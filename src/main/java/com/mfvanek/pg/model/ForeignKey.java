@@ -14,7 +14,7 @@ public class ForeignKey implements TableAware {
                       @Nonnull String columnsInConstraint,
                       @Nonnull String constraintName,
                       @Nonnull String constraintDefinition) {
-        this.tableName = Objects.requireNonNull(tableName);
+        this.tableName = Validators.tableNameNotBlank(tableName);
         this.columnsInConstraint = Objects.requireNonNull(columnsInConstraint);
         this.constraintName = Objects.requireNonNull(constraintName);
         this.constraintDefinition = Objects.requireNonNull(constraintDefinition);
@@ -44,7 +44,7 @@ public class ForeignKey implements TableAware {
     @Override
     public String toString() {
         return ForeignKey.class.getSimpleName() + "{" +
-                "tableName=" + tableName +
+                "tableName=\"" + tableName + "\'" +
                 ", columnsInConstraint=" + columnsInConstraint +
                 ", constraintName=" + constraintName +
                 ", constraintDefinition=" + constraintDefinition +

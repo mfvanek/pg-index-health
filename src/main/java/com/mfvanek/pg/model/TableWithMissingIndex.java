@@ -5,18 +5,19 @@ import java.util.Objects;
 
 // В нормальной ситуации при доступе к таблице в основном должны использоваться индексы.
 // Если индексов нет или их мало, то seqScans будет больше, чем indexScans
-public class TableWithMissingIndex {
+public class TableWithMissingIndex implements TableAware {
 
     private final String tableName;
     private final long seqScans;
     private final long indexScans;
 
-    public TableWithMissingIndex(String tableName, long seqScans, long indexScans) {
-        this.tableName = Objects.requireNonNull(tableName);
+    public TableWithMissingIndex(@Nonnull String tableName, long seqScans, long indexScans) {
+        this.tableName = Validators.tableNameNotBlank(tableName);
         this.seqScans = seqScans;
         this.indexScans = indexScans;
     }
 
+    @Override
     @Nonnull
     public String getTableName() {
         return tableName;
@@ -33,7 +34,7 @@ public class TableWithMissingIndex {
     @Override
     public String toString() {
         return TableWithMissingIndex.class.getSimpleName() + "{" +
-                "tableName=" + tableName +
+                "tableName=\'" + tableName + "\'" +
                 ", seqScans=" + seqScans +
                 ", indexScans=" + indexScans +
                 "}";

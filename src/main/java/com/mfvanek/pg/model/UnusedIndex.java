@@ -1,22 +1,35 @@
 package com.mfvanek.pg.model;
 
-public class UnusedIndex extends Index {
+import javax.annotation.Nonnull;
 
-    private final long indexSizeInBytes;
+public final class UnusedIndex extends IndexWithSize {
+
     private final long indexScans;
 
-    public UnusedIndex(String tableName, String indexName, long indexSizeInBytes, long indexScans) {
-        super(tableName, indexName);
-        this.indexSizeInBytes = indexSizeInBytes;
+    private UnusedIndex(@Nonnull String tableName,
+                        @Nonnull String indexName,
+                        long indexSizeInBytes,
+                        long indexScans) {
+        super(tableName, indexName, indexSizeInBytes);
         this.indexScans = indexScans;
+    }
+
+    public long getIndexScans() {
+        return indexScans;
     }
 
     @Override
     public String toString() {
         return UnusedIndex.class.getSimpleName() + "{" +
                 innerToString() +
-                ", indexSizeInBytes=" + indexSizeInBytes +
                 ", indexScans=" + indexScans +
                 "}";
+    }
+
+    public static UnusedIndex of(@Nonnull String tableName,
+                                 @Nonnull String indexName,
+                                 long indexSizeInBytes,
+                                 long indexScans) {
+        return new UnusedIndex(tableName, indexName, indexSizeInBytes, indexScans);
     }
 }

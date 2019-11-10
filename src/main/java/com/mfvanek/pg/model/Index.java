@@ -1,7 +1,5 @@
 package com.mfvanek.pg.model;
 
-import org.apache.commons.lang3.StringUtils;
-
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
@@ -11,19 +9,8 @@ public class Index implements TableAware {
     private final String indexName;
 
     protected Index(@Nonnull String tableName, @Nonnull String indexName) {
-        this.tableName = Objects.requireNonNull(tableName);
-        this.indexName = Objects.requireNonNull(indexName);
-        validate();
-    }
-
-    private void validate() {
-        if (StringUtils.isBlank(tableName)) {
-            throw new IllegalArgumentException("tableName");
-        }
-
-        if (StringUtils.isBlank(indexName)) {
-            throw new IllegalArgumentException("indexName");
-        }
+        this.tableName = Validators.tableNameNotBlank(tableName);
+        this.indexName = Validators.indexNameNotBlank(indexName);
     }
 
     @Override

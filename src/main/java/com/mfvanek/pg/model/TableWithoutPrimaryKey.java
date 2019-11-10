@@ -1,20 +1,20 @@
 package com.mfvanek.pg.model;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 /**
  * Таблицы без первичных ключей - это потенциальный источник bloat'а.
  * При этом pg_repack их пережать не сможет.
  */
-public class TableWithoutPrimaryKey {
+public class TableWithoutPrimaryKey implements TableAware {
 
     private final String tableName;
 
-    public TableWithoutPrimaryKey(String tableName) {
-        this.tableName = Objects.requireNonNull(tableName);
+    public TableWithoutPrimaryKey(@Nonnull String tableName) {
+        this.tableName = Validators.tableNameNotBlank(tableName);
     }
 
+    @Override
     @Nonnull
     public String getTableName() {
         return tableName;
@@ -23,7 +23,7 @@ public class TableWithoutPrimaryKey {
     @Override
     public String toString() {
         return TableWithoutPrimaryKey.class.getSimpleName() + "{" +
-                "tableName=" + tableName +
+                "tableName=\'" + tableName + "\'" +
                 "}";
     }
 }
