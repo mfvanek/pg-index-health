@@ -16,7 +16,7 @@ public final class UnusedIndex extends IndexWithSize {
                         long indexSizeInBytes,
                         long indexScans) {
         super(tableName, indexName, indexSizeInBytes);
-        this.indexScans = indexScans;
+        this.indexScans = Validators.countNotNegative(indexScans, "indexScans");
     }
 
     public long getIndexScans() {

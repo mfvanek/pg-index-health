@@ -15,7 +15,7 @@ public class DuplicatedIndexes implements TableAware {
     private final List<IndexWithSize> duplicatedIndexes;
     private final long totalSize;
 
-    public DuplicatedIndexes(@Nonnull List<IndexWithSize> duplicatedIndexes) {
+    private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
         this.duplicatedIndexes = Objects.requireNonNull(duplicatedIndexes);
         this.totalSize = duplicatedIndexes.stream()
                 .mapToLong(IndexWithSize::getIndexSizeInBytes)
@@ -46,5 +46,9 @@ public class DuplicatedIndexes implements TableAware {
                 ", totalSize=" + totalSize +
                 ", indexes=" + duplicatedIndexes +
                 "}";
+    }
+
+    public static DuplicatedIndexes of(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+        return new DuplicatedIndexes(duplicatedIndexes);
     }
 }

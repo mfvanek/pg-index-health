@@ -15,10 +15,10 @@ public class ForeignKey implements TableAware {
     private final String constraintName;
     private final String constraintDefinition;
 
-    public ForeignKey(@Nonnull String tableName,
-                      @Nonnull String columnsInConstraint,
-                      @Nonnull String constraintName,
-                      @Nonnull String constraintDefinition) {
+    private ForeignKey(@Nonnull String tableName,
+                       @Nonnull String columnsInConstraint,
+                       @Nonnull String constraintName,
+                       @Nonnull String constraintDefinition) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.columnsInConstraint = Objects.requireNonNull(columnsInConstraint);
         this.constraintName = Objects.requireNonNull(constraintName);
@@ -54,5 +54,12 @@ public class ForeignKey implements TableAware {
                 ", constraintName=" + constraintName +
                 ", constraintDefinition=" + constraintDefinition +
                 "}";
+    }
+
+    public static ForeignKey of(@Nonnull String tableName,
+                                @Nonnull String columnsInConstraint,
+                                @Nonnull String constraintName,
+                                @Nonnull String constraintDefinition) {
+        return new ForeignKey(tableName, columnsInConstraint, constraintName, constraintDefinition);
     }
 }

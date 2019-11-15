@@ -16,10 +16,10 @@ public class TableWithMissingIndex implements TableAware {
     private final long seqScans;
     private final long indexScans;
 
-    public TableWithMissingIndex(@Nonnull String tableName, long seqScans, long indexScans) {
+    private TableWithMissingIndex(@Nonnull String tableName, long seqScans, long indexScans) {
         this.tableName = Validators.tableNameNotBlank(tableName);
-        this.seqScans = seqScans;
-        this.indexScans = indexScans;
+        this.seqScans = Validators.countNotNegative(seqScans, "seqScans");
+        this.indexScans = Validators.countNotNegative(indexScans, "indexScans");
     }
 
     @Override
@@ -62,5 +62,9 @@ public class TableWithMissingIndex implements TableAware {
     @Override
     public int hashCode() {
         return Objects.hash(tableName);
+    }
+
+    public static TableWithMissingIndex of(@Nonnull String tableName, long seqScans, long indexScans) {
+        return new TableWithMissingIndex(tableName, seqScans, indexScans);
     }
 }

@@ -15,7 +15,7 @@ public class IndexWithSize extends Index implements SizeAware {
                             @Nonnull String indexName,
                             long indexSizeInBytes) {
         super(tableName, indexName);
-        this.indexSizeInBytes = indexSizeInBytes;
+        this.indexSizeInBytes = Validators.sizeNotNegative(indexSizeInBytes, "indexSizeInBytes");
     }
 
     @Override

@@ -16,17 +16,32 @@ final class Validators {
         throw new UnsupportedOperationException();
     }
 
-    static String tableNameNotBlank(@Nonnull String tableName) {
+    static String tableNameNotBlank(@Nonnull final String tableName) {
         if (StringUtils.isBlank(Objects.requireNonNull(tableName, "tableName cannot be null"))) {
             throw new IllegalArgumentException("tableName");
         }
         return tableName;
     }
 
-    static String indexNameNotBlank(@Nonnull String indexName) {
+    static String indexNameNotBlank(@Nonnull final String indexName) {
         if (StringUtils.isBlank(Objects.requireNonNull(indexName, "indexName cannot be null"))) {
             throw new IllegalArgumentException("indexName");
         }
         return indexName;
+    }
+
+    static long sizeNotNegative(final long sizeInBytes, @Nonnull final String argumentName) {
+        return argumentNotNegative(sizeInBytes, argumentName);
+    }
+
+    static long countNotNegative(final long count, @Nonnull final String argumentName) {
+        return argumentNotNegative(count, argumentName);
+    }
+
+    private static long argumentNotNegative(final long argumentValue, @Nonnull final String argumentName) {
+        if (argumentValue < 0L) {
+            throw new IllegalArgumentException(argumentName + " cannot be less than zero");
+        }
+        return argumentValue;
     }
 }

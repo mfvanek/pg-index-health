@@ -26,7 +26,7 @@ class IndexTest {
 
     @Test
     void getTableAndIndexName() {
-        final Index index = Index.of("t", "i");
+        final var index = Index.of("t", "i");
         assertNotNull(index);
         assertEquals("t", index.getTableName());
         assertEquals("i", index.getIndexName());
@@ -34,16 +34,16 @@ class IndexTest {
 
     @Test
     void testToString() {
-        final Index index = Index.of("t", "i");
+        final var index = Index.of("t", "i");
         assertNotNull(index);
         assertEquals("Index{tableName='t', indexName='i'}", index.toString());
     }
 
     @Test
     void testEqualsAndHashCode() {
-        final Index first = Index.of("t1", "i1");
-        final Index second = Index.of("t1", "i2");
-        final Index third = Index.of("t2", "i2");
+        final var first = Index.of("t1", "i1");
+        final var second = Index.of("t1", "i2");
+        final var third = Index.of("t2", "i2");
 
         // self
         assertEquals(first, first);
