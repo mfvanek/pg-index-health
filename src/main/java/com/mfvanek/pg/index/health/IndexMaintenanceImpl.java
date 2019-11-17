@@ -15,6 +15,11 @@ import com.mfvanek.pg.model.UnusedIndex;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -160,15 +165,20 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Nonnull
     @Override
     public List<Index> getInvalidIndexes() {
-//        try (Connection connection = dataSource.getConnection();
-//             Statement statement = connection.createStatement()) {
-//            try (ResultSet resultSet = statement.executeQuery(INVALID_INDEXES_SQL)) {
-//
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-        return null;
+        final List<Index> invalidIndexes = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(INVALID_INDEXES_SQL)) {
+                while (resultSet.next()) {
+                    final String tableName = resultSet.getString("table_name");
+                    final String indexName = resultSet.getString("index_name");
+                    invalidIndexes.add(Index.of(tableName, indexName));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return invalidIndexes;
     }
 
     @Nonnull
