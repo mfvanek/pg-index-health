@@ -6,11 +6,13 @@
 package com.mfvanek.pg.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
@@ -53,6 +55,17 @@ public final class DatabasePopulator implements AutoCloseable {
         }
     }
 
+    public void createDuplicatedIndex() {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute("create index concurrently if not exists i_accounts_account_number " +
+                    "on accounts (account_number)");
+        } catch (SQLException e) {
+            // TODO logging
+            // do nothing
+        }
+    }
+
     private void createTableClients() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -68,6 +81,17 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     private void createTableAccounts() {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute("create sequence if not exists accounts_seq");
+            statement.execute("create table if not exists accounts (" +
+                    "id bigint not null primary key default nextval('accounts_seq'), " +
+                    "client_id bigint not null references clients (id)," +
+                    "account_number varchar(50) not null unique, " +
+                    "account_balance numeric(22,2) not null default 0)");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void createTableDocuments() {
@@ -83,18 +107,46 @@ public final class DatabasePopulator implements AutoCloseable {
 
     private void insertDataIntoTables() {
         final int clientsCountToCreate = 1_000;
-        final String insertClientSql = "insert into clients (first_name, last_name) values (?, ?)";
+        final String insertClientSql = "insert into clients (id, first_name, last_name) values (?, ?, ?)";
+        final String insertAccountSql = "insert into accounts (client_id, account_number) values (?, ?)";
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(insertClientSql)) {
+             PreparedStatement insertClientStatement = connection.prepareStatement(insertClientSql);
+             PreparedStatement insertAccountStatement = connection.prepareStatement(insertAccountSql)) {
             for (int counter = 0; counter < clientsCountToCreate; ++counter) {
+                final long clientId = getNextClientIdFromSequence(connection);
                 final String lastName = RandomStringUtils.randomAlphabetic(10);
                 final String firstName = RandomStringUtils.randomAlphabetic(10);
-                statement.setString(1, firstName);
-                statement.setString(2, lastName);
-                statement.executeUpdate();
+                insertClientStatement.setLong(1, clientId);
+                insertClientStatement.setString(2, firstName);
+                insertClientStatement.setString(3, lastName);
+                insertClientStatement.executeUpdate();
+
+                final String accountNumber = generateAccountNumber(clientId);
+                insertAccountStatement.setLong(1, clientId);
+                insertAccountStatement.setString(2, accountNumber);
             }
             // Insert at least one duplicated client row
-            statement.executeUpdate();
+            final long clientId = getNextClientIdFromSequence(connection);
+            insertClientStatement.setLong(1, clientId);
+            insertClientStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String generateAccountNumber(final long clientId) {
+        return "407028101" + StringUtils.leftPad(String.valueOf(clientId), 11, '0');
+    }
+
+    private long getNextClientIdFromSequence(@Nonnull final Connection connection) {
+        final String selectClientIdSql = "select nextval('clients_seq')";
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(selectClientIdSql)) {
+            if (resultSet.next()) {
+                return resultSet.getLong(1);
+            } else {
+                throw new RuntimeException("An error occurred while retrieving a value from the sequence");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -104,7 +156,12 @@ public final class DatabasePopulator implements AutoCloseable {
     public void close() throws SQLException {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
+            statement.execute("truncate table accounts cascade");
             statement.execute("truncate table clients cascade");
+
+            statement.execute("drop table if exists accounts");
+            statement.execute("drop sequence if exists accounts_seq");
+
             statement.execute("drop table if exists clients");
             statement.execute("drop sequence if exists clients_seq");
         }

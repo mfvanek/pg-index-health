@@ -8,6 +8,7 @@ package com.mfvanek.pg.model;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Objects;
 
 final class Validators {
@@ -16,18 +17,22 @@ final class Validators {
         throw new UnsupportedOperationException();
     }
 
+    @Nonnull
     static String tableNameNotBlank(@Nonnull final String tableName) {
-        if (StringUtils.isBlank(Objects.requireNonNull(tableName, "tableName cannot be null"))) {
-            throw new IllegalArgumentException("tableName");
-        }
-        return tableName;
+        return notBlank(tableName, "tableName");
     }
 
+    @Nonnull
     static String indexNameNotBlank(@Nonnull final String indexName) {
-        if (StringUtils.isBlank(Objects.requireNonNull(indexName, "indexName cannot be null"))) {
-            throw new IllegalArgumentException("indexName");
+        return notBlank(indexName, "indexName");
+    }
+
+    @Nonnull
+    static String notBlank(@Nonnull final String argumentValue, @Nonnull final String argumentName) {
+        if (StringUtils.isBlank(Objects.requireNonNull(argumentValue, argumentName + " cannot be null"))) {
+            throw new IllegalArgumentException(argumentName);
         }
-        return indexName;
+        return argumentValue;
     }
 
     static long sizeNotNegative(final long sizeInBytes, @Nonnull final String argumentName) {
@@ -43,5 +48,27 @@ final class Validators {
             throw new IllegalArgumentException(argumentName + " cannot be less than zero");
         }
         return argumentValue;
+    }
+
+    @Nonnull
+    static List<IndexWithSize> validateThatTableIsTheSame(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+        final String tableName = validateThatContainsAtLeastTwoRows(duplicatedIndexes).get(0).getTableName();
+        final boolean tableIsTheSame = duplicatedIndexes.stream().allMatch(i -> i.getTableName().equals(tableName));
+        if (!tableIsTheSame) {
+            throw new IllegalArgumentException("Table name is not the same within given rows");
+        }
+        return duplicatedIndexes;
+    }
+
+    @Nonnull
+    private static List<IndexWithSize> validateThatContainsAtLeastTwoRows(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+        final int size = Objects.requireNonNull(duplicatedIndexes).size();
+        if (0 == size) {
+            throw new IllegalArgumentException("duplicatedIndexes cannot be empty");
+        }
+        if (size < 2) {
+            throw new IllegalArgumentException("duplicatedIndexes should contains at least two rows");
+        }
+        return duplicatedIndexes;
     }
 }

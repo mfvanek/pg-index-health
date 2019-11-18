@@ -26,25 +26,24 @@ import java.util.Objects;
 public class IndexMaintenanceImpl implements IndexMaintenance {
 
     private static final String INVALID_INDEXES_SQL =
-            "select x.indrelid::regclass as table_name, x.indexrelid::regclass as index_name " +
-                    "from pg_index x " +
-                    "join pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid " +
-                    "and psai.schemaname = 'public'::text " +
-                    "where x.indisvalid = false;";
+            "select x.indrelid::regclass as table_name, x.indexrelid::regclass as index_name\n" +
+                    "from pg_index x\n" +
+                    "join pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid\n" +
+                    "where x.indisvalid = false and psai.schemaname = 'public'::text;";
 
     private static final String DUPLICATED_INDEXES_SQL =
-            "select table_name, sum(pg_relation_size(idx))::bigint as total_size, " +
-                    "string_agg(idx::text, '; ') as index_names " +
-                    "from (" +
-                    "       select x.indexrelid::regclass as idx, x.indrelid::regclass as table_name, " +
-                    "              (x.indrelid::text ||' '|| x.indclass::text ||' '|| x.indkey::text ||' '|| " +
-                    "coalesce(pg_get_expr(x.indexprs, x.indrelid),'')||e' ' || " +
-                    "coalesce(pg_get_expr(x.indpred, x.indrelid),'')) as key " +
-                    "       from pg_index x " +
-                    "       join pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid " +
-                    "and psai.schemaname = 'public'::text " +
-                    "     ) sub " +
-                    "group by table_name, key having count(*)>1 " +
+            "select table_name,\n" +
+                    "       string_agg('idx=' || idx::text || ', size=' || pg_relation_size(idx), '; ') as duplicated_indexes\n" +
+                    "from (\n" +
+                    "       select x.indexrelid::regclass as idx, x.indrelid::regclass as table_name,\n" +
+                    "              (x.indrelid::text ||' '|| x.indclass::text ||' '|| x.indkey::text ||' '||\n" +
+                    "               coalesce(pg_get_expr(x.indexprs, x.indrelid),'')||e' ' ||\n" +
+                    "               coalesce(pg_get_expr(x.indpred, x.indrelid),'')) as key\n" +
+                    "       from pg_index x\n" +
+                    "       join pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid\n" +
+                    "       where psai.schemaname = 'public'::text\n" +
+                    "     ) sub\n" +
+                    "group by table_name, key having count(*) > 1\n" +
                     "order by table_name, sum(pg_relation_size(idx)) desc;";
 
     private static final String INTERSECTED_INDEXES_SQL =
@@ -184,7 +183,20 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getDuplicatedIndexes() {
-        return null;
+        final List<DuplicatedIndexes> duplicatedIndexes = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(DUPLICATED_INDEXES_SQL)) {
+                while (resultSet.next()) {
+                    final String tableName = resultSet.getString("table_name");
+                    final String duplicatedAsString = resultSet.getString("duplicated_indexes");
+                    duplicatedIndexes.add(DuplicatedIndexes.of(tableName, duplicatedAsString));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return duplicatedIndexes;
     }
 
     @Nonnull

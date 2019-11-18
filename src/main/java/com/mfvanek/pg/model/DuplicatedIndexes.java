@@ -6,8 +6,10 @@
 package com.mfvanek.pg.model;
 
 import javax.annotation.Nonnull;
+import java.util.AbstractMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DuplicatedIndexes implements TableAware {
@@ -16,7 +18,7 @@ public class DuplicatedIndexes implements TableAware {
     private final long totalSize;
 
     private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
-        this.duplicatedIndexes = Objects.requireNonNull(duplicatedIndexes);
+        this.duplicatedIndexes = Validators.validateThatTableIsTheSame(duplicatedIndexes);
         this.totalSize = duplicatedIndexes.stream()
                 .mapToLong(IndexWithSize::getIndexSizeInBytes)
                 .sum();
@@ -50,5 +52,28 @@ public class DuplicatedIndexes implements TableAware {
 
     public static DuplicatedIndexes of(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
         return new DuplicatedIndexes(duplicatedIndexes);
+    }
+
+    public static DuplicatedIndexes of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
+        Validators.tableNameNotBlank(tableName);
+        final var indexesWithNameAndSize = parseAsIndexNameAndSize(
+                Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
+        final var duplicatedIndexes = indexesWithNameAndSize.stream()
+                .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
+        return new DuplicatedIndexes(duplicatedIndexes);
+    }
+
+    private static List<Map.Entry<String, Long>> parseAsIndexNameAndSize(@Nonnull final String duplicatedAsString) {
+        final String[] indexes = duplicatedAsString.split("; ");
+        return Arrays.stream(indexes)
+                .map(s -> s.split(", "))
+                .filter(a -> a[0].startsWith("idx=") && a[1].startsWith("size="))
+                .map(a -> {
+                    final String indexName = a[0].substring("idx=".length());
+                    final String sizeAsString = a[1].substring("size=".length());
+                    return new AbstractMap.SimpleEntry<>(indexName, Long.parseLong(sizeAsString));
+                })
+                .collect(Collectors.toList());
     }
 }
