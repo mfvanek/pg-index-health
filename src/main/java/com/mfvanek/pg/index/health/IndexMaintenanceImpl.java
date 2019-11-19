@@ -47,18 +47,16 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "order by table_name, sum(pg_relation_size(idx)) desc;";
 
     private static final String INTERSECTED_INDEXES_SQL =
-            "select a.indrelid::regclass as table_name, " +
-                    "a.indexrelid::regclass as first_index, b.indexrelid::regclass as second_index, " +
-                    "pg_relation_size(a.indexrelid) + pg_relation_size(b.indexrelid) as total_size " +
-                    "from (select *, array_to_string(indkey, ' ') as cols from pg_index) as a " +
-                    "join (select *, array_to_string(indkey, ' ') as cols from pg_index) as b on " +
-                    "  (a.indrelid = b.indrelid and a.indexrelid > b.indexrelid and " +
-                    "   (" +
-                    "     (a.cols like b.cols||'%' and coalesce(substr(a.cols, length(b.cols)+1, 1), ' ') = ' ') or " +
-                    "     (b.cols like a.cols||'%' and coalesce(substr(b.cols, length(a.cols)+1, 1), ' ') = ' ') " +
-                    "     )" +
-                    "  ) " +
-                    "order by a.indrelid;";
+            "select a.indrelid::regclass as table_name,\n" +
+                    "       'idx=' || a.indexrelid::regclass || ', size=' || pg_relation_size(a.indexrelid) || '; idx=' ||\n" +
+                    "           b.indexrelid::regclass || ', size=' || pg_relation_size(b.indexrelid) as intersected_indexes\n" +
+                    "from (\n" +
+                    "    select *, array_to_string(indkey, ' ') as cols from pg_index) as a\n" +
+                    "    join (select *, array_to_string(indkey, ' ') as cols from pg_index) as b\n" +
+                    "        on (a.indrelid = b.indrelid and a.indexrelid > b.indexrelid and (\n" +
+                    "            (a.cols like b.cols||'%' and coalesce(substr(a.cols, length(b.cols)+1, 1), ' ') = ' ') or\n" +
+                    "            (b.cols like a.cols||'%' and coalesce(substr(b.cols, length(a.cols)+1, 1), ' ') = ' ')))\n" +
+                    "order by a.indrelid::regclass::text;";
 
     private static final String UNUSED_INDEXES_SQL =
             "with forein_key_indexes as ( " +
@@ -178,21 +176,13 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getDuplicatedIndexes() {
-        final List<DuplicatedIndexes> duplicatedIndexes = new ArrayList<>();
-        executeQuery(DUPLICATED_INDEXES_SQL, rs -> {
-            while (rs.next()) {
-                final String tableName = rs.getString("table_name");
-                final String duplicatedAsString = rs.getString("duplicated_indexes");
-                duplicatedIndexes.add(DuplicatedIndexes.of(tableName, duplicatedAsString));
-            }
-        });
-        return duplicatedIndexes;
+        return getDuplicatedOrIntersectedIndexes(DUPLICATED_INDEXES_SQL, "duplicated_indexes");
     }
 
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getIntersectedIndexes() {
-        return null;
+        return getDuplicatedOrIntersectedIndexes(INTERSECTED_INDEXES_SQL, "intersected_indexes");
     }
 
     @Nonnull
@@ -225,6 +215,20 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
         return null;
     }
 
+    @Nonnull
+    private List<DuplicatedIndexes> getDuplicatedOrIntersectedIndexes(@Nonnull final String sqlQuery,
+                                                                      @Nonnull final String columnName) {
+        final List<DuplicatedIndexes> indexes = new ArrayList<>();
+        executeQuery(sqlQuery, rs -> {
+            while (rs.next()) {
+                final String tableName = rs.getString("table_name");
+                final String duplicatedAsString = rs.getString(columnName);
+                indexes.add(DuplicatedIndexes.of(tableName, duplicatedAsString));
+            }
+        });
+        return indexes;
+    }
+
     private void executeQuery(@Nonnull final String sqlQuery, ResultSetExtractor rse) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -234,11 +238,5 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @FunctionalInterface
-    private interface ResultSetExtractor {
-
-        void extractData(ResultSet rs) throws SQLException;
     }
 }

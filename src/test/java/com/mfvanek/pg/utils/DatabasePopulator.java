@@ -50,8 +50,7 @@ public final class DatabasePopulator implements AutoCloseable {
             statement.execute("create unique index concurrently if not exists i_clients_last_name_first_name " +
                     "on clients (last_name, first_name)");
         } catch (SQLException e) {
-            // TODO logging
-            // do nothing
+            // do nothing, just skip error
         }
     }
 
@@ -60,9 +59,12 @@ public final class DatabasePopulator implements AutoCloseable {
              Statement statement = connection.createStatement()) {
             statement.execute("create index concurrently if not exists i_accounts_account_number " +
                     "on accounts (account_number)");
+            statement.execute("create index concurrently if not exists i_clients_last_first " +
+                    "on clients (last_name, first_name)");
+            statement.execute("create index concurrently if not exists i_clients_last_name " +
+                    "on clients (last_name)");
         } catch (SQLException e) {
-            // TODO logging
-            // do nothing
+            throw new RuntimeException(e);
         }
     }
 
