@@ -165,18 +165,13 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Override
     public List<Index> getInvalidIndexes() {
         final List<Index> invalidIndexes = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery(INVALID_INDEXES_SQL)) {
-                while (resultSet.next()) {
-                    final String tableName = resultSet.getString("table_name");
-                    final String indexName = resultSet.getString("index_name");
+        executeQuery(INVALID_INDEXES_SQL, rs -> {
+            while (rs.next()) {
+                final String tableName = rs.getString("table_name");
+                final String indexName = rs.getString("index_name");
                     invalidIndexes.add(Index.of(tableName, indexName));
-                }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        });
         return invalidIndexes;
     }
 
@@ -184,18 +179,13 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Override
     public List<DuplicatedIndexes> getDuplicatedIndexes() {
         final List<DuplicatedIndexes> duplicatedIndexes = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery(DUPLICATED_INDEXES_SQL)) {
-                while (resultSet.next()) {
-                    final String tableName = resultSet.getString("table_name");
-                    final String duplicatedAsString = resultSet.getString("duplicated_indexes");
-                    duplicatedIndexes.add(DuplicatedIndexes.of(tableName, duplicatedAsString));
-                }
+        executeQuery(DUPLICATED_INDEXES_SQL, rs -> {
+            while (rs.next()) {
+                final String tableName = rs.getString("table_name");
+                final String duplicatedAsString = rs.getString("duplicated_indexes");
+                duplicatedIndexes.add(DuplicatedIndexes.of(tableName, duplicatedAsString));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        });
         return duplicatedIndexes;
     }
 
@@ -233,5 +223,22 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Override
     public List<IndexWithNulls> getIndexesWithNullValues() {
         return null;
+    }
+
+    private void executeQuery(@Nonnull final String sqlQuery, ResultSetExtractor rse) {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(Objects.requireNonNull(sqlQuery))) {
+                rse.extractData(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FunctionalInterface
+    private interface ResultSetExtractor {
+
+        void extractData(ResultSet rs) throws SQLException;
     }
 }
