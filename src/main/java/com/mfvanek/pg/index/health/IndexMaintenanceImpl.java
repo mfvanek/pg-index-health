@@ -59,27 +59,26 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "order by a.indrelid::regclass::text;";
 
     private static final String UNUSED_INDEXES_SQL =
-            "with forein_key_indexes as ( " +
-                    "  select i.indexrelid " +
-                    "    from pg_constraint c " +
-                    "    join lateral unnest(c.conkey) with ordinality as u(attnum, attposition) on true " +
-                    "    join pg_index i on i.indrelid = c.conrelid and (c.conkey::int[] <@ indkey::int[]) " +
-                    "    where c.contype = 'f' " +
-                    ") " +
-                    "select psui.relname as table_name, " +
-                    "  psui.indexrelname as index_name, " +
-                    "  pg_relation_size(i.indexrelid) as index_size, " +
-                    "  psui.idx_scan as index_scans " +
-                    "from pg_stat_user_indexes psui " +
-                    "join pg_index i on psui.indexrelid = i.indexrelid " +
-                    "where " +
-                    "  psui.schemaname = 'public'::text and " +
-                    "  not i.indisunique and " +
-                    "  i.indexrelid not in (select * from forein_key_indexes) and " + // retains indexes on FK
-                    "  psui.idx_scan < ?::integer and " +
-                    "  pg_relation_size(psui.relid) >= ?::integer * 8192 and " + // skips small tables
-                    "  pg_relation_size(psui.indexrelid) >= ?::integer * 8192 " + // skip small indexes
-                    "order by psui.relname, pg_relation_size(i.indexrelid) desc";
+            "with foreign_key_indexes as (\n" +
+                    "    select i.indexrelid\n" +
+                    "    from pg_constraint c\n" +
+                    "        join lateral unnest(c.conkey) with ordinality as u(attnum, attposition) on true\n" +
+                    "        join pg_index i on i.indrelid = c.conrelid and (c.conkey::int[] <@ indkey::int[])\n" +
+                    "    where c.contype = 'f'\n" +
+                    ")\n" +
+                    "select psui.relname as table_name,\n" +
+                    "       psui.indexrelname as index_name,\n" +
+                    "       pg_relation_size(i.indexrelid) as index_size,\n" +
+                    "       psui.idx_scan as index_scans\n" +
+                    "from pg_stat_user_indexes psui\n" +
+                    "    join pg_index i on psui.indexrelid = i.indexrelid\n" +
+                    "where\n" +
+                    "      psui.schemaname = 'public'::text and not i.indisunique and\n" +
+                    "      i.indexrelid not in (select * from foreign_key_indexes) and /*retain indexes on foreign keys*/\n" +
+                    "      psui.idx_scan < 50 and\n" +
+                    "      pg_relation_size(psui.relid) >= 5 * 8192 and /*skip small tables*/\n" +
+                    "      pg_relation_size(psui.indexrelid) >= 5 * 8192 /*skip small indexes*/\n" +
+                    "order by psui.relname, pg_relation_size(i.indexrelid) desc;";
 
     private static final String FOREIGN_KEYS_WITHOUT_INDEX =
             "select c.conrelid::regclass as table_name, " +
@@ -188,7 +187,17 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Nonnull
     @Override
     public List<UnusedIndex> getPotentiallyUnusedIndexes() {
-        return null;
+        List<UnusedIndex> unusedIndexes = new ArrayList<>();
+        executeQuery(UNUSED_INDEXES_SQL, rs -> {
+            while (rs.next()) {
+                final String tableName = rs.getString("table_name");
+                final String indexName = rs.getString("index_name");
+                final long indexSize = rs.getLong("index_size");
+                final long indexScans = rs.getLong("index_scans");
+                unusedIndexes.add(UnusedIndex.of(tableName, indexName, indexSize, indexScans));
+            }
+        });
+        return unusedIndexes;
     }
 
     @Nonnull

@@ -5,6 +5,7 @@
 
 package com.mfvanek.pg.index.health;
 
+import com.mfvanek.pg.model.UnusedIndex;
 import com.mfvanek.pg.utils.DatabasePopulator;
 import com.opentable.db.postgres.junit5.EmbeddedPostgresExtension;
 import com.opentable.db.postgres.junit5.PreparedDbExtension;
@@ -13,8 +14,10 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.sql.SQLException;
 
+import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -131,6 +134,38 @@ class IndexMaintenanceImplTest {
             final var indexes = entry.getIndexNames();
             assertEquals(2, indexes.size());
             assertThat(indexes, containsInAnyOrder("i_clients_last_first", "i_clients_last_name"));
+        }
+    }
+
+    @Test
+    void getPotentiallyUnusedIndexesOnEmptyDataBase() {
+        final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+        assertNotNull(unusedIndexes);
+        assertEquals(0, unusedIndexes.size());
+    }
+
+    @Test
+    void getPotentiallyUnusedIndexesOnDatabaseWithoutThem() throws SQLException {
+        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
+            databasePopulator.populateOnlyTablesAndReferences();
+
+            final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+            assertNotNull(unusedIndexes);
+            assertEquals(0, unusedIndexes.size());
+        }
+    }
+
+    @Test
+    void getPotentiallyUnusedIndexesOnDatabaseWithThem() throws SQLException {
+        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
+            databasePopulator.populateWithDataAndReferences();
+            databasePopulator.createDuplicatedIndex();
+
+            final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+            assertNotNull(unusedIndexes);
+            assertThat(unusedIndexes.size(), equalTo(2));
+            final var names = unusedIndexes.stream().map(UnusedIndex::getIndexName).collect(toSet());
+            assertThat(names, containsInAnyOrder("i_clients_last_first", "i_clients_last_name"));
         }
     }
 }
