@@ -44,6 +44,13 @@ public final class DatabasePopulator implements AutoCloseable {
         addLinksBetweenDocumentsAndAccounts();
     }
 
+    public void populateOnlyTables() {
+        // TODO do it inside transaction
+        createTableClients();
+        createTableAccounts();
+        createTableDocuments();
+    }
+
     public void createInvalidIndex() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -63,6 +70,26 @@ public final class DatabasePopulator implements AutoCloseable {
                     "on clients (last_name, first_name)");
             statement.execute("create index concurrently if not exists i_clients_last_name " +
                     "on clients (last_name)");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void createNotSuitableIndexForForeignKey() {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute("create index concurrently if not exists i_accounts_account_number_client_id " +
+                    "on accounts (account_number, client_id)");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void createSuitableIndexForForeignKey() {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute("create index concurrently if not exists i_accounts_client_id_account_number " +
+                    "on accounts (client_id, account_number)");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -88,7 +115,7 @@ public final class DatabasePopulator implements AutoCloseable {
             statement.execute("create sequence if not exists accounts_seq");
             statement.execute("create table if not exists accounts (" +
                     "id bigint not null primary key default nextval('accounts_seq'), " +
-                    "client_id bigint not null references clients (id)," +
+                    "client_id bigint not null," +
                     "account_number varchar(50) not null unique, " +
                     "account_balance numeric(22,2) not null default 0)");
         } catch (SQLException e) {
@@ -100,7 +127,13 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     private void addLinksBetweenAccountsAndClients() {
-
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute("alter table if exists accounts " +
+                    "add constraint c_accounts_fk_client_id foreign key (client_id) references clients (id);");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void addLinksBetweenDocumentsAndAccounts() {

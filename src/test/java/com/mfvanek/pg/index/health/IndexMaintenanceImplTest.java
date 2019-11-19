@@ -5,6 +5,7 @@
 
 package com.mfvanek.pg.index.health;
 
+import com.mfvanek.pg.model.IndexWithSize;
 import com.mfvanek.pg.model.UnusedIndex;
 import com.mfvanek.pg.utils.DatabasePopulator;
 import com.opentable.db.postgres.junit5.EmbeddedPostgresExtension;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.sql.SQLException;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -95,9 +97,12 @@ class IndexMaintenanceImplTest {
             final var entry = duplicatedIndexes.get(0);
             assertEquals("accounts", entry.getTableName());
             assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
-            final var indexes = entry.getIndexNames();
+            final var indexes = entry.getDuplicatedIndexes();
             assertEquals(2, indexes.size());
-            assertThat(indexes, containsInAnyOrder("accounts_account_number_key", "i_accounts_account_number"));
+            assertThat(indexes.stream()
+                            .map(IndexWithSize::getIndexName)
+                            .collect(Collectors.toList()),
+                    containsInAnyOrder("accounts_account_number_key", "i_accounts_account_number"));
         }
     }
 
@@ -131,9 +136,12 @@ class IndexMaintenanceImplTest {
             final var entry = intersectedIndexes.get(0);
             assertEquals("clients", entry.getTableName());
             assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
-            final var indexes = entry.getIndexNames();
+            final var indexes = entry.getDuplicatedIndexes();
             assertEquals(2, indexes.size());
-            assertThat(indexes, containsInAnyOrder("i_clients_last_first", "i_clients_last_name"));
+            assertThat(indexes.stream()
+                            .map(IndexWithSize::getIndexName)
+                            .collect(Collectors.toList()),
+                    containsInAnyOrder("i_clients_last_first", "i_clients_last_name"));
         }
     }
 
@@ -166,6 +174,48 @@ class IndexMaintenanceImplTest {
             assertThat(unusedIndexes.size(), equalTo(2));
             final var names = unusedIndexes.stream().map(UnusedIndex::getIndexName).collect(toSet());
             assertThat(names, containsInAnyOrder("i_clients_last_first", "i_clients_last_name"));
+        }
+    }
+
+    @Test
+    void getForeignKeysNotCoveredWithIndexOnEmptyDataBase() {
+        final var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+        assertNotNull(foreignKeys);
+        assertEquals(0, foreignKeys.size());
+    }
+
+    @Test
+    void getForeignKeysNotCoveredWithIndexOnDatabaseWithoutThem() throws SQLException {
+        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
+            databasePopulator.populateOnlyTables();
+
+            final var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+            assertNotNull(foreignKeys);
+            assertEquals(0, foreignKeys.size());
+        }
+    }
+
+    @Test
+    void getForeignKeysNotCoveredWithIndexOnDatabaseWithThem() throws SQLException {
+        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
+            databasePopulator.populateOnlyTablesAndReferences();
+
+            var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+            assertNotNull(foreignKeys);
+            assertEquals(1, foreignKeys.size());
+            final var foreignKey = foreignKeys.get(0);
+            assertEquals("accounts", foreignKey.getTableName());
+            assertThat(foreignKey.getColumnsInConstraint(), containsInAnyOrder("client_id"));
+
+            databasePopulator.createNotSuitableIndexForForeignKey();
+            foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+            assertNotNull(foreignKeys);
+            assertEquals(1, foreignKeys.size());
+
+            databasePopulator.createSuitableIndexForForeignKey();
+            foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+            assertNotNull(foreignKeys);
+            assertEquals(0, foreignKeys.size());
         }
     }
 }

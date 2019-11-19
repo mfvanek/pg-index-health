@@ -28,4 +28,10 @@ class IndexWithSizeTest {
     void indexWithNegativeSize() {
         assertThrows(IllegalArgumentException.class, () -> IndexWithSize.of("t", "i", -1L));
     }
+
+    @Test
+    void testToString() {
+        final var index = IndexWithSize.of("t", "i", 33L);
+        assertEquals("IndexWithSize{tableName='t', indexName='i', indexSizeInBytes=33}", index.toString());
+    }
 }

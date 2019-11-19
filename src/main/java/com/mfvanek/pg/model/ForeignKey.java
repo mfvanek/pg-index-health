@@ -6,23 +6,20 @@
 package com.mfvanek.pg.model;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
+import java.util.List;
 
 public class ForeignKey implements TableAware {
 
     private final String tableName;
-    private final String columnsInConstraint;
     private final String constraintName;
-    private final String constraintDefinition;
+    private final List<String> columnsInConstraint;
 
     private ForeignKey(@Nonnull String tableName,
-                       @Nonnull String columnsInConstraint,
                        @Nonnull String constraintName,
-                       @Nonnull String constraintDefinition) {
+                       @Nonnull List<String> columnsInConstraint) {
         this.tableName = Validators.tableNameNotBlank(tableName);
-        this.columnsInConstraint = Objects.requireNonNull(columnsInConstraint);
-        this.constraintName = Objects.requireNonNull(constraintName);
-        this.constraintDefinition = Objects.requireNonNull(constraintDefinition);
+        this.constraintName = Validators.notBlank(constraintName, "constraintName");
+        this.columnsInConstraint = List.copyOf(Validators.validateThatNotEmpty(columnsInConstraint));
     }
 
     @Override
@@ -32,34 +29,27 @@ public class ForeignKey implements TableAware {
     }
 
     @Nonnull
-    public String getColumnsInConstraint() {
-        return columnsInConstraint;
-    }
-
-    @Nonnull
     public String getConstraintName() {
         return constraintName;
     }
 
     @Nonnull
-    public String getConstraintDefinition() {
-        return constraintDefinition;
+    public List<String> getColumnsInConstraint() {
+        return columnsInConstraint;
     }
 
     @Override
     public String toString() {
         return ForeignKey.class.getSimpleName() + "{" +
-                "tableName=\"" + tableName + "\'" +
+                "tableName=\'" + tableName + "\'" +
+                ", constraintName=\'" + constraintName + "\'" +
                 ", columnsInConstraint=" + columnsInConstraint +
-                ", constraintName=" + constraintName +
-                ", constraintDefinition=" + constraintDefinition +
                 "}";
     }
 
     public static ForeignKey of(@Nonnull String tableName,
-                                @Nonnull String columnsInConstraint,
                                 @Nonnull String constraintName,
-                                @Nonnull String constraintDefinition) {
-        return new ForeignKey(tableName, columnsInConstraint, constraintName, constraintDefinition);
+                                @Nonnull List<String> columnsInConstraint) {
+        return new ForeignKey(tableName, constraintName, columnsInConstraint);
     }
 }

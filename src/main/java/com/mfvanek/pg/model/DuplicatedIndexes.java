@@ -18,7 +18,7 @@ public class DuplicatedIndexes implements TableAware {
     private final long totalSize;
 
     private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
-        this.duplicatedIndexes = Validators.validateThatTableIsTheSame(duplicatedIndexes);
+        this.duplicatedIndexes = List.copyOf(Validators.validateThatTableIsTheSame(duplicatedIndexes));
         this.totalSize = duplicatedIndexes.stream()
                 .mapToLong(IndexWithSize::getIndexSizeInBytes)
                 .sum();
@@ -31,10 +31,8 @@ public class DuplicatedIndexes implements TableAware {
     }
 
     @Nonnull
-    public List<String> getIndexNames() {
-        return duplicatedIndexes.stream()
-                .map(Index::getIndexName)
-                .collect(Collectors.toList());
+    public List<IndexWithSize> getDuplicatedIndexes() {
+        return duplicatedIndexes;
     }
 
     public long getTotalSize() {

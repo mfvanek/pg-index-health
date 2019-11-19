@@ -9,9 +9,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -19,13 +21,16 @@ class DuplicatedIndexesTest {
 
     @Test
     void withTheSameTable() {
-        final var duplicatedIndexes = DuplicatedIndexes.of(List.of(
+        final var index = DuplicatedIndexes.of(List.of(
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
-        assertNotNull(duplicatedIndexes);
-        assertEquals("t", duplicatedIndexes.getTableName());
-        assertEquals(303L, duplicatedIndexes.getTotalSize());
-        assertLinesMatch(List.of("i1", "i2"), duplicatedIndexes.getIndexNames());
+        assertNotNull(index);
+        assertEquals("t", index.getTableName());
+        assertEquals(303L, index.getTotalSize());
+        assertThat(index.getDuplicatedIndexes().stream()
+                        .map(IndexWithSize::getIndexName)
+                        .collect(Collectors.toList()),
+                containsInAnyOrder("i1", "i2"));
     }
 
     @Test
@@ -57,11 +62,14 @@ class DuplicatedIndexesTest {
 
     @Test
     void fromValidString() {
-        final var duplicatedIndexes = DuplicatedIndexes.of("t", "idx=i3, size=11; idx=i4, size=167");
-        assertNotNull(duplicatedIndexes);
-        assertEquals("t", duplicatedIndexes.getTableName());
-        assertEquals(178L, duplicatedIndexes.getTotalSize());
-        assertLinesMatch(List.of("i3", "i4"), duplicatedIndexes.getIndexNames());
+        final var index = DuplicatedIndexes.of("t", "idx=i3, size=11; idx=i4, size=167");
+        assertNotNull(index);
+        assertEquals("t", index.getTableName());
+        assertEquals(178L, index.getTotalSize());
+        assertThat(index.getDuplicatedIndexes().stream()
+                        .map(IndexWithSize::getIndexName)
+                        .collect(Collectors.toList()),
+                containsInAnyOrder("i3", "i4"));
     }
 
     @Test

@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -81,23 +82,23 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "order by psui.relname, pg_relation_size(i.indexrelid) desc;";
 
     private static final String FOREIGN_KEYS_WITHOUT_INDEX =
-            "select c.conrelid::regclass as table_name, " +
-                    "       string_agg(col.attname, ', ' order by u.attposition) as columns, " +
-                    "       c.conname as constraint_name, pg_get_constraintdef(c.oid) as definition " +
-                    "from pg_constraint c " +
-                    "  join lateral unnest(c.conkey) with ordinality as u(attnum, attposition) on true " +
-                    "  join pg_class t on (c.conrelid = t.oid) " +
-                    "  join pg_attribute col on (col.attrelid = t.oid and col.attnum = u.attnum) " +
-                    "where contype = 'f' " +
-                    "  and not exists ( " +
-                    "    select 1 from pg_index " +
-                    "      where indrelid = c.conrelid and " +
-                    "        (c.conkey::int[] <@ indkey::int[]) and " + // все поля внешнего ключа должны быть в индексе
-                    // порядок полей во внешнем ключе и в индексе совпадает (здесь бы нужно проверить порядок следования
-                    // всех полей, но нам это не нужно, так как у нас нет составных FK)
-                    "        array_position(indkey::int[], (c.conkey::int[])[1]) = 0 " +
-                    "  ) " +
-                    "group by c.conrelid, c.conname, c.oid " +
+            "select c.conrelid::regclass as table_name,\n" +
+                    "       string_agg(col.attname, ', ' order by u.attposition) as columns,\n" +
+                    "       c.conname as constraint_name\n" +
+                    "from pg_constraint c\n" +
+                    "    join lateral unnest(c.conkey) with ordinality as u(attnum, attposition) on true\n" +
+                    "    join pg_class t on (c.conrelid = t.oid)\n" +
+                    "    join pg_namespace nsp on nsp.oid = t.relnamespace\n" +
+                    "    join pg_attribute col on (col.attrelid = t.oid and col.attnum = u.attnum)\n" +
+                    "where contype = 'f' and\n" +
+                    "      nsp.nspname = 'public'::text and\n" +
+                    "      not exists (\n" +
+                    "          select 1 from pg_index\n" +
+                    "          where indrelid = c.conrelid and\n" +
+                    "                (c.conkey::int[] <@ indkey::int[]) and /*все поля внешнего ключа должны быть в индексе*/\n" +
+                    "                array_position(indkey::int[], (c.conkey::int[])[1]) = 0 /*порядок полей во внешнем ключе и в индексе совпадает*/\n" +
+                    "      )\n" +
+                    "group by c.conrelid, c.conname, c.oid\n" +
                     "order by (c.conrelid::regclass)::text, columns;";
 
     private static final String TABLES_WITH_MISSING_INDEXES =
@@ -187,7 +188,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Nonnull
     @Override
     public List<UnusedIndex> getPotentiallyUnusedIndexes() {
-        List<UnusedIndex> unusedIndexes = new ArrayList<>();
+        final List<UnusedIndex> unusedIndexes = new ArrayList<>();
         executeQuery(UNUSED_INDEXES_SQL, rs -> {
             while (rs.next()) {
                 final String tableName = rs.getString("table_name");
@@ -203,7 +204,17 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Nonnull
     @Override
     public List<ForeignKey> getForeignKeysNotCoveredWithIndex() {
-        return null;
+        final List<ForeignKey> foreignKeysWithoutIndex = new ArrayList<>();
+        executeQuery(FOREIGN_KEYS_WITHOUT_INDEX, rs -> {
+            while (rs.next()) {
+                final String tableName = rs.getString("table_name");
+                final String constraintName = rs.getString("constraint_name");
+                final String columnsAsString = rs.getString("columns");
+                final String[] columns = columnsAsString.split(", ");
+                foreignKeysWithoutIndex.add(ForeignKey.of(tableName, constraintName, Arrays.asList(columns)));
+            }
+        });
+        return foreignKeysWithoutIndex;
     }
 
     @Nonnull

@@ -5,6 +5,7 @@
 
 package com.mfvanek.pg.model;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -70,5 +71,13 @@ final class Validators {
             throw new IllegalArgumentException("duplicatedIndexes should contains at least two rows");
         }
         return duplicatedIndexes;
+    }
+
+    @Nonnull
+    static List<String> validateThatNotEmpty(@Nonnull final List<String> columnsInConstraint) {
+        if (CollectionUtils.isEmpty(columnsInConstraint)) {
+            throw new IllegalArgumentException("columnsInConstraint cannot be empty");
+        }
+        return columnsInConstraint;
     }
 }
