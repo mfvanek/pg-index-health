@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DuplicatedIndexes implements TableAware {
+public class DuplicatedIndices implements TableAware {
 
-    private final List<IndexWithSize> duplicatedIndexes;
+    private final List<IndexWithSize> duplicatedIndices;
     private final long totalSize;
 
-    private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
-        this.duplicatedIndexes = List.copyOf(Validators.validateThatTableIsTheSame(duplicatedIndexes));
-        this.totalSize = duplicatedIndexes.stream()
+    private DuplicatedIndices(@Nonnull final List<IndexWithSize> duplicatedIndices) {
+        this.duplicatedIndices = List.copyOf(Validators.validateThatTableIsTheSame(duplicatedIndices));
+        this.totalSize = duplicatedIndices.stream()
                 .mapToLong(IndexWithSize::getIndexSizeInBytes)
                 .sum();
     }
@@ -27,12 +27,12 @@ public class DuplicatedIndexes implements TableAware {
     @Override
     @Nonnull
     public String getTableName() {
-        return duplicatedIndexes.get(0).getTableName();
+        return duplicatedIndices.get(0).getTableName();
     }
 
     @Nonnull
-    public List<IndexWithSize> getDuplicatedIndexes() {
-        return duplicatedIndexes;
+    public List<IndexWithSize> getDuplicatedIndices() {
+        return duplicatedIndices;
     }
 
     public long getTotalSize() {
@@ -41,30 +41,30 @@ public class DuplicatedIndexes implements TableAware {
 
     @Override
     public String toString() {
-        return DuplicatedIndexes.class.getSimpleName() + "{" +
+        return DuplicatedIndices.class.getSimpleName() + "{" +
                 "tableName=\'" + getTableName() + "\'" +
                 ", totalSize=" + totalSize +
-                ", indexes=" + duplicatedIndexes +
+                ", indices=" + duplicatedIndices +
                 "}";
     }
 
-    public static DuplicatedIndexes of(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
-        return new DuplicatedIndexes(duplicatedIndexes);
+    public static DuplicatedIndices of(@Nonnull final List<IndexWithSize> duplicatedIndices) {
+        return new DuplicatedIndices(duplicatedIndices);
     }
 
-    public static DuplicatedIndexes of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
+    public static DuplicatedIndices of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
         Validators.tableNameNotBlank(tableName);
-        final var indexesWithNameAndSize = parseAsIndexNameAndSize(
+        final var indicesWithNameAndSize = parseAsIndexNameAndSize(
                 Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
-        final var duplicatedIndexes = indexesWithNameAndSize.stream()
+        final var duplicatedIndices = indicesWithNameAndSize.stream()
                 .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
-        return new DuplicatedIndexes(duplicatedIndexes);
+        return new DuplicatedIndices(duplicatedIndices);
     }
 
     private static List<Map.Entry<String, Long>> parseAsIndexNameAndSize(@Nonnull final String duplicatedAsString) {
-        final String[] indexes = duplicatedAsString.split("; ");
-        return Arrays.stream(indexes)
+        final String[] indices = duplicatedAsString.split("; ");
+        return Arrays.stream(indices)
                 .map(s -> s.split(", "))
                 .filter(a -> a[0].startsWith("idx=") && a[1].startsWith("size="))
                 .map(a -> {

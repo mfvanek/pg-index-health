@@ -17,17 +17,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class DuplicatedIndexesTest {
+class DuplicatedIndicesTest {
 
     @Test
     void withTheSameTable() {
-        final var index = DuplicatedIndexes.of(List.of(
+        final var index = DuplicatedIndices.of(List.of(
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
         assertNotNull(index);
         assertEquals("t", index.getTableName());
         assertEquals(303L, index.getTotalSize());
-        assertThat(index.getDuplicatedIndexes().stream()
+        assertThat(index.getDuplicatedIndices().stream()
                         .map(IndexWithSize::getIndexName)
                         .collect(Collectors.toList()),
                 containsInAnyOrder("i1", "i2"));
@@ -35,11 +35,11 @@ class DuplicatedIndexesTest {
 
     @Test
     void testToString() {
-        final var duplicatedIndexes = DuplicatedIndexes.of(List.of(
+        final var duplicatedIndexes = DuplicatedIndices.of(List.of(
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
         assertNotNull(duplicatedIndexes);
-        assertEquals("DuplicatedIndexes{tableName='t', totalSize=303, indexes=[" +
+        assertEquals("DuplicatedIndices{tableName='t', totalSize=303, indices=[" +
                         "IndexWithSize{tableName='t', indexName='i1', indexSizeInBytes=101}, " +
                         "IndexWithSize{tableName='t', indexName='i2', indexSizeInBytes=202}]}",
                 duplicatedIndexes.toString());
@@ -47,26 +47,26 @@ class DuplicatedIndexesTest {
 
     @Test
     void withoutIndexes() {
-        assertThrows(NullPointerException.class, () -> DuplicatedIndexes.of(null));
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of(Collections.emptyList()));
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of(
+        assertThrows(NullPointerException.class, () -> DuplicatedIndices.of(null));
+        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndices.of(Collections.emptyList()));
+        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndices.of(
                 Collections.singletonList(IndexWithSize.of("t", "i", 1L))));
     }
 
     @Test
     void withDifferentTables() {
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of(List.of(
+        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndices.of(List.of(
                 IndexWithSize.of("t1", "i1", 1L),
                 IndexWithSize.of("t2", "i2", 2L))));
     }
 
     @Test
     void fromValidString() {
-        final var index = DuplicatedIndexes.of("t", "idx=i3, size=11; idx=i4, size=167");
+        final var index = DuplicatedIndices.of("t", "idx=i3, size=11; idx=i4, size=167");
         assertNotNull(index);
         assertEquals("t", index.getTableName());
         assertEquals(178L, index.getTotalSize());
-        assertThat(index.getDuplicatedIndexes().stream()
+        assertThat(index.getDuplicatedIndices().stream()
                         .map(IndexWithSize::getIndexName)
                         .collect(Collectors.toList()),
                 containsInAnyOrder("i3", "i4"));
@@ -74,11 +74,11 @@ class DuplicatedIndexesTest {
 
     @Test
     void fromInvalidString() {
-        assertThrows(NullPointerException.class, () -> DuplicatedIndexes.of(null, null));
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of("", null));
-        assertThrows(NullPointerException.class, () -> DuplicatedIndexes.of("t", null));
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of("t", ""));
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of("t", "i"));
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of("t", "idx=i1, size=1"));
+        assertThrows(NullPointerException.class, () -> DuplicatedIndices.of(null, null));
+        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndices.of("", null));
+        assertThrows(NullPointerException.class, () -> DuplicatedIndices.of("t", null));
+        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndices.of("t", ""));
+        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndices.of("t", "i"));
+        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndices.of("t", "idx=i1, size=1"));
     }
 }

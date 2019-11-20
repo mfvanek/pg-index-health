@@ -36,7 +36,7 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getInvalidIndexesOnEmptyDataBase() {
-        final var invalidIndexes = indexMaintenance.getInvalidIndexes();
+        final var invalidIndexes = indexMaintenance.getInvalidIndices();
         assertNotNull(invalidIndexes);
         assertEquals(0, invalidIndexes.size());
     }
@@ -46,7 +46,7 @@ class IndexMaintenanceImplTest {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateOnlyTablesAndReferences();
 
-            final var invalidIndexes = indexMaintenance.getInvalidIndexes();
+            final var invalidIndexes = indexMaintenance.getInvalidIndices();
             assertNotNull(invalidIndexes);
             assertEquals(0, invalidIndexes.size());
         }
@@ -58,7 +58,7 @@ class IndexMaintenanceImplTest {
             databasePopulator.populateWithDataAndReferences();
             databasePopulator.createInvalidIndex();
 
-            final var invalidIndexes = indexMaintenance.getInvalidIndexes();
+            final var invalidIndexes = indexMaintenance.getInvalidIndices();
             assertNotNull(invalidIndexes);
             assertEquals(1, invalidIndexes.size());
             final var index = invalidIndexes.get(0);
@@ -69,7 +69,7 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getDuplicatedIndexesOnEmptyDataBase() {
-        final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
+        final var duplicatedIndexes = indexMaintenance.getDuplicatedIndices();
         assertNotNull(duplicatedIndexes);
         assertEquals(0, duplicatedIndexes.size());
     }
@@ -79,7 +79,7 @@ class IndexMaintenanceImplTest {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateOnlyTablesAndReferences();
 
-            final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
+            final var duplicatedIndexes = indexMaintenance.getDuplicatedIndices();
             assertNotNull(duplicatedIndexes);
             assertEquals(0, duplicatedIndexes.size());
         }
@@ -91,13 +91,13 @@ class IndexMaintenanceImplTest {
             databasePopulator.populateWithDataAndReferences();
             databasePopulator.createDuplicatedIndex();
 
-            final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
+            final var duplicatedIndexes = indexMaintenance.getDuplicatedIndices();
             assertNotNull(duplicatedIndexes);
             assertEquals(1, duplicatedIndexes.size());
             final var entry = duplicatedIndexes.get(0);
             assertEquals("accounts", entry.getTableName());
             assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
-            final var indexes = entry.getDuplicatedIndexes();
+            final var indexes = entry.getDuplicatedIndices();
             assertEquals(2, indexes.size());
             assertThat(indexes.stream()
                             .map(IndexWithSize::getIndexName)
@@ -108,7 +108,7 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getIntersectedIndexesOnEmptyDataBase() {
-        final var intersectedIndexes = indexMaintenance.getIntersectedIndexes();
+        final var intersectedIndexes = indexMaintenance.getIntersectedIndices();
         assertNotNull(intersectedIndexes);
         assertEquals(0, intersectedIndexes.size());
     }
@@ -118,7 +118,7 @@ class IndexMaintenanceImplTest {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateOnlyTablesAndReferences();
 
-            final var intersectedIndexes = indexMaintenance.getIntersectedIndexes();
+            final var intersectedIndexes = indexMaintenance.getIntersectedIndices();
             assertNotNull(intersectedIndexes);
             assertEquals(0, intersectedIndexes.size());
         }
@@ -130,13 +130,13 @@ class IndexMaintenanceImplTest {
             databasePopulator.populateWithDataAndReferences();
             databasePopulator.createDuplicatedIndex();
 
-            final var intersectedIndexes = indexMaintenance.getIntersectedIndexes();
+            final var intersectedIndexes = indexMaintenance.getIntersectedIndices();
             assertNotNull(intersectedIndexes);
             assertEquals(1, intersectedIndexes.size());
             final var entry = intersectedIndexes.get(0);
             assertEquals("clients", entry.getTableName());
             assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
-            final var indexes = entry.getDuplicatedIndexes();
+            final var indexes = entry.getDuplicatedIndices();
             assertEquals(2, indexes.size());
             assertThat(indexes.stream()
                             .map(IndexWithSize::getIndexName)
@@ -147,7 +147,7 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getPotentiallyUnusedIndexesOnEmptyDataBase() {
-        final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+        final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndices();
         assertNotNull(unusedIndexes);
         assertEquals(0, unusedIndexes.size());
     }
@@ -157,7 +157,7 @@ class IndexMaintenanceImplTest {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateOnlyTablesAndReferences();
 
-            final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+            final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndices();
             assertNotNull(unusedIndexes);
             assertEquals(0, unusedIndexes.size());
         }
@@ -169,7 +169,7 @@ class IndexMaintenanceImplTest {
             databasePopulator.populateWithDataAndReferences();
             databasePopulator.createDuplicatedIndex();
 
-            final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+            final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndices();
             assertNotNull(unusedIndexes);
             assertThat(unusedIndexes.size(), equalTo(2));
             final var names = unusedIndexes.stream().map(UnusedIndex::getIndexName).collect(toSet());

@@ -5,7 +5,7 @@
 
 package com.mfvanek.pg.index.health;
 
-import com.mfvanek.pg.model.DuplicatedIndexes;
+import com.mfvanek.pg.model.DuplicatedIndices;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
@@ -22,22 +22,22 @@ public interface IndexMaintenance {
      * Список невалидных (битых) индексов, которые нужно удалить или переиндексировать.
      */
     @Nonnull
-    List<Index> getInvalidIndexes();
+    List<Index> getInvalidIndices();
 
     /**
      * Список дублирующихся (полностью идентичных) индексов (кандидаты на удаление).
      */
     @Nonnull
-    List<DuplicatedIndexes> getDuplicatedIndexes();
+    List<DuplicatedIndices> getDuplicatedIndices();
 
     /**
      * Список пересекающихся по полям индексов (частично идентичных, кандидаты на удаление).
      */
     @Nonnull
-    List<DuplicatedIndexes> getIntersectedIndexes();
+    List<DuplicatedIndices> getIntersectedIndices();
 
     @Nonnull
-    List<UnusedIndex> getPotentiallyUnusedIndexes();
+    List<UnusedIndex> getPotentiallyUnusedIndices();
 
     @Nonnull
     List<ForeignKey> getForeignKeysNotCoveredWithIndex();
@@ -46,7 +46,7 @@ public interface IndexMaintenance {
      * Список таблиц с потенциально отсутствующими индексами.
      */
     @Nonnull
-    List<TableWithMissingIndex> getTablesWithMissingIndexes();
+    List<TableWithMissingIndex> getTablesWithMissingIndices();
 
     /**
      * Список таблиц без первичного ключа.
@@ -58,5 +58,5 @@ public interface IndexMaintenance {
      * Список индексов, содержащих null значения.
      */
     @Nonnull
-    List<IndexWithNulls> getIndexesWithNullValues();
+    List<IndexWithNulls> getIndicesWithNullValues();
 }

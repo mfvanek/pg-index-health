@@ -5,7 +5,7 @@
 
 package com.mfvanek.pg.index.health;
 
-import com.mfvanek.pg.model.DuplicatedIndexes;
+import com.mfvanek.pg.model.DuplicatedIndices;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
@@ -26,15 +26,15 @@ import java.util.Objects;
 
 public class IndexMaintenanceImpl implements IndexMaintenance {
 
-    private static final String INVALID_INDEXES_SQL =
+    private static final String INVALID_INDICES_SQL =
             "select x.indrelid::regclass as table_name, x.indexrelid::regclass as index_name\n" +
                     "from pg_index x\n" +
                     "join pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid\n" +
                     "where x.indisvalid = false and psai.schemaname = 'public'::text;";
 
-    private static final String DUPLICATED_INDEXES_SQL =
+    private static final String DUPLICATED_INDICES_SQL =
             "select table_name,\n" +
-                    "       string_agg('idx=' || idx::text || ', size=' || pg_relation_size(idx), '; ') as duplicated_indexes\n" +
+                    "       string_agg('idx=' || idx::text || ', size=' || pg_relation_size(idx), '; ') as duplicated_indices\n" +
                     "from (\n" +
                     "       select x.indexrelid::regclass as idx, x.indrelid::regclass as table_name,\n" +
                     "              (x.indrelid::text ||' '|| x.indclass::text ||' '|| x.indkey::text ||' '||\n" +
@@ -47,10 +47,10 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "group by table_name, key having count(*) > 1\n" +
                     "order by table_name, sum(pg_relation_size(idx)) desc;";
 
-    private static final String INTERSECTED_INDEXES_SQL =
+    private static final String INTERSECTED_INDICES_SQL =
             "select a.indrelid::regclass as table_name,\n" +
                     "       'idx=' || a.indexrelid::regclass || ', size=' || pg_relation_size(a.indexrelid) || '; idx=' ||\n" +
-                    "           b.indexrelid::regclass || ', size=' || pg_relation_size(b.indexrelid) as intersected_indexes\n" +
+                    "           b.indexrelid::regclass || ', size=' || pg_relation_size(b.indexrelid) as intersected_indices\n" +
                     "from (\n" +
                     "    select *, array_to_string(indkey, ' ') as cols from pg_index) as a\n" +
                     "    join (select *, array_to_string(indkey, ' ') as cols from pg_index) as b\n" +
@@ -59,8 +59,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "            (b.cols like a.cols||'%' and coalesce(substr(b.cols, length(a.cols)+1, 1), ' ') = ' ')))\n" +
                     "order by a.indrelid::regclass::text;";
 
-    private static final String UNUSED_INDEXES_SQL =
-            "with foreign_key_indexes as (\n" +
+    private static final String UNUSED_INDICES_SQL =
+            "with foreign_key_indices as (\n" +
                     "    select i.indexrelid\n" +
                     "    from pg_constraint c\n" +
                     "        join lateral unnest(c.conkey) with ordinality as u(attnum, attposition) on true\n" +
@@ -75,10 +75,10 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "    join pg_index i on psui.indexrelid = i.indexrelid\n" +
                     "where\n" +
                     "      psui.schemaname = 'public'::text and not i.indisunique and\n" +
-                    "      i.indexrelid not in (select * from foreign_key_indexes) and /*retain indexes on foreign keys*/\n" +
-                    "      psui.idx_scan < 50 and\n" +
-                    "      pg_relation_size(psui.relid) >= 5 * 8192 and /*skip small tables*/\n" +
-                    "      pg_relation_size(psui.indexrelid) >= 5 * 8192 /*skip small indexes*/\n" +
+                    "      i.indexrelid not in (select * from foreign_key_indices) and /*retain indices on foreign keys*/\n" +
+                    "      psui.idx_scan < 50::integer and\n" +
+                    "      pg_relation_size(psui.relid) >= 5::integer * 8192 and /*skip small tables*/\n" +
+                    "      pg_relation_size(psui.indexrelid) >= 5::integer * 8192 /*skip small indices*/\n" +
                     "order by psui.relname, pg_relation_size(i.indexrelid) desc;";
 
     private static final String FOREIGN_KEYS_WITHOUT_INDEX =
@@ -101,26 +101,27 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "group by c.conrelid, c.conname, c.oid\n" +
                     "order by (c.conrelid::regclass)::text, columns;";
 
-    private static final String TABLES_WITH_MISSING_INDEXES =
-            "with tables_without_indexes as ( " +
-                    "  select " +
-                    "    relname as table_name, " +
-                    "    coalesce(seq_scan, 0) - coalesce(idx_scan, 0) as too_much_seq, " +
-                    "    pg_relation_size(relname::regclass) as table_size, " +
-                    "    coalesce(seq_scan, 0) as seq_scan, " +
-                    "    coalesce(idx_scan, 0) as idx_scan " +
-                    "  from pg_stat_all_tables " +
-                    "  where " +
-                    "      schemaname = 'public' and " +
-                    "      pg_relation_size(relname::regclass) > ?::integer * 8192 and " + // skip small tables
-                    "      relname not in ('databasechangelog') " +
-                    ") " +
-                    "select table_name, seq_scan, idx_scan " +
-                    "from tables_without_indexes " +
-                    "where " +
-                    "    (seq_scan + idx_scan) > 100 and " + // table in use
-                    "    too_much_seq > 0 " + // too much sequential scans
-                    "order by too_much_seq desc;";
+    private static final String TABLES_WITH_MISSING_INDICES =
+            "with tables_without_indices as (\n" +
+                    "    select\n" +
+                    "        relname::text as table_name,\n" +
+                    "        coalesce(seq_scan, 0) - coalesce(idx_scan, 0) as too_much_seq,\n" +
+                    "        pg_relation_size(relname::regclass) as table_size,\n" +
+                    "        coalesce(seq_scan, 0) as seq_scan,\n" +
+                    "        coalesce(idx_scan, 0) as idx_scan\n" +
+                    "    from pg_stat_all_tables\n" +
+                    "    where\n" +
+                    "          schemaname = 'public'::text and\n" +
+                    "          pg_relation_size(relname::regclass) > 5::integer * 8192 and /*skip small tables*/\n" +
+                    "          relname not in ('databasechangelog')\n" +
+                    ")\n" +
+                    "select table_name,\n" +
+                    "       seq_scan,\n" +
+                    "       idx_scan\n" +
+                    "from tables_without_indices\n" +
+                    "where (seq_scan + idx_scan) > 100::integer and /*table in use*/\n" +
+                    "      too_much_seq > 0 -- too much sequential scans\n" +
+                    "order by table_name, too_much_seq desc;";
 
     private static final String TABLES_WITHOUT_PRIMARY_KEYS =
             "select tablename as table_name " +
@@ -134,7 +135,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "      tablename not in ('databasechangelog') " +
                     "order by tablename;";
 
-    private static final String INDEXES_WITH_NULL_VALUES =
+    private static final String INDICES_WITH_NULL_VALUES =
             "select x.indrelid::regclass as table_name, " +
                     "       x.indexrelid::regclass as index_name, " +
                     "       string_agg(a.attname, ', ') as nullable_field, " +
@@ -161,44 +162,44 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<Index> getInvalidIndexes() {
-        final List<Index> invalidIndexes = new ArrayList<>();
-        executeQuery(INVALID_INDEXES_SQL, rs -> {
+    public List<Index> getInvalidIndices() {
+        final List<Index> invalidIndices = new ArrayList<>();
+        executeQuery(INVALID_INDICES_SQL, rs -> {
             while (rs.next()) {
                 final String tableName = rs.getString("table_name");
                 final String indexName = rs.getString("index_name");
-                    invalidIndexes.add(Index.of(tableName, indexName));
+                invalidIndices.add(Index.of(tableName, indexName));
             }
         });
-        return invalidIndexes;
+        return invalidIndices;
     }
 
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> getDuplicatedIndexes() {
-        return getDuplicatedOrIntersectedIndexes(DUPLICATED_INDEXES_SQL, "duplicated_indexes");
+    public List<DuplicatedIndices> getDuplicatedIndices() {
+        return getDuplicatedOrIntersectedIndices(DUPLICATED_INDICES_SQL, "duplicated_indices");
     }
 
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> getIntersectedIndexes() {
-        return getDuplicatedOrIntersectedIndexes(INTERSECTED_INDEXES_SQL, "intersected_indexes");
+    public List<DuplicatedIndices> getIntersectedIndices() {
+        return getDuplicatedOrIntersectedIndices(INTERSECTED_INDICES_SQL, "intersected_indices");
     }
 
     @Nonnull
     @Override
-    public List<UnusedIndex> getPotentiallyUnusedIndexes() {
-        final List<UnusedIndex> unusedIndexes = new ArrayList<>();
-        executeQuery(UNUSED_INDEXES_SQL, rs -> {
+    public List<UnusedIndex> getPotentiallyUnusedIndices() {
+        final List<UnusedIndex> unusedIndices = new ArrayList<>();
+        executeQuery(UNUSED_INDICES_SQL, rs -> {
             while (rs.next()) {
                 final String tableName = rs.getString("table_name");
                 final String indexName = rs.getString("index_name");
                 final long indexSize = rs.getLong("index_size");
                 final long indexScans = rs.getLong("index_scans");
-                unusedIndexes.add(UnusedIndex.of(tableName, indexName, indexSize, indexScans));
+                unusedIndices.add(UnusedIndex.of(tableName, indexName, indexSize, indexScans));
             }
         });
-        return unusedIndexes;
+        return unusedIndices;
     }
 
     @Nonnull
@@ -219,8 +220,17 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<TableWithMissingIndex> getTablesWithMissingIndexes() {
-        return null;
+    public List<TableWithMissingIndex> getTablesWithMissingIndices() {
+        final List<TableWithMissingIndex> tableWithMissingIndices = new ArrayList<>();
+        executeQuery(TABLES_WITH_MISSING_INDICES, rs -> {
+            while (rs.next()) {
+                final String tableName = rs.getString("table_name");
+                final long seqScans = rs.getLong("seq_scan");
+                final long indexScans = rs.getLong("idx_scan");
+                tableWithMissingIndices.add(TableWithMissingIndex.of(tableName, seqScans, indexScans));
+            }
+        });
+        return tableWithMissingIndices;
     }
 
     @Nonnull
@@ -231,22 +241,22 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<IndexWithNulls> getIndexesWithNullValues() {
+    public List<IndexWithNulls> getIndicesWithNullValues() {
         return null;
     }
 
     @Nonnull
-    private List<DuplicatedIndexes> getDuplicatedOrIntersectedIndexes(@Nonnull final String sqlQuery,
+    private List<DuplicatedIndices> getDuplicatedOrIntersectedIndices(@Nonnull final String sqlQuery,
                                                                       @Nonnull final String columnName) {
-        final List<DuplicatedIndexes> indexes = new ArrayList<>();
+        final List<DuplicatedIndices> indices = new ArrayList<>();
         executeQuery(sqlQuery, rs -> {
             while (rs.next()) {
                 final String tableName = rs.getString("table_name");
                 final String duplicatedAsString = rs.getString(columnName);
-                indexes.add(DuplicatedIndexes.of(tableName, duplicatedAsString));
+                indices.add(DuplicatedIndices.of(tableName, duplicatedAsString));
             }
         });
-        return indexes;
+        return indices;
     }
 
     private void executeQuery(@Nonnull final String sqlQuery, ResultSetExtractor rse) {
