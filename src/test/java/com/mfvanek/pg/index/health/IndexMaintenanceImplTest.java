@@ -35,71 +35,71 @@ class IndexMaintenanceImplTest {
             embeddedPostgres.getTestDatabase());
 
     @Test
-    void getInvalidIndexesOnEmptyDataBase() {
-        final var invalidIndexes = indexMaintenance.getInvalidIndices();
-        assertNotNull(invalidIndexes);
-        assertEquals(0, invalidIndexes.size());
+    void getInvalidIndicesOnEmptyDataBase() {
+        final var invalidIndices = indexMaintenance.getInvalidIndices();
+        assertNotNull(invalidIndices);
+        assertEquals(0, invalidIndices.size());
     }
 
     @Test
-    void getInvalidIndexesOnDatabaseWithoutThem() throws SQLException {
+    void getInvalidIndicesOnDatabaseWithoutThem() throws SQLException {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateOnlyTablesAndReferences();
 
-            final var invalidIndexes = indexMaintenance.getInvalidIndices();
-            assertNotNull(invalidIndexes);
-            assertEquals(0, invalidIndexes.size());
+            final var invalidIndices = indexMaintenance.getInvalidIndices();
+            assertNotNull(invalidIndices);
+            assertEquals(0, invalidIndices.size());
         }
     }
 
     @Test
-    void getInvalidIndexesOnDatabaseWithThem() throws SQLException {
+    void getInvalidIndicesOnDatabaseWithThem() throws SQLException {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateWithDataAndReferences();
             databasePopulator.createInvalidIndex();
 
-            final var invalidIndexes = indexMaintenance.getInvalidIndices();
-            assertNotNull(invalidIndexes);
-            assertEquals(1, invalidIndexes.size());
-            final var index = invalidIndexes.get(0);
+            final var invalidIndices = indexMaintenance.getInvalidIndices();
+            assertNotNull(invalidIndices);
+            assertEquals(1, invalidIndices.size());
+            final var index = invalidIndices.get(0);
             assertEquals("clients", index.getTableName());
             assertEquals("i_clients_last_name_first_name", index.getIndexName());
         }
     }
 
     @Test
-    void getDuplicatedIndexesOnEmptyDataBase() {
-        final var duplicatedIndexes = indexMaintenance.getDuplicatedIndices();
-        assertNotNull(duplicatedIndexes);
-        assertEquals(0, duplicatedIndexes.size());
+    void getDuplicatedIndicesOnEmptyDataBase() {
+        final var duplicatedIndices = indexMaintenance.getDuplicatedIndices();
+        assertNotNull(duplicatedIndices);
+        assertEquals(0, duplicatedIndices.size());
     }
 
     @Test
-    void getDuplicatedIndexesOnDatabaseWithoutThem() throws SQLException {
+    void getDuplicatedIndicesOnDatabaseWithoutThem() throws SQLException {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateOnlyTablesAndReferences();
 
-            final var duplicatedIndexes = indexMaintenance.getDuplicatedIndices();
-            assertNotNull(duplicatedIndexes);
-            assertEquals(0, duplicatedIndexes.size());
+            final var duplicatedIndices = indexMaintenance.getDuplicatedIndices();
+            assertNotNull(duplicatedIndices);
+            assertEquals(0, duplicatedIndices.size());
         }
     }
 
     @Test
-    void getDuplicatedIndexesOnDatabaseWithThem() throws SQLException {
+    void getDuplicatedIndicesOnDatabaseWithThem() throws SQLException {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateWithDataAndReferences();
             databasePopulator.createDuplicatedIndex();
 
-            final var duplicatedIndexes = indexMaintenance.getDuplicatedIndices();
-            assertNotNull(duplicatedIndexes);
-            assertEquals(1, duplicatedIndexes.size());
-            final var entry = duplicatedIndexes.get(0);
+            final var duplicatedIndices = indexMaintenance.getDuplicatedIndices();
+            assertNotNull(duplicatedIndices);
+            assertEquals(1, duplicatedIndices.size());
+            final var entry = duplicatedIndices.get(0);
             assertEquals("accounts", entry.getTableName());
             assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
-            final var indexes = entry.getDuplicatedIndices();
-            assertEquals(2, indexes.size());
-            assertThat(indexes.stream()
+            final var indices = entry.getDuplicatedIndices();
+            assertEquals(2, indices.size());
+            assertThat(indices.stream()
                             .map(IndexWithSize::getIndexName)
                             .collect(Collectors.toList()),
                     containsInAnyOrder("accounts_account_number_key", "i_accounts_account_number"));
@@ -107,38 +107,38 @@ class IndexMaintenanceImplTest {
     }
 
     @Test
-    void getIntersectedIndexesOnEmptyDataBase() {
-        final var intersectedIndexes = indexMaintenance.getIntersectedIndices();
-        assertNotNull(intersectedIndexes);
-        assertEquals(0, intersectedIndexes.size());
+    void getIntersectedIndicesOnEmptyDataBase() {
+        final var intersectedIndices = indexMaintenance.getIntersectedIndices();
+        assertNotNull(intersectedIndices);
+        assertEquals(0, intersectedIndices.size());
     }
 
     @Test
-    void getIntersectedIndexesOnDatabaseWithoutThem() throws SQLException {
+    void getIntersectedIndicesOnDatabaseWithoutThem() throws SQLException {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateOnlyTablesAndReferences();
 
-            final var intersectedIndexes = indexMaintenance.getIntersectedIndices();
-            assertNotNull(intersectedIndexes);
-            assertEquals(0, intersectedIndexes.size());
+            final var intersectedIndices = indexMaintenance.getIntersectedIndices();
+            assertNotNull(intersectedIndices);
+            assertEquals(0, intersectedIndices.size());
         }
     }
 
     @Test
-    void getIntersectedIndexesOnDatabaseWithThem() throws SQLException {
+    void getIntersectedIndicesOnDatabaseWithThem() throws SQLException {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateWithDataAndReferences();
             databasePopulator.createDuplicatedIndex();
 
-            final var intersectedIndexes = indexMaintenance.getIntersectedIndices();
-            assertNotNull(intersectedIndexes);
-            assertEquals(1, intersectedIndexes.size());
-            final var entry = intersectedIndexes.get(0);
+            final var intersectedIndices = indexMaintenance.getIntersectedIndices();
+            assertNotNull(intersectedIndices);
+            assertEquals(1, intersectedIndices.size());
+            final var entry = intersectedIndices.get(0);
             assertEquals("clients", entry.getTableName());
             assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
-            final var indexes = entry.getDuplicatedIndices();
-            assertEquals(2, indexes.size());
-            assertThat(indexes.stream()
+            final var indices = entry.getDuplicatedIndices();
+            assertEquals(2, indices.size());
+            assertThat(indices.stream()
                             .map(IndexWithSize::getIndexName)
                             .collect(Collectors.toList()),
                     containsInAnyOrder("i_clients_last_first", "i_clients_last_name"));
@@ -146,33 +146,33 @@ class IndexMaintenanceImplTest {
     }
 
     @Test
-    void getPotentiallyUnusedIndexesOnEmptyDataBase() {
-        final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndices();
-        assertNotNull(unusedIndexes);
-        assertEquals(0, unusedIndexes.size());
+    void getPotentiallyUnusedIndicesOnEmptyDataBase() {
+        final var unusedIndices = indexMaintenance.getPotentiallyUnusedIndices();
+        assertNotNull(unusedIndices);
+        assertEquals(0, unusedIndices.size());
     }
 
     @Test
-    void getPotentiallyUnusedIndexesOnDatabaseWithoutThem() throws SQLException {
+    void getPotentiallyUnusedIndicesOnDatabaseWithoutThem() throws SQLException {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateOnlyTablesAndReferences();
 
-            final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndices();
-            assertNotNull(unusedIndexes);
-            assertEquals(0, unusedIndexes.size());
+            final var unusedIndices = indexMaintenance.getPotentiallyUnusedIndices();
+            assertNotNull(unusedIndices);
+            assertEquals(0, unusedIndices.size());
         }
     }
 
     @Test
-    void getPotentiallyUnusedIndexesOnDatabaseWithThem() throws SQLException {
+    void getPotentiallyUnusedIndicesOnDatabaseWithThem() throws SQLException {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateWithDataAndReferences();
             databasePopulator.createDuplicatedIndex();
 
-            final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndices();
-            assertNotNull(unusedIndexes);
-            assertThat(unusedIndexes.size(), equalTo(2));
-            final var names = unusedIndexes.stream().map(UnusedIndex::getIndexName).collect(toSet());
+            final var unusedIndices = indexMaintenance.getPotentiallyUnusedIndices();
+            assertNotNull(unusedIndices);
+            assertThat(unusedIndices.size(), equalTo(2));
+            final var names = unusedIndices.stream().map(UnusedIndex::getIndexName).collect(toSet());
             assertThat(names, containsInAnyOrder("i_clients_last_first", "i_clients_last_name"));
         }
     }
