@@ -112,8 +112,8 @@ public final class DatabasePopulator implements AutoCloseable {
     private void createTableAccounts() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute("create sequence if not exists accounts_seq");
-            statement.execute("create table if not exists accounts (" +
+            statement.execute("create sequence accounts_seq");
+            statement.execute("create table accounts (" +
                     "id bigint not null primary key default nextval('accounts_seq'), " +
                     "client_id bigint not null," +
                     "account_number varchar(50) not null unique, " +
@@ -159,6 +159,7 @@ public final class DatabasePopulator implements AutoCloseable {
                 final String accountNumber = generateAccountNumber(clientId);
                 insertAccountStatement.setLong(1, clientId);
                 insertAccountStatement.setString(2, accountNumber);
+                insertAccountStatement.executeUpdate();
             }
             // Insert at least one duplicated client row
             final long clientId = getNextClientIdFromSequence(connection);

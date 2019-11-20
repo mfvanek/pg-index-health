@@ -13,7 +13,9 @@ import com.opentable.db.postgres.junit5.PreparedDbExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
@@ -171,9 +173,9 @@ class IndexMaintenanceImplTest {
 
             final var unusedIndices = indexMaintenance.getPotentiallyUnusedIndices();
             assertNotNull(unusedIndices);
-            assertThat(unusedIndices.size(), equalTo(2));
+            assertThat(unusedIndices.size(), equalTo(3));
             final var names = unusedIndices.stream().map(UnusedIndex::getIndexName).collect(toSet());
-            assertThat(names, containsInAnyOrder("i_clients_last_first", "i_clients_last_name"));
+            assertThat(names, containsInAnyOrder("i_clients_last_first", "i_clients_last_name", "i_accounts_account_number"));
         }
     }
 
@@ -216,6 +218,49 @@ class IndexMaintenanceImplTest {
             foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
             assertNotNull(foreignKeys);
             assertEquals(0, foreignKeys.size());
+        }
+    }
+
+    @Test
+    void getTablesWithMissingIndicesOnEmptyDataBase() {
+        final var tables = indexMaintenance.getTablesWithMissingIndices();
+        assertNotNull(tables);
+        assertEquals(0, tables.size());
+    }
+
+    @Test
+    void getTablesWithMissingIndicesOnDatabaseWithoutThem() throws SQLException {
+        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
+            databasePopulator.populateWithDataAndReferences();
+
+            final var tables = indexMaintenance.getTablesWithMissingIndices();
+            assertNotNull(tables);
+            assertEquals(0, tables.size());
+        }
+    }
+
+    @Test
+    void getTablesWithMissingIndicesOnDatabaseWithThem() throws SQLException {
+        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
+            databasePopulator.populateWithDataAndReferences();
+            tryToFindAccountByClientId(101);
+
+            var tables = indexMaintenance.getTablesWithMissingIndices();
+            assertNotNull(tables);
+            assertEquals(1, tables.size());
+            var table = tables.get(0);
+            assertEquals("accounts", table.getTableName());
+            assertThat(table.getSeqScans(), greaterThanOrEqualTo(101L));
+            assertEquals(0, table.getIndexScans());
+        }
+    }
+
+    private void tryToFindAccountByClientId(final int amountOfTries) throws SQLException {
+        try (Connection connection = embeddedPostgres.getTestDatabase().getConnection();
+             Statement statement = connection.createStatement()) {
+            for (int counter = 0; counter < amountOfTries; ++counter) {
+                statement.execute("select count(*) from accounts where client_id = 1::bigint");
+            }
         }
     }
 }
