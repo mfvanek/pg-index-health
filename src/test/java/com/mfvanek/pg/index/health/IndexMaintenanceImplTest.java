@@ -13,9 +13,7 @@ import com.opentable.db.postgres.junit5.PreparedDbExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
@@ -243,7 +241,7 @@ class IndexMaintenanceImplTest {
     void getTablesWithMissingIndicesOnDatabaseWithThem() throws SQLException {
         try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
             databasePopulator.populateWithDataAndReferences();
-            tryToFindAccountByClientId(101);
+            databasePopulator.tryToFindAccountByClientId(101);
 
             var tables = indexMaintenance.getTablesWithMissingIndices();
             assertNotNull(tables);
@@ -255,12 +253,35 @@ class IndexMaintenanceImplTest {
         }
     }
 
-    private void tryToFindAccountByClientId(final int amountOfTries) throws SQLException {
-        try (Connection connection = embeddedPostgres.getTestDatabase().getConnection();
-             Statement statement = connection.createStatement()) {
-            for (int counter = 0; counter < amountOfTries; ++counter) {
-                statement.execute("select count(*) from accounts where client_id = 1::bigint");
-            }
+    @Test
+    void getTablesWithoutPrimaryKeyOnEmptyDataBase() {
+        final var tables = indexMaintenance.getTablesWithoutPrimaryKey();
+        assertNotNull(tables);
+        assertEquals(0, tables.size());
+    }
+
+    @Test
+    void getTablesWithoutPrimaryKeyOnDatabaseWithoutThem() throws SQLException {
+        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
+            databasePopulator.populateWithDataAndReferences();
+
+            final var tables = indexMaintenance.getTablesWithoutPrimaryKey();
+            assertNotNull(tables);
+            assertEquals(0, tables.size());
+        }
+    }
+
+    @Test
+    void getTablesWithoutPrimaryKeyOnDatabaseWithThem() throws SQLException {
+        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
+            databasePopulator.populateWithDataAndReferences();
+            databasePopulator.createTableWithoutPrimaryKey();
+
+            var tables = indexMaintenance.getTablesWithoutPrimaryKey();
+            assertNotNull(tables);
+            assertEquals(1, tables.size());
+            var table = tables.get(0);
+            assertEquals("bad_clients", table.getTableName());
         }
     }
 }

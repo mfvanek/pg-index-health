@@ -124,15 +124,15 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "order by table_name, too_much_seq desc;";
 
     private static final String TABLES_WITHOUT_PRIMARY_KEYS =
-            "select tablename as table_name " +
-                    "from pg_tables " +
-                    "where " +
-                    "      schemaname = 'public' and " +
-                    "      tablename not in ( " +
-                    "          select c.conrelid::regclass::text as table_name " +
-                    "          from pg_constraint c " +
-                    "          where contype = 'p') and " +
-                    "      tablename not in ('databasechangelog') " +
+            "select tablename as table_name\n" +
+                    "from pg_tables\n" +
+                    "where\n" +
+                    "    schemaname = 'public'::text and\n" +
+                    "    tablename not in (\n" +
+                    "    select c.conrelid::regclass::text as table_name\n" +
+                    "    from pg_constraint c\n" +
+                    "    where contype = 'p') and\n" +
+                    "    tablename not in ('databasechangelog')\n" +
                     "order by tablename;";
 
     private static final String INDICES_WITH_NULL_VALUES =
@@ -236,7 +236,14 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Nonnull
     @Override
     public List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey() {
-        return null;
+        final List<TableWithoutPrimaryKey> tableWithoutPrimaryKeys = new ArrayList<>();
+        executeQuery(TABLES_WITHOUT_PRIMARY_KEYS, rs -> {
+            while (rs.next()) {
+                final String tableName = rs.getString("table_name");
+                tableWithoutPrimaryKeys.add(TableWithoutPrimaryKey.of(tableName));
+            }
+        });
+        return tableWithoutPrimaryKeys;
     }
 
     @Nonnull

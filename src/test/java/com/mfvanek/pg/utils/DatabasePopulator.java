@@ -200,6 +200,30 @@ public final class DatabasePopulator implements AutoCloseable {
 
             statement.execute("drop table if exists clients");
             statement.execute("drop sequence if exists clients_seq");
+
+            statement.execute("drop table if exists bad_clients");
+        }
+    }
+
+    public void tryToFindAccountByClientId(final int amountOfTries) {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            for (int counter = 0; counter < amountOfTries; ++counter) {
+                statement.execute("select count(*) from accounts where client_id = 1::bigint");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void createTableWithoutPrimaryKey() {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute("create table bad_clients (" +
+                    "id bigint not null, " +
+                    "name varchar(255) not null)");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

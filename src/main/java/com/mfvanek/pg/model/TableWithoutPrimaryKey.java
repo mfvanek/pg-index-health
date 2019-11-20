@@ -15,7 +15,7 @@ public class TableWithoutPrimaryKey implements TableAware {
 
     private final String tableName;
 
-    public TableWithoutPrimaryKey(@Nonnull String tableName) {
+    private TableWithoutPrimaryKey(@Nonnull final String tableName) {
         this.tableName = Validators.tableNameNotBlank(tableName);
     }
 
@@ -30,5 +30,9 @@ public class TableWithoutPrimaryKey implements TableAware {
         return TableWithoutPrimaryKey.class.getSimpleName() + "{" +
                 "tableName=\'" + tableName + "\'" +
                 "}";
+    }
+
+    public static TableWithoutPrimaryKey of(@Nonnull final String tableName) {
+        return new TableWithoutPrimaryKey(tableName);
     }
 }
