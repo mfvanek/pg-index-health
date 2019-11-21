@@ -6,7 +6,6 @@
 package com.mfvanek.pg.model;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 public final class IndexWithNulls extends IndexWithSize {
 
@@ -17,7 +16,7 @@ public final class IndexWithNulls extends IndexWithSize {
                            long indexSizeInBytes,
                            @Nonnull String nullableField) {
         super(tableName, indexName, indexSizeInBytes);
-        this.nullableField = Objects.requireNonNull(nullableField);
+        this.nullableField = Validators.notBlank(nullableField, "nullableField");
     }
 
     @Nonnull
@@ -29,7 +28,7 @@ public final class IndexWithNulls extends IndexWithSize {
     public String toString() {
         return IndexWithNulls.class.getSimpleName() + "{" +
                 innerToString() +
-                ", nullableField=" + nullableField +
+                ", nullableField=\'" + nullableField + "\'" +
                 "}";
     }
 
