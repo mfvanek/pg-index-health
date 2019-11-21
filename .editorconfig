@@ -9,6 +9,7 @@ tab_width = 4
 ij_continuation_indent_size = 8
 
 [*.java]
+ij_java_imports_layout = *,|,javax.**,java.**,|,$*
 ij_java_align_multiline_parameters = true
 ij_java_blank_lines_after_class_header = 1
 ij_java_blank_lines_after_imports = 1

@@ -136,23 +136,20 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "order by tablename;";
 
     private static final String INDICES_WITH_NULL_VALUES =
-            "select x.indrelid::regclass as table_name, " +
-                    "       x.indexrelid::regclass as index_name, " +
-                    "       string_agg(a.attname, ', ') as nullable_field, " +
-                    "       pg_relation_size(x.indexrelid) as index_size " +
-                    "from " +
-                    "     pg_index x " +
-                    "     join pg_stat_all_indexes psai " +
-                    "         on x.indexrelid = psai.indexrelid and psai.schemaname = 'public'::text " +
-                    "     join pg_attribute a ON a.attrelid = x.indrelid AND a.attnum = any(x.indkey) " +
-                    "where " +
-                    "      not x.indisunique and " +
-                    "      not a.attnotnull and " +
-                    "      array_position(x.indkey, a.attnum) = 0 and " + // only for first segment
-                    "      (x.indpred is null or " +
-                    "          (position(lower(a.attname) in lower(pg_get_expr(x.indpred, x.indrelid))) = 0)) " +
-                    "group by x.indrelid, x.indexrelid, x.indpred " +
-                    "order by 1,2";
+            "select x.indrelid::regclass as table_name,\n" +
+                    "       x.indexrelid::regclass as index_name,\n" +
+                    "       string_agg(a.attname, ', ') as nullable_fields,\n" +
+                    "       pg_relation_size(x.indexrelid) as index_size\n" +
+                    "from pg_index x\n" +
+                    "    join pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid\n" +
+                    "    join pg_attribute a ON a.attrelid = x.indrelid AND a.attnum = any(x.indkey)\n" +
+                    "where not x.indisunique and\n" +
+                    "      not a.attnotnull and\n" +
+                    "      psai.schemaname = 'public'::text and\n" +
+                    "      array_position(x.indkey, a.attnum) = 0 and -- only for first segment\n" +
+                    "      (x.indpred is null or (position(lower(a.attname) in lower(pg_get_expr(x.indpred, x.indrelid))) = 0))\n" +
+                    "group by x.indrelid, x.indexrelid, x.indpred\n" +
+                    "order by table_name, index_name;";
 
     private final DataSource dataSource;
 
@@ -249,7 +246,17 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Nonnull
     @Override
     public List<IndexWithNulls> getIndicesWithNullValues() {
-        return null;
+        final List<IndexWithNulls> indicesWithNulls = new ArrayList<>();
+        executeQuery(INDICES_WITH_NULL_VALUES, rs -> {
+            while (rs.next()) {
+                final String tableName = rs.getString("table_name");
+                final String indexName = rs.getString("index_name");
+                final long indexSize = rs.getLong("index_size");
+                final String nullableField = rs.getString("nullable_fields");
+                indicesWithNulls.add(IndexWithNulls.of(tableName, indexName, indexSize, nullableField));
+            }
+        });
+        return indicesWithNulls;
     }
 
     @Nonnull

@@ -29,9 +29,7 @@ public final class DatabasePopulator implements AutoCloseable {
         // TODO do it inside transaction
         createTableClients();
         createTableAccounts();
-        createTableDocuments();
         addLinksBetweenAccountsAndClients();
-        addLinksBetweenDocumentsAndAccounts();
         insertDataIntoTables();
     }
 
@@ -39,16 +37,13 @@ public final class DatabasePopulator implements AutoCloseable {
         // TODO do it inside transaction
         createTableClients();
         createTableAccounts();
-        createTableDocuments();
         addLinksBetweenAccountsAndClients();
-        addLinksBetweenDocumentsAndAccounts();
     }
 
     public void populateOnlyTables() {
         // TODO do it inside transaction
         createTableClients();
         createTableAccounts();
-        createTableDocuments();
     }
 
     public void createInvalidIndex() {
@@ -70,6 +65,16 @@ public final class DatabasePopulator implements AutoCloseable {
                     "on clients (last_name, first_name)");
             statement.execute("create index concurrently if not exists i_clients_last_name " +
                     "on clients (last_name)");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void createIndexWithNulls() {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute("create index concurrently if not exists i_clients_middle_name " +
+                    "on clients (middle_name)");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -123,9 +128,6 @@ public final class DatabasePopulator implements AutoCloseable {
         }
     }
 
-    private void createTableDocuments() {
-    }
-
     private void addLinksBetweenAccountsAndClients() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -134,10 +136,6 @@ public final class DatabasePopulator implements AutoCloseable {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void addLinksBetweenDocumentsAndAccounts() {
-
     }
 
     private void insertDataIntoTables() {

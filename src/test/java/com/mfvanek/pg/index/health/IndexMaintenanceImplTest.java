@@ -284,4 +284,34 @@ class IndexMaintenanceImplTest {
             assertEquals("bad_clients", table.getTableName());
         }
     }
+
+    @Test
+    void getIndicesWithNullValuesOnEmptyDataBase() {
+        final var indices = indexMaintenance.getIndicesWithNullValues();
+        assertNotNull(indices);
+        assertEquals(0, indices.size());
+    }
+
+    @Test
+    void getIndicesWithNullValuesOnDatabaseWithoutThem() throws SQLException {
+        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
+            databasePopulator.populateWithDataAndReferences();
+
+            final var indices = indexMaintenance.getIndicesWithNullValues();
+            assertNotNull(indices);
+            assertEquals(0, indices.size());
+        }
+    }
+
+    @Test
+    void getIndicesWithNullValuesOnDatabaseWithThem() throws SQLException {
+        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
+            databasePopulator.populateWithDataAndReferences();
+            databasePopulator.createIndexWithNulls();
+
+            final var indices = indexMaintenance.getIndicesWithNullValues();
+            assertNotNull(indices);
+            assertEquals(1, indices.size());
+        }
+    }
 }
