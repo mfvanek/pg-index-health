@@ -3,7 +3,7 @@
  * https://github.com/mfvanek
  */
 
-package com.mfvanek.pg.index.health;
+package com.mfvanek.pg.index.maintenance;
 
 import java.util.List;
 import java.util.Map;

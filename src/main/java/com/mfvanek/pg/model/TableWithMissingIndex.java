@@ -5,12 +5,14 @@
 
 package com.mfvanek.pg.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
 // В нормальной ситуации при доступе к таблице в основном должны использоваться индексы.
 // Если индексов нет или их мало, то seqScans будет больше, чем indexScans
-public class TableWithMissingIndex implements TableAware {
+public class TableWithMissingIndex implements TableAware, Comparable<TableWithMissingIndex> {
 
     private final String tableName;
     private final long seqScans;
@@ -62,6 +64,11 @@ public class TableWithMissingIndex implements TableAware {
     @Override
     public int hashCode() {
         return Objects.hash(tableName);
+    }
+
+    @Override
+    public int compareTo(TableWithMissingIndex other) {
+        return StringUtils.compare(this.tableName, other.tableName);
     }
 
     public static TableWithMissingIndex of(@Nonnull String tableName, long seqScans, long indexScans) {

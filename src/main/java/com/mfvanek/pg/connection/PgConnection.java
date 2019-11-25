@@ -15,7 +15,8 @@ public class PgConnection {
     private final DataSource masterDataSource;
     private final List<DataSource> replicasDataSource;
 
-    private PgConnection(@Nonnull final DataSource masterDataSource, @Nonnull final List<DataSource> replicasDataSource) {
+    private PgConnection(@Nonnull final DataSource masterDataSource,
+                         @Nonnull final List<DataSource> replicasDataSource) {
         this.masterDataSource = Objects.requireNonNull(masterDataSource);
         this.replicasDataSource = List.copyOf(Objects.requireNonNull(replicasDataSource));
     }
@@ -28,6 +29,10 @@ public class PgConnection {
     @Nonnull
     public List<DataSource> getReplicasDataSource() {
         return replicasDataSource;
+    }
+
+    public int getReplicasCount() {
+        return replicasDataSource.size();
     }
 
     public static PgConnection of(@Nonnull final DataSource masterDataSource,

@@ -3,7 +3,7 @@
  * https://github.com/mfvanek
  */
 
-package com.mfvanek.pg.index.health;
+package com.mfvanek.pg.index.maintenance;
 
 import com.mfvanek.pg.model.DuplicatedIndices;
 import com.mfvanek.pg.model.ForeignKey;

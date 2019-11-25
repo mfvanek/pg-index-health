@@ -5,6 +5,8 @@
 
 package com.mfvanek.pg.index.health;
 
+import com.mfvanek.pg.index.maintenance.IndexMaintenance;
+import com.mfvanek.pg.index.maintenance.IndexMaintenanceImpl;
 import com.mfvanek.pg.model.IndexWithSize;
 import com.mfvanek.pg.model.UnusedIndex;
 import com.mfvanek.pg.utils.DatabasePopulator;
