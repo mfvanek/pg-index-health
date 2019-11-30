@@ -15,15 +15,11 @@ import com.mfvanek.pg.model.IndexWithNulls;
 import com.mfvanek.pg.model.TableWithMissingIndex;
 import com.mfvanek.pg.model.TableWithoutPrimaryKey;
 import com.mfvanek.pg.model.UnusedIndex;
-import org.apache.commons.collections4.CollectionUtils;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class IndicesHealthImpl implements IndicesHealth {
 
@@ -35,12 +31,7 @@ public class IndicesHealthImpl implements IndicesHealth {
         Objects.requireNonNull(pgConnection);
         Objects.requireNonNull(maintenanceFactory);
         this.maintenanceForMaster = maintenanceFactory.forDataSource(pgConnection.getMasterDataSource());
-        this.maintenanceForReplicas = new ArrayList<>(pgConnection.getReplicasCount());
-        this.maintenanceForReplicas.addAll(
-                pgConnection.getReplicasDataSource().stream()
-                        .map(maintenanceFactory::forDataSource)
-                        .collect(Collectors.toList())
-        );
+        this.maintenanceForReplicas = ReplicasHelper.createIndexMaintenanceForReplicas(pgConnection, maintenanceFactory);
     }
 
     @Nonnull
@@ -64,12 +55,14 @@ public class IndicesHealthImpl implements IndicesHealth {
     @Nonnull
     @Override
     public List<UnusedIndex> getUnusedIndices() {
-        Collection<UnusedIndex> unusedIndices = maintenanceForMaster.getPotentiallyUnusedIndices();
+        final List<List<UnusedIndex>> potentiallyUnusedIndicesFromAllHosts = new ArrayList<>();
+        // From master
+        potentiallyUnusedIndicesFromAllHosts.add(maintenanceForMaster.getPotentiallyUnusedIndices());
+        // And all replicas
         for (var maintenanceForReplica : maintenanceForReplicas) {
-            final var unusedIndicesFromReplica = maintenanceForReplica.getPotentiallyUnusedIndices();
-            unusedIndices = CollectionUtils.intersection(unusedIndices, unusedIndicesFromReplica);
+            potentiallyUnusedIndicesFromAllHosts.add(maintenanceForReplica.getPotentiallyUnusedIndices());
         }
-        return List.copyOf(unusedIndices);
+        return ReplicasHelper.getUnusedIndicesAsIntersectionResult(potentiallyUnusedIndicesFromAllHosts);
     }
 
     @Nonnull
@@ -81,13 +74,14 @@ public class IndicesHealthImpl implements IndicesHealth {
     @Nonnull
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndices() {
-        return Stream.concat(
-                maintenanceForMaster.getTablesWithMissingIndices().stream(),
-                maintenanceForReplicas.stream()
-                        .flatMap(m -> m.getTablesWithMissingIndices().stream()))
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
+        final List<List<TableWithMissingIndex>> tablesWithMissingIndicesFromAllHosts = new ArrayList<>();
+        // From master
+        tablesWithMissingIndicesFromAllHosts.add(maintenanceForMaster.getTablesWithMissingIndices());
+        // And all replicas
+        for (var maintenanceForReplica : maintenanceForReplicas) {
+            tablesWithMissingIndicesFromAllHosts.add(maintenanceForReplica.getTablesWithMissingIndices());
+        }
+        return ReplicasHelper.getTablesWithMissingIndicesAsUnionResult(tablesWithMissingIndicesFromAllHosts);
     }
 
     @Nonnull

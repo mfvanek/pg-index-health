@@ -8,12 +8,15 @@ package com.mfvanek.pg.index.maintenance;
 import com.mfvanek.pg.model.IndexWithSize;
 import com.mfvanek.pg.model.UnusedIndex;
 import com.mfvanek.pg.utils.DatabasePopulator;
+import com.mfvanek.pg.utils.TestExecutor;
 import com.opentable.db.postgres.junit5.EmbeddedPostgresExtension;
 import com.opentable.db.postgres.junit5.PreparedDbExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import javax.annotation.Nonnull;
 import java.sql.SQLException;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
@@ -228,29 +231,29 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getTablesWithMissingIndicesOnDatabaseWithoutThem() throws SQLException {
-        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
-            databasePopulator.populateWithDataAndReferences();
-
-            final var tables = indexMaintenance.getTablesWithMissingIndices();
-            assertNotNull(tables);
-            assertEquals(0, tables.size());
-        }
+        executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
+                () -> {
+                    final var tables = indexMaintenance.getTablesWithMissingIndices();
+                    assertNotNull(tables);
+                    assertEquals(0, tables.size());
+                });
     }
 
     @Test
     void getTablesWithMissingIndicesOnDatabaseWithThem() throws SQLException {
-        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
-            databasePopulator.populateWithDataAndReferences();
-            databasePopulator.tryToFindAccountByClientId(101);
-
-            var tables = indexMaintenance.getTablesWithMissingIndices();
-            assertNotNull(tables);
-            assertEquals(1, tables.size());
-            var table = tables.get(0);
-            assertEquals("accounts", table.getTableName());
-            assertThat(table.getSeqScans(), greaterThanOrEqualTo(101L));
-            assertEquals(0, table.getIndexScans());
-        }
+        executeTestOnDatabase(databasePopulator -> {
+                    databasePopulator.populateWithDataAndReferences();
+                    databasePopulator.tryToFindAccountByClientId(101);
+                },
+                () -> {
+                    var tables = indexMaintenance.getTablesWithMissingIndices();
+                    assertNotNull(tables);
+                    assertEquals(1, tables.size());
+                    var table = tables.get(0);
+                    assertEquals("accounts", table.getTableName());
+                    assertThat(table.getSeqScans(), greaterThanOrEqualTo(101L));
+                    assertEquals(0, table.getIndexScans());
+                });
     }
 
     @Test
@@ -262,27 +265,27 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getTablesWithoutPrimaryKeyOnDatabaseWithoutThem() throws SQLException {
-        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
-            databasePopulator.populateWithDataAndReferences();
-
-            final var tables = indexMaintenance.getTablesWithoutPrimaryKey();
-            assertNotNull(tables);
-            assertEquals(0, tables.size());
-        }
+        executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
+                () -> {
+                    final var tables = indexMaintenance.getTablesWithoutPrimaryKey();
+                    assertNotNull(tables);
+                    assertEquals(0, tables.size());
+                });
     }
 
     @Test
     void getTablesWithoutPrimaryKeyOnDatabaseWithThem() throws SQLException {
-        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
-            databasePopulator.populateWithDataAndReferences();
-            databasePopulator.createTableWithoutPrimaryKey();
-
-            var tables = indexMaintenance.getTablesWithoutPrimaryKey();
-            assertNotNull(tables);
-            assertEquals(1, tables.size());
-            var table = tables.get(0);
-            assertEquals("bad_clients", table.getTableName());
-        }
+        executeTestOnDatabase(databasePopulator -> {
+                    databasePopulator.populateWithDataAndReferences();
+                    databasePopulator.createTableWithoutPrimaryKey();
+                },
+                () -> {
+                    var tables = indexMaintenance.getTablesWithoutPrimaryKey();
+                    assertNotNull(tables);
+                    assertEquals(1, tables.size());
+                    var table = tables.get(0);
+                    assertEquals("bad_clients", table.getTableName());
+                });
     }
 
     @Test
@@ -294,24 +297,33 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getIndicesWithNullValuesOnDatabaseWithoutThem() throws SQLException {
-        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
-            databasePopulator.populateWithDataAndReferences();
-
-            final var indices = indexMaintenance.getIndicesWithNullValues();
-            assertNotNull(indices);
-            assertEquals(0, indices.size());
-        }
+        executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
+                () -> {
+                    final var indices = indexMaintenance.getIndicesWithNullValues();
+                    assertNotNull(indices);
+                    assertEquals(0, indices.size());
+                });
     }
 
     @Test
     void getIndicesWithNullValuesOnDatabaseWithThem() throws SQLException {
-        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
-            databasePopulator.populateWithDataAndReferences();
-            databasePopulator.createIndexWithNulls();
+        executeTestOnDatabase(databasePopulator -> {
+                    databasePopulator.populateWithDataAndReferences();
+                    databasePopulator.createIndexWithNulls();
+                },
+                () -> {
+                    final var indices = indexMaintenance.getIndicesWithNullValues();
+                    assertNotNull(indices);
+                    assertEquals(1, indices.size());
+                });
+    }
 
-            final var indices = indexMaintenance.getIndicesWithNullValues();
-            assertNotNull(indices);
-            assertEquals(1, indices.size());
+    private void executeTestOnDatabase(@Nonnull final Consumer<DatabasePopulator> databasePopulatorConsumer,
+                                       @Nonnull final TestExecutor testExecutor)
+            throws SQLException {
+        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
+            databasePopulatorConsumer.accept(databasePopulator);
+            testExecutor.execute();
         }
     }
 }

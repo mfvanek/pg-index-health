@@ -5,49 +5,79 @@
 
 package com.mfvanek.pg.index.health;
 
+import com.mfvanek.pg.connection.PgConnection;
+import com.mfvanek.pg.index.maintenance.IndexMaintenanceFactoryImpl;
+import com.opentable.db.postgres.junit5.EmbeddedPostgresExtension;
+import com.opentable.db.postgres.junit5.PreparedDbExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class IndicesHealthImplTest {
 
+    @RegisterExtension
+    static final PreparedDbExtension embeddedPostgres =
+            EmbeddedPostgresExtension.preparedDatabase(ds -> {
+            });
+
+    private final IndicesHealth indicesHealth = new IndicesHealthImpl(PgConnection.of(embeddedPostgres.getTestDatabase()),
+            new IndexMaintenanceFactoryImpl());
+
     @Test
     void getInvalidIndicesOnEmptyDatabase() {
-        fail();
+        final var invalidIndices = indicesHealth.getInvalidIndices();
+        assertNotNull(invalidIndices);
+        assertEquals(0, invalidIndices.size());
     }
 
     @Test
     void getDuplicatedIndicesOnEmptyDatabase() {
-        fail();
+        final var duplicatedIndices = indicesHealth.getDuplicatedIndices();
+        assertNotNull(duplicatedIndices);
+        assertEquals(0, duplicatedIndices.size());
     }
 
     @Test
     void getIntersectedIndicesOnEmptyDatabase() {
-        fail();
+        final var intersectedIndices = indicesHealth.getIntersectedIndices();
+        assertNotNull(intersectedIndices);
+        assertEquals(0, intersectedIndices.size());
     }
 
     @Test
     void getUnusedIndicesOnEmptyDatabase() {
-        fail();
+        final var unusedIndices = indicesHealth.getUnusedIndices();
+        assertNotNull(unusedIndices);
+        assertEquals(0, unusedIndices.size());
     }
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnEmptyDatabase() {
-        fail();
+        final var foreignKeys = indicesHealth.getForeignKeysNotCoveredWithIndex();
+        assertNotNull(foreignKeys);
+        assertEquals(0, foreignKeys.size());
     }
 
     @Test
     void getTablesWithMissingIndicesOnEmptyDatabase() {
-        fail();
+        final var tables = indicesHealth.getTablesWithMissingIndices();
+        assertNotNull(tables);
+        assertEquals(0, tables.size());
     }
 
     @Test
     void getTablesWithoutPrimaryKeyOnEmptyDatabase() {
-        fail();
+        final var tables = indicesHealth.getTablesWithoutPrimaryKey();
+        assertNotNull(tables);
+        assertEquals(0, tables.size());
     }
 
     @Test
     void getIndicesWithNullValuesOnEmptyDatabase() {
-        fail();
+        final var indices = indicesHealth.getIndicesWithNullValues();
+        assertNotNull(indices);
+        assertEquals(0, indices.size());
     }
 }
