@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @FunctionalInterface
-interface ResultSetExtractor {
+interface ResultSetExtractor<T> {
 
-    void extractData(ResultSet rs) throws SQLException;
+    T extractData(ResultSet rs) throws SQLException;
 }
