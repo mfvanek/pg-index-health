@@ -7,6 +7,7 @@ package com.mfvanek.pg.connection;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +34,15 @@ public class PgConnection {
 
     public int getReplicasCount() {
         return replicasDataSource.size();
+    }
+
+    public static PgConnection of(@Nonnull final DataSource masterDataSource) {
+        return new PgConnection(masterDataSource, Collections.emptyList());
+    }
+
+    public static PgConnection of(@Nonnull final DataSource masterDataSource,
+                                  @Nonnull final DataSource replicaDataSource) {
+        return new PgConnection(masterDataSource, List.of(replicaDataSource));
     }
 
     public static PgConnection of(@Nonnull final DataSource masterDataSource,
