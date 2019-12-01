@@ -15,6 +15,7 @@ dependencies {
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+    compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.7.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'

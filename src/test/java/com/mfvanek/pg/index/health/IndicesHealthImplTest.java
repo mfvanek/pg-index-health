@@ -5,7 +5,7 @@
 
 package com.mfvanek.pg.index.health;
 
-import com.mfvanek.pg.connection.PgConnection;
+import com.mfvanek.pg.connection.SimplePgConnection;
 import com.mfvanek.pg.index.maintenance.IndexMaintenanceFactoryImpl;
 import com.opentable.db.postgres.junit5.EmbeddedPostgresExtension;
 import com.opentable.db.postgres.junit5.PreparedDbExtension;
@@ -22,7 +22,7 @@ class IndicesHealthImplTest {
             EmbeddedPostgresExtension.preparedDatabase(ds -> {
             });
 
-    private final IndicesHealth indicesHealth = new IndicesHealthImpl(PgConnection.of(embeddedPostgres.getTestDatabase()),
+    private final IndicesHealth indicesHealth = new IndicesHealthImpl(SimplePgConnection.of(embeddedPostgres.getTestDatabase()),
             new IndexMaintenanceFactoryImpl());
 
     @Test

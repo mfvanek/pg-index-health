@@ -13,11 +13,13 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import javax.sql.DataSource;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class PgConnectionTest {
+class SimplePgConnectionTest {
 
     @RegisterExtension
     static final PreparedDbExtension embeddedPostgres =
@@ -26,31 +28,32 @@ class PgConnectionTest {
 
     @Test
     void getMasterDataSource() {
-        final var connection = PgConnection.of(embeddedPostgres.getTestDatabase());
+        final var connection = SimplePgConnection.of(embeddedPostgres.getTestDatabase());
         assertNotNull(connection.getMasterDataSource());
 
-        assertThrows(NullPointerException.class, () -> PgConnection.of(null));
+        assertThrows(NullPointerException.class, () -> SimplePgConnection.of(null));
     }
 
     @Test
     void getReplicasDataSource() {
         final var dataSource = embeddedPostgres.getTestDatabase();
-        final var connection = PgConnection.of(dataSource, dataSource);
-        assertNotNull(connection.getMasterDataSource());
+        final var connection = SimplePgConnection.of(dataSource, dataSource);
+        assertNotNull(connection.getReplicasDataSource());
+        assertThat(connection.getReplicasDataSource(), hasSize(1));
 
         DataSource replica = null;
-        assertThrows(NullPointerException.class, () -> PgConnection.of(dataSource, replica));
+        assertThrows(NullPointerException.class, () -> SimplePgConnection.of(dataSource, replica));
 
         List<DataSource> replicas = null;
-        assertThrows(NullPointerException.class, () -> PgConnection.of(dataSource, replicas));
+        assertThrows(NullPointerException.class, () -> SimplePgConnection.of(dataSource, replicas));
     }
 
     @Test
     void getReplicasCount() {
-        var connection = PgConnection.of(embeddedPostgres.getTestDatabase());
+        var connection = SimplePgConnection.of(embeddedPostgres.getTestDatabase());
         assertEquals(0, connection.getReplicasCount());
 
-        connection = PgConnection.of(embeddedPostgres.getTestDatabase(), embeddedPostgres.getTestDatabase());
+        connection = SimplePgConnection.of(embeddedPostgres.getTestDatabase(), embeddedPostgres.getTestDatabase());
         assertEquals(1, connection.getReplicasCount());
     }
 }
