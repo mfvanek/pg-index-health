@@ -12,15 +12,17 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
-    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
-    compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.7.0'
+    compile 'com.google.code.findbugs:jsr305:3.0.2'
+    compile 'org.apache.commons:commons-lang3:3.9'
+    compile 'org.apache.commons:commons-collections4:4.4'
+    compile 'org.apache.commons:commons-dbcp2:2.7.0'
+    compile 'org.slf4j:slf4j-api:1.7.29'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     testImplementation 'com.opentable.components:otj-pg-embedded:0.13.3'
     testImplementation 'org.hamcrest:hamcrest:2.2'
+    testImplementation 'ch.qos.logback:logback-classic:1.2.3'
 }
 
 test {
