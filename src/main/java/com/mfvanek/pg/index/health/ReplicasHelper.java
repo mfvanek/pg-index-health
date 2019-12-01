@@ -11,6 +11,8 @@ import com.mfvanek.pg.index.maintenance.IndexMaintenanceFactory;
 import com.mfvanek.pg.model.TableWithMissingIndex;
 import com.mfvanek.pg.model.UnusedIndex;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 final class ReplicasHelper {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReplicasHelper.class);
 
     private ReplicasHelper() {
         throw new UnsupportedOperationException();
@@ -38,6 +42,7 @@ final class ReplicasHelper {
 
     static List<UnusedIndex> getUnusedIndicesAsIntersectionResult(
             @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndicesFromAllHosts) {
+        LOGGER.debug("potentiallyUnusedIndicesFromAllHosts = {}", potentiallyUnusedIndicesFromAllHosts);
         Collection<UnusedIndex> unusedIndices = null;
         for (var unusedIndicesFromHost : potentiallyUnusedIndicesFromAllHosts) {
             if (unusedIndices == null) {
@@ -45,15 +50,20 @@ final class ReplicasHelper {
             }
             unusedIndices = CollectionUtils.intersection(unusedIndices, unusedIndicesFromHost);
         }
-        return unusedIndices == null ? Collections.emptyList() : List.copyOf(unusedIndices);
+        final List<UnusedIndex> result = unusedIndices == null ? Collections.emptyList() : List.copyOf(unusedIndices);
+        LOGGER.debug("Intersection result {}", result);
+        return result;
     }
 
     static List<TableWithMissingIndex> getTablesWithMissingIndicesAsUnionResult(
             @Nonnull final List<List<TableWithMissingIndex>> tablesWithMissingIndicesFromAllHosts) {
-        return tablesWithMissingIndicesFromAllHosts.stream()
+        LOGGER.debug("tablesWithMissingIndicesFromAllHosts = {}", tablesWithMissingIndicesFromAllHosts);
+        final List<TableWithMissingIndex> result = tablesWithMissingIndicesFromAllHosts.stream()
                 .flatMap(Collection::stream)
                 .distinct()
                 .sorted()
                 .collect(Collectors.toList());
+        LOGGER.debug("Union result {}", result);
+        return result;
     }
 }

@@ -7,6 +7,8 @@ package com.mfvanek.pg.connection;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,6 +20,8 @@ import java.util.Objects;
 
 public class PoolAwarePgConnection implements PgConnection {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PoolAwarePgConnection.class);
+
     private final BasicDataSource masterDataSource;
     private final Map<String, BasicDataSource> replicasDataSource;
 
@@ -26,6 +30,9 @@ public class PoolAwarePgConnection implements PgConnection {
                                   @Nonnull final String password,
                                   @Nullable final String readUrl,
                                   @Nullable final String cascadeAsyncReadUrl) {
+        LOGGER.debug("Creating PoolAwarePgConnection with writeUrl = {}, userName = {}, " +
+                        "password = {}, readUrl = {}, cascadeAsyncReadUrl = {}",
+                writeUrl, userName, "*****", readUrl, cascadeAsyncReadUrl);
         Validators.pgUrlNotBlankAndValid(writeUrl, "writeUrl");
         Validators.userNameNotBlank(userName);
         Validators.passwordNotBlank(password);
