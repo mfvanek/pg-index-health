@@ -5,6 +5,8 @@
 
 package com.mfvanek.pg.index.maintenance;
 
+import com.mfvanek.pg.connection.PgConnection;
+import com.mfvanek.pg.connection.PgConnectionImpl;
 import com.mfvanek.pg.model.IndexWithSize;
 import com.mfvanek.pg.model.UnusedIndex;
 import com.mfvanek.pg.utils.DatabasePopulator;
@@ -34,8 +36,8 @@ class IndexMaintenanceImplTest {
             EmbeddedPostgresExtension.preparedDatabase(ds -> {
             });
 
-    private final IndexMaintenance indexMaintenance = new IndexMaintenanceImpl(
-            embeddedPostgres.getTestDatabase());
+    private final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+    private final IndexMaintenance indexMaintenance = new IndexMaintenanceImpl(pgConnection);
 
     @Test
     void getInvalidIndicesOnEmptyDataBase() {

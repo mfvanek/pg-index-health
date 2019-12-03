@@ -5,6 +5,7 @@
 
 package com.mfvanek.pg.index.maintenance;
 
+import com.mfvanek.pg.connection.HostAware;
 import com.mfvanek.pg.model.DuplicatedIndices;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
@@ -16,7 +17,7 @@ import com.mfvanek.pg.model.UnusedIndex;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public interface IndexMaintenance {
+public interface IndexMaintenance extends HostAware {
 
     /**
      * Список невалидных (битых) индексов, которые нужно удалить или переиндексировать.

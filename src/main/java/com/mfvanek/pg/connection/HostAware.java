@@ -6,10 +6,9 @@
 package com.mfvanek.pg.connection;
 
 import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 
-public interface PgConnection extends HostAware {
+public interface HostAware {
 
     @Nonnull
-    DataSource getDataSource();
+    PgHost getHost();
 }

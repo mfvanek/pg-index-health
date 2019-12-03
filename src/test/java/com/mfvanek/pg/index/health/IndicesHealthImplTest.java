@@ -5,7 +5,9 @@
 
 package com.mfvanek.pg.index.health;
 
-import com.mfvanek.pg.connection.SimplePgConnection;
+import com.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import com.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
+import com.mfvanek.pg.connection.PgConnectionImpl;
 import com.mfvanek.pg.index.maintenance.IndexMaintenanceFactoryImpl;
 import com.mfvanek.pg.utils.DatabasePopulator;
 import com.mfvanek.pg.utils.TestExecutor;
@@ -28,7 +30,9 @@ class IndicesHealthImplTest {
             EmbeddedPostgresExtension.preparedDatabase(ds -> {
             });
 
-    private final IndicesHealth indicesHealth = new IndicesHealthImpl(SimplePgConnection.of(embeddedPostgres.getTestDatabase()),
+    private final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(
+            PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase()));
+    private final IndicesHealth indicesHealth = new IndicesHealthImpl(haPgConnection,
             new IndexMaintenanceFactoryImpl());
 
     @Test

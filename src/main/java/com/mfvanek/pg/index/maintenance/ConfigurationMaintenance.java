@@ -8,6 +8,7 @@ package com.mfvanek.pg.index.maintenance;
 import java.util.List;
 import java.util.Map;
 
+// TODO add implementation
 public interface ConfigurationMaintenance {
 
     List<Map.Entry<String, String>> getParamsWithDefaultValues();

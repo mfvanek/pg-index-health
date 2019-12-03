@@ -5,6 +5,8 @@
 
 package com.mfvanek.pg.index.maintenance;
 
+import com.mfvanek.pg.connection.PgConnection;
+import com.mfvanek.pg.connection.PgHost;
 import com.mfvanek.pg.model.DuplicatedIndices;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
@@ -16,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -99,8 +100,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "      not exists (\n" +
                     "          select 1 from pg_index\n" +
                     "          where indrelid = c.conrelid and\n" +
-                    "                (c.conkey::int[] <@ indkey::int[]) and /*все поля внешнего ключа должны быть в индексе*/\n" +
-                    "                array_position(indkey::int[], (c.conkey::int[])[1]) = 0 /*порядок полей во внешнем ключе и в индексе совпадает*/\n" +
+                    "                (c.conkey::int[] <@ indkey::int[]) and /*all columns of foreign key have to present in index*/\n" +
+                    "                array_position(indkey::int[], (c.conkey::int[])[1]) = 0 /*ordering of columns in foreign key and in index is the same*/\n" +
                     "      )\n" +
                     "group by c.conrelid, c.conname, c.oid\n" +
                     "order by (c.conrelid::regclass)::text, columns;";
@@ -155,10 +156,10 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "group by x.indrelid, x.indexrelid, x.indpred\n" +
                     "order by table_name, index_name;";
 
-    private final DataSource dataSource;
+    private final PgConnection pgConnection;
 
-    public IndexMaintenanceImpl(@Nonnull final DataSource dataSource) {
-        this.dataSource = Objects.requireNonNull(dataSource);
+    public IndexMaintenanceImpl(@Nonnull final PgConnection pgConnection) {
+        this.pgConnection = Objects.requireNonNull(pgConnection);
     }
 
     @Nonnull
@@ -249,9 +250,15 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
         });
     }
 
+    @Override
+    @Nonnull
+    public PgHost getHost() {
+        return pgConnection.getHost();
+    }
+
     private <T> List<T> executeQuery(@Nonnull final String sqlQuery, ResultSetExtractor<T> rse) {
         LOGGER.debug("Executing query: {}", sqlQuery);
-        try (Connection connection = dataSource.getConnection();
+        try (Connection connection = pgConnection.getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
             final List<T> executionResult = new ArrayList<>();
             try (ResultSet resultSet = statement.executeQuery(Objects.requireNonNull(sqlQuery))) {

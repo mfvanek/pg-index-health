@@ -5,10 +5,12 @@
 
 package com.mfvanek.pg.index.maintenance;
 
+import com.mfvanek.pg.connection.PgConnection;
+
 import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 
 public interface IndexMaintenanceFactory {
 
-    IndexMaintenance forDataSource(@Nonnull DataSource dataSource);
+    @Nonnull
+    IndexMaintenance forConnection(@Nonnull PgConnection pgConnection);
 }

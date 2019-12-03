@@ -5,7 +5,8 @@
 
 package com.mfvanek.pg.index.health;
 
-import com.mfvanek.pg.connection.PgConnection;
+import com.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import com.mfvanek.pg.connection.PgHost;
 import com.mfvanek.pg.index.maintenance.IndexMaintenance;
 import com.mfvanek.pg.index.maintenance.IndexMaintenanceFactory;
 import com.mfvanek.pg.model.DuplicatedIndices;
@@ -15,40 +16,49 @@ import com.mfvanek.pg.model.IndexWithNulls;
 import com.mfvanek.pg.model.TableWithMissingIndex;
 import com.mfvanek.pg.model.TableWithoutPrimaryKey;
 import com.mfvanek.pg.model.UnusedIndex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class IndicesHealthImpl implements IndicesHealth {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndicesHealthImpl.class);
 
     private final IndexMaintenance maintenanceForMaster;
     private final List<IndexMaintenance> maintenanceForReplicas;
 
-    public IndicesHealthImpl(@Nonnull final PgConnection pgConnection,
+    public IndicesHealthImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
                              @Nonnull final IndexMaintenanceFactory maintenanceFactory) {
-        Objects.requireNonNull(pgConnection);
+        Objects.requireNonNull(haPgConnection);
         Objects.requireNonNull(maintenanceFactory);
-        this.maintenanceForMaster = maintenanceFactory.forDataSource(pgConnection.getMasterDataSource());
-        this.maintenanceForReplicas = ReplicasHelper.createIndexMaintenanceForReplicas(pgConnection, maintenanceFactory);
+        this.maintenanceForMaster = maintenanceFactory.forConnection(haPgConnection.getConnectionToMaster());
+        this.maintenanceForReplicas = ReplicasHelper.createIndexMaintenanceForReplicas(
+                haPgConnection.getConnectionsToReplicas(), maintenanceFactory);
     }
 
     @Nonnull
     @Override
     public List<Index> getInvalidIndices() {
+        logExecutingOnMaster();
         return maintenanceForMaster.getInvalidIndices();
     }
 
     @Nonnull
     @Override
     public List<DuplicatedIndices> getDuplicatedIndices() {
+        logExecutingOnMaster();
         return maintenanceForMaster.getDuplicatedIndices();
     }
 
     @Nonnull
     @Override
     public List<DuplicatedIndices> getIntersectedIndices() {
+        logExecutingOnMaster();
         return maintenanceForMaster.getIntersectedIndices();
     }
 
@@ -56,11 +66,13 @@ public class IndicesHealthImpl implements IndicesHealth {
     @Override
     public List<UnusedIndex> getUnusedIndices() {
         final List<List<UnusedIndex>> potentiallyUnusedIndicesFromAllHosts = new ArrayList<>();
-        // From master
-        potentiallyUnusedIndicesFromAllHosts.add(maintenanceForMaster.getPotentiallyUnusedIndices());
-        // And all replicas
+
+        potentiallyUnusedIndicesFromAllHosts.add(
+                doOnMaster(maintenanceForMaster::getPotentiallyUnusedIndices));
+
         for (var maintenanceForReplica : maintenanceForReplicas) {
-            potentiallyUnusedIndicesFromAllHosts.add(maintenanceForReplica.getPotentiallyUnusedIndices());
+            potentiallyUnusedIndicesFromAllHosts.add(
+                    doOnReplica(maintenanceForReplica.getHost(), maintenanceForReplica::getPotentiallyUnusedIndices));
         }
         return ReplicasHelper.getUnusedIndicesAsIntersectionResult(potentiallyUnusedIndicesFromAllHosts);
     }
@@ -68,6 +80,7 @@ public class IndicesHealthImpl implements IndicesHealth {
     @Nonnull
     @Override
     public List<ForeignKey> getForeignKeysNotCoveredWithIndex() {
+        logExecutingOnMaster();
         return maintenanceForMaster.getForeignKeysNotCoveredWithIndex();
     }
 
@@ -75,11 +88,13 @@ public class IndicesHealthImpl implements IndicesHealth {
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndices() {
         final List<List<TableWithMissingIndex>> tablesWithMissingIndicesFromAllHosts = new ArrayList<>();
-        // From master
-        tablesWithMissingIndicesFromAllHosts.add(maintenanceForMaster.getTablesWithMissingIndices());
-        // And all replicas
+
+        tablesWithMissingIndicesFromAllHosts.add(
+                doOnMaster(maintenanceForMaster::getTablesWithMissingIndices));
+
         for (var maintenanceForReplica : maintenanceForReplicas) {
-            tablesWithMissingIndicesFromAllHosts.add(maintenanceForReplica.getTablesWithMissingIndices());
+            tablesWithMissingIndicesFromAllHosts.add(
+                    doOnReplica(maintenanceForReplica.getHost(), maintenanceForReplica::getTablesWithMissingIndices));
         }
         return ReplicasHelper.getTablesWithMissingIndicesAsUnionResult(tablesWithMissingIndicesFromAllHosts);
     }
@@ -87,12 +102,28 @@ public class IndicesHealthImpl implements IndicesHealth {
     @Nonnull
     @Override
     public List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey() {
+        logExecutingOnMaster();
         return maintenanceForMaster.getTablesWithoutPrimaryKey();
     }
 
     @Nonnull
     @Override
     public List<IndexWithNulls> getIndicesWithNullValues() {
+        logExecutingOnMaster();
         return maintenanceForMaster.getIndicesWithNullValues();
+    }
+
+    private void logExecutingOnMaster() {
+        LOGGER.debug("Going to execute on master host [{}]", maintenanceForMaster.getHost().getName());
+    }
+
+    private <T> T doOnMaster(Supplier<T> action) {
+        logExecutingOnMaster();
+        return action.get();
+    }
+
+    private <T> T doOnReplica(@Nonnull final PgHost host, Supplier<T> action) {
+        LOGGER.debug("Going to execute on replica host [{}]", host.getName());
+        return action.get();
     }
 }

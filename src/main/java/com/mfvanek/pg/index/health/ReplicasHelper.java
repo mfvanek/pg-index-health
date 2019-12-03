@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 final class ReplicasHelper {
@@ -29,17 +30,19 @@ final class ReplicasHelper {
         throw new UnsupportedOperationException();
     }
 
-    static List<IndexMaintenance> createIndexMaintenanceForReplicas(@Nonnull final PgConnection pgConnection,
+    @Nonnull
+    static List<IndexMaintenance> createIndexMaintenanceForReplicas(@Nonnull final Set<PgConnection> connectionsToReplicas,
                                                                     @Nonnull final IndexMaintenanceFactory maintenanceFactory) {
-        final List<IndexMaintenance> result = new ArrayList<>(pgConnection.getReplicasCount());
+        final List<IndexMaintenance> result = new ArrayList<>(connectionsToReplicas.size());
         result.addAll(
-                pgConnection.getReplicasDataSource().stream()
-                        .map(maintenanceFactory::forDataSource)
+                connectionsToReplicas.stream()
+                        .map(maintenanceFactory::forConnection)
                         .collect(Collectors.toList())
         );
         return result;
     }
 
+    @Nonnull
     static List<UnusedIndex> getUnusedIndicesAsIntersectionResult(
             @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndicesFromAllHosts) {
         LOGGER.debug("potentiallyUnusedIndicesFromAllHosts = {}", potentiallyUnusedIndicesFromAllHosts);
@@ -55,6 +58,7 @@ final class ReplicasHelper {
         return result;
     }
 
+    @Nonnull
     static List<TableWithMissingIndex> getTablesWithMissingIndicesAsUnionResult(
             @Nonnull final List<List<TableWithMissingIndex>> tablesWithMissingIndicesFromAllHosts) {
         LOGGER.debug("tablesWithMissingIndicesFromAllHosts = {}", tablesWithMissingIndicesFromAllHosts);

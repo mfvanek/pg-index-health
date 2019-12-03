@@ -5,13 +5,15 @@
 
 package com.mfvanek.pg.index.maintenance;
 
+import com.mfvanek.pg.connection.PgConnection;
+
 import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 
 public class IndexMaintenanceFactoryImpl implements IndexMaintenanceFactory {
 
     @Override
-    public IndexMaintenance forDataSource(@Nonnull DataSource dataSource) {
-        return new IndexMaintenanceImpl(dataSource);
+    @Nonnull
+    public IndexMaintenance forConnection(@Nonnull final PgConnection pgConnection) {
+        return new IndexMaintenanceImpl(pgConnection);
     }
 }
