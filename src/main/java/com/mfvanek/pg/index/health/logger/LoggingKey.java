@@ -6,10 +6,12 @@
 package com.mfvanek.pg.index.health.logger;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-public interface IndicesHealthLogger {
+public interface LoggingKey {
 
     @Nonnull
-    List<String> logAll();
+    String getKeyName();
+
+    @Nonnull
+    String getSubKeyName();
 }
