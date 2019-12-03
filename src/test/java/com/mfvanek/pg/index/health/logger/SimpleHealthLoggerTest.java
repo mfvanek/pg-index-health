@@ -6,6 +6,7 @@
 package com.mfvanek.pg.index.health.logger;
 
 import com.mfvanek.pg.index.health.IndicesHealth;
+import com.mfvanek.pg.model.IndexWithNulls;
 import com.mfvanek.pg.model.UnusedIndex;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -37,5 +38,27 @@ class SimpleHealthLoggerTest {
                 .findFirst()
                 .orElseThrow();
         assertThat(logStr, containsString("unused_indices\t2"));
+    }
+
+    @Test
+    void applyIndicesWithNullValuesExclusions() {
+        final var exclusions = Exclusions.builder()
+                .withIndicesWithNullValuesExclusions("i2, i5, , ,,  ")
+                .build();
+        final var indicesHealthMock = Mockito.mock(IndicesHealth.class);
+        Mockito.when(indicesHealthMock.getIndicesWithNullValues())
+                .thenReturn(List.of(
+                        IndexWithNulls.of("t1", "i1", 1L, "f1"),
+                        IndexWithNulls.of("t1", "i2", 2L, "f2"),
+                        IndexWithNulls.of("t2", "i3", 3L, "f3"),
+                        IndexWithNulls.of("t2", "i4", 4L, "f4")
+                ));
+        final IndicesHealthLogger logger = new SimpleHealthLogger(indicesHealthMock, exclusions);
+        final var logs = logger.logAll();
+        final var logStr = logs.stream()
+                .filter(l -> l.contains(SimpleLoggingKey.INDICES_WITH_NULLS.getSubKeyName()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(logStr, containsString("indices_with_null_values\t3"));
     }
 }
