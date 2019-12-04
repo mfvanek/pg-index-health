@@ -10,6 +10,7 @@ import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DuplicatedIndices implements TableAware {
@@ -37,6 +38,12 @@ public class DuplicatedIndices implements TableAware {
 
     public long getTotalSize() {
         return totalSize;
+    }
+
+    public Set<String> getIndexNames() {
+        return duplicatedIndices.stream()
+                .map(Index::getIndexName)
+                .collect(Collectors.toSet());
     }
 
     @Override

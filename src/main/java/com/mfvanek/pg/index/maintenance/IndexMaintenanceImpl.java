@@ -3,8 +3,10 @@
  * https://github.com/mfvanek
  */
 
-package com.mfvanek.pg.index.health;
+package com.mfvanek.pg.index.maintenance;
 
+import com.mfvanek.pg.connection.PgConnection;
+import com.mfvanek.pg.connection.PgHost;
 import com.mfvanek.pg.model.DuplicatedIndices;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
@@ -12,9 +14,10 @@ import com.mfvanek.pg.model.IndexWithNulls;
 import com.mfvanek.pg.model.TableWithMissingIndex;
 import com.mfvanek.pg.model.TableWithoutPrimaryKey;
 import com.mfvanek.pg.model.UnusedIndex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,6 +28,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class IndexMaintenanceImpl implements IndexMaintenance {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndexMaintenanceImpl.class);
 
     private static final String INVALID_INDICES_SQL =
             "select x.indrelid::regclass as table_name, x.indexrelid::regclass as index_name\n" +
@@ -95,8 +100,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "      not exists (\n" +
                     "          select 1 from pg_index\n" +
                     "          where indrelid = c.conrelid and\n" +
-                    "                (c.conkey::int[] <@ indkey::int[]) and /*все поля внешнего ключа должны быть в индексе*/\n" +
-                    "                array_position(indkey::int[], (c.conkey::int[])[1]) = 0 /*порядок полей во внешнем ключе и в индексе совпадает*/\n" +
+                    "                (c.conkey::int[] <@ indkey::int[]) and /*all columns of foreign key have to present in index*/\n" +
+                    "                array_position(indkey::int[], (c.conkey::int[])[1]) = 0 /*ordering of columns in foreign key and in index is the same*/\n" +
                     "      )\n" +
                     "group by c.conrelid, c.conname, c.oid\n" +
                     "order by (c.conrelid::regclass)::text, columns;";
@@ -151,24 +156,20 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "group by x.indrelid, x.indexrelid, x.indpred\n" +
                     "order by table_name, index_name;";
 
-    private final DataSource dataSource;
+    private final PgConnection pgConnection;
 
-    public IndexMaintenanceImpl(@Nonnull DataSource dataSource) {
-        this.dataSource = Objects.requireNonNull(dataSource);
+    public IndexMaintenanceImpl(@Nonnull final PgConnection pgConnection) {
+        this.pgConnection = Objects.requireNonNull(pgConnection);
     }
 
     @Nonnull
     @Override
     public List<Index> getInvalidIndices() {
-        final List<Index> invalidIndices = new ArrayList<>();
-        executeQuery(INVALID_INDICES_SQL, rs -> {
-            while (rs.next()) {
-                final String tableName = rs.getString("table_name");
-                final String indexName = rs.getString("index_name");
-                invalidIndices.add(Index.of(tableName, indexName));
-            }
+        return executeQuery(INVALID_INDICES_SQL, rs -> {
+            final String tableName = rs.getString("table_name");
+            final String indexName = rs.getString("index_name");
+            return Index.of(tableName, indexName);
         });
-        return invalidIndices;
     }
 
     @Nonnull
@@ -186,100 +187,89 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Nonnull
     @Override
     public List<UnusedIndex> getPotentiallyUnusedIndices() {
-        final List<UnusedIndex> unusedIndices = new ArrayList<>();
-        executeQuery(UNUSED_INDICES_SQL, rs -> {
-            while (rs.next()) {
-                final String tableName = rs.getString("table_name");
-                final String indexName = rs.getString("index_name");
-                final long indexSize = rs.getLong("index_size");
-                final long indexScans = rs.getLong("index_scans");
-                unusedIndices.add(UnusedIndex.of(tableName, indexName, indexSize, indexScans));
-            }
+        return executeQuery(UNUSED_INDICES_SQL, rs -> {
+            final String tableName = rs.getString("table_name");
+            final String indexName = rs.getString("index_name");
+            final long indexSize = rs.getLong("index_size");
+            final long indexScans = rs.getLong("index_scans");
+            return UnusedIndex.of(tableName, indexName, indexSize, indexScans);
         });
-        return unusedIndices;
     }
 
     @Nonnull
     @Override
     public List<ForeignKey> getForeignKeysNotCoveredWithIndex() {
-        final List<ForeignKey> foreignKeysWithoutIndex = new ArrayList<>();
-        executeQuery(FOREIGN_KEYS_WITHOUT_INDEX, rs -> {
-            while (rs.next()) {
-                final String tableName = rs.getString("table_name");
-                final String constraintName = rs.getString("constraint_name");
-                final String columnsAsString = rs.getString("columns");
-                final String[] columns = columnsAsString.split(", ");
-                foreignKeysWithoutIndex.add(ForeignKey.of(tableName, constraintName, Arrays.asList(columns)));
-            }
+        return executeQuery(FOREIGN_KEYS_WITHOUT_INDEX, rs -> {
+            final String tableName = rs.getString("table_name");
+            final String constraintName = rs.getString("constraint_name");
+            final String columnsAsString = rs.getString("columns");
+            final String[] columns = columnsAsString.split(", ");
+            return ForeignKey.of(tableName, constraintName, Arrays.asList(columns));
         });
-        return foreignKeysWithoutIndex;
     }
 
     @Nonnull
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndices() {
-        final List<TableWithMissingIndex> tableWithMissingIndices = new ArrayList<>();
-        executeQuery(TABLES_WITH_MISSING_INDICES, rs -> {
-            while (rs.next()) {
-                final String tableName = rs.getString("table_name");
-                final long seqScans = rs.getLong("seq_scan");
-                final long indexScans = rs.getLong("idx_scan");
-                tableWithMissingIndices.add(TableWithMissingIndex.of(tableName, seqScans, indexScans));
-            }
+        return executeQuery(TABLES_WITH_MISSING_INDICES, rs -> {
+            final String tableName = rs.getString("table_name");
+            final long seqScans = rs.getLong("seq_scan");
+            final long indexScans = rs.getLong("idx_scan");
+            return TableWithMissingIndex.of(tableName, seqScans, indexScans);
         });
-        return tableWithMissingIndices;
     }
 
     @Nonnull
     @Override
     public List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey() {
-        final List<TableWithoutPrimaryKey> tableWithoutPrimaryKeys = new ArrayList<>();
-        executeQuery(TABLES_WITHOUT_PRIMARY_KEYS, rs -> {
-            while (rs.next()) {
-                final String tableName = rs.getString("table_name");
-                tableWithoutPrimaryKeys.add(TableWithoutPrimaryKey.of(tableName));
-            }
+        return executeQuery(TABLES_WITHOUT_PRIMARY_KEYS, rs -> {
+            final String tableName = rs.getString("table_name");
+            return TableWithoutPrimaryKey.of(tableName);
         });
-        return tableWithoutPrimaryKeys;
     }
 
     @Nonnull
     @Override
     public List<IndexWithNulls> getIndicesWithNullValues() {
-        final List<IndexWithNulls> indicesWithNulls = new ArrayList<>();
-        executeQuery(INDICES_WITH_NULL_VALUES, rs -> {
-            while (rs.next()) {
-                final String tableName = rs.getString("table_name");
-                final String indexName = rs.getString("index_name");
-                final long indexSize = rs.getLong("index_size");
-                final String nullableField = rs.getString("nullable_fields");
-                indicesWithNulls.add(IndexWithNulls.of(tableName, indexName, indexSize, nullableField));
-            }
+        return executeQuery(INDICES_WITH_NULL_VALUES, rs -> {
+            final String tableName = rs.getString("table_name");
+            final String indexName = rs.getString("index_name");
+            final long indexSize = rs.getLong("index_size");
+            final String nullableField = rs.getString("nullable_fields");
+            return IndexWithNulls.of(tableName, indexName, indexSize, nullableField);
         });
-        return indicesWithNulls;
     }
 
     @Nonnull
     private List<DuplicatedIndices> getDuplicatedOrIntersectedIndices(@Nonnull final String sqlQuery,
                                                                       @Nonnull final String columnName) {
-        final List<DuplicatedIndices> indices = new ArrayList<>();
-        executeQuery(sqlQuery, rs -> {
-            while (rs.next()) {
-                final String tableName = rs.getString("table_name");
-                final String duplicatedAsString = rs.getString(columnName);
-                indices.add(DuplicatedIndices.of(tableName, duplicatedAsString));
-            }
+        return executeQuery(sqlQuery, rs -> {
+            final String tableName = rs.getString("table_name");
+            final String duplicatedAsString = rs.getString(columnName);
+            return DuplicatedIndices.of(tableName, duplicatedAsString);
         });
-        return indices;
     }
 
-    private void executeQuery(@Nonnull final String sqlQuery, ResultSetExtractor rse) {
-        try (Connection connection = dataSource.getConnection();
+    @Override
+    @Nonnull
+    public PgHost getHost() {
+        return pgConnection.getHost();
+    }
+
+    private <T> List<T> executeQuery(@Nonnull final String sqlQuery, ResultSetExtractor<T> rse) {
+        LOGGER.debug("Executing query: {}", sqlQuery);
+        try (Connection connection = pgConnection.getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
+            final List<T> executionResult = new ArrayList<>();
             try (ResultSet resultSet = statement.executeQuery(Objects.requireNonNull(sqlQuery))) {
-                rse.extractData(resultSet);
+                while (resultSet.next()) {
+                    executionResult.add(rse.extractData(resultSet));
+                }
             }
+            LOGGER.debug("Query completed with result {}", executionResult);
+            return executionResult;
         } catch (SQLException e) {
+            LOGGER.trace("Query failed", e);
             throw new RuntimeException(e);
         }
     }

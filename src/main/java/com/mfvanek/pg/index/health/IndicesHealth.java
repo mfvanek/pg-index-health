@@ -16,47 +16,29 @@ import com.mfvanek.pg.model.UnusedIndex;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public interface IndexMaintenance {
+public interface IndicesHealth {
 
-    /**
-     * Список невалидных (битых) индексов, которые нужно удалить или переиндексировать.
-     */
     @Nonnull
     List<Index> getInvalidIndices();
 
-    /**
-     * Список дублирующихся (полностью идентичных) индексов (кандидаты на удаление).
-     */
     @Nonnull
     List<DuplicatedIndices> getDuplicatedIndices();
 
-    /**
-     * Список пересекающихся по полям индексов (частично идентичных, кандидаты на удаление).
-     */
     @Nonnull
     List<DuplicatedIndices> getIntersectedIndices();
 
     @Nonnull
-    List<UnusedIndex> getPotentiallyUnusedIndices();
+    List<UnusedIndex> getUnusedIndices();
 
     @Nonnull
     List<ForeignKey> getForeignKeysNotCoveredWithIndex();
 
-    /**
-     * Список таблиц с потенциально отсутствующими индексами.
-     */
     @Nonnull
     List<TableWithMissingIndex> getTablesWithMissingIndices();
 
-    /**
-     * Список таблиц без первичного ключа.
-     */
     @Nonnull
     List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey();
 
-    /**
-     * Список индексов, содержащих null значения.
-     */
     @Nonnull
     List<IndexWithNulls> getIndicesWithNullValues();
 }

@@ -48,4 +48,14 @@ class TableWithMissingIndexTest {
         assertNotEquals(theSame, third);
         assertNotEquals(theSame.hashCode(), third.hashCode());
     }
+
+    @Test
+    void comparison() {
+        final var first = TableWithMissingIndex.of("t1", 0, 1);
+        final var theSame = TableWithMissingIndex.of("t1", 2, 3);
+        final var third = TableWithMissingIndex.of("t2", 4, 5);
+        assertEquals(0, first.compareTo(theSame));
+        assertEquals(-1, first.compareTo(third));
+        assertEquals(1, third.compareTo(theSame));
+    }
 }

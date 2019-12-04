@@ -8,7 +8,7 @@ package com.mfvanek.pg.model;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class Index implements TableAware {
+public class Index implements TableAware, IndexAware {
 
     private final String tableName;
     private final String indexName;
@@ -24,6 +24,7 @@ public class Index implements TableAware {
         return tableName;
     }
 
+    @Override
     @Nonnull
     public String getIndexName() {
         return indexName;
