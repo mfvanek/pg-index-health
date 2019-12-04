@@ -8,6 +8,7 @@ package com.mfvanek.pg.connection;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -49,5 +50,32 @@ class PgHostImplTest {
         assertNotNull(host);
         assertEquals("One of [host-3, host-4, host-1, host-2]", host.getName());
         assertEquals("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432", host.getPgUrl());
+    }
+
+    @Test
+    void toStringTest() {
+        final var host = PgHostImpl.ofMaster();
+        assertNotNull(host);
+        assertEquals("PgHostImpl{pgUrl='jdbc:postgresql://master', hostNames=[master]}", host.toString());
+    }
+
+    @Test
+    void equalsAndHashCode() {
+        final var first = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
+        final var theSame = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
+        final var withDifferentHostsOrder = PgHostImpl.ofUrl("jdbc:postgresql://host-2:5432,host-1:4432,host-4:3432,host-3:2432/db_name?ssl=true&sslmode=require");
+        final var second = PgHostImpl.ofMaster();
+
+        assertEquals(first, first);
+        assertEquals(first.hashCode(), first.hashCode());
+
+        assertEquals(first, theSame);
+        assertEquals(first.hashCode(), theSame.hashCode());
+
+        assertEquals(first, withDifferentHostsOrder);
+        assertEquals(first.hashCode(), withDifferentHostsOrder.hashCode());
+
+        assertNotEquals(first, second);
+        assertNotEquals(first.hashCode(), second.hashCode());
     }
 }

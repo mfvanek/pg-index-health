@@ -10,7 +10,6 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-// TODO Add tests
 final class PgConnectionHelper {
 
     private PgConnectionHelper() {

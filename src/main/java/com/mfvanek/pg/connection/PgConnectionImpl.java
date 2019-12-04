@@ -9,7 +9,6 @@ import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 import java.util.Objects;
 
-// TODO add tests
 public class PgConnectionImpl implements PgConnection {
 
     private final DataSource dataSource;
