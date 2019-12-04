@@ -20,6 +20,6 @@ public class PgConnectionFactoryImpl implements PgConnectionFactory {
         LOGGER.debug("Creating {} with pgUrl = {}, userName = {}, password = {}",
                 PgConnection.class.getSimpleName(), pgUrl, userName, "*****");
         final var dataSource = PgConnectionHelper.createDataSource(pgUrl, userName, password);
-        return PgConnectionImpl.of(dataSource, PgHostImpl.of(pgUrl));
+        return PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl(pgUrl));
     }
 }

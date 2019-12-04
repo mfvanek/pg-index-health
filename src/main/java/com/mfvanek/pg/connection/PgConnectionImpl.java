@@ -38,11 +38,6 @@ public class PgConnectionImpl implements PgConnection {
     }
 
     @Nonnull
-    public static PgConnection ofReplica(@Nonnull final DataSource dataSource) {
-        return new PgConnectionImpl(dataSource, PgHostImpl.ofReplica());
-    }
-
-    @Nonnull
     public static PgConnection of(@Nonnull final DataSource dataSource, @Nonnull final PgHost host) {
         return new PgConnectionImpl(dataSource, host);
     }

@@ -9,23 +9,19 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Set;
 
-// TODO add test
 public class PgHostImpl implements PgHost {
-
-    private static final String MASTER = "master";
-    private static final String REPLICA = "replica";
 
     private final String pgUrl;
     private final Set<String> hostNames;
 
-    private PgHostImpl(@Nonnull final String pgUrl) {
-        if (MASTER.equals(pgUrl) || REPLICA.equals(pgUrl)) {
-            this.pgUrl = pgUrl;
-            this.hostNames = Set.of(pgUrl);
-        } else {
-            this.pgUrl = PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
-            this.hostNames = PgUrlParser.extractHostNames(pgUrl);
-        }
+    private PgHostImpl(@Nonnull final String pgUrl, boolean withValidation) {
+        this.pgUrl = PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
+        this.hostNames = PgUrlParser.extractHostNames(pgUrl);
+    }
+
+    private PgHostImpl(@Nonnull final String hostName) {
+        this.hostNames = Set.of(Objects.requireNonNull(hostName));
+        this.pgUrl = PgUrlParser.URL_HEADER + hostName;
     }
 
     @Nonnull
@@ -44,17 +40,17 @@ public class PgHostImpl implements PgHost {
 
     @Nonnull
     public static PgHost ofMaster() {
-        return new PgHostImpl(MASTER);
+        return new PgHostImpl("master");
     }
 
     @Nonnull
-    public static PgHost ofReplica() {
-        return new PgHostImpl(REPLICA);
+    public static PgHost ofUrl(@Nonnull final String pgUrl) {
+        return new PgHostImpl(pgUrl, true);
     }
 
     @Nonnull
-    public static PgHost of(@Nonnull final String pgUrl) {
-        return new PgHostImpl(pgUrl);
+    public static PgHost ofName(@Nonnull final String hostName) {
+        return new PgHostImpl(hostName);
     }
 
     @Override
@@ -80,6 +76,7 @@ public class PgHostImpl implements PgHost {
     public String toString() {
         return PgHostImpl.class.getSimpleName() + '{' +
                 "pgUrl='" + pgUrl + '\'' +
+                ", hostNames=" + hostNames +
                 '}';
     }
 }
