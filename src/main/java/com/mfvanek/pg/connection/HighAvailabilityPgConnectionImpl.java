@@ -9,7 +9,6 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Set;
 
-// TODO add and actualize tests
 public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConnection {
 
     private final PgConnection connectionToMaster;

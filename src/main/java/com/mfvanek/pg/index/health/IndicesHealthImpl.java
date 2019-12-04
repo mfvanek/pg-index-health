@@ -66,10 +66,6 @@ public class IndicesHealthImpl implements IndicesHealth {
     @Override
     public List<UnusedIndex> getUnusedIndices() {
         final List<List<UnusedIndex>> potentiallyUnusedIndicesFromAllHosts = new ArrayList<>();
-
-        potentiallyUnusedIndicesFromAllHosts.add(
-                doOnMaster(maintenanceForMaster::getPotentiallyUnusedIndices));
-
         for (var maintenanceForReplica : maintenanceForReplicas) {
             potentiallyUnusedIndicesFromAllHosts.add(
                     doOnReplica(maintenanceForReplica.getHost(), maintenanceForReplica::getPotentiallyUnusedIndices));
@@ -88,10 +84,6 @@ public class IndicesHealthImpl implements IndicesHealth {
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndices() {
         final List<List<TableWithMissingIndex>> tablesWithMissingIndicesFromAllHosts = new ArrayList<>();
-
-        tablesWithMissingIndicesFromAllHosts.add(
-                doOnMaster(maintenanceForMaster::getTablesWithMissingIndices));
-
         for (var maintenanceForReplica : maintenanceForReplicas) {
             tablesWithMissingIndicesFromAllHosts.add(
                     doOnReplica(maintenanceForReplica.getHost(), maintenanceForReplica::getTablesWithMissingIndices));
@@ -115,11 +107,6 @@ public class IndicesHealthImpl implements IndicesHealth {
 
     private void logExecutingOnMaster() {
         LOGGER.debug("Going to execute on master host [{}]", maintenanceForMaster.getHost().getName());
-    }
-
-    private <T> T doOnMaster(Supplier<T> action) {
-        logExecutingOnMaster();
-        return action.get();
     }
 
     private <T> T doOnReplica(@Nonnull final PgHost host, Supplier<T> action) {
