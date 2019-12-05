@@ -17,7 +17,7 @@ class PgUrlParserTest {
 
     @Test
     void extractNamesAndUrlsForEachHost() {
-        var extractResult = PgUrlParser.extractNamesAndUrlsForEachHost(
+        var extractResult = PgUrlParser.extractNameWithPortAndUrlForEachHost(
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
         assertThat(extractResult, hasSize(4));
         assertThat(extractResult, containsInAnyOrder(
@@ -27,14 +27,14 @@ class PgUrlParserTest {
                 Pair.of("host-4:6432", "jdbc:postgresql://host-4:6432/db_name?ssl=true&sslmode=require")
         ));
 
-        assertThrows(NullPointerException.class, () -> PgUrlParser.extractNamesAndUrlsForEachHost(null));
-        assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractNamesAndUrlsForEachHost(""));
-        assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractNamesAndUrlsForEachHost("host-name:5432"));
+        assertThrows(NullPointerException.class, () -> PgUrlParser.extractNameWithPortAndUrlForEachHost(null));
+        assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractNameWithPortAndUrlForEachHost(""));
+        assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractNameWithPortAndUrlForEachHost("host-name:5432"));
     }
 
     @Test
     void extractNamesAndUrlsForMaster() {
-        var extractResult = PgUrlParser.extractNamesAndUrlsForEachHost(
+        var extractResult = PgUrlParser.extractNameWithPortAndUrlForEachHost(
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?targetServerType=master&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require");
         assertThat(extractResult, hasSize(4));
         assertThat(extractResult, containsInAnyOrder(

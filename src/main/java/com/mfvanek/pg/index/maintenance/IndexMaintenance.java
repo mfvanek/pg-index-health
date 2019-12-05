@@ -20,43 +20,49 @@ import java.util.List;
 public interface IndexMaintenance extends HostAware {
 
     /**
-     * Список невалидных (битых) индексов, которые нужно удалить или переиндексировать.
+     * List of invalid (broken) indices to be deleted or re-indexed.
      */
     @Nonnull
     List<Index> getInvalidIndices();
 
     /**
-     * Список дублирующихся (полностью идентичных) индексов (кандидаты на удаление).
+     * List of duplicated (completely identical) indices (candidates for deletion).
      */
     @Nonnull
     List<DuplicatedIndices> getDuplicatedIndices();
 
     /**
-     * Список пересекающихся по полям индексов (частично идентичных, кандидаты на удаление).
+     * List of intersecting indices (partially identical, candidates for deletion).
      */
     @Nonnull
     List<DuplicatedIndices> getIntersectedIndices();
 
+    /**
+     * List of potentially unused indices (candidates for deletion).
+     */
     @Nonnull
     List<UnusedIndex> getPotentiallyUnusedIndices();
 
+    /**
+     * List of foreign keys without associated indices (potential performance degradation).
+     */
     @Nonnull
     List<ForeignKey> getForeignKeysNotCoveredWithIndex();
 
     /**
-     * Список таблиц с потенциально отсутствующими индексами.
+     * List of tables with potentially missing indices (potential performance degradation).
      */
     @Nonnull
     List<TableWithMissingIndex> getTablesWithMissingIndices();
 
     /**
-     * Список таблиц без первичного ключа.
+     * List of tables without primary key.
      */
     @Nonnull
     List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey();
 
     /**
-     * Список индексов, содержащих null значения.
+     * List of indices that contain null values.
      */
     @Nonnull
     List<IndexWithNulls> getIndicesWithNullValues();
