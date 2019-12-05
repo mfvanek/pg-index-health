@@ -12,6 +12,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -27,17 +29,27 @@ class PgConnectionImplTest {
         final var connection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
         assertNotNull(connection.getDataSource());
         assertThat(connection.getHost(), equalTo(PgHostImpl.ofMaster()));
-
-        assertThrows(NullPointerException.class, () -> PgConnectionImpl.ofMaster(null));
     }
 
     @Test
-    void getReplicasDataSource() {
-        final var dataSource = embeddedPostgres.getTestDatabase();
-        final var connection = PgConnectionImpl.ofReplica(dataSource);
-        assertNotNull(connection.getDataSource());
-        assertThat(connection.getHost(), equalTo(PgHostImpl.ofReplica()));
+    void withInvalidArguments() {
+        assertThrows(NullPointerException.class, () -> PgConnectionImpl.ofMaster(null));
+        assertThrows(NullPointerException.class, () -> PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), null));
+    }
 
-        assertThrows(NullPointerException.class, () -> PgConnectionImpl.ofReplica(null));
+    @Test
+    void equalsAndHashCode() {
+        final var first = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final var theSame = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final var second = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("second"));
+
+        assertEquals(first, first);
+        assertEquals(first.hashCode(), first.hashCode());
+
+        assertEquals(first, theSame);
+        assertEquals(first.hashCode(), theSame.hashCode());
+
+        assertNotEquals(first, second);
+        assertNotEquals(first.hashCode(), second.hashCode());
     }
 }

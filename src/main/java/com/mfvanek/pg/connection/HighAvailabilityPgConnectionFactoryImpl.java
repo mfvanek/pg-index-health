@@ -5,13 +5,15 @@
 
 package com.mfvanek.pg.connection;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-// TODO add tests for wrong params
 public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailabilityPgConnectionFactory {
 
     private final PgConnectionFactory pgConnectionFactory;
@@ -25,8 +27,7 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
     public HighAvailabilityPgConnection of(@Nonnull final String writeUrl,
                                            @Nonnull final String userName,
                                            @Nonnull final String password) {
-        final var connectionToMaster = pgConnectionFactory.forUrl(writeUrl, userName, password);
-        return HighAvailabilityPgConnectionImpl.of(connectionToMaster);
+        return create(writeUrl, userName, password, null, null);
     }
 
     @Override
@@ -36,10 +37,7 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
                                            @Nonnull final String password,
                                            @Nonnull final String readUrl) {
         PgConnectionValidators.pgUrlNotBlankAndValid(readUrl, "readUrl");
-        final var connectionToMaster = pgConnectionFactory.forUrl(writeUrl, userName, password);
-        final Map<String, PgConnection> connectionsToReplicas = new HashMap<>();
-        addReplicasDataSources(connectionsToReplicas, readUrl, userName, password);
-        return HighAvailabilityPgConnectionImpl.of(connectionToMaster, Set.copyOf(connectionsToReplicas.values()));
+        return create(writeUrl, userName, password, readUrl, null);
     }
 
     @Override
@@ -51,10 +49,23 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
                                            @Nonnull final String cascadeAsyncReadUrl) {
         PgConnectionValidators.pgUrlNotBlankAndValid(readUrl, "readUrl");
         PgConnectionValidators.pgUrlNotBlankAndValid(cascadeAsyncReadUrl, "cascadeAsyncReadUrl");
+        return create(writeUrl, userName, password, readUrl, cascadeAsyncReadUrl);
+    }
+
+    private HighAvailabilityPgConnection create(@Nonnull final String writeUrl,
+                                                @Nonnull final String userName,
+                                                @Nonnull final String password,
+                                                @Nullable final String readUrl,
+                                                @Nullable final String cascadeAsyncReadUrl) {
         final var connectionToMaster = pgConnectionFactory.forUrl(writeUrl, userName, password);
         final Map<String, PgConnection> connectionsToReplicas = new HashMap<>();
-        addReplicasDataSources(connectionsToReplicas, readUrl, userName, password);
-        addReplicasDataSources(connectionsToReplicas, cascadeAsyncReadUrl, userName, password);
+        addReplicasDataSources(connectionsToReplicas, writeUrl, userName, password);
+        if (StringUtils.isNotBlank(readUrl)) {
+            addReplicasDataSources(connectionsToReplicas, readUrl, userName, password);
+        }
+        if (StringUtils.isNotBlank(cascadeAsyncReadUrl)) {
+            addReplicasDataSources(connectionsToReplicas, cascadeAsyncReadUrl, userName, password);
+        }
         return HighAvailabilityPgConnectionImpl.of(connectionToMaster, Set.copyOf(connectionsToReplicas.values()));
     }
 

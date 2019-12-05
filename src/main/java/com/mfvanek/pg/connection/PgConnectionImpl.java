@@ -9,7 +9,6 @@ import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 import java.util.Objects;
 
-// TODO add tests
 public class PgConnectionImpl implements PgConnection {
 
     private final DataSource dataSource;
@@ -35,11 +34,6 @@ public class PgConnectionImpl implements PgConnection {
     @Nonnull
     public static PgConnection ofMaster(@Nonnull final DataSource dataSource) {
         return new PgConnectionImpl(dataSource, PgHostImpl.ofMaster());
-    }
-
-    @Nonnull
-    public static PgConnection ofReplica(@Nonnull final DataSource dataSource) {
-        return new PgConnectionImpl(dataSource, PgHostImpl.ofReplica());
     }
 
     @Nonnull

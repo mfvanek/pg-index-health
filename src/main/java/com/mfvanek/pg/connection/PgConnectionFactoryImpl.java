@@ -16,10 +16,12 @@ public class PgConnectionFactoryImpl implements PgConnectionFactory {
 
     @Nonnull
     @Override
-    public PgConnection forUrl(@Nonnull String pgUrl, @Nonnull String userName, @Nonnull String password) {
+    public PgConnection forUrl(@Nonnull final String pgUrl,
+                               @Nonnull final String userName,
+                               @Nonnull final String password) {
         LOGGER.debug("Creating {} with pgUrl = {}, userName = {}, password = {}",
                 PgConnection.class.getSimpleName(), pgUrl, userName, "*****");
         final var dataSource = PgConnectionHelper.createDataSource(pgUrl, userName, password);
-        return PgConnectionImpl.of(dataSource, PgHostImpl.of(pgUrl));
+        return PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl(pgUrl));
     }
 }
