@@ -29,12 +29,22 @@ final class PgUrlParser {
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
         final int lastIndex = pgUrl.lastIndexOf('/');
         final String dbNameWithParams = pgUrl.substring(lastIndex);
+        final String dbNameWithParamsForReplica = convertToReplicaConnectionString(dbNameWithParams);
         final String allHostsWithPort = extractAllHostsWithPort(pgUrl);
         return Arrays.stream(allHostsWithPort.split(","))
                 .distinct()
                 .sorted()
-                .map(h -> Pair.of(h, URL_HEADER + h + dbNameWithParams))
+                .map(h -> Pair.of(h, URL_HEADER + h + dbNameWithParamsForReplica))
                 .collect(Collectors.toList());
+    }
+
+    @Nonnull
+    private static String convertToReplicaConnectionString(@Nonnull final String dbNameWithParams) {
+        final String masterServerType = "targetServerType=master";
+        if (dbNameWithParams.contains(masterServerType)) {
+            return dbNameWithParams.replace(masterServerType, "targetServerType=any");
+        }
+        return dbNameWithParams;
     }
 
     @Nonnull
