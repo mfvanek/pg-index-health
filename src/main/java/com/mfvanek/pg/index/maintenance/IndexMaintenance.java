@@ -23,25 +23,25 @@ public interface IndexMaintenance extends HostAware {
      * List of invalid (broken) indices to be deleted or re-indexed.
      */
     @Nonnull
-    List<Index> getInvalidIndices();
+    List<Index> getInvalidIndexes();
 
     /**
      * List of duplicated (completely identical) indices (candidates for deletion).
      */
     @Nonnull
-    List<DuplicatedIndexes> getDuplicatedIndices();
+    List<DuplicatedIndexes> getDuplicatedIndexes();
 
     /**
      * List of intersecting indices (partially identical, candidates for deletion).
      */
     @Nonnull
-    List<DuplicatedIndexes> getIntersectedIndices();
+    List<DuplicatedIndexes> getIntersectedIndexes();
 
     /**
      * List of potentially unused indices (candidates for deletion).
      */
     @Nonnull
-    List<UnusedIndex> getPotentiallyUnusedIndices();
+    List<UnusedIndex> getPotentiallyUnusedIndexes();
 
     /**
      * List of foreign keys without associated indices (potential performance degradation).
@@ -53,7 +53,7 @@ public interface IndexMaintenance extends HostAware {
      * List of tables with potentially missing indices (potential performance degradation).
      */
     @Nonnull
-    List<TableWithMissingIndex> getTablesWithMissingIndices();
+    List<TableWithMissingIndex> getTablesWithMissingIndexes();
 
     /**
      * List of tables without primary key.
@@ -65,5 +65,5 @@ public interface IndexMaintenance extends HostAware {
      * List of indices that contain null values.
      */
     @Nonnull
-    List<IndexWithNulls> getIndicesWithNullValues();
+    List<IndexWithNulls> getIndexesWithNullValues();
 }

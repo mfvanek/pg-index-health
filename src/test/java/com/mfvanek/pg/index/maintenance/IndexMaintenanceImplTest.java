@@ -41,7 +41,7 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getInvalidIndicesOnEmptyDataBase() {
-        final var invalidIndices = indexMaintenance.getInvalidIndices();
+        final var invalidIndices = indexMaintenance.getInvalidIndexes();
         assertNotNull(invalidIndices);
         assertEquals(0, invalidIndices.size());
     }
@@ -50,7 +50,7 @@ class IndexMaintenanceImplTest {
     void getInvalidIndicesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var invalidIndices = indexMaintenance.getInvalidIndices();
+                    final var invalidIndices = indexMaintenance.getInvalidIndexes();
                     assertNotNull(invalidIndices);
                     assertEquals(0, invalidIndices.size());
                 });
@@ -63,7 +63,7 @@ class IndexMaintenanceImplTest {
                     databasePopulator.createInvalidIndex();
                 },
                 () -> {
-                    final var invalidIndices = indexMaintenance.getInvalidIndices();
+                    final var invalidIndices = indexMaintenance.getInvalidIndexes();
                     assertNotNull(invalidIndices);
                     assertEquals(1, invalidIndices.size());
                     final var index = invalidIndices.get(0);
@@ -74,7 +74,7 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getDuplicatedIndicesOnEmptyDataBase() {
-        final var duplicatedIndices = indexMaintenance.getDuplicatedIndices();
+        final var duplicatedIndices = indexMaintenance.getDuplicatedIndexes();
         assertNotNull(duplicatedIndices);
         assertEquals(0, duplicatedIndices.size());
     }
@@ -83,7 +83,7 @@ class IndexMaintenanceImplTest {
     void getDuplicatedIndicesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var duplicatedIndices = indexMaintenance.getDuplicatedIndices();
+                    final var duplicatedIndices = indexMaintenance.getDuplicatedIndexes();
                     assertNotNull(duplicatedIndices);
                     assertEquals(0, duplicatedIndices.size());
                 });
@@ -96,7 +96,7 @@ class IndexMaintenanceImplTest {
                     databasePopulator.createDuplicatedIndex();
                 },
                 () -> {
-                    final var duplicatedIndices = indexMaintenance.getDuplicatedIndices();
+                    final var duplicatedIndices = indexMaintenance.getDuplicatedIndexes();
                     assertNotNull(duplicatedIndices);
                     assertEquals(1, duplicatedIndices.size());
                     final var entry = duplicatedIndices.get(0);
@@ -113,7 +113,7 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getIntersectedIndicesOnEmptyDataBase() {
-        final var intersectedIndices = indexMaintenance.getIntersectedIndices();
+        final var intersectedIndices = indexMaintenance.getIntersectedIndexes();
         assertNotNull(intersectedIndices);
         assertEquals(0, intersectedIndices.size());
     }
@@ -122,7 +122,7 @@ class IndexMaintenanceImplTest {
     void getIntersectedIndicesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var intersectedIndices = indexMaintenance.getIntersectedIndices();
+                    final var intersectedIndices = indexMaintenance.getIntersectedIndexes();
                     assertNotNull(intersectedIndices);
                     assertEquals(0, intersectedIndices.size());
                 });
@@ -135,7 +135,7 @@ class IndexMaintenanceImplTest {
                     databasePopulator.createDuplicatedIndex();
                 },
                 () -> {
-                    final var intersectedIndices = indexMaintenance.getIntersectedIndices();
+                    final var intersectedIndices = indexMaintenance.getIntersectedIndexes();
                     assertNotNull(intersectedIndices);
                     assertEquals(1, intersectedIndices.size());
                     final var entry = intersectedIndices.get(0);
@@ -152,7 +152,7 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getPotentiallyUnusedIndicesOnEmptyDataBase() {
-        final var unusedIndices = indexMaintenance.getPotentiallyUnusedIndices();
+        final var unusedIndices = indexMaintenance.getPotentiallyUnusedIndexes();
         assertNotNull(unusedIndices);
         assertEquals(0, unusedIndices.size());
     }
@@ -161,7 +161,7 @@ class IndexMaintenanceImplTest {
     void getPotentiallyUnusedIndicesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var unusedIndices = indexMaintenance.getPotentiallyUnusedIndices();
+                    final var unusedIndices = indexMaintenance.getPotentiallyUnusedIndexes();
                     assertNotNull(unusedIndices);
                     assertEquals(0, unusedIndices.size());
                 });
@@ -174,7 +174,7 @@ class IndexMaintenanceImplTest {
                     databasePopulator.createDuplicatedIndex();
                 },
                 () -> {
-                    final var unusedIndices = indexMaintenance.getPotentiallyUnusedIndices();
+                    final var unusedIndices = indexMaintenance.getPotentiallyUnusedIndexes();
                     assertNotNull(unusedIndices);
                     assertThat(unusedIndices.size(), equalTo(3));
                     final var names = unusedIndices.stream().map(UnusedIndex::getIndexName).collect(toSet());
@@ -243,7 +243,7 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getTablesWithMissingIndicesOnEmptyDataBase() {
-        final var tables = indexMaintenance.getTablesWithMissingIndices();
+        final var tables = indexMaintenance.getTablesWithMissingIndexes();
         assertNotNull(tables);
         assertEquals(0, tables.size());
     }
@@ -252,7 +252,7 @@ class IndexMaintenanceImplTest {
     void getTablesWithMissingIndicesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
                 () -> {
-                    final var tables = indexMaintenance.getTablesWithMissingIndices();
+                    final var tables = indexMaintenance.getTablesWithMissingIndexes();
                     assertNotNull(tables);
                     assertEquals(0, tables.size());
                 });
@@ -265,7 +265,7 @@ class IndexMaintenanceImplTest {
                     databasePopulator.tryToFindAccountByClientId(101);
                 },
                 () -> {
-                    var tables = indexMaintenance.getTablesWithMissingIndices();
+                    var tables = indexMaintenance.getTablesWithMissingIndexes();
                     assertNotNull(tables);
                     assertEquals(1, tables.size());
                     var table = tables.get(0);
@@ -309,7 +309,7 @@ class IndexMaintenanceImplTest {
 
     @Test
     void getIndicesWithNullValuesOnEmptyDataBase() {
-        final var indices = indexMaintenance.getIndicesWithNullValues();
+        final var indices = indexMaintenance.getIndexesWithNullValues();
         assertNotNull(indices);
         assertEquals(0, indices.size());
     }
@@ -318,7 +318,7 @@ class IndexMaintenanceImplTest {
     void getIndicesWithNullValuesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
                 () -> {
-                    final var indices = indexMaintenance.getIndicesWithNullValues();
+                    final var indices = indexMaintenance.getIndexesWithNullValues();
                     assertNotNull(indices);
                     assertEquals(0, indices.size());
                 });
@@ -331,7 +331,7 @@ class IndexMaintenanceImplTest {
                     databasePopulator.createIndexWithNulls();
                 },
                 () -> {
-                    final var indices = indexMaintenance.getIndicesWithNullValues();
+                    final var indices = indexMaintenance.getIndexesWithNullValues();
                     assertNotNull(indices);
                     assertEquals(1, indices.size());
                 });

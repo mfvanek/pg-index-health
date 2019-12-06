@@ -29,7 +29,7 @@ class ReplicasHelperTest {
                 List.of(i2, i1, i5),
                 List.of(i2, i5, i1, i4)
         );
-        final var unusedIndices = ReplicasHelper.getUnusedIndicesAsIntersectionResult(potentiallyUnusedIndicesFromAllHosts);
+        final var unusedIndices = ReplicasHelper.getUnusedIndexesAsIntersectionResult(potentiallyUnusedIndicesFromAllHosts);
         assertThat(unusedIndices, hasSize(2));
         assertThat(unusedIndices, containsInAnyOrder(i1, i5));
     }
@@ -45,7 +45,7 @@ class ReplicasHelperTest {
                 List.of(t2),
                 List.of(t2, t3)
         );
-        final var tablesWithMissingIndices = ReplicasHelper.getTablesWithMissingIndicesAsUnionResult(
+        final var tablesWithMissingIndices = ReplicasHelper.getTablesWithMissingIndexesAsUnionResult(
                 tablesWithMissingIndicesFromAllHosts);
         assertThat(tablesWithMissingIndices, hasSize(3));
         assertThat(tablesWithMissingIndices, containsInAnyOrder(t1, t2, t3));

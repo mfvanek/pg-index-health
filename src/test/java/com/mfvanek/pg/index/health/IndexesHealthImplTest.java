@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 // TODO Add tests for non zero cases
-class IndicesHealthImplTest {
+class IndexesHealthImplTest {
 
     @RegisterExtension
     static final PreparedDbExtension embeddedPostgres =
@@ -33,12 +33,12 @@ class IndicesHealthImplTest {
 
     private final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(
             PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase()));
-    private final IndicesHealth indicesHealth = new IndicesHealthImpl(haPgConnection,
+    private final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection,
             new IndexMaintenanceFactoryImpl());
 
     @Test
     void getInvalidIndicesOnEmptyDatabase() {
-        final var invalidIndices = indicesHealth.getInvalidIndices();
+        final var invalidIndices = indexesHealth.getInvalidIndexes();
         assertNotNull(invalidIndices);
         assertEquals(0, invalidIndices.size());
     }
@@ -47,7 +47,7 @@ class IndicesHealthImplTest {
     void getInvalidIndicesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var invalidIndices = indicesHealth.getInvalidIndices();
+                    final var invalidIndices = indexesHealth.getInvalidIndexes();
                     assertNotNull(invalidIndices);
                     assertEquals(0, invalidIndices.size());
                 });
@@ -55,7 +55,7 @@ class IndicesHealthImplTest {
 
     @Test
     void getDuplicatedIndicesOnEmptyDatabase() {
-        final var duplicatedIndices = indicesHealth.getDuplicatedIndices();
+        final var duplicatedIndices = indexesHealth.getDuplicatedIndexes();
         assertNotNull(duplicatedIndices);
         assertEquals(0, duplicatedIndices.size());
     }
@@ -64,7 +64,7 @@ class IndicesHealthImplTest {
     void getDuplicatedIndicesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var duplicatedIndices = indicesHealth.getDuplicatedIndices();
+                    final var duplicatedIndices = indexesHealth.getDuplicatedIndexes();
                     assertNotNull(duplicatedIndices);
                     assertEquals(0, duplicatedIndices.size());
                 });
@@ -72,7 +72,7 @@ class IndicesHealthImplTest {
 
     @Test
     void getIntersectedIndicesOnEmptyDatabase() {
-        final var intersectedIndices = indicesHealth.getIntersectedIndices();
+        final var intersectedIndices = indexesHealth.getIntersectedIndexes();
         assertNotNull(intersectedIndices);
         assertEquals(0, intersectedIndices.size());
     }
@@ -81,7 +81,7 @@ class IndicesHealthImplTest {
     void getIntersectedIndicesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var intersectedIndices = indicesHealth.getIntersectedIndices();
+                    final var intersectedIndices = indexesHealth.getIntersectedIndexes();
                     assertNotNull(intersectedIndices);
                     assertEquals(0, intersectedIndices.size());
                 });
@@ -89,7 +89,7 @@ class IndicesHealthImplTest {
 
     @Test
     void getUnusedIndicesOnEmptyDatabase() {
-        final var unusedIndices = indicesHealth.getUnusedIndices();
+        final var unusedIndices = indexesHealth.getUnusedIndexes();
         assertNotNull(unusedIndices);
         assertEquals(0, unusedIndices.size());
     }
@@ -98,7 +98,7 @@ class IndicesHealthImplTest {
     void getUnusedIndicesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var unusedIndices = indicesHealth.getUnusedIndices();
+                    final var unusedIndices = indexesHealth.getUnusedIndexes();
                     assertNotNull(unusedIndices);
                     assertEquals(0, unusedIndices.size());
                 });
@@ -106,7 +106,7 @@ class IndicesHealthImplTest {
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnEmptyDatabase() {
-        final var foreignKeys = indicesHealth.getForeignKeysNotCoveredWithIndex();
+        final var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
         assertNotNull(foreignKeys);
         assertEquals(0, foreignKeys.size());
     }
@@ -115,7 +115,7 @@ class IndicesHealthImplTest {
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTables,
                 () -> {
-                    final var foreignKeys = indicesHealth.getForeignKeysNotCoveredWithIndex();
+                    final var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
                     assertEquals(0, foreignKeys.size());
                 });
@@ -123,7 +123,7 @@ class IndicesHealthImplTest {
 
     @Test
     void getTablesWithMissingIndicesOnEmptyDatabase() {
-        final var tables = indicesHealth.getTablesWithMissingIndices();
+        final var tables = indexesHealth.getTablesWithMissingIndexes();
         assertNotNull(tables);
         assertEquals(0, tables.size());
     }
@@ -132,7 +132,7 @@ class IndicesHealthImplTest {
     void getTablesWithMissingIndicesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
                 () -> {
-                    final var tables = indicesHealth.getTablesWithMissingIndices();
+                    final var tables = indexesHealth.getTablesWithMissingIndexes();
                     assertNotNull(tables);
                     assertEquals(0, tables.size());
                 });
@@ -140,7 +140,7 @@ class IndicesHealthImplTest {
 
     @Test
     void getTablesWithoutPrimaryKeyOnEmptyDatabase() {
-        final var tables = indicesHealth.getTablesWithoutPrimaryKey();
+        final var tables = indexesHealth.getTablesWithoutPrimaryKey();
         assertNotNull(tables);
         assertEquals(0, tables.size());
     }
@@ -149,7 +149,7 @@ class IndicesHealthImplTest {
     void getTablesWithoutPrimaryKeyOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
                 () -> {
-                    final var tables = indicesHealth.getTablesWithoutPrimaryKey();
+                    final var tables = indexesHealth.getTablesWithoutPrimaryKey();
                     assertNotNull(tables);
                     assertEquals(0, tables.size());
                 });
@@ -157,7 +157,7 @@ class IndicesHealthImplTest {
 
     @Test
     void getIndicesWithNullValuesOnEmptyDatabase() {
-        final var indices = indicesHealth.getIndicesWithNullValues();
+        final var indices = indexesHealth.getIndexesWithNullValues();
         assertNotNull(indices);
         assertEquals(0, indices.size());
     }
@@ -166,7 +166,7 @@ class IndicesHealthImplTest {
     void getIndicesWithNullValuesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
                 () -> {
-                    final var indices = indicesHealth.getIndicesWithNullValues();
+                    final var indices = indexesHealth.getIndexesWithNullValues();
                     assertNotNull(indices);
                     assertEquals(0, indices.size());
                 });

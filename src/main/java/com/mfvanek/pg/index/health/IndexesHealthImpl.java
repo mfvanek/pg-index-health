@@ -25,14 +25,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class IndicesHealthImpl implements IndicesHealth {
+public class IndexesHealthImpl implements IndexesHealth {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IndicesHealthImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndexesHealthImpl.class);
 
     private final IndexMaintenance maintenanceForMaster;
     private final List<IndexMaintenance> maintenanceForReplicas;
 
-    public IndicesHealthImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
+    public IndexesHealthImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
                              @Nonnull final IndexMaintenanceFactory maintenanceFactory) {
         Objects.requireNonNull(haPgConnection);
         Objects.requireNonNull(maintenanceFactory);
@@ -43,34 +43,34 @@ public class IndicesHealthImpl implements IndicesHealth {
 
     @Nonnull
     @Override
-    public List<Index> getInvalidIndices() {
+    public List<Index> getInvalidIndexes() {
         logExecutingOnMaster();
-        return maintenanceForMaster.getInvalidIndices();
+        return maintenanceForMaster.getInvalidIndexes();
     }
 
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> getDuplicatedIndices() {
+    public List<DuplicatedIndexes> getDuplicatedIndexes() {
         logExecutingOnMaster();
-        return maintenanceForMaster.getDuplicatedIndices();
+        return maintenanceForMaster.getDuplicatedIndexes();
     }
 
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> getIntersectedIndices() {
+    public List<DuplicatedIndexes> getIntersectedIndexes() {
         logExecutingOnMaster();
-        return maintenanceForMaster.getIntersectedIndices();
+        return maintenanceForMaster.getIntersectedIndexes();
     }
 
     @Nonnull
     @Override
-    public List<UnusedIndex> getUnusedIndices() {
-        final List<List<UnusedIndex>> potentiallyUnusedIndicesFromAllHosts = new ArrayList<>();
+    public List<UnusedIndex> getUnusedIndexes() {
+        final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = new ArrayList<>();
         for (var maintenanceForReplica : maintenanceForReplicas) {
-            potentiallyUnusedIndicesFromAllHosts.add(
-                    doOnReplica(maintenanceForReplica.getHost(), maintenanceForReplica::getPotentiallyUnusedIndices));
+            potentiallyUnusedIndexesFromAllHosts.add(
+                    doOnReplica(maintenanceForReplica.getHost(), maintenanceForReplica::getPotentiallyUnusedIndexes));
         }
-        return ReplicasHelper.getUnusedIndicesAsIntersectionResult(potentiallyUnusedIndicesFromAllHosts);
+        return ReplicasHelper.getUnusedIndexesAsIntersectionResult(potentiallyUnusedIndexesFromAllHosts);
     }
 
     @Nonnull
@@ -82,13 +82,13 @@ public class IndicesHealthImpl implements IndicesHealth {
 
     @Nonnull
     @Override
-    public List<TableWithMissingIndex> getTablesWithMissingIndices() {
+    public List<TableWithMissingIndex> getTablesWithMissingIndexes() {
         final List<List<TableWithMissingIndex>> tablesWithMissingIndicesFromAllHosts = new ArrayList<>();
         for (var maintenanceForReplica : maintenanceForReplicas) {
             tablesWithMissingIndicesFromAllHosts.add(
-                    doOnReplica(maintenanceForReplica.getHost(), maintenanceForReplica::getTablesWithMissingIndices));
+                    doOnReplica(maintenanceForReplica.getHost(), maintenanceForReplica::getTablesWithMissingIndexes));
         }
-        return ReplicasHelper.getTablesWithMissingIndicesAsUnionResult(tablesWithMissingIndicesFromAllHosts);
+        return ReplicasHelper.getTablesWithMissingIndexesAsUnionResult(tablesWithMissingIndicesFromAllHosts);
     }
 
     @Nonnull
@@ -100,9 +100,9 @@ public class IndicesHealthImpl implements IndicesHealth {
 
     @Nonnull
     @Override
-    public List<IndexWithNulls> getIndicesWithNullValues() {
+    public List<IndexWithNulls> getIndexesWithNullValues() {
         logExecutingOnMaster();
-        return maintenanceForMaster.getIndicesWithNullValues();
+        return maintenanceForMaster.getIndexesWithNullValues();
     }
 
     private void logExecutingOnMaster() {

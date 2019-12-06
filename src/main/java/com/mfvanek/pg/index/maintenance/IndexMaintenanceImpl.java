@@ -164,7 +164,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<Index> getInvalidIndices() {
+    public List<Index> getInvalidIndexes() {
         return executeQuery(INVALID_INDICES_SQL, rs -> {
             final String tableName = rs.getString("table_name");
             final String indexName = rs.getString("index_name");
@@ -174,19 +174,19 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> getDuplicatedIndices() {
+    public List<DuplicatedIndexes> getDuplicatedIndexes() {
         return getDuplicatedOrIntersectedIndices(DUPLICATED_INDICES_SQL, "duplicated_indices");
     }
 
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> getIntersectedIndices() {
+    public List<DuplicatedIndexes> getIntersectedIndexes() {
         return getDuplicatedOrIntersectedIndices(INTERSECTED_INDICES_SQL, "intersected_indices");
     }
 
     @Nonnull
     @Override
-    public List<UnusedIndex> getPotentiallyUnusedIndices() {
+    public List<UnusedIndex> getPotentiallyUnusedIndexes() {
         return executeQuery(UNUSED_INDICES_SQL, rs -> {
             final String tableName = rs.getString("table_name");
             final String indexName = rs.getString("index_name");
@@ -210,7 +210,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<TableWithMissingIndex> getTablesWithMissingIndices() {
+    public List<TableWithMissingIndex> getTablesWithMissingIndexes() {
         return executeQuery(TABLES_WITH_MISSING_INDICES, rs -> {
             final String tableName = rs.getString("table_name");
             final long seqScans = rs.getLong("seq_scan");
@@ -230,7 +230,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<IndexWithNulls> getIndicesWithNullValues() {
+    public List<IndexWithNulls> getIndexesWithNullValues() {
         return executeQuery(INDICES_WITH_NULL_VALUES, rs -> {
             final String tableName = rs.getString("table_name");
             final String indexName = rs.getString("index_name");

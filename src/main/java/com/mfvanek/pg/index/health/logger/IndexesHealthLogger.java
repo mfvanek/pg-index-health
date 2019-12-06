@@ -8,7 +8,7 @@ package com.mfvanek.pg.index.health.logger;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public interface IndicesHealthLogger {
+public interface IndexesHealthLogger {
 
     @Nonnull
     List<String> logAll();

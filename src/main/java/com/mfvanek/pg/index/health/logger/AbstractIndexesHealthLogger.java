@@ -5,7 +5,7 @@
 
 package com.mfvanek.pg.index.health.logger;
 
-import com.mfvanek.pg.index.health.IndicesHealth;
+import com.mfvanek.pg.index.health.IndexesHealth;
 import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.IndexAware;
 import com.mfvanek.pg.model.TableAware;
@@ -20,16 +20,16 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class AbstractIndicesHealthLogger implements IndicesHealthLogger {
+public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractIndicesHealthLogger.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractIndexesHealthLogger.class);
 
-    private final IndicesHealth indicesHealth;
+    private final IndexesHealth indexesHealth;
     private final Exclusions exclusions;
 
-    protected AbstractIndicesHealthLogger(@Nonnull final IndicesHealth indicesHealth,
+    protected AbstractIndexesHealthLogger(@Nonnull final IndexesHealth indexesHealth,
                                           @Nonnull final Exclusions exclusions) {
-        this.indicesHealth = Objects.requireNonNull(indicesHealth);
+        this.indexesHealth = Objects.requireNonNull(indexesHealth);
         this.exclusions = Objects.requireNonNull(exclusions);
     }
 
@@ -57,8 +57,8 @@ public abstract class AbstractIndicesHealthLogger implements IndicesHealthLogger
 
     @Nonnull
     private String logInvalidIndices() {
-        final var invalidIndices = indicesHealth.getInvalidIndices();
-        final LoggingKey key = SimpleLoggingKey.INVALID_INDICES;
+        final var invalidIndices = indexesHealth.getInvalidIndexes();
+        final LoggingKey key = SimpleLoggingKey.INVALID_INDEXES;
         if (CollectionUtils.isNotEmpty(invalidIndices)) {
             LOGGER.error("There are invalid indices in the database {}", invalidIndices);
             return writeToLog(key, invalidIndices.size());
@@ -68,10 +68,10 @@ public abstract class AbstractIndicesHealthLogger implements IndicesHealthLogger
 
     @Nonnull
     private String logDuplicatedIndices() {
-        final var rawDuplicatedIndices = indicesHealth.getDuplicatedIndices();
+        final var rawDuplicatedIndices = indexesHealth.getDuplicatedIndexes();
         final var duplicatedIndices = applyExclusions(rawDuplicatedIndices,
-                exclusions.getDuplicatedIndicesExclusions());
-        final LoggingKey key = SimpleLoggingKey.DUPLICATED_INDICES;
+                exclusions.getDuplicatedIndexesExclusions());
+        final LoggingKey key = SimpleLoggingKey.DUPLICATED_INDEXES;
         if (CollectionUtils.isNotEmpty(duplicatedIndices)) {
             LOGGER.warn("There are duplicated indices in the database {}", duplicatedIndices);
             return writeToLog(key, duplicatedIndices.size());
@@ -81,10 +81,10 @@ public abstract class AbstractIndicesHealthLogger implements IndicesHealthLogger
 
     @Nonnull
     private String logIntersectedIndices() {
-        final var rawIntersectedIndices = indicesHealth.getIntersectedIndices();
+        final var rawIntersectedIndices = indexesHealth.getIntersectedIndexes();
         final var intersectedIndices = applyExclusions(rawIntersectedIndices,
-                exclusions.getIntersectedIndicesExclusions());
-        final LoggingKey key = SimpleLoggingKey.INTERSECTED_INDICES;
+                exclusions.getIntersectedIndexesExclusions());
+        final LoggingKey key = SimpleLoggingKey.INTERSECTED_INDEXES;
         if (CollectionUtils.isNotEmpty(intersectedIndices)) {
             LOGGER.warn("There are intersected indices in the database {}", intersectedIndices);
             return writeToLog(key, intersectedIndices.size());
@@ -94,9 +94,9 @@ public abstract class AbstractIndicesHealthLogger implements IndicesHealthLogger
 
     @Nonnull
     private String logUnusedIndices() {
-        final var rawUnusedIndices = indicesHealth.getUnusedIndices();
-        final var unusedIndices = applyIndicesExclusions(rawUnusedIndices, exclusions.getUnusedIndicesExclusions());
-        final LoggingKey key = SimpleLoggingKey.UNUSED_INDICES;
+        final var rawUnusedIndices = indexesHealth.getUnusedIndexes();
+        final var unusedIndices = applyIndicesExclusions(rawUnusedIndices, exclusions.getUnusedIndexesExclusions());
+        final LoggingKey key = SimpleLoggingKey.UNUSED_INDEXES;
         if (CollectionUtils.isNotEmpty(unusedIndices)) {
             LOGGER.warn("There are unused indices in the database {}", unusedIndices);
             return writeToLog(key, unusedIndices.size());
@@ -106,7 +106,7 @@ public abstract class AbstractIndicesHealthLogger implements IndicesHealthLogger
 
     @Nonnull
     private String logForeignKeysNotCoveredWithIndex() {
-        final var foreignKeys = indicesHealth.getForeignKeysNotCoveredWithIndex();
+        final var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
         final LoggingKey key = SimpleLoggingKey.FOREIGN_KEYS;
         if (CollectionUtils.isNotEmpty(foreignKeys)) {
             LOGGER.warn("There are foreign keys without index in the database {}", foreignKeys);
@@ -117,10 +117,10 @@ public abstract class AbstractIndicesHealthLogger implements IndicesHealthLogger
 
     @Nonnull
     private String logTablesWithMissingIndices() {
-        final var rawTablesWithMissingIndices = indicesHealth.getTablesWithMissingIndices();
+        final var rawTablesWithMissingIndices = indexesHealth.getTablesWithMissingIndexes();
         final var tablesWithMissingIndices = applyTablesExclusions(rawTablesWithMissingIndices,
-                exclusions.getTablesWithMissingIndicesExclusions());
-        final LoggingKey key = SimpleLoggingKey.TABLES_WITH_MISSING_INDICES;
+                exclusions.getTablesWithMissingIndexesExclusions());
+        final LoggingKey key = SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES;
         if (CollectionUtils.isNotEmpty(tablesWithMissingIndices)) {
             LOGGER.warn("There are tables with missing indices in the database {}", tablesWithMissingIndices);
             return writeToLog(key, tablesWithMissingIndices.size());
@@ -130,7 +130,7 @@ public abstract class AbstractIndicesHealthLogger implements IndicesHealthLogger
 
     @Nonnull
     private String logTablesWithoutPrimaryKey() {
-        final var rawTablesWithoutPrimaryKey = indicesHealth.getTablesWithoutPrimaryKey();
+        final var rawTablesWithoutPrimaryKey = indexesHealth.getTablesWithoutPrimaryKey();
         final var tablesWithoutPrimaryKey = applyTablesExclusions(rawTablesWithoutPrimaryKey,
                 exclusions.getTablesWithoutPrimaryKeyExclusions());
         final LoggingKey key = SimpleLoggingKey.TABLES_WITHOUT_PK;
@@ -143,10 +143,10 @@ public abstract class AbstractIndicesHealthLogger implements IndicesHealthLogger
 
     @Nonnull
     private String logIndicesWithNullValues() {
-        final var rawIndicesWithNullValues = indicesHealth.getIndicesWithNullValues();
+        final var rawIndicesWithNullValues = indexesHealth.getIndexesWithNullValues();
         final var indicesWithNullValues = applyIndicesExclusions(rawIndicesWithNullValues,
-                exclusions.getIndicesWithNullValuesExclusions());
-        final LoggingKey key = SimpleLoggingKey.INDICES_WITH_NULLS;
+                exclusions.getIndexesWithNullValuesExclusions());
+        final LoggingKey key = SimpleLoggingKey.INDEXES_WITH_NULLS;
         if (CollectionUtils.isNotEmpty(indicesWithNullValues)) {
             LOGGER.warn("There are indices with null values in the database {}", indicesWithNullValues);
             return writeToLog(key, indicesWithNullValues.size());

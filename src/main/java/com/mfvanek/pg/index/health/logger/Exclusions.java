@@ -14,25 +14,25 @@ import java.util.Set;
 
 public class Exclusions {
 
-    private final Set<String> duplicatedIndicesExclusions;
-    private final Set<String> intersectedIndicesExclusions;
-    private final Set<String> unusedIndicesExclusions;
-    private final Set<String> tablesWithMissingIndicesExclusions;
+    private final Set<String> duplicatedIndexesExclusions;
+    private final Set<String> intersectedIndexesExclusions;
+    private final Set<String> unusedIndexesExclusions;
+    private final Set<String> tablesWithMissingIndexesExclusions;
     private final Set<String> tablesWithoutPrimaryKeyExclusions;
-    private final Set<String> indicesWithNullValuesExclusions;
+    private final Set<String> indexesWithNullValuesExclusions;
 
-    private Exclusions(@Nonnull String duplicatedIndicesExclusions,
-                       @Nonnull String intersectedIndicesExclusions,
-                       @Nonnull String unusedIndicesExclusions,
-                       @Nonnull String tablesWithMissingIndicesExclusions,
+    private Exclusions(@Nonnull String duplicatedIndexesExclusions,
+                       @Nonnull String intersectedIndexesExclusions,
+                       @Nonnull String unusedIndexesExclusions,
+                       @Nonnull String tablesWithMissingIndexesExclusions,
                        @Nonnull String tablesWithoutPrimaryKeyExclusions,
-                       @Nonnull String indicesWithNullValuesExclusions) {
-        this.duplicatedIndicesExclusions = prepareExclusions(duplicatedIndicesExclusions);
-        this.intersectedIndicesExclusions = prepareExclusions(intersectedIndicesExclusions);
-        this.unusedIndicesExclusions = prepareExclusions(unusedIndicesExclusions);
-        this.tablesWithMissingIndicesExclusions = prepareExclusions(tablesWithMissingIndicesExclusions);
+                       @Nonnull String indexesWithNullValuesExclusions) {
+        this.duplicatedIndexesExclusions = prepareExclusions(duplicatedIndexesExclusions);
+        this.intersectedIndexesExclusions = prepareExclusions(intersectedIndexesExclusions);
+        this.unusedIndexesExclusions = prepareExclusions(unusedIndexesExclusions);
+        this.tablesWithMissingIndexesExclusions = prepareExclusions(tablesWithMissingIndexesExclusions);
         this.tablesWithoutPrimaryKeyExclusions = prepareExclusions(tablesWithoutPrimaryKeyExclusions);
-        this.indicesWithNullValuesExclusions = prepareExclusions(indicesWithNullValuesExclusions);
+        this.indexesWithNullValuesExclusions = prepareExclusions(indexesWithNullValuesExclusions);
     }
 
     private static Set<String> prepareExclusions(@Nonnull final String rawExclusions) {
@@ -50,23 +50,23 @@ public class Exclusions {
     }
 
     @Nonnull
-    public Set<String> getDuplicatedIndicesExclusions() {
-        return duplicatedIndicesExclusions;
+    public Set<String> getDuplicatedIndexesExclusions() {
+        return duplicatedIndexesExclusions;
     }
 
     @Nonnull
-    public Set<String> getIntersectedIndicesExclusions() {
-        return intersectedIndicesExclusions;
+    public Set<String> getIntersectedIndexesExclusions() {
+        return intersectedIndexesExclusions;
     }
 
     @Nonnull
-    public Set<String> getUnusedIndicesExclusions() {
-        return unusedIndicesExclusions;
+    public Set<String> getUnusedIndexesExclusions() {
+        return unusedIndexesExclusions;
     }
 
     @Nonnull
-    public Set<String> getTablesWithMissingIndicesExclusions() {
-        return tablesWithMissingIndicesExclusions;
+    public Set<String> getTablesWithMissingIndexesExclusions() {
+        return tablesWithMissingIndexesExclusions;
     }
 
     @Nonnull
@@ -75,19 +75,19 @@ public class Exclusions {
     }
 
     @Nonnull
-    public Set<String> getIndicesWithNullValuesExclusions() {
-        return indicesWithNullValuesExclusions;
+    public Set<String> getIndexesWithNullValuesExclusions() {
+        return indexesWithNullValuesExclusions;
     }
 
     @Override
     public String toString() {
         return Exclusions.class.getSimpleName() + '{' +
-                "duplicatedIndicesExclusions=" + duplicatedIndicesExclusions +
-                ", intersectedIndicesExclusions=" + intersectedIndicesExclusions +
-                ", unusedIndicesExclusions=" + unusedIndicesExclusions +
-                ", tablesWithMissingIndicesExclusions=" + tablesWithMissingIndicesExclusions +
+                "duplicatedIndexesExclusions=" + duplicatedIndexesExclusions +
+                ", intersectedIndexesExclusions=" + intersectedIndexesExclusions +
+                ", unusedIndexesExclusions=" + unusedIndexesExclusions +
+                ", tablesWithMissingIndexesExclusions=" + tablesWithMissingIndexesExclusions +
                 ", tablesWithoutPrimaryKeyExclusions=" + tablesWithoutPrimaryKeyExclusions +
-                ", indicesWithNullValuesExclusions=" + indicesWithNullValuesExclusions +
+                ", indexesWithNullValuesExclusions=" + indexesWithNullValuesExclusions +
                 '}';
     }
 
@@ -103,33 +103,33 @@ public class Exclusions {
 
         private static final String EMPTY = "";
 
-        private String duplicatedIndicesExclusions = EMPTY;
-        private String intersectedIndicesExclusions = EMPTY;
-        private String unusedIndicesExclusions = EMPTY;
-        private String tablesWithMissingIndicesExclusions = EMPTY;
+        private String duplicatedIndexesExclusions = EMPTY;
+        private String intersectedIndexesExclusions = EMPTY;
+        private String unusedIndexesExclusions = EMPTY;
+        private String tablesWithMissingIndexesExclusions = EMPTY;
         private String tablesWithoutPrimaryKeyExclusions = EMPTY;
-        private String indicesWithNullValuesExclusions = EMPTY;
+        private String indexesWithNullValuesExclusions = EMPTY;
 
         private Builder() {
         }
 
-        public Builder withDuplicatedIndicesExclusions(@Nonnull final String duplicatedIndicesExclusions) {
-            this.duplicatedIndicesExclusions = Objects.requireNonNull(duplicatedIndicesExclusions);
+        public Builder withDuplicatedIndexesExclusions(@Nonnull final String duplicatedIndexesExclusions) {
+            this.duplicatedIndexesExclusions = Objects.requireNonNull(duplicatedIndexesExclusions);
             return this;
         }
 
-        public Builder withIntersectedIndicesExclusions(@Nonnull final String intersectedIndicesExclusions) {
-            this.intersectedIndicesExclusions = Objects.requireNonNull(intersectedIndicesExclusions);
+        public Builder withIntersectedIndexesExclusions(@Nonnull final String intersectedIndexesExclusions) {
+            this.intersectedIndexesExclusions = Objects.requireNonNull(intersectedIndexesExclusions);
             return this;
         }
 
-        public Builder withUnusedIndicesExclusions(@Nonnull final String unusedIndicesExclusions) {
-            this.unusedIndicesExclusions = Objects.requireNonNull(unusedIndicesExclusions);
+        public Builder withUnusedIndexesExclusions(@Nonnull final String unusedIndexesExclusions) {
+            this.unusedIndexesExclusions = Objects.requireNonNull(unusedIndexesExclusions);
             return this;
         }
 
-        public Builder withTablesWithMissingIndicesExclusions(@Nonnull final String tablesWithMissingIndicesExclusions) {
-            this.tablesWithMissingIndicesExclusions = Objects.requireNonNull(tablesWithMissingIndicesExclusions);
+        public Builder withTablesWithMissingIndexesExclusions(@Nonnull final String tablesWithMissingIndexesExclusions) {
+            this.tablesWithMissingIndexesExclusions = Objects.requireNonNull(tablesWithMissingIndexesExclusions);
             return this;
         }
 
@@ -138,30 +138,30 @@ public class Exclusions {
             return this;
         }
 
-        public Builder withIndicesWithNullValuesExclusions(@Nonnull final String indicesWithNullValuesExclusions) {
-            this.indicesWithNullValuesExclusions = Objects.requireNonNull(indicesWithNullValuesExclusions);
+        public Builder withIndexesWithNullValuesExclusions(@Nonnull final String indexesWithNullValuesExclusions) {
+            this.indexesWithNullValuesExclusions = Objects.requireNonNull(indexesWithNullValuesExclusions);
             return this;
         }
 
         public Exclusions build() {
             return new Exclusions(
-                    duplicatedIndicesExclusions,
-                    intersectedIndicesExclusions,
-                    unusedIndicesExclusions,
-                    tablesWithMissingIndicesExclusions,
+                    duplicatedIndexesExclusions,
+                    intersectedIndexesExclusions,
+                    unusedIndexesExclusions,
+                    tablesWithMissingIndexesExclusions,
                     tablesWithoutPrimaryKeyExclusions,
-                    indicesWithNullValuesExclusions);
+                    indexesWithNullValuesExclusions);
         }
 
         @Override
         public String toString() {
             return Builder.class.getSimpleName() + '{' +
-                    "duplicatedIndicesExclusions='" + duplicatedIndicesExclusions + '\'' +
-                    ", intersectedIndicesExclusions='" + intersectedIndicesExclusions + '\'' +
-                    ", unusedIndicesExclusions='" + unusedIndicesExclusions + '\'' +
-                    ", tablesWithMissingIndicesExclusions='" + tablesWithMissingIndicesExclusions + '\'' +
+                    "duplicatedIndexesExclusions='" + duplicatedIndexesExclusions + '\'' +
+                    ", intersectedIndexesExclusions='" + intersectedIndexesExclusions + '\'' +
+                    ", unusedIndexesExclusions='" + unusedIndexesExclusions + '\'' +
+                    ", tablesWithMissingIndexesExclusions='" + tablesWithMissingIndexesExclusions + '\'' +
                     ", tablesWithoutPrimaryKeyExclusions='" + tablesWithoutPrimaryKeyExclusions + '\'' +
-                    ", indicesWithNullValuesExclusions='" + indicesWithNullValuesExclusions + '\'' +
+                    ", indexesWithNullValuesExclusions='" + indexesWithNullValuesExclusions + '\'' +
                     '}';
         }
     }
