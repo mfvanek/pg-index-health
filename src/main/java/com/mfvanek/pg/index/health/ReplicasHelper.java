@@ -43,26 +43,26 @@ final class ReplicasHelper {
     }
 
     @Nonnull
-    static List<UnusedIndex> getUnusedIndicesAsIntersectionResult(
-            @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndicesFromAllHosts) {
-        LOGGER.debug("potentiallyUnusedIndicesFromAllHosts = {}", potentiallyUnusedIndicesFromAllHosts);
-        Collection<UnusedIndex> unusedIndices = null;
-        for (var unusedIndicesFromHost : potentiallyUnusedIndicesFromAllHosts) {
-            if (unusedIndices == null) {
-                unusedIndices = unusedIndicesFromHost;
+    static List<UnusedIndex> getUnusedIndexesAsIntersectionResult(
+            @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts) {
+        LOGGER.debug("potentiallyUnusedIndexesFromAllHosts = {}", potentiallyUnusedIndexesFromAllHosts);
+        Collection<UnusedIndex> unusedIndexes = null;
+        for (var unusedIndexesFromHost : potentiallyUnusedIndexesFromAllHosts) {
+            if (unusedIndexes == null) {
+                unusedIndexes = unusedIndexesFromHost;
             }
-            unusedIndices = CollectionUtils.intersection(unusedIndices, unusedIndicesFromHost);
+            unusedIndexes = CollectionUtils.intersection(unusedIndexes, unusedIndexesFromHost);
         }
-        final List<UnusedIndex> result = unusedIndices == null ? Collections.emptyList() : List.copyOf(unusedIndices);
+        final List<UnusedIndex> result = unusedIndexes == null ? Collections.emptyList() : List.copyOf(unusedIndexes);
         LOGGER.debug("Intersection result {}", result);
         return result;
     }
 
     @Nonnull
-    static List<TableWithMissingIndex> getTablesWithMissingIndicesAsUnionResult(
-            @Nonnull final List<List<TableWithMissingIndex>> tablesWithMissingIndicesFromAllHosts) {
-        LOGGER.debug("tablesWithMissingIndicesFromAllHosts = {}", tablesWithMissingIndicesFromAllHosts);
-        final List<TableWithMissingIndex> result = tablesWithMissingIndicesFromAllHosts.stream()
+    static List<TableWithMissingIndex> getTablesWithMissingIndexesAsUnionResult(
+            @Nonnull final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts) {
+        LOGGER.debug("tablesWithMissingIndexesFromAllHosts = {}", tablesWithMissingIndexesFromAllHosts);
+        final List<TableWithMissingIndex> result = tablesWithMissingIndexesFromAllHosts.stream()
                 .flatMap(Collection::stream)
                 .distinct()
                 .sorted()

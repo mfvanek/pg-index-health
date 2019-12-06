@@ -5,7 +5,7 @@
 
 package com.mfvanek.pg.index.health.logger;
 
-import com.mfvanek.pg.index.health.IndicesHealth;
+import com.mfvanek.pg.index.health.IndexesHealth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,13 +13,13 @@ import javax.annotation.Nonnull;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class SimpleHealthLogger extends AbstractIndicesHealthLogger {
+public class SimpleHealthLogger extends AbstractIndexesHealthLogger {
 
     private static final Logger KV_LOG = LoggerFactory.getLogger("key-value.log");
 
-    public SimpleHealthLogger(@Nonnull final IndicesHealth indicesHealth,
+    public SimpleHealthLogger(@Nonnull final IndexesHealth indexesHealth,
                               @Nonnull final Exclusions exclusions) {
-        super(indicesHealth, exclusions);
+        super(indexesHealth, exclusions);
     }
 
     @Override

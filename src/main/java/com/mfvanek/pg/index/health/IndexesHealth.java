@@ -5,7 +5,7 @@
 
 package com.mfvanek.pg.index.health;
 
-import com.mfvanek.pg.model.DuplicatedIndices;
+import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
@@ -16,29 +16,29 @@ import com.mfvanek.pg.model.UnusedIndex;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public interface IndicesHealth {
+public interface IndexesHealth {
 
     @Nonnull
-    List<Index> getInvalidIndices();
+    List<Index> getInvalidIndexes();
 
     @Nonnull
-    List<DuplicatedIndices> getDuplicatedIndices();
+    List<DuplicatedIndexes> getDuplicatedIndexes();
 
     @Nonnull
-    List<DuplicatedIndices> getIntersectedIndices();
+    List<DuplicatedIndexes> getIntersectedIndexes();
 
     @Nonnull
-    List<UnusedIndex> getUnusedIndices();
+    List<UnusedIndex> getUnusedIndexes();
 
     @Nonnull
     List<ForeignKey> getForeignKeysNotCoveredWithIndex();
 
     @Nonnull
-    List<TableWithMissingIndex> getTablesWithMissingIndices();
+    List<TableWithMissingIndex> getTablesWithMissingIndexes();
 
     @Nonnull
     List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey();
 
     @Nonnull
-    List<IndexWithNulls> getIndicesWithNullValues();
+    List<IndexWithNulls> getIndexesWithNullValues();
 }

@@ -25,7 +25,7 @@ final class PgUrlParser {
 
     // For example, jdbc:postgresql://host-1:6432/db_name?param=value
     @Nonnull
-    static List<Pair<String, String>> extractNamesAndUrlsForEachHost(@Nonnull final String pgUrl) {
+    static List<Pair<String, String>> extractNameWithPortAndUrlForEachHost(@Nonnull final String pgUrl) {
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
         final int lastIndex = pgUrl.lastIndexOf('/');
         final String dbNameWithParams = pgUrl.substring(lastIndex);

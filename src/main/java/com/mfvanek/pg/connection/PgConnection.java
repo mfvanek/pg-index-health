@@ -8,6 +8,9 @@ package com.mfvanek.pg.connection;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
+/**
+ * A wrapper of standard DataSource interface with awareness of real host.
+ */
 public interface PgConnection extends HostAware {
 
     @Nonnull

@@ -8,8 +8,7 @@ package com.mfvanek.pg.model;
 import javax.annotation.Nonnull;
 
 /**
- * Таблицы без первичных ключей - это потенциальный источник bloat'а.
- * При этом pg_repack их пережать не сможет.
+ * Tables without primary keys can be a huge problem when bloat occurs because pg_repack will not be able to process them.
  */
 public class TableWithoutPrimaryKey implements TableAware {
 

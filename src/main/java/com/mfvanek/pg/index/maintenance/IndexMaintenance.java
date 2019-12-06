@@ -6,7 +6,7 @@
 package com.mfvanek.pg.index.maintenance;
 
 import com.mfvanek.pg.connection.HostAware;
-import com.mfvanek.pg.model.DuplicatedIndices;
+import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
@@ -20,44 +20,50 @@ import java.util.List;
 public interface IndexMaintenance extends HostAware {
 
     /**
-     * Список невалидных (битых) индексов, которые нужно удалить или переиндексировать.
+     * List of invalid (broken) indexes to be deleted or re-indexed.
      */
     @Nonnull
-    List<Index> getInvalidIndices();
+    List<Index> getInvalidIndexes();
 
     /**
-     * Список дублирующихся (полностью идентичных) индексов (кандидаты на удаление).
+     * List of duplicated (completely identical) indexes (candidates for deletion).
      */
     @Nonnull
-    List<DuplicatedIndices> getDuplicatedIndices();
+    List<DuplicatedIndexes> getDuplicatedIndexes();
 
     /**
-     * Список пересекающихся по полям индексов (частично идентичных, кандидаты на удаление).
+     * List of intersecting indexes (partially identical, candidates for deletion).
      */
     @Nonnull
-    List<DuplicatedIndices> getIntersectedIndices();
+    List<DuplicatedIndexes> getIntersectedIndexes();
 
+    /**
+     * List of potentially unused indexes (candidates for deletion).
+     */
     @Nonnull
-    List<UnusedIndex> getPotentiallyUnusedIndices();
+    List<UnusedIndex> getPotentiallyUnusedIndexes();
 
+    /**
+     * List of foreign keys without associated indexes (potential performance degradation).
+     */
     @Nonnull
     List<ForeignKey> getForeignKeysNotCoveredWithIndex();
 
     /**
-     * Список таблиц с потенциально отсутствующими индексами.
+     * List of tables with potentially missing indexes (potential performance degradation).
      */
     @Nonnull
-    List<TableWithMissingIndex> getTablesWithMissingIndices();
+    List<TableWithMissingIndex> getTablesWithMissingIndexes();
 
     /**
-     * Список таблиц без первичного ключа.
+     * List of tables without primary key.
      */
     @Nonnull
     List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey();
 
     /**
-     * Список индексов, содержащих null значения.
+     * List of indexes that contain null values.
      */
     @Nonnull
-    List<IndexWithNulls> getIndicesWithNullValues();
+    List<IndexWithNulls> getIndexesWithNullValues();
 }

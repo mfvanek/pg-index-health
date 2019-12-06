@@ -73,7 +73,7 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
                                         @Nonnull final String readUrl,
                                         @Nonnull final String userName,
                                         @Nonnull final String password) {
-        final var allHosts = PgUrlParser.extractNamesAndUrlsForEachHost(readUrl);
+        final var allHosts = PgUrlParser.extractNameWithPortAndUrlForEachHost(readUrl);
         for (var host : allHosts) {
             connectionsToReplicas.computeIfAbsent(
                     host.getKey(), h -> pgConnectionFactory.forUrl(host.getValue(), userName, password));

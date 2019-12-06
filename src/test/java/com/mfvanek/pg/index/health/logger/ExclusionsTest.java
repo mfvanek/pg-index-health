@@ -17,12 +17,12 @@ class ExclusionsTest {
     @Test
     void parseTest() {
         final var exclusions = Exclusions.builder()
-                .withDuplicatedIndicesExclusions("i1,i2,, i3, , i4 ")
+                .withDuplicatedIndexesExclusions("i1,i2,, i3, , i4 ")
                 .build();
         assertNotNull(exclusions);
-        assertNotNull(exclusions.getDuplicatedIndicesExclusions());
-        assertThat(exclusions.getDuplicatedIndicesExclusions(), hasSize(4));
-        assertThat(exclusions.getDuplicatedIndicesExclusions(), containsInAnyOrder("i1", "i2", "i3", "i4"));
+        assertNotNull(exclusions.getDuplicatedIndexesExclusions());
+        assertThat(exclusions.getDuplicatedIndexesExclusions(), hasSize(4));
+        assertThat(exclusions.getDuplicatedIndexesExclusions(), containsInAnyOrder("i1", "i2", "i3", "i4"));
     }
 
     @Test
@@ -30,22 +30,22 @@ class ExclusionsTest {
         final var exclusions = Exclusions.empty();
         assertNotNull(exclusions);
 
-        assertNotNull(exclusions.getDuplicatedIndicesExclusions());
-        assertThat(exclusions.getDuplicatedIndicesExclusions(), hasSize(0));
+        assertNotNull(exclusions.getDuplicatedIndexesExclusions());
+        assertThat(exclusions.getDuplicatedIndexesExclusions(), hasSize(0));
 
-        assertNotNull(exclusions.getIntersectedIndicesExclusions());
-        assertThat(exclusions.getIntersectedIndicesExclusions(), hasSize(0));
+        assertNotNull(exclusions.getIntersectedIndexesExclusions());
+        assertThat(exclusions.getIntersectedIndexesExclusions(), hasSize(0));
 
-        assertNotNull(exclusions.getUnusedIndicesExclusions());
-        assertThat(exclusions.getUnusedIndicesExclusions(), hasSize(0));
+        assertNotNull(exclusions.getUnusedIndexesExclusions());
+        assertThat(exclusions.getUnusedIndexesExclusions(), hasSize(0));
 
-        assertNotNull(exclusions.getTablesWithMissingIndicesExclusions());
-        assertThat(exclusions.getTablesWithMissingIndicesExclusions(), hasSize(0));
+        assertNotNull(exclusions.getTablesWithMissingIndexesExclusions());
+        assertThat(exclusions.getTablesWithMissingIndexesExclusions(), hasSize(0));
 
         assertNotNull(exclusions.getTablesWithoutPrimaryKeyExclusions());
         assertThat(exclusions.getTablesWithoutPrimaryKeyExclusions(), hasSize(0));
 
-        assertNotNull(exclusions.getIndicesWithNullValuesExclusions());
-        assertThat(exclusions.getIndicesWithNullValuesExclusions(), hasSize(0));
+        assertNotNull(exclusions.getIndexesWithNullValuesExclusions());
+        assertThat(exclusions.getIndexesWithNullValuesExclusions(), hasSize(0));
     }
 }
