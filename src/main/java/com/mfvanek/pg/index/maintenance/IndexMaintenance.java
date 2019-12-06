@@ -6,7 +6,7 @@
 package com.mfvanek.pg.index.maintenance;
 
 import com.mfvanek.pg.connection.HostAware;
-import com.mfvanek.pg.model.DuplicatedIndices;
+import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
@@ -29,13 +29,13 @@ public interface IndexMaintenance extends HostAware {
      * List of duplicated (completely identical) indices (candidates for deletion).
      */
     @Nonnull
-    List<DuplicatedIndices> getDuplicatedIndices();
+    List<DuplicatedIndexes> getDuplicatedIndices();
 
     /**
      * List of intersecting indices (partially identical, candidates for deletion).
      */
     @Nonnull
-    List<DuplicatedIndices> getIntersectedIndices();
+    List<DuplicatedIndexes> getIntersectedIndices();
 
     /**
      * List of potentially unused indices (candidates for deletion).

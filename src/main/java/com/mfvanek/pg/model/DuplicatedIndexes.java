@@ -15,16 +15,16 @@ import java.util.stream.Collectors;
 
 /**
  * A typical error is when you create a column with an UNIQUE CONSTRAINT and then manually create an unique index on it.
- * See [documentation](https://www.postgresql.org/docs/10/ddl-constraints.html#DDL-CONSTRAINTS-UNIQUE-CONSTRAINTS).
+ * See documentation https://www.postgresql.org/docs/10/ddl-constraints.html#DDL-CONSTRAINTS-UNIQUE-CONSTRAINTS.
  */
-public class DuplicatedIndices implements TableAware {
+public class DuplicatedIndexes implements TableAware {
 
-    private final List<IndexWithSize> duplicatedIndices;
+    private final List<IndexWithSize> duplicatedIndexes;
     private final long totalSize;
 
-    private DuplicatedIndices(@Nonnull final List<IndexWithSize> duplicatedIndices) {
-        this.duplicatedIndices = List.copyOf(Validators.validateThatTableIsTheSame(duplicatedIndices));
-        this.totalSize = duplicatedIndices.stream()
+    private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+        this.duplicatedIndexes = List.copyOf(Validators.validateThatTableIsTheSame(duplicatedIndexes));
+        this.totalSize = duplicatedIndexes.stream()
                 .mapToLong(IndexWithSize::getIndexSizeInBytes)
                 .sum();
     }
@@ -32,12 +32,12 @@ public class DuplicatedIndices implements TableAware {
     @Override
     @Nonnull
     public String getTableName() {
-        return duplicatedIndices.get(0).getTableName();
+        return duplicatedIndexes.get(0).getTableName();
     }
 
     @Nonnull
-    public List<IndexWithSize> getDuplicatedIndices() {
-        return duplicatedIndices;
+    public List<IndexWithSize> getDuplicatedIndexes() {
+        return duplicatedIndexes;
     }
 
     public long getTotalSize() {
@@ -45,37 +45,37 @@ public class DuplicatedIndices implements TableAware {
     }
 
     public Set<String> getIndexNames() {
-        return duplicatedIndices.stream()
+        return duplicatedIndexes.stream()
                 .map(Index::getIndexName)
                 .collect(Collectors.toSet());
     }
 
     @Override
     public String toString() {
-        return DuplicatedIndices.class.getSimpleName() + "{" +
+        return DuplicatedIndexes.class.getSimpleName() + "{" +
                 "tableName=\'" + getTableName() + "\'" +
                 ", totalSize=" + totalSize +
-                ", indices=" + duplicatedIndices +
+                ", indexes=" + duplicatedIndexes +
                 "}";
     }
 
-    public static DuplicatedIndices of(@Nonnull final List<IndexWithSize> duplicatedIndices) {
-        return new DuplicatedIndices(duplicatedIndices);
+    public static DuplicatedIndexes of(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+        return new DuplicatedIndexes(duplicatedIndexes);
     }
 
-    public static DuplicatedIndices of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
+    public static DuplicatedIndexes of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
         Validators.tableNameNotBlank(tableName);
-        final var indicesWithNameAndSize = parseAsIndexNameAndSize(
+        final var indexesWithNameAndSize = parseAsIndexNameAndSize(
                 Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
-        final var duplicatedIndices = indicesWithNameAndSize.stream()
+        final var duplicatedIndexes = indexesWithNameAndSize.stream()
                 .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
-        return new DuplicatedIndices(duplicatedIndices);
+        return new DuplicatedIndexes(duplicatedIndexes);
     }
 
     private static List<Map.Entry<String, Long>> parseAsIndexNameAndSize(@Nonnull final String duplicatedAsString) {
-        final String[] indices = duplicatedAsString.split("; ");
-        return Arrays.stream(indices)
+        final String[] indexes = duplicatedAsString.split("; ");
+        return Arrays.stream(indexes)
                 .map(s -> s.split(", "))
                 .filter(a -> a[0].startsWith("idx=") && a[1].startsWith("size="))
                 .map(a -> {

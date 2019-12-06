@@ -11,8 +11,8 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
- * Normally, indices should be used primarily when accessing a table.
- * If there are few or no indices in the table, then seqScans will be larger than indexScans.
+ * Normally, indesex should be used primarily when accessing a table.
+ * If there are few or no indexes in the table, then seqScans will be larger than indexScans.
  */
 public class TableWithMissingIndex implements TableAware, Comparable<TableWithMissingIndex> {
 

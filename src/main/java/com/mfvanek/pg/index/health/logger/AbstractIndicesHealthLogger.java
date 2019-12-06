@@ -6,7 +6,7 @@
 package com.mfvanek.pg.index.health.logger;
 
 import com.mfvanek.pg.index.health.IndicesHealth;
-import com.mfvanek.pg.model.DuplicatedIndices;
+import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.IndexAware;
 import com.mfvanek.pg.model.TableAware;
 import org.apache.commons.collections4.CollectionUtils;
@@ -155,7 +155,7 @@ public abstract class AbstractIndicesHealthLogger implements IndicesHealthLogger
     }
 
     @Nonnull
-    private List<DuplicatedIndices> applyExclusions(@Nonnull final List<DuplicatedIndices> rawIndices,
+    private List<DuplicatedIndexes> applyExclusions(@Nonnull final List<DuplicatedIndexes> rawIndices,
                                                     @Nonnull final Set<String> indicesExclusions) {
         if (CollectionUtils.isEmpty(rawIndices) ||
                 CollectionUtils.isEmpty(indicesExclusions)) {

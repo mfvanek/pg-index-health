@@ -102,7 +102,7 @@ class IndexMaintenanceImplTest {
                     final var entry = duplicatedIndices.get(0);
                     assertEquals("accounts", entry.getTableName());
                     assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
-                    final var indices = entry.getDuplicatedIndices();
+                    final var indices = entry.getDuplicatedIndexes();
                     assertEquals(2, indices.size());
                     assertThat(indices.stream()
                                     .map(IndexWithSize::getIndexName)
@@ -141,7 +141,7 @@ class IndexMaintenanceImplTest {
                     final var entry = intersectedIndices.get(0);
                     assertEquals("clients", entry.getTableName());
                     assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
-                    final var indices = entry.getDuplicatedIndices();
+                    final var indices = entry.getDuplicatedIndexes();
                     assertEquals(2, indices.size());
                     assertThat(indices.stream()
                                     .map(IndexWithSize::getIndexName)

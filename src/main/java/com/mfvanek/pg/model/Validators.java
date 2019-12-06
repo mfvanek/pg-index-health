@@ -52,25 +52,25 @@ final class Validators {
     }
 
     @Nonnull
-    static List<IndexWithSize> validateThatTableIsTheSame(@Nonnull final List<IndexWithSize> duplicatedIndices) {
-        final String tableName = validateThatContainsAtLeastTwoRows(duplicatedIndices).get(0).getTableName();
-        final boolean tableIsTheSame = duplicatedIndices.stream().allMatch(i -> i.getTableName().equals(tableName));
+    static List<IndexWithSize> validateThatTableIsTheSame(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+        final String tableName = validateThatContainsAtLeastTwoRows(duplicatedIndexes).get(0).getTableName();
+        final boolean tableIsTheSame = duplicatedIndexes.stream().allMatch(i -> i.getTableName().equals(tableName));
         if (!tableIsTheSame) {
             throw new IllegalArgumentException("Table name is not the same within given rows");
         }
-        return duplicatedIndices;
+        return duplicatedIndexes;
     }
 
     @Nonnull
-    private static List<IndexWithSize> validateThatContainsAtLeastTwoRows(@Nonnull final List<IndexWithSize> duplicatedIndices) {
-        final int size = Objects.requireNonNull(duplicatedIndices).size();
+    private static List<IndexWithSize> validateThatContainsAtLeastTwoRows(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+        final int size = Objects.requireNonNull(duplicatedIndexes).size();
         if (0 == size) {
-            throw new IllegalArgumentException("duplicatedIndices cannot be empty");
+            throw new IllegalArgumentException("duplicatedIndexes cannot be empty");
         }
         if (size < 2) {
-            throw new IllegalArgumentException("duplicatedIndices should contains at least two rows");
+            throw new IllegalArgumentException("duplicatedIndexes should contains at least two rows");
         }
-        return duplicatedIndices;
+        return duplicatedIndexes;
     }
 
     @Nonnull

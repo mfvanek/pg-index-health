@@ -5,7 +5,7 @@
 
 package com.mfvanek.pg.index.health;
 
-import com.mfvanek.pg.model.DuplicatedIndices;
+import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
@@ -22,10 +22,10 @@ public interface IndicesHealth {
     List<Index> getInvalidIndices();
 
     @Nonnull
-    List<DuplicatedIndices> getDuplicatedIndices();
+    List<DuplicatedIndexes> getDuplicatedIndices();
 
     @Nonnull
-    List<DuplicatedIndices> getIntersectedIndices();
+    List<DuplicatedIndexes> getIntersectedIndices();
 
     @Nonnull
     List<UnusedIndex> getUnusedIndices();

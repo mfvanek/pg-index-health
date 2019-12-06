@@ -9,7 +9,7 @@ import com.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import com.mfvanek.pg.connection.PgHost;
 import com.mfvanek.pg.index.maintenance.IndexMaintenance;
 import com.mfvanek.pg.index.maintenance.IndexMaintenanceFactory;
-import com.mfvanek.pg.model.DuplicatedIndices;
+import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
@@ -50,14 +50,14 @@ public class IndicesHealthImpl implements IndicesHealth {
 
     @Nonnull
     @Override
-    public List<DuplicatedIndices> getDuplicatedIndices() {
+    public List<DuplicatedIndexes> getDuplicatedIndices() {
         logExecutingOnMaster();
         return maintenanceForMaster.getDuplicatedIndices();
     }
 
     @Nonnull
     @Override
-    public List<DuplicatedIndices> getIntersectedIndices() {
+    public List<DuplicatedIndexes> getIntersectedIndices() {
         logExecutingOnMaster();
         return maintenanceForMaster.getIntersectedIndices();
     }

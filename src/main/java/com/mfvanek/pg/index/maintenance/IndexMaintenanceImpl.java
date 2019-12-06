@@ -7,7 +7,7 @@ package com.mfvanek.pg.index.maintenance;
 
 import com.mfvanek.pg.connection.PgConnection;
 import com.mfvanek.pg.connection.PgHost;
-import com.mfvanek.pg.model.DuplicatedIndices;
+import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
@@ -174,13 +174,13 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<DuplicatedIndices> getDuplicatedIndices() {
+    public List<DuplicatedIndexes> getDuplicatedIndices() {
         return getDuplicatedOrIntersectedIndices(DUPLICATED_INDICES_SQL, "duplicated_indices");
     }
 
     @Nonnull
     @Override
-    public List<DuplicatedIndices> getIntersectedIndices() {
+    public List<DuplicatedIndexes> getIntersectedIndices() {
         return getDuplicatedOrIntersectedIndices(INTERSECTED_INDICES_SQL, "intersected_indices");
     }
 
@@ -241,12 +241,12 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     }
 
     @Nonnull
-    private List<DuplicatedIndices> getDuplicatedOrIntersectedIndices(@Nonnull final String sqlQuery,
+    private List<DuplicatedIndexes> getDuplicatedOrIntersectedIndices(@Nonnull final String sqlQuery,
                                                                       @Nonnull final String columnName) {
         return executeQuery(sqlQuery, rs -> {
             final String tableName = rs.getString("table_name");
             final String duplicatedAsString = rs.getString(columnName);
-            return DuplicatedIndices.of(tableName, duplicatedAsString);
+            return DuplicatedIndexes.of(tableName, duplicatedAsString);
         });
     }
 
