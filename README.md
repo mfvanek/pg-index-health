@@ -6,9 +6,9 @@
 
 ## Available checks
 **pg-index-health** allows you to detect the following problems:
-1. Invalid (broken) indexes.
-1. Duplicated (completely identical) indexes.
-1. Intersecting (partially identical) indexes.
+1. Invalid (broken) indexes ([sql](https://github.com/mfvanek/pg-index-health/blob/master/src/main/resources/sql/invalid_indexes.sql)).
+1. Duplicated (completely identical) indexes ([sql](https://github.com/mfvanek/pg-index-health/blob/master/src/main/resources/sql/duplicated_indexes.sql)).
+1. Intersecting (partially identical) indexes ([sql](https://github.com/mfvanek/pg-index-health/blob/master/src/main/resources/sql/intersecting_indexes.sql)).
 1. Unused indexes.
 1. Foreign keys without associated indexes.
 1. Indexes with null values.
