@@ -117,18 +117,17 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "    from pg_stat_all_tables\n" +
                     "    where\n" +
                     "          schemaname = 'public'::text and\n" +
-                    "          pg_relation_size(relname::regclass) > 5::integer * 8192 and /*skip small tables*/\n" +
-                    "          relname not in ('databasechangelog')\n" +
+                    "          pg_relation_size(relname::regclass) > 5::integer * 8192 /*skip small tables*/\n" +
                     ")\n" +
                     "select table_name,\n" +
                     "       seq_scan,\n" +
                     "       idx_scan\n" +
                     "from tables_without_indexes\n" +
                     "where (seq_scan + idx_scan) > 100::integer and /*table in use*/\n" +
-                    "      too_much_seq > 0 -- too much sequential scans\n" +
+                    "      too_much_seq > 0 /*too much sequential scans*/\n" +
                     "order by table_name, too_much_seq desc;";
 
-    private static final String TABLES_WITHOUT_PRIMARY_KEYS =
+    private static final String TABLES_WITHOUT_PRIMARY_KEY =
             "select tablename as table_name\n" +
                     "from pg_tables\n" +
                     "where\n" +
@@ -136,8 +135,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "    tablename not in (\n" +
                     "    select c.conrelid::regclass::text as table_name\n" +
                     "    from pg_constraint c\n" +
-                    "    where contype = 'p') and\n" +
-                    "    tablename not in ('databasechangelog')\n" +
+                    "    where contype = 'p')\n" +
                     "order by tablename;";
 
     private static final String INDEXES_WITH_NULL_VALUES =
@@ -151,7 +149,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "where not x.indisunique and\n" +
                     "      not a.attnotnull and\n" +
                     "      psai.schemaname = 'public'::text and\n" +
-                    "      array_position(x.indkey, a.attnum) = 0 and -- only for first segment\n" +
+                    "      array_position(x.indkey, a.attnum) = 0 and /*only for first segment*/\n" +
                     "      (x.indpred is null or (position(lower(a.attname) in lower(pg_get_expr(x.indpred, x.indrelid))) = 0))\n" +
                     "group by x.indrelid, x.indexrelid, x.indpred\n" +
                     "order by table_name, index_name;";
@@ -222,7 +220,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     @Nonnull
     @Override
     public List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey() {
-        return executeQuery(TABLES_WITHOUT_PRIMARY_KEYS, rs -> {
+        return executeQuery(TABLES_WITHOUT_PRIMARY_KEY, rs -> {
             final String tableName = rs.getString("table_name");
             return TableWithoutPrimaryKey.of(tableName);
         });

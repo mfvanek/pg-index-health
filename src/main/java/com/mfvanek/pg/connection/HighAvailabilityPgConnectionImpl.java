@@ -34,7 +34,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
 
     @Nonnull
     public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToMaster) {
-        return new HighAvailabilityPgConnectionImpl(connectionToMaster, Set.of());
+        return new HighAvailabilityPgConnectionImpl(connectionToMaster, Set.of(connectionToMaster));
     }
 
     @Nonnull

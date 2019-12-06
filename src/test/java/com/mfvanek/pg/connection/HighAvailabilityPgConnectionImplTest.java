@@ -10,8 +10,12 @@ import com.opentable.db.postgres.junit5.PreparedDbExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.util.Set;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class HighAvailabilityPgConnectionImplTest {
@@ -26,6 +30,17 @@ class HighAvailabilityPgConnectionImplTest {
         final var pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
         final var haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
         assertNotNull(haPgConnection);
-        assertThat(haPgConnection.getConnectionsToReplicas(), hasSize(0));
+        assertThat(haPgConnection.getConnectionsToReplicas(), hasSize(1));
+        assertEquals(haPgConnection.getConnectionToMaster(), haPgConnection.getConnectionsToReplicas().iterator().next());
+    }
+
+    @Test
+    void withReplicas() {
+        final var master = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final var replica = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("replica"));
+        final var haPgConnection = HighAvailabilityPgConnectionImpl.of(master, Set.of(master, replica));
+        assertNotNull(haPgConnection);
+        assertThat(haPgConnection.getConnectionsToReplicas(), hasSize(2));
+        assertThat(haPgConnection.getConnectionsToReplicas(), containsInAnyOrder(master, replica));
     }
 }
