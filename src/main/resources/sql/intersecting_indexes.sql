@@ -1,6 +1,6 @@
 select a.indrelid::regclass as table_name,
                         'idx=' || a.indexrelid::regclass || ', size=' || pg_relation_size(a.indexrelid) || '; idx=' ||
-                        b.indexrelid::regclass || ', size=' || pg_relation_size(b.indexrelid) as intersected_indices
+                        b.indexrelid::regclass || ', size=' || pg_relation_size(b.indexrelid) as intersected_indexes
 from (
     select *, array_to_string(indkey, ' ') as cols
     from pg_index) as a

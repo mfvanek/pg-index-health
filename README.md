@@ -1,18 +1,18 @@
 # pg-index-health
-**pg-index-health** is a Java library for analyzing and maintaining indices health in [Postgresql](https://www.postgresql.org/) databases.
+**pg-index-health** is a Java library for analyzing and maintaining indexes health in [Postgresql](https://www.postgresql.org/) databases.
 
 ## Supported PostgreSQL versions
 * 10
 
 ## Available checks
 **pg-index-health** allows you to detect the following problems:
-1. Invalid (broken) indices.
-1. Duplicated (completely identical) indices.
-1. Intersecting (partially identical) indices.
-1. Unused indices.
-1. Foreign keys without associated indices.
-1. Indices with null values.
-1. Tables with missing indices.
+1. Invalid (broken) indexes.
+1. Duplicated (completely identical) indexes.
+1. Intersecting (partially identical) indexes.
+1. Unused indexes.
+1. Foreign keys without associated indexes.
+1. Indexes with null values.
+1. Tables with missing indexes.
 1. Tables without primary key.
 
 ## Demo application
@@ -22,7 +22,7 @@ import com.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
 import com.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import com.mfvanek.pg.connection.PgConnectionFactoryImpl;
 import com.mfvanek.pg.index.health.logger.Exclusions;
-import com.mfvanek.pg.index.health.logger.IndicesHealthLogger;
+import com.mfvanek.pg.index.health.logger.IndexesHealthLogger;
 import com.mfvanek.pg.index.health.logger.SimpleHealthLogger;
 import com.mfvanek.pg.index.maintenance.IndexMaintenanceFactoryImpl;
 
@@ -35,8 +35,8 @@ public class DemoApp {
         final String password = "any_password";
         final HighAvailabilityPgConnectionFactory haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
         final HighAvailabilityPgConnection haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl);
-        final IndicesHealth indicesHealth = new IndicesHealthImpl(haPgConnection, new IndexMaintenanceFactoryImpl());
-        final IndicesHealthLogger logger = new SimpleHealthLogger(indicesHealth, Exclusions.empty());
+        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, new IndexMaintenanceFactoryImpl());
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealth, Exclusions.empty());
         logger.logAll().forEach(System.out::println);
     }
 }

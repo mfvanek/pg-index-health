@@ -37,14 +37,14 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     @Nonnull
     public final List<String> logAll() {
         final List<String> logResult = new ArrayList<>();
-        logResult.add(logInvalidIndices());
-        logResult.add(logDuplicatedIndices());
-        logResult.add(logIntersectedIndices());
-        logResult.add(logUnusedIndices());
+        logResult.add(logInvalidIndexes());
+        logResult.add(logDuplicatedIndexes());
+        logResult.add(logIntersectedIndexes());
+        logResult.add(logUnusedIndexes());
         logResult.add(logForeignKeysNotCoveredWithIndex());
-        logResult.add(logTablesWithMissingIndices());
+        logResult.add(logTablesWithMissingIndexes());
         logResult.add(logTablesWithoutPrimaryKey());
-        logResult.add(logIndicesWithNullValues());
+        logResult.add(logIndexesWithNullValues());
         return logResult;
     }
 
@@ -56,50 +56,50 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logInvalidIndices() {
-        final var invalidIndices = indexesHealth.getInvalidIndexes();
+    private String logInvalidIndexes() {
+        final var invalidIndexes = indexesHealth.getInvalidIndexes();
         final LoggingKey key = SimpleLoggingKey.INVALID_INDEXES;
-        if (CollectionUtils.isNotEmpty(invalidIndices)) {
-            LOGGER.error("There are invalid indices in the database {}", invalidIndices);
-            return writeToLog(key, invalidIndices.size());
+        if (CollectionUtils.isNotEmpty(invalidIndexes)) {
+            LOGGER.error("There are invalid indexes in the database {}", invalidIndexes);
+            return writeToLog(key, invalidIndexes.size());
         }
         return writeZeroToLog(key);
     }
 
     @Nonnull
-    private String logDuplicatedIndices() {
-        final var rawDuplicatedIndices = indexesHealth.getDuplicatedIndexes();
-        final var duplicatedIndices = applyExclusions(rawDuplicatedIndices,
+    private String logDuplicatedIndexes() {
+        final var rawDuplicatedIndexes = indexesHealth.getDuplicatedIndexes();
+        final var duplicatedIndexes = applyExclusions(rawDuplicatedIndexes,
                 exclusions.getDuplicatedIndexesExclusions());
         final LoggingKey key = SimpleLoggingKey.DUPLICATED_INDEXES;
-        if (CollectionUtils.isNotEmpty(duplicatedIndices)) {
-            LOGGER.warn("There are duplicated indices in the database {}", duplicatedIndices);
-            return writeToLog(key, duplicatedIndices.size());
+        if (CollectionUtils.isNotEmpty(duplicatedIndexes)) {
+            LOGGER.warn("There are duplicated indexes in the database {}", duplicatedIndexes);
+            return writeToLog(key, duplicatedIndexes.size());
         }
         return writeZeroToLog(key);
     }
 
     @Nonnull
-    private String logIntersectedIndices() {
-        final var rawIntersectedIndices = indexesHealth.getIntersectedIndexes();
-        final var intersectedIndices = applyExclusions(rawIntersectedIndices,
+    private String logIntersectedIndexes() {
+        final var rawIntersectedIndexes = indexesHealth.getIntersectedIndexes();
+        final var intersectedIndexes = applyExclusions(rawIntersectedIndexes,
                 exclusions.getIntersectedIndexesExclusions());
         final LoggingKey key = SimpleLoggingKey.INTERSECTED_INDEXES;
-        if (CollectionUtils.isNotEmpty(intersectedIndices)) {
-            LOGGER.warn("There are intersected indices in the database {}", intersectedIndices);
-            return writeToLog(key, intersectedIndices.size());
+        if (CollectionUtils.isNotEmpty(intersectedIndexes)) {
+            LOGGER.warn("There are intersected indexes in the database {}", intersectedIndexes);
+            return writeToLog(key, intersectedIndexes.size());
         }
         return writeZeroToLog(key);
     }
 
     @Nonnull
-    private String logUnusedIndices() {
-        final var rawUnusedIndices = indexesHealth.getUnusedIndexes();
-        final var unusedIndices = applyIndicesExclusions(rawUnusedIndices, exclusions.getUnusedIndexesExclusions());
+    private String logUnusedIndexes() {
+        final var rawUnusedIndexes = indexesHealth.getUnusedIndexes();
+        final var unusedIndexes = applyIndexesExclusions(rawUnusedIndexes, exclusions.getUnusedIndexesExclusions());
         final LoggingKey key = SimpleLoggingKey.UNUSED_INDEXES;
-        if (CollectionUtils.isNotEmpty(unusedIndices)) {
-            LOGGER.warn("There are unused indices in the database {}", unusedIndices);
-            return writeToLog(key, unusedIndices.size());
+        if (CollectionUtils.isNotEmpty(unusedIndexes)) {
+            LOGGER.warn("There are unused indexes in the database {}", unusedIndexes);
+            return writeToLog(key, unusedIndexes.size());
         }
         return writeZeroToLog(key);
     }
@@ -116,14 +116,14 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logTablesWithMissingIndices() {
-        final var rawTablesWithMissingIndices = indexesHealth.getTablesWithMissingIndexes();
-        final var tablesWithMissingIndices = applyTablesExclusions(rawTablesWithMissingIndices,
+    private String logTablesWithMissingIndexes() {
+        final var rawTablesWithMissingIndexes = indexesHealth.getTablesWithMissingIndexes();
+        final var tablesWithMissingIndexes = applyTablesExclusions(rawTablesWithMissingIndexes,
                 exclusions.getTablesWithMissingIndexesExclusions());
         final LoggingKey key = SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES;
-        if (CollectionUtils.isNotEmpty(tablesWithMissingIndices)) {
-            LOGGER.warn("There are tables with missing indices in the database {}", tablesWithMissingIndices);
-            return writeToLog(key, tablesWithMissingIndices.size());
+        if (CollectionUtils.isNotEmpty(tablesWithMissingIndexes)) {
+            LOGGER.warn("There are tables with missing indexes in the database {}", tablesWithMissingIndexes);
+            return writeToLog(key, tablesWithMissingIndexes.size());
         }
         return writeZeroToLog(key);
     }
@@ -142,35 +142,35 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logIndicesWithNullValues() {
-        final var rawIndicesWithNullValues = indexesHealth.getIndexesWithNullValues();
-        final var indicesWithNullValues = applyIndicesExclusions(rawIndicesWithNullValues,
+    private String logIndexesWithNullValues() {
+        final var rawIndexesWithNullValues = indexesHealth.getIndexesWithNullValues();
+        final var indexesWithNullValues = applyIndexesExclusions(rawIndexesWithNullValues,
                 exclusions.getIndexesWithNullValuesExclusions());
         final LoggingKey key = SimpleLoggingKey.INDEXES_WITH_NULLS;
-        if (CollectionUtils.isNotEmpty(indicesWithNullValues)) {
-            LOGGER.warn("There are indices with null values in the database {}", indicesWithNullValues);
-            return writeToLog(key, indicesWithNullValues.size());
+        if (CollectionUtils.isNotEmpty(indexesWithNullValues)) {
+            LOGGER.warn("There are indexes with null values in the database {}", indexesWithNullValues);
+            return writeToLog(key, indexesWithNullValues.size());
         }
         return writeZeroToLog(key);
     }
 
     @Nonnull
-    private List<DuplicatedIndexes> applyExclusions(@Nonnull final List<DuplicatedIndexes> rawIndices,
-                                                    @Nonnull final Set<String> indicesExclusions) {
-        if (CollectionUtils.isEmpty(rawIndices) ||
-                CollectionUtils.isEmpty(indicesExclusions)) {
-            return rawIndices;
+    private List<DuplicatedIndexes> applyExclusions(@Nonnull final List<DuplicatedIndexes> rawIndexes,
+                                                    @Nonnull final Set<String> indexesExclusions) {
+        if (CollectionUtils.isEmpty(rawIndexes) ||
+                CollectionUtils.isEmpty(indexesExclusions)) {
+            return rawIndexes;
         }
 
-        return rawIndices.stream()
+        return rawIndexes.stream()
                 .filter(i -> i.getIndexNames().stream()
                         .map(String::toLowerCase)
-                        .noneMatch(indicesExclusions::contains))
+                        .noneMatch(indexesExclusions::contains))
                 .collect(Collectors.toList());
     }
 
     @Nonnull
-    private static <T extends IndexAware> List<T> applyIndicesExclusions(@Nonnull final List<T> rawRecords,
+    private static <T extends IndexAware> List<T> applyIndexesExclusions(@Nonnull final List<T> rawRecords,
                                                                          @Nonnull final Set<String> exclusions) {
         if (CollectionUtils.isEmpty(rawRecords) ||
                 CollectionUtils.isEmpty(exclusions)) {

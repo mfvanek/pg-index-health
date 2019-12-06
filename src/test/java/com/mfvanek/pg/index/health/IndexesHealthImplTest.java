@@ -37,70 +37,70 @@ class IndexesHealthImplTest {
             new IndexMaintenanceFactoryImpl());
 
     @Test
-    void getInvalidIndicesOnEmptyDatabase() {
-        final var invalidIndices = indexesHealth.getInvalidIndexes();
-        assertNotNull(invalidIndices);
-        assertEquals(0, invalidIndices.size());
+    void getInvalidIndexesOnEmptyDatabase() {
+        final var invalidIndexes = indexesHealth.getInvalidIndexes();
+        assertNotNull(invalidIndexes);
+        assertEquals(0, invalidIndexes.size());
     }
 
     @Test
-    void getInvalidIndicesOnDatabaseWithoutThem() throws SQLException {
+    void getInvalidIndexesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var invalidIndices = indexesHealth.getInvalidIndexes();
-                    assertNotNull(invalidIndices);
-                    assertEquals(0, invalidIndices.size());
+                    final var invalidIndexes = indexesHealth.getInvalidIndexes();
+                    assertNotNull(invalidIndexes);
+                    assertEquals(0, invalidIndexes.size());
                 });
     }
 
     @Test
-    void getDuplicatedIndicesOnEmptyDatabase() {
-        final var duplicatedIndices = indexesHealth.getDuplicatedIndexes();
-        assertNotNull(duplicatedIndices);
-        assertEquals(0, duplicatedIndices.size());
+    void getDuplicatedIndexesOnEmptyDatabase() {
+        final var duplicatedIndexes = indexesHealth.getDuplicatedIndexes();
+        assertNotNull(duplicatedIndexes);
+        assertEquals(0, duplicatedIndexes.size());
     }
 
     @Test
-    void getDuplicatedIndicesOnDatabaseWithoutThem() throws SQLException {
+    void getDuplicatedIndexesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var duplicatedIndices = indexesHealth.getDuplicatedIndexes();
-                    assertNotNull(duplicatedIndices);
-                    assertEquals(0, duplicatedIndices.size());
+                    final var duplicatedIndexes = indexesHealth.getDuplicatedIndexes();
+                    assertNotNull(duplicatedIndexes);
+                    assertEquals(0, duplicatedIndexes.size());
                 });
     }
 
     @Test
-    void getIntersectedIndicesOnEmptyDatabase() {
-        final var intersectedIndices = indexesHealth.getIntersectedIndexes();
-        assertNotNull(intersectedIndices);
-        assertEquals(0, intersectedIndices.size());
+    void getIntersectedIndexesOnEmptyDatabase() {
+        final var intersectedIndexes = indexesHealth.getIntersectedIndexes();
+        assertNotNull(intersectedIndexes);
+        assertEquals(0, intersectedIndexes.size());
     }
 
     @Test
-    void getIntersectedIndicesOnDatabaseWithoutThem() throws SQLException {
+    void getIntersectedIndexesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var intersectedIndices = indexesHealth.getIntersectedIndexes();
-                    assertNotNull(intersectedIndices);
-                    assertEquals(0, intersectedIndices.size());
+                    final var intersectedIndexes = indexesHealth.getIntersectedIndexes();
+                    assertNotNull(intersectedIndexes);
+                    assertEquals(0, intersectedIndexes.size());
                 });
     }
 
     @Test
-    void getUnusedIndicesOnEmptyDatabase() {
-        final var unusedIndices = indexesHealth.getUnusedIndexes();
-        assertNotNull(unusedIndices);
-        assertEquals(0, unusedIndices.size());
+    void getUnusedIndexesOnEmptyDatabase() {
+        final var unusedIndexes = indexesHealth.getUnusedIndexes();
+        assertNotNull(unusedIndexes);
+        assertEquals(0, unusedIndexes.size());
     }
 
     @Test
-    void getUnusedIndicesOnDatabaseWithoutThem() throws SQLException {
+    void getUnusedIndexesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var unusedIndices = indexesHealth.getUnusedIndexes();
-                    assertNotNull(unusedIndices);
-                    assertEquals(0, unusedIndices.size());
+                    final var unusedIndexes = indexesHealth.getUnusedIndexes();
+                    assertNotNull(unusedIndexes);
+                    assertEquals(0, unusedIndexes.size());
                 });
     }
 
@@ -122,14 +122,14 @@ class IndexesHealthImplTest {
     }
 
     @Test
-    void getTablesWithMissingIndicesOnEmptyDatabase() {
+    void getTablesWithMissingIndexesOnEmptyDatabase() {
         final var tables = indexesHealth.getTablesWithMissingIndexes();
         assertNotNull(tables);
         assertEquals(0, tables.size());
     }
 
     @Test
-    void getTablesWithMissingIndicesOnDatabaseWithoutThem() throws SQLException {
+    void getTablesWithMissingIndexesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
                 () -> {
                     final var tables = indexesHealth.getTablesWithMissingIndexes();
@@ -156,19 +156,19 @@ class IndexesHealthImplTest {
     }
 
     @Test
-    void getIndicesWithNullValuesOnEmptyDatabase() {
-        final var indices = indexesHealth.getIndexesWithNullValues();
-        assertNotNull(indices);
-        assertEquals(0, indices.size());
+    void getIndexesWithNullValuesOnEmptyDatabase() {
+        final var indexes = indexesHealth.getIndexesWithNullValues();
+        assertNotNull(indexes);
+        assertEquals(0, indexes.size());
     }
 
     @Test
-    void getIndicesWithNullValuesOnDatabaseWithoutThem() throws SQLException {
+    void getIndexesWithNullValuesOnDatabaseWithoutThem() throws SQLException {
         executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
                 () -> {
-                    final var indices = indexesHealth.getIndexesWithNullValues();
-                    assertNotNull(indices);
-                    assertEquals(0, indices.size());
+                    final var indexes = indexesHealth.getIndexesWithNullValues();
+                    assertNotNull(indexes);
+                    assertEquals(0, indexes.size());
                 });
     }
 

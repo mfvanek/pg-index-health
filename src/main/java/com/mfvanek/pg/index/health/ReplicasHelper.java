@@ -46,14 +46,14 @@ final class ReplicasHelper {
     static List<UnusedIndex> getUnusedIndexesAsIntersectionResult(
             @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts) {
         LOGGER.debug("potentiallyUnusedIndexesFromAllHosts = {}", potentiallyUnusedIndexesFromAllHosts);
-        Collection<UnusedIndex> unusedIndices = null;
-        for (var unusedIndicesFromHost : potentiallyUnusedIndexesFromAllHosts) {
-            if (unusedIndices == null) {
-                unusedIndices = unusedIndicesFromHost;
+        Collection<UnusedIndex> unusedIndexes = null;
+        for (var unusedIndexesFromHost : potentiallyUnusedIndexesFromAllHosts) {
+            if (unusedIndexes == null) {
+                unusedIndexes = unusedIndexesFromHost;
             }
-            unusedIndices = CollectionUtils.intersection(unusedIndices, unusedIndicesFromHost);
+            unusedIndexes = CollectionUtils.intersection(unusedIndexes, unusedIndexesFromHost);
         }
-        final List<UnusedIndex> result = unusedIndices == null ? Collections.emptyList() : List.copyOf(unusedIndices);
+        final List<UnusedIndex> result = unusedIndexes == null ? Collections.emptyList() : List.copyOf(unusedIndexes);
         LOGGER.debug("Intersection result {}", result);
         return result;
     }

@@ -35,18 +35,18 @@ class DuplicatedIndexesTest {
 
     @Test
     void testToString() {
-        final var indices = DuplicatedIndexes.of(List.of(
+        final var indexes = DuplicatedIndexes.of(List.of(
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
-        assertNotNull(indices);
+        assertNotNull(indexes);
         assertEquals("DuplicatedIndexes{tableName='t', totalSize=303, indexes=[" +
                         "IndexWithSize{tableName='t', indexName='i1', indexSizeInBytes=101}, " +
                         "IndexWithSize{tableName='t', indexName='i2', indexSizeInBytes=202}]}",
-                indices.toString());
+                indexes.toString());
     }
 
     @Test
-    void withoutIndices() {
+    void withoutIndexes() {
         assertThrows(NullPointerException.class, () -> DuplicatedIndexes.of(null));
         assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of(Collections.emptyList()));
         assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of(

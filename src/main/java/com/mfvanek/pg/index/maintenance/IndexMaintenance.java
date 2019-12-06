@@ -20,37 +20,37 @@ import java.util.List;
 public interface IndexMaintenance extends HostAware {
 
     /**
-     * List of invalid (broken) indices to be deleted or re-indexed.
+     * List of invalid (broken) indexes to be deleted or re-indexed.
      */
     @Nonnull
     List<Index> getInvalidIndexes();
 
     /**
-     * List of duplicated (completely identical) indices (candidates for deletion).
+     * List of duplicated (completely identical) indexes (candidates for deletion).
      */
     @Nonnull
     List<DuplicatedIndexes> getDuplicatedIndexes();
 
     /**
-     * List of intersecting indices (partially identical, candidates for deletion).
+     * List of intersecting indexes (partially identical, candidates for deletion).
      */
     @Nonnull
     List<DuplicatedIndexes> getIntersectedIndexes();
 
     /**
-     * List of potentially unused indices (candidates for deletion).
+     * List of potentially unused indexes (candidates for deletion).
      */
     @Nonnull
     List<UnusedIndex> getPotentiallyUnusedIndexes();
 
     /**
-     * List of foreign keys without associated indices (potential performance degradation).
+     * List of foreign keys without associated indexes (potential performance degradation).
      */
     @Nonnull
     List<ForeignKey> getForeignKeysNotCoveredWithIndex();
 
     /**
-     * List of tables with potentially missing indices (potential performance degradation).
+     * List of tables with potentially missing indexes (potential performance degradation).
      */
     @Nonnull
     List<TableWithMissingIndex> getTablesWithMissingIndexes();
@@ -62,7 +62,7 @@ public interface IndexMaintenance extends HostAware {
     List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey();
 
     /**
-     * List of indices that contain null values.
+     * List of indexes that contain null values.
      */
     @Nonnull
     List<IndexWithNulls> getIndexesWithNullValues();

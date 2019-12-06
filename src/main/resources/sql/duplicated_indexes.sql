@@ -1,5 +1,5 @@
 select table_name,
-    string_agg('idx=' || idx::text || ', size=' || pg_relation_size(idx), '; ') as duplicated_indices
+    string_agg('idx=' || idx::text || ', size=' || pg_relation_size(idx), '; ') as duplicated_indexes
 from (
     select x.indexrelid::regclass as idx,
         x.indrelid::regclass as table_name,

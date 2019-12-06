@@ -83,12 +83,12 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Nonnull
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndexes() {
-        final List<List<TableWithMissingIndex>> tablesWithMissingIndicesFromAllHosts = new ArrayList<>();
+        final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = new ArrayList<>();
         for (var maintenanceForReplica : maintenanceForReplicas) {
-            tablesWithMissingIndicesFromAllHosts.add(
+            tablesWithMissingIndexesFromAllHosts.add(
                     doOnReplica(maintenanceForReplica.getHost(), maintenanceForReplica::getTablesWithMissingIndexes));
         }
-        return ReplicasHelper.getTablesWithMissingIndexesAsUnionResult(tablesWithMissingIndicesFromAllHosts);
+        return ReplicasHelper.getTablesWithMissingIndexesAsUnionResult(tablesWithMissingIndexesFromAllHosts);
     }
 
     @Nonnull
