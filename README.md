@@ -1,6 +1,9 @@
 # pg-index-health
 **pg-index-health** is a Java library for analyzing and maintaining indices health in [Postgresql](https://www.postgresql.org/) databases.
 
+## Supported PostgreSQL versions
+* 10
+
 ## Available checks
 **pg-index-health** allows you to detect the following problems:
 1. Invalid (broken) indices.
