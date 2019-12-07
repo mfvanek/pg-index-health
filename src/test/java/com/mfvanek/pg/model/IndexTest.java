@@ -7,6 +7,8 @@ package com.mfvanek.pg.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -44,6 +46,9 @@ class IndexTest {
         final var first = Index.of("t1", "i1");
         final var second = Index.of("t1", "i2");
         final var third = Index.of("t2", "i2");
+
+        assertNotEquals(first, null);
+        assertNotEquals(first, BigDecimal.ZERO);
 
         // self
         assertEquals(first, first);
