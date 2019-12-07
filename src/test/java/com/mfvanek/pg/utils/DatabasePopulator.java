@@ -25,6 +25,18 @@ public final class DatabasePopulator implements AutoCloseable {
         this.dataSource = Objects.requireNonNull(dataSource);
     }
 
+    public String getPgVersion() {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery("select version()")) {
+                resultSet.next();
+                return resultSet.getString(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void populateWithDataAndReferences() {
         // TODO do it inside transaction
         createTableClients();
@@ -190,8 +202,8 @@ public final class DatabasePopulator implements AutoCloseable {
     public void close() throws SQLException {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute("truncate table accounts cascade");
-            statement.execute("truncate table clients cascade");
+            //statement.execute("truncate table accounts cascade");
+            //statement.execute("truncate table clients cascade");
 
             statement.execute("drop table if exists accounts");
             statement.execute("drop sequence if exists accounts_seq");
