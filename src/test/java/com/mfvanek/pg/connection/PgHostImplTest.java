@@ -7,6 +7,8 @@ package com.mfvanek.pg.connection;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -65,6 +67,9 @@ class PgHostImplTest {
         final var theSame = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
         final var withDifferentHostsOrder = PgHostImpl.ofUrl("jdbc:postgresql://host-2:5432,host-1:4432,host-4:3432,host-3:2432/db_name?ssl=true&sslmode=require");
         final var second = PgHostImpl.ofMaster();
+
+        assertNotEquals(first, null);
+        assertNotEquals(first, BigDecimal.ZERO);
 
         assertEquals(first, first);
         assertEquals(first.hashCode(), first.hashCode());

@@ -10,6 +10,8 @@ import com.opentable.db.postgres.junit5.PreparedDbExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.math.BigDecimal;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,6 +44,9 @@ class PgConnectionImplTest {
         final var first = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
         final var theSame = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
         final var second = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("second"));
+
+        assertNotEquals(first, null);
+        assertNotEquals(first, BigDecimal.ZERO);
 
         assertEquals(first, first);
         assertEquals(first.hashCode(), first.hashCode());

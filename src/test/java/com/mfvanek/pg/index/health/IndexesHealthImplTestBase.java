@@ -3,22 +3,20 @@
  * https://github.com/mfvanek
  */
 
-package com.mfvanek.pg.index.maintenance;
+package com.mfvanek.pg.index.health;
 
-import com.mfvanek.pg.connection.PgConnection;
+import com.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import com.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import com.mfvanek.pg.connection.PgConnectionImpl;
+import com.mfvanek.pg.index.maintenance.IndexMaintenanceFactoryImpl;
 import com.mfvanek.pg.model.IndexWithSize;
 import com.mfvanek.pg.model.UnusedIndex;
+import com.mfvanek.pg.utils.DatabaseAwareTestBase;
 import com.mfvanek.pg.utils.DatabasePopulator;
-import com.mfvanek.pg.utils.TestExecutor;
-import com.opentable.db.postgres.junit5.EmbeddedPostgresExtension;
-import com.opentable.db.postgres.junit5.PreparedDbExtension;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import javax.annotation.Nonnull;
-import java.sql.SQLException;
-import java.util.function.Consumer;
+import javax.sql.DataSource;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
@@ -29,41 +27,42 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class IndexMaintenanceImplTest {
+abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
-    @RegisterExtension
-    static final PreparedDbExtension embeddedPostgres =
-            EmbeddedPostgresExtension.preparedDatabase(ds -> {
-            });
+    private final IndexesHealth indexesHealth;
 
-    private final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
-    private final IndexMaintenance indexMaintenance = new IndexMaintenanceImpl(pgConnection);
+    IndexesHealthImplTestBase(@Nonnull final DataSource dataSource) {
+        super(dataSource);
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(
+                PgConnectionImpl.ofMaster(dataSource));
+        this.indexesHealth = new IndexesHealthImpl(haPgConnection, new IndexMaintenanceFactoryImpl());
+    }
 
     @Test
-    void getInvalidIndexesOnEmptyDataBase() {
-        final var invalidIndexes = indexMaintenance.getInvalidIndexes();
+    void getInvalidIndexesOnEmptyDatabase() {
+        final var invalidIndexes = indexesHealth.getInvalidIndexes();
         assertNotNull(invalidIndexes);
         assertEquals(0, invalidIndexes.size());
     }
 
     @Test
-    void getInvalidIndexesOnDatabaseWithoutThem() throws SQLException {
+    void getInvalidIndexesOnDatabaseWithoutThem() {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var invalidIndexes = indexMaintenance.getInvalidIndexes();
+                    final var invalidIndexes = indexesHealth.getInvalidIndexes();
                     assertNotNull(invalidIndexes);
                     assertEquals(0, invalidIndexes.size());
                 });
     }
 
     @Test
-    void getInvalidIndexesOnDatabaseWithThem() throws SQLException {
+    void getInvalidIndexesOnDatabaseWithThem() {
         executeTestOnDatabase(databasePopulator -> {
                     databasePopulator.populateWithDataAndReferences();
                     databasePopulator.createInvalidIndex();
                 },
                 () -> {
-                    final var invalidIndexes = indexMaintenance.getInvalidIndexes();
+                    final var invalidIndexes = indexesHealth.getInvalidIndexes();
                     assertNotNull(invalidIndexes);
                     assertEquals(1, invalidIndexes.size());
                     final var index = invalidIndexes.get(0);
@@ -73,30 +72,30 @@ class IndexMaintenanceImplTest {
     }
 
     @Test
-    void getDuplicatedIndexesOnEmptyDataBase() {
-        final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
+    void getDuplicatedIndexesOnEmptyDatabase() {
+        final var duplicatedIndexes = indexesHealth.getDuplicatedIndexes();
         assertNotNull(duplicatedIndexes);
         assertEquals(0, duplicatedIndexes.size());
     }
 
     @Test
-    void getDuplicatedIndexesOnDatabaseWithoutThem() throws SQLException {
+    void getDuplicatedIndexesOnDatabaseWithoutThem() {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
+                    final var duplicatedIndexes = indexesHealth.getDuplicatedIndexes();
                     assertNotNull(duplicatedIndexes);
                     assertEquals(0, duplicatedIndexes.size());
                 });
     }
 
     @Test
-    void getDuplicatedIndexesOnDatabaseWithThem() throws SQLException {
+    void getDuplicatedIndexesOnDatabaseWithThem() {
         executeTestOnDatabase(databasePopulator -> {
                     databasePopulator.populateWithDataAndReferences();
                     databasePopulator.createDuplicatedIndex();
                 },
                 () -> {
-                    final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
+                    final var duplicatedIndexes = indexesHealth.getDuplicatedIndexes();
                     assertNotNull(duplicatedIndexes);
                     assertEquals(1, duplicatedIndexes.size());
                     final var entry = duplicatedIndexes.get(0);
@@ -112,30 +111,30 @@ class IndexMaintenanceImplTest {
     }
 
     @Test
-    void getIntersectedIndexesOnEmptyDataBase() {
-        final var intersectedIndexes = indexMaintenance.getIntersectedIndexes();
+    void getIntersectedIndexesOnEmptyDatabase() {
+        final var intersectedIndexes = indexesHealth.getIntersectedIndexes();
         assertNotNull(intersectedIndexes);
         assertEquals(0, intersectedIndexes.size());
     }
 
     @Test
-    void getIntersectedIndexesOnDatabaseWithoutThem() throws SQLException {
+    void getIntersectedIndexesOnDatabaseWithoutThem() {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var intersectedIndexes = indexMaintenance.getIntersectedIndexes();
+                    final var intersectedIndexes = indexesHealth.getIntersectedIndexes();
                     assertNotNull(intersectedIndexes);
                     assertEquals(0, intersectedIndexes.size());
                 });
     }
 
     @Test
-    void getIntersectedIndexesOnDatabaseWithThem() throws SQLException {
+    void getIntersectedIndexesOnDatabaseWithThem() {
         executeTestOnDatabase(databasePopulator -> {
                     databasePopulator.populateWithDataAndReferences();
                     databasePopulator.createDuplicatedIndex();
                 },
                 () -> {
-                    final var intersectedIndexes = indexMaintenance.getIntersectedIndexes();
+                    final var intersectedIndexes = indexesHealth.getIntersectedIndexes();
                     assertNotNull(intersectedIndexes);
                     assertEquals(1, intersectedIndexes.size());
                     final var entry = intersectedIndexes.get(0);
@@ -151,30 +150,30 @@ class IndexMaintenanceImplTest {
     }
 
     @Test
-    void getPotentiallyUnusedIndexesOnEmptyDataBase() {
-        final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+    void getUnusedIndexesOnEmptyDatabase() {
+        final var unusedIndexes = indexesHealth.getUnusedIndexes();
         assertNotNull(unusedIndexes);
         assertEquals(0, unusedIndexes.size());
     }
 
     @Test
-    void getPotentiallyUnusedIndexesOnDatabaseWithoutThem() throws SQLException {
+    void getUnusedIndexesOnDatabaseWithoutThem() {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+                    final var unusedIndexes = indexesHealth.getUnusedIndexes();
                     assertNotNull(unusedIndexes);
                     assertEquals(0, unusedIndexes.size());
                 });
     }
 
     @Test
-    void getPotentiallyUnusedIndexesOnDatabaseWithThem() throws SQLException {
+    void getUnusedIndexesOnDatabaseWithThem() {
         executeTestOnDatabase(databasePopulator -> {
                     databasePopulator.populateWithDataAndReferences();
                     databasePopulator.createDuplicatedIndex();
                 },
                 () -> {
-                    final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+                    final var unusedIndexes = indexesHealth.getUnusedIndexes();
                     assertNotNull(unusedIndexes);
                     assertThat(unusedIndexes.size(), equalTo(3));
                     final var names = unusedIndexes.stream().map(UnusedIndex::getIndexName).collect(toSet());
@@ -183,27 +182,27 @@ class IndexMaintenanceImplTest {
     }
 
     @Test
-    void getForeignKeysNotCoveredWithIndexOnEmptyDataBase() {
-        final var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+    void getForeignKeysNotCoveredWithIndexOnEmptyDatabase() {
+        final var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
         assertNotNull(foreignKeys);
         assertEquals(0, foreignKeys.size());
     }
 
     @Test
-    void getForeignKeysNotCoveredWithIndexOnDatabaseWithoutThem() throws SQLException {
+    void getForeignKeysNotCoveredWithIndexOnDatabaseWithoutThem() {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTables,
                 () -> {
-                    final var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+                    final var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
                     assertEquals(0, foreignKeys.size());
                 });
     }
 
     @Test
-    void getForeignKeysNotCoveredWithIndexOnDatabaseWithThem() throws SQLException {
+    void getForeignKeysNotCoveredWithIndexOnDatabaseWithThem() {
         executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
                 () -> {
-                    var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+                    var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
                     assertEquals(1, foreignKeys.size());
                     final var foreignKey = foreignKeys.get(0);
@@ -213,13 +212,13 @@ class IndexMaintenanceImplTest {
     }
 
     @Test
-    void getForeignKeysNotCoveredWithIndexOnDatabaseWithNotSuitableIndex() throws SQLException {
+    void getForeignKeysNotCoveredWithIndexOnDatabaseWithNotSuitableIndex() {
         executeTestOnDatabase(databasePopulator -> {
                     databasePopulator.populateOnlyTablesAndReferences();
                     databasePopulator.createNotSuitableIndexForForeignKey();
                 },
                 () -> {
-                    var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+                    var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
                     assertEquals(1, foreignKeys.size());
                     final var foreignKey = foreignKeys.get(0);
@@ -229,43 +228,43 @@ class IndexMaintenanceImplTest {
     }
 
     @Test
-    void getForeignKeysNotCoveredWithIndexOnDatabaseWithSuitableIndex() throws SQLException {
+    void getForeignKeysNotCoveredWithIndexOnDatabaseWithSuitableIndex() {
         executeTestOnDatabase(databasePopulator -> {
                     databasePopulator.populateOnlyTablesAndReferences();
                     databasePopulator.createSuitableIndexForForeignKey();
                 },
                 () -> {
-                    var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+                    var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
                     assertEquals(0, foreignKeys.size());
                 });
     }
 
     @Test
-    void getTablesWithMissingIndexesOnEmptyDataBase() {
-        final var tables = indexMaintenance.getTablesWithMissingIndexes();
+    void getTablesWithMissingIndexesOnEmptyDatabase() {
+        final var tables = indexesHealth.getTablesWithMissingIndexes();
         assertNotNull(tables);
         assertEquals(0, tables.size());
     }
 
     @Test
-    void getTablesWithMissingIndexesOnDatabaseWithoutThem() throws SQLException {
+    void getTablesWithMissingIndexesOnDatabaseWithoutThem() {
         executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
                 () -> {
-                    final var tables = indexMaintenance.getTablesWithMissingIndexes();
+                    final var tables = indexesHealth.getTablesWithMissingIndexes();
                     assertNotNull(tables);
                     assertEquals(0, tables.size());
                 });
     }
 
     @Test
-    void getTablesWithMissingIndexesOnDatabaseWithThem() throws SQLException {
+    void getTablesWithMissingIndexesOnDatabaseWithThem() {
         executeTestOnDatabase(databasePopulator -> {
                     databasePopulator.populateWithDataAndReferences();
                     databasePopulator.tryToFindAccountByClientId(101);
                 },
                 () -> {
-                    var tables = indexMaintenance.getTablesWithMissingIndexes();
+                    var tables = indexesHealth.getTablesWithMissingIndexes();
                     assertNotNull(tables);
                     assertEquals(1, tables.size());
                     var table = tables.get(0);
@@ -276,30 +275,30 @@ class IndexMaintenanceImplTest {
     }
 
     @Test
-    void getTablesWithoutPrimaryKeyOnEmptyDataBase() {
-        final var tables = indexMaintenance.getTablesWithoutPrimaryKey();
+    void getTablesWithoutPrimaryKeyOnEmptyDatabase() {
+        final var tables = indexesHealth.getTablesWithoutPrimaryKey();
         assertNotNull(tables);
         assertEquals(0, tables.size());
     }
 
     @Test
-    void getTablesWithoutPrimaryKeyOnDatabaseWithoutThem() throws SQLException {
+    void getTablesWithoutPrimaryKeyOnDatabaseWithoutThem() {
         executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
                 () -> {
-                    final var tables = indexMaintenance.getTablesWithoutPrimaryKey();
+                    final var tables = indexesHealth.getTablesWithoutPrimaryKey();
                     assertNotNull(tables);
                     assertEquals(0, tables.size());
                 });
     }
 
     @Test
-    void getTablesWithoutPrimaryKeyOnDatabaseWithThem() throws SQLException {
+    void getTablesWithoutPrimaryKeyOnDatabaseWithThem() {
         executeTestOnDatabase(databasePopulator -> {
                     databasePopulator.populateWithDataAndReferences();
                     databasePopulator.createTableWithoutPrimaryKey();
                 },
                 () -> {
-                    var tables = indexMaintenance.getTablesWithoutPrimaryKey();
+                    var tables = indexesHealth.getTablesWithoutPrimaryKey();
                     assertNotNull(tables);
                     assertEquals(1, tables.size());
                     var table = tables.get(0);
@@ -308,41 +307,32 @@ class IndexMaintenanceImplTest {
     }
 
     @Test
-    void getIndexesWithNullValuesOnEmptyDataBase() {
-        final var indexes = indexMaintenance.getIndexesWithNullValues();
+    void getIndexesWithNullValuesOnEmptyDatabase() {
+        final var indexes = indexesHealth.getIndexesWithNullValues();
         assertNotNull(indexes);
         assertEquals(0, indexes.size());
     }
 
     @Test
-    void getIndexesWithNullValuesOnDatabaseWithoutThem() throws SQLException {
+    void getIndexesWithNullValuesOnDatabaseWithoutThem() {
         executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
                 () -> {
-                    final var indexes = indexMaintenance.getIndexesWithNullValues();
+                    final var indexes = indexesHealth.getIndexesWithNullValues();
                     assertNotNull(indexes);
                     assertEquals(0, indexes.size());
                 });
     }
 
     @Test
-    void getIndexesWithNullValuesOnDatabaseWithThem() throws SQLException {
+    void getIndexesWithNullValuesOnDatabaseWithThem() {
         executeTestOnDatabase(databasePopulator -> {
                     databasePopulator.populateWithDataAndReferences();
                     databasePopulator.createIndexWithNulls();
                 },
                 () -> {
-                    final var indexes = indexMaintenance.getIndexesWithNullValues();
+                    final var indexes = indexesHealth.getIndexesWithNullValues();
                     assertNotNull(indexes);
                     assertEquals(1, indexes.size());
                 });
-    }
-
-    private void executeTestOnDatabase(@Nonnull final Consumer<DatabasePopulator> databasePopulatorConsumer,
-                                       @Nonnull final TestExecutor testExecutor)
-            throws SQLException {
-        try (DatabasePopulator databasePopulator = new DatabasePopulator(embeddedPostgres.getTestDatabase())) {
-            databasePopulatorConsumer.accept(databasePopulator);
-            testExecutor.execute();
-        }
     }
 }

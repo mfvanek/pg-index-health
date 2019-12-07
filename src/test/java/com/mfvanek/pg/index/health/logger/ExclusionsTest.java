@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ExclusionsTest {
@@ -47,5 +48,14 @@ class ExclusionsTest {
 
         assertNotNull(exclusions.getIndexesWithNullValuesExclusions());
         assertThat(exclusions.getIndexesWithNullValuesExclusions(), hasSize(0));
+    }
+
+    @Test
+    void toStringTest() {
+        final var exclusions = Exclusions.empty();
+        assertEquals("Exclusions{duplicatedIndexesExclusions=[], " +
+                "intersectedIndexesExclusions=[], unusedIndexesExclusions=[], " +
+                "tablesWithMissingIndexesExclusions=[], tablesWithoutPrimaryKeyExclusions=[], " +
+                "indexesWithNullValuesExclusions=[]}", exclusions.toString());
     }
 }

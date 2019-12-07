@@ -24,6 +24,8 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'ch.qos.logback:logback-classic:1.2.3'
     testImplementation 'org.mockito:mockito-core:3.2.0'
+    testImplementation 'io.zonky.test:embedded-postgres:1.2.6'
+    testImplementation enforcedPlatform('io.zonky.test.postgres:embedded-postgres-binaries-bom:11.5.0')
 }
 
 test {

@@ -21,12 +21,23 @@ public final class DatabasePopulator implements AutoCloseable {
 
     private final DataSource dataSource;
 
-    public DatabasePopulator(@Nonnull final DataSource dataSource) {
+    DatabasePopulator(@Nonnull final DataSource dataSource) {
         this.dataSource = Objects.requireNonNull(dataSource);
     }
 
+    public String getPgVersion() {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery("select version()")) {
+                resultSet.next();
+                return resultSet.getString(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void populateWithDataAndReferences() {
-        // TODO do it inside transaction
         createTableClients();
         createTableAccounts();
         addLinksBetweenAccountsAndClients();
@@ -34,14 +45,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     public void populateOnlyTablesAndReferences() {
-        // TODO do it inside transaction
         createTableClients();
         createTableAccounts();
         addLinksBetweenAccountsAndClients();
     }
 
     public void populateOnlyTables() {
-        // TODO do it inside transaction
         createTableClients();
         createTableAccounts();
     }
@@ -103,12 +112,14 @@ public final class DatabasePopulator implements AutoCloseable {
     private void createTableClients() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
+            connection.setAutoCommit(false);
             statement.execute("create sequence if not exists clients_seq");
             statement.execute("create table if not exists clients (" +
                     "id bigint not null primary key default nextval('clients_seq'), " +
                     "last_name varchar(255) not null, " +
                     "first_name varchar(255) not null, " +
                     "middle_name varchar(255))");
+            connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -117,12 +128,14 @@ public final class DatabasePopulator implements AutoCloseable {
     private void createTableAccounts() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
+            connection.setAutoCommit(false);
             statement.execute("create sequence accounts_seq");
             statement.execute("create table accounts (" +
                     "id bigint not null primary key default nextval('accounts_seq'), " +
                     "client_id bigint not null," +
                     "account_number varchar(50) not null unique, " +
                     "account_balance numeric(22,2) not null default 0)");
+            connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -145,6 +158,7 @@ public final class DatabasePopulator implements AutoCloseable {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement insertClientStatement = connection.prepareStatement(insertClientSql);
              PreparedStatement insertAccountStatement = connection.prepareStatement(insertAccountSql)) {
+            connection.setAutoCommit(false);
             for (int counter = 0; counter < clientsCountToCreate; ++counter) {
                 final long clientId = getNextClientIdFromSequence(connection);
                 final String lastName = RandomStringUtils.randomAlphabetic(10);
@@ -163,6 +177,7 @@ public final class DatabasePopulator implements AutoCloseable {
             final long clientId = getNextClientIdFromSequence(connection);
             insertClientStatement.setLong(1, clientId);
             insertClientStatement.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -190,9 +205,6 @@ public final class DatabasePopulator implements AutoCloseable {
     public void close() throws SQLException {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute("truncate table accounts cascade");
-            statement.execute("truncate table clients cascade");
-
             statement.execute("drop table if exists accounts");
             statement.execute("drop sequence if exists accounts_seq");
 
