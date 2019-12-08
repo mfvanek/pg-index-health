@@ -1,6 +1,6 @@
 package com.mfvanek.pg.settings;
 
-import javax.annotation.Nonnull;
+import com.mfvanek.pg.utils.Validators;
 
 public class ServerSpecification {
 
@@ -12,9 +12,8 @@ public class ServerSpecification {
                                 long memoryAmountInBytes,
                                 boolean hasSSD) {
         Validators.valueIsPositive(cpuCoresAmount, "cpuCoresAmount");
-        Validators.valueIsPositive(memoryAmountInBytes, "memoryAmountInBytes");
         this.cpuCoresAmount = cpuCoresAmount;
-        this.memoryAmountInBytes = memoryAmountInBytes;
+        this.memoryAmountInBytes = Validators.valueIsPositive(memoryAmountInBytes, "memoryAmountInBytes");
         this.hasSSD = hasSSD;
     }
 
@@ -70,19 +69,6 @@ public class ServerSpecification {
 
         public ServerSpecification build() {
             return new ServerSpecification(cpuCoresAmount, memoryAmountInBytes, hasSSD);
-        }
-    }
-
-    private static class Validators {
-
-        private Validators() {
-            throw new UnsupportedOperationException();
-        }
-
-        static void valueIsPositive(final long argumentValue, @Nonnull final String argumentName) {
-            if (argumentValue <= 0) {
-                throw new IllegalArgumentException(argumentName + " should be greater than zero");
-            }
         }
     }
 

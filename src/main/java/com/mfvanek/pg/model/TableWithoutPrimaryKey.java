@@ -5,6 +5,8 @@
 
 package com.mfvanek.pg.model;
 
+import com.mfvanek.pg.utils.Validators;
+
 import javax.annotation.Nonnull;
 
 /**
