@@ -1,9 +1,8 @@
 package com.mfvanek.pg.settings;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
-public enum ImportantParam {
+public enum ImportantParam implements PgParam {
 
     SHARED_BUFFERS("shared_buffers", "128MB"),
     WORK_MEM("work_mem", "4MB"),
@@ -16,26 +15,32 @@ public enum ImportantParam {
     EFFECTIVE_CACHE_SIZE("effective_cache_size", "4GB"),
     TEMP_FILE_LIMIT("temp_file_limit", "-1");
 
-    final String paramName;
-    final String defaultValue;
+    final PgParam defaultValue;
 
     ImportantParam(@Nonnull final String paramName, @Nonnull final String defaultValue) {
-        this.paramName = Objects.requireNonNull(paramName);
-        this.defaultValue = Objects.requireNonNull(defaultValue);
+        this.defaultValue = PgParamImpl.of(paramName, defaultValue);
     }
 
-    public String getParamName() {
-        return paramName;
-    }
-
-    public String getDefaultValue() {
+    @Nonnull
+    public PgParam getDefaultValue() {
         return defaultValue;
+    }
+
+    @Nonnull
+    @Override
+    public String getName() {
+        return defaultValue.getName();
+    }
+
+    @Nonnull
+    @Override
+    public String getValue() {
+        return defaultValue.getValue();
     }
 
     @Override
     public String toString() {
         return ImportantParam.class.getSimpleName() + '{' +
-                "paramName='" + paramName + '\'' +
                 ", defaultValue='" + defaultValue + '\'' +
                 '}';
     }
