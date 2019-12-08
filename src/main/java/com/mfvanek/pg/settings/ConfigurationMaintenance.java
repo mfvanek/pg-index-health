@@ -3,13 +3,14 @@
  * https://github.com/mfvanek
  */
 
-package com.mfvanek.pg.index.maintenance;
+package com.mfvanek.pg.settings;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-// TODO add implementation
 public interface ConfigurationMaintenance {
 
-    List<Map.Entry<String, String>> getParamsWithDefaultValues();
+    @Nonnull
+    List<Map.Entry<String, String>> getParamsWithDefaultValues(@Nonnull ServerSpecification specification);
 }
