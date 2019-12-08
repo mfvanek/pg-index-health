@@ -20,6 +20,7 @@ public class ConfigurationMaintenanceImpl implements ConfigurationMaintenance {
     @Nonnull
     @Override
     public List<PgParam> getParamsWithDefaultValues(@Nonnull ServerSpecification specification) {
+        // TODO get max_connections and calculate recommended values
         final List<PgParam> params = new ArrayList<>();
         for (var importantParam : ImportantParam.values()) {
             var currentValue = getCurrentValue(importantParam);
@@ -31,14 +32,19 @@ public class ConfigurationMaintenanceImpl implements ConfigurationMaintenance {
     }
 
     @Nonnull
-    private PgParam getCurrentValue(@Nonnull final ImportantParam importantParam) {
-        final String sqlQuery = String.format("show %s;", importantParam.getName());
+    private PgParam getCurrentValue(@Nonnull final PgParam param) {
+        return getCurrentValue(param.getName());
+    }
+
+    @Nonnull
+    private PgParam getCurrentValue(@Nonnull final String paramName) {
+        final String sqlQuery = String.format("show %s;", paramName);
         final var params = QueryExecutor.executeQuery(pgConnection, sqlQuery, rs -> {
-            final String currentValue = rs.getString(importantParam.getName());
-            return PgParamImpl.of(importantParam.getName(), currentValue);
+            final String currentValue = rs.getString(paramName);
+            return PgParamImpl.of(paramName, currentValue);
         });
         if (params.size() != 1) {
-            throw new NoSuchElementException(importantParam.getName());
+            throw new NoSuchElementException(paramName);
         }
         return params.get(0);
     }
