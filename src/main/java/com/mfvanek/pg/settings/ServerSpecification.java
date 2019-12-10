@@ -1,5 +1,6 @@
 package com.mfvanek.pg.settings;
 
+import com.mfvanek.pg.model.MemoryUnit;
 import com.mfvanek.pg.utils.Validators;
 
 public class ServerSpecification {

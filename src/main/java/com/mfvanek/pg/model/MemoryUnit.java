@@ -1,10 +1,11 @@
-package com.mfvanek.pg.settings;
+package com.mfvanek.pg.model;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public enum MemoryUnit {
 
+    MB(1024L * 1024L, "megabyte"),
     GB(1024L * 1024L * 1024L, "gigabyte");
 
     final long dimension;

@@ -74,9 +74,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "where\n" +
                     "      psui.schemaname = 'public'::text and not i.indisunique and\n" +
                     "      i.indexrelid not in (select * from foreign_key_indexes) and /*retain indexes on foreign keys*/\n" +
-                    "      psui.idx_scan < 50::integer and\n" +
-                    "      pg_relation_size(psui.relid) >= 5::integer * 8192 and /*skip small tables*/\n" +
-                    "      pg_relation_size(psui.indexrelid) >= 5::integer * 8192 /*skip small indexes*/\n" +
+                    "      psui.idx_scan < 50::integer\n" +
                     "order by psui.relname, pg_relation_size(i.indexrelid) desc;";
 
     private static final String FOREIGN_KEYS_WITHOUT_INDEX =

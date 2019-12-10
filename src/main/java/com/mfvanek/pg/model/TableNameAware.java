@@ -7,8 +7,8 @@ package com.mfvanek.pg.model;
 
 import javax.annotation.Nonnull;
 
-public interface IndexAware {
+public interface TableNameAware {
 
     @Nonnull
-    String getIndexName();
+    String getTableName();
 }

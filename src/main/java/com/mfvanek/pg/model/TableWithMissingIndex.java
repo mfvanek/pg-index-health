@@ -15,7 +15,7 @@ import java.util.Objects;
  * Normally, indesex should be used primarily when accessing a table.
  * If there are few or no indexes in the table, then seqScans will be larger than indexScans.
  */
-public class TableWithMissingIndex implements TableAware, Comparable<TableWithMissingIndex> {
+public class TableWithMissingIndex implements TableNameAware, Comparable<TableWithMissingIndex> {
 
     private final String tableName;
     private final long seqScans;

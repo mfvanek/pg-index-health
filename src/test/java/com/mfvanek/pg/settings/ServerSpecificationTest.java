@@ -1,5 +1,6 @@
 package com.mfvanek.pg.settings;
 
+import com.mfvanek.pg.model.MemoryUnit;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

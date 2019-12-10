@@ -7,8 +7,9 @@ package com.mfvanek.pg.index.health.logger;
 
 import com.mfvanek.pg.index.health.IndexesHealth;
 import com.mfvanek.pg.model.DuplicatedIndexes;
-import com.mfvanek.pg.model.IndexAware;
-import com.mfvanek.pg.model.TableAware;
+import com.mfvanek.pg.model.IndexNameAware;
+import com.mfvanek.pg.model.IndexSizeAware;
+import com.mfvanek.pg.model.TableNameAware;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +96,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     @Nonnull
     private String logUnusedIndexes() {
         final var rawUnusedIndexes = indexesHealth.getUnusedIndexes();
-        final var unusedIndexes = applyIndexesExclusions(rawUnusedIndexes, exclusions.getUnusedIndexesExclusions());
+        final var filteredUnusedIndexes = applyIndexesExclusions(rawUnusedIndexes, exclusions.getUnusedIndexesExclusions());
+        final var unusedIndexes = applyIndexSizeExclusions(filteredUnusedIndexes, exclusions.getIndexSizeThreshold());
         final LoggingKey key = SimpleLoggingKey.UNUSED_INDEXES;
         if (CollectionUtils.isNotEmpty(unusedIndexes)) {
             LOGGER.warn("There are unused indexes in the database {}", unusedIndexes);
@@ -170,10 +172,9 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private static <T extends IndexAware> List<T> applyIndexesExclusions(@Nonnull final List<T> rawRecords,
-                                                                         @Nonnull final Set<String> exclusions) {
-        if (CollectionUtils.isEmpty(rawRecords) ||
-                CollectionUtils.isEmpty(exclusions)) {
+    private static <T extends IndexNameAware> List<T> applyIndexesExclusions(@Nonnull final List<T> rawRecords,
+                                                                             @Nonnull final Set<String> exclusions) {
+        if (CollectionUtils.isEmpty(rawRecords) || CollectionUtils.isEmpty(exclusions)) {
             return rawRecords;
         }
 
@@ -183,10 +184,21 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private static <T extends TableAware> List<T> applyTablesExclusions(@Nonnull final List<T> rawRecords,
-                                                                        @Nonnull final Set<String> exclusions) {
-        if (CollectionUtils.isEmpty(rawRecords) ||
-                CollectionUtils.isEmpty(exclusions)) {
+    private static <T extends IndexSizeAware> List<T> applyIndexSizeExclusions(@Nonnull final List<T> rawRecords,
+                                                                               final long threshold) {
+        if (CollectionUtils.isEmpty(rawRecords) || threshold <= 0L) {
+            return rawRecords;
+        }
+
+        return rawRecords.stream()
+                .filter(i -> i.getIndexSizeInBytes() >= threshold)
+                .collect(Collectors.toList());
+    }
+
+    @Nonnull
+    private static <T extends TableNameAware> List<T> applyTablesExclusions(@Nonnull final List<T> rawRecords,
+                                                                            @Nonnull final Set<String> exclusions) {
+        if (CollectionUtils.isEmpty(rawRecords) || CollectionUtils.isEmpty(exclusions)) {
             return rawRecords;
         }
 

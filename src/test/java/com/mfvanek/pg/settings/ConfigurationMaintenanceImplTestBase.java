@@ -1,6 +1,7 @@
 package com.mfvanek.pg.settings;
 
 import com.mfvanek.pg.connection.PgConnectionImpl;
+import com.mfvanek.pg.model.MemoryUnit;
 import com.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 

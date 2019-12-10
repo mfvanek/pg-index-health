@@ -56,6 +56,6 @@ class ExclusionsTest {
         assertEquals("Exclusions{duplicatedIndexesExclusions=[], " +
                 "intersectedIndexesExclusions=[], unusedIndexesExclusions=[], " +
                 "tablesWithMissingIndexesExclusions=[], tablesWithoutPrimaryKeyExclusions=[], " +
-                "indexesWithNullValuesExclusions=[]}", exclusions.toString());
+                "indexesWithNullValuesExclusions=[], indexSizeThreshold=0}", exclusions.toString());
     }
 }
