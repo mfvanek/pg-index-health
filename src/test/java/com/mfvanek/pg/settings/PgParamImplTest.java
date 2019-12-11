@@ -7,7 +7,10 @@ package com.mfvanek.pg.settings;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -27,8 +30,17 @@ class PgParamImplTest {
         assertThrows(IllegalArgumentException.class, () -> PgParamImpl.of("", null));
         assertThrows(IllegalArgumentException.class, () -> PgParamImpl.of("  ", null));
         assertThrows(NullPointerException.class, () -> PgParamImpl.of("param_name", null));
-        assertThrows(IllegalArgumentException.class, () -> PgParamImpl.of("param_name", ""));
-        assertThrows(IllegalArgumentException.class, () -> PgParamImpl.of("param_name", "  "));
+    }
+
+    @Test
+    void withEmptyValue() {
+        var param = PgParamImpl.of("statement_timeout", "");
+        assertNotNull(param);
+        assertEquals("", param.getValue());
+
+        param = PgParamImpl.of("statement_timeout", "       ");
+        assertNotNull(param);
+        assertEquals("", param.getValue());
     }
 
     @Test
@@ -36,5 +48,24 @@ class PgParamImplTest {
         final var param = PgParamImpl.of("statement_timeout", "2s");
         assertNotNull(param);
         assertEquals("PgParamImpl{name='statement_timeout', value='2s'}", param.toString());
+    }
+
+    @Test
+    void equalsAndHashCode() {
+        final var first = PgParamImpl.of("statement_timeout", "2s");
+        final var theSame = PgParamImpl.of("statement_timeout", "2s");
+        final var second = PgParamImpl.of("lock_timeout", "2s");
+
+        assertNotEquals(first, null);
+        assertNotEquals(first, BigDecimal.ZERO);
+
+        assertEquals(first, first);
+        assertEquals(first.hashCode(), first.hashCode());
+
+        assertEquals(first, theSame);
+        assertEquals(first.hashCode(), theSame.hashCode());
+
+        assertNotEquals(first, second);
+        assertNotEquals(first.hashCode(), second.hashCode());
     }
 }

@@ -8,6 +8,7 @@ package com.mfvanek.pg.settings;
 import com.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public class PgParamImpl implements PgParam {
 
@@ -16,7 +17,7 @@ public class PgParamImpl implements PgParam {
 
     private PgParamImpl(@Nonnull final String name, @Nonnull final String value) {
         this.name = Validators.notBlank(name, "name");
-        this.value = Validators.notBlank(value, "value");
+        this.value = Objects.requireNonNull(value, "value for '" + name + "\' cannot be null").strip();
     }
 
     @Override
@@ -38,6 +39,25 @@ public class PgParamImpl implements PgParam {
                 "name='" + name + '\'' +
                 ", value='" + value + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        PgParamImpl pgParam = (PgParamImpl) o;
+        return name.equals(pgParam.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
     public static PgParam of(@Nonnull final String name, @Nonnull final String value) {

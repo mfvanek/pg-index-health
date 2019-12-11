@@ -16,7 +16,10 @@ import javax.sql.DataSource;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 abstract class ConfigurationMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
@@ -36,6 +39,7 @@ abstract class ConfigurationMaintenanceImplTestBase extends DatabaseAwareTestBas
                 .withSSD()
                 .build();
         final var paramsWithDefaultValues = configurationMaintenance.getParamsWithDefaultValues(specification);
+        assertNotNull(paramsWithDefaultValues);
         assertThat(paramsWithDefaultValues, hasSize(9));
         assertThat(paramsWithDefaultValues.stream()
                 .map(PgParam::getName)
@@ -50,5 +54,15 @@ abstract class ConfigurationMaintenanceImplTestBase extends DatabaseAwareTestBas
                 "effective_cache_size",
                 "temp_file_limit")
         );
+    }
+
+    @Test
+    void getParamsCurrentValues() {
+        final var currentValues = configurationMaintenance.getParamsCurrentValues();
+        assertNotNull(currentValues);
+        assertThat(currentValues, hasSize(greaterThan(200)));
+        for (var importantParam : ImportantParam.values()) {
+            assertThat(currentValues, hasItem(importantParam.getDefaultValue()));
+        }
     }
 }

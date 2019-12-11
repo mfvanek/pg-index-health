@@ -9,10 +9,10 @@ import com.mfvanek.pg.connection.PgConnection;
 import com.mfvanek.pg.utils.QueryExecutor;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Set;
 
 public class ConfigurationMaintenanceImpl implements ConfigurationMaintenance {
 
@@ -24,9 +24,9 @@ public class ConfigurationMaintenanceImpl implements ConfigurationMaintenance {
 
     @Nonnull
     @Override
-    public List<PgParam> getParamsWithDefaultValues(@Nonnull ServerSpecification specification) {
+    public Set<PgParam> getParamsWithDefaultValues(@Nonnull ServerSpecification specification) {
         // TODO get max_connections and calculate recommended values
-        final List<PgParam> params = new ArrayList<>();
+        final Set<PgParam> params = new HashSet<>();
         for (var importantParam : ImportantParam.values()) {
             var currentValue = getCurrentValue(importantParam);
             if (currentValue.getValue().equals(importantParam.getValue())) {
@@ -34,6 +34,17 @@ public class ConfigurationMaintenanceImpl implements ConfigurationMaintenance {
             }
         }
         return params;
+    }
+
+    @Override
+    @Nonnull
+    public Set<PgParam> getParamsCurrentValues() {
+        final var params = QueryExecutor.executeQuery(pgConnection, "show all", rs -> {
+            final String paramName = rs.getString("name");
+            final String currentValue = rs.getString("setting");
+            return PgParamImpl.of(paramName, currentValue);
+        });
+        return Set.copyOf(params);
     }
 
     @Nonnull

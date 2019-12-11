@@ -6,10 +6,13 @@
 package com.mfvanek.pg.settings;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.Set;
 
 public interface ConfigurationMaintenance {
 
     @Nonnull
-    List<PgParam> getParamsWithDefaultValues(@Nonnull ServerSpecification specification);
+    Set<PgParam> getParamsWithDefaultValues(@Nonnull ServerSpecification specification);
+
+    @Nonnull
+    Set<PgParam> getParamsCurrentValues();
 }
