@@ -8,8 +8,9 @@ class ConfigurationMaintenanceImplTestPg11 extends ConfigurationMaintenanceImplT
 
     @RegisterExtension
     static final PreparedDbExtension embeddedPostgres =
-            EmbeddedPostgresExtension.preparedDatabase(ds -> {
-            });
+            EmbeddedPostgresExtension
+                    .preparedDatabase(ds -> {})
+                    .customize(builder -> builder.setServerConfig(ImportantParam.LOCK_TIMEOUT.getName(), "1000"));
 
     ConfigurationMaintenanceImplTestPg11() {
         super(embeddedPostgres.getTestDatabase());

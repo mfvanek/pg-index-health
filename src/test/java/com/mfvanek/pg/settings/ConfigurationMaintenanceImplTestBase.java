@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 
 abstract class ConfigurationMaintenanceImplTestBase extends DatabaseAwareTestBase {
@@ -30,5 +32,18 @@ abstract class ConfigurationMaintenanceImplTestBase extends DatabaseAwareTestBas
                 .build();
         final var paramsWithDefaultValues = configurationMaintenance.getParamsWithDefaultValues(specification);
         assertThat(paramsWithDefaultValues, hasSize(9));
+        assertThat(paramsWithDefaultValues.stream()
+                .map(PgParam::getName)
+                .collect(toList()), containsInAnyOrder(
+                "shared_buffers",
+                "work_mem",
+                "maintenance_work_mem",
+                "random_page_cost",
+                "log_min_duration_statement",
+                "idle_in_transaction_session_timeout",
+                "statement_timeout",
+                "effective_cache_size",
+                "temp_file_limit")
+        );
     }
 }

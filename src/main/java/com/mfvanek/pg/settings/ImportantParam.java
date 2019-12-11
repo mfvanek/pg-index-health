@@ -7,7 +7,7 @@ public enum ImportantParam implements PgParam {
     SHARED_BUFFERS("shared_buffers", "128MB"),
     WORK_MEM("work_mem", "4MB"),
     MAINTENANCE_WORK_MEM("maintenance_work_mem", "64MB"),
-    RANDOM_PAGE_COST("random_page_cost", "4.0"),
+    RANDOM_PAGE_COST("random_page_cost", "4"),
     LOG_MIN_DURATION_STATEMENT("log_min_duration_statement", "-1"),
     IDLE_IN_TRANSACTION_SESSION_TIMEOUT("idle_in_transaction_session_timeout", "0"),
     STATEMENT_TIMEOUT("statement_timeout", "0"),
