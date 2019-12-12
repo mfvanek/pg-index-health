@@ -14,22 +14,15 @@ import com.mfvanek.pg.model.IndexWithNulls;
 import com.mfvanek.pg.model.TableWithMissingIndex;
 import com.mfvanek.pg.model.TableWithoutPrimaryKey;
 import com.mfvanek.pg.model.UnusedIndex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.mfvanek.pg.utils.QueryExecutor;
+import com.mfvanek.pg.utils.ResultSetExtractor;
 
 import javax.annotation.Nonnull;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class IndexMaintenanceImpl implements IndexMaintenance {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(IndexMaintenanceImpl.class);
 
     private static final String INVALID_INDEXES_SQL =
             "select x.indrelid::regclass as table_name, x.indexrelid::regclass as index_name\n" +
@@ -81,9 +74,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "where\n" +
                     "      psui.schemaname = 'public'::text and not i.indisunique and\n" +
                     "      i.indexrelid not in (select * from foreign_key_indexes) and /*retain indexes on foreign keys*/\n" +
-                    "      psui.idx_scan < 50::integer and\n" +
-                    "      pg_relation_size(psui.relid) >= 5::integer * 8192 and /*skip small tables*/\n" +
-                    "      pg_relation_size(psui.indexrelid) >= 5::integer * 8192 /*skip small indexes*/\n" +
+                    "      psui.idx_scan < 50::integer\n" +
                     "order by psui.relname, pg_relation_size(i.indexrelid) desc;";
 
     private static final String FOREIGN_KEYS_WITHOUT_INDEX =
@@ -254,21 +245,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
         return pgConnection.getHost();
     }
 
-    private <T> List<T> executeQuery(@Nonnull final String sqlQuery, ResultSetExtractor<T> rse) {
-        LOGGER.debug("Executing query: {}", sqlQuery);
-        try (Connection connection = pgConnection.getDataSource().getConnection();
-             Statement statement = connection.createStatement()) {
-            final List<T> executionResult = new ArrayList<>();
-            try (ResultSet resultSet = statement.executeQuery(Objects.requireNonNull(sqlQuery))) {
-                while (resultSet.next()) {
-                    executionResult.add(rse.extractData(resultSet));
-                }
-            }
-            LOGGER.debug("Query completed with result {}", executionResult);
-            return executionResult;
-        } catch (SQLException e) {
-            LOGGER.trace("Query failed", e);
-            throw new RuntimeException(e);
-        }
+    private <T> List<T> executeQuery(@Nonnull final String sqlQuery,
+                                     @Nonnull final ResultSetExtractor<T> rse) {
+        return QueryExecutor.executeQuery(pgConnection, sqlQuery, rse);
     }
 }

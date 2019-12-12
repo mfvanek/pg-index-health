@@ -5,10 +5,12 @@
 
 package com.mfvanek.pg.model;
 
+import com.mfvanek.pg.utils.Validators;
+
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class Index implements TableAware, IndexAware {
+public class Index implements TableNameAware, IndexNameAware {
 
     private final String tableName;
     private final String indexName;

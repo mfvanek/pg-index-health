@@ -68,7 +68,7 @@ public class IndexesHealthImpl implements IndexesHealth {
         final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = new ArrayList<>();
         for (var maintenanceForReplica : maintenanceForReplicas) {
             potentiallyUnusedIndexesFromAllHosts.add(
-                    doOnReplica(maintenanceForReplica.getHost(), maintenanceForReplica::getPotentiallyUnusedIndexes));
+                    doOnHost(maintenanceForReplica.getHost(), maintenanceForReplica::getPotentiallyUnusedIndexes));
         }
         return ReplicasHelper.getUnusedIndexesAsIntersectionResult(potentiallyUnusedIndexesFromAllHosts);
     }
@@ -86,7 +86,7 @@ public class IndexesHealthImpl implements IndexesHealth {
         final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = new ArrayList<>();
         for (var maintenanceForReplica : maintenanceForReplicas) {
             tablesWithMissingIndexesFromAllHosts.add(
-                    doOnReplica(maintenanceForReplica.getHost(), maintenanceForReplica::getTablesWithMissingIndexes));
+                    doOnHost(maintenanceForReplica.getHost(), maintenanceForReplica::getTablesWithMissingIndexes));
         }
         return ReplicasHelper.getTablesWithMissingIndexesAsUnionResult(tablesWithMissingIndexesFromAllHosts);
     }
@@ -109,8 +109,8 @@ public class IndexesHealthImpl implements IndexesHealth {
         LOGGER.debug("Going to execute on master host [{}]", maintenanceForMaster.getHost().getName());
     }
 
-    private <T> T doOnReplica(@Nonnull final PgHost host, Supplier<T> action) {
-        LOGGER.debug("Going to execute on replica host [{}]", host.getName());
+    private <T> T doOnHost(@Nonnull final PgHost host, Supplier<T> action) {
+        LOGGER.debug("Going to execute on host {}", host.getName());
         return action.get();
     }
 }

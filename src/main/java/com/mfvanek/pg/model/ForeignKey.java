@@ -5,10 +5,12 @@
 
 package com.mfvanek.pg.model;
 
+import com.mfvanek.pg.utils.Validators;
+
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ForeignKey implements TableAware {
+public class ForeignKey implements TableNameAware {
 
     private final String tableName;
     private final String constraintName;

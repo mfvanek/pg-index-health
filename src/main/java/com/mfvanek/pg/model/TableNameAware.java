@@ -5,7 +5,10 @@
 
 package com.mfvanek.pg.model;
 
-public interface SizeAware {
+import javax.annotation.Nonnull;
 
-    long getIndexSizeInBytes();
+public interface TableNameAware {
+
+    @Nonnull
+    String getTableName();
 }

@@ -5,9 +5,11 @@
 
 package com.mfvanek.pg.model;
 
+import com.mfvanek.pg.utils.Validators;
+
 import javax.annotation.Nonnull;
 
-public class IndexWithSize extends Index implements SizeAware {
+public class IndexWithSize extends Index implements IndexSizeAware {
 
     private final long indexSizeInBytes;
 

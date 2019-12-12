@@ -3,12 +3,15 @@
  * https://github.com/mfvanek
  */
 
-package com.mfvanek.pg.model;
+package com.mfvanek.pg.settings;
 
 import javax.annotation.Nonnull;
 
-public interface IndexAware {
+public interface PgParam {
 
     @Nonnull
-    String getIndexName();
+    String getName();
+
+    @Nonnull
+    String getValue();
 }

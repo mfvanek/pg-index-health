@@ -3,8 +3,9 @@
  * https://github.com/mfvanek
  */
 
-package com.mfvanek.pg.model;
+package com.mfvanek.pg.utils;
 
+import com.mfvanek.pg.model.IndexWithSize;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,35 +13,42 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 
-final class Validators {
+public final class Validators {
 
     private Validators() {
         throw new UnsupportedOperationException();
     }
 
+    public static long valueIsPositive(final long argumentValue, @Nonnull final String argumentName) {
+        if (argumentValue <= 0) {
+            throw new IllegalArgumentException(argumentName + " should be greater than zero");
+        }
+        return argumentValue;
+    }
+
     @Nonnull
-    static String tableNameNotBlank(@Nonnull final String tableName) {
+    public static String tableNameNotBlank(@Nonnull final String tableName) {
         return notBlank(tableName, "tableName");
     }
 
     @Nonnull
-    static String indexNameNotBlank(@Nonnull final String indexName) {
+    public static String indexNameNotBlank(@Nonnull final String indexName) {
         return notBlank(indexName, "indexName");
     }
 
     @Nonnull
-    static String notBlank(@Nonnull final String argumentValue, @Nonnull final String argumentName) {
+    public static String notBlank(@Nonnull final String argumentValue, @Nonnull final String argumentName) {
         if (StringUtils.isBlank(Objects.requireNonNull(argumentValue, argumentName + " cannot be null"))) {
             throw new IllegalArgumentException(argumentName);
         }
         return argumentValue;
     }
 
-    static long sizeNotNegative(final long sizeInBytes, @Nonnull final String argumentName) {
+    public static long sizeNotNegative(final long sizeInBytes, @Nonnull final String argumentName) {
         return argumentNotNegative(sizeInBytes, argumentName);
     }
 
-    static long countNotNegative(final long count, @Nonnull final String argumentName) {
+    public static long countNotNegative(final long count, @Nonnull final String argumentName) {
         return argumentNotNegative(count, argumentName);
     }
 
@@ -52,7 +60,7 @@ final class Validators {
     }
 
     @Nonnull
-    static List<IndexWithSize> validateThatTableIsTheSame(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+    public static List<IndexWithSize> validateThatTableIsTheSame(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
         final String tableName = validateThatContainsAtLeastTwoRows(duplicatedIndexes).get(0).getTableName();
         final boolean tableIsTheSame = duplicatedIndexes.stream().allMatch(i -> i.getTableName().equals(tableName));
         if (!tableIsTheSame) {
@@ -62,7 +70,8 @@ final class Validators {
     }
 
     @Nonnull
-    private static List<IndexWithSize> validateThatContainsAtLeastTwoRows(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+    private static List<IndexWithSize> validateThatContainsAtLeastTwoRows(
+            @Nonnull final List<IndexWithSize> duplicatedIndexes) {
         final int size = Objects.requireNonNull(duplicatedIndexes).size();
         if (0 == size) {
             throw new IllegalArgumentException("duplicatedIndexes cannot be empty");
@@ -74,7 +83,7 @@ final class Validators {
     }
 
     @Nonnull
-    static List<String> validateThatNotEmpty(@Nonnull final List<String> columnsInConstraint) {
+    public static List<String> validateThatNotEmpty(@Nonnull final List<String> columnsInConstraint) {
         if (CollectionUtils.isEmpty(columnsInConstraint)) {
             throw new IllegalArgumentException("columnsInConstraint cannot be empty");
         }

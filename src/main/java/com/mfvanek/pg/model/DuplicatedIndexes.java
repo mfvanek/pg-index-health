@@ -5,6 +5,8 @@
 
 package com.mfvanek.pg.model;
 
+import com.mfvanek.pg.utils.Validators;
+
 import javax.annotation.Nonnull;
 import java.util.AbstractMap;
 import java.util.Arrays;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
  * A typical error is when you create a column with an UNIQUE CONSTRAINT and then manually create an unique index on it.
  * See documentation https://www.postgresql.org/docs/10/ddl-constraints.html#DDL-CONSTRAINTS-UNIQUE-CONSTRAINTS.
  */
-public class DuplicatedIndexes implements TableAware {
+public class DuplicatedIndexes implements TableNameAware {
 
     private final List<IndexWithSize> duplicatedIndexes;
     private final long totalSize;

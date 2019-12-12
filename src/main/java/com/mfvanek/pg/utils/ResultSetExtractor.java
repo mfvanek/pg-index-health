@@ -3,13 +3,13 @@
  * https://github.com/mfvanek
  */
 
-package com.mfvanek.pg.index.maintenance;
+package com.mfvanek.pg.utils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @FunctionalInterface
-interface ResultSetExtractor<T> {
+public interface ResultSetExtractor<T> {
 
     T extractData(ResultSet rs) throws SQLException;
 }
