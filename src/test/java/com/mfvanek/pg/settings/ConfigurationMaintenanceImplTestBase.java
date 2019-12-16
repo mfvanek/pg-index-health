@@ -14,12 +14,15 @@ import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 abstract class ConfigurationMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
@@ -61,8 +64,23 @@ abstract class ConfigurationMaintenanceImplTestBase extends DatabaseAwareTestBas
         final var currentValues = configurationMaintenance.getParamsCurrentValues();
         assertNotNull(currentValues);
         assertThat(currentValues, hasSize(greaterThan(200)));
+        final var allParamNames = currentValues.stream()
+                .map(PgParam::getName)
+                .collect(toSet());
         for (var importantParam : ImportantParam.values()) {
-            assertThat(currentValues, hasItem(importantParam.getDefaultValue()));
+            assertThat(allParamNames, hasItem(importantParam.getName()));
         }
+    }
+
+    @Test
+    void getParamCurrentValue() {
+        final var currentValue = configurationMaintenance.getParamCurrentValue(ImportantParam.LOG_MIN_DURATION_STATEMENT);
+        assertNotNull(currentValue);
+        assertEquals(ImportantParam.LOG_MIN_DURATION_STATEMENT.getDefaultValue(), currentValue.getValue());
+    }
+
+    @Test
+    void getCurrentValueForUnknownParam() {
+        assertThrows(RuntimeException.class, () -> configurationMaintenance.getParamCurrentValue(PgParamImpl.of("unknown_param", "")));
     }
 }

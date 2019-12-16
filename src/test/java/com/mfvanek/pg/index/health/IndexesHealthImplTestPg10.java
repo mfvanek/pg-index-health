@@ -19,8 +19,7 @@ class IndexesHealthImplTestPg10 extends IndexesHealthImplTestBase {
 
     @RegisterExtension
     static final PreparedDbExtension embeddedPostgres =
-            EmbeddedPostgresExtension.preparedDatabase(ds -> {
-            });
+            EmbeddedPostgresExtension.preparedDatabase(ds -> {});
 
     IndexesHealthImplTestPg10() {
         super(embeddedPostgres.getTestDatabase());

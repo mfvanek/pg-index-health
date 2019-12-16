@@ -16,6 +16,11 @@ class TableWithoutPrimaryKeyTest {
     void getTableName() {
         final var table = TableWithoutPrimaryKey.of("t");
         assertEquals("t", table.getTableName());
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void withInvalidValues() {
         assertThrows(NullPointerException.class, () -> TableWithoutPrimaryKey.of(null));
         assertThrows(IllegalArgumentException.class, () -> TableWithoutPrimaryKey.of(""));
         assertThrows(IllegalArgumentException.class, () -> TableWithoutPrimaryKey.of("  "));

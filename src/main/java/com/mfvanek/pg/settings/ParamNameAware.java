@@ -3,16 +3,13 @@
  * https://github.com/mfvanek
  */
 
-package com.mfvanek.pg.index.health.logger;
+package com.mfvanek.pg.settings;
 
 import javax.annotation.Nonnull;
 
 @SuppressWarnings("WeakerAccess")
-public interface LoggingKey {
+public interface ParamNameAware {
 
     @Nonnull
-    String getKeyName();
-
-    @Nonnull
-    String getSubKeyName();
+    String getName();
 }

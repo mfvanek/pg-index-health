@@ -10,7 +10,8 @@ import com.mfvanek.pg.utils.Validators;
 import javax.annotation.Nonnull;
 
 /**
- * Tables without primary keys can be a huge problem when bloat occurs because pg_repack will not be able to process them.
+ * Tables without primary keys can be a huge problem when bloat occurs
+ * because pg_repack will not be able to process them.
  */
 public class TableWithoutPrimaryKey implements TableNameAware {
 

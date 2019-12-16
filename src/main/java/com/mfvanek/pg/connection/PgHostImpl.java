@@ -14,7 +14,8 @@ public class PgHostImpl implements PgHost {
     private final String pgUrl;
     private final Set<String> hostNames;
 
-    private PgHostImpl(@Nonnull final String pgUrl, boolean withValidation) {
+    private PgHostImpl(@Nonnull final String pgUrl,
+                       @SuppressWarnings("SameParameterValue") boolean withValidation) {
         this.pgUrl = PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
         this.hostNames = PgUrlParser.extractHostNames(pgUrl);
     }

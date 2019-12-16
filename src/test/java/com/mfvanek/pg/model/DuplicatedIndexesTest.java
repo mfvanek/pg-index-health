@@ -45,6 +45,7 @@ class DuplicatedIndexesTest {
                 indexes.toString());
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void withoutIndexes() {
         assertThrows(NullPointerException.class, () -> DuplicatedIndexes.of(null));
@@ -72,6 +73,7 @@ class DuplicatedIndexesTest {
                 containsInAnyOrder("i3", "i4"));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void fromInvalidString() {
         assertThrows(NullPointerException.class, () -> DuplicatedIndexes.of(null, null));

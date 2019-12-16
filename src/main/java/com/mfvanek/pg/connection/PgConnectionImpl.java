@@ -63,8 +63,7 @@ public class PgConnectionImpl implements PgConnection {
     @Override
     public String toString() {
         return PgConnectionImpl.class.getSimpleName() + '{' +
-                "dataSource=" + dataSource +
-                ", host=" + host +
+                "host=" + host +
                 '}';
     }
 }

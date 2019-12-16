@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class HighAvailabilityPgConnectionFactoryImplTest {
 
-    private HighAvailabilityPgConnectionFactory connectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
+    private final HighAvailabilityPgConnectionFactory connectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
 
     @Test
     void onlyWriteUrl() {
@@ -40,6 +40,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
         assertThat(haPgConnection.getConnectionsToReplicas(), hasSize(5));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
         assertThrows(NullPointerException.class, () -> connectionFactory.of(null, null, null, null, null));

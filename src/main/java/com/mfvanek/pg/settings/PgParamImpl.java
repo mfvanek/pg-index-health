@@ -17,7 +17,7 @@ public class PgParamImpl implements PgParam {
 
     private PgParamImpl(@Nonnull final String name, @Nonnull final String value) {
         this.name = Validators.notBlank(name, "name");
-        this.value = Objects.requireNonNull(value, "value for '" + name + "\' cannot be null").strip();
+        this.value = Validators.paramValueNotNull(value, "value for '" + name + "\' cannot be null");
     }
 
     @Override

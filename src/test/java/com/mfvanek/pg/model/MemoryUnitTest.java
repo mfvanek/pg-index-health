@@ -16,4 +16,9 @@ class MemoryUnitTest {
         assertEquals(2097152L, MemoryUnit.MB.convertToBytes(2));
         assertEquals(3221225472L, MemoryUnit.GB.convertToBytes(3));
     }
+
+    @Test
+    void toStringTest() {
+        assertEquals("MemoryUnit{dimension=1048576, description='megabyte'}", MemoryUnit.MB.toString());
+    }
 }

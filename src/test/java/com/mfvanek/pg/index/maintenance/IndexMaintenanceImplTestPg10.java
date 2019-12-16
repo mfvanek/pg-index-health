@@ -19,8 +19,7 @@ class IndexMaintenanceImplTestPg10 extends IndexMaintenanceImplTestBase {
 
     @RegisterExtension
     static final PreparedDbExtension embeddedPostgres =
-            EmbeddedPostgresExtension.preparedDatabase(ds -> {
-            });
+            EmbeddedPostgresExtension.preparedDatabase(ds -> {});
 
     IndexMaintenanceImplTestPg10() {
         super(embeddedPostgres.getTestDatabase());

@@ -32,6 +32,7 @@ class ForeignKeyTest {
         assertThat(foreignKey.getColumnsInConstraint(), containsInAnyOrder("order_id"));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
         assertThrows(NullPointerException.class, () -> ForeignKey.of(null, null, null));

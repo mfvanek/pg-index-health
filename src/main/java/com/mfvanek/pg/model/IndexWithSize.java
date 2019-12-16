@@ -13,6 +13,7 @@ public class IndexWithSize extends Index implements IndexSizeAware {
 
     private final long indexSizeInBytes;
 
+    @SuppressWarnings("WeakerAccess")
     protected IndexWithSize(@Nonnull String tableName,
                             @Nonnull String indexName,
                             long indexSizeInBytes) {

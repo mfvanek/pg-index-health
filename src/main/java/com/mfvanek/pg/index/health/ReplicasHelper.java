@@ -31,8 +31,9 @@ final class ReplicasHelper {
     }
 
     @Nonnull
-    static List<IndexMaintenance> createIndexMaintenanceForReplicas(@Nonnull final Set<PgConnection> connectionsToReplicas,
-                                                                    @Nonnull final IndexMaintenanceFactory maintenanceFactory) {
+    static List<IndexMaintenance> createIndexMaintenanceForReplicas(
+            @Nonnull final Set<PgConnection> connectionsToReplicas,
+            @Nonnull final IndexMaintenanceFactory maintenanceFactory) {
         final List<IndexMaintenance> result = new ArrayList<>(connectionsToReplicas.size());
         result.addAll(
                 connectionsToReplicas.stream()

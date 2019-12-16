@@ -23,8 +23,7 @@ class PgConnectionImplTest {
 
     @RegisterExtension
     static final PreparedDbExtension embeddedPostgres =
-            EmbeddedPostgresExtension.preparedDatabase(ds -> {
-            });
+            EmbeddedPostgresExtension.preparedDatabase(ds -> {});
 
     @Test
     void getMasterDataSource() {
@@ -33,6 +32,7 @@ class PgConnectionImplTest {
         assertThat(connection.getHost(), equalTo(PgHostImpl.ofMaster()));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
         assertThrows(NullPointerException.class, () -> PgConnectionImpl.ofMaster(null));
@@ -56,5 +56,12 @@ class PgConnectionImplTest {
 
         assertNotEquals(first, second);
         assertNotEquals(first.hashCode(), second.hashCode());
+    }
+
+    @Test
+    void toStringTest() {
+        final var connection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        assertEquals("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://master', hostNames=[master]}}",
+                connection.toString());
     }
 }

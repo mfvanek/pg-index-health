@@ -28,8 +28,8 @@ public class ConfigurationMaintenanceImpl implements ConfigurationMaintenance {
         // TODO get max_connections and calculate recommended values
         final Set<PgParam> params = new HashSet<>();
         for (var importantParam : ImportantParam.values()) {
-            var currentValue = getCurrentValue(importantParam);
-            if (currentValue.getValue().equals(importantParam.getValue())) {
+            var currentValue = getParamCurrentValue(importantParam);
+            if (currentValue.getValue().equals(importantParam.getDefaultValue())) {
                 params.add(currentValue);
             }
         }
@@ -47,9 +47,10 @@ public class ConfigurationMaintenanceImpl implements ConfigurationMaintenance {
         return Set.copyOf(params);
     }
 
+    @Override
     @Nonnull
-    private PgParam getCurrentValue(@Nonnull final PgParam param) {
-        return getCurrentValue(param.getName());
+    public PgParam getParamCurrentValue(@Nonnull final ParamNameAware paramName) {
+        return getCurrentValue(paramName.getName());
     }
 
     @Nonnull
