@@ -7,6 +7,7 @@ package com.mfvanek.pg.index.health.logger;
 
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("WeakerAccess")
 public interface LoggingKey {
 
     @Nonnull

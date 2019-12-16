@@ -21,6 +21,7 @@ class IndexWithNullsTest {
         assertEquals("f", index.getNullableField());
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
         assertThrows(NullPointerException.class, () -> IndexWithNulls.of(null, null, 0, null));

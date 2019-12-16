@@ -32,6 +32,7 @@ class PgConnectionImplTest {
         assertThat(connection.getHost(), equalTo(PgHostImpl.ofMaster()));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
         assertThrows(NullPointerException.class, () -> PgConnectionImpl.ofMaster(null));

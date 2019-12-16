@@ -19,7 +19,7 @@ public enum SimpleLoggingKey implements LoggingKey {
     TABLES_WITHOUT_PK("tables_without_primary_key"),
     INDEXES_WITH_NULLS("indexes_with_null_values");
 
-    final String subKeyName;
+    private final String subKeyName;
 
     SimpleLoggingKey(@Nonnull final String subKeyName) {
         this.subKeyName = Objects.requireNonNull(subKeyName);

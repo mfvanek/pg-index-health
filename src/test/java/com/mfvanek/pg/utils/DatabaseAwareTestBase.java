@@ -20,11 +20,6 @@ public abstract class DatabaseAwareTestBase {
     }
 
     @Nonnull
-    protected DataSource getDataSource() {
-        return dataSource;
-    }
-
-    @Nonnull
     protected DatabasePopulator createDatabasePopulator() {
         return new DatabasePopulator(dataSource);
     }

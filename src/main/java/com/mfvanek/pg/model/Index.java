@@ -15,6 +15,7 @@ public class Index implements TableNameAware, IndexNameAware {
     private final String tableName;
     private final String indexName;
 
+    @SuppressWarnings("WeakerAccess")
     protected Index(@Nonnull String tableName, @Nonnull String indexName) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.indexName = Validators.indexNameNotBlank(indexName);
@@ -39,6 +40,7 @@ public class Index implements TableNameAware, IndexNameAware {
                 "}";
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected String innerToString() {
         return "tableName=\'" + tableName + "\'" +
                 ", indexName=\'" + indexName + "\'";

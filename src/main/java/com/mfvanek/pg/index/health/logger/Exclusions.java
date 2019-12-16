@@ -37,7 +37,8 @@ public class Exclusions {
         this.tablesWithMissingIndexesExclusions = prepareExclusions(tablesWithMissingIndexesExclusions);
         this.tablesWithoutPrimaryKeyExclusions = prepareExclusions(tablesWithoutPrimaryKeyExclusions);
         this.indexesWithNullValuesExclusions = prepareExclusions(indexesWithNullValuesExclusions);
-        this.indexSizeThresholdInBytes = Validators.sizeNotNegative(indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
+        this.indexSizeThresholdInBytes = Validators.sizeNotNegative(
+                indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
     }
 
     private static Set<String> prepareExclusions(@Nonnull final String rawExclusions) {
@@ -139,7 +140,8 @@ public class Exclusions {
             return this;
         }
 
-        public Builder withTablesWithMissingIndexesExclusions(@Nonnull final String tablesWithMissingIndexesExclusions) {
+        public Builder withTablesWithMissingIndexesExclusions(
+                @Nonnull final String tablesWithMissingIndexesExclusions) {
             this.tablesWithMissingIndexesExclusions = Objects.requireNonNull(tablesWithMissingIndexesExclusions);
             return this;
         }
@@ -155,7 +157,8 @@ public class Exclusions {
         }
 
         public Builder withIndexSizeThreshold(final long indexSizeThresholdInBytes) {
-            this.indexSizeThresholdInBytes = Validators.valueIsPositive(indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
+            this.indexSizeThresholdInBytes = Validators.valueIsPositive(
+                    indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
             return this;
         }
 

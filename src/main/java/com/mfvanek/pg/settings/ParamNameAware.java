@@ -7,6 +7,7 @@ package com.mfvanek.pg.settings;
 
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("WeakerAccess")
 public interface ParamNameAware {
 
     @Nonnull

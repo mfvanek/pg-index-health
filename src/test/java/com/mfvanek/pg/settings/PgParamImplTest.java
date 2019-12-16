@@ -24,6 +24,7 @@ class PgParamImplTest {
         assertEquals("2s", param.getValue());
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
         assertThrows(NullPointerException.class, () -> PgParamImpl.of(null, null));

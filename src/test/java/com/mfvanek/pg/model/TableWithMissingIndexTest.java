@@ -23,6 +23,7 @@ class TableWithMissingIndexTest {
         assertEquals(2, table.getIndexScans());
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void invalidArguments() {
         assertThrows(NullPointerException.class, () -> TableWithMissingIndex.of(null, 0, 0));

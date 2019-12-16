@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class IndexTest {
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void validation() {
         assertThrows(NullPointerException.class, () -> Index.of(null, null));

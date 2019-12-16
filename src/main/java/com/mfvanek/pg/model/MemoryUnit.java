@@ -13,8 +13,8 @@ public enum MemoryUnit {
     MB(1024L * 1024L, "megabyte"),
     GB(1024L * 1024L * 1024L, "gigabyte");
 
-    final long dimension;
-    final String description;
+    private final long dimension;
+    private final String description;
 
     MemoryUnit(final long dimension, @Nonnull final String description) {
         this.dimension = dimension;
@@ -27,5 +27,13 @@ public enum MemoryUnit {
 
     public long convertToBytes(final int unitsCount) {
         return unitsCount * dimension;
+    }
+
+    @Override
+    public String toString() {
+        return MemoryUnit.class.getSimpleName() + '{' +
+                "dimension=" + dimension +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

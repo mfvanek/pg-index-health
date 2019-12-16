@@ -26,7 +26,11 @@ class PgUrlParserTest {
                 Pair.of("host-3:6432", "jdbc:postgresql://host-3:6432/db_name?ssl=true&sslmode=require"),
                 Pair.of("host-4:6432", "jdbc:postgresql://host-4:6432/db_name?ssl=true&sslmode=require")
         ));
+    }
 
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void extractNamesAndUrlsForEachHostWithInvalidUrl() {
         assertThrows(NullPointerException.class, () -> PgUrlParser.extractNameWithPortAndUrlForEachHost(null));
         assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractNameWithPortAndUrlForEachHost(""));
         assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractNameWithPortAndUrlForEachHost("host-name:5432"));
@@ -51,7 +55,11 @@ class PgUrlParserTest {
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
         assertThat(hostNames, hasSize(4));
         assertThat(hostNames, containsInAnyOrder("host-1", "host-2", "host-3", "host-4"));
+    }
 
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void extractHostNamesWithInvalidUrl() {
         assertThrows(NullPointerException.class, () -> PgUrlParser.extractHostNames(null));
         assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractHostNames(""));
         assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractHostNames("host-name:5432"));

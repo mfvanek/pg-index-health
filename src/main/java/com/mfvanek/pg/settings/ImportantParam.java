@@ -22,8 +22,8 @@ public enum ImportantParam implements ParamNameAware {
     EFFECTIVE_CACHE_SIZE("effective_cache_size", "4GB"),
     TEMP_FILE_LIMIT("temp_file_limit", "-1");
 
-    final String name;
-    final String defaultValue;
+    private final String name;
+    private final String defaultValue;
 
     ImportantParam(@Nonnull final String name, @Nonnull final String defaultValue) {
         this.name = Validators.notBlank(name, "name");

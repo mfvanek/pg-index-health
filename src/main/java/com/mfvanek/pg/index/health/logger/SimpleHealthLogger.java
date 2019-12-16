@@ -31,6 +31,7 @@ public class SimpleHealthLogger extends AbstractIndexesHealthLogger {
 
     @Nonnull
     private String format(@Nonnull final String keyName, @Nonnull final String subKeyName, final int value) {
-        return DateTimeFormatter.ISO_INSTANT.format(ZonedDateTime.now()) + "\t" + keyName + "\t" + subKeyName + "\t" + value;
+        return DateTimeFormatter.ISO_INSTANT.format(
+                ZonedDateTime.now()) + "\t" + keyName + "\t" + subKeyName + "\t" + value;
     }
 }
