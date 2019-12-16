@@ -46,7 +46,7 @@ public enum ImportantParam implements PgParam {
     @Override
     public String toString() {
         return ImportantParam.class.getSimpleName() + '{' +
-                ", defaultValue='" + defaultValue + '\'' +
+                "defaultValue='" + defaultValue + '\'' +
                 '}';
     }
 }
