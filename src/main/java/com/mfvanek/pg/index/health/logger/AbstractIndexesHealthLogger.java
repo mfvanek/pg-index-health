@@ -97,7 +97,7 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     private String logUnusedIndexes() {
         final var rawUnusedIndexes = indexesHealth.getUnusedIndexes();
         final var filteredUnusedIndexes = applyIndexesExclusions(rawUnusedIndexes, exclusions.getUnusedIndexesExclusions());
-        final var unusedIndexes = applyIndexSizeExclusions(filteredUnusedIndexes, exclusions.getIndexSizeThreshold());
+        final var unusedIndexes = applyIndexSizeExclusions(filteredUnusedIndexes, exclusions.getIndexSizeThresholdInBytes());
         final LoggingKey key = SimpleLoggingKey.UNUSED_INDEXES;
         if (CollectionUtils.isNotEmpty(unusedIndexes)) {
             LOGGER.warn("There are unused indexes in the database {}", unusedIndexes);

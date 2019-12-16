@@ -56,6 +56,16 @@ class ExclusionsTest {
         assertEquals("Exclusions{duplicatedIndexesExclusions=[], " +
                 "intersectedIndexesExclusions=[], unusedIndexesExclusions=[], " +
                 "tablesWithMissingIndexesExclusions=[], tablesWithoutPrimaryKeyExclusions=[], " +
-                "indexesWithNullValuesExclusions=[], indexSizeThreshold=0}", exclusions.toString());
+                "indexesWithNullValuesExclusions=[], indexSizeThresholdInBytes=0}", exclusions.toString());
+    }
+
+    @Test
+    void toStringBuilderTest() {
+        final var builder = Exclusions.builder();
+        assertNotNull(builder);
+        assertEquals("Builder{duplicatedIndexesExclusions='', intersectedIndexesExclusions='', " +
+                        "unusedIndexesExclusions='', tablesWithMissingIndexesExclusions='', tablesWithoutPrimaryKeyExclusions='', " +
+                        "indexesWithNullValuesExclusions='', indexSizeThresholdInBytes=0}",
+                builder.toString());
     }
 }
