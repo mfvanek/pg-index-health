@@ -7,9 +7,13 @@ package com.mfvanek.pg.index.health.logger;
 
 import com.mfvanek.pg.index.health.IndexesHealth;
 import com.mfvanek.pg.model.DuplicatedIndexes;
+import com.mfvanek.pg.model.ForeignKey;
+import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
 import com.mfvanek.pg.model.IndexWithSize;
 import com.mfvanek.pg.model.MemoryUnit;
+import com.mfvanek.pg.model.TableWithMissingIndex;
+import com.mfvanek.pg.model.TableWithoutPrimaryKey;
 import com.mfvanek.pg.model.UnusedIndex;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,12 +25,30 @@ import static org.hamcrest.Matchers.containsString;
 
 class SimpleHealthLoggerTest {
 
+    private final IndexesHealth indexesHealthMock = Mockito.mock(IndexesHealth.class);
+
+    @Test
+    void logInvalidIndexes() {
+        Mockito.when(indexesHealthMock.getInvalidIndexes())
+                .thenReturn(List.of(
+                        Index.of("t1", "i1"),
+                        Index.of("t1", "i2"),
+                        Index.of("t2", "i3")
+                ));
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, Exclusions.empty());
+        final var logs = logger.logAll();
+        final var logStr = logs.stream()
+                .filter(l -> l.contains(SimpleLoggingKey.INVALID_INDEXES.getSubKeyName()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(logStr, containsString("invalid_indexes\t3"));
+    }
+
     @Test
     void applyDuplicatedExclusions() {
         final var exclusions = Exclusions.builder()
                 .withDuplicatedIndexesExclusions("i1, i3, ,,,")
                 .build();
-        final var indexesHealthMock = Mockito.mock(IndexesHealth.class);
         Mockito.when(indexesHealthMock.getDuplicatedIndexes())
                 .thenReturn(List.of(
                         DuplicatedIndexes.of(List.of(
@@ -56,7 +78,6 @@ class SimpleHealthLoggerTest {
         final var exclusions = Exclusions.builder()
                 .withUnusedIndexesExclusions("i2, i3, , ,,  ")
                 .build();
-        final var indexesHealthMock = Mockito.mock(IndexesHealth.class);
         Mockito.when(indexesHealthMock.getUnusedIndexes())
                 .thenReturn(List.of(
                         UnusedIndex.of("t1", "i1", 1L, 1L),
@@ -74,12 +95,40 @@ class SimpleHealthLoggerTest {
     }
 
     @Test
+    void applyIntersectedIndexesExclusions() {
+        final var exclusions = Exclusions.builder()
+                .withIntersectedIndexesExclusions("i4,,  , i6")
+                .build();
+        Mockito.when(indexesHealthMock.getIntersectedIndexes())
+                .thenReturn(List.of(
+                        DuplicatedIndexes.of(List.of(
+                                IndexWithSize.of("t1", "i1", 1L),
+                                IndexWithSize.of("t1", "i2", 2L)
+                        )),
+                        DuplicatedIndexes.of(List.of(
+                                IndexWithSize.of("t2", "i3", 3L),
+                                IndexWithSize.of("t2", "i4", 4L)
+                        )),
+                        DuplicatedIndexes.of(List.of(
+                                IndexWithSize.of("t3", "i5", 5L),
+                                IndexWithSize.of("t3", "i6", 6L)
+                        ))
+                ));
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
+        final var logs = logger.logAll();
+        final var logStr = logs.stream()
+                .filter(l -> l.contains(SimpleLoggingKey.INTERSECTED_INDEXES.getSubKeyName()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(logStr, containsString("intersected_indexes\t1"));
+    }
+
+    @Test
     void applyUnusedExclusionsWithSize() {
         final var exclusions = Exclusions.builder()
                 .withUnusedIndexesExclusions("i2, i3, , ,,  ")
                 .withIndexSizeThreshold(2L)
                 .build();
-        final var indexesHealthMock = Mockito.mock(IndexesHealth.class);
         Mockito.when(indexesHealthMock.getUnusedIndexes())
                 .thenReturn(List.of(
                         UnusedIndex.of("t1", "i1", 1L, 1L),
@@ -102,7 +151,6 @@ class SimpleHealthLoggerTest {
                 .withUnusedIndexesExclusions("i2, i3, , ,,  ")
                 .withIndexSizeThreshold(1, MemoryUnit.MB)
                 .build();
-        final var indexesHealthMock = Mockito.mock(IndexesHealth.class);
         Mockito.when(indexesHealthMock.getUnusedIndexes())
                 .thenReturn(List.of(
                         UnusedIndex.of("t1", "i1", 1_048_576L, 1L),
@@ -120,11 +168,69 @@ class SimpleHealthLoggerTest {
     }
 
     @Test
+    void logForeignKeysNotCoveredWithIndex() {
+        Mockito.when(indexesHealthMock.getForeignKeysNotCoveredWithIndex())
+                .thenReturn(List.of(
+                        ForeignKey.of("t1", "c1", List.of("f1")),
+                        ForeignKey.of("t1", "c2", List.of("f2")),
+                        ForeignKey.of("t2", "c3", List.of("f3", "f4"))
+                ));
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, Exclusions.empty());
+        final var logs = logger.logAll();
+        final var logStr = logs.stream()
+                .filter(l -> l.contains(SimpleLoggingKey.FOREIGN_KEYS.getSubKeyName()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(logStr, containsString("foreign_keys_without_index\t3"));
+    }
+
+    @Test
+    void applyTablesWithMissingIndexesExclusions() {
+        final var exclusions = Exclusions.builder()
+                .withTablesWithMissingIndexesExclusions("t1,  ,,  , t3   ")
+                .build();
+        Mockito.when(indexesHealthMock.getTablesWithMissingIndexes())
+                .thenReturn(List.of(
+                        TableWithMissingIndex.of("t1", 101L, 1L),
+                        TableWithMissingIndex.of("t2", 202L, 2L),
+                        TableWithMissingIndex.of("t3", 303L, 3L),
+                        TableWithMissingIndex.of("t4", 404L, 4L)
+                ));
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
+        final var logs = logger.logAll();
+        final var logStr = logs.stream()
+                .filter(l -> l.contains(SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES.getSubKeyName()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(logStr, containsString("tables_with_missing_indexes\t2"));
+    }
+
+    @Test
+    void applyTablesWithoutPrimaryKeyExclusions() {
+        final var exclusions = Exclusions.builder()
+                .withTablesWithoutPrimaryKeyExclusions("  ,,   ,   , t4, t6")
+                .build();
+        Mockito.when(indexesHealthMock.getTablesWithoutPrimaryKey())
+                .thenReturn(List.of(
+                        TableWithoutPrimaryKey.of("t1"),
+                        TableWithoutPrimaryKey.of("t2"),
+                        TableWithoutPrimaryKey.of("t3"),
+                        TableWithoutPrimaryKey.of("t4")
+                ));
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
+        final var logs = logger.logAll();
+        final var logStr = logs.stream()
+                .filter(l -> l.contains(SimpleLoggingKey.TABLES_WITHOUT_PK.getSubKeyName()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(logStr, containsString("tables_without_primary_key\t3"));
+    }
+
+    @Test
     void applyIndexesWithNullValuesExclusions() {
         final var exclusions = Exclusions.builder()
                 .withIndexesWithNullValuesExclusions("i2, i5, , ,,  ")
                 .build();
-        final var indexesHealthMock = Mockito.mock(IndexesHealth.class);
         Mockito.when(indexesHealthMock.getIndexesWithNullValues())
                 .thenReturn(List.of(
                         IndexWithNulls.of("t1", "i1", 1L, "f1"),
