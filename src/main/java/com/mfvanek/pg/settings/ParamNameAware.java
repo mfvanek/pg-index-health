@@ -7,8 +7,8 @@ package com.mfvanek.pg.settings;
 
 import javax.annotation.Nonnull;
 
-public interface PgParam extends ParamNameAware {
+public interface ParamNameAware {
 
     @Nonnull
-    String getValue();
+    String getName();
 }

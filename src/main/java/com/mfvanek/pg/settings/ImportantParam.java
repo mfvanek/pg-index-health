@@ -5,9 +5,11 @@
 
 package com.mfvanek.pg.settings;
 
+import com.mfvanek.pg.utils.Validators;
+
 import javax.annotation.Nonnull;
 
-public enum ImportantParam implements PgParam {
+public enum ImportantParam implements ParamNameAware {
 
     SHARED_BUFFERS("shared_buffers", "128MB"),
     WORK_MEM("work_mem", "4MB"),
@@ -20,33 +22,31 @@ public enum ImportantParam implements PgParam {
     EFFECTIVE_CACHE_SIZE("effective_cache_size", "4GB"),
     TEMP_FILE_LIMIT("temp_file_limit", "-1");
 
-    final PgParam defaultValue;
+    final String name;
+    final String defaultValue;
 
-    ImportantParam(@Nonnull final String paramName, @Nonnull final String defaultValue) {
-        this.defaultValue = PgParamImpl.of(paramName, defaultValue);
+    ImportantParam(@Nonnull final String name, @Nonnull final String defaultValue) {
+        this.name = Validators.notBlank(name, "name");
+        this.defaultValue = Validators.paramValueNotNull(
+                defaultValue, "defaultValue for '" + name + "\' cannot be null");
     }
 
     @Nonnull
-    public PgParam getDefaultValue() {
+    public String getDefaultValue() {
         return defaultValue;
     }
 
     @Nonnull
     @Override
     public String getName() {
-        return defaultValue.getName();
-    }
-
-    @Nonnull
-    @Override
-    public String getValue() {
-        return defaultValue.getValue();
+        return name;
     }
 
     @Override
     public String toString() {
         return ImportantParam.class.getSimpleName() + '{' +
-                "defaultValue='" + defaultValue + '\'' +
+                "name='" + name + '\'' +
+                ", defaultValue='" + defaultValue + '\'' +
                 '}';
     }
 }

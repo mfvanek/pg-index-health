@@ -15,4 +15,7 @@ public interface ConfigurationMaintenance {
 
     @Nonnull
     Set<PgParam> getParamsCurrentValues();
+
+    @Nonnull
+    PgParam getParamCurrentValue(@Nonnull ParamNameAware paramName);
 }

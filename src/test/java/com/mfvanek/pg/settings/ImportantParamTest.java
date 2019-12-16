@@ -7,6 +7,9 @@ package com.mfvanek.pg.settings;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -16,14 +19,22 @@ class ImportantParamTest {
     void completenessTest() {
         for (var param : ImportantParam.values()) {
             assertNotNull(param.getName());
-            assertNotNull(param.getValue());
             assertNotNull(param.getDefaultValue());
         }
     }
 
     @Test
+    void uniquenessTest() {
+        final Set<String> names = new HashSet<>();
+        for (var param : ImportantParam.values()) {
+            names.add(param.getName());
+        }
+        assertEquals(ImportantParam.values().length, names.size());
+    }
+
+    @Test
     void testToString() {
         final String result = ImportantParam.MAINTENANCE_WORK_MEM.toString();
-        assertEquals("ImportantParam{defaultValue='PgParamImpl{name='maintenance_work_mem', value='64MB'}'}", result);
+        assertEquals("ImportantParam{name='maintenance_work_mem', defaultValue='64MB'}", result);
     }
 }
