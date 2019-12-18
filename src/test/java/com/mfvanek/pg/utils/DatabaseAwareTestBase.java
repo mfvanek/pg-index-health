@@ -24,6 +24,11 @@ public abstract class DatabaseAwareTestBase {
         return new DatabasePopulator(dataSource);
     }
 
+    @Nonnull
+    protected DataSource getDataSource() {
+        return dataSource;
+    }
+
     protected void executeTestOnDatabase(@Nonnull final Consumer<DatabasePopulator> databasePopulatorConsumer,
                                          @Nonnull final TestExecutor testExecutor) {
         try (var databasePopulator = createDatabasePopulator()) {
