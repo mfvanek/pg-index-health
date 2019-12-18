@@ -8,7 +8,8 @@ package com.mfvanek.pg.index.health;
 import com.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import com.mfvanek.pg.connection.PgHost;
 import com.mfvanek.pg.index.maintenance.IndexMaintenance;
-import com.mfvanek.pg.index.maintenance.IndexMaintenanceFactory;
+import com.mfvanek.pg.index.maintenance.MaintenanceFactory;
+import com.mfvanek.pg.index.maintenance.StatisticsMaintenance;
 import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
@@ -31,13 +32,16 @@ public class IndexesHealthImpl implements IndexesHealth {
 
     private final IndexMaintenance maintenanceForMaster;
     private final List<IndexMaintenance> maintenanceForReplicas;
+    private final List<StatisticsMaintenance> statisticsMaintenanceForReplicas;
 
     public IndexesHealthImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
-                             @Nonnull final IndexMaintenanceFactory maintenanceFactory) {
+                             @Nonnull final MaintenanceFactory maintenanceFactory) {
         Objects.requireNonNull(haPgConnection);
         Objects.requireNonNull(maintenanceFactory);
-        this.maintenanceForMaster = maintenanceFactory.forConnection(haPgConnection.getConnectionToMaster());
+        this.maintenanceForMaster = maintenanceFactory.forIndex(haPgConnection.getConnectionToMaster());
         this.maintenanceForReplicas = ReplicasHelper.createIndexMaintenanceForReplicas(
+                haPgConnection.getConnectionsToReplicas(), maintenanceFactory);
+        this.statisticsMaintenanceForReplicas = ReplicasHelper.createStatisticsMaintenanceForReplicas(
                 haPgConnection.getConnectionsToReplicas(), maintenanceFactory);
     }
 
@@ -103,6 +107,13 @@ public class IndexesHealthImpl implements IndexesHealth {
     public List<IndexWithNulls> getIndexesWithNullValues() {
         logExecutingOnMaster();
         return maintenanceForMaster.getIndexesWithNullValues();
+    }
+
+    @Override
+    public void resetStatistics() {
+        for (var statisticsMaintenance : statisticsMaintenanceForReplicas) {
+            doOnHost(statisticsMaintenance.getHost(), statisticsMaintenance::resetStatistics);
+        }
     }
 
     private void logExecutingOnMaster() {

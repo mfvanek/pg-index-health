@@ -8,7 +8,7 @@ package com.mfvanek.pg.index.health;
 import com.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import com.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import com.mfvanek.pg.connection.PgConnectionImpl;
-import com.mfvanek.pg.index.maintenance.IndexMaintenanceFactoryImpl;
+import com.mfvanek.pg.index.maintenance.MaintenanceFactoryImpl;
 import com.mfvanek.pg.model.IndexWithSize;
 import com.mfvanek.pg.model.UnusedIndex;
 import com.mfvanek.pg.utils.DatabaseAwareTestBase;
@@ -24,6 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -35,7 +36,7 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
         super(dataSource);
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(
                 PgConnectionImpl.ofMaster(dataSource));
-        this.indexesHealth = new IndexesHealthImpl(haPgConnection, new IndexMaintenanceFactoryImpl());
+        this.indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
     }
 
     @Test
@@ -244,7 +245,7 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
     void getTablesWithMissingIndexesOnEmptyDatabase() {
         final var tables = indexesHealth.getTablesWithMissingIndexes();
         assertNotNull(tables);
-        assertEquals(0, tables.size());
+        assertThat(tables, hasSize(0));
     }
 
     @Test
@@ -253,7 +254,7 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                 () -> {
                     final var tables = indexesHealth.getTablesWithMissingIndexes();
                     assertNotNull(tables);
-                    assertEquals(0, tables.size());
+                    assertThat(tables, hasSize(0));
                 });
     }
 
@@ -264,10 +265,10 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                     databasePopulator.tryToFindAccountByClientId(101);
                 },
                 () -> {
-                    var tables = indexesHealth.getTablesWithMissingIndexes();
+                    final var tables = indexesHealth.getTablesWithMissingIndexes();
                     assertNotNull(tables);
-                    assertEquals(1, tables.size());
-                    var table = tables.get(0);
+                    assertThat(tables, hasSize(1));
+                    final var table = tables.get(0);
                     assertEquals("accounts", table.getTableName());
                     assertThat(table.getSeqScans(), greaterThanOrEqualTo(101L));
                     assertEquals(0, table.getIndexScans());
@@ -298,10 +299,10 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                     databasePopulator.createTableWithoutPrimaryKey();
                 },
                 () -> {
-                    var tables = indexesHealth.getTablesWithoutPrimaryKey();
+                    final var tables = indexesHealth.getTablesWithoutPrimaryKey();
                     assertNotNull(tables);
                     assertEquals(1, tables.size());
-                    var table = tables.get(0);
+                    final var table = tables.get(0);
                     assertEquals("bad_clients", table.getTableName());
                 });
     }
@@ -333,6 +334,20 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                     final var indexes = indexesHealth.getIndexesWithNullValues();
                     assertNotNull(indexes);
                     assertEquals(1, indexes.size());
+                });
+    }
+
+    @Test
+    void shouldResetCounters() {
+        executeTestOnDatabase(databasePopulator -> {
+                    databasePopulator.populateWithDataAndReferences();
+                    databasePopulator.tryToFindAccountByClientId(101);
+                },
+                () -> {
+                    assertThat(getSeqScansForAccounts(), greaterThanOrEqualTo(101L));
+                    indexesHealth.resetStatistics();
+                    waitForStatisticsCollector();
+                    assertEquals(0L, getSeqScansForAccounts());
                 });
     }
 }
