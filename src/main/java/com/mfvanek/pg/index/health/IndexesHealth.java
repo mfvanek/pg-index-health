@@ -39,6 +39,14 @@ public interface IndexesHealth {
     @Nonnull
     List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey();
 
+    /**
+     * Get indexes that contain null values from all hosts.
+     */
     @Nonnull
     List<IndexWithNulls> getIndexesWithNullValues();
+
+    /**
+     * Reset all statistics counters on all hosts to zero.
+     */
+    void resetStatistics();
 }

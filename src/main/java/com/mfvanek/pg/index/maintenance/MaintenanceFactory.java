@@ -9,8 +9,11 @@ import com.mfvanek.pg.connection.PgConnection;
 
 import javax.annotation.Nonnull;
 
-public interface IndexMaintenanceFactory {
+public interface MaintenanceFactory {
 
     @Nonnull
-    IndexMaintenance forConnection(@Nonnull PgConnection pgConnection);
+    IndexMaintenance forIndex(@Nonnull PgConnection pgConnection);
+
+    @Nonnull
+    StatisticsMaintenance forStatistics(@Nonnull PgConnection pgConnection);
 }

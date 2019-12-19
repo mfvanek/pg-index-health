@@ -7,7 +7,8 @@ package com.mfvanek.pg.index.health;
 
 import com.mfvanek.pg.connection.PgConnection;
 import com.mfvanek.pg.index.maintenance.IndexMaintenance;
-import com.mfvanek.pg.index.maintenance.IndexMaintenanceFactory;
+import com.mfvanek.pg.index.maintenance.MaintenanceFactory;
+import com.mfvanek.pg.index.maintenance.StatisticsMaintenance;
 import com.mfvanek.pg.model.TableWithMissingIndex;
 import com.mfvanek.pg.model.UnusedIndex;
 import org.apache.commons.collections4.CollectionUtils;
@@ -15,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -33,14 +33,19 @@ final class ReplicasHelper {
     @Nonnull
     static List<IndexMaintenance> createIndexMaintenanceForReplicas(
             @Nonnull final Set<PgConnection> connectionsToReplicas,
-            @Nonnull final IndexMaintenanceFactory maintenanceFactory) {
-        final List<IndexMaintenance> result = new ArrayList<>(connectionsToReplicas.size());
-        result.addAll(
-                connectionsToReplicas.stream()
-                        .map(maintenanceFactory::forConnection)
-                        .collect(Collectors.toList())
-        );
-        return result;
+            @Nonnull final MaintenanceFactory maintenanceFactory) {
+        return connectionsToReplicas.stream()
+                .map(maintenanceFactory::forIndex)
+                .collect(Collectors.toList());
+    }
+
+    @Nonnull
+    static List<StatisticsMaintenance> createStatisticsMaintenanceForReplicas(
+            @Nonnull final Set<PgConnection> connectionsToReplicas,
+            @Nonnull final MaintenanceFactory maintenanceFactory) {
+        return connectionsToReplicas.stream()
+                .map(maintenanceFactory::forStatistics)
+                .collect(Collectors.toList());
     }
 
     @Nonnull
