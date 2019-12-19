@@ -1,12 +1,11 @@
 with tables_without_indexes as (
-    select relname::text as table_name,
-        coalesce(seq_scan, 0) - coalesce(idx_scan, 0) as too_much_seq,
-        pg_relation_size(relname::regclass) as table_size,
-        coalesce(seq_scan, 0) as seq_scan,
-        coalesce(idx_scan, 0) as idx_scan
-    from pg_stat_all_tables
-    where schemaname = 'public'::text
-      and pg_relation_size(relname::regclass) > 5::integer * 8192 /*skip small tables*/
+    select psat.relname::text as table_name,
+        coalesce(psat.seq_scan, 0) - coalesce(psat.idx_scan, 0) as too_much_seq,
+        coalesce(psat.seq_scan, 0) as seq_scan,
+        coalesce(psat.idx_scan, 0) as idx_scan
+    from pg_catalog.pg_stat_all_tables psat
+    where psat.schemaname = 'public'::text
+      and pg_relation_size(psat.relname::regclass) > 5::integer * 8192 /*skip small tables*/
 )
 select table_name,
     seq_scan,
