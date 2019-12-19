@@ -36,9 +36,9 @@ class ReplicasHelperTest {
 
     @Test
     void getTablesWithMissingIndexesAsUnionResult() {
-        final var t1 = TableWithMissingIndex.of("t1", 10L, 1L);
-        final var t2 = TableWithMissingIndex.of("t2", 30L, 3L);
-        final var t3 = TableWithMissingIndex.of("t3", 40L, 4L);
+        final var t1 = TableWithMissingIndex.of("t1", 1L, 10L, 1L);
+        final var t2 = TableWithMissingIndex.of("t2", 2L, 30L, 3L);
+        final var t3 = TableWithMissingIndex.of("t3", 3L, 40L, 4L);
         final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = List.of(
                 List.of(),
                 List.of(t1, t3),

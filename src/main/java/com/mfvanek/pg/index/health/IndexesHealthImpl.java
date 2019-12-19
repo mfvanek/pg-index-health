@@ -14,8 +14,8 @@ import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
+import com.mfvanek.pg.model.Table;
 import com.mfvanek.pg.model.TableWithMissingIndex;
-import com.mfvanek.pg.model.TableWithoutPrimaryKey;
 import com.mfvanek.pg.model.UnusedIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +97,7 @@ public class IndexesHealthImpl implements IndexesHealth {
 
     @Nonnull
     @Override
-    public List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey() {
+    public List<Table> getTablesWithoutPrimaryKey() {
         logExecutingOnMaster();
         return maintenanceForMaster.getTablesWithoutPrimaryKey();
     }

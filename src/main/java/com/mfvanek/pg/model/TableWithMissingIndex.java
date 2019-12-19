@@ -15,22 +15,18 @@ import java.util.Objects;
  * Normally, indexes should be used primarily when accessing a table.
  * If there are few or no indexes in the table, then seqScans will be larger than indexScans.
  */
-public class TableWithMissingIndex implements TableNameAware, Comparable<TableWithMissingIndex> {
+public class TableWithMissingIndex extends Table implements Comparable<TableWithMissingIndex> {
 
-    private final String tableName;
     private final long seqScans;
     private final long indexScans;
 
-    private TableWithMissingIndex(@Nonnull String tableName, long seqScans, long indexScans) {
-        this.tableName = Validators.tableNameNotBlank(tableName);
+    private TableWithMissingIndex(@Nonnull final String tableName,
+                                  final long tableSizeInBytes,
+                                  final long seqScans,
+                                  final long indexScans) {
+        super(tableName, tableSizeInBytes);
         this.seqScans = Validators.countNotNegative(seqScans, "seqScans");
         this.indexScans = Validators.countNotNegative(indexScans, "indexScans");
-    }
-
-    @Override
-    @Nonnull
-    public String getTableName() {
-        return tableName;
     }
 
     public long getSeqScans() {
@@ -43,11 +39,11 @@ public class TableWithMissingIndex implements TableNameAware, Comparable<TableWi
 
     @Override
     public String toString() {
-        return TableWithMissingIndex.class.getSimpleName() + "{" +
-                "tableName=\'" + tableName + "\'" +
+        return TableWithMissingIndex.class.getSimpleName() + '{' +
+                innerToString() +
                 ", seqScans=" + seqScans +
                 ", indexScans=" + indexScans +
-                "}";
+                '}';
     }
 
     @Override
@@ -61,20 +57,23 @@ public class TableWithMissingIndex implements TableNameAware, Comparable<TableWi
         }
 
         TableWithMissingIndex that = (TableWithMissingIndex) o;
-        return tableName.equals(that.tableName);
+        return getTableName().equals(that.getTableName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tableName);
+        return Objects.hash(getTableName());
     }
 
     @Override
     public int compareTo(TableWithMissingIndex other) {
-        return StringUtils.compare(this.tableName, other.tableName);
+        return StringUtils.compare(this.getTableName(), other.getTableName());
     }
 
-    public static TableWithMissingIndex of(@Nonnull String tableName, long seqScans, long indexScans) {
-        return new TableWithMissingIndex(tableName, seqScans, indexScans);
+    public static TableWithMissingIndex of(@Nonnull final String tableName,
+                                           final long tableSizeInBytes,
+                                           final long seqScans,
+                                           final long indexScans) {
+        return new TableWithMissingIndex(tableName, tableSizeInBytes, seqScans, indexScans);
     }
 }

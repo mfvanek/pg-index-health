@@ -9,8 +9,8 @@ import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
+import com.mfvanek.pg.model.Table;
 import com.mfvanek.pg.model.TableWithMissingIndex;
-import com.mfvanek.pg.model.TableWithoutPrimaryKey;
 import com.mfvanek.pg.model.UnusedIndex;
 
 import javax.annotation.Nonnull;
@@ -37,7 +37,7 @@ public interface IndexesHealth {
     List<TableWithMissingIndex> getTablesWithMissingIndexes();
 
     @Nonnull
-    List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey();
+    List<Table> getTablesWithoutPrimaryKey();
 
     /**
      * Get indexes that contain null values from all hosts.

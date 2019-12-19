@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,11 +20,15 @@ class ExclusionsTest {
     void parseTest() {
         final var exclusions = Exclusions.builder()
                 .withDuplicatedIndexesExclusions("i1,i2,, i3, , i4 ")
+                .withIndexSizeThreshold(11L)
+                .withTableSizeThreshold(22L)
                 .build();
         assertNotNull(exclusions);
         assertNotNull(exclusions.getDuplicatedIndexesExclusions());
         assertThat(exclusions.getDuplicatedIndexesExclusions(), hasSize(4));
         assertThat(exclusions.getDuplicatedIndexesExclusions(), containsInAnyOrder("i1", "i2", "i3", "i4"));
+        assertThat(exclusions.getIndexSizeThresholdInBytes(), equalTo(11L));
+        assertThat(exclusions.getTableSizeThresholdInBytes(), equalTo(22L));
     }
 
     @Test
@@ -48,15 +53,19 @@ class ExclusionsTest {
 
         assertNotNull(exclusions.getIndexesWithNullValuesExclusions());
         assertThat(exclusions.getIndexesWithNullValuesExclusions(), hasSize(0));
+
+        assertThat(exclusions.getIndexSizeThresholdInBytes(), equalTo(0L));
+        assertThat(exclusions.getTableSizeThresholdInBytes(), equalTo(0L));
     }
 
     @Test
     void toStringTest() {
         final var exclusions = Exclusions.empty();
         assertEquals("Exclusions{duplicatedIndexesExclusions=[], " +
-                "intersectedIndexesExclusions=[], unusedIndexesExclusions=[], " +
-                "tablesWithMissingIndexesExclusions=[], tablesWithoutPrimaryKeyExclusions=[], " +
-                "indexesWithNullValuesExclusions=[], indexSizeThresholdInBytes=0}", exclusions.toString());
+                        "intersectedIndexesExclusions=[], unusedIndexesExclusions=[], " +
+                        "tablesWithMissingIndexesExclusions=[], tablesWithoutPrimaryKeyExclusions=[], " +
+                        "indexesWithNullValuesExclusions=[], indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0}",
+                exclusions.toString());
     }
 
     @Test
@@ -65,7 +74,7 @@ class ExclusionsTest {
         assertNotNull(builder);
         assertEquals("Builder{duplicatedIndexesExclusions='', intersectedIndexesExclusions='', " +
                         "unusedIndexesExclusions='', tablesWithMissingIndexesExclusions='', tablesWithoutPrimaryKeyExclusions='', " +
-                        "indexesWithNullValuesExclusions='', indexSizeThresholdInBytes=0}",
+                        "indexesWithNullValuesExclusions='', indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0}",
                 builder.toString());
     }
 }

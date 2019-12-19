@@ -33,9 +33,7 @@ public class IndexWithSize extends Index implements IndexSizeAware {
 
     @Override
     public String toString() {
-        return IndexWithSize.class.getSimpleName() + "{" +
-                innerToString() +
-                "}";
+        return IndexWithSize.class.getSimpleName() + '{' + innerToString() + '}';
     }
 
     public static IndexWithSize of(@Nonnull String tableName,

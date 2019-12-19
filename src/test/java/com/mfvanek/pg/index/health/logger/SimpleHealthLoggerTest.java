@@ -12,8 +12,8 @@ import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
 import com.mfvanek.pg.model.IndexWithSize;
 import com.mfvanek.pg.model.MemoryUnit;
+import com.mfvanek.pg.model.Table;
 import com.mfvanek.pg.model.TableWithMissingIndex;
-import com.mfvanek.pg.model.TableWithoutPrimaryKey;
 import com.mfvanek.pg.model.UnusedIndex;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -191,10 +191,10 @@ class SimpleHealthLoggerTest {
                 .build();
         Mockito.when(indexesHealthMock.getTablesWithMissingIndexes())
                 .thenReturn(List.of(
-                        TableWithMissingIndex.of("t1", 101L, 1L),
-                        TableWithMissingIndex.of("t2", 202L, 2L),
-                        TableWithMissingIndex.of("t3", 303L, 3L),
-                        TableWithMissingIndex.of("t4", 404L, 4L)
+                        TableWithMissingIndex.of("t1", 0L, 101L, 1L),
+                        TableWithMissingIndex.of("t2", 0L, 202L, 2L),
+                        TableWithMissingIndex.of("t3", 0L, 303L, 3L),
+                        TableWithMissingIndex.of("t4", 0L, 404L, 4L)
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
         final var logs = logger.logAll();
@@ -206,16 +206,37 @@ class SimpleHealthLoggerTest {
     }
 
     @Test
+    void applyTablesWithMissingIndexesExclusionsBySize() {
+        final var exclusions = Exclusions.builder()
+                .withTableSizeThreshold(98L)
+                .build();
+        Mockito.when(indexesHealthMock.getTablesWithMissingIndexes())
+                .thenReturn(List.of(
+                        TableWithMissingIndex.of("t1", 97L, 101L, 1L),
+                        TableWithMissingIndex.of("t2", 98L, 202L, 2L),
+                        TableWithMissingIndex.of("t3", 99L, 303L, 3L),
+                        TableWithMissingIndex.of("t4", 100L, 404L, 4L)
+                ));
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
+        final var logs = logger.logAll();
+        final var logStr = logs.stream()
+                .filter(l -> l.contains(SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES.getSubKeyName()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(logStr, containsString("tables_with_missing_indexes\t3"));
+    }
+
+    @Test
     void applyTablesWithoutPrimaryKeyExclusions() {
         final var exclusions = Exclusions.builder()
                 .withTablesWithoutPrimaryKeyExclusions("  ,,   ,   , t4, t6")
                 .build();
         Mockito.when(indexesHealthMock.getTablesWithoutPrimaryKey())
                 .thenReturn(List.of(
-                        TableWithoutPrimaryKey.of("t1"),
-                        TableWithoutPrimaryKey.of("t2"),
-                        TableWithoutPrimaryKey.of("t3"),
-                        TableWithoutPrimaryKey.of("t4")
+                        Table.of("t1", 0L),
+                        Table.of("t2", 0L),
+                        Table.of("t3", 0L),
+                        Table.of("t4", 0L)
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
         final var logs = logger.logAll();
@@ -224,6 +245,27 @@ class SimpleHealthLoggerTest {
                 .findFirst()
                 .orElseThrow();
         assertThat(logStr, containsString("tables_without_primary_key\t3"));
+    }
+
+    @Test
+    void applyTablesWithoutPrimaryKeyExclusionsBySize() {
+        final var exclusions = Exclusions.builder()
+                .withTableSizeThreshold(100L)
+                .build();
+        Mockito.when(indexesHealthMock.getTablesWithoutPrimaryKey())
+                .thenReturn(List.of(
+                        Table.of("t1", 10L),
+                        Table.of("t2", 50L),
+                        Table.of("t3", 100L),
+                        Table.of("t4", 200L)
+                ));
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
+        final var logs = logger.logAll();
+        final var logStr = logs.stream()
+                .filter(l -> l.contains(SimpleLoggingKey.TABLES_WITHOUT_PK.getSubKeyName()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(logStr, containsString("tables_without_primary_key\t2"));
     }
 
     @Test
