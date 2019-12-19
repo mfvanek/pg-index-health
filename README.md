@@ -18,7 +18,7 @@
 1. Tables without primary key ([sql](https://github.com/mfvanek/pg-index-health/blob/master/src/main/resources/sql/tables_without_primary_key.sql)).
 
 ## Important note
-**pg_index_health** uses the [Statistics Collector](https://www.postgresql.org/docs/10/monitoring-stats.html).  
+**pg_index_health** uses the [PostgreSQL's statistics collector](https://www.postgresql.org/docs/10/monitoring-stats.html).  
 You can call `pg_stat_reset()` to reset all statistics counters for the current database to zero.
 
 ## Demo application

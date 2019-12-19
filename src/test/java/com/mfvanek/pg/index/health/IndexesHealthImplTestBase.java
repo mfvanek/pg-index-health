@@ -344,6 +344,7 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                     databasePopulator.tryToFindAccountByClientId(101);
                 },
                 () -> {
+                    waitForStatisticsCollector();
                     assertThat(getSeqScansForAccounts(), greaterThanOrEqualTo(101L));
                     indexesHealth.resetStatistics();
                     waitForStatisticsCollector();
