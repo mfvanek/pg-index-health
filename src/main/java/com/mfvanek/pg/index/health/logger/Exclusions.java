@@ -23,6 +23,7 @@ public class Exclusions {
     private final Set<String> tablesWithoutPrimaryKeyExclusions;
     private final Set<String> indexesWithNullValuesExclusions;
     private final long indexSizeThresholdInBytes;
+    private final long tableSizeThresholdInBytes;
 
     private Exclusions(@Nonnull String duplicatedIndexesExclusions,
                        @Nonnull String intersectedIndexesExclusions,
@@ -30,7 +31,8 @@ public class Exclusions {
                        @Nonnull String tablesWithMissingIndexesExclusions,
                        @Nonnull String tablesWithoutPrimaryKeyExclusions,
                        @Nonnull String indexesWithNullValuesExclusions,
-                       final long indexSizeThresholdInBytes) {
+                       final long indexSizeThresholdInBytes,
+                       final long tableSizeThresholdInBytes) {
         this.duplicatedIndexesExclusions = prepareExclusions(duplicatedIndexesExclusions);
         this.intersectedIndexesExclusions = prepareExclusions(intersectedIndexesExclusions);
         this.unusedIndexesExclusions = prepareExclusions(unusedIndexesExclusions);
@@ -39,6 +41,8 @@ public class Exclusions {
         this.indexesWithNullValuesExclusions = prepareExclusions(indexesWithNullValuesExclusions);
         this.indexSizeThresholdInBytes = Validators.sizeNotNegative(
                 indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
+        this.tableSizeThresholdInBytes = Validators.sizeNotNegative(
+                tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
     }
 
     private static Set<String> prepareExclusions(@Nonnull final String rawExclusions) {
@@ -89,6 +93,10 @@ public class Exclusions {
         return indexSizeThresholdInBytes;
     }
 
+    long getTableSizeThresholdInBytes() {
+        return tableSizeThresholdInBytes;
+    }
+
     @Override
     public String toString() {
         return Exclusions.class.getSimpleName() + '{' +
@@ -99,6 +107,7 @@ public class Exclusions {
                 ", tablesWithoutPrimaryKeyExclusions=" + tablesWithoutPrimaryKeyExclusions +
                 ", indexesWithNullValuesExclusions=" + indexesWithNullValuesExclusions +
                 ", indexSizeThresholdInBytes=" + indexSizeThresholdInBytes +
+                ", tableSizeThresholdInBytes=" + tableSizeThresholdInBytes +
                 '}';
     }
 
@@ -121,6 +130,7 @@ public class Exclusions {
         private String tablesWithoutPrimaryKeyExclusions = EMPTY;
         private String indexesWithNullValuesExclusions = EMPTY;
         private long indexSizeThresholdInBytes = 0L;
+        private long tableSizeThresholdInBytes = 0L;
 
         private Builder() {
         }
@@ -164,8 +174,18 @@ public class Exclusions {
 
         public Builder withIndexSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
             Validators.valueIsPositive(thresholdUnitsCount, "thresholdUnitsCount");
-            this.indexSizeThresholdInBytes = unit.convertToBytes(thresholdUnitsCount);
+            return withIndexSizeThreshold(unit.convertToBytes(thresholdUnitsCount));
+        }
+
+        public Builder withTableSizeThreshold(final long tableSizeThresholdInBytes) {
+            this.tableSizeThresholdInBytes = Validators.valueIsPositive(
+                    tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
             return this;
+        }
+
+        public Builder withTableSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
+            Validators.valueIsPositive(thresholdUnitsCount, "thresholdUnitsCount");
+            return withTableSizeThreshold(unit.convertToBytes(thresholdUnitsCount));
         }
 
         public Exclusions build() {
@@ -176,7 +196,8 @@ public class Exclusions {
                     tablesWithMissingIndexesExclusions,
                     tablesWithoutPrimaryKeyExclusions,
                     indexesWithNullValuesExclusions,
-                    indexSizeThresholdInBytes);
+                    indexSizeThresholdInBytes,
+                    tableSizeThresholdInBytes);
         }
 
         @Override
@@ -189,6 +210,7 @@ public class Exclusions {
                     ", tablesWithoutPrimaryKeyExclusions='" + tablesWithoutPrimaryKeyExclusions + '\'' +
                     ", indexesWithNullValuesExclusions='" + indexesWithNullValuesExclusions + '\'' +
                     ", indexSizeThresholdInBytes=" + indexSizeThresholdInBytes +
+                    ", tableSizeThresholdInBytes=" + tableSizeThresholdInBytes +
                     '}';
         }
     }

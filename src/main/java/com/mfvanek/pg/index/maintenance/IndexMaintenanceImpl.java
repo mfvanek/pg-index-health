@@ -11,8 +11,8 @@ import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
+import com.mfvanek.pg.model.Table;
 import com.mfvanek.pg.model.TableWithMissingIndex;
-import com.mfvanek.pg.model.TableWithoutPrimaryKey;
 import com.mfvanek.pg.model.UnusedIndex;
 import com.mfvanek.pg.utils.QueryExecutor;
 import com.mfvanek.pg.utils.ResultSetExtractor;
@@ -106,14 +106,15 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     private static final String TABLES_WITH_MISSING_INDEXES =
             "with tables_without_indexes as (\n" +
                     "    select psat.relname::text as table_name,\n" +
+                    "        pg_table_size(psat.relid) as table_size,\n" +
                     "        coalesce(psat.seq_scan, 0) - coalesce(psat.idx_scan, 0) as too_much_seq,\n" +
                     "        coalesce(psat.seq_scan, 0) as seq_scan,\n" +
                     "        coalesce(psat.idx_scan, 0) as idx_scan\n" +
                     "    from pg_catalog.pg_stat_all_tables psat\n" +
                     "    where psat.schemaname = 'public'::text\n" +
-                    "      and pg_relation_size(psat.relname::regclass) > 5::integer * 8192 /*skip small tables*/\n" +
                     ")\n" +
                     "select table_name,\n" +
+                    "    table_size,\n" +
                     "    seq_scan,\n" +
                     "    idx_scan\n" +
                     "from tables_without_indexes\n" +
@@ -122,14 +123,15 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "order by table_name, too_much_seq desc;";
 
     private static final String TABLES_WITHOUT_PRIMARY_KEY =
-            "select pt.tablename as table_name\n" +
-                    "from pg_catalog.pg_tables pt\n" +
-                    "where pt.schemaname = 'public'::text\n" +
-                    "  and pt.tablename not in (\n" +
+            "select psat.relname::text as table_name,\n" +
+                    "    pg_table_size(psat.relid) as table_size\n" +
+                    "from pg_catalog.pg_stat_all_tables psat\n" +
+                    "where psat.schemaname = 'public'::text\n" +
+                    "  and psat.relname not in (\n" +
                     "    select c.conrelid::regclass::text as table_name\n" +
                     "    from pg_catalog.pg_constraint c\n" +
                     "    where c.contype = 'p')\n" +
-                    "order by pt.tablename;";
+                    "order by psat.relname::text;";
 
     private static final String INDEXES_WITH_NULL_VALUES =
             "select x.indrelid::regclass as table_name,\n" +
@@ -204,18 +206,20 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     public List<TableWithMissingIndex> getTablesWithMissingIndexes() {
         return executeQuery(TABLES_WITH_MISSING_INDEXES, rs -> {
             final String tableName = rs.getString("table_name");
+            final long tableSize = rs.getLong("table_size");
             final long seqScans = rs.getLong("seq_scan");
             final long indexScans = rs.getLong("idx_scan");
-            return TableWithMissingIndex.of(tableName, seqScans, indexScans);
+            return TableWithMissingIndex.of(tableName, tableSize, seqScans, indexScans);
         });
     }
 
     @Nonnull
     @Override
-    public List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey() {
+    public List<Table> getTablesWithoutPrimaryKey() {
         return executeQuery(TABLES_WITHOUT_PRIMARY_KEY, rs -> {
             final String tableName = rs.getString("table_name");
-            return TableWithoutPrimaryKey.of(tableName);
+            final long tableSize = rs.getLong("table_size");
+            return Table.of(tableName, tableSize);
         });
     }
 

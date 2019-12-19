@@ -28,10 +28,10 @@ public final class IndexWithNulls extends IndexWithSize {
 
     @Override
     public String toString() {
-        return IndexWithNulls.class.getSimpleName() + "{" +
+        return IndexWithNulls.class.getSimpleName() + '{' +
                 innerToString() +
                 ", nullableField=\'" + nullableField + "\'" +
-                "}";
+                '}';
     }
 
     public static IndexWithNulls of(@Nonnull String tableName,

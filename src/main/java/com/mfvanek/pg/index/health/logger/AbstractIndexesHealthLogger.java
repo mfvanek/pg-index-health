@@ -10,6 +10,7 @@ import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.IndexNameAware;
 import com.mfvanek.pg.model.IndexSizeAware;
 import com.mfvanek.pg.model.TableNameAware;
+import com.mfvanek.pg.model.TableSizeAware;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,8 +124,10 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     @Nonnull
     private String logTablesWithMissingIndexes() {
         final var rawTablesWithMissingIndexes = indexesHealth.getTablesWithMissingIndexes();
-        final var tablesWithMissingIndexes = applyTablesExclusions(rawTablesWithMissingIndexes,
-                exclusions.getTablesWithMissingIndexesExclusions());
+        final var tablesFilteredBySize = applyTableSizeExclusions(
+                rawTablesWithMissingIndexes, exclusions.getTableSizeThresholdInBytes());
+        final var tablesWithMissingIndexes = applyTablesExclusions(
+                tablesFilteredBySize, exclusions.getTablesWithMissingIndexesExclusions());
         final LoggingKey key = SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES;
         if (CollectionUtils.isNotEmpty(tablesWithMissingIndexes)) {
             LOGGER.warn("There are tables with missing indexes in the database {}", tablesWithMissingIndexes);
@@ -136,8 +139,10 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     @Nonnull
     private String logTablesWithoutPrimaryKey() {
         final var rawTablesWithoutPrimaryKey = indexesHealth.getTablesWithoutPrimaryKey();
-        final var tablesWithoutPrimaryKey = applyTablesExclusions(rawTablesWithoutPrimaryKey,
-                exclusions.getTablesWithoutPrimaryKeyExclusions());
+        final var tablesFilteredBySize = applyTableSizeExclusions(
+                rawTablesWithoutPrimaryKey, exclusions.getTableSizeThresholdInBytes());
+        final var tablesWithoutPrimaryKey = applyTablesExclusions(
+                tablesFilteredBySize, exclusions.getTablesWithoutPrimaryKeyExclusions());
         final LoggingKey key = SimpleLoggingKey.TABLES_WITHOUT_PK;
         if (CollectionUtils.isNotEmpty(tablesWithoutPrimaryKey)) {
             LOGGER.warn("There are tables without primary key in the database {}", tablesWithoutPrimaryKey);
@@ -207,6 +212,18 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
 
         return rawRecords.stream()
                 .filter(t -> !exclusions.contains(t.getTableName().toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    @Nonnull
+    private static <T extends TableSizeAware> List<T> applyTableSizeExclusions(@Nonnull final List<T> rawRecords,
+                                                                               final long threshold) {
+        if (CollectionUtils.isEmpty(rawRecords) || threshold <= 0L) {
+            return rawRecords;
+        }
+
+        return rawRecords.stream()
+                .filter(i -> i.getTableSizeInBytes() >= threshold)
                 .collect(Collectors.toList());
     }
 }

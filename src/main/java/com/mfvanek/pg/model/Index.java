@@ -35,9 +35,7 @@ public class Index implements TableNameAware, IndexNameAware {
 
     @Override
     public String toString() {
-        return Index.class.getSimpleName() + "{" +
-                innerToString() +
-                "}";
+        return Index.class.getSimpleName() + '{' + innerToString() + '}';
     }
 
     @SuppressWarnings("WeakerAccess")

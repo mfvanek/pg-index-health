@@ -10,8 +10,8 @@ import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
+import com.mfvanek.pg.model.Table;
 import com.mfvanek.pg.model.TableWithMissingIndex;
-import com.mfvanek.pg.model.TableWithoutPrimaryKey;
 import com.mfvanek.pg.model.UnusedIndex;
 
 import javax.annotation.Nonnull;
@@ -57,9 +57,12 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * List of tables without primary key.
+     *
+     * Tables without primary key might become a huge problem when bloat occurs
+     * because pg_repack will not be able to process them.
      */
     @Nonnull
-    List<TableWithoutPrimaryKey> getTablesWithoutPrimaryKey();
+    List<Table> getTablesWithoutPrimaryKey();
 
     /**
      * List of indexes that contain null values.

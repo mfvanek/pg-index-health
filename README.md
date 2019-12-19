@@ -51,7 +51,7 @@ public class DemoApp {
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealth, Exclusions.empty());
         logger.logAll().forEach(System.out::println);
         // Resetting current statistics
-        indexesHealth.resetStatistics();
+        // indexesHealth.resetStatistics();
     }
 
     private static void forProduction() {
@@ -63,7 +63,10 @@ public class DemoApp {
         final HighAvailabilityPgConnectionFactory haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
         final HighAvailabilityPgConnection haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl, cascadeAsyncReadUrl);
         final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
-        final var exclusions = Exclusions.builder().withIndexSizeThreshold(10, MemoryUnit.MB).build();
+        final var exclusions = Exclusions.builder()
+                .withIndexSizeThreshold(10, MemoryUnit.MB)
+                .withTableSizeThreshold(10, MemoryUnit.MB)
+                .build();
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealth, exclusions);
         logger.logAll().forEach(System.out::println);
     }
