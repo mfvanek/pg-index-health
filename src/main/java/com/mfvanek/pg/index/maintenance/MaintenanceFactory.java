@@ -6,13 +6,14 @@
 package com.mfvanek.pg.index.maintenance;
 
 import com.mfvanek.pg.connection.PgConnection;
+import com.mfvanek.pg.model.PgContext;
 
 import javax.annotation.Nonnull;
 
 public interface MaintenanceFactory {
 
     @Nonnull
-    IndexMaintenance forIndex(@Nonnull PgConnection pgConnection);
+    IndexMaintenance forIndex(@Nonnull PgConnection pgConnection, @Nonnull PgContext pgContext);
 
     @Nonnull
     StatisticsMaintenance forStatistics(@Nonnull PgConnection pgConnection);

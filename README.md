@@ -32,6 +32,7 @@ import com.mfvanek.pg.index.health.logger.IndexesHealthLogger;
 import com.mfvanek.pg.index.health.logger.SimpleHealthLogger;
 import com.mfvanek.pg.index.maintenance.MaintenanceFactoryImpl;
 import com.mfvanek.pg.model.MemoryUnit;
+import com.mfvanek.pg.model.PgContext;
 
 public class DemoApp {
 
@@ -47,7 +48,7 @@ public class DemoApp {
         final String password = "password_testing";
         final HighAvailabilityPgConnectionFactory haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
         final HighAvailabilityPgConnection haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl);
-        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
+        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, PgContext.ofPublic(), new MaintenanceFactoryImpl());
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealth, Exclusions.empty());
         logger.logAll().forEach(System.out::println);
         // Resetting current statistics
@@ -62,7 +63,7 @@ public class DemoApp {
         final String password = "password_production";
         final HighAvailabilityPgConnectionFactory haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
         final HighAvailabilityPgConnection haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl, cascadeAsyncReadUrl);
-        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
+        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, PgContext.ofPublic(), new MaintenanceFactoryImpl());
         final var exclusions = Exclusions.builder()
                 .withIndexSizeThreshold(10, MemoryUnit.MB)
                 .withTableSizeThreshold(10, MemoryUnit.MB)

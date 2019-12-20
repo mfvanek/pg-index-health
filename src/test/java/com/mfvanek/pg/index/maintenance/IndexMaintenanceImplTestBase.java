@@ -8,6 +8,7 @@ package com.mfvanek.pg.index.maintenance;
 import com.mfvanek.pg.connection.PgConnection;
 import com.mfvanek.pg.connection.PgConnectionImpl;
 import com.mfvanek.pg.model.IndexWithSize;
+import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.model.UnusedIndex;
 import com.mfvanek.pg.utils.DatabaseAwareTestBase;
 import com.mfvanek.pg.utils.DatabasePopulator;
@@ -32,7 +33,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
     IndexMaintenanceImplTestBase(@Nonnull final DataSource dataSource) {
         super(dataSource);
         final PgConnection pgConnection = PgConnectionImpl.ofMaster(dataSource);
-        this.indexMaintenance = new IndexMaintenanceImpl(pgConnection);
+        this.indexMaintenance = new IndexMaintenanceImpl(pgConnection, PgContext.ofPublic());
     }
 
     @Test

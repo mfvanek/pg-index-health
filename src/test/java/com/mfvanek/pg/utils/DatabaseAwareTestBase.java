@@ -5,12 +5,14 @@
 
 package com.mfvanek.pg.utils;
 
+import com.mfvanek.pg.model.PgContext;
+
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
@@ -31,7 +33,7 @@ public abstract class DatabaseAwareTestBase {
     }
 
     @Nonnull
-    protected DataSource getDataSource() {
+    private DataSource getDataSource() {
         return dataSource;
     }
 
@@ -56,14 +58,15 @@ public abstract class DatabaseAwareTestBase {
         });
     }
 
-    protected long getSeqScansForAccounts() {
+    protected long getSeqScansForAccounts(@Nonnull final PgContext pgContext) {
         final String sqlQuery =
                 "select psat.relname::text as table_name, coalesce(psat.seq_scan, 0) as seq_scan\n" +
                         "from pg_catalog.pg_stat_all_tables psat\n" +
-                        "where psat.schemaname = 'public'::text and psat.relname = 'accounts'::text;";
+                        "where psat.schemaname = ?::text and psat.relname = 'accounts'::text;";
         try (Connection connection = getDataSource().getConnection();
-             Statement statement = connection.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery(sqlQuery)) {
+             PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+            statement.setString(1, pgContext.getSchemeName());
+            try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 return resultSet.getLong(2);
             }

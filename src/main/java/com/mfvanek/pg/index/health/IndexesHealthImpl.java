@@ -14,6 +14,7 @@ import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
+import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.model.Table;
 import com.mfvanek.pg.model.TableWithMissingIndex;
 import com.mfvanek.pg.model.UnusedIndex;
@@ -35,12 +36,13 @@ public class IndexesHealthImpl implements IndexesHealth {
     private final List<StatisticsMaintenance> statisticsMaintenanceForReplicas;
 
     public IndexesHealthImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
+                             @Nonnull final PgContext pgContext,
                              @Nonnull final MaintenanceFactory maintenanceFactory) {
         Objects.requireNonNull(haPgConnection);
         Objects.requireNonNull(maintenanceFactory);
-        this.maintenanceForMaster = maintenanceFactory.forIndex(haPgConnection.getConnectionToMaster());
+        this.maintenanceForMaster = maintenanceFactory.forIndex(haPgConnection.getConnectionToMaster(), pgContext);
         this.maintenanceForReplicas = ReplicasHelper.createIndexMaintenanceForReplicas(
-                haPgConnection.getConnectionsToReplicas(), maintenanceFactory);
+                haPgConnection.getConnectionsToReplicas(), pgContext, maintenanceFactory);
         this.statisticsMaintenanceForReplicas = ReplicasHelper.createStatisticsMaintenanceForReplicas(
                 haPgConnection.getConnectionsToReplicas(), maintenanceFactory);
     }

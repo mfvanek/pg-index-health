@@ -7,6 +7,7 @@ package com.mfvanek.pg.index.maintenance;
 
 import com.mfvanek.pg.connection.PgConnection;
 import com.mfvanek.pg.connection.PgConnectionImpl;
+import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 
@@ -40,10 +41,11 @@ abstract class StatisticsMaintenanceImplTestBase extends DatabaseAwareTestBase {
                     databasePopulator.tryToFindAccountByClientId(101);
                 },
                 () -> {
-                    assertThat(getSeqScansForAccounts(), greaterThanOrEqualTo(101L));
+                    final PgContext pgContext = PgContext.ofPublic();
+                    assertThat(getSeqScansForAccounts(pgContext), greaterThanOrEqualTo(101L));
                     statisticsMaintenance.resetStatistics();
                     waitForStatisticsCollector();
-                    assertEquals(0L, getSeqScansForAccounts());
+                    assertEquals(0L, getSeqScansForAccounts(pgContext));
                 });
     }
 

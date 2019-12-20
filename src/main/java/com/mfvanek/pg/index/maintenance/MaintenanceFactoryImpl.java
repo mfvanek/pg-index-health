@@ -6,6 +6,7 @@
 package com.mfvanek.pg.index.maintenance;
 
 import com.mfvanek.pg.connection.PgConnection;
+import com.mfvanek.pg.model.PgContext;
 
 import javax.annotation.Nonnull;
 
@@ -13,8 +14,9 @@ public class MaintenanceFactoryImpl implements MaintenanceFactory {
 
     @Override
     @Nonnull
-    public IndexMaintenance forIndex(@Nonnull final PgConnection pgConnection) {
-        return new IndexMaintenanceImpl(pgConnection);
+    public IndexMaintenance forIndex(@Nonnull final PgConnection pgConnection,
+                                     @Nonnull final PgContext pgContext) {
+        return new IndexMaintenanceImpl(pgConnection, pgContext);
     }
 
     @Nonnull

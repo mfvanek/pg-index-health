@@ -6,11 +6,13 @@
 package com.mfvanek.pg.utils;
 
 import com.mfvanek.pg.connection.PgConnection;
+import com.mfvanek.pg.model.PgContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -34,6 +36,28 @@ public final class QueryExecutor {
              Statement statement = connection.createStatement()) {
             final List<T> executionResult = new ArrayList<>();
             try (ResultSet resultSet = statement.executeQuery(Objects.requireNonNull(sqlQuery))) {
+                while (resultSet.next()) {
+                    executionResult.add(rse.extractData(resultSet));
+                }
+            }
+            LOGGER.debug("Query completed with result {}", executionResult);
+            return executionResult;
+        } catch (SQLException e) {
+            LOGGER.trace("Query failed", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> List<T> executeQuery(@Nonnull final PgConnection pgConnection,
+                                           @Nonnull final PgContext pgContext,
+                                           @Nonnull final String sqlQuery,
+                                           @Nonnull final ResultSetExtractor<T> rse) {
+        LOGGER.debug("Executing query: {}", sqlQuery);
+        try (Connection connection = pgConnection.getDataSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(Objects.requireNonNull(sqlQuery))) {
+            statement.setString(1, pgContext.getSchemeName());
+            final List<T> executionResult = new ArrayList<>();
+            try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     executionResult.add(rse.extractData(resultSet));
                 }

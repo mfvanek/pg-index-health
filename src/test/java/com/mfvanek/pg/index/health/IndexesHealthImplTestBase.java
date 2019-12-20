@@ -10,6 +10,7 @@ import com.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import com.mfvanek.pg.connection.PgConnectionImpl;
 import com.mfvanek.pg.index.maintenance.MaintenanceFactoryImpl;
 import com.mfvanek.pg.model.IndexWithSize;
+import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.model.UnusedIndex;
 import com.mfvanek.pg.utils.DatabaseAwareTestBase;
 import com.mfvanek.pg.utils.DatabasePopulator;
@@ -30,13 +31,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
+    private final PgContext pgContext;
     private final IndexesHealth indexesHealth;
 
     IndexesHealthImplTestBase(@Nonnull final DataSource dataSource) {
         super(dataSource);
+        this.pgContext = PgContext.ofPublic();
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(
                 PgConnectionImpl.ofMaster(dataSource));
-        this.indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
+        this.indexesHealth = new IndexesHealthImpl(haPgConnection, pgContext, new MaintenanceFactoryImpl());
     }
 
     @Test
@@ -345,10 +348,10 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                 },
                 () -> {
                     waitForStatisticsCollector();
-                    assertThat(getSeqScansForAccounts(), greaterThanOrEqualTo(101L));
+                    assertThat(getSeqScansForAccounts(pgContext), greaterThanOrEqualTo(101L));
                     indexesHealth.resetStatistics();
                     waitForStatisticsCollector();
-                    assertEquals(0L, getSeqScansForAccounts());
+                    assertEquals(0L, getSeqScansForAccounts(pgContext));
                 });
     }
 }
