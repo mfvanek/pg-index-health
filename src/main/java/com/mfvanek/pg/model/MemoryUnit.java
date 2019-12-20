@@ -21,10 +21,6 @@ public enum MemoryUnit {
         this.description = Objects.requireNonNull(description);
     }
 
-    public long getDimension() {
-        return dimension;
-    }
-
     public long convertToBytes(final int unitsCount) {
         return unitsCount * dimension;
     }

@@ -5,6 +5,7 @@
 
 package com.mfvanek.pg.index.health.logger;
 
+import com.mfvanek.pg.model.MemoryUnit;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,6 +30,17 @@ class ExclusionsTest {
         assertThat(exclusions.getDuplicatedIndexesExclusions(), containsInAnyOrder("i1", "i2", "i3", "i4"));
         assertThat(exclusions.getIndexSizeThresholdInBytes(), equalTo(11L));
         assertThat(exclusions.getTableSizeThresholdInBytes(), equalTo(22L));
+    }
+
+    @Test
+    void withMemoryUnitTest() {
+        final var exclusions = Exclusions.builder()
+                .withTableSizeThreshold(10, MemoryUnit.MB)
+                .withIndexSizeThreshold(2, MemoryUnit.GB)
+                .build();
+        assertNotNull(exclusions);
+        assertThat(exclusions.getIndexSizeThresholdInBytes(), equalTo(2_147_483_648L));
+        assertThat(exclusions.getTableSizeThresholdInBytes(), equalTo(10_485_760L));
     }
 
     @Test
