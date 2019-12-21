@@ -11,8 +11,9 @@ import com.mfvanek.pg.model.IndexWithSize;
 import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.model.UnusedIndex;
 import com.mfvanek.pg.utils.DatabaseAwareTestBase;
-import com.mfvanek.pg.utils.DatabasePopulator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -28,37 +29,41 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
-    private final IndexMaintenance indexMaintenance;
+    private static final long AMOUNT_OF_TRIES = 101L;
+
+    private final PgConnection pgConnection;
 
     IndexMaintenanceImplTestBase(@Nonnull final DataSource dataSource) {
         super(dataSource);
-        final PgConnection pgConnection = PgConnectionImpl.ofMaster(dataSource);
-        this.indexMaintenance = new IndexMaintenanceImpl(pgConnection, PgContext.ofPublic());
+        this.pgConnection = PgConnectionImpl.ofMaster(dataSource);
     }
 
     @Test
     void getInvalidIndexesOnEmptyDataBase() {
-        final var invalidIndexes = indexMaintenance.getInvalidIndexes();
+        final var invalidIndexes = maintenance().getInvalidIndexes();
         assertNotNull(invalidIndexes);
         assertEquals(0, invalidIndexes.size());
     }
 
-    @Test
-    void getInvalidIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getInvalidIndexesOnDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(dbp ->
+                        dbp.withSchema(schemaName).withReferences().populate(),
                 () -> {
-                    final var invalidIndexes = indexMaintenance.getInvalidIndexes();
+                    final var invalidIndexes = maintenance(schemaName).getInvalidIndexes();
                     assertNotNull(invalidIndexes);
                     assertEquals(0, invalidIndexes.size());
                 });
     }
 
-    @Test
-    void getInvalidIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().withInvalidIndex().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getInvalidIndexesOnDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(dbp ->
+                        dbp.withSchema(schemaName).withReferences().withData().withInvalidIndex().populate(),
                 () -> {
-                    final var invalidIndexes = indexMaintenance.getInvalidIndexes();
+                    final var invalidIndexes = maintenance(schemaName).getInvalidIndexes();
                     assertNotNull(invalidIndexes);
                     assertEquals(1, invalidIndexes.size());
                     final var index = invalidIndexes.get(0);
@@ -69,27 +74,29 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getDuplicatedIndexesOnEmptyDataBase() {
-        final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
+        final var duplicatedIndexes = maintenance().getDuplicatedIndexes();
         assertNotNull(duplicatedIndexes);
         assertEquals(0, duplicatedIndexes.size());
     }
 
-    @Test
-    void getDuplicatedIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getDuplicatedIndexesOnDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(dbp -> dbp.withSchema(schemaName).withReferences().populate(),
                 () -> {
-                    final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
+                    final var duplicatedIndexes = maintenance(schemaName).getDuplicatedIndexes();
                     assertNotNull(duplicatedIndexes);
                     assertEquals(0, duplicatedIndexes.size());
                 });
     }
 
-    @Test
-    void getDuplicatedIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withDuplicatedIndex().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getDuplicatedIndexesOnDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(dbp ->
+                        dbp.withSchema(schemaName).withReferences().withDuplicatedIndex().populate(),
                 () -> {
-                    final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
+                    final var duplicatedIndexes = maintenance(schemaName).getDuplicatedIndexes();
                     assertNotNull(duplicatedIndexes);
                     assertEquals(1, duplicatedIndexes.size());
                     final var entry = duplicatedIndexes.get(0);
@@ -106,64 +113,78 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getIntersectedIndexesOnEmptyDataBase() {
-        final var intersectedIndexes = indexMaintenance.getIntersectedIndexes();
+        final var intersectedIndexes = maintenance().getIntersectedIndexes();
         assertNotNull(intersectedIndexes);
         assertEquals(0, intersectedIndexes.size());
     }
 
-    @Test
-    void getIntersectedIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getIntersectedIndexesOnDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(dbp -> dbp.withSchema(schemaName).withReferences().populate(),
                 () -> {
-                    final var intersectedIndexes = indexMaintenance.getIntersectedIndexes();
+                    final var intersectedIndexes = maintenance(schemaName).getIntersectedIndexes();
                     assertNotNull(intersectedIndexes);
                     assertEquals(0, intersectedIndexes.size());
                 });
     }
 
-    @Test
-    void getIntersectedIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().withDuplicatedIndex().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getIntersectedIndexesOnDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(dbp ->
+                        dbp.withSchema(schemaName).withReferences().withData().withDuplicatedIndex().populate(),
                 () -> {
-                    final var intersectedIndexes = indexMaintenance.getIntersectedIndexes();
+                    final var intersectedIndexes = maintenance(schemaName).getIntersectedIndexes();
                     assertNotNull(intersectedIndexes);
                     assertEquals(1, intersectedIndexes.size());
                     final var entry = intersectedIndexes.get(0);
-                    assertEquals("clients", entry.getTableName());
+                    if (isDefaultSchema(schemaName)) {
+                        assertEquals("clients", entry.getTableName());
+                    } else {
+                        assertEquals(schemaName + ".clients", entry.getTableName());
+                    }
                     assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
                     final var indexes = entry.getDuplicatedIndexes();
                     assertEquals(2, indexes.size());
-                    assertThat(indexes.stream()
-                                    .map(IndexWithSize::getIndexName)
-                                    .collect(Collectors.toList()),
-                            containsInAnyOrder("i_clients_last_first", "i_clients_last_name"));
+                    final var names = indexes.stream()
+                            .map(IndexWithSize::getIndexName)
+                            .collect(Collectors.toList());
+                    if (isDefaultSchema(schemaName)) {
+                        assertThat(names, containsInAnyOrder(
+                                "i_clients_last_first", "i_clients_last_name"));
+                    } else {
+                        assertThat(names, containsInAnyOrder(
+                                schemaName + ".i_clients_last_first", schemaName + ".i_clients_last_name"));
+                    }
                 });
     }
 
     @Test
     void getPotentiallyUnusedIndexesOnEmptyDataBase() {
-        final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+        final var unusedIndexes = maintenance().getPotentiallyUnusedIndexes();
         assertNotNull(unusedIndexes);
         assertEquals(0, unusedIndexes.size());
     }
 
-    @Test
-    void getPotentiallyUnusedIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getPotentiallyUnusedIndexesOnDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(dbp -> dbp.withSchema(schemaName).withReferences().populate(),
                 () -> {
-                    final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+                    final var unusedIndexes = maintenance(schemaName).getPotentiallyUnusedIndexes();
                     assertNotNull(unusedIndexes);
                     assertEquals(0, unusedIndexes.size());
                 });
     }
 
-    @Test
-    void getPotentiallyUnusedIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().withDuplicatedIndex().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getPotentiallyUnusedIndexesOnDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(dbp ->
+                        dbp.withSchema(schemaName).withReferences().withData().withDuplicatedIndex().populate(),
                 () -> {
-                    final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+                    final var unusedIndexes = maintenance(schemaName).getPotentiallyUnusedIndexes();
                     assertNotNull(unusedIndexes);
                     assertThat(unusedIndexes.size(), equalTo(3));
                     final var names = unusedIndexes.stream().map(UnusedIndex::getIndexName).collect(toSet());
@@ -173,26 +194,28 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnEmptyDataBase() {
-        final var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+        final var foreignKeys = maintenance().getForeignKeysNotCoveredWithIndex();
         assertNotNull(foreignKeys);
         assertEquals(0, foreignKeys.size());
     }
 
-    @Test
-    void getForeignKeysNotCoveredWithIndexOnDatabaseWithoutThem() {
-        executeTestOnDatabase(DatabasePopulator::populate,
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getForeignKeysNotCoveredWithIndexOnDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(dbp -> dbp.withSchema(schemaName).populate(),
                 () -> {
-                    final var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+                    final var foreignKeys = maintenance(schemaName).getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
                     assertEquals(0, foreignKeys.size());
                 });
     }
 
-    @Test
-    void getForeignKeysNotCoveredWithIndexOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getForeignKeysNotCoveredWithIndexOnDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(dbp -> dbp.withSchema(schemaName).withReferences().populate(),
                 () -> {
-                    var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+                    var foreignKeys = maintenance(schemaName).getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
                     assertEquals(1, foreignKeys.size());
                     final var foreignKey = foreignKeys.get(0);
@@ -201,12 +224,13 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
                 });
     }
 
-    @Test
-    void getForeignKeysNotCoveredWithIndexOnDatabaseWithNotSuitableIndex() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withNonSuitableIndex().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getForeignKeysNotCoveredWithIndexOnDatabaseWithNotSuitableIndex(final String schemaName) {
+        executeTestOnDatabase(dbp ->
+                        dbp.withSchema(schemaName).withReferences().withNonSuitableIndex().populate(),
                 () -> {
-                    var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+                    var foreignKeys = maintenance(schemaName).getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
                     assertEquals(1, foreignKeys.size());
                     final var foreignKey = foreignKeys.get(0);
@@ -215,12 +239,13 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
                 });
     }
 
-    @Test
-    void getForeignKeysNotCoveredWithIndexOnDatabaseWithSuitableIndex() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withSuitableIndex().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getForeignKeysNotCoveredWithIndexOnDatabaseWithSuitableIndex(final String schemaName) {
+        executeTestOnDatabase(dbp ->
+                        dbp.withSchema(schemaName).withReferences().withSuitableIndex().populate(),
                 () -> {
-                    var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+                    var foreignKeys = maintenance(schemaName).getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
                     assertEquals(0, foreignKeys.size());
                 });
@@ -228,63 +253,67 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithMissingIndexesOnEmptyDataBase() {
-        final var tables = indexMaintenance.getTablesWithMissingIndexes();
+        final var tables = maintenance().getTablesWithMissingIndexes();
         assertNotNull(tables);
         assertEquals(0, tables.size());
     }
 
-    @Test
-    void getTablesWithMissingIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getTablesWithMissingIndexesOnDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(dbp ->
+                        dbp.withSchema(schemaName).withReferences().withData().populate(),
                 () -> {
-                    final var tables = indexMaintenance.getTablesWithMissingIndexes();
+                    final var tables = maintenance(schemaName).getTablesWithMissingIndexes();
                     assertNotNull(tables);
                     assertEquals(0, tables.size());
                 });
     }
 
-    @Test
-    void getTablesWithMissingIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.withReferences().withData().populate();
-                    databasePopulator.tryToFindAccountByClientId(101);
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getTablesWithMissingIndexesOnDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(dbp -> {
+                    dbp.withSchema(schemaName).withReferences().withData().populate();
+                    dbp.tryToFindAccountByClientId(AMOUNT_OF_TRIES);
                 },
                 () -> {
-                    var tables = indexMaintenance.getTablesWithMissingIndexes();
+                    var tables = maintenance(schemaName).getTablesWithMissingIndexes();
                     assertNotNull(tables);
                     assertEquals(1, tables.size());
                     var table = tables.get(0);
                     assertEquals("accounts", table.getTableName());
-                    assertThat(table.getSeqScans(), greaterThanOrEqualTo(101L));
+                    assertThat(table.getSeqScans(), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
                     assertEquals(0, table.getIndexScans());
                 });
     }
 
     @Test
     void getTablesWithoutPrimaryKeyOnEmptyDataBase() {
-        final var tables = indexMaintenance.getTablesWithoutPrimaryKey();
+        final var tables = maintenance().getTablesWithoutPrimaryKey();
         assertNotNull(tables);
         assertEquals(0, tables.size());
     }
 
-    @Test
-    void getTablesWithoutPrimaryKeyOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getTablesWithoutPrimaryKeyOnDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(dbp ->
+                        dbp.withSchema(schemaName).withReferences().withData().populate(),
                 () -> {
-                    final var tables = indexMaintenance.getTablesWithoutPrimaryKey();
+                    final var tables = maintenance(schemaName).getTablesWithoutPrimaryKey();
                     assertNotNull(tables);
                     assertEquals(0, tables.size());
                 });
     }
 
-    @Test
-    void getTablesWithoutPrimaryKeyOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().withTableWithoutPrimaryKey().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getTablesWithoutPrimaryKeyOnDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(dbp ->
+                        dbp.withSchema(schemaName).withReferences().withData().withTableWithoutPrimaryKey().populate(),
                 () -> {
-                    var tables = indexMaintenance.getTablesWithoutPrimaryKey();
+                    var tables = maintenance(schemaName).getTablesWithoutPrimaryKey();
                     assertNotNull(tables);
                     assertEquals(1, tables.size());
                     var table = tables.get(0);
@@ -294,30 +323,42 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getIndexesWithNullValuesOnEmptyDataBase() {
-        final var indexes = indexMaintenance.getIndexesWithNullValues();
+        final var indexes = maintenance().getIndexesWithNullValues();
         assertNotNull(indexes);
         assertEquals(0, indexes.size());
     }
 
-    @Test
-    void getIndexesWithNullValuesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getIndexesWithNullValuesOnDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(dbp ->
+                        dbp.withSchema(schemaName).withReferences().withData().populate(),
                 () -> {
-                    final var indexes = indexMaintenance.getIndexesWithNullValues();
+                    final var indexes = maintenance(schemaName).getIndexesWithNullValues();
                     assertNotNull(indexes);
                     assertEquals(0, indexes.size());
                 });
     }
 
-    @Test
-    void getIndexesWithNullValuesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().withNullValuesInIndex().populate(),
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getIndexesWithNullValuesOnDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(dbp ->
+                        dbp.withSchema(schemaName).withReferences().withData().withNullValuesInIndex().populate(),
                 () -> {
-                    final var indexes = indexMaintenance.getIndexesWithNullValues();
+                    final var indexes = maintenance(schemaName).getIndexesWithNullValues();
                     assertNotNull(indexes);
                     assertEquals(1, indexes.size());
                 });
+    }
+
+    @Nonnull
+    private IndexMaintenance maintenance() {
+        return new IndexMaintenanceImpl(pgConnection, PgContext.ofPublic());
+    }
+
+    @Nonnull
+    private IndexMaintenance maintenance(@Nonnull final String schemaName) {
+        return new IndexMaintenanceImpl(pgConnection, PgContext.of(schemaName));
     }
 }

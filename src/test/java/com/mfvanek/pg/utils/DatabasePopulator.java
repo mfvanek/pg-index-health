@@ -117,6 +117,17 @@ public final class DatabasePopulator implements AutoCloseable {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute("create schema if not exists " + schemaName);
+            final String checkQuery = String.format(
+                    "select exists(select 1 from information_schema.schemata where schema_name = '%s')", schemaName);
+            try (ResultSet rs = statement.executeQuery(checkQuery)) {
+                if (rs.next()) {
+                    final var schemaExists = rs.getBoolean(1);
+                    if (schemaExists) {
+                        return;
+                    }
+                }
+                throw new RuntimeException("Schema with name " + schemaName + " wasn't created");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -285,7 +296,7 @@ public final class DatabasePopulator implements AutoCloseable {
         }
     }
 
-    public void tryToFindAccountByClientId(final int amountOfTries) {
+    public void tryToFindAccountByClientId(final long amountOfTries) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             for (int counter = 0; counter < amountOfTries; ++counter) {
@@ -303,6 +314,23 @@ public final class DatabasePopulator implements AutoCloseable {
             statement.execute(String.format("create table if not exists %s.bad_clients (" +
                     "id bigint not null, " +
                     "name varchar(255) not null)", schemaName));
+            final String checkQuery = String.format("select exists (\n" +
+                    "   select 1 \n" +
+                    "   from pg_catalog.pg_class c\n" +
+                    "   join pg_catalog.pg_namespace n on n.oid = c.relnamespace\n" +
+                    "   where n.nspname = '%s'\n" +
+                    "   and c.relname = '%s'\n" +
+                    "   and c.relkind = 'r'\n" +
+                    "   );", schemaName, "bad_clients");
+            try (ResultSet rs = statement.executeQuery(checkQuery)) {
+                if (rs.next()) {
+                    final var schemaExists = rs.getBoolean(1);
+                    if (schemaExists) {
+                        return;
+                    }
+                }
+                throw new RuntimeException("Table with name 'bad_clients' in schema " + schemaName + " wasn't created");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

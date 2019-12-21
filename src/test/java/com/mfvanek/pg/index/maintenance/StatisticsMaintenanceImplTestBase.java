@@ -10,6 +10,8 @@ import com.mfvanek.pg.connection.PgConnectionImpl;
 import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -34,14 +36,15 @@ abstract class StatisticsMaintenanceImplTestBase extends DatabaseAwareTestBase {
         statisticsMaintenance.resetStatistics();
     }
 
-    @Test
-    void shouldResetCounters() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.withReferences().withData().populate();
-                    databasePopulator.tryToFindAccountByClientId(101);
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void shouldResetCounters(final String schemaName) {
+        executeTestOnDatabase(dbp -> {
+                    dbp.withSchema(schemaName).withReferences().withData().populate();
+                    dbp.tryToFindAccountByClientId(101);
                 },
                 () -> {
-                    final PgContext pgContext = PgContext.ofPublic();
+                    final PgContext pgContext = PgContext.of(schemaName);
                     assertThat(getSeqScansForAccounts(pgContext), greaterThanOrEqualTo(101L));
                     statisticsMaintenance.resetStatistics();
                     waitForStatisticsCollector();

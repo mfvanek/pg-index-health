@@ -51,7 +51,7 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getInvalidIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
+        executeTestOnDatabase(dbp -> dbp.withReferences().populate(),
                 () -> {
                     final var invalidIndexes = indexesHealth.getInvalidIndexes();
                     assertNotNull(invalidIndexes);
@@ -61,8 +61,8 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getInvalidIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().withInvalidIndex().populate(),
+        executeTestOnDatabase(dbp ->
+                        dbp.withReferences().withData().withInvalidIndex().populate(),
                 () -> {
                     final var invalidIndexes = indexesHealth.getInvalidIndexes();
                     assertNotNull(invalidIndexes);
@@ -82,7 +82,7 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getDuplicatedIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
+        executeTestOnDatabase(dbp -> dbp.withReferences().populate(),
                 () -> {
                     final var duplicatedIndexes = indexesHealth.getDuplicatedIndexes();
                     assertNotNull(duplicatedIndexes);
@@ -92,8 +92,8 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getDuplicatedIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().withDuplicatedIndex().populate(),
+        executeTestOnDatabase(dbp ->
+                        dbp.withReferences().withData().withDuplicatedIndex().populate(),
                 () -> {
                     final var duplicatedIndexes = indexesHealth.getDuplicatedIndexes();
                     assertNotNull(duplicatedIndexes);
@@ -119,7 +119,7 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getIntersectedIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
+        executeTestOnDatabase(dbp -> dbp.withReferences().populate(),
                 () -> {
                     final var intersectedIndexes = indexesHealth.getIntersectedIndexes();
                     assertNotNull(intersectedIndexes);
@@ -129,8 +129,8 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getIntersectedIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().withDuplicatedIndex().populate(),
+        executeTestOnDatabase(dbp ->
+                        dbp.withReferences().withData().withDuplicatedIndex().populate(),
                 () -> {
                     final var intersectedIndexes = indexesHealth.getIntersectedIndexes();
                     assertNotNull(intersectedIndexes);
@@ -156,7 +156,7 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getUnusedIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
+        executeTestOnDatabase(dbp -> dbp.withReferences().populate(),
                 () -> {
                     final var unusedIndexes = indexesHealth.getUnusedIndexes();
                     assertNotNull(unusedIndexes);
@@ -166,8 +166,8 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getUnusedIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().withDuplicatedIndex().populate(),
+        executeTestOnDatabase(dbp ->
+                        dbp.withReferences().withData().withDuplicatedIndex().populate(),
                 () -> {
                     final var unusedIndexes = indexesHealth.getUnusedIndexes();
                     assertNotNull(unusedIndexes);
@@ -196,7 +196,7 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
+        executeTestOnDatabase(dbp -> dbp.withReferences().populate(),
                 () -> {
                     var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
@@ -209,8 +209,8 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithNotSuitableIndex() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withNonSuitableIndex().populate(),
+        executeTestOnDatabase(dbp ->
+                        dbp.withReferences().withNonSuitableIndex().populate(),
                 () -> {
                     var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
@@ -223,8 +223,8 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithSuitableIndex() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withSuitableIndex().populate(),
+        executeTestOnDatabase(dbp ->
+                        dbp.withReferences().withSuitableIndex().populate(),
                 () -> {
                     var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
@@ -241,8 +241,8 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithMissingIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().populate(),
+        executeTestOnDatabase(dbp ->
+                        dbp.withReferences().withData().populate(),
                 () -> {
                     final var tables = indexesHealth.getTablesWithMissingIndexes();
                     assertNotNull(tables);
@@ -252,9 +252,9 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithMissingIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.withReferences().withData().populate();
-                    databasePopulator.tryToFindAccountByClientId(101);
+        executeTestOnDatabase(dbp -> {
+                    dbp.withReferences().withData().populate();
+                    dbp.tryToFindAccountByClientId(101);
                 },
                 () -> {
                     final var tables = indexesHealth.getTablesWithMissingIndexes();
@@ -276,8 +276,8 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithoutPrimaryKeyOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().populate(),
+        executeTestOnDatabase(dbp ->
+                        dbp.withReferences().withData().populate(),
                 () -> {
                     final var tables = indexesHealth.getTablesWithoutPrimaryKey();
                     assertNotNull(tables);
@@ -287,8 +287,8 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithoutPrimaryKeyOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().withTableWithoutPrimaryKey().populate(),
+        executeTestOnDatabase(dbp ->
+                        dbp.withReferences().withData().withTableWithoutPrimaryKey().populate(),
                 () -> {
                     final var tables = indexesHealth.getTablesWithoutPrimaryKey();
                     assertNotNull(tables);
@@ -307,7 +307,7 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getIndexesWithNullValuesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().withData().populate(),
+        executeTestOnDatabase(dbp -> dbp.withReferences().withData().populate(),
                 () -> {
                     final var indexes = indexesHealth.getIndexesWithNullValues();
                     assertNotNull(indexes);
@@ -317,8 +317,8 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getIndexesWithNullValuesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator ->
-                        databasePopulator.withReferences().withData().withNullValuesInIndex().populate(),
+        executeTestOnDatabase(dbp ->
+                        dbp.withReferences().withData().withNullValuesInIndex().populate(),
                 () -> {
                     final var indexes = indexesHealth.getIndexesWithNullValues();
                     assertNotNull(indexes);
@@ -328,9 +328,9 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void shouldResetCounters() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.withReferences().withData().populate();
-                    databasePopulator.tryToFindAccountByClientId(101);
+        executeTestOnDatabase(dbp -> {
+                    dbp.withReferences().withData().populate();
+                    dbp.tryToFindAccountByClientId(101);
                 },
                 () -> {
                     waitForStatisticsCollector();

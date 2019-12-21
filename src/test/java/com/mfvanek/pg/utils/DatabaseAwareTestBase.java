@@ -29,7 +29,7 @@ public abstract class DatabaseAwareTestBase {
     }
 
     @Nonnull
-    protected DatabasePopulator createDatabasePopulator() {
+    private DatabasePopulator createDatabasePopulator() {
         return DatabasePopulator.builder(dataSource);
     }
 
@@ -87,5 +87,9 @@ public abstract class DatabaseAwareTestBase {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected boolean isDefaultSchema(@Nonnull final String schemaName) {
+        return "public".equals(schemaName);
     }
 }
