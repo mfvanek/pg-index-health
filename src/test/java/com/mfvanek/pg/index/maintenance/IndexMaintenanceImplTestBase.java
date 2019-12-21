@@ -45,7 +45,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getInvalidIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
+        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
                 () -> {
                     final var invalidIndexes = indexMaintenance.getInvalidIndexes();
                     assertNotNull(invalidIndexes);
@@ -55,10 +55,8 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getInvalidIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.populateWithDataAndReferences();
-                    databasePopulator.createInvalidIndex();
-                },
+        executeTestOnDatabase(databasePopulator ->
+                        databasePopulator.withReferences().withData().withInvalidIndex().populate(),
                 () -> {
                     final var invalidIndexes = indexMaintenance.getInvalidIndexes();
                     assertNotNull(invalidIndexes);
@@ -78,7 +76,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getDuplicatedIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
+        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
                 () -> {
                     final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
                     assertNotNull(duplicatedIndexes);
@@ -88,10 +86,8 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getDuplicatedIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.populateWithDataAndReferences();
-                    databasePopulator.createDuplicatedIndex();
-                },
+        executeTestOnDatabase(databasePopulator ->
+                        databasePopulator.withReferences().withDuplicatedIndex().populate(),
                 () -> {
                     final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
                     assertNotNull(duplicatedIndexes);
@@ -117,7 +113,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getIntersectedIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
+        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
                 () -> {
                     final var intersectedIndexes = indexMaintenance.getIntersectedIndexes();
                     assertNotNull(intersectedIndexes);
@@ -127,10 +123,8 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getIntersectedIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.populateWithDataAndReferences();
-                    databasePopulator.createDuplicatedIndex();
-                },
+        executeTestOnDatabase(databasePopulator ->
+                        databasePopulator.withReferences().withData().withDuplicatedIndex().populate(),
                 () -> {
                     final var intersectedIndexes = indexMaintenance.getIntersectedIndexes();
                     assertNotNull(intersectedIndexes);
@@ -156,7 +150,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getPotentiallyUnusedIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
+        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
                 () -> {
                     final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
                     assertNotNull(unusedIndexes);
@@ -166,10 +160,8 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getPotentiallyUnusedIndexesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.populateWithDataAndReferences();
-                    databasePopulator.createDuplicatedIndex();
-                },
+        executeTestOnDatabase(databasePopulator ->
+                        databasePopulator.withReferences().withData().withDuplicatedIndex().populate(),
                 () -> {
                     final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
                     assertNotNull(unusedIndexes);
@@ -188,7 +180,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithoutThem() {
-        executeTestOnDatabase(DatabasePopulator::populateOnlyTables,
+        executeTestOnDatabase(DatabasePopulator::populate,
                 () -> {
                     final var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
@@ -198,7 +190,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithThem() {
-        executeTestOnDatabase(DatabasePopulator::populateOnlyTablesAndReferences,
+        executeTestOnDatabase(databasePopulator -> databasePopulator.withReferences().populate(),
                 () -> {
                     var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
@@ -211,10 +203,8 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithNotSuitableIndex() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.populateOnlyTablesAndReferences();
-                    databasePopulator.createNotSuitableIndexForForeignKey();
-                },
+        executeTestOnDatabase(databasePopulator ->
+                        databasePopulator.withReferences().withNonSuitableIndex().populate(),
                 () -> {
                     var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
@@ -227,10 +217,8 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithSuitableIndex() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.populateOnlyTablesAndReferences();
-                    databasePopulator.createSuitableIndexForForeignKey();
-                },
+        executeTestOnDatabase(databasePopulator ->
+                        databasePopulator.withReferences().withSuitableIndex().populate(),
                 () -> {
                     var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
                     assertNotNull(foreignKeys);
@@ -247,7 +235,8 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithMissingIndexesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
+        executeTestOnDatabase(databasePopulator ->
+                        databasePopulator.withReferences().withData().populate(),
                 () -> {
                     final var tables = indexMaintenance.getTablesWithMissingIndexes();
                     assertNotNull(tables);
@@ -258,7 +247,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
     @Test
     void getTablesWithMissingIndexesOnDatabaseWithThem() {
         executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.populateWithDataAndReferences();
+                    databasePopulator.withReferences().withData().populate();
                     databasePopulator.tryToFindAccountByClientId(101);
                 },
                 () -> {
@@ -281,7 +270,8 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithoutPrimaryKeyOnDatabaseWithoutThem() {
-        executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
+        executeTestOnDatabase(databasePopulator ->
+                        databasePopulator.withReferences().withData().populate(),
                 () -> {
                     final var tables = indexMaintenance.getTablesWithoutPrimaryKey();
                     assertNotNull(tables);
@@ -291,10 +281,8 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithoutPrimaryKeyOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.populateWithDataAndReferences();
-                    databasePopulator.createTableWithoutPrimaryKey();
-                },
+        executeTestOnDatabase(databasePopulator ->
+                        databasePopulator.withReferences().withData().withTableWithoutPrimaryKey().populate(),
                 () -> {
                     var tables = indexMaintenance.getTablesWithoutPrimaryKey();
                     assertNotNull(tables);
@@ -313,7 +301,8 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getIndexesWithNullValuesOnDatabaseWithoutThem() {
-        executeTestOnDatabase(DatabasePopulator::populateWithDataAndReferences,
+        executeTestOnDatabase(databasePopulator ->
+                        databasePopulator.withReferences().withData().populate(),
                 () -> {
                     final var indexes = indexMaintenance.getIndexesWithNullValues();
                     assertNotNull(indexes);
@@ -323,10 +312,8 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getIndexesWithNullValuesOnDatabaseWithThem() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.populateWithDataAndReferences();
-                    databasePopulator.createIndexWithNulls();
-                },
+        executeTestOnDatabase(databasePopulator ->
+                        databasePopulator.withReferences().withData().withNullValuesInIndex().populate(),
                 () -> {
                     final var indexes = indexMaintenance.getIndexesWithNullValues();
                     assertNotNull(indexes);

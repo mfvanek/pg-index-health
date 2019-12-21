@@ -20,42 +20,93 @@ import java.util.Objects;
 public final class DatabasePopulator implements AutoCloseable {
 
     private final DataSource dataSource;
+    private boolean needCreateReferences = false;
+    private boolean needInsertData = false;
+    private boolean needCreateInvalidIndex = false;
+    private boolean needCreateDuplicatedIndex = false;
+    private boolean needCreateNotSuitableIndex = false;
+    private boolean needCreateSuitableIndex = false;
+    private boolean needCreateTableWithoutPrimaryKey = false;
+    private boolean needCreateIndexWithNulls = false;
 
-    DatabasePopulator(@Nonnull final DataSource dataSource) {
+    private DatabasePopulator(@Nonnull final DataSource dataSource) {
         this.dataSource = Objects.requireNonNull(dataSource);
     }
 
-    public String getPgVersion() {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery("select version()")) {
-                resultSet.next();
-                return resultSet.getString(1);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    static DatabasePopulator builder(@Nonnull final DataSource dataSource) {
+        return new DatabasePopulator(dataSource);
+    }
+
+    public DatabasePopulator withReferences() {
+        this.needCreateReferences = true;
+        return this;
+    }
+
+    public DatabasePopulator withData() {
+        this.needInsertData = true;
+        return this;
+    }
+
+    public DatabasePopulator withInvalidIndex() {
+        this.needCreateInvalidIndex = true;
+        return this;
+    }
+
+    public DatabasePopulator withDuplicatedIndex() {
+        this.needCreateDuplicatedIndex = true;
+        return this;
+    }
+
+    public DatabasePopulator withNonSuitableIndex() {
+        this.needCreateNotSuitableIndex = true;
+        return this;
+    }
+
+    public DatabasePopulator withSuitableIndex() {
+        this.needCreateSuitableIndex = true;
+        return this;
+    }
+
+    public DatabasePopulator withTableWithoutPrimaryKey() {
+        this.needCreateTableWithoutPrimaryKey = true;
+        return this;
+    }
+
+    public DatabasePopulator withNullValuesInIndex() {
+        this.needCreateIndexWithNulls = true;
+        return this;
+    }
+
+    public void populate() {
+        createTableClients();
+        createTableAccounts();
+        if (needCreateReferences) {
+            addLinksBetweenAccountsAndClients();
+        }
+        if (needInsertData) {
+            insertDataIntoTables();
+        }
+        if (needCreateInvalidIndex) {
+            createInvalidIndex();
+        }
+        if (needCreateDuplicatedIndex) {
+            createDuplicatedIndex();
+        }
+        if (needCreateNotSuitableIndex) {
+            createNotSuitableIndexForForeignKey();
+        }
+        if (needCreateSuitableIndex) {
+            createSuitableIndexForForeignKey();
+        }
+        if (needCreateTableWithoutPrimaryKey) {
+            createTableWithoutPrimaryKey();
+        }
+        if (needCreateIndexWithNulls) {
+            createIndexWithNulls();
         }
     }
 
-    public void populateWithDataAndReferences() {
-        createTableClients();
-        createTableAccounts();
-        addLinksBetweenAccountsAndClients();
-        insertDataIntoTables();
-    }
-
-    public void populateOnlyTablesAndReferences() {
-        createTableClients();
-        createTableAccounts();
-        addLinksBetweenAccountsAndClients();
-    }
-
-    public void populateOnlyTables() {
-        createTableClients();
-        createTableAccounts();
-    }
-
-    public void createInvalidIndex() {
+    private void createInvalidIndex() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute("create unique index concurrently if not exists i_clients_last_name_first_name " +
@@ -65,7 +116,7 @@ public final class DatabasePopulator implements AutoCloseable {
         }
     }
 
-    public void createDuplicatedIndex() {
+    private void createDuplicatedIndex() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute("create index concurrently if not exists i_accounts_account_number " +
@@ -79,7 +130,7 @@ public final class DatabasePopulator implements AutoCloseable {
         }
     }
 
-    public void createIndexWithNulls() {
+    private void createIndexWithNulls() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute("create index concurrently if not exists i_clients_middle_name " +
@@ -89,7 +140,7 @@ public final class DatabasePopulator implements AutoCloseable {
         }
     }
 
-    public void createNotSuitableIndexForForeignKey() {
+    private void createNotSuitableIndexForForeignKey() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute("create index concurrently if not exists i_accounts_account_number_client_id " +
@@ -99,7 +150,7 @@ public final class DatabasePopulator implements AutoCloseable {
         }
     }
 
-    public void createSuitableIndexForForeignKey() {
+    private void createSuitableIndexForForeignKey() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute("create index concurrently if not exists i_accounts_client_id_account_number " +
@@ -226,7 +277,7 @@ public final class DatabasePopulator implements AutoCloseable {
         }
     }
 
-    public void createTableWithoutPrimaryKey() {
+    private void createTableWithoutPrimaryKey() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute("create table bad_clients (" +

@@ -27,9 +27,11 @@ abstract class QueryExecutorTestBase extends DatabaseAwareTestBase {
     @Test
     void executeInvalidQuery() {
         final String invalidSql = "select unknown_field from unknown_table";
-        assertThrows(RuntimeException.class, () -> QueryExecutor.executeQuery(pgConnection, invalidSql, (rs) -> null));
+        assertThrows(RuntimeException.class, () -> QueryExecutor.executeQuery(
+                pgConnection, invalidSql, (rs) -> null));
 
         final String invalidSqlWithParam = "select unknown_field from unknown_table where schema = ?::text";
-        assertThrows(RuntimeException.class, () -> QueryExecutor.executeQuery(pgConnection, PgContext.of("s"), invalidSqlWithParam, (rs) -> null));
+        assertThrows(RuntimeException.class, () -> QueryExecutor.executeQuery(
+                pgConnection, PgContext.of("s"), invalidSqlWithParam, (rs) -> null));
     }
 }

@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
@@ -29,7 +30,7 @@ public abstract class DatabaseAwareTestBase {
 
     @Nonnull
     protected DatabasePopulator createDatabasePopulator() {
-        return new DatabasePopulator(dataSource);
+        return DatabasePopulator.builder(dataSource);
     }
 
     @Nonnull
@@ -69,6 +70,19 @@ public abstract class DatabaseAwareTestBase {
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 return resultSet.getLong(2);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Nonnull
+    protected String getPgVersion() {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery("select version()")) {
+                resultSet.next();
+                return resultSet.getString(1);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

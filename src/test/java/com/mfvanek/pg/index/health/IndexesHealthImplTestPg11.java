@@ -10,8 +10,6 @@ import io.zonky.test.db.postgres.junit5.PreparedDbExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.sql.SQLException;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
@@ -26,9 +24,7 @@ class IndexesHealthImplTestPg11 extends IndexesHealthImplTestBase {
     }
 
     @Test
-    void pgVersion() throws SQLException {
-        try (var databasePopulator = createDatabasePopulator()) {
-            assertThat(databasePopulator.getPgVersion(), containsString("PostgreSQL 11.5"));
-        }
+    void pgVersion() {
+        assertThat(getPgVersion(), containsString("PostgreSQL 11.5"));
     }
 }

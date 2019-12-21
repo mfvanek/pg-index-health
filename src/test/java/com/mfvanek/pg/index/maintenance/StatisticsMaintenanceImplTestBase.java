@@ -37,7 +37,7 @@ abstract class StatisticsMaintenanceImplTestBase extends DatabaseAwareTestBase {
     @Test
     void shouldResetCounters() {
         executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.populateWithDataAndReferences();
+                    databasePopulator.withReferences().withData().populate();
                     databasePopulator.tryToFindAccountByClientId(101);
                 },
                 () -> {
