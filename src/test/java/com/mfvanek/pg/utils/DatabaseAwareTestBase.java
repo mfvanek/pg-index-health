@@ -49,7 +49,7 @@ public abstract class DatabaseAwareTestBase {
     }
 
     protected void waitForStatisticsCollector() {
-        IntStream.of(1, 2, 3).forEach((i) -> {
+        IntStream.of(1, 2, 3, 4).forEach((i) -> {
             try {
                 // see PGSTAT_STAT_INTERVAL at https://github.com/postgres/postgres/blob/master/src/backend/postmaster/pgstat.c
                 Thread.sleep(500L);
@@ -66,7 +66,7 @@ public abstract class DatabaseAwareTestBase {
                         "where psat.schemaname = ?::text and psat.relname = 'accounts'::text;";
         try (Connection connection = getDataSource().getConnection();
              PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            statement.setString(1, pgContext.getSchemeName());
+            statement.setString(1, pgContext.getSchemaName());
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 return resultSet.getLong(2);

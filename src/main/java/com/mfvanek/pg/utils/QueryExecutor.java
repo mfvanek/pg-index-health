@@ -55,7 +55,7 @@ public final class QueryExecutor {
         LOGGER.debug("Executing query: {}", sqlQuery);
         try (Connection connection = pgConnection.getDataSource().getConnection();
              PreparedStatement statement = connection.prepareStatement(Objects.requireNonNull(sqlQuery))) {
-            statement.setString(1, pgContext.getSchemeName());
+            statement.setString(1, pgContext.getSchemaName());
             final List<T> executionResult = new ArrayList<>();
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {

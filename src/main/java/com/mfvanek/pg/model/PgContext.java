@@ -11,21 +11,21 @@ import javax.annotation.Nonnull;
 
 public class PgContext {
 
-    private final String schemeName;
+    private final String schemaName;
 
-    private PgContext(@Nonnull final String schemeName) {
-        this.schemeName = Validators.notBlank(schemeName, "schemeName");
+    private PgContext(@Nonnull final String schemaName) {
+        this.schemaName = Validators.notBlank(schemaName, "schemaName");
     }
 
     @Nonnull
-    public String getSchemeName() {
-        return schemeName;
+    public String getSchemaName() {
+        return schemaName;
     }
 
     @Override
     public String toString() {
         return PgContext.class.getSimpleName() + '{' +
-                "schemeName='" + schemeName + '\'' +
+                "schemaName='" + schemaName + '\'' +
                 '}';
     }
 
