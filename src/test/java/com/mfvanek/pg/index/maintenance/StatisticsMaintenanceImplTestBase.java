@@ -42,7 +42,7 @@ abstract class StatisticsMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
-                    tryToFindAccountByClientId(schemaName, AMOUNT_OF_TRIES);
+                    tryToFindAccountByClientId(schemaName);
                     final PgContext pgContext = PgContext.of(schemaName);
                     assertThat(getSeqScansForAccounts(pgContext), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
                     statisticsMaintenance.resetStatistics();

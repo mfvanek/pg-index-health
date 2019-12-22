@@ -275,7 +275,7 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
-                    tryToFindAccountByClientId(schemaName, AMOUNT_OF_TRIES);
+                    tryToFindAccountByClientId(schemaName);
                     final var tables = indexesHealth.getTablesWithMissingIndexes(ctx);
                     assertNotNull(tables);
                     assertThat(tables, hasSize(1));
@@ -356,8 +356,7 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
-                    tryToFindAccountByClientId(schemaName, AMOUNT_OF_TRIES);
-                    waitForStatisticsCollector();
+                    tryToFindAccountByClientId(schemaName);
                     assertThat(getSeqScansForAccounts(ctx), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
                     indexesHealth.resetStatistics();
                     waitForStatisticsCollector();

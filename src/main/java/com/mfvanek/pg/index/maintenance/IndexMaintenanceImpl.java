@@ -71,8 +71,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "             join pg_catalog.pg_index i on i.indrelid = c.conrelid and (c.conkey::int[] <@ i.indkey::int[])\n" +
                     "    where c.contype = 'f'\n" +
                     ")\n" +
-                    "select psui.relname as table_name,\n" +
-                    "    psui.indexrelname as index_name,\n" +
+                    "select psui.relid::regclass::text as table_name,\n" +
+                    "    psui.indexrelid::regclass::text as index_name,\n" +
                     "    pg_relation_size(i.indexrelid) as index_size,\n" +
                     "    psui.idx_scan as index_scans\n" +
                     "from pg_catalog.pg_stat_user_indexes psui\n" +

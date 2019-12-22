@@ -52,7 +52,7 @@ public final class QueryExecutor {
                                            @Nonnull final PgContext pgContext,
                                            @Nonnull final String sqlQuery,
                                            @Nonnull final ResultSetExtractor<T> rse) {
-        LOGGER.debug("Executing query: {}", sqlQuery);
+        LOGGER.debug("Executing query with context {}: {}", pgContext, sqlQuery);
         try (Connection connection = pgConnection.getDataSource().getConnection();
              PreparedStatement statement = connection.prepareStatement(Objects.requireNonNull(sqlQuery))) {
             statement.setString(1, pgContext.getSchemaName());

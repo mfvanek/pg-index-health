@@ -318,10 +318,10 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
-                    tryToFindAccountByClientId(schemaName, AMOUNT_OF_TRIES);
+                    tryToFindAccountByClientId(schemaName);
                     var tables = indexMaintenance.getTablesWithMissingIndexes(ctx);
                     assertNotNull(tables);
-                    assertEquals(1, tables.size());
+                    assertThat(tables, hasSize(1));
                     var table = tables.get(0);
                     if (isDefaultSchema(schemaName)) {
                         assertEquals("accounts", table.getTableName());

@@ -97,14 +97,14 @@ public abstract class DatabaseAwareTestBase {
         return "public".equals(schemaName);
     }
 
-    protected void tryToFindAccountByClientId(@Nonnull final String schemaName,
-                                              final long amountOfTries) {
+    protected void tryToFindAccountByClientId(@Nonnull final String schemaName) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            for (int counter = 0; counter < amountOfTries; ++counter) {
+            for (int counter = 0; counter < AMOUNT_OF_TRIES; ++counter) {
                 statement.execute(String.format(
                         "select count(*) from %s.accounts where client_id = 1::bigint", schemaName));
             }
+            waitForStatisticsCollector();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
