@@ -39,13 +39,12 @@ abstract class StatisticsMaintenanceImplTestBase extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void shouldResetCounters(final String schemaName) {
-        executeTestOnDatabase(dbp -> {
-                    dbp.withSchema(schemaName).withReferences().withData().populate();
-                    dbp.tryToFindAccountByClientId(101);
-                },
-                () -> {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withData(),
+                ctx -> {
+                    tryToFindAccountByClientId(schemaName, AMOUNT_OF_TRIES);
                     final PgContext pgContext = PgContext.of(schemaName);
-                    assertThat(getSeqScansForAccounts(pgContext), greaterThanOrEqualTo(101L));
+                    assertThat(getSeqScansForAccounts(pgContext), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
                     statisticsMaintenance.resetStatistics();
                     waitForStatisticsCollector();
                     assertEquals(0L, getSeqScansForAccounts(pgContext));

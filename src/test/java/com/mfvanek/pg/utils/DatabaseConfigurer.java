@@ -5,12 +5,11 @@
 
 package com.mfvanek.pg.utils;
 
-import com.mfvanek.pg.model.PgContext;
-
 import javax.annotation.Nonnull;
 
 @FunctionalInterface
-public interface TestExecutor {
+public interface DatabaseConfigurer {
 
-    void execute(@Nonnull PgContext pgContext);
+    @Nonnull
+    DatabasePopulator configure(@Nonnull DatabasePopulator databasePopulator);
 }

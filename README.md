@@ -23,12 +23,9 @@ You can call `pg_stat_reset()` to reset all statistics counters for the current 
 
 ## Demo application
 ```java
-import com.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import com.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
 import com.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import com.mfvanek.pg.connection.PgConnectionFactoryImpl;
 import com.mfvanek.pg.index.health.logger.Exclusions;
-import com.mfvanek.pg.index.health.logger.IndexesHealthLogger;
 import com.mfvanek.pg.index.health.logger.SimpleHealthLogger;
 import com.mfvanek.pg.index.maintenance.MaintenanceFactoryImpl;
 import com.mfvanek.pg.model.MemoryUnit;
@@ -46,11 +43,12 @@ public class DemoApp {
         final String readUrl = "jdbc:postgresql://host-name-1:6432,host-name-2:6432,host-name-3:6432/db_name_testing?targetServerType=preferSlave&loadBalanceHosts=true&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require";
         final String userName = "user_name_testing";
         final String password = "password_testing";
-        final HighAvailabilityPgConnectionFactory haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
-        final HighAvailabilityPgConnection haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl);
-        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, PgContext.ofPublic(), new MaintenanceFactoryImpl());
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealth, Exclusions.empty());
-        logger.logAll().forEach(System.out::println);
+        final var haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
+        final var haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl);
+        final var indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
+        final var logger = new SimpleHealthLogger(indexesHealth, Exclusions.empty());
+        logger.logAll(PgContext.ofPublic())
+                .forEach(System.out::println);
         // Resetting current statistics
         // indexesHealth.resetStatistics();
     }
@@ -61,15 +59,16 @@ public class DemoApp {
         final String cascadeAsyncReadUrl = "jdbc:postgresql://host-name-6:6432/db_name_production?ssl=true&targetServerType=preferSlave&loadBalanceHosts=true&prepareThreshold=0&preparedStatementCacheQueries=0&connectTimeout=2&socketTimeout=50&loginTimeout=10&sslmode=require";
         final String userName = "user_name_production";
         final String password = "password_production";
-        final HighAvailabilityPgConnectionFactory haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
-        final HighAvailabilityPgConnection haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl, cascadeAsyncReadUrl);
-        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, PgContext.ofPublic(), new MaintenanceFactoryImpl());
+        final var haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
+        final var haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl, cascadeAsyncReadUrl);
+        final var indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
         final var exclusions = Exclusions.builder()
                 .withIndexSizeThreshold(10, MemoryUnit.MB)
                 .withTableSizeThreshold(10, MemoryUnit.MB)
                 .build();
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealth, exclusions);
-        logger.logAll().forEach(System.out::println);
+        final var logger = new SimpleHealthLogger(indexesHealth, exclusions);
+        logger.logAll(PgContext.ofPublic())
+                .forEach(System.out::println);
     }
 }
 ```

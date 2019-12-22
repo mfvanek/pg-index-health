@@ -15,12 +15,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
 public abstract class DatabaseAwareTestBase {
+
+    protected static final long AMOUNT_OF_TRIES = 101L;
 
     private final DataSource dataSource;
 
@@ -38,11 +39,14 @@ public abstract class DatabaseAwareTestBase {
         return dataSource;
     }
 
-    protected void executeTestOnDatabase(@Nonnull final Consumer<DatabasePopulator> databasePopulatorConsumer,
+    protected void executeTestOnDatabase(@Nonnull final String schemaName,
+                                         @Nonnull final DatabaseConfigurer databaseConfigurer,
                                          @Nonnull final TestExecutor testExecutor) {
         try (var databasePopulator = createDatabasePopulator()) {
-            databasePopulatorConsumer.accept(databasePopulator);
-            testExecutor.execute();
+            databaseConfigurer.configure(databasePopulator)
+                    .withSchema(schemaName)
+                    .populate();
+            testExecutor.execute(PgContext.of(schemaName));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -91,5 +95,18 @@ public abstract class DatabaseAwareTestBase {
 
     protected boolean isDefaultSchema(@Nonnull final String schemaName) {
         return "public".equals(schemaName);
+    }
+
+    protected void tryToFindAccountByClientId(@Nonnull final String schemaName,
+                                              final long amountOfTries) {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            for (int counter = 0; counter < amountOfTries; ++counter) {
+                statement.execute(String.format(
+                        "select count(*) from %s.accounts where client_id = 1::bigint", schemaName));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

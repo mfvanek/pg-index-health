@@ -106,7 +106,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     private static final String TABLES_WITH_MISSING_INDEXES =
             "with tables_without_indexes as (\n" +
-                    "    select psat.relname::text as table_name,\n" +
+                    "    select psat.relid::regclass::text as table_name,\n" +
                     "        pg_table_size(psat.relid) as table_size,\n" +
                     "        coalesce(psat.seq_scan, 0) - coalesce(psat.idx_scan, 0) as too_much_seq,\n" +
                     "        coalesce(psat.seq_scan, 0) as seq_scan,\n" +
@@ -124,12 +124,12 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "order by table_name, too_much_seq desc;";
 
     private static final String TABLES_WITHOUT_PRIMARY_KEY =
-            "select psat.relname::text as table_name,\n" +
+            "select psat.relid::regclass::text as table_name,\n" +
                     "    pg_table_size(psat.relid) as table_size\n" +
                     "from pg_catalog.pg_stat_all_tables psat\n" +
                     "where psat.schemaname = ?::text\n" +
-                    "  and psat.relname not in (\n" +
-                    "    select c.conrelid::regclass::text as table_name\n" +
+                    "  and psat.relid::regclass not in (\n" +
+                    "    select c.conrelid::regclass as table_name\n" +
                     "    from pg_catalog.pg_constraint c\n" +
                     "    where c.contype = 'p')\n" +
                     "order by psat.relname::text;";
@@ -151,18 +151,15 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "order by table_name, index_name;";
 
     private final PgConnection pgConnection;
-    private final PgContext pgContext;
 
-    public IndexMaintenanceImpl(@Nonnull final PgConnection pgConnection,
-                                @Nonnull final PgContext pgContext) {
+    public IndexMaintenanceImpl(@Nonnull final PgConnection pgConnection) {
         this.pgConnection = Objects.requireNonNull(pgConnection);
-        this.pgContext = Objects.requireNonNull(pgContext);
     }
 
     @Nonnull
     @Override
-    public List<Index> getInvalidIndexes() {
-        return executeQuery(INVALID_INDEXES_SQL, rs -> {
+    public List<Index> getInvalidIndexes(@Nonnull final PgContext pgContext) {
+        return executeQuery(INVALID_INDEXES_SQL, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final String indexName = rs.getString("index_name");
             return Index.of(tableName, indexName);
@@ -171,20 +168,22 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> getDuplicatedIndexes() {
-        return getDuplicatedOrIntersectedIndexes(DUPLICATED_INDEXES_SQL, "duplicated_indexes");
+    public List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull final PgContext pgContext) {
+        return getDuplicatedOrIntersectedIndexes(
+                DUPLICATED_INDEXES_SQL, pgContext, "duplicated_indexes");
     }
 
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> getIntersectedIndexes() {
-        return getDuplicatedOrIntersectedIndexes(INTERSECTED_INDEXES_SQL, "intersected_indexes");
+    public List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull final PgContext pgContext) {
+        return getDuplicatedOrIntersectedIndexes(
+                INTERSECTED_INDEXES_SQL, pgContext, "intersected_indexes");
     }
 
     @Nonnull
     @Override
-    public List<UnusedIndex> getPotentiallyUnusedIndexes() {
-        return executeQuery(UNUSED_INDEXES_SQL, rs -> {
+    public List<UnusedIndex> getPotentiallyUnusedIndexes(@Nonnull final PgContext pgContext) {
+        return executeQuery(UNUSED_INDEXES_SQL, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final String indexName = rs.getString("index_name");
             final long indexSize = rs.getLong("index_size");
@@ -195,8 +194,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<ForeignKey> getForeignKeysNotCoveredWithIndex() {
-        return executeQuery(FOREIGN_KEYS_WITHOUT_INDEX, rs -> {
+    public List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull final PgContext pgContext) {
+        return executeQuery(FOREIGN_KEYS_WITHOUT_INDEX, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final String constraintName = rs.getString("constraint_name");
             final String columnsAsString = rs.getString("columns");
@@ -207,8 +206,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<TableWithMissingIndex> getTablesWithMissingIndexes() {
-        return executeQuery(TABLES_WITH_MISSING_INDEXES, rs -> {
+    public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
+        return executeQuery(TABLES_WITH_MISSING_INDEXES, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final long tableSize = rs.getLong("table_size");
             final long seqScans = rs.getLong("seq_scan");
@@ -219,8 +218,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<Table> getTablesWithoutPrimaryKey() {
-        return executeQuery(TABLES_WITHOUT_PRIMARY_KEY, rs -> {
+    public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
+        return executeQuery(TABLES_WITHOUT_PRIMARY_KEY, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final long tableSize = rs.getLong("table_size");
             return Table.of(tableName, tableSize);
@@ -229,8 +228,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<IndexWithNulls> getIndexesWithNullValues() {
-        return executeQuery(INDEXES_WITH_NULL_VALUES, rs -> {
+    public List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final PgContext pgContext) {
+        return executeQuery(INDEXES_WITH_NULL_VALUES, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final String indexName = rs.getString("index_name");
             final long indexSize = rs.getLong("index_size");
@@ -241,8 +240,9 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     private List<DuplicatedIndexes> getDuplicatedOrIntersectedIndexes(@Nonnull final String sqlQuery,
+                                                                      @Nonnull final PgContext pgContext,
                                                                       @Nonnull final String columnName) {
-        return executeQuery(sqlQuery, rs -> {
+        return executeQuery(sqlQuery, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final String duplicatedAsString = rs.getString(columnName);
             return DuplicatedIndexes.of(tableName, duplicatedAsString);
@@ -256,6 +256,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     }
 
     private <T> List<T> executeQuery(@Nonnull final String sqlQuery,
+                                     @Nonnull final PgContext pgContext,
                                      @Nonnull final ResultSetExtractor<T> rse) {
         return QueryExecutor.executeQuery(pgConnection, pgContext, sqlQuery, rse);
     }

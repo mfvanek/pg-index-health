@@ -9,7 +9,6 @@ import com.mfvanek.pg.connection.PgConnection;
 import com.mfvanek.pg.index.maintenance.IndexMaintenance;
 import com.mfvanek.pg.index.maintenance.MaintenanceFactory;
 import com.mfvanek.pg.index.maintenance.StatisticsMaintenance;
-import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.model.TableWithMissingIndex;
 import com.mfvanek.pg.model.UnusedIndex;
 import org.apache.commons.collections4.CollectionUtils;
@@ -34,10 +33,9 @@ final class ReplicasHelper {
     @Nonnull
     static List<IndexMaintenance> createIndexMaintenanceForReplicas(
             @Nonnull final Set<PgConnection> connectionsToReplicas,
-            @Nonnull final PgContext pgContext,
             @Nonnull final MaintenanceFactory maintenanceFactory) {
         return connectionsToReplicas.stream()
-                .map(con -> maintenanceFactory.forIndex(con, pgContext))
+                .map(maintenanceFactory::forIndex)
                 .collect(Collectors.toList());
     }
 

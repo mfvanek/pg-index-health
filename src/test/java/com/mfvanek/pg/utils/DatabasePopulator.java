@@ -38,47 +38,56 @@ public final class DatabasePopulator implements AutoCloseable {
         return new DatabasePopulator(dataSource);
     }
 
+    @Nonnull
     public DatabasePopulator withReferences() {
         this.needCreateReferences = true;
         return this;
     }
 
+    @Nonnull
     public DatabasePopulator withData() {
         this.needInsertData = true;
         return this;
     }
 
+    @Nonnull
     public DatabasePopulator withInvalidIndex() {
         this.needCreateInvalidIndex = true;
         return this;
     }
 
+    @Nonnull
     public DatabasePopulator withDuplicatedIndex() {
         this.needCreateDuplicatedIndex = true;
         return this;
     }
 
+    @Nonnull
     public DatabasePopulator withNonSuitableIndex() {
         this.needCreateNotSuitableIndex = true;
         return this;
     }
 
+    @Nonnull
     public DatabasePopulator withSuitableIndex() {
         this.needCreateSuitableIndex = true;
         return this;
     }
 
+    @Nonnull
     public DatabasePopulator withTableWithoutPrimaryKey() {
         this.needCreateTableWithoutPrimaryKey = true;
         return this;
     }
 
+    @Nonnull
     public DatabasePopulator withNullValuesInIndex() {
         this.needCreateIndexWithNulls = true;
         return this;
     }
 
-    public DatabasePopulator withSchema(@Nonnull final String schemaName) {
+    @Nonnull
+    DatabasePopulator withSchema(@Nonnull final String schemaName) {
         this.schemaName = Validators.notBlank(schemaName, "schemaName");
         return this;
     }
@@ -293,18 +302,6 @@ public final class DatabasePopulator implements AutoCloseable {
             statement.execute(String.format("drop sequence if exists %s.clients_seq", schemaName));
 
             statement.execute(String.format("drop table if exists %s.bad_clients", schemaName));
-        }
-    }
-
-    public void tryToFindAccountByClientId(final long amountOfTries) {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            for (int counter = 0; counter < amountOfTries; ++counter) {
-                statement.execute(String.format(
-                        "select count(*) from %s.accounts where client_id = 1::bigint", schemaName));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
