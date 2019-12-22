@@ -28,27 +28,27 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractIndexesHealthLogger.class);
 
     private final IndexesHealth indexesHealth;
-    private final Exclusions exclusions;
 
     @SuppressWarnings("WeakerAccess")
-    protected AbstractIndexesHealthLogger(@Nonnull final IndexesHealth indexesHealth,
-                                          @Nonnull final Exclusions exclusions) {
+    protected AbstractIndexesHealthLogger(@Nonnull final IndexesHealth indexesHealth) {
         this.indexesHealth = Objects.requireNonNull(indexesHealth);
-        this.exclusions = Objects.requireNonNull(exclusions);
     }
 
     @Override
     @Nonnull
-    public final List<String> logAll(@Nonnull final PgContext pgContext) {
+    public final List<String> logAll(@Nonnull final Exclusions exclusions,
+                                     @Nonnull final PgContext pgContext) {
+        Objects.requireNonNull(exclusions);
+        Objects.requireNonNull(pgContext);
         final List<String> logResult = new ArrayList<>();
         logResult.add(logInvalidIndexes(pgContext));
-        logResult.add(logDuplicatedIndexes(pgContext));
-        logResult.add(logIntersectedIndexes(pgContext));
-        logResult.add(logUnusedIndexes(pgContext));
+        logResult.add(logDuplicatedIndexes(exclusions, pgContext));
+        logResult.add(logIntersectedIndexes(exclusions, pgContext));
+        logResult.add(logUnusedIndexes(exclusions, pgContext));
         logResult.add(logForeignKeysNotCoveredWithIndex(pgContext));
-        logResult.add(logTablesWithMissingIndexes(pgContext));
-        logResult.add(logTablesWithoutPrimaryKey(pgContext));
-        logResult.add(logIndexesWithNullValues(pgContext));
+        logResult.add(logTablesWithMissingIndexes(exclusions, pgContext));
+        logResult.add(logTablesWithoutPrimaryKey(exclusions, pgContext));
+        logResult.add(logIndexesWithNullValues(exclusions, pgContext));
         return logResult;
     }
 
@@ -71,7 +71,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logDuplicatedIndexes(@Nonnull final PgContext pgContext) {
+    private String logDuplicatedIndexes(@Nonnull final Exclusions exclusions,
+                                        @Nonnull final PgContext pgContext) {
         final var rawDuplicatedIndexes = indexesHealth.getDuplicatedIndexes(pgContext);
         final var duplicatedIndexes = applyExclusions(rawDuplicatedIndexes,
                 exclusions.getDuplicatedIndexesExclusions());
@@ -84,7 +85,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logIntersectedIndexes(@Nonnull final PgContext pgContext) {
+    private String logIntersectedIndexes(@Nonnull final Exclusions exclusions,
+                                         @Nonnull final PgContext pgContext) {
         final var rawIntersectedIndexes = indexesHealth.getIntersectedIndexes(pgContext);
         final var intersectedIndexes = applyExclusions(rawIntersectedIndexes,
                 exclusions.getIntersectedIndexesExclusions());
@@ -97,7 +99,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logUnusedIndexes(@Nonnull final PgContext pgContext) {
+    private String logUnusedIndexes(@Nonnull final Exclusions exclusions,
+                                    @Nonnull final PgContext pgContext) {
         final var rawUnusedIndexes = indexesHealth.getUnusedIndexes(pgContext);
         final var filteredUnusedIndexes = applyIndexesExclusions(
                 rawUnusedIndexes, exclusions.getUnusedIndexesExclusions());
@@ -123,7 +126,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
+    private String logTablesWithMissingIndexes(@Nonnull final Exclusions exclusions,
+                                               @Nonnull final PgContext pgContext) {
         final var rawTablesWithMissingIndexes = indexesHealth.getTablesWithMissingIndexes(pgContext);
         final var tablesFilteredBySize = applyTableSizeExclusions(
                 rawTablesWithMissingIndexes, exclusions.getTableSizeThresholdInBytes());
@@ -138,7 +142,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
+    private String logTablesWithoutPrimaryKey(@Nonnull final Exclusions exclusions,
+                                              @Nonnull final PgContext pgContext) {
         final var rawTablesWithoutPrimaryKey = indexesHealth.getTablesWithoutPrimaryKey(pgContext);
         final var tablesFilteredBySize = applyTableSizeExclusions(
                 rawTablesWithoutPrimaryKey, exclusions.getTableSizeThresholdInBytes());
@@ -153,7 +158,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logIndexesWithNullValues(@Nonnull final PgContext pgContext) {
+    private String logIndexesWithNullValues(@Nonnull final Exclusions exclusions,
+                                            @Nonnull final PgContext pgContext) {
         final var rawIndexesWithNullValues = indexesHealth.getIndexesWithNullValues(pgContext);
         final var indexesWithNullValues = applyIndexesExclusions(rawIndexesWithNullValues,
                 exclusions.getIndexesWithNullValuesExclusions());

@@ -17,9 +17,8 @@ public class SimpleHealthLogger extends AbstractIndexesHealthLogger {
 
     private static final Logger KV_LOG = LoggerFactory.getLogger("key-value.log");
 
-    public SimpleHealthLogger(@Nonnull final IndexesHealth indexesHealth,
-                              @Nonnull final Exclusions exclusions) {
-        super(indexesHealth, exclusions);
+    public SimpleHealthLogger(@Nonnull final IndexesHealth indexesHealth) {
+        super(indexesHealth);
     }
 
     @Override
