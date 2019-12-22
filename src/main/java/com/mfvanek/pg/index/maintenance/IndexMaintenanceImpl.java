@@ -11,6 +11,7 @@ import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
+import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.model.Table;
 import com.mfvanek.pg.model.TableWithMissingIndex;
 import com.mfvanek.pg.model.UnusedIndex;
@@ -29,7 +30,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "    x.indexrelid::regclass as index_name\n" +
                     "from pg_catalog.pg_index x\n" +
                     "    join pg_catalog.pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid\n" +
-                    "where psai.schemaname = 'public'::text\n" +
+                    "where psai.schemaname = ?::text\n" +
                     "  and x.indisvalid = false;";
 
     private static final String DUPLICATED_INDEXES_SQL =
@@ -43,7 +44,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "         coalesce(pg_get_expr(x.indpred, x.indrelid), '')) as key\n" +
                     "    from pg_catalog.pg_index x\n" +
                     "             join pg_catalog.pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid\n" +
-                    "    where psai.schemaname = 'public'::text\n" +
+                    "    where psai.schemaname = ?::text\n" +
                     ") sub\n" +
                     "group by table_name, key\n" +
                     "having count(*) > 1\n" +
@@ -59,7 +60,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "                     (a.cols like b.cols || '%' and coalesce(substr(a.cols, length(b.cols) + 1, 1), ' ') = ' ') or\n" +
                     "                     (b.cols like a.cols || '%' and coalesce(substr(b.cols, length(a.cols) + 1, 1), ' ') = ' ')))\n" +
                     "        join pg_catalog.pg_stat_all_indexes psai on a.indexrelid = psai.indexrelid\n" +
-                    "where psai.schemaname = 'public'::text\n" +
+                    "where psai.schemaname = ?::text\n" +
                     "order by a.indrelid::regclass::text;";
 
     private static final String UNUSED_INDEXES_SQL =
@@ -70,13 +71,13 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "             join pg_catalog.pg_index i on i.indrelid = c.conrelid and (c.conkey::int[] <@ i.indkey::int[])\n" +
                     "    where c.contype = 'f'\n" +
                     ")\n" +
-                    "select psui.relname as table_name,\n" +
-                    "    psui.indexrelname as index_name,\n" +
+                    "select psui.relid::regclass::text as table_name,\n" +
+                    "    psui.indexrelid::regclass::text as index_name,\n" +
                     "    pg_relation_size(i.indexrelid) as index_size,\n" +
                     "    psui.idx_scan as index_scans\n" +
                     "from pg_catalog.pg_stat_user_indexes psui\n" +
                     "         join pg_catalog.pg_index i on psui.indexrelid = i.indexrelid\n" +
-                    "where psui.schemaname = 'public'::text\n" +
+                    "where psui.schemaname = ?::text\n" +
                     "  and not i.indisunique\n" +
                     "  and i.indexrelid not in (select * from foreign_key_indexes) /*retain indexes on foreign keys*/\n" +
                     "  and psui.idx_scan < 50::integer\n" +
@@ -92,7 +93,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "         join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace\n" +
                     "         join pg_catalog.pg_attribute col on (col.attrelid = t.oid and col.attnum = u.attnum)\n" +
                     "where c.contype = 'f'\n" +
-                    "  and nsp.nspname = 'public'::text\n" +
+                    "  and nsp.nspname = ?::text\n" +
                     "  and not exists(\n" +
                     "        select 1\n" +
                     "        from pg_catalog.pg_index pi\n" +
@@ -105,13 +106,13 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     private static final String TABLES_WITH_MISSING_INDEXES =
             "with tables_without_indexes as (\n" +
-                    "    select psat.relname::text as table_name,\n" +
+                    "    select psat.relid::regclass::text as table_name,\n" +
                     "        pg_table_size(psat.relid) as table_size,\n" +
                     "        coalesce(psat.seq_scan, 0) - coalesce(psat.idx_scan, 0) as too_much_seq,\n" +
                     "        coalesce(psat.seq_scan, 0) as seq_scan,\n" +
                     "        coalesce(psat.idx_scan, 0) as idx_scan\n" +
                     "    from pg_catalog.pg_stat_all_tables psat\n" +
-                    "    where psat.schemaname = 'public'::text\n" +
+                    "    where psat.schemaname = ?::text\n" +
                     ")\n" +
                     "select table_name,\n" +
                     "    table_size,\n" +
@@ -123,12 +124,12 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "order by table_name, too_much_seq desc;";
 
     private static final String TABLES_WITHOUT_PRIMARY_KEY =
-            "select psat.relname::text as table_name,\n" +
+            "select psat.relid::regclass::text as table_name,\n" +
                     "    pg_table_size(psat.relid) as table_size\n" +
                     "from pg_catalog.pg_stat_all_tables psat\n" +
-                    "where psat.schemaname = 'public'::text\n" +
-                    "  and psat.relname not in (\n" +
-                    "    select c.conrelid::regclass::text as table_name\n" +
+                    "where psat.schemaname = ?::text\n" +
+                    "  and psat.relid::regclass not in (\n" +
+                    "    select c.conrelid::regclass as table_name\n" +
                     "    from pg_catalog.pg_constraint c\n" +
                     "    where c.contype = 'p')\n" +
                     "order by psat.relname::text;";
@@ -143,7 +144,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "         join pg_catalog.pg_attribute a ON a.attrelid = x.indrelid AND a.attnum = any(x.indkey)\n" +
                     "where not x.indisunique\n" +
                     "  and not a.attnotnull\n" +
-                    "  and psai.schemaname = 'public'::text\n" +
+                    "  and psai.schemaname = ?::text\n" +
                     "  and array_position(x.indkey, a.attnum) = 0 /*only for first segment*/\n" +
                     "  and (x.indpred is null or (position(lower(a.attname) in lower(pg_get_expr(x.indpred, x.indrelid))) = 0))\n" +
                     "group by x.indrelid, x.indexrelid, x.indpred\n" +
@@ -157,8 +158,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<Index> getInvalidIndexes() {
-        return executeQuery(INVALID_INDEXES_SQL, rs -> {
+    public List<Index> getInvalidIndexes(@Nonnull final PgContext pgContext) {
+        return executeQuery(INVALID_INDEXES_SQL, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final String indexName = rs.getString("index_name");
             return Index.of(tableName, indexName);
@@ -167,20 +168,22 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> getDuplicatedIndexes() {
-        return getDuplicatedOrIntersectedIndexes(DUPLICATED_INDEXES_SQL, "duplicated_indexes");
+    public List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull final PgContext pgContext) {
+        return getDuplicatedOrIntersectedIndexes(
+                DUPLICATED_INDEXES_SQL, pgContext, "duplicated_indexes");
     }
 
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> getIntersectedIndexes() {
-        return getDuplicatedOrIntersectedIndexes(INTERSECTED_INDEXES_SQL, "intersected_indexes");
+    public List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull final PgContext pgContext) {
+        return getDuplicatedOrIntersectedIndexes(
+                INTERSECTED_INDEXES_SQL, pgContext, "intersected_indexes");
     }
 
     @Nonnull
     @Override
-    public List<UnusedIndex> getPotentiallyUnusedIndexes() {
-        return executeQuery(UNUSED_INDEXES_SQL, rs -> {
+    public List<UnusedIndex> getPotentiallyUnusedIndexes(@Nonnull final PgContext pgContext) {
+        return executeQuery(UNUSED_INDEXES_SQL, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final String indexName = rs.getString("index_name");
             final long indexSize = rs.getLong("index_size");
@@ -191,8 +194,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<ForeignKey> getForeignKeysNotCoveredWithIndex() {
-        return executeQuery(FOREIGN_KEYS_WITHOUT_INDEX, rs -> {
+    public List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull final PgContext pgContext) {
+        return executeQuery(FOREIGN_KEYS_WITHOUT_INDEX, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final String constraintName = rs.getString("constraint_name");
             final String columnsAsString = rs.getString("columns");
@@ -203,8 +206,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<TableWithMissingIndex> getTablesWithMissingIndexes() {
-        return executeQuery(TABLES_WITH_MISSING_INDEXES, rs -> {
+    public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
+        return executeQuery(TABLES_WITH_MISSING_INDEXES, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final long tableSize = rs.getLong("table_size");
             final long seqScans = rs.getLong("seq_scan");
@@ -215,8 +218,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<Table> getTablesWithoutPrimaryKey() {
-        return executeQuery(TABLES_WITHOUT_PRIMARY_KEY, rs -> {
+    public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
+        return executeQuery(TABLES_WITHOUT_PRIMARY_KEY, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final long tableSize = rs.getLong("table_size");
             return Table.of(tableName, tableSize);
@@ -225,8 +228,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     @Override
-    public List<IndexWithNulls> getIndexesWithNullValues() {
-        return executeQuery(INDEXES_WITH_NULL_VALUES, rs -> {
+    public List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final PgContext pgContext) {
+        return executeQuery(INDEXES_WITH_NULL_VALUES, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final String indexName = rs.getString("index_name");
             final long indexSize = rs.getLong("index_size");
@@ -237,8 +240,9 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
 
     @Nonnull
     private List<DuplicatedIndexes> getDuplicatedOrIntersectedIndexes(@Nonnull final String sqlQuery,
+                                                                      @Nonnull final PgContext pgContext,
                                                                       @Nonnull final String columnName) {
-        return executeQuery(sqlQuery, rs -> {
+        return executeQuery(sqlQuery, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final String duplicatedAsString = rs.getString(columnName);
             return DuplicatedIndexes.of(tableName, duplicatedAsString);
@@ -252,7 +256,8 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     }
 
     private <T> List<T> executeQuery(@Nonnull final String sqlQuery,
+                                     @Nonnull final PgContext pgContext,
                                      @Nonnull final ResultSetExtractor<T> rse) {
-        return QueryExecutor.executeQuery(pgConnection, sqlQuery, rse);
+        return QueryExecutor.executeQuery(pgConnection, pgContext, sqlQuery, rse);
     }
 }

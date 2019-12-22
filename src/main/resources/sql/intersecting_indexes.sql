@@ -7,5 +7,5 @@ from (select *, array_to_string(indkey, ' ') as cols from pg_catalog.pg_index) a
                       (a.cols like b.cols || '%' and coalesce(substr(a.cols, length(b.cols) + 1, 1), ' ') = ' ') or
                       (b.cols like a.cols || '%' and coalesce(substr(b.cols, length(a.cols) + 1, 1), ' ') = ' ')))
          join pg_catalog.pg_stat_all_indexes psai on a.indexrelid = psai.indexrelid
-where psai.schemaname = 'public'::text
+where psai.schemaname = ?::text
 order by a.indrelid::regclass::text;

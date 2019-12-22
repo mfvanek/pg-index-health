@@ -7,6 +7,7 @@ package com.mfvanek.pg.utils;
 
 import com.mfvanek.pg.connection.PgConnection;
 import com.mfvanek.pg.connection.PgConnectionImpl;
+import com.mfvanek.pg.model.PgContext;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
@@ -26,6 +27,11 @@ abstract class QueryExecutorTestBase extends DatabaseAwareTestBase {
     @Test
     void executeInvalidQuery() {
         final String invalidSql = "select unknown_field from unknown_table";
-        assertThrows(RuntimeException.class, () -> QueryExecutor.executeQuery(pgConnection, invalidSql, (rs) -> null));
+        assertThrows(RuntimeException.class, () -> QueryExecutor.executeQuery(
+                pgConnection, invalidSql, (rs) -> null));
+
+        final String invalidSqlWithParam = "select unknown_field from unknown_table where schema = ?::text";
+        assertThrows(RuntimeException.class, () -> QueryExecutor.executeQuery(
+                pgConnection, PgContext.of("s"), invalidSqlWithParam, (rs) -> null));
     }
 }

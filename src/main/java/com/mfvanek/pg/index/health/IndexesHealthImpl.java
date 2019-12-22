@@ -14,6 +14,7 @@ import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.ForeignKey;
 import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
+import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.model.Table;
 import com.mfvanek.pg.model.TableWithMissingIndex;
 import com.mfvanek.pg.model.UnusedIndex;
@@ -47,66 +48,68 @@ public class IndexesHealthImpl implements IndexesHealth {
 
     @Nonnull
     @Override
-    public List<Index> getInvalidIndexes() {
+    public List<Index> getInvalidIndexes(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getInvalidIndexes();
+        return maintenanceForMaster.getInvalidIndexes(pgContext);
     }
 
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> getDuplicatedIndexes() {
+    public List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getDuplicatedIndexes();
+        return maintenanceForMaster.getDuplicatedIndexes(pgContext);
     }
 
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> getIntersectedIndexes() {
+    public List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getIntersectedIndexes();
+        return maintenanceForMaster.getIntersectedIndexes(pgContext);
     }
 
     @Nonnull
     @Override
-    public List<UnusedIndex> getUnusedIndexes() {
+    public List<UnusedIndex> getUnusedIndexes(@Nonnull final PgContext pgContext) {
         final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = new ArrayList<>();
         for (var maintenanceForReplica : maintenanceForReplicas) {
             potentiallyUnusedIndexesFromAllHosts.add(
-                    doOnHost(maintenanceForReplica.getHost(), maintenanceForReplica::getPotentiallyUnusedIndexes));
+                    doOnHost(maintenanceForReplica.getHost(),
+                            () -> maintenanceForReplica.getPotentiallyUnusedIndexes(pgContext)));
         }
         return ReplicasHelper.getUnusedIndexesAsIntersectionResult(potentiallyUnusedIndexesFromAllHosts);
     }
 
     @Nonnull
     @Override
-    public List<ForeignKey> getForeignKeysNotCoveredWithIndex() {
+    public List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getForeignKeysNotCoveredWithIndex();
+        return maintenanceForMaster.getForeignKeysNotCoveredWithIndex(pgContext);
     }
 
     @Nonnull
     @Override
-    public List<TableWithMissingIndex> getTablesWithMissingIndexes() {
+    public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
         final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = new ArrayList<>();
         for (var maintenanceForReplica : maintenanceForReplicas) {
             tablesWithMissingIndexesFromAllHosts.add(
-                    doOnHost(maintenanceForReplica.getHost(), maintenanceForReplica::getTablesWithMissingIndexes));
+                    doOnHost(maintenanceForReplica.getHost(),
+                            () -> maintenanceForReplica.getTablesWithMissingIndexes(pgContext)));
         }
         return ReplicasHelper.getTablesWithMissingIndexesAsUnionResult(tablesWithMissingIndexesFromAllHosts);
     }
 
     @Nonnull
     @Override
-    public List<Table> getTablesWithoutPrimaryKey() {
+    public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getTablesWithoutPrimaryKey();
+        return maintenanceForMaster.getTablesWithoutPrimaryKey(pgContext);
     }
 
     @Nonnull
     @Override
-    public List<IndexWithNulls> getIndexesWithNullValues() {
+    public List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getIndexesWithNullValues();
+        return maintenanceForMaster.getIndexesWithNullValues(pgContext);
     }
 
     @Override

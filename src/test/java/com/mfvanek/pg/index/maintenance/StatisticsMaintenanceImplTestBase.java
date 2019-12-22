@@ -7,8 +7,11 @@ package com.mfvanek.pg.index.maintenance;
 
 import com.mfvanek.pg.connection.PgConnection;
 import com.mfvanek.pg.connection.PgConnectionImpl;
+import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -33,17 +36,18 @@ abstract class StatisticsMaintenanceImplTestBase extends DatabaseAwareTestBase {
         statisticsMaintenance.resetStatistics();
     }
 
-    @Test
-    void shouldResetCounters() {
-        executeTestOnDatabase(databasePopulator -> {
-                    databasePopulator.populateWithDataAndReferences();
-                    databasePopulator.tryToFindAccountByClientId(101);
-                },
-                () -> {
-                    assertThat(getSeqScansForAccounts(), greaterThanOrEqualTo(101L));
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void shouldResetCounters(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withData(),
+                ctx -> {
+                    tryToFindAccountByClientId(schemaName);
+                    final PgContext pgContext = PgContext.of(schemaName);
+                    assertThat(getSeqScansForAccounts(pgContext), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
                     statisticsMaintenance.resetStatistics();
                     waitForStatisticsCollector();
-                    assertEquals(0L, getSeqScansForAccounts());
+                    assertEquals(0L, getSeqScansForAccounts(pgContext));
                 });
     }
 

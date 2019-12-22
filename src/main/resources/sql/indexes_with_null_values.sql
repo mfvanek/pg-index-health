@@ -7,7 +7,7 @@ from pg_catalog.pg_index x
          join pg_catalog.pg_attribute a ON a.attrelid = x.indrelid AND a.attnum = any (x.indkey)
 where not x.indisunique
   and not a.attnotnull
-  and psai.schemaname = 'public'::text
+  and psai.schemaname = ?::text
   and array_position(x.indkey, a.attnum) = 0 /*only for first segment*/
   and (x.indpred is null or (position(lower(a.attname) in lower(pg_get_expr(x.indpred, x.indrelid))) = 0))
 group by x.indrelid, x.indexrelid, x.indpred

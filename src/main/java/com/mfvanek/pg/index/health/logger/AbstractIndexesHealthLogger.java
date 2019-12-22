@@ -9,6 +9,7 @@ import com.mfvanek.pg.index.health.IndexesHealth;
 import com.mfvanek.pg.model.DuplicatedIndexes;
 import com.mfvanek.pg.model.IndexNameAware;
 import com.mfvanek.pg.model.IndexSizeAware;
+import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.model.TableNameAware;
 import com.mfvanek.pg.model.TableSizeAware;
 import org.apache.commons.collections4.CollectionUtils;
@@ -38,16 +39,16 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
 
     @Override
     @Nonnull
-    public final List<String> logAll() {
+    public final List<String> logAll(@Nonnull final PgContext pgContext) {
         final List<String> logResult = new ArrayList<>();
-        logResult.add(logInvalidIndexes());
-        logResult.add(logDuplicatedIndexes());
-        logResult.add(logIntersectedIndexes());
-        logResult.add(logUnusedIndexes());
-        logResult.add(logForeignKeysNotCoveredWithIndex());
-        logResult.add(logTablesWithMissingIndexes());
-        logResult.add(logTablesWithoutPrimaryKey());
-        logResult.add(logIndexesWithNullValues());
+        logResult.add(logInvalidIndexes(pgContext));
+        logResult.add(logDuplicatedIndexes(pgContext));
+        logResult.add(logIntersectedIndexes(pgContext));
+        logResult.add(logUnusedIndexes(pgContext));
+        logResult.add(logForeignKeysNotCoveredWithIndex(pgContext));
+        logResult.add(logTablesWithMissingIndexes(pgContext));
+        logResult.add(logTablesWithoutPrimaryKey(pgContext));
+        logResult.add(logIndexesWithNullValues(pgContext));
         return logResult;
     }
 
@@ -59,8 +60,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logInvalidIndexes() {
-        final var invalidIndexes = indexesHealth.getInvalidIndexes();
+    private String logInvalidIndexes(@Nonnull final PgContext pgContext) {
+        final var invalidIndexes = indexesHealth.getInvalidIndexes(pgContext);
         final LoggingKey key = SimpleLoggingKey.INVALID_INDEXES;
         if (CollectionUtils.isNotEmpty(invalidIndexes)) {
             LOGGER.error("There are invalid indexes in the database {}", invalidIndexes);
@@ -70,8 +71,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logDuplicatedIndexes() {
-        final var rawDuplicatedIndexes = indexesHealth.getDuplicatedIndexes();
+    private String logDuplicatedIndexes(@Nonnull final PgContext pgContext) {
+        final var rawDuplicatedIndexes = indexesHealth.getDuplicatedIndexes(pgContext);
         final var duplicatedIndexes = applyExclusions(rawDuplicatedIndexes,
                 exclusions.getDuplicatedIndexesExclusions());
         final LoggingKey key = SimpleLoggingKey.DUPLICATED_INDEXES;
@@ -83,8 +84,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logIntersectedIndexes() {
-        final var rawIntersectedIndexes = indexesHealth.getIntersectedIndexes();
+    private String logIntersectedIndexes(@Nonnull final PgContext pgContext) {
+        final var rawIntersectedIndexes = indexesHealth.getIntersectedIndexes(pgContext);
         final var intersectedIndexes = applyExclusions(rawIntersectedIndexes,
                 exclusions.getIntersectedIndexesExclusions());
         final LoggingKey key = SimpleLoggingKey.INTERSECTED_INDEXES;
@@ -96,8 +97,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logUnusedIndexes() {
-        final var rawUnusedIndexes = indexesHealth.getUnusedIndexes();
+    private String logUnusedIndexes(@Nonnull final PgContext pgContext) {
+        final var rawUnusedIndexes = indexesHealth.getUnusedIndexes(pgContext);
         final var filteredUnusedIndexes = applyIndexesExclusions(
                 rawUnusedIndexes, exclusions.getUnusedIndexesExclusions());
         final var unusedIndexes = applyIndexSizeExclusions(
@@ -111,8 +112,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logForeignKeysNotCoveredWithIndex() {
-        final var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
+    private String logForeignKeysNotCoveredWithIndex(@Nonnull final PgContext pgContext) {
+        final var foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex(pgContext);
         final LoggingKey key = SimpleLoggingKey.FOREIGN_KEYS;
         if (CollectionUtils.isNotEmpty(foreignKeys)) {
             LOGGER.warn("There are foreign keys without index in the database {}", foreignKeys);
@@ -122,8 +123,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logTablesWithMissingIndexes() {
-        final var rawTablesWithMissingIndexes = indexesHealth.getTablesWithMissingIndexes();
+    private String logTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
+        final var rawTablesWithMissingIndexes = indexesHealth.getTablesWithMissingIndexes(pgContext);
         final var tablesFilteredBySize = applyTableSizeExclusions(
                 rawTablesWithMissingIndexes, exclusions.getTableSizeThresholdInBytes());
         final var tablesWithMissingIndexes = applyTablesExclusions(
@@ -137,8 +138,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logTablesWithoutPrimaryKey() {
-        final var rawTablesWithoutPrimaryKey = indexesHealth.getTablesWithoutPrimaryKey();
+    private String logTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
+        final var rawTablesWithoutPrimaryKey = indexesHealth.getTablesWithoutPrimaryKey(pgContext);
         final var tablesFilteredBySize = applyTableSizeExclusions(
                 rawTablesWithoutPrimaryKey, exclusions.getTableSizeThresholdInBytes());
         final var tablesWithoutPrimaryKey = applyTablesExclusions(
@@ -152,8 +153,8 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
-    private String logIndexesWithNullValues() {
-        final var rawIndexesWithNullValues = indexesHealth.getIndexesWithNullValues();
+    private String logIndexesWithNullValues(@Nonnull final PgContext pgContext) {
+        final var rawIndexesWithNullValues = indexesHealth.getIndexesWithNullValues(pgContext);
         final var indexesWithNullValues = applyIndexesExclusions(rawIndexesWithNullValues,
                 exclusions.getIndexesWithNullValuesExclusions());
         final LoggingKey key = SimpleLoggingKey.INDEXES_WITH_NULLS;

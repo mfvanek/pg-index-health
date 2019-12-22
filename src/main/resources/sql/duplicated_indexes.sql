@@ -8,7 +8,7 @@ from (
          coalesce(pg_get_expr(x.indpred, x.indrelid), '')) as key
     from pg_catalog.pg_index x
              join pg_catalog.pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid
-    where psai.schemaname = 'public'::text
+    where psai.schemaname = ?::text
 ) sub
 group by table_name, key
 having count(*) > 1
