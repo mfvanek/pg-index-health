@@ -13,10 +13,10 @@ import java.util.List;
 public interface IndexesHealthLogger {
 
     @Nonnull
-    List<String> logAll(@Nonnull PgContext pgContext);
+    List<String> logAll(@Nonnull Exclusions exclusions, @Nonnull PgContext pgContext);
 
     @Nonnull
-    default List<String> logAll() {
-        return logAll(PgContext.ofPublic());
+    default List<String> logAll(@Nonnull final Exclusions exclusions) {
+        return logAll(exclusions, PgContext.ofPublic());
     }
 }

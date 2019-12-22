@@ -30,7 +30,7 @@ abstract class IndexesHealthLoggerTestBase extends DatabaseAwareTestBase {
         super(dataSource);
         final var haPgConnection = HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofMaster(dataSource));
         final var indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
-        this.logger = new SimpleHealthLogger(indexesHealth, Exclusions.empty());
+        this.logger = new SimpleHealthLogger(indexesHealth);
     }
 
     @ParameterizedTest
@@ -45,7 +45,7 @@ abstract class IndexesHealthLoggerTestBase extends DatabaseAwareTestBase {
                         .withDuplicatedIndex()
                         .withNonSuitableIndex(),
                 ctx -> {
-                    final var logs = logger.logAll(ctx);
+                    final var logs = logger.logAll(Exclusions.empty(), ctx);
                     assertNotNull(logs);
                     assertThat(logs, hasSize(8));
                     assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes\t1");
@@ -58,7 +58,7 @@ abstract class IndexesHealthLoggerTestBase extends DatabaseAwareTestBase {
 
     @Test
     void logAllWithDefaultSchema() {
-        final var logs = logger.logAll();
+        final var logs = logger.logAll(Exclusions.empty());
         assertNotNull(logs);
         assertThat(logs, hasSize(8));
         for (var key : SimpleLoggingKey.values()) {

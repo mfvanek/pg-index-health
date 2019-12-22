@@ -46,8 +46,8 @@ public class DemoApp {
         final var haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
         final var haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl);
         final var indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
-        final var logger = new SimpleHealthLogger(indexesHealth, Exclusions.empty());
-        logger.logAll(PgContext.ofPublic())
+        final var logger = new SimpleHealthLogger(indexesHealth);
+        logger.logAll(Exclusions.empty(), PgContext.ofPublic())
                 .forEach(System.out::println);
         // Resetting current statistics
         // indexesHealth.resetStatistics();
@@ -66,8 +66,8 @@ public class DemoApp {
                 .withIndexSizeThreshold(10, MemoryUnit.MB)
                 .withTableSizeThreshold(10, MemoryUnit.MB)
                 .build();
-        final var logger = new SimpleHealthLogger(indexesHealth, exclusions);
-        logger.logAll(PgContext.ofPublic())
+        final var logger = new SimpleHealthLogger(indexesHealth);
+        logger.logAll(exclusions, PgContext.ofPublic())
                 .forEach(System.out::println);
     }
 }

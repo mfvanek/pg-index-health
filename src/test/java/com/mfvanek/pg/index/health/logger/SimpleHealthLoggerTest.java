@@ -36,8 +36,8 @@ class SimpleHealthLoggerTest {
                         Index.of("t1", "i2"),
                         Index.of("t2", "i3")
                 ));
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, Exclusions.empty());
-        final var logs = logger.logAll();
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final var logs = logger.logAll(Exclusions.empty());
         assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes\t3");
     }
 
@@ -61,8 +61,8 @@ class SimpleHealthLoggerTest {
                                 IndexWithSize.of("t3", "i6", 6L)
                         ))
                 ));
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
-        final var logs = logger.logAll();
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final var logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.DUPLICATED_INDEXES, "duplicated_indexes\t1");
     }
 
@@ -78,8 +78,8 @@ class SimpleHealthLoggerTest {
                         UnusedIndex.of("t2", "i3", 3L, 3L),
                         UnusedIndex.of("t2", "i4", 4L, 4L)
                 ));
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
-        final var logs = logger.logAll();
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final var logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t2");
     }
 
@@ -103,8 +103,8 @@ class SimpleHealthLoggerTest {
                                 IndexWithSize.of("t3", "i6", 6L)
                         ))
                 ));
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
-        final var logs = logger.logAll();
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final var logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.INTERSECTED_INDEXES, "intersected_indexes\t1");
     }
 
@@ -121,8 +121,8 @@ class SimpleHealthLoggerTest {
                         UnusedIndex.of("t2", "i3", 3L, 3L),
                         UnusedIndex.of("t2", "i4", 4L, 4L)
                 ));
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
-        final var logs = logger.logAll();
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final var logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t1");
     }
 
@@ -139,8 +139,8 @@ class SimpleHealthLoggerTest {
                         UnusedIndex.of("t2", "i3", 1_048_574L, 3L),
                         UnusedIndex.of("t2", "i4", 1_048_573L, 4L)
                 ));
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
-        final var logs = logger.logAll();
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final var logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t1");
     }
 
@@ -152,8 +152,8 @@ class SimpleHealthLoggerTest {
                         ForeignKey.of("t1", "c2", List.of("f2")),
                         ForeignKey.of("t2", "c3", List.of("f3", "f4"))
                 ));
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, Exclusions.empty());
-        final var logs = logger.logAll();
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final var logs = logger.logAll(Exclusions.empty());
         assertContainsKey(logs, SimpleLoggingKey.FOREIGN_KEYS, "foreign_keys_without_index\t3");
     }
 
@@ -169,8 +169,8 @@ class SimpleHealthLoggerTest {
                         TableWithMissingIndex.of("t3", 0L, 303L, 3L),
                         TableWithMissingIndex.of("t4", 0L, 404L, 4L)
                 ));
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
-        final var logs = logger.logAll();
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final var logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES, "tables_with_missing_indexes\t2");
     }
 
@@ -186,8 +186,8 @@ class SimpleHealthLoggerTest {
                         TableWithMissingIndex.of("t3", 99L, 303L, 3L),
                         TableWithMissingIndex.of("t4", 100L, 404L, 4L)
                 ));
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
-        final var logs = logger.logAll();
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final var logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES, "tables_with_missing_indexes\t3");
     }
 
@@ -203,8 +203,8 @@ class SimpleHealthLoggerTest {
                         Table.of("t3", 0L),
                         Table.of("t4", 0L)
                 ));
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
-        final var logs = logger.logAll();
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final var logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key\t3");
     }
 
@@ -220,8 +220,8 @@ class SimpleHealthLoggerTest {
                         Table.of("t3", 100L),
                         Table.of("t4", 200L)
                 ));
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
-        final var logs = logger.logAll();
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final var logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key\t2");
     }
 
@@ -237,8 +237,8 @@ class SimpleHealthLoggerTest {
                         IndexWithNulls.of("t2", "i3", 3L, "f3"),
                         IndexWithNulls.of("t2", "i4", 4L, "f4")
                 ));
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
-        final var logs = logger.logAll();
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final var logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.INDEXES_WITH_NULLS, "indexes_with_null_values\t3");
     }
 }
