@@ -70,8 +70,13 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                     assertNotNull(invalidIndexes);
                     assertEquals(1, invalidIndexes.size());
                     final var index = invalidIndexes.get(0);
-                    assertEquals("clients", index.getTableName());
-                    assertEquals("i_clients_last_name_first_name", index.getIndexName());
+                    if (isDefaultSchema(schemaName)) {
+                        assertEquals("clients", index.getTableName());
+                        assertEquals("i_clients_last_name_first_name", index.getIndexName());
+                    } else {
+                        assertEquals(schemaName + ".clients", index.getTableName());
+                        assertEquals(schemaName + ".i_clients_last_name_first_name", index.getIndexName());
+                    }
                 });
     }
 
@@ -104,14 +109,26 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                     assertNotNull(duplicatedIndexes);
                     assertEquals(1, duplicatedIndexes.size());
                     final var entry = duplicatedIndexes.get(0);
-                    assertEquals("accounts", entry.getTableName());
+                    if (isDefaultSchema(schemaName)) {
+                        assertEquals("accounts", entry.getTableName());
+                    } else {
+                        assertEquals(schemaName + ".accounts", entry.getTableName());
+                    }
                     assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
                     final var indexes = entry.getDuplicatedIndexes();
                     assertEquals(2, indexes.size());
-                    assertThat(indexes.stream()
-                                    .map(IndexWithSize::getIndexName)
-                                    .collect(Collectors.toList()),
-                            containsInAnyOrder("accounts_account_number_key", "i_accounts_account_number"));
+                    final var names = indexes.stream()
+                            .map(IndexWithSize::getIndexName)
+                            .collect(Collectors.toList());
+                    if (isDefaultSchema(schemaName)) {
+                        assertThat(names, containsInAnyOrder(
+                                "accounts_account_number_key",
+                                "i_accounts_account_number"));
+                    } else {
+                        assertThat(names, containsInAnyOrder(
+                                schemaName + ".accounts_account_number_key",
+                                schemaName + ".i_accounts_account_number"));
+                    }
                 });
     }
 
@@ -144,14 +161,26 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                     assertNotNull(intersectedIndexes);
                     assertEquals(1, intersectedIndexes.size());
                     final var entry = intersectedIndexes.get(0);
-                    assertEquals("clients", entry.getTableName());
+                    if (isDefaultSchema(schemaName)) {
+                        assertEquals("clients", entry.getTableName());
+                    } else {
+                        assertEquals(schemaName + ".clients", entry.getTableName());
+                    }
                     assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
                     final var indexes = entry.getDuplicatedIndexes();
                     assertEquals(2, indexes.size());
-                    assertThat(indexes.stream()
-                                    .map(IndexWithSize::getIndexName)
-                                    .collect(Collectors.toList()),
-                            containsInAnyOrder("i_clients_last_first", "i_clients_last_name"));
+                    final var names = indexes.stream()
+                            .map(IndexWithSize::getIndexName)
+                            .collect(Collectors.toList());
+                    if (isDefaultSchema(schemaName)) {
+                        assertThat(names, containsInAnyOrder(
+                                "i_clients_last_first",
+                                "i_clients_last_name"));
+                    } else {
+                        assertThat(names, containsInAnyOrder(
+                                schemaName + ".i_clients_last_first",
+                                schemaName + ".i_clients_last_name"));
+                    }
                 });
     }
 
@@ -184,8 +213,17 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                     assertNotNull(unusedIndexes);
                     assertThat(unusedIndexes.size(), equalTo(3));
                     final var names = unusedIndexes.stream().map(UnusedIndex::getIndexName).collect(toSet());
-                    assertThat(names, containsInAnyOrder(
-                            "i_clients_last_first", "i_clients_last_name", "i_accounts_account_number"));
+                    if (isDefaultSchema(schemaName)) {
+                        assertThat(names, containsInAnyOrder(
+                                "i_clients_last_first",
+                                "i_clients_last_name",
+                                "i_accounts_account_number"));
+                    } else {
+                        assertThat(names, containsInAnyOrder(
+                                schemaName + ".i_clients_last_first",
+                                schemaName + ".i_clients_last_name",
+                                schemaName + ".i_accounts_account_number"));
+                    }
                 });
     }
 
@@ -218,7 +256,11 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                     assertNotNull(foreignKeys);
                     assertEquals(1, foreignKeys.size());
                     final var foreignKey = foreignKeys.get(0);
-                    assertEquals("accounts", foreignKey.getTableName());
+                    if (isDefaultSchema(schemaName)) {
+                        assertEquals("accounts", foreignKey.getTableName());
+                    } else {
+                        assertEquals(schemaName + ".accounts", foreignKey.getTableName());
+                    }
                     assertThat(foreignKey.getColumnsInConstraint(), containsInAnyOrder("client_id"));
                 });
     }
@@ -233,7 +275,11 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                     assertNotNull(foreignKeys);
                     assertEquals(1, foreignKeys.size());
                     final var foreignKey = foreignKeys.get(0);
-                    assertEquals("accounts", foreignKey.getTableName());
+                    if (isDefaultSchema(schemaName)) {
+                        assertEquals("accounts", foreignKey.getTableName());
+                    } else {
+                        assertEquals(schemaName + ".accounts", foreignKey.getTableName());
+                    }
                     assertThat(foreignKey.getColumnsInConstraint(), containsInAnyOrder("client_id"));
                 });
     }
@@ -279,8 +325,12 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                     final var tables = indexesHealth.getTablesWithMissingIndexes(ctx);
                     assertNotNull(tables);
                     assertThat(tables, hasSize(1));
-                    final var table = tables.get(0);
-                    assertEquals("accounts", table.getTableName());
+                    var table = tables.get(0);
+                    if (isDefaultSchema(schemaName)) {
+                        assertEquals("accounts", table.getTableName());
+                    } else {
+                        assertEquals(schemaName + ".accounts", table.getTableName());
+                    }
                     assertThat(table.getSeqScans(), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
                     assertEquals(0, table.getIndexScans());
                 });
@@ -313,9 +363,13 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                 ctx -> {
                     final var tables = indexesHealth.getTablesWithoutPrimaryKey(ctx);
                     assertNotNull(tables);
-                    assertEquals(1, tables.size());
-                    final var table = tables.get(0);
-                    assertEquals("bad_clients", table.getTableName());
+                    assertThat(tables, hasSize(1));
+                    var table = tables.get(0);
+                    if (isDefaultSchema(schemaName)) {
+                        assertEquals("bad_clients", table.getTableName());
+                    } else {
+                        assertEquals(schemaName + ".bad_clients", table.getTableName());
+                    }
                 });
     }
 
@@ -347,6 +401,13 @@ abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
                     final var indexes = indexesHealth.getIndexesWithNullValues(ctx);
                     assertNotNull(indexes);
                     assertEquals(1, indexes.size());
+                    final var indexWithNulls = indexes.get(0);
+                    if (isDefaultSchema(schemaName)) {
+                        assertEquals("i_clients_middle_name", indexWithNulls.getIndexName());
+                    } else {
+                        assertEquals(schemaName + ".i_clients_middle_name", indexWithNulls.getIndexName());
+                    }
+                    assertEquals("middle_name", indexWithNulls.getNullableField());
                 });
     }
 

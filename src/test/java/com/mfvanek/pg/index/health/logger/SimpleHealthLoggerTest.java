@@ -12,6 +12,7 @@ import com.mfvanek.pg.model.Index;
 import com.mfvanek.pg.model.IndexWithNulls;
 import com.mfvanek.pg.model.IndexWithSize;
 import com.mfvanek.pg.model.MemoryUnit;
+import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.model.Table;
 import com.mfvanek.pg.model.TableWithMissingIndex;
 import com.mfvanek.pg.model.UnusedIndex;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 
 class SimpleHealthLoggerTest {
 
@@ -29,7 +31,7 @@ class SimpleHealthLoggerTest {
 
     @Test
     void logInvalidIndexes() {
-        Mockito.when(indexesHealthMock.getInvalidIndexes())
+        Mockito.when(indexesHealthMock.getInvalidIndexes(any(PgContext.class)))
                 .thenReturn(List.of(
                         Index.of("t1", "i1"),
                         Index.of("t1", "i2"),
@@ -49,7 +51,7 @@ class SimpleHealthLoggerTest {
         final var exclusions = Exclusions.builder()
                 .withDuplicatedIndexesExclusions("i1, i3, ,,,")
                 .build();
-        Mockito.when(indexesHealthMock.getDuplicatedIndexes())
+        Mockito.when(indexesHealthMock.getDuplicatedIndexes(any(PgContext.class)))
                 .thenReturn(List.of(
                         DuplicatedIndexes.of(List.of(
                                 IndexWithSize.of("t1", "i1", 1L),
@@ -78,7 +80,7 @@ class SimpleHealthLoggerTest {
         final var exclusions = Exclusions.builder()
                 .withUnusedIndexesExclusions("i2, i3, , ,,  ")
                 .build();
-        Mockito.when(indexesHealthMock.getUnusedIndexes())
+        Mockito.when(indexesHealthMock.getUnusedIndexes(any(PgContext.class)))
                 .thenReturn(List.of(
                         UnusedIndex.of("t1", "i1", 1L, 1L),
                         UnusedIndex.of("t1", "i2", 2L, 2L),
@@ -99,7 +101,7 @@ class SimpleHealthLoggerTest {
         final var exclusions = Exclusions.builder()
                 .withIntersectedIndexesExclusions("i4,,  , i6")
                 .build();
-        Mockito.when(indexesHealthMock.getIntersectedIndexes())
+        Mockito.when(indexesHealthMock.getIntersectedIndexes(any(PgContext.class)))
                 .thenReturn(List.of(
                         DuplicatedIndexes.of(List.of(
                                 IndexWithSize.of("t1", "i1", 1L),
@@ -129,7 +131,7 @@ class SimpleHealthLoggerTest {
                 .withUnusedIndexesExclusions("i2, i3, , ,,  ")
                 .withIndexSizeThreshold(2L)
                 .build();
-        Mockito.when(indexesHealthMock.getUnusedIndexes())
+        Mockito.when(indexesHealthMock.getUnusedIndexes(any(PgContext.class)))
                 .thenReturn(List.of(
                         UnusedIndex.of("t1", "i1", 1L, 1L),
                         UnusedIndex.of("t1", "i2", 2L, 2L),
@@ -151,7 +153,7 @@ class SimpleHealthLoggerTest {
                 .withUnusedIndexesExclusions("i2, i3, , ,,  ")
                 .withIndexSizeThreshold(1, MemoryUnit.MB)
                 .build();
-        Mockito.when(indexesHealthMock.getUnusedIndexes())
+        Mockito.when(indexesHealthMock.getUnusedIndexes(any(PgContext.class)))
                 .thenReturn(List.of(
                         UnusedIndex.of("t1", "i1", 1_048_576L, 1L),
                         UnusedIndex.of("t1", "i2", 1_048_575L, 2L),
@@ -169,7 +171,7 @@ class SimpleHealthLoggerTest {
 
     @Test
     void logForeignKeysNotCoveredWithIndex() {
-        Mockito.when(indexesHealthMock.getForeignKeysNotCoveredWithIndex())
+        Mockito.when(indexesHealthMock.getForeignKeysNotCoveredWithIndex(any(PgContext.class)))
                 .thenReturn(List.of(
                         ForeignKey.of("t1", "c1", List.of("f1")),
                         ForeignKey.of("t1", "c2", List.of("f2")),
@@ -189,7 +191,7 @@ class SimpleHealthLoggerTest {
         final var exclusions = Exclusions.builder()
                 .withTablesWithMissingIndexesExclusions("t1,  ,,  , t3   ")
                 .build();
-        Mockito.when(indexesHealthMock.getTablesWithMissingIndexes())
+        Mockito.when(indexesHealthMock.getTablesWithMissingIndexes(any(PgContext.class)))
                 .thenReturn(List.of(
                         TableWithMissingIndex.of("t1", 0L, 101L, 1L),
                         TableWithMissingIndex.of("t2", 0L, 202L, 2L),
@@ -210,7 +212,7 @@ class SimpleHealthLoggerTest {
         final var exclusions = Exclusions.builder()
                 .withTableSizeThreshold(98L)
                 .build();
-        Mockito.when(indexesHealthMock.getTablesWithMissingIndexes())
+        Mockito.when(indexesHealthMock.getTablesWithMissingIndexes(any(PgContext.class)))
                 .thenReturn(List.of(
                         TableWithMissingIndex.of("t1", 97L, 101L, 1L),
                         TableWithMissingIndex.of("t2", 98L, 202L, 2L),
@@ -231,7 +233,7 @@ class SimpleHealthLoggerTest {
         final var exclusions = Exclusions.builder()
                 .withTablesWithoutPrimaryKeyExclusions("  ,,   ,   , t4, t6")
                 .build();
-        Mockito.when(indexesHealthMock.getTablesWithoutPrimaryKey())
+        Mockito.when(indexesHealthMock.getTablesWithoutPrimaryKey(any(PgContext.class)))
                 .thenReturn(List.of(
                         Table.of("t1", 0L),
                         Table.of("t2", 0L),
@@ -252,7 +254,7 @@ class SimpleHealthLoggerTest {
         final var exclusions = Exclusions.builder()
                 .withTableSizeThreshold(100L)
                 .build();
-        Mockito.when(indexesHealthMock.getTablesWithoutPrimaryKey())
+        Mockito.when(indexesHealthMock.getTablesWithoutPrimaryKey(any(PgContext.class)))
                 .thenReturn(List.of(
                         Table.of("t1", 10L),
                         Table.of("t2", 50L),
@@ -273,7 +275,7 @@ class SimpleHealthLoggerTest {
         final var exclusions = Exclusions.builder()
                 .withIndexesWithNullValuesExclusions("i2, i5, , ,,  ")
                 .build();
-        Mockito.when(indexesHealthMock.getIndexesWithNullValues())
+        Mockito.when(indexesHealthMock.getIndexesWithNullValues(any(PgContext.class)))
                 .thenReturn(List.of(
                         IndexWithNulls.of("t1", "i1", 1L, "f1"),
                         IndexWithNulls.of("t1", "i2", 2L, "f2"),
