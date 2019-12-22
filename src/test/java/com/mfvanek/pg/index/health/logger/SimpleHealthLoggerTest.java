@@ -21,8 +21,7 @@ import org.mockito.Mockito;
 
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
+import static com.mfvanek.pg.utils.HealthLoggerAssertions.assertContainsKey;
 import static org.mockito.ArgumentMatchers.any;
 
 class SimpleHealthLoggerTest {
@@ -39,11 +38,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, Exclusions.empty());
         final var logs = logger.logAll();
-        final var logStr = logs.stream()
-                .filter(l -> l.contains(SimpleLoggingKey.INVALID_INDEXES.getSubKeyName()))
-                .findFirst()
-                .orElseThrow();
-        assertThat(logStr, containsString("invalid_indexes\t3"));
+        assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes\t3");
     }
 
     @Test
@@ -68,11 +63,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
         final var logs = logger.logAll();
-        final var logStr = logs.stream()
-                .filter(l -> l.contains(SimpleLoggingKey.DUPLICATED_INDEXES.getSubKeyName()))
-                .findFirst()
-                .orElseThrow();
-        assertThat(logStr, containsString("duplicated_indexes\t1"));
+        assertContainsKey(logs, SimpleLoggingKey.DUPLICATED_INDEXES, "duplicated_indexes\t1");
     }
 
     @Test
@@ -89,11 +80,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
         final var logs = logger.logAll();
-        final var logStr = logs.stream()
-                .filter(l -> l.contains(SimpleLoggingKey.UNUSED_INDEXES.getSubKeyName()))
-                .findFirst()
-                .orElseThrow();
-        assertThat(logStr, containsString("unused_indexes\t2"));
+        assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t2");
     }
 
     @Test
@@ -118,11 +105,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
         final var logs = logger.logAll();
-        final var logStr = logs.stream()
-                .filter(l -> l.contains(SimpleLoggingKey.INTERSECTED_INDEXES.getSubKeyName()))
-                .findFirst()
-                .orElseThrow();
-        assertThat(logStr, containsString("intersected_indexes\t1"));
+        assertContainsKey(logs, SimpleLoggingKey.INTERSECTED_INDEXES, "intersected_indexes\t1");
     }
 
     @Test
@@ -140,11 +123,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
         final var logs = logger.logAll();
-        final var logStr = logs.stream()
-                .filter(l -> l.contains(SimpleLoggingKey.UNUSED_INDEXES.getSubKeyName()))
-                .findFirst()
-                .orElseThrow();
-        assertThat(logStr, containsString("unused_indexes\t1"));
+        assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t1");
     }
 
     @Test
@@ -162,11 +141,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
         final var logs = logger.logAll();
-        final var logStr = logs.stream()
-                .filter(l -> l.contains(SimpleLoggingKey.UNUSED_INDEXES.getSubKeyName()))
-                .findFirst()
-                .orElseThrow();
-        assertThat(logStr, containsString("unused_indexes\t1"));
+        assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t1");
     }
 
     @Test
@@ -179,11 +154,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, Exclusions.empty());
         final var logs = logger.logAll();
-        final var logStr = logs.stream()
-                .filter(l -> l.contains(SimpleLoggingKey.FOREIGN_KEYS.getSubKeyName()))
-                .findFirst()
-                .orElseThrow();
-        assertThat(logStr, containsString("foreign_keys_without_index\t3"));
+        assertContainsKey(logs, SimpleLoggingKey.FOREIGN_KEYS, "foreign_keys_without_index\t3");
     }
 
     @Test
@@ -200,11 +171,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
         final var logs = logger.logAll();
-        final var logStr = logs.stream()
-                .filter(l -> l.contains(SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES.getSubKeyName()))
-                .findFirst()
-                .orElseThrow();
-        assertThat(logStr, containsString("tables_with_missing_indexes\t2"));
+        assertContainsKey(logs, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES, "tables_with_missing_indexes\t2");
     }
 
     @Test
@@ -221,11 +188,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
         final var logs = logger.logAll();
-        final var logStr = logs.stream()
-                .filter(l -> l.contains(SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES.getSubKeyName()))
-                .findFirst()
-                .orElseThrow();
-        assertThat(logStr, containsString("tables_with_missing_indexes\t3"));
+        assertContainsKey(logs, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES, "tables_with_missing_indexes\t3");
     }
 
     @Test
@@ -242,11 +205,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
         final var logs = logger.logAll();
-        final var logStr = logs.stream()
-                .filter(l -> l.contains(SimpleLoggingKey.TABLES_WITHOUT_PK.getSubKeyName()))
-                .findFirst()
-                .orElseThrow();
-        assertThat(logStr, containsString("tables_without_primary_key\t3"));
+        assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key\t3");
     }
 
     @Test
@@ -263,11 +222,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
         final var logs = logger.logAll();
-        final var logStr = logs.stream()
-                .filter(l -> l.contains(SimpleLoggingKey.TABLES_WITHOUT_PK.getSubKeyName()))
-                .findFirst()
-                .orElseThrow();
-        assertThat(logStr, containsString("tables_without_primary_key\t2"));
+        assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key\t2");
     }
 
     @Test
@@ -284,10 +239,6 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock, exclusions);
         final var logs = logger.logAll();
-        final var logStr = logs.stream()
-                .filter(l -> l.contains(SimpleLoggingKey.INDEXES_WITH_NULLS.getSubKeyName()))
-                .findFirst()
-                .orElseThrow();
-        assertThat(logStr, containsString("indexes_with_null_values\t3"));
+        assertContainsKey(logs, SimpleLoggingKey.INDEXES_WITH_NULLS, "indexes_with_null_values\t3");
     }
 }
