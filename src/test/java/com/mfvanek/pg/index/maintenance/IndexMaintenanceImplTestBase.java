@@ -8,6 +8,7 @@ package com.mfvanek.pg.index.maintenance;
 import com.mfvanek.pg.connection.PgConnection;
 import com.mfvanek.pg.connection.PgConnectionImpl;
 import com.mfvanek.pg.model.IndexWithSize;
+import com.mfvanek.pg.model.PgContext;
 import com.mfvanek.pg.model.UnusedIndex;
 import com.mfvanek.pg.utils.DatabaseAwareTestBase;
 import com.mfvanek.pg.utils.DatabasePopulator;
@@ -405,6 +406,28 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
                         assertEquals(schemaName + ".i_clients_middle_name", indexWithNulls.getIndexName());
                     }
                     assertEquals("middle_name", indexWithNulls.getNullableField());
+                });
+    }
+
+    @Test
+    void securityTest() {
+        executeTestOnDatabase("public",
+                dbp -> dbp.withReferences().withData().withNullValuesInIndex(),
+                ctx -> {
+                    final long before = getRowsCount(ctx.getSchemaName(), "clients");
+                    assertEquals(1001L, before);
+                    var indexes = indexMaintenance.getIndexesWithNullValues(PgContext.of("; truncate table clients;"));
+                    assertNotNull(indexes);
+                    assertThat(indexes, hasSize(0));
+                    assertEquals(before, getRowsCount(ctx.getSchemaName(), "clients"));
+
+                    indexes = indexMaintenance.getIndexesWithNullValues(PgContext.of("; select pg_sleep(100000000);"));
+                    assertNotNull(indexes);
+                    assertThat(indexes, hasSize(0));
+
+                    indexes = indexMaintenance.getIndexesWithNullValues(ctx);
+                    assertNotNull(indexes);
+                    assertThat(indexes, hasSize(1));
                 });
     }
 }

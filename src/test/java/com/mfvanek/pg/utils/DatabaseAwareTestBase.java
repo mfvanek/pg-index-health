@@ -109,4 +109,18 @@ public abstract class DatabaseAwareTestBase {
             throw new RuntimeException(e);
         }
     }
+
+    protected long getRowsCount(@Nonnull final String schemaName,
+                                @Nonnull final String tableName) {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(
+                    "select count(*) from " + schemaName + "." + tableName)) {
+                resultSet.next();
+                return resultSet.getLong(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
