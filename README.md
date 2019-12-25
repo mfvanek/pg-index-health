@@ -23,13 +23,13 @@ You can call `pg_stat_reset()` to reset all statistics counters for the current 
 
 ## Demo application
 ```java
-import com.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
-import com.mfvanek.pg.connection.PgConnectionFactoryImpl;
-import com.mfvanek.pg.index.health.logger.Exclusions;
-import com.mfvanek.pg.index.health.logger.SimpleHealthLogger;
-import com.mfvanek.pg.index.maintenance.MaintenanceFactoryImpl;
-import com.mfvanek.pg.model.MemoryUnit;
-import com.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
+import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
+import io.github.mfvanek.pg.index.health.logger.Exclusions;
+import io.github.mfvanek.pg.index.health.logger.SimpleHealthLogger;
+import io.github.mfvanek.pg.index.maintenance.MaintenanceFactoryImpl;
+import io.github.mfvanek.pg.model.MemoryUnit;
+import io.github.mfvanek.pg.model.PgContext;
 
 public class DemoApp {
 
