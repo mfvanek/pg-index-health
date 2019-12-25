@@ -1,0 +1,11 @@
+/*
+ * Copyright (c) 2019. Ivan Vakhrushev. All rights reserved.
+ * https://github.com/mfvanek
+ */
+
+package io.github.mfvanek.pg.model;
+
+public interface TableSizeAware {
+
+    long getTableSizeInBytes();
+}
