@@ -3,9 +3,10 @@ plugins {
 }
 
 group 'com.mfvanek'
-version '0.0.8'
+version '0.0.9'
 
 sourceCompatibility = 11
+targetCompatibility = 11
 
 repositories {
     mavenCentral()
@@ -31,4 +32,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes("Implementation-Title": project.name,
+                "Implementation-Version": project.version)
+    }
 }
