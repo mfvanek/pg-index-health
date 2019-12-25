@@ -7,8 +7,10 @@
 
 package io.github.mfvanek.pg.index.health.logger;
 
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.index.health.IndexesHealth;
 import io.github.mfvanek.pg.index.health.IndexesHealthImpl;
 import io.github.mfvanek.pg.index.maintenance.MaintenanceFactoryImpl;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
@@ -18,6 +20,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
+import java.util.List;
 
 import static io.github.mfvanek.pg.utils.HealthLoggerAssertions.assertContainsKey;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,8 +33,8 @@ abstract class IndexesHealthLoggerTestBase extends DatabaseAwareTestBase {
 
     IndexesHealthLoggerTestBase(@Nonnull final DataSource dataSource) {
         super(dataSource);
-        final var haPgConnection = HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofMaster(dataSource));
-        final var indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofMaster(dataSource));
+        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
         this.logger = new SimpleHealthLogger(indexesHealth);
     }
 
@@ -47,7 +50,7 @@ abstract class IndexesHealthLoggerTestBase extends DatabaseAwareTestBase {
                         .withDuplicatedIndex()
                         .withNonSuitableIndex(),
                 ctx -> {
-                    final var logs = logger.logAll(Exclusions.empty(), ctx);
+                    final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
                     assertNotNull(logs);
                     assertThat(logs, hasSize(8));
                     assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes\t1");
@@ -60,10 +63,10 @@ abstract class IndexesHealthLoggerTestBase extends DatabaseAwareTestBase {
 
     @Test
     void logAllWithDefaultSchema() {
-        final var logs = logger.logAll(Exclusions.empty());
+        final List<String> logs = logger.logAll(Exclusions.empty());
         assertNotNull(logs);
         assertThat(logs, hasSize(8));
-        for (var key : SimpleLoggingKey.values()) {
+        for (SimpleLoggingKey key : SimpleLoggingKey.values()) {
             assertContainsKey(logs, key, key.getSubKeyName() + "\t0");
         }
     }

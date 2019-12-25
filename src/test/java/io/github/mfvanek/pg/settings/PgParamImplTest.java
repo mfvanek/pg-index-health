@@ -20,7 +20,7 @@ class PgParamImplTest {
 
     @Test
     void getNameAndValue() {
-        final var param = PgParamImpl.of("statement_timeout", "2s");
+        final PgParam param = PgParamImpl.of("statement_timeout", "2s");
         assertNotNull(param);
         assertEquals("statement_timeout", param.getName());
         assertEquals("2s", param.getValue());
@@ -37,7 +37,7 @@ class PgParamImplTest {
 
     @Test
     void withEmptyValue() {
-        var param = PgParamImpl.of("statement_timeout", "");
+        PgParam param = PgParamImpl.of("statement_timeout", "");
         assertNotNull(param);
         assertEquals("", param.getValue());
 
@@ -48,16 +48,16 @@ class PgParamImplTest {
 
     @Test
     void testToString() {
-        final var param = PgParamImpl.of("statement_timeout", "2s");
+        final PgParam param = PgParamImpl.of("statement_timeout", "2s");
         assertNotNull(param);
         assertEquals("PgParamImpl{name='statement_timeout', value='2s'}", param.toString());
     }
 
     @Test
     void equalsAndHashCode() {
-        final var first = PgParamImpl.of("statement_timeout", "2s");
-        final var theSame = PgParamImpl.of("statement_timeout", "2s");
-        final var second = PgParamImpl.of("lock_timeout", "2s");
+        final PgParam first = PgParamImpl.of("statement_timeout", "2s");
+        final PgParam theSame = PgParamImpl.of("statement_timeout", "2s");
+        final PgParam second = PgParamImpl.of("lock_timeout", "2s");
 
         assertNotEquals(first, null);
         assertNotEquals(first, BigDecimal.ZERO);

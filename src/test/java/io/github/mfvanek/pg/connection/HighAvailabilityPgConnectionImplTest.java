@@ -29,8 +29,8 @@ class HighAvailabilityPgConnectionImplTest {
 
     @Test
     void ofMaster() {
-        final var pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
-        final var haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
+        final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
         assertNotNull(haPgConnection);
         assertThat(haPgConnection.getConnectionsToReplicas(), hasSize(1));
         assertEquals(haPgConnection.getConnectionToMaster(), haPgConnection.getConnectionsToReplicas().iterator().next());
@@ -38,9 +38,9 @@ class HighAvailabilityPgConnectionImplTest {
 
     @Test
     void withReplicas() {
-        final var master = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
-        final var replica = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("replica"));
-        final var haPgConnection = HighAvailabilityPgConnectionImpl.of(master, Set.of(master, replica));
+        final PgConnection master = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final PgConnection replica = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("replica"));
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(master, Set.of(master, replica));
         assertNotNull(haPgConnection);
         assertThat(haPgConnection.getConnectionsToReplicas(), hasSize(2));
         assertThat(haPgConnection.getConnectionsToReplicas(), Matchers.containsInAnyOrder(master, replica));

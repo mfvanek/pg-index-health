@@ -18,7 +18,7 @@ class PgConnectionFactoryImplTest {
 
     @Test
     void forUrlTest() {
-        final var pgConnection = pgConnectionFactory.forUrl(
+        final PgConnection pgConnection = pgConnectionFactory.forUrl(
                 "jdbc:postgresql://localhost:5432/postgres?prepareThreshold=0&preparedStatementCacheQueries=0", "postgres", "postgres");
         assertNotNull(pgConnection);
         assertEquals("jdbc:postgresql://localhost:5432/postgres?prepareThreshold=0&preparedStatementCacheQueries=0",

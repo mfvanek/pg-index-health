@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.sql.DataSource;
 
 public class PgConnectionFactoryImpl implements PgConnectionFactory {
 
@@ -23,7 +24,7 @@ public class PgConnectionFactoryImpl implements PgConnectionFactory {
                                @Nonnull final String password) {
         LOGGER.debug("Creating {} with pgUrl = {}, userName = {}, password = {}",
                 PgConnection.class.getSimpleName(), pgUrl, userName, "*****");
-        final var dataSource = PgConnectionHelper.createDataSource(pgUrl, userName, password);
+        final DataSource dataSource = PgConnectionHelper.createDataSource(pgUrl, userName, password);
         return PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl(pgUrl));
     }
 }

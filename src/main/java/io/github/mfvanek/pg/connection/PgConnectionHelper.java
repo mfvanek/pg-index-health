@@ -25,7 +25,7 @@ final class PgConnectionHelper {
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
         PgConnectionValidators.userNameNotBlank(userName);
         PgConnectionValidators.passwordNotBlank(password);
-        final var dataSource = new BasicDataSource();
+        final BasicDataSource dataSource = new BasicDataSource();
         setCommonProperties(dataSource, userName, password);
         dataSource.setUrl(pgUrl);
         return dataSource;

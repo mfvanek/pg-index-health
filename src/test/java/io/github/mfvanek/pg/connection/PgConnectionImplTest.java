@@ -29,7 +29,7 @@ class PgConnectionImplTest {
 
     @Test
     void getMasterDataSource() {
-        final var connection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final PgConnection connection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
         assertNotNull(connection.getDataSource());
         assertThat(connection.getHost(), equalTo(PgHostImpl.ofMaster()));
     }
@@ -43,9 +43,9 @@ class PgConnectionImplTest {
 
     @Test
     void equalsAndHashCode() {
-        final var first = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
-        final var theSame = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
-        final var second = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("second"));
+        final PgConnection first = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final PgConnection theSame = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final PgConnection second = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("second"));
 
         assertNotEquals(first, null);
         assertNotEquals(first, BigDecimal.ZERO);
@@ -62,7 +62,7 @@ class PgConnectionImplTest {
 
     @Test
     void toStringTest() {
-        final var connection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final PgConnection connection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
         assertEquals("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://master', hostNames=[master]}}",
                 connection.toString());
     }

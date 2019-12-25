@@ -69,9 +69,9 @@ public class DuplicatedIndexes implements TableNameAware {
 
     public static DuplicatedIndexes of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
         Validators.tableNameNotBlank(tableName);
-        final var indexesWithNameAndSize = parseAsIndexNameAndSize(
+        final List<Map.Entry<String, Long>> indexesWithNameAndSize = parseAsIndexNameAndSize(
                 Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
-        final var duplicatedIndexes = indexesWithNameAndSize.stream()
+        final List<IndexWithSize> duplicatedIndexes = indexesWithNameAndSize.stream()
                 .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
         return new DuplicatedIndexes(duplicatedIndexes);

@@ -73,7 +73,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<UnusedIndex> getUnusedIndexes(@Nonnull final PgContext pgContext) {
         final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = new ArrayList<>();
-        for (var maintenanceForReplica : maintenanceForReplicas) {
+        for (IndexMaintenance maintenanceForReplica : maintenanceForReplicas) {
             potentiallyUnusedIndexesFromAllHosts.add(
                     doOnHost(maintenanceForReplica.getHost(),
                             () -> maintenanceForReplica.getPotentiallyUnusedIndexes(pgContext)));
@@ -92,7 +92,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
         final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = new ArrayList<>();
-        for (var maintenanceForReplica : maintenanceForReplicas) {
+        for (IndexMaintenance maintenanceForReplica : maintenanceForReplicas) {
             tablesWithMissingIndexesFromAllHosts.add(
                     doOnHost(maintenanceForReplica.getHost(),
                             () -> maintenanceForReplica.getTablesWithMissingIndexes(pgContext)));
@@ -116,7 +116,7 @@ public class IndexesHealthImpl implements IndexesHealth {
 
     @Override
     public void resetStatistics() {
-        for (var statisticsMaintenance : statisticsMaintenanceForReplicas) {
+        for (StatisticsMaintenance statisticsMaintenance : statisticsMaintenanceForReplicas) {
             doOnHost(statisticsMaintenance.getHost(), statisticsMaintenance::resetStatistics);
         }
     }

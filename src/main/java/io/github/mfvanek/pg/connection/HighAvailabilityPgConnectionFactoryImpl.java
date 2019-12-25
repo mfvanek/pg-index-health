@@ -8,10 +8,12 @@
 package io.github.mfvanek.pg.connection;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -59,7 +61,7 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
                                                 @Nonnull final String password,
                                                 @Nullable final String readUrl,
                                                 @Nullable final String cascadeAsyncReadUrl) {
-        final var connectionToMaster = pgConnectionFactory.forUrl(writeUrl, userName, password);
+        final PgConnection connectionToMaster = pgConnectionFactory.forUrl(writeUrl, userName, password);
         final Map<String, PgConnection> connectionsToReplicas = new HashMap<>();
         addReplicasDataSources(connectionsToReplicas, writeUrl, userName, password);
         if (StringUtils.isNotBlank(readUrl)) {
@@ -75,8 +77,8 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
                                         @Nonnull final String readUrl,
                                         @Nonnull final String userName,
                                         @Nonnull final String password) {
-        final var allHosts = PgUrlParser.extractNameWithPortAndUrlForEachHost(readUrl);
-        for (var host : allHosts) {
+        final List<Pair<String, String>> allHosts = PgUrlParser.extractNameWithPortAndUrlForEachHost(readUrl);
+        for (Pair<String, String> host : allHosts) {
             connectionsToReplicas.computeIfAbsent(
                     host.getKey(), h -> pgConnectionFactory.forUrl(host.getValue(), userName, password));
         }
