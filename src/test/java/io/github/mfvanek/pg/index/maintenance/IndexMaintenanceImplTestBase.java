@@ -9,18 +9,25 @@ package io.github.mfvanek.pg.index.maintenance;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.model.DuplicatedIndexes;
+import io.github.mfvanek.pg.model.ForeignKey;
+import io.github.mfvanek.pg.model.Index;
+import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.IndexWithSize;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.Table;
+import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.utils.DatabasePopulator;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
@@ -44,7 +51,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getInvalidIndexesOnEmptyDataBase() {
-        final var invalidIndexes = indexMaintenance.getInvalidIndexes();
+        final List<Index> invalidIndexes = indexMaintenance.getInvalidIndexes();
         assertNotNull(invalidIndexes);
         assertEquals(0, invalidIndexes.size());
     }
@@ -55,7 +62,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final var invalidIndexes = indexMaintenance.getInvalidIndexes(ctx);
+                    final List<Index> invalidIndexes = indexMaintenance.getInvalidIndexes(ctx);
                     assertNotNull(invalidIndexes);
                     assertEquals(0, invalidIndexes.size());
                 });
@@ -67,10 +74,10 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withInvalidIndex(),
                 ctx -> {
-                    final var invalidIndexes = indexMaintenance.getInvalidIndexes(ctx);
+                    final List<Index> invalidIndexes = indexMaintenance.getInvalidIndexes(ctx);
                     assertNotNull(invalidIndexes);
                     assertEquals(1, invalidIndexes.size());
-                    final var index = invalidIndexes.get(0);
+                    final Index index = invalidIndexes.get(0);
                     if (isDefaultSchema(schemaName)) {
                         assertEquals("clients", index.getTableName());
                         assertEquals("i_clients_last_name_first_name", index.getIndexName());
@@ -83,7 +90,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getDuplicatedIndexesOnEmptyDataBase() {
-        final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
+        final List<DuplicatedIndexes> duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
         assertNotNull(duplicatedIndexes);
         assertEquals(0, duplicatedIndexes.size());
     }
@@ -94,7 +101,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes(ctx);
+                    final List<DuplicatedIndexes> duplicatedIndexes = indexMaintenance.getDuplicatedIndexes(ctx);
                     assertNotNull(duplicatedIndexes);
                     assertEquals(0, duplicatedIndexes.size());
                 });
@@ -106,19 +113,19 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withDuplicatedIndex(),
                 ctx -> {
-                    final var duplicatedIndexes = indexMaintenance.getDuplicatedIndexes(ctx);
+                    final List<DuplicatedIndexes> duplicatedIndexes = indexMaintenance.getDuplicatedIndexes(ctx);
                     assertNotNull(duplicatedIndexes);
                     assertEquals(1, duplicatedIndexes.size());
-                    final var entry = duplicatedIndexes.get(0);
+                    final DuplicatedIndexes entry = duplicatedIndexes.get(0);
                     if (isDefaultSchema(schemaName)) {
                         assertEquals("accounts", entry.getTableName());
                     } else {
                         assertEquals(schemaName + ".accounts", entry.getTableName());
                     }
                     assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
-                    final var indexes = entry.getDuplicatedIndexes();
+                    final List<IndexWithSize> indexes = entry.getDuplicatedIndexes();
                     assertEquals(2, indexes.size());
-                    final var names = indexes.stream()
+                    final List<String> names = indexes.stream()
                             .map(IndexWithSize::getIndexName)
                             .collect(Collectors.toList());
                     if (isDefaultSchema(schemaName)) {
@@ -135,7 +142,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getIntersectedIndexesOnEmptyDataBase() {
-        final var intersectedIndexes = indexMaintenance.getIntersectedIndexes();
+        final List<DuplicatedIndexes> intersectedIndexes = indexMaintenance.getIntersectedIndexes();
         assertNotNull(intersectedIndexes);
         assertEquals(0, intersectedIndexes.size());
     }
@@ -146,7 +153,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final var intersectedIndexes = indexMaintenance.getIntersectedIndexes(ctx);
+                    final List<DuplicatedIndexes> intersectedIndexes = indexMaintenance.getIntersectedIndexes(ctx);
                     assertNotNull(intersectedIndexes);
                     assertEquals(0, intersectedIndexes.size());
                 });
@@ -158,19 +165,19 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withDuplicatedIndex(),
                 ctx -> {
-                    final var intersectedIndexes = indexMaintenance.getIntersectedIndexes(ctx);
+                    final List<DuplicatedIndexes> intersectedIndexes = indexMaintenance.getIntersectedIndexes(ctx);
                     assertNotNull(intersectedIndexes);
                     assertEquals(1, intersectedIndexes.size());
-                    final var entry = intersectedIndexes.get(0);
+                    final DuplicatedIndexes entry = intersectedIndexes.get(0);
                     if (isDefaultSchema(schemaName)) {
                         assertEquals("clients", entry.getTableName());
                     } else {
                         assertEquals(schemaName + ".clients", entry.getTableName());
                     }
                     assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
-                    final var indexes = entry.getDuplicatedIndexes();
+                    final List<IndexWithSize> indexes = entry.getDuplicatedIndexes();
                     assertEquals(2, indexes.size());
-                    final var names = indexes.stream()
+                    final List<String> names = indexes.stream()
                             .map(IndexWithSize::getIndexName)
                             .collect(Collectors.toList());
                     if (isDefaultSchema(schemaName)) {
@@ -187,7 +194,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getPotentiallyUnusedIndexesOnEmptyDataBase() {
-        final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+        final List<UnusedIndex> unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
         assertNotNull(unusedIndexes);
         assertEquals(0, unusedIndexes.size());
     }
@@ -198,7 +205,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes(ctx);
+                    final List<UnusedIndex> unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes(ctx);
                     assertNotNull(unusedIndexes);
                     assertEquals(0, unusedIndexes.size());
                 });
@@ -210,10 +217,10 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withDuplicatedIndex(),
                 ctx -> {
-                    final var unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes(ctx);
+                    final List<UnusedIndex> unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes(ctx);
                     assertNotNull(unusedIndexes);
                     assertThat(unusedIndexes.size(), equalTo(3));
-                    final var names = unusedIndexes.stream().map(UnusedIndex::getIndexName).collect(toSet());
+                    final Set<String> names = unusedIndexes.stream().map(UnusedIndex::getIndexName).collect(toSet());
                     if (isDefaultSchema(schemaName)) {
                         assertThat(names, containsInAnyOrder(
                                 "i_clients_last_first",
@@ -230,7 +237,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnEmptyDataBase() {
-        final var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+        final List<ForeignKey> foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
         assertNotNull(foreignKeys);
         assertEquals(0, foreignKeys.size());
     }
@@ -241,7 +248,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp,
                 ctx -> {
-                    final var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
+                    final List<ForeignKey> foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
                     assertNotNull(foreignKeys);
                     assertEquals(0, foreignKeys.size());
                 });
@@ -253,10 +260,10 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
+                    final List<ForeignKey> foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
                     assertNotNull(foreignKeys);
                     assertEquals(1, foreignKeys.size());
-                    final var foreignKey = foreignKeys.get(0);
+                    final ForeignKey foreignKey = foreignKeys.get(0);
                     if (isDefaultSchema(schemaName)) {
                         assertEquals("accounts", foreignKey.getTableName());
                     } else {
@@ -272,10 +279,10 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withNonSuitableIndex(),
                 ctx -> {
-                    var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
+                    final List<ForeignKey> foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
                     assertNotNull(foreignKeys);
                     assertEquals(1, foreignKeys.size());
-                    final var foreignKey = foreignKeys.get(0);
+                    final ForeignKey foreignKey = foreignKeys.get(0);
                     if (isDefaultSchema(schemaName)) {
                         assertEquals("accounts", foreignKey.getTableName());
                     } else {
@@ -291,7 +298,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withSuitableIndex(),
                 ctx -> {
-                    var foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
+                    final List<ForeignKey> foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
                     assertNotNull(foreignKeys);
                     assertEquals(0, foreignKeys.size());
                 });
@@ -299,7 +306,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithMissingIndexesOnEmptyDataBase() {
-        final var tables = indexMaintenance.getTablesWithMissingIndexes();
+        final List<TableWithMissingIndex> tables = indexMaintenance.getTablesWithMissingIndexes();
         assertNotNull(tables);
         assertEquals(0, tables.size());
     }
@@ -310,7 +317,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
-                    final var tables = indexMaintenance.getTablesWithMissingIndexes(ctx);
+                    final List<TableWithMissingIndex> tables = indexMaintenance.getTablesWithMissingIndexes(ctx);
                     assertNotNull(tables);
                     assertEquals(0, tables.size());
                 });
@@ -323,10 +330,10 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
                     tryToFindAccountByClientId(schemaName);
-                    var tables = indexMaintenance.getTablesWithMissingIndexes(ctx);
+                    final List<TableWithMissingIndex> tables = indexMaintenance.getTablesWithMissingIndexes(ctx);
                     assertNotNull(tables);
-                    MatcherAssert.assertThat(tables, hasSize(1));
-                    var table = tables.get(0);
+                    assertThat(tables, hasSize(1));
+                    final TableWithMissingIndex table = tables.get(0);
                     if (isDefaultSchema(schemaName)) {
                         assertEquals("accounts", table.getTableName());
                     } else {
@@ -339,7 +346,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithoutPrimaryKeyOnEmptyDataBase() {
-        final var tables = indexMaintenance.getTablesWithoutPrimaryKey();
+        final List<Table> tables = indexMaintenance.getTablesWithoutPrimaryKey();
         assertNotNull(tables);
         assertEquals(0, tables.size());
     }
@@ -350,7 +357,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
-                    final var tables = indexMaintenance.getTablesWithoutPrimaryKey(ctx);
+                    final List<Table> tables = indexMaintenance.getTablesWithoutPrimaryKey(ctx);
                     assertNotNull(tables);
                     assertEquals(0, tables.size());
                 });
@@ -362,10 +369,10 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withTableWithoutPrimaryKey(),
                 ctx -> {
-                    var tables = indexMaintenance.getTablesWithoutPrimaryKey(ctx);
+                    final List<Table> tables = indexMaintenance.getTablesWithoutPrimaryKey(ctx);
                     assertNotNull(tables);
-                    MatcherAssert.assertThat(tables, hasSize(1));
-                    var table = tables.get(0);
+                    assertThat(tables, hasSize(1));
+                    final Table table = tables.get(0);
                     if (isDefaultSchema(schemaName)) {
                         assertEquals("bad_clients", table.getTableName());
                     } else {
@@ -376,7 +383,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getIndexesWithNullValuesOnEmptyDataBase() {
-        final var indexes = indexMaintenance.getIndexesWithNullValues();
+        final List<IndexWithNulls> indexes = indexMaintenance.getIndexesWithNullValues();
         assertNotNull(indexes);
         assertEquals(0, indexes.size());
     }
@@ -387,7 +394,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
-                    final var indexes = indexMaintenance.getIndexesWithNullValues(ctx);
+                    final List<IndexWithNulls> indexes = indexMaintenance.getIndexesWithNullValues(ctx);
                     assertNotNull(indexes);
                     assertEquals(0, indexes.size());
                 });
@@ -399,10 +406,10 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withNullValuesInIndex(),
                 ctx -> {
-                    final var indexes = indexMaintenance.getIndexesWithNullValues(ctx);
+                    final List<IndexWithNulls> indexes = indexMaintenance.getIndexesWithNullValues(ctx);
                     assertNotNull(indexes);
                     assertEquals(1, indexes.size());
-                    final var indexWithNulls = indexes.get(0);
+                    final IndexWithNulls indexWithNulls = indexes.get(0);
                     if (isDefaultSchema(schemaName)) {
                         assertEquals("i_clients_middle_name", indexWithNulls.getIndexName());
                     } else {
@@ -419,18 +426,19 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
                 ctx -> {
                     final long before = getRowsCount(ctx.getSchemaName(), "clients");
                     assertEquals(1001L, before);
-                    var indexes = indexMaintenance.getIndexesWithNullValues(PgContext.of("; truncate table clients;"));
+                    List<IndexWithNulls> indexes = indexMaintenance.getIndexesWithNullValues
+                            (PgContext.of("; truncate table clients;"));
                     assertNotNull(indexes);
-                    MatcherAssert.assertThat(indexes, hasSize(0));
+                    assertThat(indexes, hasSize(0));
                     assertEquals(before, getRowsCount(ctx.getSchemaName(), "clients"));
 
                     indexes = indexMaintenance.getIndexesWithNullValues(PgContext.of("; select pg_sleep(100000000);"));
                     assertNotNull(indexes);
-                    MatcherAssert.assertThat(indexes, hasSize(0));
+                    assertThat(indexes, hasSize(0));
 
                     indexes = indexMaintenance.getIndexesWithNullValues(ctx);
                     assertNotNull(indexes);
-                    MatcherAssert.assertThat(indexes, hasSize(1));
+                    assertThat(indexes, hasSize(1));
                 });
     }
 }

@@ -12,6 +12,7 @@ import io.github.mfvanek.pg.utils.QueryExecutor;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
@@ -29,8 +30,8 @@ public class ConfigurationMaintenanceImpl implements ConfigurationMaintenance {
     public Set<PgParam> getParamsWithDefaultValues(@Nonnull ServerSpecification specification) {
         // TODO get max_connections and calculate recommended values
         final Set<PgParam> params = new HashSet<>();
-        for (var importantParam : ImportantParam.values()) {
-            var currentValue = getParamCurrentValue(importantParam);
+        for (ImportantParam importantParam : ImportantParam.values()) {
+            PgParam currentValue = getParamCurrentValue(importantParam);
             if (currentValue.getValue().equals(importantParam.getDefaultValue())) {
                 params.add(currentValue);
             }
@@ -41,12 +42,12 @@ public class ConfigurationMaintenanceImpl implements ConfigurationMaintenance {
     @Override
     @Nonnull
     public Set<PgParam> getParamsCurrentValues() {
-        final var params = QueryExecutor.executeQuery(pgConnection, "show all", rs -> {
+        final List<PgParam> params = QueryExecutor.executeQuery(pgConnection, "show all", rs -> {
             final String paramName = rs.getString("name");
             final String currentValue = rs.getString("setting");
             return PgParamImpl.of(paramName, currentValue);
         });
-        return Set.copyOf(params);
+        return new HashSet<>(params);
     }
 
     @Override
@@ -58,7 +59,7 @@ public class ConfigurationMaintenanceImpl implements ConfigurationMaintenance {
     @Nonnull
     private PgParam getCurrentValue(@Nonnull final String paramName) {
         final String sqlQuery = String.format("show %s;", paramName);
-        final var params = QueryExecutor.executeQuery(pgConnection, sqlQuery, rs -> {
+        final List<PgParam> params = QueryExecutor.executeQuery(pgConnection, sqlQuery, rs -> {
             final String currentValue = rs.getString(paramName);
             return PgParamImpl.of(paramName, currentValue);
         });

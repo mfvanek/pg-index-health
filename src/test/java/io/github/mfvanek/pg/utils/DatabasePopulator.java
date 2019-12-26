@@ -132,7 +132,7 @@ public final class DatabasePopulator implements AutoCloseable {
                     "select exists(select 1 from information_schema.schemata where schema_name = '%s')", schemaName);
             try (ResultSet rs = statement.executeQuery(checkQuery)) {
                 if (rs.next()) {
-                    final var schemaExists = rs.getBoolean(1);
+                    final boolean schemaExists = rs.getBoolean(1);
                     if (schemaExists) {
                         return;
                     }
@@ -323,7 +323,7 @@ public final class DatabasePopulator implements AutoCloseable {
                     "   );", schemaName, "bad_clients");
             try (ResultSet rs = statement.executeQuery(checkQuery)) {
                 if (rs.next()) {
-                    final var schemaExists = rs.getBoolean(1);
+                    final boolean schemaExists = rs.getBoolean(1);
                     if (schemaExists) {
                         return;
                     }

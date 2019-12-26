@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -38,12 +39,12 @@ abstract class ConfigurationMaintenanceImplTestBase extends DatabaseAwareTestBas
 
     @Test
     void getParamsWithDefaultValues() {
-        final var specification = ServerSpecification.builder()
+        final ServerSpecification specification = ServerSpecification.builder()
                 .withCpuCores(2)
                 .withMemoryAmount(2, MemoryUnit.GB)
                 .withSSD()
                 .build();
-        final var paramsWithDefaultValues = configurationMaintenance.getParamsWithDefaultValues(specification);
+        final Set<PgParam> paramsWithDefaultValues = configurationMaintenance.getParamsWithDefaultValues(specification);
         assertNotNull(paramsWithDefaultValues);
         assertThat(paramsWithDefaultValues, hasSize(9));
         assertThat(paramsWithDefaultValues.stream()
@@ -63,20 +64,20 @@ abstract class ConfigurationMaintenanceImplTestBase extends DatabaseAwareTestBas
 
     @Test
     void getParamsCurrentValues() {
-        final var currentValues = configurationMaintenance.getParamsCurrentValues();
+        final Set<PgParam> currentValues = configurationMaintenance.getParamsCurrentValues();
         assertNotNull(currentValues);
         assertThat(currentValues, hasSize(greaterThan(200)));
-        final var allParamNames = currentValues.stream()
+        final Set<String> allParamNames = currentValues.stream()
                 .map(PgParam::getName)
                 .collect(toSet());
-        for (var importantParam : ImportantParam.values()) {
+        for (ImportantParam importantParam : ImportantParam.values()) {
             assertThat(allParamNames, hasItem(importantParam.getName()));
         }
     }
 
     @Test
     void getParamCurrentValue() {
-        final var currentValue = configurationMaintenance.getParamCurrentValue(ImportantParam.LOG_MIN_DURATION_STATEMENT);
+        final PgParam currentValue = configurationMaintenance.getParamCurrentValue(ImportantParam.LOG_MIN_DURATION_STATEMENT);
         assertNotNull(currentValue);
         assertEquals(ImportantParam.LOG_MIN_DURATION_STATEMENT.getDefaultValue(), currentValue.getValue());
     }

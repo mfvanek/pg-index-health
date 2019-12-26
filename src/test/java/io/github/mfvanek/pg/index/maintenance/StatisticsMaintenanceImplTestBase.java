@@ -9,6 +9,7 @@ package io.github.mfvanek.pg.index.maintenance;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ abstract class StatisticsMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
     @Test
     void getHost() {
-        final var host = statisticsMaintenance.getHost();
+        final PgHost host = statisticsMaintenance.getHost();
         assertNotNull(host);
         assertEquals("master", host.getName());
     }

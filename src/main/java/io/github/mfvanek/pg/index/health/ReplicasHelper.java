@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -55,13 +56,13 @@ final class ReplicasHelper {
             @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts) {
         LOGGER.debug("potentiallyUnusedIndexesFromAllHosts = {}", potentiallyUnusedIndexesFromAllHosts);
         Collection<UnusedIndex> unusedIndexes = null;
-        for (var unusedIndexesFromHost : potentiallyUnusedIndexesFromAllHosts) {
+        for (List<UnusedIndex> unusedIndexesFromHost : potentiallyUnusedIndexesFromAllHosts) {
             if (unusedIndexes == null) {
                 unusedIndexes = unusedIndexesFromHost;
             }
             unusedIndexes = CollectionUtils.intersection(unusedIndexes, unusedIndexesFromHost);
         }
-        final List<UnusedIndex> result = unusedIndexes == null ? Collections.emptyList() : List.copyOf(unusedIndexes);
+        final List<UnusedIndex> result = unusedIndexes == null ? Collections.emptyList() : new ArrayList<>(unusedIndexes);
         LOGGER.debug("Intersection result {}", result);
         return result;
     }

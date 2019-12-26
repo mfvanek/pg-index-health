@@ -20,7 +20,7 @@ class ServerSpecificationTest {
 
     @Test
     void getCpuCoresAmount() {
-        final var specification = ServerSpecification.builder()
+        final ServerSpecification specification = ServerSpecification.builder()
                 .withCpuCores(2)
                 .build();
         assertNotNull(specification);
@@ -34,7 +34,7 @@ class ServerSpecificationTest {
 
     @Test
     void getMemoryAmountInBytes() {
-        final var specification = ServerSpecification.builder()
+        final ServerSpecification specification = ServerSpecification.builder()
                 .withMemoryAmount(160, MemoryUnit.GB)
                 .build();
         assertNotNull(specification);
@@ -48,7 +48,7 @@ class ServerSpecificationTest {
 
     @Test
     void hasSSD() {
-        final var specification = ServerSpecification.builder()
+        final ServerSpecification specification = ServerSpecification.builder()
                 .withSSD()
                 .build();
         assertNotNull(specification);
@@ -59,7 +59,7 @@ class ServerSpecificationTest {
 
     @Test
     void toStringTest() {
-        final var specification = ServerSpecification.builder().build();
+        final ServerSpecification specification = ServerSpecification.builder().build();
         assertNotNull(specification);
         assertEquals("ServerSpecification{cpuCoresAmount=1, memoryAmountInBytes=1073741824, hasSSD=false}",
                 specification.toString());

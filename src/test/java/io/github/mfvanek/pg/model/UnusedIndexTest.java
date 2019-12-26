@@ -16,7 +16,7 @@ class UnusedIndexTest {
 
     @Test
     void getIndexScans() {
-        final var index = UnusedIndex.of("t", "i", 1L, 2L);
+        final UnusedIndex index = UnusedIndex.of("t", "i", 1L, 2L);
         assertEquals("t", index.getTableName());
         assertEquals("i", index.getIndexName());
         assertEquals(1L, index.getIndexSizeInBytes());
@@ -25,7 +25,7 @@ class UnusedIndexTest {
 
     @Test
     void testToString() {
-        final var index = UnusedIndex.of("t", "i", 1L, 2L);
+        final UnusedIndex index = UnusedIndex.of("t", "i", 1L, 2L);
         assertEquals("UnusedIndex{tableName='t', indexName='i', " +
                 "indexSizeInBytes=1, indexScans=2}", index.toString());
     }

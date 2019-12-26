@@ -23,7 +23,7 @@ class DuplicatedIndexesTest {
 
     @Test
     void withTheSameTable() {
-        final var index = DuplicatedIndexes.of(List.of(
+        final DuplicatedIndexes index = DuplicatedIndexes.of(List.of(
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
         assertNotNull(index);
@@ -37,7 +37,7 @@ class DuplicatedIndexesTest {
 
     @Test
     void testToString() {
-        final var indexes = DuplicatedIndexes.of(List.of(
+        final DuplicatedIndexes indexes = DuplicatedIndexes.of(List.of(
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
         assertNotNull(indexes);
@@ -65,7 +65,7 @@ class DuplicatedIndexesTest {
 
     @Test
     void fromValidString() {
-        final var index = DuplicatedIndexes.of("t", "idx=i3, size=11; idx=i4, size=167");
+        final DuplicatedIndexes index = DuplicatedIndexes.of("t", "idx=i3, size=11; idx=i4, size=167");
         assertNotNull(index);
         assertEquals("t", index.getTableName());
         assertEquals(178L, index.getTotalSize());

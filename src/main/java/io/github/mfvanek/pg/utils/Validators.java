@@ -93,6 +93,6 @@ public final class Validators {
     }
 
     public static String paramValueNotNull(@Nonnull final String value, @Nonnull final String message) {
-        return Objects.requireNonNull(value, message).strip();
+        return Objects.requireNonNull(value, message).trim();
     }
 }

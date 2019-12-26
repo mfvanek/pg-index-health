@@ -44,7 +44,7 @@ public abstract class DatabaseAwareTestBase {
     protected void executeTestOnDatabase(@Nonnull final String schemaName,
                                          @Nonnull final DatabaseConfigurer databaseConfigurer,
                                          @Nonnull final TestExecutor testExecutor) {
-        try (var databasePopulator = createDatabasePopulator()) {
+        try (DatabasePopulator databasePopulator = createDatabasePopulator()) {
             databaseConfigurer.configure(databasePopulator)
                     .withSchema(schemaName)
                     .populate();

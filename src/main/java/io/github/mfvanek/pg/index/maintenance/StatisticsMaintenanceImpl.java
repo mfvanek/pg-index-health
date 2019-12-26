@@ -12,6 +12,7 @@ import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.utils.QueryExecutor;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Objects;
 
 public class StatisticsMaintenanceImpl implements StatisticsMaintenance {
@@ -24,7 +25,7 @@ public class StatisticsMaintenanceImpl implements StatisticsMaintenance {
 
     @Override
     public boolean resetStatistics() {
-        final var result = QueryExecutor.executeQuery(pgConnection, "select pg_stat_reset()", rs -> true);
+        final List<Boolean> result = QueryExecutor.executeQuery(pgConnection, "select pg_stat_reset()", rs -> true);
         return result.size() == 1;
     }
 

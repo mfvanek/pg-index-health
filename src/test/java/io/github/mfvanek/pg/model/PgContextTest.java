@@ -16,7 +16,7 @@ class PgContextTest {
 
     @Test
     void getSchemeName() {
-        final var context = PgContext.of("s");
+        final PgContext context = PgContext.of("s");
         assertEquals("s", context.getSchemaName());
         assertEquals("public", PgContext.ofPublic().getSchemaName());
     }
@@ -31,7 +31,7 @@ class PgContextTest {
 
     @Test
     void testToString() {
-        final var context = PgContext.of("s");
+        final PgContext context = PgContext.of("s");
         assertEquals("PgContext{schemaName='s'}", context.toString());
         assertEquals("PgContext{schemaName='public'}", PgContext.ofPublic().toString());
     }

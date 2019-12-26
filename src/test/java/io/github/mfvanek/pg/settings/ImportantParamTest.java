@@ -19,7 +19,7 @@ class ImportantParamTest {
 
     @Test
     void completenessTest() {
-        for (var param : ImportantParam.values()) {
+        for (ImportantParam param : ImportantParam.values()) {
             assertNotNull(param.getName());
             assertNotNull(param.getDefaultValue());
         }
@@ -28,7 +28,7 @@ class ImportantParamTest {
     @Test
     void uniquenessTest() {
         final Set<String> names = new HashSet<>();
-        for (var param : ImportantParam.values()) {
+        for (ImportantParam param : ImportantParam.values()) {
             names.add(param.getName());
         }
         assertEquals(ImportantParam.values().length, names.size());

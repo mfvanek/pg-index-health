@@ -21,7 +21,7 @@ class ExclusionsTest {
 
     @Test
     void parseTest() {
-        final var exclusions = Exclusions.builder()
+        final Exclusions exclusions = Exclusions.builder()
                 .withDuplicatedIndexesExclusions("i1,i2,, i3, , i4 ")
                 .withIndexSizeThreshold(11L)
                 .withTableSizeThreshold(22L)
@@ -36,7 +36,7 @@ class ExclusionsTest {
 
     @Test
     void withMemoryUnitTest() {
-        final var exclusions = Exclusions.builder()
+        final Exclusions exclusions = Exclusions.builder()
                 .withTableSizeThreshold(10, MemoryUnit.MB)
                 .withIndexSizeThreshold(2, MemoryUnit.GB)
                 .build();
@@ -47,7 +47,7 @@ class ExclusionsTest {
 
     @Test
     void emptyTest() {
-        final var exclusions = Exclusions.empty();
+        final Exclusions exclusions = Exclusions.empty();
         assertNotNull(exclusions);
 
         assertNotNull(exclusions.getDuplicatedIndexesExclusions());
@@ -74,7 +74,7 @@ class ExclusionsTest {
 
     @Test
     void toStringTest() {
-        final var exclusions = Exclusions.empty();
+        final Exclusions exclusions = Exclusions.empty();
         assertEquals("Exclusions{duplicatedIndexesExclusions=[], " +
                         "intersectedIndexesExclusions=[], unusedIndexesExclusions=[], " +
                         "tablesWithMissingIndexesExclusions=[], tablesWithoutPrimaryKeyExclusions=[], " +
@@ -84,7 +84,7 @@ class ExclusionsTest {
 
     @Test
     void toStringBuilderTest() {
-        final var builder = Exclusions.builder();
+        final Exclusions.Builder builder = Exclusions.builder();
         assertNotNull(builder);
         assertEquals("Builder{duplicatedIndexesExclusions='', intersectedIndexesExclusions='', " +
                         "unusedIndexesExclusions='', tablesWithMissingIndexesExclusions='', tablesWithoutPrimaryKeyExclusions='', " +

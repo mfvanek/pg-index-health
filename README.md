@@ -43,10 +43,10 @@ public class DemoApp {
         final String readUrl = "jdbc:postgresql://host-name-1:6432,host-name-2:6432,host-name-3:6432/db_name_testing?targetServerType=preferSlave&loadBalanceHosts=true&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require";
         final String userName = "user_name_testing";
         final String password = "password_testing";
-        final var haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
-        final var haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl);
-        final var indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
-        final var logger = new SimpleHealthLogger(indexesHealth);
+        final HighAvailabilityPgConnectionFactory haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
+        final HighAvailabilityPgConnection haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl);
+        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealth);
         logger.logAll(Exclusions.empty(), PgContext.ofPublic())
                 .forEach(System.out::println);
         // Resetting current statistics
@@ -59,14 +59,14 @@ public class DemoApp {
         final String cascadeAsyncReadUrl = "jdbc:postgresql://host-name-6:6432/db_name_production?ssl=true&targetServerType=preferSlave&loadBalanceHosts=true&prepareThreshold=0&preparedStatementCacheQueries=0&connectTimeout=2&socketTimeout=50&loginTimeout=10&sslmode=require";
         final String userName = "user_name_production";
         final String password = "password_production";
-        final var haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
-        final var haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl, cascadeAsyncReadUrl);
-        final var indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
-        final var exclusions = Exclusions.builder()
+        final HighAvailabilityPgConnectionFactory haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
+        final HighAvailabilityPgConnection haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl, cascadeAsyncReadUrl);
+        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
+        final Exclusions exclusions = Exclusions.builder()
                 .withIndexSizeThreshold(10, MemoryUnit.MB)
                 .withTableSizeThreshold(10, MemoryUnit.MB)
                 .build();
-        final var logger = new SimpleHealthLogger(indexesHealth);
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealth);
         logger.logAll(exclusions, PgContext.ofPublic())
                 .forEach(System.out::println);
     }

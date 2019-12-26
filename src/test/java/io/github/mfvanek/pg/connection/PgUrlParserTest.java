@@ -10,6 +10,9 @@ package io.github.mfvanek.pg.connection;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Set;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
@@ -19,7 +22,7 @@ class PgUrlParserTest {
 
     @Test
     void extractNamesAndUrlsForEachHost() {
-        var extractResult = PgUrlParser.extractNameWithPortAndUrlForEachHost(
+        final List<Pair<String, String>> extractResult = PgUrlParser.extractNameWithPortAndUrlForEachHost(
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
         assertThat(extractResult, hasSize(4));
         assertThat(extractResult, containsInAnyOrder(
@@ -40,7 +43,7 @@ class PgUrlParserTest {
 
     @Test
     void extractNamesAndUrlsForMaster() {
-        var extractResult = PgUrlParser.extractNameWithPortAndUrlForEachHost(
+        final List<Pair<String, String>> extractResult = PgUrlParser.extractNameWithPortAndUrlForEachHost(
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?targetServerType=master&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require");
         assertThat(extractResult, hasSize(4));
         assertThat(extractResult, containsInAnyOrder(
@@ -53,7 +56,7 @@ class PgUrlParserTest {
 
     @Test
     void extractHostNames() {
-        final var hostNames = PgUrlParser.extractHostNames(
+        final Set<String> hostNames = PgUrlParser.extractHostNames(
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
         assertThat(hostNames, hasSize(4));
         assertThat(hostNames, containsInAnyOrder("host-1", "host-2", "host-3", "host-4"));
