@@ -10,6 +10,8 @@ package io.github.mfvanek.pg.model;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ForeignKey implements TableNameAware {
@@ -23,7 +25,7 @@ public class ForeignKey implements TableNameAware {
                        @Nonnull List<String> columnsInConstraint) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
-        this.columnsInConstraint = List.copyOf(Validators.validateThatNotEmpty(columnsInConstraint));
+        this.columnsInConstraint = new ArrayList<>(Validators.validateThatNotEmpty(columnsInConstraint));
     }
 
     @Override
@@ -39,7 +41,7 @@ public class ForeignKey implements TableNameAware {
 
     @Nonnull
     public List<String> getColumnsInConstraint() {
-        return columnsInConstraint;
+        return Collections.unmodifiableList(columnsInConstraint);
     }
 
     @Override

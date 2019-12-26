@@ -47,7 +47,7 @@ public class ConfigurationMaintenanceImpl implements ConfigurationMaintenance {
             final String currentValue = rs.getString("setting");
             return PgParamImpl.of(paramName, currentValue);
         });
-        return Set.copyOf(params);
+        return new HashSet<>(params);
     }
 
     @Override

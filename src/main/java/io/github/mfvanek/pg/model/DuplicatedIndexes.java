@@ -11,7 +11,9 @@ import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +29,7 @@ public class DuplicatedIndexes implements TableNameAware {
     private final long totalSize;
 
     private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
-        this.duplicatedIndexes = List.copyOf(Validators.validateThatTableIsTheSame(duplicatedIndexes));
+        this.duplicatedIndexes = new ArrayList<>(Validators.validateThatTableIsTheSame(duplicatedIndexes));
         this.totalSize = duplicatedIndexes.stream()
                 .mapToLong(IndexWithSize::getIndexSizeInBytes)
                 .sum();
@@ -41,7 +43,7 @@ public class DuplicatedIndexes implements TableNameAware {
 
     @Nonnull
     public List<IndexWithSize> getDuplicatedIndexes() {
-        return duplicatedIndexes;
+        return Collections.unmodifiableList(duplicatedIndexes);
     }
 
     public long getTotalSize() {
