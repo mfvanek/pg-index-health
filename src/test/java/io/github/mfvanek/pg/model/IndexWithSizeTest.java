@@ -16,13 +16,13 @@ class IndexWithSizeTest {
 
     @Test
     void indexWithZeroSize() {
-        final var index = IndexWithSize.of("t", "i", 0L);
+        final IndexWithSize index = IndexWithSize.of("t", "i", 0L);
         assertEquals(0L, index.getIndexSizeInBytes());
     }
 
     @Test
     void indexWithPositiveSize() {
-        final var index = IndexWithSize.of("t", "i", 123L);
+        final IndexWithSize index = IndexWithSize.of("t", "i", 123L);
         assertEquals(123L, index.getIndexSizeInBytes());
     }
 
@@ -33,7 +33,7 @@ class IndexWithSizeTest {
 
     @Test
     void testToString() {
-        final var index = IndexWithSize.of("t", "i", 33L);
+        final IndexWithSize index = IndexWithSize.of("t", "i", 33L);
         assertEquals("IndexWithSize{tableName='t', indexName='i', indexSizeInBytes=33}", index.toString());
     }
 }

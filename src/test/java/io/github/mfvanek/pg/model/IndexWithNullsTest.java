@@ -16,7 +16,7 @@ class IndexWithNullsTest {
 
     @Test
     void getNullableField() {
-        final var index = IndexWithNulls.of("t", "i", 11L, "f");
+        final IndexWithNulls index = IndexWithNulls.of("t", "i", 11L, "f");
         assertEquals("t", index.getTableName());
         assertEquals("i", index.getIndexName());
         assertEquals(11L, index.getIndexSizeInBytes());
@@ -38,7 +38,7 @@ class IndexWithNullsTest {
 
     @Test
     void testToString() {
-        final var index = IndexWithNulls.of("t", "i", 22L, "f");
+        final IndexWithNulls index = IndexWithNulls.of("t", "i", 22L, "f");
         assertEquals("IndexWithNulls{tableName='t', indexName='i', " +
                 "indexSizeInBytes=22, nullableField='f'}", index.toString());
     }

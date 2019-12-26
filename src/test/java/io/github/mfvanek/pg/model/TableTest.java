@@ -16,7 +16,7 @@ class TableTest {
 
     @Test
     void getTableName() {
-        final var table = Table.of("t", 1L);
+        final Table table = Table.of("t", 1L);
         assertEquals("t", table.getTableName());
         assertEquals(1L, table.getTableSizeInBytes());
     }
@@ -32,7 +32,7 @@ class TableTest {
 
     @Test
     void testToString() {
-        final var table = Table.of("t", 2L);
+        final Table table = Table.of("t", 2L);
         assertEquals("Table{tableName='t', tableSizeInBytes=2}", table.toString());
     }
 }

@@ -21,14 +21,14 @@ class ForeignKeyTest {
 
     @Test
     void testToString() {
-        final var foreignKey = ForeignKey.of("t", "c_t_order_id", List.of("order_id"));
+        final ForeignKey foreignKey = ForeignKey.of("t", "c_t_order_id", List.of("order_id"));
         assertEquals("ForeignKey{tableName='t', constraintName='c_t_order_id', " +
                 "columnsInConstraint=[order_id]}", foreignKey.toString());
     }
 
     @Test
     void foreignKey() {
-        final var foreignKey = ForeignKey.of("t", "c_t_order_id", List.of("order_id"));
+        final ForeignKey foreignKey = ForeignKey.of("t", "c_t_order_id", List.of("order_id"));
         assertEquals("t", foreignKey.getTableName());
         assertEquals("c_t_order_id", foreignKey.getConstraintName());
         assertThat(foreignKey.getColumnsInConstraint(), containsInAnyOrder("order_id"));

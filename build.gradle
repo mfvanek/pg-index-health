@@ -5,8 +5,8 @@ plugins {
 group 'io.github.mfvanek'
 version '0.1.1'
 
-sourceCompatibility = 10
-targetCompatibility = 10
+sourceCompatibility = 9
+targetCompatibility = 9
 
 repositories {
     mavenCentral()

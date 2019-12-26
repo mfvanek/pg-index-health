@@ -19,7 +19,7 @@ class TableWithMissingIndexTest {
 
     @Test
     void getters() {
-        final var table = TableWithMissingIndex.of("t", 1L, 2L, 3L);
+        final TableWithMissingIndex table = TableWithMissingIndex.of("t", 1L, 2L, 3L);
         assertEquals("t", table.getTableName());
         assertEquals(1L, table.getTableSizeInBytes());
         assertEquals(2L, table.getSeqScans());
@@ -39,16 +39,16 @@ class TableWithMissingIndexTest {
 
     @Test
     void testToString() {
-        final var table = TableWithMissingIndex.of("t", 11L, 33L, 22L);
+        final TableWithMissingIndex table = TableWithMissingIndex.of("t", 11L, 33L, 22L);
         assertEquals("TableWithMissingIndex{tableName='t', tableSizeInBytes=11, seqScans=33, indexScans=22}",
                 table.toString());
     }
 
     @Test
     void testEqualsAndHashCode() {
-        final var first = TableWithMissingIndex.of("t1", 1L, 0, 1);
-        final var theSame = TableWithMissingIndex.of("t1", 2L, 2, 3);
-        final var third = TableWithMissingIndex.of("t2", 3L, 4, 5);
+        final TableWithMissingIndex first = TableWithMissingIndex.of("t1", 1L, 0, 1);
+        final TableWithMissingIndex theSame = TableWithMissingIndex.of("t1", 2L, 2, 3);
+        final TableWithMissingIndex third = TableWithMissingIndex.of("t2", 3L, 4, 5);
 
         assertNotEquals(first, null);
         assertNotEquals(first, BigDecimal.ZERO);
@@ -65,9 +65,9 @@ class TableWithMissingIndexTest {
 
     @Test
     void comparison() {
-        final var first = TableWithMissingIndex.of("t1", 1L, 0, 1);
-        final var theSame = TableWithMissingIndex.of("t1", 2L, 2, 3);
-        final var third = TableWithMissingIndex.of("t2", 3L, 4, 5);
+        final TableWithMissingIndex first = TableWithMissingIndex.of("t1", 1L, 0, 1);
+        final TableWithMissingIndex theSame = TableWithMissingIndex.of("t1", 2L, 2, 3);
+        final TableWithMissingIndex third = TableWithMissingIndex.of("t2", 3L, 4, 5);
         assertEquals(0, first.compareTo(theSame));
         assertEquals(-1, first.compareTo(third));
         assertEquals(1, third.compareTo(theSame));
