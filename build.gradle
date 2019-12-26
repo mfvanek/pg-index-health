@@ -1,14 +1,17 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    //id 'signing'
 }
 
 group 'io.github.mfvanek'
-version '0.1.2'
+version '0.1.3-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -38,5 +41,68 @@ jar {
     manifest {
         attributes("Implementation-Title": project.name,
                 "Implementation-Version": project.version)
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            // artifactId = project.name
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = project.name
+                description = 'pg-index-health is a Java library for analyzing and maintaining indexes health in Postgresql databases.'
+                url = 'https://github.com/mfvanek/pg-index-health'
+                licenses {
+                    license {
+                        name = 'GNU General Public License v3.0'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'mfvanek'
+                        name = 'Ivan Vakhrushev'
+                        email = 'mfvanek@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'https://github.com/mfvanek/pg-index-health.git'
+                    developerConnection = 'git@github.com:mfvanek/pg-index-health.git'
+                    url = 'https://github.com/mfvanek/pg-index-health'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+        }
+        //mavenLocal()
+    }
+}
+
+//signing {
+//    sign publishing.publications.mavenJava
+//}
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
     }
 }
