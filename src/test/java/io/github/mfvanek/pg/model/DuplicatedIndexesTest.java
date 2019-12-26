@@ -9,8 +9,8 @@ package io.github.mfvanek.pg.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,7 +23,7 @@ class DuplicatedIndexesTest {
 
     @Test
     void withTheSameTable() {
-        final DuplicatedIndexes index = DuplicatedIndexes.of(List.of(
+        final DuplicatedIndexes index = DuplicatedIndexes.of(Arrays.asList(
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
         assertNotNull(index);
@@ -37,7 +37,7 @@ class DuplicatedIndexesTest {
 
     @Test
     void testToString() {
-        final DuplicatedIndexes indexes = DuplicatedIndexes.of(List.of(
+        final DuplicatedIndexes indexes = DuplicatedIndexes.of(Arrays.asList(
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
         assertNotNull(indexes);
@@ -58,7 +58,7 @@ class DuplicatedIndexesTest {
 
     @Test
     void withDifferentTables() {
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of(List.of(
+        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of(Arrays.asList(
                 IndexWithSize.of("t1", "i1", 1L),
                 IndexWithSize.of("t2", "i2", 2L))));
     }

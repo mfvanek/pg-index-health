@@ -8,6 +8,7 @@
 package io.github.mfvanek.pg.connection;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
@@ -36,7 +37,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
 
     @Nonnull
     public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToMaster) {
-        return new HighAvailabilityPgConnectionImpl(connectionToMaster, Set.of(connectionToMaster));
+        return new HighAvailabilityPgConnectionImpl(connectionToMaster, Collections.singleton(connectionToMaster));
     }
 
     @Nonnull

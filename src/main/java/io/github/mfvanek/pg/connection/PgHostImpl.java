@@ -8,6 +8,7 @@
 package io.github.mfvanek.pg.connection;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class PgHostImpl implements PgHost {
     }
 
     private PgHostImpl(@Nonnull final String hostName) {
-        this.hostNames = Set.of(Objects.requireNonNull(hostName));
+        this.hostNames = Collections.singleton(Objects.requireNonNull(hostName));
         this.pgUrl = PgUrlParser.URL_HEADER + hostName;
     }
 

@@ -13,7 +13,8 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.util.Set;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -39,8 +40,10 @@ class HighAvailabilityPgConnectionImplTest {
     @Test
     void withReplicas() {
         final PgConnection master = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
-        final PgConnection replica = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("replica"));
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(master, Set.of(master, replica));
+        final PgConnection replica = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(),
+                PgHostImpl.ofName("replica"));
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(master,
+                new HashSet<>(Arrays.asList(master, replica)));
         assertNotNull(haPgConnection);
         assertThat(haPgConnection.getConnectionsToReplicas(), hasSize(2));
         assertThat(haPgConnection.getConnectionsToReplicas(), Matchers.containsInAnyOrder(master, replica));
