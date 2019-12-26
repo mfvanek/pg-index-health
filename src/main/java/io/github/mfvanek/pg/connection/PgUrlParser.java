@@ -7,6 +7,7 @@
 
 package io.github.mfvanek.pg.connection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -14,8 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static java.util.function.Predicate.not;
 
 final class PgUrlParser {
 
@@ -54,7 +53,7 @@ final class PgUrlParser {
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
         final String allHostsWithPort = extractAllHostsWithPort(pgUrl);
         return Arrays.stream(allHostsWithPort.split(","))
-                .filter(not(String::isBlank))
+                .filter(StringUtils::isNotBlank)
                 .map(h -> h.substring(0, h.lastIndexOf(':')))
                 .collect(Collectors.toSet());
     }
