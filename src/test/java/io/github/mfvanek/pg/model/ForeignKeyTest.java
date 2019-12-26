@@ -10,7 +10,6 @@ package io.github.mfvanek.pg.model;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
-import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -21,14 +20,16 @@ class ForeignKeyTest {
 
     @Test
     void testToString() {
-        final ForeignKey foreignKey = ForeignKey.of("t", "c_t_order_id", List.of("order_id"));
+        final ForeignKey foreignKey = ForeignKey.of("t", "c_t_order_id",
+                Collections.singletonList("order_id"));
         assertEquals("ForeignKey{tableName='t', constraintName='c_t_order_id', " +
                 "columnsInConstraint=[order_id]}", foreignKey.toString());
     }
 
     @Test
     void foreignKey() {
-        final ForeignKey foreignKey = ForeignKey.of("t", "c_t_order_id", List.of("order_id"));
+        final ForeignKey foreignKey = ForeignKey.of("t", "c_t_order_id",
+                Collections.singletonList("order_id"));
         assertEquals("t", foreignKey.getTableName());
         assertEquals("c_t_order_id", foreignKey.getConstraintName());
         assertThat(foreignKey.getColumnsInConstraint(), containsInAnyOrder("order_id"));
