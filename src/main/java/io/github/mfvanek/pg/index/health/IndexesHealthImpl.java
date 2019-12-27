@@ -29,6 +29,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+/**
+ * Implementation of {@code IndexesHealth} which collects information from all hosts in the cluster.
+ *
+ * @author Ivan Vakhrushev
+ * @see IndexMaintenance
+ */
 public class IndexesHealthImpl implements IndexesHealth {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexesHealthImpl.class);
@@ -48,6 +54,9 @@ public class IndexesHealthImpl implements IndexesHealth {
                 haPgConnection.getConnectionsToReplicas(), maintenanceFactory);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<Index> getInvalidIndexes(@Nonnull final PgContext pgContext) {
@@ -55,6 +64,9 @@ public class IndexesHealthImpl implements IndexesHealth {
         return maintenanceForMaster.getInvalidIndexes(pgContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull final PgContext pgContext) {
@@ -62,6 +74,9 @@ public class IndexesHealthImpl implements IndexesHealth {
         return maintenanceForMaster.getDuplicatedIndexes(pgContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull final PgContext pgContext) {
@@ -69,6 +84,9 @@ public class IndexesHealthImpl implements IndexesHealth {
         return maintenanceForMaster.getIntersectedIndexes(pgContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<UnusedIndex> getUnusedIndexes(@Nonnull final PgContext pgContext) {
@@ -81,6 +99,9 @@ public class IndexesHealthImpl implements IndexesHealth {
         return ReplicasHelper.getUnusedIndexesAsIntersectionResult(potentiallyUnusedIndexesFromAllHosts);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull final PgContext pgContext) {
@@ -88,6 +109,9 @@ public class IndexesHealthImpl implements IndexesHealth {
         return maintenanceForMaster.getForeignKeysNotCoveredWithIndex(pgContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
@@ -100,6 +124,9 @@ public class IndexesHealthImpl implements IndexesHealth {
         return ReplicasHelper.getTablesWithMissingIndexesAsUnionResult(tablesWithMissingIndexesFromAllHosts);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
@@ -107,6 +134,9 @@ public class IndexesHealthImpl implements IndexesHealth {
         return maintenanceForMaster.getTablesWithoutPrimaryKey(pgContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final PgContext pgContext) {
@@ -114,6 +144,9 @@ public class IndexesHealthImpl implements IndexesHealth {
         return maintenanceForMaster.getIndexesWithNullValues(pgContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void resetStatistics() {
         for (StatisticsMaintenance statisticsMaintenance : statisticsMaintenanceForReplicas) {

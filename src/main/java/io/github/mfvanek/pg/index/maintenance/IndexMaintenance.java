@@ -23,7 +23,10 @@ import java.util.List;
 public interface IndexMaintenance extends HostAware {
 
     /**
-     * List of invalid (broken) indexes to be deleted or re-indexed.
+     * Returns invalid (broken) indexes to be deleted or re-indexed on current host.
+     *
+     * @param pgContext {@code PgContext} with the specified schema
+     * @return list of invalid indexes
      */
     @Nonnull
     List<Index> getInvalidIndexes(@Nonnull PgContext pgContext);
@@ -34,7 +37,10 @@ public interface IndexMaintenance extends HostAware {
     }
 
     /**
-     * List of duplicated (completely identical) indexes (candidates for deletion).
+     * Returns duplicated (completely identical) indexes (candidates for deletion) on current host.
+     *
+     * @param pgContext {@code PgContext} with the specified schema
+     * @return list of duplicated indexes
      */
     @Nonnull
     List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull PgContext pgContext);
@@ -45,7 +51,10 @@ public interface IndexMaintenance extends HostAware {
     }
 
     /**
-     * List of intersecting indexes (partially identical, candidates for deletion).
+     * Returns intersected indexes (partially identical, candidates for deletion) on current host.
+     *
+     * @param pgContext {@code PgContext} with the specified schema
+     * @return list of intersected indexes
      */
     @Nonnull
     List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull PgContext pgContext);
@@ -56,7 +65,10 @@ public interface IndexMaintenance extends HostAware {
     }
 
     /**
-     * List of potentially unused indexes (candidates for deletion).
+     * Returns potentially unused indexes (candidates for deletion) on current host.
+     *
+     * @param pgContext {@code PgContext} with the specified schema
+     * @return list of potentially unused indexes
      */
     @Nonnull
     List<UnusedIndex> getPotentiallyUnusedIndexes(@Nonnull PgContext pgContext);
@@ -67,7 +79,10 @@ public interface IndexMaintenance extends HostAware {
     }
 
     /**
-     * List of foreign keys without associated indexes (potential performance degradation).
+     * Returns foreign keys without associated indexes (potential performance degradation) on current host.
+     *
+     * @param pgContext {@code PgContext} with the specified schema
+     * @return list of foreign keys without associated indexes
      */
     @Nonnull
     List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull PgContext pgContext);
@@ -78,7 +93,10 @@ public interface IndexMaintenance extends HostAware {
     }
 
     /**
-     * List of tables with potentially missing indexes (potential performance degradation).
+     * Returns tables with potentially missing indexes (potential performance degradation) on current host.
+     *
+     * @param pgContext {@code PgContext} with the specified schema
+     * @return list of tables with potentially missing indexes
      */
     @Nonnull
     List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull PgContext pgContext);
@@ -89,10 +107,13 @@ public interface IndexMaintenance extends HostAware {
     }
 
     /**
-     * List of tables without primary key.
+     * Returns tables without primary key on current host.
      * <p>
      * Tables without primary key might become a huge problem when bloat occurs
      * because pg_repack will not be able to process them.
+     *
+     * @param pgContext {@code PgContext} with the specified schema
+     * @return list of tables without primary key
      */
     @Nonnull
     List<Table> getTablesWithoutPrimaryKey(@Nonnull PgContext pgContext);
@@ -103,7 +124,10 @@ public interface IndexMaintenance extends HostAware {
     }
 
     /**
-     * List of indexes that contain null values.
+     * Returns indexes that contain null values on current host.
+     *
+     * @param pgContext {@code PgContext} with the specified schema
+     * @return list of indexes with null values
      */
     @Nonnull
     List<IndexWithNulls> getIndexesWithNullValues(@Nonnull PgContext pgContext);
