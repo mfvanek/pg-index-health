@@ -78,7 +78,10 @@ public interface IndexesHealth {
     }
 
     /**
-     * Get indexes that contain null values from all hosts.
+     * Returns indexes that contain null values from all hosts.
+     *
+     * @param pgContext {@code PgContext} with the specified schema
+     * @return list of indexes with null values
      */
     @Nonnull
     List<IndexWithNulls> getIndexesWithNullValues(@Nonnull PgContext pgContext);

@@ -25,6 +25,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Implementation of {@code IndexMaintenance} which collects information from current host in the cluster.
+ *
+ * @author Ivan Vakhrushev
+ * @see io.github.mfvanek.pg.connection.HostAware
+ * @see PgHost
+ */
 public class IndexMaintenanceImpl implements IndexMaintenance {
 
     private static final String INVALID_INDEXES_SQL =
@@ -158,6 +165,9 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
         this.pgConnection = Objects.requireNonNull(pgConnection);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<Index> getInvalidIndexes(@Nonnull final PgContext pgContext) {
@@ -168,6 +178,9 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull final PgContext pgContext) {
@@ -175,6 +188,9 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                 DUPLICATED_INDEXES_SQL, pgContext, "duplicated_indexes");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull final PgContext pgContext) {
@@ -182,6 +198,9 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                 INTERSECTED_INDEXES_SQL, pgContext, "intersected_indexes");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<UnusedIndex> getPotentiallyUnusedIndexes(@Nonnull final PgContext pgContext) {
@@ -194,6 +213,9 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull final PgContext pgContext) {
@@ -206,6 +228,9 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
@@ -218,6 +243,9 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
@@ -228,6 +256,9 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final PgContext pgContext) {
@@ -251,6 +282,9 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Nonnull
     public PgHost getHost() {

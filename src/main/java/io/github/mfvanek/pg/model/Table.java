@@ -11,6 +11,11 @@ import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
 
+/**
+ * A base representation of database table.
+ *
+ * @author Ivan Vakhrushev
+ */
 public class Table implements TableNameAware, TableSizeAware {
 
     private final String tableName;
@@ -44,6 +49,13 @@ public class Table implements TableNameAware, TableSizeAware {
         return Table.class.getSimpleName() + '{' + innerToString() + '}';
     }
 
+    /**
+     * Constructs a {@code Table} object.
+     *
+     * @param tableName        table name; should be non blank.
+     * @param tableSizeInBytes table size in bytes; should be positive or zero.
+     * @return {@code Table}
+     */
     public static Table of(@Nonnull final String tableName, final long tableSizeInBytes) {
         return new Table(tableName, tableSizeInBytes);
     }
