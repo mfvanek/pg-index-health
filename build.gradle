@@ -1,11 +1,11 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    //id 'signing'
+    id 'signing'
 }
 
 group 'io.github.mfvanek'
-version '0.1.3-SNAPSHOT'
+version '0.1.3'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -52,7 +52,6 @@ java {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            // artifactId = project.name
             from components.java
             versionMapping {
                 usage('java-api') {
@@ -62,6 +61,7 @@ publishing {
                     fromResolutionResult()
                 }
             }
+
             pom {
                 name = project.name
                 description = 'pg-index-health is a Java library for analyzing and maintaining indexes health in Postgresql databases.'
@@ -72,6 +72,7 @@ publishing {
                         url = 'https://www.gnu.org/licenses/gpl-3.0.html'
                     }
                 }
+
                 developers {
                     developer {
                         id = 'mfvanek'
@@ -79,6 +80,7 @@ publishing {
                         email = 'mfvanek@gmail.com'
                     }
                 }
+
                 scm {
                     connection = 'scm:git:https://github.com/mfvanek/pg-index-health.git'
                     developerConnection = 'scm:git@github.com:mfvanek/pg-index-health.git'
@@ -87,19 +89,20 @@ publishing {
             }
         }
     }
+
     repositories {
         maven {
             def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
             def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
         }
-        //mavenLocal()
     }
 }
 
-//signing {
-//    sign publishing.publications.mavenJava
-//}
+signing {
+    required { !version.endsWith('SNAPSHOT') && gradle.taskGraph.hasTask("publish") }
+    sign publishing.publications.mavenJava
+}
 
 javadoc {
     if (JavaVersion.current().isJava9Compatible()) {
