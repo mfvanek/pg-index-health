@@ -80,8 +80,8 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'https://github.com/mfvanek/pg-index-health.git'
-                    developerConnection = 'git@github.com:mfvanek/pg-index-health.git'
+                    connection = 'scm:git:https://github.com/mfvanek/pg-index-health.git'
+                    developerConnection = 'scm:git@github.com:mfvanek/pg-index-health.git'
                     url = 'https://github.com/mfvanek/pg-index-health'
                 }
             }

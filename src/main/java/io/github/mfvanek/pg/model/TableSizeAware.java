@@ -7,7 +7,21 @@
 
 package io.github.mfvanek.pg.model;
 
+/**
+ * Allows to get table size in bytes.
+ * Used as a marker interface for filtering exclusions in
+ * {@link io.github.mfvanek.pg.index.health.logger.AbstractIndexesHealthLogger}
+ *
+ * @author Ivan Vakhrushev
+ * @see IndexSizeAware
+ * @see io.github.mfvanek.pg.index.health.logger.Exclusions
+ */
 public interface TableSizeAware {
 
+    /**
+     * Gets table size in bytes.
+     *
+     * @return table size in bytes
+     */
     long getTableSizeInBytes();
 }
