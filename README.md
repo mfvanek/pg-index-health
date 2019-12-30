@@ -1,6 +1,8 @@
 # pg-index-health
 **pg-index-health** is a Java library for analyzing and maintaining indexes health in [Postgresql](https://www.postgresql.org/) databases.
 
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.mfvanek/pg-index-health.svg)](https://search.maven.org/artifact/io.github.mfvanek/pg-index-health/)
+
 ## Supported PostgreSQL versions
 * 9.6
 * 10
@@ -23,9 +25,14 @@ You can call `pg_stat_reset()` to reset all statistics counters for the current 
 
 ## Demo application
 ```java
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
+import io.github.mfvanek.pg.index.health.IndexesHealth;
+import io.github.mfvanek.pg.index.health.IndexesHealthImpl;
 import io.github.mfvanek.pg.index.health.logger.Exclusions;
+import io.github.mfvanek.pg.index.health.logger.IndexesHealthLogger;
 import io.github.mfvanek.pg.index.health.logger.SimpleHealthLogger;
 import io.github.mfvanek.pg.index.maintenance.MaintenanceFactoryImpl;
 import io.github.mfvanek.pg.model.MemoryUnit;
@@ -34,8 +41,17 @@ import io.github.mfvanek.pg.model.PgContext;
 public class DemoApp {
 
     public static void main(String[] args) {
+        loadDriver();
         forTesting();
         forProduction();
+    }
+
+    private static void loadDriver() {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void forTesting() {
