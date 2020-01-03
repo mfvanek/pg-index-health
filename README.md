@@ -88,3 +88,5 @@ public class DemoApp {
     }
 }
 ```
+
+For more examples see [pg-index-health-demo](https://github.com/mfvanek/pg-index-health-demo) project.
