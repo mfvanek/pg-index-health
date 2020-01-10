@@ -15,6 +15,7 @@ class MemoryUnitTest {
 
     @Test
     void convertToBytes() {
+        assertEquals(1024L, MemoryUnit.KB.convertToBytes(1));
         assertEquals(2097152L, MemoryUnit.MB.convertToBytes(2));
         assertEquals(3221225472L, MemoryUnit.GB.convertToBytes(3));
     }

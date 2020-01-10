@@ -169,24 +169,24 @@ public class Exclusions {
         }
 
         public Builder withIndexSizeThreshold(final long indexSizeThresholdInBytes) {
-            this.indexSizeThresholdInBytes = Validators.valueIsPositive(
+            this.indexSizeThresholdInBytes = Validators.sizeNotNegative(
                     indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
             return this;
         }
 
         public Builder withIndexSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
-            Validators.valueIsPositive(thresholdUnitsCount, "thresholdUnitsCount");
+            Validators.valueNotNegative(thresholdUnitsCount, "thresholdUnitsCount");
             return withIndexSizeThreshold(unit.convertToBytes(thresholdUnitsCount));
         }
 
         public Builder withTableSizeThreshold(final long tableSizeThresholdInBytes) {
-            this.tableSizeThresholdInBytes = Validators.valueIsPositive(
+            this.tableSizeThresholdInBytes = Validators.sizeNotNegative(
                     tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
             return this;
         }
 
         public Builder withTableSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
-            Validators.valueIsPositive(thresholdUnitsCount, "thresholdUnitsCount");
+            Validators.valueNotNegative(thresholdUnitsCount, "thresholdUnitsCount");
             return withTableSizeThreshold(unit.convertToBytes(thresholdUnitsCount));
         }
 

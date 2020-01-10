@@ -12,6 +12,7 @@ import java.util.Objects;
 
 public enum MemoryUnit {
 
+    KB(1024L, "kilobyte"),
     MB(1024L * 1024L, "megabyte"),
     GB(1024L * 1024L * 1024L, "gigabyte");
 
