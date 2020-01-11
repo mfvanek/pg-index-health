@@ -16,6 +16,13 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * A listing of exclusions for {@link IndexesHealthLogger}.
+ *
+ * @author Ivan Vakhrushev
+ * @see IndexesHealthLogger
+ * @see AbstractIndexesHealthLogger
+ */
 public class Exclusions {
 
     private final Set<String> duplicatedIndexesExclusions;
@@ -113,10 +120,20 @@ public class Exclusions {
                 '}';
     }
 
+    /**
+     * Returns empty exclusions list.
+     *
+     * @return empty {@code Exclusions} object
+     */
     public static Exclusions empty() {
         return builder().build();
     }
 
+    /**
+     * Returns a {@code Builder} for constructing {@link Exclusions} object.
+     *
+     * @return {@code Builder}
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -137,16 +154,37 @@ public class Exclusions {
         private Builder() {
         }
 
+        /**
+         * Sets a list of duplicated indexes that should be excluded by {@link IndexesHealthLogger}.
+         *
+         * @param duplicatedIndexesExclusions comma-separated list of duplicated indexes,
+         *                                    for example {@code "idx_name_1, idx_name_2"}
+         * @return {@code Builder}
+         */
         public Builder withDuplicatedIndexesExclusions(@Nonnull final String duplicatedIndexesExclusions) {
             this.duplicatedIndexesExclusions = Objects.requireNonNull(duplicatedIndexesExclusions);
             return this;
         }
 
+        /**
+         * Sets a list of intersected indexes that should be excluded by {@link IndexesHealthLogger}.
+         *
+         * @param intersectedIndexesExclusions comma-separated list of intersected indexes,
+         *                                     for example {@code "idx_name_1, idx_name_2"}
+         * @return {@code Builder}
+         */
         public Builder withIntersectedIndexesExclusions(@Nonnull final String intersectedIndexesExclusions) {
             this.intersectedIndexesExclusions = Objects.requireNonNull(intersectedIndexesExclusions);
             return this;
         }
 
+        /**
+         * Sets a list of unused indexes that should be excluded by {@link IndexesHealthLogger}.
+         *
+         * @param unusedIndexesExclusions comma-separated list of unused indexes,
+         *                                for example {@code "idx_name_1, idx_name_2"}
+         * @return {@code Builder}
+         */
         public Builder withUnusedIndexesExclusions(@Nonnull final String unusedIndexesExclusions) {
             this.unusedIndexesExclusions = Objects.requireNonNull(unusedIndexesExclusions);
             return this;

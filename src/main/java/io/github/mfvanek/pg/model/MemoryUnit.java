@@ -10,6 +10,11 @@ package io.github.mfvanek.pg.model;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
+/**
+ * Units of information.
+ *
+ * @author Ivan Vakhrushev
+ */
 public enum MemoryUnit {
 
     KB(1024L, "kilobyte"),
@@ -24,6 +29,12 @@ public enum MemoryUnit {
         this.description = Objects.requireNonNull(description);
     }
 
+    /**
+     * Converts given information units amount to bytes according to it {@link MemoryUnit#dimension}.
+     *
+     * @param unitsCount information units amount
+     * @return size in bytes
+     */
     public long convertToBytes(final int unitsCount) {
         return unitsCount * dimension;
     }
