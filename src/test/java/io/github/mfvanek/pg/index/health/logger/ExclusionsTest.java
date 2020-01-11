@@ -16,6 +16,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExclusionsTest {
 
@@ -90,5 +91,57 @@ class ExclusionsTest {
                         "unusedIndexesExclusions='', tablesWithMissingIndexesExclusions='', tablesWithoutPrimaryKeyExclusions='', " +
                         "indexesWithNullValuesExclusions='', indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0}",
                 builder.toString());
+    }
+
+    @Test
+    void builderWithPositiveSizeInBytes() {
+        final Exclusions firstExclusions = Exclusions.builder()
+                .withIndexSizeThreshold(11L)
+                .withTableSizeThreshold(22L)
+                .build();
+        assertNotNull(firstExclusions);
+        assertEquals(11L, firstExclusions.getIndexSizeThresholdInBytes());
+        assertEquals(22L, firstExclusions.getTableSizeThresholdInBytes());
+    }
+
+    @Test
+    void builderWithZeroSizeInBytes() {
+        final Exclusions firstExclusions = Exclusions.builder()
+                .withIndexSizeThreshold(0L)
+                .withTableSizeThreshold(0L)
+                .build();
+        assertNotNull(firstExclusions);
+        assertEquals(0L, firstExclusions.getIndexSizeThresholdInBytes());
+        assertEquals(0L, firstExclusions.getTableSizeThresholdInBytes());
+    }
+
+    @Test
+    void builderWithPositiveSizeInMemoryUnits() {
+        final Exclusions firstExclusions = Exclusions.builder()
+                .withIndexSizeThreshold(2, MemoryUnit.KB)
+                .withTableSizeThreshold(4, MemoryUnit.KB)
+                .build();
+        assertNotNull(firstExclusions);
+        assertEquals(2048L, firstExclusions.getIndexSizeThresholdInBytes());
+        assertEquals(4096L, firstExclusions.getTableSizeThresholdInBytes());
+    }
+
+    @Test
+    void builderWithZeroSizeInMemoryUnits() {
+        final Exclusions firstExclusions = Exclusions.builder()
+                .withIndexSizeThreshold(0, MemoryUnit.KB)
+                .withTableSizeThreshold(0, MemoryUnit.KB)
+                .build();
+        assertNotNull(firstExclusions);
+        assertEquals(0L, firstExclusions.getIndexSizeThresholdInBytes());
+        assertEquals(0L, firstExclusions.getTableSizeThresholdInBytes());
+    }
+
+    @Test
+    void builderWithInvalidSize() {
+        assertThrows(IllegalArgumentException.class, () -> Exclusions.builder().withIndexSizeThreshold(-1L));
+        assertThrows(IllegalArgumentException.class, () -> Exclusions.builder().withTableSizeThreshold(-1L));
+        assertThrows(IllegalArgumentException.class, () -> Exclusions.builder().withIndexSizeThreshold(-1, MemoryUnit.KB));
+        assertThrows(IllegalArgumentException.class, () -> Exclusions.builder().withTableSizeThreshold(-1, MemoryUnit.KB));
     }
 }

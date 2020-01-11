@@ -42,6 +42,9 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
         this.indexesHealth = Objects.requireNonNull(indexesHealth);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Nonnull
     public final List<String> logAll(@Nonnull final Exclusions exclusions,

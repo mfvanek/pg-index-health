@@ -28,6 +28,10 @@ public final class Validators {
         return argumentValue;
     }
 
+    public static long valueNotNegative(final long argumentValue, @Nonnull final String argumentName) {
+        return argumentNotNegative(argumentValue, argumentName);
+    }
+
     @Nonnull
     public static String tableNameNotBlank(@Nonnull final String tableName) {
         return notBlank(tableName, "tableName");
