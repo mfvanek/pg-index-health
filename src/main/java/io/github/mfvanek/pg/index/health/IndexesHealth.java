@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * An entry point for collecting and  managing statistics about the health of tables and indexes on all hosts in the cluster.
+ * An entry point for collecting and managing statistics about the health of tables and indexes on all hosts in the cluster.
  *
  * @author Ivan Vakhrushev
  * @see PgContext

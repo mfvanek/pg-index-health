@@ -40,17 +40,17 @@ public class IndexesHealthImpl implements IndexesHealth {
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexesHealthImpl.class);
 
     private final IndexMaintenance maintenanceForMaster;
-    private final List<IndexMaintenance> maintenanceForReplicas;
-    private final List<StatisticsMaintenance> statisticsMaintenanceForReplicas;
+    private final List<IndexMaintenance> indexMaintenanceForAllHostsInCluster;
+    private final List<StatisticsMaintenance> statisticsMaintenanceForAllHostsInCluster;
 
     public IndexesHealthImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
                              @Nonnull final MaintenanceFactory maintenanceFactory) {
         Objects.requireNonNull(haPgConnection);
         Objects.requireNonNull(maintenanceFactory);
         this.maintenanceForMaster = maintenanceFactory.forIndex(haPgConnection.getConnectionToMaster());
-        this.maintenanceForReplicas = ReplicasHelper.createIndexMaintenanceForReplicas(
+        this.indexMaintenanceForAllHostsInCluster = ReplicasHelper.createIndexMaintenanceForReplicas(
                 haPgConnection.getConnectionsToAllHostsInCluster(), maintenanceFactory);
-        this.statisticsMaintenanceForReplicas = ReplicasHelper.createStatisticsMaintenanceForReplicas(
+        this.statisticsMaintenanceForAllHostsInCluster = ReplicasHelper.createStatisticsMaintenanceForReplicas(
                 haPgConnection.getConnectionsToAllHostsInCluster(), maintenanceFactory);
     }
 
@@ -91,7 +91,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<UnusedIndex> getUnusedIndexes(@Nonnull final PgContext pgContext) {
         final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = new ArrayList<>();
-        for (IndexMaintenance maintenanceForReplica : maintenanceForReplicas) {
+        for (IndexMaintenance maintenanceForReplica : indexMaintenanceForAllHostsInCluster) {
             potentiallyUnusedIndexesFromAllHosts.add(
                     doOnHost(maintenanceForReplica.getHost(),
                             () -> maintenanceForReplica.getPotentiallyUnusedIndexes(pgContext)));
@@ -116,7 +116,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
         final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = new ArrayList<>();
-        for (IndexMaintenance maintenanceForReplica : maintenanceForReplicas) {
+        for (IndexMaintenance maintenanceForReplica : indexMaintenanceForAllHostsInCluster) {
             tablesWithMissingIndexesFromAllHosts.add(
                     doOnHost(maintenanceForReplica.getHost(),
                             () -> maintenanceForReplica.getTablesWithMissingIndexes(pgContext)));
@@ -149,7 +149,7 @@ public class IndexesHealthImpl implements IndexesHealth {
      */
     @Override
     public void resetStatistics() {
-        for (StatisticsMaintenance statisticsMaintenance : statisticsMaintenanceForReplicas) {
+        for (StatisticsMaintenance statisticsMaintenance : statisticsMaintenanceForAllHostsInCluster) {
             doOnHost(statisticsMaintenance.getHost(), statisticsMaintenance::resetStatistics);
         }
     }
