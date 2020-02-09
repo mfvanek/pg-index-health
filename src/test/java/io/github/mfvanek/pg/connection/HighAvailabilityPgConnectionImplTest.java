@@ -9,7 +9,6 @@ package io.github.mfvanek.pg.connection;
 
 import com.opentable.db.postgres.junit5.EmbeddedPostgresExtension;
 import com.opentable.db.postgres.junit5.PreparedDbExtension;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -17,9 +16,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class HighAvailabilityPgConnectionImplTest {
 
@@ -33,8 +34,16 @@ class HighAvailabilityPgConnectionImplTest {
         final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
         assertNotNull(haPgConnection);
-        assertThat(haPgConnection.getConnectionsToReplicas(), hasSize(1));
-        assertEquals(haPgConnection.getConnectionToMaster(), haPgConnection.getConnectionsToReplicas().iterator().next());
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), hasSize(1));
+        assertEquals(haPgConnection.getConnectionToMaster(), haPgConnection.getConnectionsToAllHostsInCluster().iterator().next());
+    }
+
+    @Test
+    void shouldBeUnmodifiable() {
+        final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
+        assertNotNull(haPgConnection);
+        assertThrows(UnsupportedOperationException.class, () -> haPgConnection.getConnectionsToAllHostsInCluster().clear());
     }
 
     @Test
@@ -45,7 +54,7 @@ class HighAvailabilityPgConnectionImplTest {
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(master,
                 new HashSet<>(Arrays.asList(master, replica)));
         assertNotNull(haPgConnection);
-        assertThat(haPgConnection.getConnectionsToReplicas(), hasSize(2));
-        assertThat(haPgConnection.getConnectionsToReplicas(), Matchers.containsInAnyOrder(master, replica));
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), hasSize(2));
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), containsInAnyOrder(master, replica));
     }
 }

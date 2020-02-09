@@ -15,24 +15,30 @@ import java.util.Set;
 public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConnection {
 
     private final PgConnection connectionToMaster;
-    private final Set<PgConnection> connectionsToReplicas;
+    private final Set<PgConnection> connectionsToAllHostsInCluster;
 
     private HighAvailabilityPgConnectionImpl(@Nonnull final PgConnection connectionToMaster,
-                                             @Nonnull final Set<PgConnection> connectionsToReplicas) {
+                                             @Nonnull final Set<PgConnection> connectionsToAllHostsInCluster) {
         this.connectionToMaster = Objects.requireNonNull(connectionToMaster);
-        this.connectionsToReplicas = Objects.requireNonNull(connectionsToReplicas);
+        this.connectionsToAllHostsInCluster = Objects.requireNonNull(connectionsToAllHostsInCluster);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Nonnull
     public PgConnection getConnectionToMaster() {
         return connectionToMaster;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Nonnull
-    public Set<PgConnection> getConnectionsToReplicas() {
-        return connectionsToReplicas;
+    public Set<PgConnection> getConnectionsToAllHostsInCluster() {
+        return Collections.unmodifiableSet(connectionsToAllHostsInCluster);
     }
 
     @Nonnull
@@ -42,7 +48,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
 
     @Nonnull
     public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToMaster,
-                                                  @Nonnull final Set<PgConnection> connectionsToReplicas) {
-        return new HighAvailabilityPgConnectionImpl(connectionToMaster, connectionsToReplicas);
+                                                  @Nonnull final Set<PgConnection> connectionsToAllHostsInCluster) {
+        return new HighAvailabilityPgConnectionImpl(connectionToMaster, connectionsToAllHostsInCluster);
     }
 }

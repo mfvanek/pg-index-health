@@ -49,9 +49,9 @@ public class IndexesHealthImpl implements IndexesHealth {
         Objects.requireNonNull(maintenanceFactory);
         this.maintenanceForMaster = maintenanceFactory.forIndex(haPgConnection.getConnectionToMaster());
         this.maintenanceForReplicas = ReplicasHelper.createIndexMaintenanceForReplicas(
-                haPgConnection.getConnectionsToReplicas(), maintenanceFactory);
+                haPgConnection.getConnectionsToAllHostsInCluster(), maintenanceFactory);
         this.statisticsMaintenanceForReplicas = ReplicasHelper.createStatisticsMaintenanceForReplicas(
-                haPgConnection.getConnectionsToReplicas(), maintenanceFactory);
+                haPgConnection.getConnectionsToAllHostsInCluster(), maintenanceFactory);
     }
 
     /**

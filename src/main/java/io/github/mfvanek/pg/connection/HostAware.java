@@ -20,7 +20,7 @@ public interface HostAware {
      * Gets information about host in the cluster.
      *
      * @return {@code PgHost}
-     * @see PgHostImpl
+     * @see PgHost
      */
     @Nonnull
     PgHost getHost();

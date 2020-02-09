@@ -9,6 +9,12 @@ package io.github.mfvanek.pg.index.maintenance;
 
 import io.github.mfvanek.pg.connection.HostAware;
 
+/**
+ * An entry point for managing statistics on the specified host.
+ *
+ * @author Ivan Vakhrushev
+ * @see HostAware
+ */
 public interface StatisticsMaintenance extends HostAware {
 
     /**

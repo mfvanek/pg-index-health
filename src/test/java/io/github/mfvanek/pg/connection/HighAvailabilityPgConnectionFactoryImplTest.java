@@ -22,7 +22,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
     void onlyWriteUrl() {
         final HighAvailabilityPgConnection haPgConnection = connectionFactory.of("jdbc:postgresql://host-1:6432,host-2:6432/db_name?ssl=true&sslmode=require", "postgres", "postgres");
         assertNotNull(haPgConnection);
-        assertThat(haPgConnection.getConnectionsToReplicas(), hasSize(2));
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), hasSize(2));
     }
 
     @Test
@@ -30,7 +30,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
         final HighAvailabilityPgConnection haPgConnection = connectionFactory.of("jdbc:postgresql://host-1:6432,host-2:6432/db_name?ssl=true&sslmode=require", "postgres", "postgres",
                 "jdbc:postgresql://host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
         assertNotNull(haPgConnection);
-        assertThat(haPgConnection.getConnectionsToReplicas(), hasSize(4));
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), hasSize(4));
     }
 
     @Test
@@ -39,7 +39,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
                 "jdbc:postgresql://host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require",
                 "jdbc:postgresql://host-5:6432/db_name?ssl=true&sslmode=require");
         assertNotNull(haPgConnection);
-        assertThat(haPgConnection.getConnectionsToReplicas(), hasSize(5));
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), hasSize(5));
     }
 
     @SuppressWarnings("ConstantConditions")
