@@ -11,6 +11,14 @@ import io.github.mfvanek.pg.connection.PgConnection;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Factory for creating {@link IndexMaintenance} and {@link StatisticsMaintenance} objects with a given {@link PgConnection}.
+ *
+ * @author Ivan Vakhrushev
+ * @see IndexMaintenance
+ * @see StatisticsMaintenance
+ * @see PgConnection
+ */
 public interface MaintenanceFactory {
 
     @Nonnull

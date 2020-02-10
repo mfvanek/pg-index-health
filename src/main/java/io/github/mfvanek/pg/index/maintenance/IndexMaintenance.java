@@ -20,17 +20,31 @@ import io.github.mfvanek.pg.model.UnusedIndex;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * A set of diagnostics for collecting statistics about the health of tables and indexes on a specific host.
+ *
+ * @author Ivan Vakhrushev
+ * @see HostAware
+ * @see PgContext
+ */
 public interface IndexMaintenance extends HostAware {
 
     /**
-     * Returns invalid (broken) indexes to be deleted or re-indexed on current host.
+     * Returns invalid (broken) indexes to be deleted or re-indexed on current host with the specified schema.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of invalid indexes
+     * @see Index
      */
     @Nonnull
     List<Index> getInvalidIndexes(@Nonnull PgContext pgContext);
 
+    /**
+     * Returns invalid (broken) indexes to be deleted or re-indexed on current host in the public schema.
+     *
+     * @return list of invalid indexes
+     * @see Index
+     */
     @Nonnull
     default List<Index> getInvalidIndexes() {
         return getInvalidIndexes(PgContext.ofPublic());

@@ -11,6 +11,8 @@ import javax.annotation.Nonnull;
 
 /**
  * An abstraction of database host. This is a real server where your queries will be executed.
+ *
+ * @author Ivan Vakhrushev
  */
 public interface PgHost {
 

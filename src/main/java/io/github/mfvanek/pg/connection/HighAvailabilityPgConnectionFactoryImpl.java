@@ -56,30 +56,31 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
         return create(writeUrl, userName, password, readUrl, cascadeAsyncReadUrl);
     }
 
+    @Nonnull
     private HighAvailabilityPgConnection create(@Nonnull final String writeUrl,
                                                 @Nonnull final String userName,
                                                 @Nonnull final String password,
                                                 @Nullable final String readUrl,
                                                 @Nullable final String cascadeAsyncReadUrl) {
         final PgConnection connectionToMaster = pgConnectionFactory.forUrl(writeUrl, userName, password);
-        final Map<String, PgConnection> connectionsToReplicas = new HashMap<>();
-        addReplicasDataSources(connectionsToReplicas, writeUrl, userName, password);
+        final Map<String, PgConnection> connectionsToAllHostsInCluster = new HashMap<>();
+        addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, writeUrl, userName, password);
         if (StringUtils.isNotBlank(readUrl)) {
-            addReplicasDataSources(connectionsToReplicas, readUrl, userName, password);
+            addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, readUrl, userName, password);
         }
         if (StringUtils.isNotBlank(cascadeAsyncReadUrl)) {
-            addReplicasDataSources(connectionsToReplicas, cascadeAsyncReadUrl, userName, password);
+            addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, cascadeAsyncReadUrl, userName, password);
         }
-        return HighAvailabilityPgConnectionImpl.of(connectionToMaster, new HashSet<>(connectionsToReplicas.values()));
+        return HighAvailabilityPgConnectionImpl.of(connectionToMaster, new HashSet<>(connectionsToAllHostsInCluster.values()));
     }
 
-    private void addReplicasDataSources(@Nonnull final Map<String, PgConnection> connectionsToReplicas,
-                                        @Nonnull final String readUrl,
-                                        @Nonnull final String userName,
-                                        @Nonnull final String password) {
-        final List<Pair<String, String>> allHosts = PgUrlParser.extractNameWithPortAndUrlForEachHost(readUrl);
+    private void addDataSourcesForAllHostsFromUrl(@Nonnull final Map<String, PgConnection> connectionsToAllHostsInCluster,
+                                                  @Nonnull final String anyUrl,
+                                                  @Nonnull final String userName,
+                                                  @Nonnull final String password) {
+        final List<Pair<String, String>> allHosts = PgUrlParser.extractNameWithPortAndUrlForEachHost(anyUrl);
         for (Pair<String, String> host : allHosts) {
-            connectionsToReplicas.computeIfAbsent(
+            connectionsToAllHostsInCluster.computeIfAbsent(
                     host.getKey(), h -> pgConnectionFactory.forUrl(host.getValue(), userName, password));
         }
     }
