@@ -213,8 +213,9 @@ public class Exclusions {
         }
 
         public Builder withIndexSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
-            Validators.valueNotNegative(thresholdUnitsCount, "thresholdUnitsCount");
-            return withIndexSizeThreshold(unit.convertToBytes(thresholdUnitsCount));
+            final long indexSizeInBytes = unit.convertToBytes(
+                    Validators.argumentNotNegative(thresholdUnitsCount, "thresholdUnitsCount"));
+            return withIndexSizeThreshold(indexSizeInBytes);
         }
 
         public Builder withTableSizeThreshold(final long tableSizeThresholdInBytes) {
@@ -224,8 +225,9 @@ public class Exclusions {
         }
 
         public Builder withTableSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
-            Validators.valueNotNegative(thresholdUnitsCount, "thresholdUnitsCount");
-            return withTableSizeThreshold(unit.convertToBytes(thresholdUnitsCount));
+            final long tableSizeInBytes = unit.convertToBytes(
+                    Validators.argumentNotNegative(thresholdUnitsCount, "thresholdUnitsCount"));
+            return withTableSizeThreshold(tableSizeInBytes);
         }
 
         public Exclusions build() {
