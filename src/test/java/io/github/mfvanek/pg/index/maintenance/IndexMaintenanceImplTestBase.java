@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.time.Duration.ofSeconds;
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -40,7 +39,6 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
@@ -434,7 +432,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
     @ValueSource(strings = {"public", "custom"})
     void getIndexesWithBloatOnDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName,
-                DatabasePopulator::withReferences,
+                dbp -> dbp.withReferences().withStatistics(),
                 ctx -> {
                     final List<IndexWithBloat> indexes = indexMaintenance.getIndexesWithBloat(ctx);
                     assertNotNull(indexes);
@@ -446,12 +444,9 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
     @ValueSource(strings = {"public", "custom"})
     void getIndexesWithBloatOnDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData(),
-                ctx -> assertTimeout(ofSeconds(120), () -> {
-                    // Waiting for the statistics to be updated
-                    while (!existsStatisticsForTable(ctx, "accounts")) {
-                        Thread.sleep(5000);
-                    }
+                dbp -> dbp.withReferences().withData().withStatistics(),
+                ctx -> {
+                    waitForStatisticsCollector();
                     assertTrue(existsStatisticsForTable(ctx, "accounts"));
 
                     final List<IndexWithBloat> indexes = indexMaintenance.getIndexesWithBloat(ctx);
@@ -468,7 +463,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
                     assertEquals(57344L, index.getIndexSizeInBytes());
                     assertEquals(8192L, index.getBloatSizeInBytes());
                     assertEquals(14, index.getBloatPercentage());
-                }));
+                });
     }
 
     @Test
