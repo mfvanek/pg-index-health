@@ -94,11 +94,15 @@ rows_header_stats as (
         fill_factor,
         table_oid,
         (index_tuple_header_size + max_align
-			/* add padding to the index tuple header to align on max_align */
-			- case when index_tuple_header_size % max_align = 0 then max_align else index_tuple_header_size % max_align end
-			+ null_data_width + max_align
-			/* add padding to the data to align on max_align */
-			- case when null_data_width = 0 then 0 when null_data_width::integer % max_align = 0 then max_align else null_data_width::integer % max_align end
+             /* add padding to the index tuple header to align on max_align */
+             -
+         case when index_tuple_header_size % max_align = 0 then max_align else index_tuple_header_size % max_align end
+             + null_data_width + max_align
+            /* add padding to the data to align on max_align */
+            - case
+                  when null_data_width = 0 then 0
+                  when null_data_width::integer % max_align = 0 then max_align
+                  else null_data_width::integer % max_align end
             )::numeric as null_data_header_width,
         page_header_size,
         page_opaque_data_size
@@ -118,13 +122,14 @@ relation_stats as (
     from rows_header_stats
 ),
 corrected_relation_stats as (
-    select
-        table_name,
+    select table_name,
         index_name,
         index_size,
         block_size,
         relpages,
-        case when relpages - estimated_pages_count > 0 then relpages - estimated_pages_count else 0 end as pages_ff_diff
+        (case
+             when relpages - estimated_pages_count > 0 then relpages - estimated_pages_count
+             else 0 end)::bigint as pages_ff_diff
     from relation_stats
 ),
  bloat_stats as (
@@ -136,10 +141,8 @@ corrected_relation_stats as (
         round(100 * block_size * pages_ff_diff / index_size::float)::integer as bloat_percentage
      from
         corrected_relation_stats
-     where
-        pages_ff_diff > 0
  )
 select *
 from bloat_stats
-where bloat_percentage >= 10
+where bloat_percentage >= ?::integer
 order by table_name, index_name;

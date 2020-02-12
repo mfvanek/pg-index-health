@@ -12,6 +12,7 @@ import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.model.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.ForeignKey;
 import io.github.mfvanek.pg.model.Index;
+import io.github.mfvanek.pg.model.IndexWithBloat;
 import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.IndexWithSize;
 import io.github.mfvanek.pg.model.PgContext;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.time.Duration.ofSeconds;
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -38,6 +40,8 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
 
@@ -417,6 +421,54 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
                     }
                     assertEquals("middle_name", indexWithNulls.getNullableField());
                 });
+    }
+
+    @Test
+    void getIndexesWithBloatOnEmptyDataBase() {
+        final List<IndexWithBloat> indexes = indexMaintenance.getIndexesWithBloat();
+        assertNotNull(indexes);
+        assertEquals(0, indexes.size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getIndexesWithBloatOnDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                DatabasePopulator::withReferences,
+                ctx -> {
+                    final List<IndexWithBloat> indexes = indexMaintenance.getIndexesWithBloat(ctx);
+                    assertNotNull(indexes);
+                    assertEquals(0, indexes.size());
+                });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getIndexesWithBloatOnDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withData(),
+                ctx -> assertTimeout(ofSeconds(120), () -> {
+                    // Waiting for the statistics to be updated
+                    while (!existsStatisticsForTable(ctx, "accounts")) {
+                        Thread.sleep(5000);
+                    }
+                    assertTrue(existsStatisticsForTable(ctx, "accounts"));
+
+                    final List<IndexWithBloat> indexes = indexMaintenance.getIndexesWithBloat(ctx);
+                    assertNotNull(indexes);
+                    assertEquals(3, indexes.size());
+                    final IndexWithBloat index = indexes.get(0);
+                    if (isDefaultSchema(schemaName)) {
+                        assertEquals("accounts_account_number_key", index.getIndexName());
+                        assertEquals("accounts", index.getTableName());
+                    } else {
+                        assertEquals(schemaName + ".accounts_account_number_key", index.getIndexName());
+                        assertEquals(schemaName + ".accounts", index.getTableName());
+                    }
+                    assertEquals(57344L, index.getIndexSizeInBytes());
+                    assertEquals(8192L, index.getBloatSizeInBytes());
+                    assertEquals(14, index.getBloatPercentage());
+                }));
     }
 
     @Test

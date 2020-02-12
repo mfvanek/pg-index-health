@@ -4,6 +4,11 @@ import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Represents database index with information about bloat.
+ *
+ * @author Ivan Vakhrushev
+ */
 public class IndexWithBloat extends IndexWithSize implements BloatAware {
 
     private long bloatSizeInBytes;
@@ -19,11 +24,17 @@ public class IndexWithBloat extends IndexWithSize implements BloatAware {
         this.bloatPercentage = Validators.argumentNotNegative(bloatPercentage, "bloatPercentage");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getBloatSizeInBytes() {
         return bloatSizeInBytes;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getBloatPercentage() {
         return bloatPercentage;

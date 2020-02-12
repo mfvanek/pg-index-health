@@ -48,7 +48,7 @@ public abstract class DatabaseAwareTestBase {
             databaseConfigurer.configure(databasePopulator)
                     .withSchema(schemaName)
                     .populate();
-            testExecutor.execute(PgContext.of(schemaName));
+            testExecutor.execute(PgContext.of(schemaName, 0));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -76,6 +76,23 @@ public abstract class DatabaseAwareTestBase {
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 return resultSet.getLong(2);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected boolean existsStatisticsForTable(@Nonnull final PgContext pgContext, @Nonnull final String tableName) {
+        final String sqlQuery =
+                "select exists (select 1 from pg_catalog.pg_stats ps " +
+                        "where ps.schemaname = ?::text and ps.tablename = ?::text);";
+        try (Connection connection = getDataSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+            statement.setString(1, pgContext.getSchemaName());
+            statement.setString(2, Objects.requireNonNull(tableName));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                return resultSet.getBoolean(1);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

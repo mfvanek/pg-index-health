@@ -16,9 +16,15 @@ class PgContextTest {
 
     @Test
     void getSchemeName() {
-        final PgContext context = PgContext.of("s");
-        assertEquals("s", context.getSchemaName());
+        assertEquals("s", PgContext.of("s").getSchemaName());
         assertEquals("public", PgContext.ofPublic().getSchemaName());
+    }
+
+    @Test
+    void getBloatPercentageThreshold() {
+        assertEquals(10, PgContext.of("s").getBloatPercentageThreshold());
+        assertEquals(22, PgContext.of("s", 22).getBloatPercentageThreshold());
+        assertEquals(10, PgContext.ofPublic().getBloatPercentageThreshold());
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -27,12 +33,13 @@ class PgContextTest {
         assertThrows(NullPointerException.class, () -> PgContext.of(null));
         assertThrows(IllegalArgumentException.class, () -> PgContext.of(""));
         assertThrows(IllegalArgumentException.class, () -> PgContext.of("   "));
+        assertThrows(IllegalArgumentException.class, () -> PgContext.of("s", -1));
     }
 
     @Test
     void testToString() {
-        final PgContext context = PgContext.of("s");
-        assertEquals("PgContext{schemaName='s'}", context.toString());
-        assertEquals("PgContext{schemaName='public'}", PgContext.ofPublic().toString());
+        assertEquals("PgContext{schemaName='s', bloatPercentageThreshold=10}", PgContext.of("s").toString());
+        assertEquals("PgContext{schemaName='s', bloatPercentageThreshold=11}", PgContext.of("s", 11).toString());
+        assertEquals("PgContext{schemaName='public', bloatPercentageThreshold=10}", PgContext.ofPublic().toString());
     }
 }

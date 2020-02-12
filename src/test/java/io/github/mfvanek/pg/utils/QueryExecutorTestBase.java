@@ -33,7 +33,7 @@ abstract class QueryExecutorTestBase extends DatabaseAwareTestBase {
                 pgConnection, invalidSql, (rs) -> null));
 
         final String invalidSqlWithParam = "select unknown_field from unknown_table where schema = ?::text";
-        assertThrows(RuntimeException.class, () -> QueryExecutor.executeQuery(
+        assertThrows(RuntimeException.class, () -> QueryExecutor.executeQueryWithSchema(
                 pgConnection, PgContext.of("s"), invalidSqlWithParam, (rs) -> null));
     }
 }

@@ -11,6 +11,7 @@ import io.github.mfvanek.pg.connection.HostAware;
 import io.github.mfvanek.pg.model.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.ForeignKey;
 import io.github.mfvanek.pg.model.Index;
+import io.github.mfvanek.pg.model.IndexWithBloat;
 import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.Table;
@@ -149,5 +150,24 @@ public interface IndexMaintenance extends HostAware {
     @Nonnull
     default List<IndexWithNulls> getIndexesWithNullValues() {
         return getIndexesWithNullValues(PgContext.ofPublic());
+    }
+
+    /**
+     * Returns indexes that are bloated in the specified schema.
+     *
+     * @param pgContext {@code PgContext} with the specified schema
+     * @return list of bloated indexes
+     */
+    @Nonnull
+    List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext);
+
+    /**
+     * Returns indexes that are bloated in the public schema.
+     *
+     * @return list of bloated indexes
+     */
+    @Nonnull
+    default List<IndexWithBloat> getIndexesWithBloat() {
+        return getIndexesWithBloat(PgContext.ofPublic());
     }
 }
