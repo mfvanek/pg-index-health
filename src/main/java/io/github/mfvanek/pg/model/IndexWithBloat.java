@@ -10,6 +10,7 @@ package io.github.mfvanek.pg.model;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * Represents database index with information about bloat.
@@ -56,6 +57,30 @@ public class IndexWithBloat extends IndexWithSize implements BloatAware {
     @Override
     public String toString() {
         return IndexWithBloat.class.getSimpleName() + '{' + innerToString() + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        IndexWithBloat that = (IndexWithBloat) o;
+        return bloatSizeInBytes == that.bloatSizeInBytes &&
+                bloatPercentage == that.bloatPercentage;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), bloatSizeInBytes, bloatPercentage);
     }
 
     @Nonnull
