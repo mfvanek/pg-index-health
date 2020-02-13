@@ -2,6 +2,7 @@ name: Java CI
 
 on:
     push:
+    pull_request:
     schedule:
         # At 00:00 on Sunday
         - cron:  '0 0 * * SUN'
