@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2019-2020. Ivan Vakhrushev.
+ * https://github.com/mfvanek/pg-index-health
+ *
+ * This file is a part of "pg-index-health" - a Java library for analyzing and maintaining indexes health in Postgresql databases.
+ */
+
 package io.github.mfvanek.pg.model;
 
 import org.junit.jupiter.api.Test;
