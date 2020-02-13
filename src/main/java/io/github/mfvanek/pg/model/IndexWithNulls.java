@@ -10,6 +10,7 @@ package io.github.mfvanek.pg.model;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public final class IndexWithNulls extends IndexWithSize {
 
@@ -34,6 +35,26 @@ public final class IndexWithNulls extends IndexWithSize {
                 innerToString() +
                 ", nullableField=\'" + nullableField + "\'" +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        IndexWithNulls that = (IndexWithNulls) o;
+        return Objects.equals(nullableField, that.nullableField);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), nullableField);
     }
 
     public static IndexWithNulls of(@Nonnull String tableName,

@@ -9,7 +9,10 @@ package io.github.mfvanek.pg.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class IndexWithNullsTest {
@@ -41,5 +44,32 @@ class IndexWithNullsTest {
         final IndexWithNulls index = IndexWithNulls.of("t", "i", 22L, "f");
         assertEquals("IndexWithNulls{tableName='t', indexName='i', " +
                 "indexSizeInBytes=22, nullableField='f'}", index.toString());
+    }
+
+    @Test
+    void testEqualsAndHashCode() {
+        final IndexWithNulls first = IndexWithNulls.of("t1", "i1", 1, "f");
+        final IndexWithNulls second = IndexWithNulls.of("t1", "i1", 2, "f");
+        final IndexWithNulls third = IndexWithNulls.of("t1", "i1", 2, "t");
+
+        assertNotEquals(first, null);
+        assertNotEquals(first, BigDecimal.ZERO);
+
+        // self
+        assertEquals(first, first);
+        assertEquals(first.hashCode(), first.hashCode());
+
+        // the same
+        assertEquals(first, IndexWithNulls.of("t1", "i1", 1, "f"));
+
+        // others
+        assertNotEquals(first, second);
+        assertNotEquals(first.hashCode(), second.hashCode());
+
+        assertNotEquals(first, third);
+        assertNotEquals(first.hashCode(), third.hashCode());
+
+        assertNotEquals(second, third);
+        assertNotEquals(second.hashCode(), third.hashCode());
     }
 }
