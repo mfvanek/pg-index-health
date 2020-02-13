@@ -434,6 +434,7 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withStatistics(),
                 ctx -> {
+                    waitForStatisticsCollector();
                     final List<IndexWithBloat> indexes = indexMaintenance.getIndexesWithBloat(ctx);
                     assertNotNull(indexes);
                     assertEquals(0, indexes.size());
