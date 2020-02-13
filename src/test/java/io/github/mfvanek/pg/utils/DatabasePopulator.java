@@ -313,13 +313,13 @@ public final class DatabasePopulator implements AutoCloseable {
             statement.execute(String.format("create table if not exists %s.bad_clients (" +
                     "id bigint not null, " +
                     "name varchar(255) not null)", schemaName));
-            final String checkQuery = String.format("select exists (\n" +
-                    "   select 1 \n" +
-                    "   from pg_catalog.pg_class c\n" +
-                    "   join pg_catalog.pg_namespace n on n.oid = c.relnamespace\n" +
-                    "   where n.nspname = '%s'\n" +
-                    "   and c.relname = '%s'\n" +
-                    "   and c.relkind = 'r'\n" +
+            final String checkQuery = String.format("select exists (%n" +
+                    "   select 1 %n" +
+                    "   from pg_catalog.pg_class c%n" +
+                    "   join pg_catalog.pg_namespace n on n.oid = c.relnamespace%n" +
+                    "   where n.nspname = '%s'%n" +
+                    "   and c.relname = '%s'%n" +
+                    "   and c.relkind = 'r'%n" +
                     "   );", schemaName, "bad_clients");
             try (ResultSet rs = statement.executeQuery(checkQuery)) {
                 if (rs.next()) {

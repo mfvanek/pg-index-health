@@ -10,6 +10,7 @@ package io.github.mfvanek.pg.model;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public class IndexWithSize extends Index implements IndexSizeAware {
 
@@ -42,5 +43,25 @@ public class IndexWithSize extends Index implements IndexSizeAware {
                                    @Nonnull String indexName,
                                    long indexSizeInBytes) {
         return new IndexWithSize(tableName, indexName, indexSizeInBytes);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        IndexWithSize that = (IndexWithSize) o;
+        return indexSizeInBytes == that.indexSizeInBytes;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), indexSizeInBytes);
     }
 }

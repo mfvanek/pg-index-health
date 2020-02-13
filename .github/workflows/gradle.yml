@@ -1,10 +1,14 @@
 name: Java CI
 
-on: [push]
+on:
+    push:
+    schedule:
+        # At 00:00 on Sunday
+        - cron:  '0 0 * * SUN'
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: [ubuntu-latest, windows-latest, macos-latest]
         steps:
             -   uses: actions/checkout@v1
             -   name: Set up JDK 8
