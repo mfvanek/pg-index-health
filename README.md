@@ -1,6 +1,7 @@
 # <img src="logo.png" width="100%">
-**pg-index-health** is a Java library for analyzing and maintaining indexes health in [Postgresql](https://www.postgresql.org/) databases.
+**pg-index-health** is a Java library for analyzing and maintaining indexes health in [PostgreSQL](https://www.postgresql.org/) databases.
 
+![Java CI](https://github.com/mfvanek/pg-index-health/workflows/Java%20CI/badge.svg)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.mfvanek/pg-index-health.svg)](https://search.maven.org/artifact/io.github.mfvanek/pg-index-health/)
 
 ## Supported PostgreSQL versions
