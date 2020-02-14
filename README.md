@@ -24,6 +24,22 @@
 **pg_index_health** uses the [PostgreSQL's statistics collector](https://www.postgresql.org/docs/10/monitoring-stats.html).  
 You can call `pg_stat_reset()` to reset all statistics counters for the current database to zero.
 
+## Installation
+
+Using Gradle:
+```groovy
+implementation 'io.github.mfvanek:pg-index-health:0.1.4'
+```
+
+Using Maven:
+```xml
+<dependency>
+  <groupId>io.github.mfvanek</groupId>
+  <artifactId>pg-index-health</artifactId>
+  <version>0.1.4</version>
+</dependency>
+```
+
 ## Demo application
 ```java
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
