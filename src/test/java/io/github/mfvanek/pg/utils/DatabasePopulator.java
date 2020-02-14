@@ -348,6 +348,10 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     private void collectStatistics() {
+        collectStatistics(dataSource, schemaName);
+    }
+
+    static void collectStatistics(@Nonnull final DataSource dataSource, @Nonnull final String schemaName) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             final String query = String.format("vacuum analyze %s.", schemaName);

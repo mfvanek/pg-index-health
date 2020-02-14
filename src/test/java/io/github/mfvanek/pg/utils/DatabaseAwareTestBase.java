@@ -123,6 +123,7 @@ public abstract class DatabaseAwareTestBase {
                 statement.execute(String.format(
                         "select count(*) from %s.accounts where client_id = 1::bigint", schemaName));
             }
+            DatabasePopulator.collectStatistics(dataSource, schemaName);
             waitForStatisticsCollector();
         } catch (SQLException e) {
             throw new RuntimeException(e);
