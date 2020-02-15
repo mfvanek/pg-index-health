@@ -7,6 +7,7 @@
 
 package io.github.mfvanek.pg.connection;
 
+import io.github.mfvanek.pg.utils.TestUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +20,11 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PgUrlParserTest {
+
+    @Test
+    void privateConstructor() {
+        assertThrows(UnsupportedOperationException.class, () -> TestUtils.invokePrivateConstructor(PgUrlParser.class));
+    }
 
     @Test
     void extractNamesAndUrlsForEachHost() {

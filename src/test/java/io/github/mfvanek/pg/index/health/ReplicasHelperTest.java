@@ -9,6 +9,7 @@ package io.github.mfvanek.pg.index.health;
 
 import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
+import io.github.mfvanek.pg.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -18,8 +19,14 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ReplicasHelperTest {
+
+    @Test
+    void privateConstructor() {
+        assertThrows(UnsupportedOperationException.class, () -> TestUtils.invokePrivateConstructor(ReplicasHelper.class));
+    }
 
     @Test
     void getUnusedIndexesAsIntersectionResult() {
