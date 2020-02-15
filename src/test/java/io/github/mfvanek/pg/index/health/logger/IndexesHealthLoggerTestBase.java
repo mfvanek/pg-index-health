@@ -48,16 +48,19 @@ abstract class IndexesHealthLoggerTestBase extends DatabaseAwareTestBase {
                         .withNullValuesInIndex()
                         .withTableWithoutPrimaryKey()
                         .withDuplicatedIndex()
-                        .withNonSuitableIndex(),
+                        .withNonSuitableIndex()
+                        .withStatistics(),
                 ctx -> {
+                    waitForStatisticsCollector();
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
                     assertNotNull(logs);
-                    assertThat(logs, hasSize(8));
+                    assertThat(logs, hasSize(9));
                     assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes\t1");
                     assertContainsKey(logs, SimpleLoggingKey.DUPLICATED_INDEXES, "duplicated_indexes\t2");
                     assertContainsKey(logs, SimpleLoggingKey.FOREIGN_KEYS, "foreign_keys_without_index\t1");
                     assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key\t1");
                     assertContainsKey(logs, SimpleLoggingKey.INDEXES_WITH_NULLS, "indexes_with_null_values\t1");
+                    assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat\t8");
                 });
     }
 
@@ -65,7 +68,7 @@ abstract class IndexesHealthLoggerTestBase extends DatabaseAwareTestBase {
     void logAllWithDefaultSchema() {
         final List<String> logs = logger.logAll(Exclusions.empty());
         assertNotNull(logs);
-        assertThat(logs, hasSize(8));
+        assertThat(logs, hasSize(9));
         for (SimpleLoggingKey key : SimpleLoggingKey.values()) {
             assertContainsKey(logs, key, key.getSubKeyName() + "\t0");
         }

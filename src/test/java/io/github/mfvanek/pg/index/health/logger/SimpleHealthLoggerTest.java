@@ -11,6 +11,7 @@ import io.github.mfvanek.pg.index.health.IndexesHealth;
 import io.github.mfvanek.pg.model.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.ForeignKey;
 import io.github.mfvanek.pg.model.Index;
+import io.github.mfvanek.pg.model.IndexWithBloat;
 import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.IndexWithSize;
 import io.github.mfvanek.pg.model.MemoryUnit;
@@ -249,17 +250,36 @@ class SimpleHealthLoggerTest {
     @Test
     void applyIndexesBloatExclusionsBySize() {
         final Exclusions exclusions = Exclusions.builder()
-                // TODO
+                .withIndexSizeThreshold(20L)
+                .withIndexBloatSizeThreshold(10L)
                 .build();
-        Mockito.when(indexesHealthMock.getIndexesWithNullValues(any(PgContext.class)))
+        Mockito.when(indexesHealthMock.getIndexesWithBloat(any(PgContext.class)))
                 .thenReturn(Arrays.asList(
-                        IndexWithNulls.of("t1", "i1", 1L, "f1"),
-                        IndexWithNulls.of("t1", "i2", 2L, "f2"),
-                        IndexWithNulls.of("t2", "i3", 3L, "f3"),
-                        IndexWithNulls.of("t2", "i4", 4L, "f4")
+                        IndexWithBloat.of("t1", "i1", 15L, 10L, 67),
+                        IndexWithBloat.of("t1", "i2", 20L, 9L, 45),
+                        IndexWithBloat.of("t2", "i3", 30L, 10L, 66),
+                        IndexWithBloat.of("t2", "i4", 40L, 20L, 50)
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(exclusions);
-        assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat\t3");
+        assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat\t2");
+    }
+
+    @Test
+    void applyIndexesBloatExclusionsByPercentage() {
+        final Exclusions exclusions = Exclusions.builder()
+                .withIndexSizeThreshold(16)
+                .withIndexBloatPercentageThreshold(51)
+                .build();
+        Mockito.when(indexesHealthMock.getIndexesWithBloat(any(PgContext.class)))
+                .thenReturn(Arrays.asList(
+                        IndexWithBloat.of("t1", "i1", 15L, 10L, 67),
+                        IndexWithBloat.of("t1", "i2", 20L, 9L, 45),
+                        IndexWithBloat.of("t2", "i3", 30L, 10L, 66),
+                        IndexWithBloat.of("t2", "i4", 40L, 20L, 50)
+                ));
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final List<String> logs = logger.logAll(exclusions);
+        assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat\t1");
     }
 }

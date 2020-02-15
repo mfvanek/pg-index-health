@@ -189,7 +189,9 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     private String logIndexesBloat(@Nonnull final Exclusions exclusions,
                                    @Nonnull final PgContext pgContext) {
         final List<IndexWithBloat> rawIndexesWithBloat = indexesHealth.getIndexesWithBloat(pgContext);
-        final List<IndexWithBloat> indexesWithBloat = applyBloatExclusions(rawIndexesWithBloat,
+        final List<IndexWithBloat> filteredIndexesWithBloat = applyIndexSizeExclusions(
+                rawIndexesWithBloat, exclusions.getIndexSizeThresholdInBytes());
+        final List<IndexWithBloat> indexesWithBloat = applyBloatExclusions(filteredIndexesWithBloat,
                 exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold());
         final LoggingKey key = SimpleLoggingKey.INDEXES_BLOAT;
         if (CollectionUtils.isNotEmpty(indexesWithBloat)) {
@@ -266,7 +268,7 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     private static <T extends BloatAware> List<T> applyBloatExclusions(@Nonnull final List<T> rawRecords,
                                                                        final long sizeThreshold,
                                                                        final int percentageThreshold) {
-        if (CollectionUtils.isEmpty(rawRecords) || sizeThreshold <= 0L || percentageThreshold <= 0) {
+        if (CollectionUtils.isEmpty(rawRecords) || (sizeThreshold <= 0L && percentageThreshold <= 0)) {
             return rawRecords;
         }
 
