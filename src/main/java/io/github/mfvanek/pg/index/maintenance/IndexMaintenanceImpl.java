@@ -235,7 +235,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "            else 2 + ((32 + 8 - 1) / 8) /* indextupledata size + indexattributebitmapdata size (max num filed per index + 8 - 1 /8) */\n" +
                     "            end as index_tuple_header_size,\n" +
                     "        /* remove null values and save space using it fractional part from stats */\n" +
-                    "        sum((1 - coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 1024)) as null_data_width\n" +
+                    "        sum((1 - coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 0)) as null_data_width\n" +
                     "    from\n" +
                     "        named_indexes_attributes i\n" +
                     "        join pg_catalog.pg_stats s on s.schemaname = i.nspname and s.tablename = i.attrelname and s.attname = i.attname\n" +

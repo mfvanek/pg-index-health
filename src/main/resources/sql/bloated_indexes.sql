@@ -78,7 +78,7 @@ rows_data_stats as (
             else 2 + ((32 + 8 - 1) / 8) /* indextupledata size + indexattributebitmapdata size (max num filed per index + 8 - 1 /8) */
             end as index_tuple_header_size,
         /* remove null values and save space using it fractional part from stats */
-        sum((1 - coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 1024)) as null_data_width
+        sum((1 - coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 0)) as null_data_width
     from
         named_indexes_attributes i
         join pg_catalog.pg_stats s on s.schemaname = i.nspname and s.tablename = i.attrelname and s.attname = i.attname
