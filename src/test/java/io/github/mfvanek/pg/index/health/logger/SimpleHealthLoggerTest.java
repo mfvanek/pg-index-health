@@ -18,7 +18,6 @@ import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.Table;
 import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
-import io.github.mfvanek.pg.utils.HealthLoggerAssertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -26,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static io.github.mfvanek.pg.utils.HealthLoggerAssertions.assertContainsKey;
 import static org.mockito.ArgumentMatchers.any;
 
 class SimpleHealthLoggerTest {
@@ -42,7 +42,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(Exclusions.empty());
-        HealthLoggerAssertions.assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes\t3");
+        assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes\t3");
     }
 
     @Test
@@ -67,7 +67,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(exclusions);
-        HealthLoggerAssertions.assertContainsKey(logs, SimpleLoggingKey.DUPLICATED_INDEXES, "duplicated_indexes\t1");
+        assertContainsKey(logs, SimpleLoggingKey.DUPLICATED_INDEXES, "duplicated_indexes\t1");
     }
 
     @Test
@@ -84,7 +84,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(exclusions);
-        HealthLoggerAssertions.assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t2");
+        assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t2");
     }
 
     @Test
@@ -109,7 +109,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(exclusions);
-        HealthLoggerAssertions.assertContainsKey(logs, SimpleLoggingKey.INTERSECTED_INDEXES, "intersected_indexes\t1");
+        assertContainsKey(logs, SimpleLoggingKey.INTERSECTED_INDEXES, "intersected_indexes\t1");
     }
 
     @Test
@@ -127,7 +127,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(exclusions);
-        HealthLoggerAssertions.assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t1");
+        assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t1");
     }
 
     @Test
@@ -145,7 +145,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(exclusions);
-        HealthLoggerAssertions.assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t1");
+        assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t1");
     }
 
     @Test
@@ -158,7 +158,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(Exclusions.empty());
-        HealthLoggerAssertions.assertContainsKey(logs, SimpleLoggingKey.FOREIGN_KEYS, "foreign_keys_without_index\t3");
+        assertContainsKey(logs, SimpleLoggingKey.FOREIGN_KEYS, "foreign_keys_without_index\t3");
     }
 
     @Test
@@ -175,7 +175,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(exclusions);
-        HealthLoggerAssertions.assertContainsKey(logs, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES, "tables_with_missing_indexes\t2");
+        assertContainsKey(logs, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES, "tables_with_missing_indexes\t2");
     }
 
     @Test
@@ -192,7 +192,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(exclusions);
-        HealthLoggerAssertions.assertContainsKey(logs, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES, "tables_with_missing_indexes\t3");
+        assertContainsKey(logs, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES, "tables_with_missing_indexes\t3");
     }
 
     @Test
@@ -209,7 +209,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(exclusions);
-        HealthLoggerAssertions.assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key\t3");
+        assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key\t3");
     }
 
     @Test
@@ -226,7 +226,7 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(exclusions);
-        HealthLoggerAssertions.assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key\t2");
+        assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key\t2");
     }
 
     @Test
@@ -243,6 +243,23 @@ class SimpleHealthLoggerTest {
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(exclusions);
-        HealthLoggerAssertions.assertContainsKey(logs, SimpleLoggingKey.INDEXES_WITH_NULLS, "indexes_with_null_values\t3");
+        assertContainsKey(logs, SimpleLoggingKey.INDEXES_WITH_NULLS, "indexes_with_null_values\t3");
+    }
+
+    @Test
+    void applyIndexesBloatExclusionsBySize() {
+        final Exclusions exclusions = Exclusions.builder()
+                // TODO
+                .build();
+        Mockito.when(indexesHealthMock.getIndexesWithNullValues(any(PgContext.class)))
+                .thenReturn(Arrays.asList(
+                        IndexWithNulls.of("t1", "i1", 1L, "f1"),
+                        IndexWithNulls.of("t1", "i2", 2L, "f2"),
+                        IndexWithNulls.of("t2", "i3", 3L, "f3"),
+                        IndexWithNulls.of("t2", "i4", 4L, "f4")
+                ));
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final List<String> logs = logger.logAll(exclusions);
+        assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat\t3");
     }
 }

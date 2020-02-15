@@ -61,6 +61,13 @@ public final class Validators {
         return argumentValue;
     }
 
+    public static int validPercent(final int percentValue, @Nonnull final String argumentName) {
+        if (percentValue < 0 || percentValue > 100) {
+            throw new IllegalArgumentException(argumentName + " should be in the range from 0 to 100 inclusive");
+        }
+        return percentValue;
+    }
+
     private static long argumentNotNegative(final long argumentValue, @Nonnull final String argumentName) {
         if (argumentValue < 0L) {
             throw new IllegalArgumentException(argumentName + " cannot be less than zero");
