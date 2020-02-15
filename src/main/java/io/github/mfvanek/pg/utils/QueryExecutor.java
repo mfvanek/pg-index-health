@@ -21,6 +21,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public final class QueryExecutor {
 
@@ -50,14 +51,44 @@ public final class QueryExecutor {
         }
     }
 
-    public static <T> List<T> executeQuery(@Nonnull final PgConnection pgConnection,
-                                           @Nonnull final PgContext pgContext,
-                                           @Nonnull final String sqlQuery,
-                                           @Nonnull final ResultSetExtractor<T> rse) {
+    public static <T> List<T> executeQueryWithSchema(@Nonnull final PgConnection pgConnection,
+                                                     @Nonnull final PgContext pgContext,
+                                                     @Nonnull final String sqlQuery,
+                                                     @Nonnull final ResultSetExtractor<T> rse) {
+        return executeQuery(pgConnection, pgContext, sqlQuery, rse, statement -> {
+            try {
+                statement.setString(1, pgContext.getSchemaName());
+            } catch (SQLException e) {
+                LOGGER.trace("Error occurs while setting params", e);
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public static <T> List<T> executeQueryWithBloatThreshold(@Nonnull final PgConnection pgConnection,
+                                                             @Nonnull final PgContext pgContext,
+                                                             @Nonnull final String sqlQuery,
+                                                             @Nonnull final ResultSetExtractor<T> rse) {
+        return executeQuery(pgConnection, pgContext, sqlQuery, rse, statement -> {
+            try {
+                statement.setString(1, pgContext.getSchemaName());
+                statement.setInt(2, pgContext.getBloatPercentageThreshold());
+            } catch (SQLException e) {
+                LOGGER.trace("Error occurs while setting params", e);
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private static <T> List<T> executeQuery(@Nonnull final PgConnection pgConnection,
+                                            @Nonnull final PgContext pgContext,
+                                            @Nonnull final String sqlQuery,
+                                            @Nonnull final ResultSetExtractor<T> rse,
+                                            @Nonnull final Consumer<PreparedStatement> paramsSetter) {
         LOGGER.debug("Executing query with context {}: {}", pgContext, sqlQuery);
         try (Connection connection = pgConnection.getDataSource().getConnection();
              PreparedStatement statement = connection.prepareStatement(Objects.requireNonNull(sqlQuery))) {
-            statement.setString(1, pgContext.getSchemaName());
+            paramsSetter.accept(statement);
             final List<T> executionResult = new ArrayList<>();
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {

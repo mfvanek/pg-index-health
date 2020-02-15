@@ -8,11 +8,13 @@
 package io.github.mfvanek.pg.index.health.logger;
 
 import io.github.mfvanek.pg.index.health.IndexesHealth;
+import io.github.mfvanek.pg.model.BloatAware;
 import io.github.mfvanek.pg.model.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.ForeignKey;
 import io.github.mfvanek.pg.model.Index;
 import io.github.mfvanek.pg.model.IndexNameAware;
 import io.github.mfvanek.pg.model.IndexSizeAware;
+import io.github.mfvanek.pg.model.IndexWithBloat;
 import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.Table;
@@ -60,6 +62,7 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
         logResult.add(logTablesWithMissingIndexes(exclusions, pgContext));
         logResult.add(logTablesWithoutPrimaryKey(exclusions, pgContext));
         logResult.add(logIndexesWithNullValues(exclusions, pgContext));
+        logResult.add(logIndexesBloat(exclusions, pgContext));
         return logResult;
     }
 
@@ -183,6 +186,22 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
     }
 
     @Nonnull
+    private String logIndexesBloat(@Nonnull final Exclusions exclusions,
+                                   @Nonnull final PgContext pgContext) {
+        final List<IndexWithBloat> rawIndexesWithBloat = indexesHealth.getIndexesWithBloat(pgContext);
+        final List<IndexWithBloat> filteredIndexesWithBloat = applyIndexSizeExclusions(
+                rawIndexesWithBloat, exclusions.getIndexSizeThresholdInBytes());
+        final List<IndexWithBloat> indexesWithBloat = applyBloatExclusions(filteredIndexesWithBloat,
+                exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold());
+        final LoggingKey key = SimpleLoggingKey.INDEXES_BLOAT;
+        if (CollectionUtils.isNotEmpty(indexesWithBloat)) {
+            LOGGER.warn("There are indexes with bloat in the database {}", indexesWithBloat);
+            return writeToLog(key, indexesWithBloat.size());
+        }
+        return writeZeroToLog(key);
+    }
+
+    @Nonnull
     private List<DuplicatedIndexes> applyExclusions(@Nonnull final List<DuplicatedIndexes> rawIndexes,
                                                     @Nonnull final Set<String> indexesExclusions) {
         if (CollectionUtils.isEmpty(rawIndexes) ||
@@ -242,6 +261,20 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
 
         return rawRecords.stream()
                 .filter(i -> i.getTableSizeInBytes() >= threshold)
+                .collect(Collectors.toList());
+    }
+
+    @Nonnull
+    private static <T extends BloatAware> List<T> applyBloatExclusions(@Nonnull final List<T> rawRecords,
+                                                                       final long sizeThreshold,
+                                                                       final int percentageThreshold) {
+        if (CollectionUtils.isEmpty(rawRecords) || (sizeThreshold <= 0L && percentageThreshold <= 0)) {
+            return rawRecords;
+        }
+
+        return rawRecords.stream()
+                .filter(r -> r.getBloatSizeInBytes() >= sizeThreshold)
+                .filter(r -> r.getBloatPercentage() >= percentageThreshold)
                 .collect(Collectors.toList());
     }
 }

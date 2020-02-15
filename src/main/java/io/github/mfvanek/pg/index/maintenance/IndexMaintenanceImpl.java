@@ -12,6 +12,7 @@ import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.ForeignKey;
 import io.github.mfvanek.pg.model.Index;
+import io.github.mfvanek.pg.model.IndexWithBloat;
 import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.Table;
@@ -159,6 +160,149 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "group by x.indrelid, x.indexrelid, x.indpred\n" +
                     "order by table_name, index_name;";
 
+    private static final String INDEXES_WITH_BLOAT =
+            "with indexes_data as (\n" +
+                    "    select\n" +
+                    "        pc.relname as inner_index_name,\n" +
+                    "        pc.reltuples,\n" +
+                    "        pc.relpages,\n" +
+                    "        pi.indrelid as table_oid,\n" +
+                    "        pi.indexrelid as index_oid,\n" +
+                    "        coalesce(substring(array_to_string(pc.reloptions, ' ') from 'fillfactor=([0-9]+)')::smallint, 90) as fill_factor,\n" +
+                    "        pi.indnatts,\n" +
+                    "        string_to_array(textin(int2vectorout(pi.indkey)), ' ')::int[] as indkey,\n" +
+                    "        pn.nspname\n" +
+                    "    from\n" +
+                    "        pg_catalog.pg_index pi\n" +
+                    "        join pg_catalog.pg_class pc on pc.oid = pi.indexrelid\n" +
+                    "        join pg_catalog.pg_namespace pn on pn.oid = pc.relnamespace\n" +
+                    "    where\n" +
+                    "        pc.relam = (select oid from pg_catalog.pg_am where amname = 'btree') and\n" +
+                    "        pc.relpages > 0 and\n" +
+                    "        pn.nspname = ?::text\n" +
+                    "),\n" +
+                    "nested_indexes_attributes as (\n" +
+                    "    select\n" +
+                    "        inner_index_name,\n" +
+                    "        reltuples,\n" +
+                    "        relpages,\n" +
+                    "        table_oid,\n" +
+                    "        index_oid,\n" +
+                    "        fill_factor,\n" +
+                    "        indkey,\n" +
+                    "        nspname,\n" +
+                    "        pg_catalog.generate_series(1, indnatts) as attpos\n" +
+                    "    from indexes_data\n" +
+                    "),\n" +
+                    "named_indexes_attributes as (\n" +
+                    "    select\n" +
+                    "        ic.table_oid,\n" +
+                    "        ic.inner_index_name,\n" +
+                    "        ic.attpos,\n" +
+                    "        ic.indkey,\n" +
+                    "        ic.indkey[ic.attpos],\n" +
+                    "        ic.reltuples,\n" +
+                    "        ic.relpages,\n" +
+                    "        ic.index_oid,\n" +
+                    "        ic.fill_factor,\n" +
+                    "        coalesce(a1.attnum, a2.attnum) as attnum,\n" +
+                    "        coalesce(a1.attname, a2.attname) as attname,\n" +
+                    "        coalesce(a1.atttypid, a2.atttypid) as atttypid,\n" +
+                    "        ic.nspname,\n" +
+                    "        case when a1.attnum is null then ic.inner_index_name else ct.relname end as attrelname\n" +
+                    "    from\n" +
+                    "        nested_indexes_attributes ic\n" +
+                    "        join pg_catalog.pg_class ct on ct.oid = ic.table_oid\n" +
+                    "        left join pg_catalog.pg_attribute a1 on ic.indkey[ic.attpos] <> 0 and a1.attrelid = ic.table_oid and a1.attnum = ic.indkey[ic.attpos]\n" +
+                    "        left join pg_catalog.pg_attribute a2 on ic.indkey[ic.attpos] = 0 and a2.attrelid = ic.index_oid and a2.attnum = ic.attpos\n" +
+                    "),\n" +
+                    "rows_data_stats as (\n" +
+                    "    select\n" +
+                    "        i.table_oid,\n" +
+                    "        i.reltuples,\n" +
+                    "        i.relpages,\n" +
+                    "        i.index_oid,\n" +
+                    "        i.fill_factor,\n" +
+                    "        current_setting('block_size')::bigint as block_size,\n" +
+                    "        /* max_align: 4 on 32bits, 8 on 64bits (and mingw32 ?) */\n" +
+                    "        case when version() ~ 'mingw32' or version() ~ '64-bit|x86_64|ppc64|ia64|amd64' then 8 else 4 end as max_align,\n" +
+                    "        /* per page header, fixed size: 20 for 7.x, 24 for others */\n" +
+                    "        24 as page_header_size,\n" +
+                    "        /* per page btree opaque data */\n" +
+                    "        16 as page_opaque_data_size,\n" +
+                    "        /* per tuple header: add indexattributebitmapdata if some cols are null-able */\n" +
+                    "        case when max(coalesce(s.null_frac, 0)) = 0 then 2 /* indextupledata size */\n" +
+                    "            else 2 + ((32 + 8 - 1) / 8) /* indextupledata size + indexattributebitmapdata size (max num filed per index + 8 - 1 /8) */\n" +
+                    "            end as index_tuple_header_size,\n" +
+                    "        /* remove null values and save space using it fractional part from stats */\n" +
+                    "        sum((1 - coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 1024)) as null_data_width\n" +
+                    "    from\n" +
+                    "        named_indexes_attributes i\n" +
+                    "        join pg_catalog.pg_stats s on s.schemaname = i.nspname and s.tablename = i.attrelname and s.attname = i.attname\n" +
+                    "    group by 1, 2, 3, 4, 5, 6, 7, 8, 9\n" +
+                    "),\n" +
+                    "rows_header_stats as (\n" +
+                    "    select\n" +
+                    "        max_align,\n" +
+                    "        block_size,\n" +
+                    "        reltuples,\n" +
+                    "        relpages,\n" +
+                    "        index_oid,\n" +
+                    "        fill_factor,\n" +
+                    "        table_oid,\n" +
+                    "        (index_tuple_header_size + max_align\n" +
+                    "             /* add padding to the index tuple header to align on max_align */\n" +
+                    "             -\n" +
+                    "         case when index_tuple_header_size % max_align = 0 then max_align else index_tuple_header_size % max_align end\n" +
+                    "             + null_data_width + max_align\n" +
+                    "            /* add padding to the data to align on max_align */\n" +
+                    "            - case\n" +
+                    "                  when null_data_width = 0 then 0\n" +
+                    "                  when null_data_width::integer % max_align = 0 then max_align\n" +
+                    "                  else null_data_width::integer % max_align end\n" +
+                    "            )::numeric as null_data_header_width,\n" +
+                    "        page_header_size,\n" +
+                    "        page_opaque_data_size\n" +
+                    "    from rows_data_stats\n" +
+                    "),\n" +
+                    "relation_stats as (\n" +
+                    "    select\n" +
+                    "        /* itemiddata size + computed avg size of a tuple (nulldatahdrwidth) */\n" +
+                    "        coalesce(1 +\n" +
+                    "                 ceil(reltuples / floor((block_size - page_opaque_data_size - page_header_size) * fill_factor / (100 * (4 + null_data_header_width)::float))),\n" +
+                    "            0)::bigint as estimated_pages_count,\n" +
+                    "        block_size,\n" +
+                    "        table_oid::regclass::text as table_name,\n" +
+                    "        index_oid::regclass::text as index_name,\n" +
+                    "        pg_relation_size(index_oid) as index_size,\n" +
+                    "        relpages\n" +
+                    "    from rows_header_stats\n" +
+                    "),\n" +
+                    "corrected_relation_stats as (\n" +
+                    "    select\n" +
+                    "        table_name,\n" +
+                    "        index_name,\n" +
+                    "        index_size,\n" +
+                    "        block_size,\n" +
+                    "        relpages,\n" +
+                    "        case when relpages - estimated_pages_count > 0 then relpages - estimated_pages_count else 0 end as pages_ff_diff\n" +
+                    "    from relation_stats\n" +
+                    "),\n" +
+                    " bloat_stats as (\n" +
+                    "    select\n" +
+                    "        table_name,\n" +
+                    "        index_name,\n" +
+                    "        index_size,\n" +
+                    "        block_size * pages_ff_diff as bloat_size,\n" +
+                    "        round(100 * block_size * pages_ff_diff / index_size::float)::integer as bloat_percentage\n" +
+                    "     from\n" +
+                    "        corrected_relation_stats\n" +
+                    " )\n" +
+                    "select *\n" +
+                    "from bloat_stats\n" +
+                    "where bloat_percentage >= ?::integer\n" +
+                    "order by table_name, index_name;";
+
     private final PgConnection pgConnection;
 
     public IndexMaintenanceImpl(@Nonnull final PgConnection pgConnection) {
@@ -285,6 +429,22 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     /**
      * {@inheritDoc}
      */
+    @Nonnull
+    @Override
+    public List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext) {
+        return executeQueryWithBloatThreshold(INDEXES_WITH_BLOAT, pgContext, rs -> {
+            final String tableName = rs.getString("table_name");
+            final String indexName = rs.getString("index_name");
+            final long indexSize = rs.getLong("index_size");
+            final long bloatSize = rs.getLong("bloat_size");
+            final int bloatPercentage = rs.getInt("bloat_percentage");
+            return IndexWithBloat.of(tableName, indexName, indexSize, bloatSize, bloatPercentage);
+        });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Nonnull
     public PgHost getHost() {
@@ -294,6 +454,12 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
     private <T> List<T> executeQuery(@Nonnull final String sqlQuery,
                                      @Nonnull final PgContext pgContext,
                                      @Nonnull final ResultSetExtractor<T> rse) {
-        return QueryExecutor.executeQuery(pgConnection, pgContext, sqlQuery, rse);
+        return QueryExecutor.executeQueryWithSchema(pgConnection, pgContext, sqlQuery, rse);
+    }
+
+    private <T> List<T> executeQueryWithBloatThreshold(@Nonnull final String sqlQuery,
+                                                       @Nonnull final PgContext pgContext,
+                                                       @Nonnull final ResultSetExtractor<T> rse) {
+        return QueryExecutor.executeQueryWithBloatThreshold(pgConnection, pgContext, sqlQuery, rse);
     }
 }

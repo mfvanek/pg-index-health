@@ -48,7 +48,7 @@ public abstract class DatabaseAwareTestBase {
             databaseConfigurer.configure(databasePopulator)
                     .withSchema(schemaName)
                     .populate();
-            testExecutor.execute(PgContext.of(schemaName));
+            testExecutor.execute(PgContext.of(schemaName, 0));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -82,6 +82,23 @@ public abstract class DatabaseAwareTestBase {
         }
     }
 
+    protected boolean existsStatisticsForTable(@Nonnull final PgContext pgContext, @Nonnull final String tableName) {
+        final String sqlQuery =
+                "select exists (select 1 from pg_catalog.pg_stats ps " +
+                        "where ps.schemaname = ?::text and ps.tablename = ?::text);";
+        try (Connection connection = getDataSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+            statement.setString(1, pgContext.getSchemaName());
+            statement.setString(2, Objects.requireNonNull(tableName));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                return resultSet.getBoolean(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Nonnull
     protected String getPgVersion() {
         try (Connection connection = dataSource.getConnection();
@@ -106,6 +123,7 @@ public abstract class DatabaseAwareTestBase {
                 statement.execute(String.format(
                         "select count(*) from %s.accounts where client_id = 1::bigint", schemaName));
             }
+            DatabasePopulator.collectStatistics(dataSource, schemaName);
             waitForStatisticsCollector();
         } catch (SQLException e) {
             throw new RuntimeException(e);

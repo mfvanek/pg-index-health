@@ -31,6 +31,7 @@ public final class DatabasePopulator implements AutoCloseable {
     private boolean needCreateSuitableIndex = false;
     private boolean needCreateTableWithoutPrimaryKey = false;
     private boolean needCreateIndexWithNulls = false;
+    private boolean needCollectStatistics = false;
 
     private DatabasePopulator(@Nonnull final DataSource dataSource) {
         this.dataSource = Objects.requireNonNull(dataSource);
@@ -94,6 +95,12 @@ public final class DatabasePopulator implements AutoCloseable {
         return this;
     }
 
+    @Nonnull
+    public DatabasePopulator withStatistics() {
+        this.needCollectStatistics = true;
+        return this;
+    }
+
     public void populate() {
         createSchema();
         createTableClients();
@@ -121,6 +128,11 @@ public final class DatabasePopulator implements AutoCloseable {
         }
         if (needCreateIndexWithNulls) {
             createIndexWithNulls();
+        }
+
+        // should be the last step in pipeline
+        if (needCollectStatistics) {
+            collectStatistics();
         }
     }
 
@@ -330,6 +342,21 @@ public final class DatabasePopulator implements AutoCloseable {
                 }
                 throw new RuntimeException("Table with name 'bad_clients' in schema " + schemaName + " wasn't created");
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void collectStatistics() {
+        collectStatistics(dataSource, schemaName);
+    }
+
+    static void collectStatistics(@Nonnull final DataSource dataSource, @Nonnull final String schemaName) {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            final String query = String.format("vacuum analyze %s.", schemaName);
+            statement.execute(query + "accounts");
+            statement.execute(query + "clients");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

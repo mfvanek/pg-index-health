@@ -28,10 +28,6 @@ public final class Validators {
         return argumentValue;
     }
 
-    public static long valueNotNegative(final long argumentValue, @Nonnull final String argumentName) {
-        return argumentNotNegative(argumentValue, argumentName);
-    }
-
     @Nonnull
     public static String tableNameNotBlank(@Nonnull final String tableName) {
         return notBlank(tableName, "tableName");
@@ -56,6 +52,20 @@ public final class Validators {
 
     public static long countNotNegative(final long count, @Nonnull final String argumentName) {
         return argumentNotNegative(count, argumentName);
+    }
+
+    public static int argumentNotNegative(final int argumentValue, @Nonnull final String argumentName) {
+        if (argumentValue < 0) {
+            throw new IllegalArgumentException(argumentName + " cannot be less than zero");
+        }
+        return argumentValue;
+    }
+
+    public static int validPercent(final int percentValue, @Nonnull final String argumentName) {
+        if (percentValue < 0 || percentValue > 100) {
+            throw new IllegalArgumentException(argumentName + " should be in the range from 0 to 100 inclusive");
+        }
+        return percentValue;
     }
 
     private static long argumentNotNegative(final long argumentValue, @Nonnull final String argumentName) {

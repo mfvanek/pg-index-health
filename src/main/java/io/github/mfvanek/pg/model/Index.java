@@ -28,12 +28,18 @@ public class Index implements TableNameAware, IndexNameAware {
         this.indexName = Validators.indexNameNotBlank(indexName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Nonnull
     public String getTableName() {
         return tableName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Nonnull
     public String getIndexName() {

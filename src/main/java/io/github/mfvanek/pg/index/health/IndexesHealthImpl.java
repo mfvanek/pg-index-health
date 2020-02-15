@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.index.maintenance.StatisticsMaintenance;
 import io.github.mfvanek.pg.model.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.ForeignKey;
 import io.github.mfvanek.pg.model.Index;
+import io.github.mfvanek.pg.model.IndexWithBloat;
 import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.Table;
@@ -91,10 +92,10 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<UnusedIndex> getUnusedIndexes(@Nonnull final PgContext pgContext) {
         final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = new ArrayList<>();
-        for (IndexMaintenance maintenanceForReplica : indexMaintenanceForAllHostsInCluster) {
+        for (IndexMaintenance maintenanceForHost : indexMaintenanceForAllHostsInCluster) {
             potentiallyUnusedIndexesFromAllHosts.add(
-                    doOnHost(maintenanceForReplica.getHost(),
-                            () -> maintenanceForReplica.getPotentiallyUnusedIndexes(pgContext)));
+                    doOnHost(maintenanceForHost.getHost(),
+                            () -> maintenanceForHost.getPotentiallyUnusedIndexes(pgContext)));
         }
         return ReplicasHelper.getUnusedIndexesAsIntersectionResult(potentiallyUnusedIndexesFromAllHosts);
     }
@@ -116,10 +117,10 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
         final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = new ArrayList<>();
-        for (IndexMaintenance maintenanceForReplica : indexMaintenanceForAllHostsInCluster) {
+        for (IndexMaintenance maintenanceForHost : indexMaintenanceForAllHostsInCluster) {
             tablesWithMissingIndexesFromAllHosts.add(
-                    doOnHost(maintenanceForReplica.getHost(),
-                            () -> maintenanceForReplica.getTablesWithMissingIndexes(pgContext)));
+                    doOnHost(maintenanceForHost.getHost(),
+                            () -> maintenanceForHost.getTablesWithMissingIndexes(pgContext)));
         }
         return ReplicasHelper.getTablesWithMissingIndexesAsUnionResult(tablesWithMissingIndexesFromAllHosts);
     }
@@ -142,6 +143,16 @@ public class IndexesHealthImpl implements IndexesHealth {
     public List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
         return maintenanceForMaster.getIndexesWithNullValues(pgContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext) {
+        logExecutingOnMaster();
+        return maintenanceForMaster.getIndexesWithBloat(pgContext);
     }
 
     /**
