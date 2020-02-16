@@ -11,7 +11,6 @@ import io.github.mfvanek.pg.utils.Validators;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 /**
  * Normally, indexes should be used primarily when accessing a table.
@@ -58,13 +57,12 @@ public class TableWithMissingIndex extends Table implements Comparable<TableWith
             return false;
         }
 
-        TableWithMissingIndex that = (TableWithMissingIndex) o;
-        return getTableName().equals(that.getTableName());
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTableName());
+        return super.hashCode();
     }
 
     @Override

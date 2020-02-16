@@ -10,24 +10,22 @@ package io.github.mfvanek.pg.model;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 /**
- * Represents database index with information about bloat.
+ * Represents database table with information about bloat.
  *
  * @author Ivan Vakhrushev
  */
-public class IndexWithBloat extends IndexWithSize implements BloatAware {
+public class TableWithBloat extends Table implements BloatAware {
 
     private long bloatSizeInBytes;
     private int bloatPercentage;
 
-    private IndexWithBloat(@Nonnull String tableName,
-                           @Nonnull String indexName,
-                           long indexSizeInBytes,
+    private TableWithBloat(@Nonnull final String tableName,
+                           final long tableSizeInBytes,
                            long bloatSizeInBytes,
                            int bloatPercentage) {
-        super(tableName, indexName, indexSizeInBytes);
+        super(tableName, tableSizeInBytes);
         this.bloatSizeInBytes = Validators.sizeNotNegative(bloatSizeInBytes, "bloatSizeInBytes");
         this.bloatPercentage = Validators.argumentNotNegative(bloatPercentage, "bloatPercentage");
     }
@@ -56,7 +54,7 @@ public class IndexWithBloat extends IndexWithSize implements BloatAware {
 
     @Override
     public String toString() {
-        return IndexWithBloat.class.getSimpleName() + '{' + innerToString() + '}';
+        return TableWithBloat.class.getSimpleName() + '{' + innerToString() + '}';
     }
 
     @Override
@@ -69,36 +67,27 @@ public class IndexWithBloat extends IndexWithSize implements BloatAware {
             return false;
         }
 
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        IndexWithBloat that = (IndexWithBloat) o;
-        return bloatSizeInBytes == that.bloatSizeInBytes &&
-                bloatPercentage == that.bloatPercentage;
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), bloatSizeInBytes, bloatPercentage);
+        return super.hashCode();
     }
 
     /**
-     * Constructs a {@code IndexWithBloat} object.
+     * Constructs a {@code TableWithBloat} object.
      *
      * @param tableName        table name; should be non blank.
-     * @param indexName        index name; should be non blank.
-     * @param indexSizeInBytes index size in bytes; should be positive or zero.
+     * @param tableSizeInBytes table size in bytes; should be positive or zero.
      * @param bloatSizeInBytes bloat amount in bytes; should be positive or zero.
      * @param bloatPercentage  bloat percentage in the range from 0 to 100 inclusive.
-     * @return {@code IndexWithBloat}
+     * @return {@code TableWithBloat}
      */
-    @Nonnull
-    public static IndexWithBloat of(@Nonnull String tableName,
-                                    @Nonnull String indexName,
-                                    long indexSizeInBytes,
+    public static TableWithBloat of(@Nonnull final String tableName,
+                                    final long tableSizeInBytes,
                                     long bloatSizeInBytes,
                                     int bloatPercentage) {
-        return new IndexWithBloat(tableName, indexName, indexSizeInBytes, bloatSizeInBytes, bloatPercentage);
+        return new TableWithBloat(tableName, tableSizeInBytes, bloatSizeInBytes, bloatPercentage);
     }
 }
