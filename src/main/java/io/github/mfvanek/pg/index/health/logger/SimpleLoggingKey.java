@@ -20,7 +20,8 @@ public enum SimpleLoggingKey implements LoggingKey {
     TABLES_WITH_MISSING_INDEXES("tables_with_missing_indexes"),
     TABLES_WITHOUT_PK("tables_without_primary_key"),
     INDEXES_WITH_NULLS("indexes_with_null_values"),
-    INDEXES_BLOAT("indexes_bloat");
+    INDEXES_BLOAT("indexes_bloat"),
+    TABLES_BLOAT("tables_bloat");
 
     private final String subKeyName;
 

@@ -16,6 +16,8 @@ import java.util.Objects;
  * A base representation of database index.
  *
  * @author Ivan Vakhrushev
+ * @see TableNameAware
+ * @see IndexNameAware
  */
 public class Index implements TableNameAware, IndexNameAware {
 
@@ -23,7 +25,7 @@ public class Index implements TableNameAware, IndexNameAware {
     private final String indexName;
 
     @SuppressWarnings("WeakerAccess")
-    protected Index(@Nonnull String tableName, @Nonnull String indexName) {
+    protected Index(@Nonnull final String tableName, @Nonnull final String indexName) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.indexName = Validators.indexNameNotBlank(indexName);
     }
@@ -53,8 +55,8 @@ public class Index implements TableNameAware, IndexNameAware {
 
     @SuppressWarnings("WeakerAccess")
     protected String innerToString() {
-        return "tableName=\'" + tableName + "\'" +
-                ", indexName=\'" + indexName + "\'";
+        return "tableName='" + tableName + '\'' +
+                ", indexName='" + indexName + '\'';
     }
 
     @Override
@@ -84,7 +86,7 @@ public class Index implements TableNameAware, IndexNameAware {
      * @param indexName index name; should be non blank.
      * @return {@code Index}
      */
-    public static Index of(@Nonnull String tableName, @Nonnull String indexName) {
+    public static Index of(@Nonnull final String tableName, @Nonnull final String indexName) {
         return new Index(tableName, indexName);
     }
 }

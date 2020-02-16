@@ -35,6 +35,8 @@ public class Exclusions {
     private final long tableSizeThresholdInBytes;
     private final long indexBloatSizeThresholdInBytes;
     private final int indexBloatPercentageThreshold;
+    private final long tableBloatSizeThresholdInBytes;
+    private final int tableBloatPercentageThreshold;
 
     private Exclusions(@Nonnull String duplicatedIndexesExclusions,
                        @Nonnull String intersectedIndexesExclusions,
@@ -45,7 +47,9 @@ public class Exclusions {
                        final long indexSizeThresholdInBytes,
                        final long tableSizeThresholdInBytes,
                        final long indexBloatSizeThresholdInBytes,
-                       final int indexBloatPercentageThreshold) {
+                       final int indexBloatPercentageThreshold,
+                       final long tableBloatSizeThresholdInBytes,
+                       final int tableBloatPercentageThreshold) {
         this.duplicatedIndexesExclusions = prepareExclusions(duplicatedIndexesExclusions);
         this.intersectedIndexesExclusions = prepareExclusions(intersectedIndexesExclusions);
         this.unusedIndexesExclusions = prepareExclusions(unusedIndexesExclusions);
@@ -60,6 +64,10 @@ public class Exclusions {
                 indexBloatSizeThresholdInBytes, "indexBloatSizeThresholdInBytes");
         this.indexBloatPercentageThreshold = Validators.validPercent(
                 indexBloatPercentageThreshold, "indexBloatPercentageThreshold");
+        this.tableBloatSizeThresholdInBytes = Validators.sizeNotNegative(
+                tableBloatSizeThresholdInBytes, "tableBloatSizeThresholdInBytes");
+        this.tableBloatPercentageThreshold = Validators.validPercent(
+                tableBloatPercentageThreshold, "tableBloatPercentageThreshold");
     }
 
     private static Set<String> prepareExclusions(@Nonnull final String rawExclusions) {
@@ -122,6 +130,14 @@ public class Exclusions {
         return indexBloatPercentageThreshold;
     }
 
+    public long getTableBloatSizeThresholdInBytes() {
+        return tableBloatSizeThresholdInBytes;
+    }
+
+    public int getTableBloatPercentageThreshold() {
+        return tableBloatPercentageThreshold;
+    }
+
     @Override
     public String toString() {
         return Exclusions.class.getSimpleName() + '{' +
@@ -135,6 +151,8 @@ public class Exclusions {
                 ", tableSizeThresholdInBytes=" + tableSizeThresholdInBytes +
                 ", indexBloatSizeThresholdInBytes=" + indexBloatSizeThresholdInBytes +
                 ", indexBloatPercentageThreshold=" + indexBloatPercentageThreshold +
+                ", tableBloatSizeThresholdInBytes=" + tableBloatSizeThresholdInBytes +
+                ", tableBloatPercentageThreshold=" + tableBloatPercentageThreshold +
                 '}';
     }
 
@@ -170,6 +188,8 @@ public class Exclusions {
         private long tableSizeThresholdInBytes = 0L;
         private long indexBloatSizeThresholdInBytes = 0L;
         private int indexBloatPercentageThreshold = 0;
+        private long tableBloatSizeThresholdInBytes = 0L;
+        private int tableBloatPercentageThreshold = 0;
 
         private Builder() {
         }
@@ -257,14 +277,32 @@ public class Exclusions {
         }
 
         public Builder withIndexBloatSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
-            final long indexSizeInBytes = unit.convertToBytes(
+            final long indexBloatSizeInBytes = unit.convertToBytes(
                     Validators.argumentNotNegative(thresholdUnitsCount, "thresholdUnitsCount"));
-            return withIndexBloatSizeThreshold(indexSizeInBytes);
+            return withIndexBloatSizeThreshold(indexBloatSizeInBytes);
         }
 
         public Builder withIndexBloatPercentageThreshold(final int indexBloatPercentageThreshold) {
             this.indexBloatPercentageThreshold = Validators.validPercent(
                     indexBloatPercentageThreshold, "indexBloatPercentageThreshold");
+            return this;
+        }
+
+        public Builder withTableBloatSizeThreshold(final long tableBloatSizeThresholdInBytes) {
+            this.tableBloatSizeThresholdInBytes = Validators.sizeNotNegative(
+                    tableBloatSizeThresholdInBytes, "tableBloatSizeThresholdInBytes");
+            return this;
+        }
+
+        public Builder withTableBloatSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
+            final long tableBloatSizeInBytes = unit.convertToBytes(
+                    Validators.argumentNotNegative(thresholdUnitsCount, "thresholdUnitsCount"));
+            return withTableBloatSizeThreshold(tableBloatSizeInBytes);
+        }
+
+        public Builder withTableBloatPercentageThreshold(final int tableBloatPercentageThreshold) {
+            this.tableBloatPercentageThreshold = Validators.validPercent(
+                    tableBloatPercentageThreshold, "tableBloatPercentageThreshold");
             return this;
         }
 
@@ -279,7 +317,9 @@ public class Exclusions {
                     indexSizeThresholdInBytes,
                     tableSizeThresholdInBytes,
                     indexBloatSizeThresholdInBytes,
-                    indexBloatPercentageThreshold);
+                    indexBloatPercentageThreshold,
+                    tableBloatSizeThresholdInBytes,
+                    tableBloatPercentageThreshold);
         }
 
         @Override
@@ -295,6 +335,8 @@ public class Exclusions {
                     ", tableSizeThresholdInBytes=" + tableSizeThresholdInBytes +
                     ", indexBloatSizeThresholdInBytes=" + indexBloatSizeThresholdInBytes +
                     ", indexBloatPercentageThreshold=" + indexBloatPercentageThreshold +
+                    ", tableBloatSizeThresholdInBytes=" + tableBloatSizeThresholdInBytes +
+                    ", tableBloatPercentageThreshold=" + tableBloatPercentageThreshold +
                     '}';
         }
     }

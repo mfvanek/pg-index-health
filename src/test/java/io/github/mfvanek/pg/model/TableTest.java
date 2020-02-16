@@ -9,7 +9,10 @@ package io.github.mfvanek.pg.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TableTest {
@@ -34,5 +37,35 @@ class TableTest {
     void testToString() {
         final Table table = Table.of("t", 2L);
         assertEquals("Table{tableName='t', tableSizeInBytes=2}", table.toString());
+    }
+
+    @Test
+    void testEqualsAndHashCode() {
+        final Table first = Table.of("t1", 22L);
+        final Table theSame = Table.of("t1", 0L); // different size!
+        final Table second = Table.of("t2", 30L);
+        final Table third = Table.of("t3", 22L);
+
+        assertNotEquals(first, null);
+        assertNotEquals(first, BigDecimal.ZERO);
+
+        // self
+        assertEquals(first, first);
+        assertEquals(first.hashCode(), first.hashCode());
+
+        // the same
+        assertEquals(first, theSame);
+        assertEquals(first.hashCode(), theSame.hashCode());
+
+        // others
+        assertNotEquals(first, second);
+        assertNotEquals(second, first);
+        assertNotEquals(first.hashCode(), second.hashCode());
+
+        assertNotEquals(first, third);
+        assertNotEquals(first.hashCode(), third.hashCode());
+
+        assertNotEquals(second, third);
+        assertNotEquals(second.hashCode(), third.hashCode());
     }
 }

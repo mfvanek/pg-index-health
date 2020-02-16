@@ -19,6 +19,7 @@ import io.github.mfvanek.pg.model.IndexWithBloat;
 import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.Table;
+import io.github.mfvanek.pg.model.TableWithBloat;
 import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
 import org.slf4j.Logger;
@@ -153,6 +154,16 @@ public class IndexesHealthImpl implements IndexesHealth {
     public List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext) {
         logExecutingOnMaster();
         return maintenanceForMaster.getIndexesWithBloat(pgContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Nonnull
+    public List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext) {
+        logExecutingOnMaster();
+        return maintenanceForMaster.getTablesWithBloat(pgContext);
     }
 
     /**

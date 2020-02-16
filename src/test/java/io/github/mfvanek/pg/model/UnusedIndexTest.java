@@ -42,21 +42,28 @@ class UnusedIndexTest {
     @Test
     void testEqualsAndHashCode() {
         final UnusedIndex first = UnusedIndex.of("t1", "i1", 1L, 2L);
+        final UnusedIndex theSame = UnusedIndex.of("t1", "i1", 10L, 6L); // different size!
         final UnusedIndex second = UnusedIndex.of("t1", "i2", 1L, 3L);
-        final UnusedIndex third = UnusedIndex.of("t2", "i2", 2L, 2L);
+        final UnusedIndex third = UnusedIndex.of("t2", "i3", 2L, 2L);
 
         assertNotEquals(first, null);
         assertNotEquals(first, BigDecimal.ZERO);
+
+        final Index anotherType = Index.of("t1", "i1");
+        assertNotEquals(first, anotherType);
+        assertEquals(first.hashCode(), anotherType.hashCode());
 
         // self
         assertEquals(first, first);
         assertEquals(first.hashCode(), first.hashCode());
 
         // the same
-        assertEquals(first, UnusedIndex.of("t1", "i1", 1L, 2L));
+        assertEquals(first, theSame);
+        assertEquals(first.hashCode(), theSame.hashCode());
 
         // others
         assertNotEquals(first, second);
+        assertNotEquals(second, first);
         assertNotEquals(first.hashCode(), second.hashCode());
 
         assertNotEquals(first, third);

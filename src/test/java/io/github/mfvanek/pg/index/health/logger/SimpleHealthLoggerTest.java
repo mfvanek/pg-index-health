@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.model.IndexWithSize;
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.Table;
+import io.github.mfvanek.pg.model.TableWithBloat;
 import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
 import org.junit.jupiter.api.Test;
@@ -257,7 +258,7 @@ class SimpleHealthLoggerTest {
                 .thenReturn(Arrays.asList(
                         IndexWithBloat.of("t1", "i1", 15L, 10L, 67),
                         IndexWithBloat.of("t1", "i2", 20L, 9L, 45),
-                        IndexWithBloat.of("t2", "i3", 30L, 10L, 66),
+                        IndexWithBloat.of("t2", "i3", 30L, 10L, 33),
                         IndexWithBloat.of("t2", "i4", 40L, 20L, 50)
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
@@ -275,11 +276,47 @@ class SimpleHealthLoggerTest {
                 .thenReturn(Arrays.asList(
                         IndexWithBloat.of("t1", "i1", 15L, 10L, 67),
                         IndexWithBloat.of("t1", "i2", 20L, 9L, 45),
-                        IndexWithBloat.of("t2", "i3", 30L, 10L, 66),
-                        IndexWithBloat.of("t2", "i4", 40L, 20L, 50)
+                        IndexWithBloat.of("t2", "i3", 30L, 10L, 33),
+                        IndexWithBloat.of("t2", "i4", 40L, 21L, 52)
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat\t1");
+    }
+
+    @Test
+    void applyTablesBloatExclusionsBySize() {
+        final Exclusions exclusions = Exclusions.builder()
+                .withTableSizeThreshold(21L)
+                .withTableBloatSizeThreshold(11L)
+                .build();
+        Mockito.when(indexesHealthMock.getTablesWithBloat(any(PgContext.class)))
+                .thenReturn(Arrays.asList(
+                        TableWithBloat.of("t1", 15L, 11L, 73),
+                        TableWithBloat.of("t2", 20L, 9L, 45),
+                        TableWithBloat.of("t3", 30L, 10L, 33),
+                        TableWithBloat.of("t4", 40L, 20L, 50)
+                ));
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final List<String> logs = logger.logAll(exclusions);
+        assertContainsKey(logs, SimpleLoggingKey.TABLES_BLOAT, "tables_bloat\t1");
+    }
+
+    @Test
+    void applyTablesBloatExclusionsByPercentage() {
+        final Exclusions exclusions = Exclusions.builder()
+                .withTableSizeThreshold(16L)
+                .withTableBloatPercentageThreshold(35)
+                .build();
+        Mockito.when(indexesHealthMock.getTablesWithBloat(any(PgContext.class)))
+                .thenReturn(Arrays.asList(
+                        TableWithBloat.of("t1", 15L, 11L, 73),
+                        TableWithBloat.of("t2", 20L, 9L, 45),
+                        TableWithBloat.of("t3", 30L, 10L, 33),
+                        TableWithBloat.of("t4", 40L, 20L, 50)
+                ));
+        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);
+        final List<String> logs = logger.logAll(exclusions);
+        assertContainsKey(logs, SimpleLoggingKey.TABLES_BLOAT, "tables_bloat\t2");
     }
 }

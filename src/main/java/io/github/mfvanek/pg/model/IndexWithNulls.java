@@ -10,16 +10,15 @@ package io.github.mfvanek.pg.model;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 public final class IndexWithNulls extends IndexWithSize {
 
     private final String nullableField;
 
-    private IndexWithNulls(@Nonnull String tableName,
-                           @Nonnull String indexName,
-                           long indexSizeInBytes,
-                           @Nonnull String nullableField) {
+    private IndexWithNulls(@Nonnull final String tableName,
+                           @Nonnull final String indexName,
+                           final long indexSizeInBytes,
+                           @Nonnull final String nullableField) {
         super(tableName, indexName, indexSizeInBytes);
         this.nullableField = Validators.notBlank(nullableField, "nullableField");
     }
@@ -33,7 +32,7 @@ public final class IndexWithNulls extends IndexWithSize {
     public String toString() {
         return IndexWithNulls.class.getSimpleName() + '{' +
                 innerToString() +
-                ", nullableField=\'" + nullableField + "\'" +
+                ", nullableField='" + nullableField + '\'' +
                 '}';
     }
 
@@ -42,25 +41,23 @@ public final class IndexWithNulls extends IndexWithSize {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        if (!super.equals(o)) {
-            return false;
-        }
-        IndexWithNulls that = (IndexWithNulls) o;
-        return Objects.equals(nullableField, that.nullableField);
+
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), nullableField);
+        return super.hashCode();
     }
 
-    public static IndexWithNulls of(@Nonnull String tableName,
-                                    @Nonnull String indexName,
-                                    long indexSizeInBytes,
-                                    @Nonnull String nullableField) {
+    public static IndexWithNulls of(@Nonnull final String tableName,
+                                    @Nonnull final String indexName,
+                                    final long indexSizeInBytes,
+                                    @Nonnull final String nullableField) {
         return new IndexWithNulls(tableName, indexName, indexSizeInBytes, nullableField);
     }
 }

@@ -10,6 +10,7 @@ package io.github.mfvanek.pg.model;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * A base representation of database table.
@@ -27,12 +28,18 @@ public class Table implements TableNameAware, TableSizeAware {
         this.tableSizeInBytes = Validators.sizeNotNegative(tableSizeInBytes, "tableSizeInBytes");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Nonnull
     public String getTableName() {
         return tableName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getTableSizeInBytes() {
         return tableSizeInBytes;
@@ -40,13 +47,32 @@ public class Table implements TableNameAware, TableSizeAware {
 
     @SuppressWarnings("WeakerAccess")
     protected String innerToString() {
-        return "tableName=\'" + tableName + "\'" +
+        return "tableName='" + tableName + '\'' +
                 ", tableSizeInBytes=" + tableSizeInBytes;
     }
 
     @Override
     public String toString() {
         return Table.class.getSimpleName() + '{' + innerToString() + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Table that = (Table) o;
+        return Objects.equals(tableName, that.tableName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableName);
     }
 
     /**
@@ -56,6 +82,7 @@ public class Table implements TableNameAware, TableSizeAware {
      * @param tableSizeInBytes table size in bytes; should be positive or zero.
      * @return {@code Table}
      */
+    @Nonnull
     public static Table of(@Nonnull final String tableName, final long tableSizeInBytes) {
         return new Table(tableName, tableSizeInBytes);
     }

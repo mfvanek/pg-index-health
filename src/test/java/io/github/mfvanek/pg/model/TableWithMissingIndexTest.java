@@ -53,10 +53,15 @@ class TableWithMissingIndexTest {
         assertNotEquals(first, null);
         assertNotEquals(first, BigDecimal.ZERO);
 
+        final Table anotherType = Table.of("t1", 1L);
+        assertNotEquals(first, anotherType);
+        assertEquals(first.hashCode(), anotherType.hashCode());
+
         assertEquals(first, theSame);
         assertEquals(first.hashCode(), theSame.hashCode());
 
         assertNotEquals(first, third);
+        assertNotEquals(third, first);
         assertNotEquals(first.hashCode(), third.hashCode());
 
         assertNotEquals(theSame, third);

@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.model.IndexWithBloat;
 import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.Table;
+import io.github.mfvanek.pg.model.TableWithBloat;
 import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
 import io.github.mfvanek.pg.utils.QueryExecutor;
@@ -235,7 +236,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "            else 2 + ((32 + 8 - 1) / 8) /* indextupledata size + indexattributebitmapdata size (max num filed per index + 8 - 1 /8) */\n" +
                     "            end as index_tuple_header_size,\n" +
                     "        /* remove null values and save space using it fractional part from stats */\n" +
-                    "        sum((1 - coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 1024)) as null_data_width\n" +
+                    "        sum((1 - coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 0)) as null_data_width\n" +
                     "    from\n" +
                     "        named_indexes_attributes i\n" +
                     "        join pg_catalog.pg_stats s on s.schemaname = i.nspname and s.tablename = i.attrelname and s.attname = i.attname\n" +
@@ -302,6 +303,85 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
                     "from bloat_stats\n" +
                     "where bloat_percentage >= ?::integer\n" +
                     "order by table_name, index_name;";
+
+    private static final String TABLES_WITH_BLOAT =
+            "with tables_stats as (\n" +
+                    "    select\n" +
+                    "        pc.oid as table_oid,\n" +
+                    "        pc.reltuples,\n" +
+                    "        pc.relpages as heap_pages,\n" +
+                    "        coalesce(toast.relpages, 0) as toast_pages,\n" +
+                    "        coalesce(toast.reltuples, 0) as toast_tuples,\n" +
+                    "        coalesce(substring(array_to_string(pc.reloptions, ' ') from 'fillfactor=([0-9]+)')::smallint, 100) as fill_factor,\n" +
+                    "        current_setting('block_size')::bigint as block_size,\n" +
+                    "        case when version() ~ 'mingw32' or version() ~ '64-bit|x86_64|ppc64|ia64|amd64' then 8 else 4 end as max_align,\n" +
+                    "        24 as page_header_size,\n" +
+                    "        23 + case when max(coalesce(ps.null_frac, 0)) > 0 then (7 + count(ps.attname)) / 8 else 0::int end +\n" +
+                    "            case when bool_or(pa.attname = 'oid' and pa.attnum < 0) then 4 else 0 end as table_tuple_header_size,\n" +
+                    "        sum((1 - coalesce(ps.null_frac, 0)) * coalesce(ps.avg_width, 0)) as null_data_width\n" +
+                    "    from\n" +
+                    "        pg_attribute as pa\n" +
+                    "        join pg_class as pc on pa.attrelid = pc.oid\n" +
+                    "        join pg_namespace as pn on pn.oid = pc.relnamespace\n" +
+                    "        left join pg_stats as ps\n" +
+                    "            on ps.schemaname = pn.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname\n" +
+                    "        left join pg_class as toast on pc.reltoastrelid = toast.oid\n" +
+                    "    where\n" +
+                    "        not pa.attisdropped\n" +
+                    "        and pc.relkind = 'r'\n" +
+                    "        and pc.relpages > 0\n" +
+                    "        and pn.nspname = ?::text\n" +
+                    "    group by table_oid, pc.reltuples, heap_pages, toast_pages, toast_tuples, fill_factor, block_size, page_header_size\n" +
+                    "),\n" +
+                    "tables_pages_size as (\n" +
+                    "    select\n" +
+                    "        (4 + table_tuple_header_size + null_data_width + (2 * max_align) -\n" +
+                    "            case when table_tuple_header_size % max_align = 0 then max_align\n" +
+                    "                else table_tuple_header_size % max_align end -\n" +
+                    "            case when ceil(null_data_width)::int % max_align = 0 then max_align\n" +
+                    "                else ceil(null_data_width)::int % max_align end\n" +
+                    "        ) as tpl_size,\n" +
+                    "        block_size - page_header_size as size_per_block,\n" +
+                    "        heap_pages + toast_pages as table_pages_count,\n" +
+                    "        reltuples,\n" +
+                    "        toast_tuples,\n" +
+                    "        block_size,\n" +
+                    "        page_header_size,\n" +
+                    "        table_oid,\n" +
+                    "        fill_factor\n" +
+                    "    from tables_stats as ts\n" +
+                    "),\n" +
+                    "relation_stats as (\n" +
+                    "    select\n" +
+                    "        ceil(reltuples / ((block_size - page_header_size) * fill_factor / (tpl_size * 100))) +\n" +
+                    "            ceil(toast_tuples / 4) as estimated_pages_count,\n" +
+                    "        table_pages_count,\n" +
+                    "        block_size,\n" +
+                    "        table_oid::regclass::text as table_name,\n" +
+                    "        pg_table_size(table_oid) as table_size\n" +
+                    "    from tables_pages_size as tps\n" +
+                    "),\n" +
+                    "corrected_relation_stats as (\n" +
+                    "    select\n" +
+                    "        table_name,\n" +
+                    "        table_size,\n" +
+                    "        (case when table_pages_count - estimated_pages_count > 0 then table_pages_count - estimated_pages_count\n" +
+                    "            else 0 end)::bigint as pages_ff_diff,\n" +
+                    "        block_size\n" +
+                    "    from relation_stats as rs\n" +
+                    "),\n" +
+                    "bloat_stats as (\n" +
+                    "    select\n" +
+                    "        table_name,\n" +
+                    "        table_size,\n" +
+                    "        block_size * pages_ff_diff as bloat_size,\n" +
+                    "        case when table_size > 0 then round(100 * block_size * pages_ff_diff / table_size::float)::integer else 0 end as bloat_percentage\n" +
+                    "    from corrected_relation_stats\n" +
+                    ")\n" +
+                    "select *\n" +
+                    "from bloat_stats\n" +
+                    "where bloat_percentage >= ?::integer\n" +
+                    "order by table_name;";
 
     private final PgConnection pgConnection;
 
@@ -439,6 +519,21 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
             final long bloatSize = rs.getLong("bloat_size");
             final int bloatPercentage = rs.getInt("bloat_percentage");
             return IndexWithBloat.of(tableName, indexName, indexSize, bloatSize, bloatPercentage);
+        });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Nonnull
+    public List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext) {
+        return executeQueryWithBloatThreshold(TABLES_WITH_BLOAT, pgContext, rs -> {
+            final String tableName = rs.getString("table_name");
+            final long tableSize = rs.getLong("table_size");
+            final long bloatSize = rs.getLong("bloat_size");
+            final int bloatPercentage = rs.getInt("bloat_percentage");
+            return TableWithBloat.of(tableName, tableSize, bloatSize, bloatPercentage);
         });
     }
 

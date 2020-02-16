@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.model.IndexWithBloat;
 import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.Table;
+import io.github.mfvanek.pg.model.TableWithBloat;
 import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
 
@@ -128,6 +129,29 @@ public interface IndexesHealth {
     @Nonnull
     default List<IndexWithBloat> getIndexesWithBloat() {
         return getIndexesWithBloat(PgContext.ofPublic());
+    }
+
+    /**
+     * Returns bloated tables in the specified schema on master host.
+     *
+     * @param pgContext {@code PgContext} with the specified schema
+     * @return list of bloated tables
+     * @see PgContext
+     * @see TableWithBloat
+     */
+    @Nonnull
+    List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext);
+
+    /**
+     * Returns bloated tables in the public schema on master host.
+     *
+     * @return list of bloated tables
+     * @see PgContext
+     * @see TableWithBloat
+     */
+    @Nonnull
+    default List<TableWithBloat> getTablesWithBloat() {
+        return getTablesWithBloat(PgContext.ofPublic());
     }
 
     /**

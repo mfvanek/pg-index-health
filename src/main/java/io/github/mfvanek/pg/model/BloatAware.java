@@ -22,7 +22,7 @@ public interface BloatAware {
     long getBloatSizeInBytes();
 
     /**
-     * Gets bloat percentage.
+     * Gets bloat percentage (in the range from 0 to 100 inclusive).
      *
      * @return bloat percentage
      */
