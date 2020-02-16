@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.IndexWithSize;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.Table;
+import io.github.mfvanek.pg.model.TableWithBloat;
 import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
@@ -464,6 +465,50 @@ abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
                     assertEquals(57344L, index.getIndexSizeInBytes());
                     assertEquals(8192L, index.getBloatSizeInBytes());
                     assertEquals(14, index.getBloatPercentage());
+                });
+    }
+
+    @Test
+    void getTablesWithBloatOnEmptyDataBase() {
+        final List<TableWithBloat> tables = indexMaintenance.getTablesWithBloat();
+        assertNotNull(tables);
+        assertEquals(0, tables.size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getTablesWithBloatOnDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withStatistics(),
+                ctx -> {
+                    waitForStatisticsCollector();
+                    final List<TableWithBloat> tables = indexMaintenance.getTablesWithBloat(ctx);
+                    assertNotNull(tables);
+                    assertEquals(0, tables.size());
+                });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getTablesWithBloatOnDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withData().withStatistics(),
+                ctx -> {
+                    waitForStatisticsCollector();
+                    assertTrue(existsStatisticsForTable(ctx, "accounts"));
+
+                    final List<TableWithBloat> tables = indexMaintenance.getTablesWithBloat(ctx);
+                    assertNotNull(tables);
+                    assertEquals(2, tables.size());
+                    final TableWithBloat table = tables.get(0);
+                    if (isDefaultSchema(schemaName)) {
+                        assertEquals("accounts", table.getTableName());
+                    } else {
+                        assertEquals(schemaName + ".accounts", table.getTableName());
+                    }
+                    assertEquals(106496L, table.getTableSizeInBytes());
+                    assertEquals(0L, table.getBloatSizeInBytes());
+                    assertEquals(0, table.getBloatPercentage());
                 });
     }
 

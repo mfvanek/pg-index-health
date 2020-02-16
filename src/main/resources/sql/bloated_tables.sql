@@ -27,6 +27,7 @@ with tables_stats as (
     where
         not pa.attisdropped
         and pc.relkind = 'r'
+        and pc.relpages > 0
         and pn.nspname = ?::text
     group by table_oid, pc.reltuples, heap_pages, toast_pages, toast_tuples, fill_factor, block_size, page_header_size
 ),
@@ -72,7 +73,7 @@ bloat_stats as (
         table_name,
         table_size,
         block_size * pages_ff_diff as bloat_size,
-        round(100 * block_size * pages_ff_diff / table_size::float)::integer as bloat_percentage
+        case when table_size > 0 then round(100 * block_size * pages_ff_diff / table_size::float)::integer else 0 end as bloat_percentage
     from corrected_relation_stats
 )
 select *
