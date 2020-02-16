@@ -20,6 +20,7 @@ import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.Table;
 import io.github.mfvanek.pg.model.TableNameAware;
 import io.github.mfvanek.pg.model.TableSizeAware;
+import io.github.mfvanek.pg.model.TableWithBloat;
 import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
 import org.apache.commons.collections4.CollectionUtils;
@@ -63,6 +64,7 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
         logResult.add(logTablesWithoutPrimaryKey(exclusions, pgContext));
         logResult.add(logIndexesWithNullValues(exclusions, pgContext));
         logResult.add(logIndexesBloat(exclusions, pgContext));
+        logResult.add(logTablesBloat(exclusions, pgContext));
         return logResult;
     }
 
@@ -197,6 +199,22 @@ public abstract class AbstractIndexesHealthLogger implements IndexesHealthLogger
         if (CollectionUtils.isNotEmpty(indexesWithBloat)) {
             LOGGER.warn("There are indexes with bloat in the database {}", indexesWithBloat);
             return writeToLog(key, indexesWithBloat.size());
+        }
+        return writeZeroToLog(key);
+    }
+
+    @Nonnull
+    private String logTablesBloat(@Nonnull final Exclusions exclusions,
+                                  @Nonnull final PgContext pgContext) {
+        final List<TableWithBloat> rawTablesWithBloat = indexesHealth.getTablesWithBloat(pgContext);
+        final List<TableWithBloat> filteredTablesWithBloat = applyTableSizeExclusions(
+                rawTablesWithBloat, exclusions.getTableSizeThresholdInBytes());
+        final List<TableWithBloat> tablesWithBloat = applyBloatExclusions(filteredTablesWithBloat,
+                exclusions.getTableBloatSizeThresholdInBytes(), exclusions.getTableBloatPercentageThreshold());
+        final LoggingKey key = SimpleLoggingKey.TABLES_BLOAT;
+        if (CollectionUtils.isNotEmpty(tablesWithBloat)) {
+            LOGGER.warn("There are tables with bloat in the database {}", tablesWithBloat);
+            return writeToLog(key, tablesWithBloat.size());
         }
         return writeZeroToLog(key);
     }
