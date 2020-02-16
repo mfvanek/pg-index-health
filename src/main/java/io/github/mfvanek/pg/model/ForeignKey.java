@@ -28,6 +28,9 @@ public class ForeignKey implements TableNameAware {
         this.columnsInConstraint = new ArrayList<>(Validators.validateThatNotEmpty(columnsInConstraint));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Nonnull
     public String getTableName() {
@@ -46,11 +49,11 @@ public class ForeignKey implements TableNameAware {
 
     @Override
     public String toString() {
-        return ForeignKey.class.getSimpleName() + "{" +
-                "tableName=\'" + tableName + "\'" +
-                ", constraintName=\'" + constraintName + "\'" +
+        return ForeignKey.class.getSimpleName() + '{' +
+                "tableName='" + tableName + '\'' +
+                ", constraintName='" + constraintName + '\'' +
                 ", columnsInConstraint=" + columnsInConstraint +
-                "}";
+                '}';
     }
 
     public static ForeignKey of(@Nonnull String tableName,

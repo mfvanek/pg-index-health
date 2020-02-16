@@ -10,7 +10,6 @@ package io.github.mfvanek.pg.model;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 /**
  * Represents database index with information about bloat.
@@ -22,11 +21,11 @@ public class IndexWithBloat extends IndexWithSize implements BloatAware {
     private long bloatSizeInBytes;
     private int bloatPercentage;
 
-    private IndexWithBloat(@Nonnull String tableName,
-                           @Nonnull String indexName,
-                           long indexSizeInBytes,
-                           long bloatSizeInBytes,
-                           int bloatPercentage) {
+    private IndexWithBloat(@Nonnull final String tableName,
+                           @Nonnull final String indexName,
+                           final long indexSizeInBytes,
+                           final long bloatSizeInBytes,
+                           final int bloatPercentage) {
         super(tableName, indexName, indexSizeInBytes);
         this.bloatSizeInBytes = Validators.sizeNotNegative(bloatSizeInBytes, "bloatSizeInBytes");
         this.bloatPercentage = Validators.argumentNotNegative(bloatPercentage, "bloatPercentage");
@@ -69,18 +68,12 @@ public class IndexWithBloat extends IndexWithSize implements BloatAware {
             return false;
         }
 
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        IndexWithBloat that = (IndexWithBloat) o;
-        return bloatSizeInBytes == that.bloatSizeInBytes &&
-                bloatPercentage == that.bloatPercentage;
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), bloatSizeInBytes, bloatPercentage);
+        return super.hashCode();
     }
 
     /**
@@ -94,11 +87,11 @@ public class IndexWithBloat extends IndexWithSize implements BloatAware {
      * @return {@code IndexWithBloat}
      */
     @Nonnull
-    public static IndexWithBloat of(@Nonnull String tableName,
-                                    @Nonnull String indexName,
-                                    long indexSizeInBytes,
-                                    long bloatSizeInBytes,
-                                    int bloatPercentage) {
+    public static IndexWithBloat of(@Nonnull final String tableName,
+                                    @Nonnull final String indexName,
+                                    final long indexSizeInBytes,
+                                    final long bloatSizeInBytes,
+                                    final int bloatPercentage) {
         return new IndexWithBloat(tableName, indexName, indexSizeInBytes, bloatSizeInBytes, bloatPercentage);
     }
 }

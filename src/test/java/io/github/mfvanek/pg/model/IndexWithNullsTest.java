@@ -49,21 +49,28 @@ class IndexWithNullsTest {
     @Test
     void testEqualsAndHashCode() {
         final IndexWithNulls first = IndexWithNulls.of("t1", "i1", 1, "f");
-        final IndexWithNulls second = IndexWithNulls.of("t1", "i1", 2, "f");
-        final IndexWithNulls third = IndexWithNulls.of("t1", "i1", 2, "t");
+        final IndexWithNulls theSame = IndexWithNulls.of("t1", "i1", 3, "f"); // different size!
+        final IndexWithNulls second = IndexWithNulls.of("t2", "i2", 2, "f");
+        final IndexWithNulls third = IndexWithNulls.of("t3", "i3", 2, "t");
 
         assertNotEquals(first, null);
         assertNotEquals(first, BigDecimal.ZERO);
+
+        final Index anotherType = Index.of("t1", "i1");
+        assertNotEquals(first, anotherType);
+        assertEquals(first.hashCode(), anotherType.hashCode());
 
         // self
         assertEquals(first, first);
         assertEquals(first.hashCode(), first.hashCode());
 
         // the same
-        assertEquals(first, IndexWithNulls.of("t1", "i1", 1, "f"));
+        assertEquals(first, theSame);
+        assertEquals(first.hashCode(), theSame.hashCode());
 
         // others
         assertNotEquals(first, second);
+        assertNotEquals(second, first);
         assertNotEquals(first.hashCode(), second.hashCode());
 
         assertNotEquals(first, third);

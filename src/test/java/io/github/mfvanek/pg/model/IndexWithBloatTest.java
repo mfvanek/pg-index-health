@@ -51,21 +51,28 @@ class IndexWithBloatTest {
     @Test
     void equalsAndHashCode() {
         final IndexWithBloat first = IndexWithBloat.of("t1", "i1", 22L, 11L, 50);
-        final IndexWithBloat second = IndexWithBloat.of("t1", "i1", 30L, 3L, 10);
-        final IndexWithBloat third = IndexWithBloat.of("t1", "i2", 22L, 11L, 50);
+        final IndexWithBloat theSame = IndexWithBloat.of("t1", "i1", 100L, 60L, 60); // different size!
+        final IndexWithBloat second = IndexWithBloat.of("t2", "i2", 30L, 3L, 10);
+        final IndexWithBloat third = IndexWithBloat.of("t3", "i3", 22L, 11L, 50);
 
         assertNotEquals(first, null);
         assertNotEquals(first, BigDecimal.ZERO);
+
+        final Index anotherType = Index.of("t1", "i1");
+        assertNotEquals(first, anotherType);
+        assertEquals(first.hashCode(), anotherType.hashCode());
 
         // self
         assertEquals(first, first);
         assertEquals(first.hashCode(), first.hashCode());
 
         // the same
-        assertEquals(first, IndexWithBloat.of("t1", "i1", 22L, 11L, 50));
+        assertEquals(first, theSame);
+        assertEquals(first.hashCode(), theSame.hashCode());
 
         // others
         assertNotEquals(first, second);
+        assertNotEquals(second, first);
         assertNotEquals(first.hashCode(), second.hashCode());
 
         assertNotEquals(first, third);

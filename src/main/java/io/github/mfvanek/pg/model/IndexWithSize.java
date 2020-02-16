@@ -10,20 +10,22 @@ package io.github.mfvanek.pg.model;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 public class IndexWithSize extends Index implements IndexSizeAware {
 
     private final long indexSizeInBytes;
 
     @SuppressWarnings("WeakerAccess")
-    protected IndexWithSize(@Nonnull String tableName,
-                            @Nonnull String indexName,
-                            long indexSizeInBytes) {
+    protected IndexWithSize(@Nonnull final String tableName,
+                            @Nonnull final String indexName,
+                            final long indexSizeInBytes) {
         super(tableName, indexName);
         this.indexSizeInBytes = Validators.sizeNotNegative(indexSizeInBytes, "indexSizeInBytes");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getIndexSizeInBytes() {
         return indexSizeInBytes;
@@ -39,29 +41,27 @@ public class IndexWithSize extends Index implements IndexSizeAware {
         return IndexWithSize.class.getSimpleName() + '{' + innerToString() + '}';
     }
 
-    public static IndexWithSize of(@Nonnull String tableName,
-                                   @Nonnull String indexName,
-                                   long indexSizeInBytes) {
-        return new IndexWithSize(tableName, indexName, indexSizeInBytes);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        if (!super.equals(o)) {
-            return false;
-        }
-        IndexWithSize that = (IndexWithSize) o;
-        return indexSizeInBytes == that.indexSizeInBytes;
+
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), indexSizeInBytes);
+        return super.hashCode();
+    }
+
+    public static IndexWithSize of(@Nonnull final String tableName,
+                                   @Nonnull final String indexName,
+                                   final long indexSizeInBytes) {
+        return new IndexWithSize(tableName, indexName, indexSizeInBytes);
     }
 }

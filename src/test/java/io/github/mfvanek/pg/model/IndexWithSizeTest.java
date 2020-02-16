@@ -43,21 +43,28 @@ class IndexWithSizeTest {
     @Test
     void testEqualsAndHashCode() {
         final IndexWithSize first = IndexWithSize.of("t1", "i1", 22L);
-        final IndexWithSize second = IndexWithSize.of("t1", "i1", 33L);
-        final IndexWithSize third = IndexWithSize.of("t1", "i2", 22L);
+        final IndexWithSize theSame = IndexWithSize.of("t1", "i1", 44L); // different size!
+        final IndexWithSize second = IndexWithSize.of("t1", "i2", 33L);
+        final IndexWithSize third = IndexWithSize.of("t3", "i3", 22L);
 
         assertNotEquals(first, null);
         assertNotEquals(first, BigDecimal.ZERO);
+
+        final Index anotherType = Index.of("t1", "i1");
+        assertNotEquals(first, anotherType);
+        assertEquals(first.hashCode(), anotherType.hashCode());
 
         // self
         assertEquals(first, first);
         assertEquals(first.hashCode(), first.hashCode());
 
         // the same
-        assertEquals(first, IndexWithSize.of("t1", "i1", 22L));
+        assertEquals(first, theSame);
+        assertEquals(first.hashCode(), theSame.hashCode());
 
         // others
         assertNotEquals(first, second);
+        assertNotEquals(second, first);
         assertNotEquals(first.hashCode(), second.hashCode());
 
         assertNotEquals(first, third);

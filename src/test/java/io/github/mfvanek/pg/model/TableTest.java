@@ -55,6 +55,7 @@ class TableTest {
 
         // the same
         assertEquals(first, theSame);
+        assertEquals(first.hashCode(), theSame.hashCode());
 
         // others
         assertNotEquals(first, second);

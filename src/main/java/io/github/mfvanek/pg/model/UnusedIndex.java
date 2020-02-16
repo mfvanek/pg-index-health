@@ -10,16 +10,15 @@ package io.github.mfvanek.pg.model;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 public final class UnusedIndex extends IndexWithSize {
 
     private final long indexScans;
 
-    private UnusedIndex(@Nonnull String tableName,
-                        @Nonnull String indexName,
-                        long indexSizeInBytes,
-                        long indexScans) {
+    private UnusedIndex(@Nonnull final String tableName,
+                        @Nonnull final String indexName,
+                        final long indexSizeInBytes,
+                        final long indexScans) {
         super(tableName, indexName, indexSizeInBytes);
         this.indexScans = Validators.countNotNegative(indexScans, "indexScans");
     }
@@ -30,10 +29,10 @@ public final class UnusedIndex extends IndexWithSize {
 
     @Override
     public String toString() {
-        return UnusedIndex.class.getSimpleName() + "{" +
+        return UnusedIndex.class.getSimpleName() + '{' +
                 innerToString() +
                 ", indexScans=" + indexScans +
-                "}";
+                '}';
     }
 
     @Override
@@ -41,25 +40,23 @@ public final class UnusedIndex extends IndexWithSize {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        if (!super.equals(o)) {
-            return false;
-        }
-        UnusedIndex that = (UnusedIndex) o;
-        return indexScans == that.indexScans;
+
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), indexScans);
+        return super.hashCode();
     }
 
-    public static UnusedIndex of(@Nonnull String tableName,
-                                 @Nonnull String indexName,
-                                 long indexSizeInBytes,
-                                 long indexScans) {
+    public static UnusedIndex of(@Nonnull final String tableName,
+                                 @Nonnull final String indexName,
+                                 final long indexSizeInBytes,
+                                 final long indexScans) {
         return new UnusedIndex(tableName, indexName, indexSizeInBytes, indexScans);
     }
 }
