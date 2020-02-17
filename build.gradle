@@ -115,3 +115,15 @@ javadoc {
         options.addBooleanOption('html5', true)
     }
 }
+
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+spotbugs {
+    toolVersion = '4.0.0'
+    excludeFilter = file("spotbugs/exclude.xml")
+}

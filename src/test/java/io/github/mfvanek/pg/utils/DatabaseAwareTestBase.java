@@ -55,7 +55,7 @@ public abstract class DatabaseAwareTestBase {
     }
 
     protected void waitForStatisticsCollector() {
-        IntStream.of(1, 2, 3, 4).forEach((i) -> {
+        IntStream.of(1, 2, 3, 4, 5, 6).forEach((i) -> {
             try {
                 // see PGSTAT_STAT_INTERVAL at https://github.com/postgres/postgres/blob/master/src/backend/postmaster/pgstat.c
                 Thread.sleep(500L);
@@ -123,11 +123,11 @@ public abstract class DatabaseAwareTestBase {
                 statement.execute(String.format(
                         "select count(*) from %s.accounts where client_id = 1::bigint", schemaName));
             }
-            DatabasePopulator.collectStatistics(dataSource, schemaName);
-            waitForStatisticsCollector();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        DatabasePopulator.collectStatistics(dataSource, schemaName);
+        waitForStatisticsCollector();
     }
 
     protected long getRowsCount(@Nonnull final String schemaName,

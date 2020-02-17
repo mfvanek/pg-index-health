@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,10 +36,12 @@ public final class QueryExecutor {
                                            @Nonnull final String sqlQuery,
                                            @Nonnull final ResultSetExtractor<T> rse) {
         LOGGER.debug("Executing query: {}", sqlQuery);
-        try (Connection connection = pgConnection.getDataSource().getConnection();
+        Objects.requireNonNull(sqlQuery, "sqlQuery");
+        final DataSource dataSource = pgConnection.getDataSource();
+        try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             final List<T> executionResult = new ArrayList<>();
-            try (ResultSet resultSet = statement.executeQuery(Objects.requireNonNull(sqlQuery))) {
+            try (ResultSet resultSet = statement.executeQuery(sqlQuery)) {
                 while (resultSet.next()) {
                     executionResult.add(rse.extractData(resultSet));
                 }
@@ -86,8 +89,10 @@ public final class QueryExecutor {
                                             @Nonnull final ResultSetExtractor<T> rse,
                                             @Nonnull final Consumer<PreparedStatement> paramsSetter) {
         LOGGER.debug("Executing query with context {}: {}", pgContext, sqlQuery);
-        try (Connection connection = pgConnection.getDataSource().getConnection();
-             PreparedStatement statement = connection.prepareStatement(Objects.requireNonNull(sqlQuery))) {
+        Objects.requireNonNull(sqlQuery, "sqlQuery");
+        final DataSource dataSource = pgConnection.getDataSource();
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
             paramsSetter.accept(statement);
             final List<T> executionResult = new ArrayList<>();
             try (ResultSet resultSet = statement.executeQuery()) {
