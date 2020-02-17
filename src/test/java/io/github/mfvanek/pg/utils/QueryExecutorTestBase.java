@@ -44,4 +44,11 @@ abstract class QueryExecutorTestBase extends DatabaseAwareTestBase {
         assertThrows(RuntimeException.class, () -> QueryExecutor.executeQueryWithSchema(
                 pgConnection, PgContext.of("s"), invalidSqlWithParam, (rs) -> null));
     }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void executeNullQuery() {
+        assertThrows(NullPointerException.class, () -> QueryExecutor.executeQuery(
+                pgConnection, null, (rs) -> null));
+    }
 }
