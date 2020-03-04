@@ -155,6 +155,10 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns indexes that are bloated in the specified schema.
+     * <p>
+     * Note: The database user on whose behalf this method will be executed
+     * have to have read permissions for the corresponding tables.
+     * </p>
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of bloated indexes
@@ -164,6 +168,10 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns indexes that are bloated in the public schema.
+     * <p>
+     * Note: The database user on whose behalf this method will be executed
+     * have to have read permissions for the corresponding tables.
+     * </p>
      *
      * @return list of bloated indexes
      */
@@ -174,6 +182,10 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns tables that are bloated in the specified schema.
+     * <p>
+     * Note: The database user on whose behalf this method will be executed
+     * have to have read permissions for the corresponding tables.
+     * </p>
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of bloated tables
@@ -183,6 +195,10 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns tables that are bloated in the public schema.
+     * <p>
+     * Note: The database user on whose behalf this method will be executed
+     * have to have read permissions for the corresponding tables.
+     * </p>
      *
      * @return list of bloated tables
      */

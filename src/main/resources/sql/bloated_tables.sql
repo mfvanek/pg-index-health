@@ -3,6 +3,10 @@
 -- https://github.com/dataegret/pg-utils/blob/master/sql/table_bloat.sql
 -- https://github.com/pgexperts/pgx_scripts/blob/master/bloat/table_bloat_check.sql
 -- https://github.com/ioguix/pgsql-bloat-estimation/blob/master/table/table_bloat.sql
+--
+-- Please note!
+-- The user on whose behalf this sql query will be executed
+-- have to have read permissions for the corresponding tables.
 with tables_stats as (
     select
         pc.oid as table_oid,

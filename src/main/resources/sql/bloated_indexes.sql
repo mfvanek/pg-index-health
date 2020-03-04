@@ -4,6 +4,10 @@
 -- https://github.com/ioguix/pgsql-bloat-estimation/blob/master/btree/btree_bloat.sql
 -- https://github.com/pgexperts/pgx_scripts/blob/master/bloat/index_bloat_check.sql
 -- https://github.com/lesovsky/uber-scripts/blob/master/postgresql/sql/show_bloat.sql
+--
+-- Please note!
+-- The user on whose behalf this sql query will be executed
+-- have to have read permissions for the corresponding tables.
 with indexes_data as (
     select
         pc.relname as inner_index_name,
