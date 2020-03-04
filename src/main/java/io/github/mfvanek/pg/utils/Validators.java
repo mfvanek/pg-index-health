@@ -109,4 +109,13 @@ public final class Validators {
     public static String paramValueNotNull(@Nonnull final String value, @Nonnull final String message) {
         return Objects.requireNonNull(value, message).trim();
     }
+
+    @Nonnull
+    public static String validateSqlFileName(@Nonnull final String sqlFileName) {
+        final String fileName = notBlank(sqlFileName, "sqlFileName").toLowerCase();
+        if (!fileName.endsWith(".sql")) {
+            throw new IllegalArgumentException("only *.sql files are supported");
+        }
+        return fileName;
+    }
 }
