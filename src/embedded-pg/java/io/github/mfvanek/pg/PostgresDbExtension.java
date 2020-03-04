@@ -1,20 +1,13 @@
 /*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Copyright (c) 2019-2020. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health
  *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * This file is a part of "pg-index-health" - a Java library for analyzing and maintaining indexes health in PostgreSQL databases.
  */
+
 package io.github.mfvanek.pg;
 
 import com.opentable.db.postgres.embedded.ConnectionInfo;
-import com.opentable.db.postgres.embedded.DatabasePreparer;
 import com.opentable.db.postgres.embedded.EmbeddedPostgres;
 import com.opentable.db.postgres.embedded.PreparedDbProvider;
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -26,21 +19,13 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
-public class PreparedDbExtension implements BeforeAllCallback, AfterAllCallback {
+public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback {
 
     private volatile DataSource dataSource;
     private volatile PreparedDbProvider provider;
     private volatile ConnectionInfo connectionInfo;
 
     private final List<Consumer<EmbeddedPostgres.Builder>> builderCustomizers = new CopyOnWriteArrayList<>();
-
-    public PreparedDbExtension customize(Consumer<EmbeddedPostgres.Builder> customizer) {
-        if (dataSource != null) {
-            throw new AssertionError("already started");
-        }
-        builderCustomizers.add(customizer);
-        return this;
-    }
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
@@ -68,5 +53,10 @@ public class PreparedDbExtension implements BeforeAllCallback, AfterAllCallback 
             throw new AssertionError("not initialized");
         }
         return connectionInfo.getPort();
+    }
+
+    public PostgresDbExtension withAdditionalStartupParameter(String key, String value) {
+        builderCustomizers.add(builder -> builder.setServerConfig(key, value));
+        return this;
     }
 }

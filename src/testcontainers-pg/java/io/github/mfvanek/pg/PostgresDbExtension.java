@@ -1,16 +1,10 @@
 /*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Copyright (c) 2019-2020. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health
  *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * This file is a part of "pg-index-health" - a Java library for analyzing and maintaining indexes health in PostgreSQL databases.
  */
+
 package io.github.mfvanek.pg;
 
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -20,15 +14,17 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.PostgreSQLContainerProvider;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
-public class PreparedDbExtension implements BeforeAllCallback, AfterAllCallback {
+public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback {
 
     private volatile JdbcDatabaseContainer container;
     private volatile DataSource dataSource;
@@ -37,7 +33,8 @@ public class PreparedDbExtension implements BeforeAllCallback, AfterAllCallback 
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
-        container = new PostgreSQLContainerProvider().newInstance();
+        String pgVersion = Optional.ofNullable(System.getenv("TEST_PG_VERSION")).orElse(PostgreSQLContainer.DEFAULT_TAG);
+        container = new PostgreSQLContainerProvider().newInstance(pgVersion);
         String[] startupCommand = Stream.concat(
                 Arrays.stream(container.getCommandParts()),
                 additionalParameters.stream()
@@ -49,6 +46,11 @@ public class PreparedDbExtension implements BeforeAllCallback, AfterAllCallback 
         dataSource = getDataSource();
     }
 
+    @Override
+    public void afterAll(ExtensionContext extensionContext) {
+        container.close();
+    }
+
     @NotNull
     private BasicDataSource getDataSource() {
         BasicDataSource basicDataSource = new BasicDataSource();
@@ -57,11 +59,6 @@ public class PreparedDbExtension implements BeforeAllCallback, AfterAllCallback 
         basicDataSource.setPassword(container.getPassword());
         basicDataSource.setDriverClassName(container.getDriverClassName());
         return basicDataSource;
-    }
-
-    @Override
-    public void afterAll(ExtensionContext extensionContext) {
-        container.close();
     }
 
     public DataSource getTestDatabase() {
@@ -78,7 +75,7 @@ public class PreparedDbExtension implements BeforeAllCallback, AfterAllCallback 
         return container.getFirstMappedPort();
     }
 
-    public PreparedDbExtension withAdditionalStartupParameter(String key, String value) {
+    public PostgresDbExtension withAdditionalStartupParameter(String key, String value) {
         additionalParameters.add(Pair.of(key, value));
         return this;
     }

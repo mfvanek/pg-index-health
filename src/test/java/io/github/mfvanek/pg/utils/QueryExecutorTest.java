@@ -7,8 +7,8 @@
 
 package io.github.mfvanek.pg.utils;
 
-import io.github.mfvanek.pg.EmbeddedPostgresExtension;
-import io.github.mfvanek.pg.PreparedDbExtension;
+import io.github.mfvanek.pg.PostgresExtensionFactory;
+import io.github.mfvanek.pg.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.model.PgContext;
@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public final class QueryExecutorTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PreparedDbExtension embeddedPostgres =
-            EmbeddedPostgresExtension.preparedDatabase();
+    static final PostgresDbExtension embeddedPostgres =
+            PostgresExtensionFactory.database();
 
     private final PgConnection pgConnection;
 

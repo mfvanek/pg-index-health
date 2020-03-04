@@ -1,4 +1,4 @@
-name: Java CI
+name: PostgreSQL versions CI
 
 on:
     push:
@@ -13,8 +13,10 @@ jobs:
     build:
         strategy:
             matrix:
-                os: [ubuntu-latest]
-        runs-on: ${{ matrix.os }}
+                pg_version: [9.6.17, 10.12, 11.7, 12.2]
+        env:
+            TEST_PG_VERSION: ${{ matrix.pg_version }}
+        runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v1
             -   name: Set up JDK 8

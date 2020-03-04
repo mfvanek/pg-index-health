@@ -7,8 +7,8 @@
 
 package io.github.mfvanek.pg.index.health;
 
-import io.github.mfvanek.pg.EmbeddedPostgresExtension;
-import io.github.mfvanek.pg.PreparedDbExtension;
+import io.github.mfvanek.pg.PostgresExtensionFactory;
+import io.github.mfvanek.pg.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
@@ -30,8 +30,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -48,8 +46,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
     @RegisterExtension
-    static final PreparedDbExtension embeddedPostgres =
-            EmbeddedPostgresExtension.preparedDatabase();
+    static final PostgresDbExtension embeddedPostgres =
+            PostgresExtensionFactory.database();
 
     private final IndexesHealth indexesHealth;
 

@@ -7,8 +7,8 @@
 
 package io.github.mfvanek.pg.index.maintenance;
 
-import io.github.mfvanek.pg.EmbeddedPostgresExtension;
-import io.github.mfvanek.pg.PreparedDbExtension;
+import io.github.mfvanek.pg.PostgresExtensionFactory;
+import io.github.mfvanek.pg.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgHost;
@@ -19,9 +19,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,8 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public final class StatisticsMaintenanceImplTest extends DatabaseAwareTestBase {
     @RegisterExtension
-    static final PreparedDbExtension embeddedPostgres =
-            EmbeddedPostgresExtension.preparedDatabase();
+    static final PostgresDbExtension embeddedPostgres =
+            PostgresExtensionFactory.database();
 
     private final StatisticsMaintenance statisticsMaintenance;
 

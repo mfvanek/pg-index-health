@@ -7,8 +7,8 @@
 
 package io.github.mfvanek.pg.index.health.logger;
 
-import io.github.mfvanek.pg.EmbeddedPostgresExtension;
-import io.github.mfvanek.pg.PreparedDbExtension;
+import io.github.mfvanek.pg.PostgresExtensionFactory;
+import io.github.mfvanek.pg.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
@@ -30,8 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public final class IndexesHealthLoggerTest extends DatabaseAwareTestBase {
     @RegisterExtension
-    static final PreparedDbExtension embeddedPostgres =
-            EmbeddedPostgresExtension.preparedDatabase();
+    static final PostgresDbExtension embeddedPostgres =
+            PostgresExtensionFactory.database();
 
     private final IndexesHealthLogger logger;
 
