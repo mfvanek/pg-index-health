@@ -7,12 +7,15 @@
 
 package io.github.mfvanek.pg.index.maintenance;
 
+import io.github.mfvanek.pg.EmbeddedPostgresExtension;
+import io.github.mfvanek.pg.PreparedDbExtension;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -24,13 +27,16 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-abstract class StatisticsMaintenanceImplTestBase extends DatabaseAwareTestBase {
+public final class StatisticsMaintenanceImplTest extends DatabaseAwareTestBase {
+    @RegisterExtension
+    static final PreparedDbExtension embeddedPostgres =
+            EmbeddedPostgresExtension.preparedDatabase();
 
     private final StatisticsMaintenance statisticsMaintenance;
 
-    StatisticsMaintenanceImplTestBase(@Nonnull final DataSource dataSource) {
-        super(dataSource);
-        final PgConnection pgConnection = PgConnectionImpl.ofMaster(dataSource);
+    StatisticsMaintenanceImplTest() {
+        super(embeddedPostgres.getTestDatabase());
+        final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
         this.statisticsMaintenance = new StatisticsMaintenanceImpl(pgConnection);
     }
 
