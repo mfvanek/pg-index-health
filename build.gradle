@@ -21,6 +21,7 @@ dependencies {
     compile 'com.google.code.findbugs:jsr305:3.0.2'
     compile 'org.apache.commons:commons-lang3:3.9'
     compile 'org.apache.commons:commons-collections4:4.4'
+    compile 'commons-io:commons-io:2.6'
     compile 'org.apache.commons:commons-dbcp2:2.7.0'
     compile 'org.slf4j:slf4j-api:1.7.29'
 
