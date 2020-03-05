@@ -16,6 +16,7 @@ repositories {
     mavenCentral()
 }
 
+def postgresVersion = System.getenv('TEST_PG_VERSION') ?: '10.11.0'
 dependencies {
     compile 'com.google.code.findbugs:jsr305:3.0.2'
     compile 'org.apache.commons:commons-lang3:3.9'
@@ -27,12 +28,12 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.5.2'
-    testImplementation 'com.opentable.components:otj-pg-embedded:0.13.3'
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'ch.qos.logback:logback-classic:1.2.3'
     testImplementation 'org.mockito:mockito-core:3.2.0'
+    testImplementation 'com.vdurmont:semver4j:3.1.0'
     testImplementation 'io.zonky.test:embedded-postgres:1.2.6'
-    testImplementation enforcedPlatform('io.zonky.test.postgres:embedded-postgres-binaries-bom:11.5.0')
+    testImplementation enforcedPlatform("io.zonky.test.postgres:embedded-postgres-binaries-bom:$postgresVersion")
 }
 
 test {

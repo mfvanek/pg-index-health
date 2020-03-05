@@ -7,6 +7,8 @@
 
 package io.github.mfvanek.pg.index.health.logger;
 
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
@@ -15,11 +17,10 @@ import io.github.mfvanek.pg.index.health.IndexesHealthImpl;
 import io.github.mfvanek.pg.index.maintenance.MaintenanceFactoryImpl;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import java.util.List;
 
 import static io.github.mfvanek.pg.utils.HealthLoggerAssertions.assertContainsKey;
@@ -27,13 +28,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-abstract class IndexesHealthLoggerTestBase extends DatabaseAwareTestBase {
+public final class IndexesHealthLoggerTest extends DatabaseAwareTestBase {
+    @RegisterExtension
+    static final PostgresDbExtension embeddedPostgres =
+            PostgresExtensionFactory.database();
 
     private final IndexesHealthLogger logger;
 
-    IndexesHealthLoggerTestBase(@Nonnull final DataSource dataSource) {
-        super(dataSource);
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofMaster(dataSource));
+    IndexesHealthLoggerTest() {
+        super(embeddedPostgres.getTestDatabase());
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase()));
         final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
         this.logger = new SimpleHealthLogger(indexesHealth);
     }

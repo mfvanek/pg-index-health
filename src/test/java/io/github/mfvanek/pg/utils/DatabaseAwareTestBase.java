@@ -99,19 +99,6 @@ public abstract class DatabaseAwareTestBase {
         }
     }
 
-    @Nonnull
-    protected String getPgVersion() {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery("select version()")) {
-                resultSet.next();
-                return resultSet.getString(1);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     protected boolean isDefaultSchema(@Nonnull final String schemaName) {
         return "public".equals(schemaName);
     }

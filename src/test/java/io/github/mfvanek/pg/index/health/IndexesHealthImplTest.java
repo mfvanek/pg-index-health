@@ -7,6 +7,8 @@
 
 package io.github.mfvanek.pg.index.health;
 
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
@@ -24,11 +26,10 @@ import io.github.mfvanek.pg.model.UnusedIndex;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.utils.DatabasePopulator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,14 +44,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-abstract class IndexesHealthImplTestBase extends DatabaseAwareTestBase {
+public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
+    @RegisterExtension
+    static final PostgresDbExtension embeddedPostgres =
+            PostgresExtensionFactory.database();
 
     private final IndexesHealth indexesHealth;
 
-    IndexesHealthImplTestBase(@Nonnull final DataSource dataSource) {
-        super(dataSource);
+    IndexesHealthImplTest() {
+        super(embeddedPostgres.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(
-                PgConnectionImpl.ofMaster(dataSource));
+                PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase()));
         this.indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
     }
 

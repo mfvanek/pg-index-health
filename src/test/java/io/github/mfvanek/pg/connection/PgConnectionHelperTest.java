@@ -7,9 +7,8 @@
 
 package io.github.mfvanek.pg.connection;
 
-import com.opentable.db.postgres.embedded.ConnectionInfo;
-import com.opentable.db.postgres.junit5.EmbeddedPostgresExtension;
-import com.opentable.db.postgres.junit5.PreparedDbExtension;
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -23,9 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class PgConnectionHelperTest {
 
     @RegisterExtension
-    static final PreparedDbExtension embeddedPostgres =
-            EmbeddedPostgresExtension.preparedDatabase(ds -> {
-            });
+    static final PostgresDbExtension embeddedPostgres =
+            PostgresExtensionFactory.database();
 
     @Test
     void privateConstructor() {
@@ -40,9 +38,9 @@ class PgConnectionHelperTest {
 
     @Nonnull
     private String getWriteUrl() {
-        final ConnectionInfo connectionInfo = embeddedPostgres.getConnectionInfo();
+        final int port = embeddedPostgres.getPort();
         return String.format(
                 "jdbc:postgresql://localhost:%d/postgres?prepareThreshold=0&preparedStatementCacheQueries=0",
-                connectionInfo.getPort());
+                port);
     }
 }

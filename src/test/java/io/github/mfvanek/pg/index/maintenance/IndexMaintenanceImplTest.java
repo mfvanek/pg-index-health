@@ -7,6 +7,8 @@
 
 package io.github.mfvanek.pg.index.maintenance;
 
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.model.DuplicatedIndexes;
@@ -23,11 +25,10 @@ import io.github.mfvanek.pg.model.UnusedIndex;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.utils.DatabasePopulator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,13 +43,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-abstract class IndexMaintenanceImplTestBase extends DatabaseAwareTestBase {
+public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
+    @RegisterExtension
+    static final PostgresDbExtension embeddedPostgres =
+            PostgresExtensionFactory.database();
 
     private final IndexMaintenance indexMaintenance;
 
-    IndexMaintenanceImplTestBase(@Nonnull final DataSource dataSource) {
-        super(dataSource);
-        final PgConnection pgConnection = PgConnectionImpl.ofMaster(dataSource);
+    IndexMaintenanceImplTest() {
+        super(embeddedPostgres.getTestDatabase());
+        final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
         this.indexMaintenance = new IndexMaintenanceImpl(pgConnection);
     }
 

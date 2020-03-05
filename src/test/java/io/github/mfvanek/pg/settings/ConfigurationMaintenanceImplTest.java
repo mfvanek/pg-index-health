@@ -7,13 +7,14 @@
 
 package io.github.mfvanek.pg.settings;
 
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
@@ -27,14 +28,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-abstract class ConfigurationMaintenanceImplTestBase extends DatabaseAwareTestBase {
+public final class ConfigurationMaintenanceImplTest extends DatabaseAwareTestBase {
+    @RegisterExtension
+    static final PostgresDbExtension embeddedPostgres =
+            PostgresExtensionFactory
+                    .database()
+                    .withAdditionalStartupParameter(ImportantParam.LOCK_TIMEOUT.getName(), "1000");
 
     private final ConfigurationMaintenance configurationMaintenance;
 
-    ConfigurationMaintenanceImplTestBase(@Nonnull final DataSource dataSource) {
-        super(dataSource);
+    ConfigurationMaintenanceImplTest() {
+        super(embeddedPostgres.getTestDatabase());
         this.configurationMaintenance = new ConfigurationMaintenanceImpl(
-                PgConnectionImpl.ofMaster(dataSource));
+                PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase()));
     }
 
     @Test

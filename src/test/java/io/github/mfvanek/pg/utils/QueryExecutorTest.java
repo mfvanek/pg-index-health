@@ -7,23 +7,27 @@
 
 package io.github.mfvanek.pg.utils;
 
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.model.PgContext;
 import org.junit.jupiter.api.Test;
-
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-abstract class QueryExecutorTestBase extends DatabaseAwareTestBase {
+public final class QueryExecutorTest extends DatabaseAwareTestBase {
+
+    @RegisterExtension
+    static final PostgresDbExtension embeddedPostgres =
+            PostgresExtensionFactory.database();
 
     private final PgConnection pgConnection;
 
-    QueryExecutorTestBase(@Nonnull final DataSource dataSource) {
-        super(dataSource);
-        this.pgConnection = PgConnectionImpl.ofMaster(dataSource);
+    QueryExecutorTest() {
+        super(embeddedPostgres.getTestDatabase());
+        this.pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
     }
 
     @Test

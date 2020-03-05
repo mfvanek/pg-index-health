@@ -7,8 +7,8 @@
 
 package io.github.mfvanek.pg.connection;
 
-import com.opentable.db.postgres.junit5.EmbeddedPostgresExtension;
-import com.opentable.db.postgres.junit5.PreparedDbExtension;
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -25,9 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class HighAvailabilityPgConnectionImplTest {
 
     @RegisterExtension
-    static final PreparedDbExtension embeddedPostgres =
-            EmbeddedPostgresExtension.preparedDatabase(ds -> {
-            });
+    static final PostgresDbExtension embeddedPostgres =
+            PostgresExtensionFactory.database();
 
     @Test
     void ofMaster() {
