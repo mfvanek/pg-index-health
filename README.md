@@ -8,6 +8,7 @@
 * 9.6
 * 10
 * 11
+* 12
 
 ## Available checks
 **pg-index-health** allows you to detect the following problems:

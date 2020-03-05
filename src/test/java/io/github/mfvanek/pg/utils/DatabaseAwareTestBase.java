@@ -49,8 +49,6 @@ public abstract class DatabaseAwareTestBase {
                     .withSchema(schemaName)
                     .populate();
             testExecutor.execute(PgContext.of(schemaName, 0));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
