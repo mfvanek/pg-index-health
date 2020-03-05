@@ -32,6 +32,7 @@ public final class DatabasePopulator implements AutoCloseable {
     private boolean needCreateTableWithoutPrimaryKey = false;
     private boolean needCreateIndexWithNulls = false;
     private boolean needCollectStatistics = false;
+    private boolean needCreateDuplicatedHashIndex = false;
 
     private DatabasePopulator(@Nonnull final DataSource dataSource) {
         this.dataSource = Objects.requireNonNull(dataSource);
@@ -62,6 +63,12 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withDuplicatedIndex() {
         this.needCreateDuplicatedIndex = true;
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withDuplicatedHashIndex() {
+        this.needCreateDuplicatedHashIndex = true;
         return this;
     }
 
@@ -129,6 +136,9 @@ public final class DatabasePopulator implements AutoCloseable {
         if (needCreateIndexWithNulls) {
             createIndexWithNulls();
         }
+        if (needCreateDuplicatedHashIndex) {
+            createDuplicatedHashIndex();
+        }
 
         // should be the last step in pipeline
         if (needCollectStatistics) {
@@ -137,8 +147,7 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     private void createSchema() {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
+        executeOnDatabase(dataSource, statement -> {
             statement.execute("create schema if not exists " + schemaName);
             final String checkQuery = String.format(
                     "select exists(select 1 from information_schema.schemata where schema_name = '%s')", schemaName);
@@ -151,9 +160,7 @@ public final class DatabasePopulator implements AutoCloseable {
                 }
                 throw new RuntimeException("Schema with name " + schemaName + " wasn't created");
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 
     private void createInvalidIndex() {
@@ -167,90 +174,72 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     private void createDuplicatedIndex() {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
+        executeOnDatabase(dataSource, statement -> {
             statement.execute(String.format("create index concurrently if not exists i_accounts_account_number " +
                     "on %s.accounts (account_number)", schemaName));
             statement.execute(String.format("create index concurrently if not exists i_clients_last_first " +
                     "on %s.clients (last_name, first_name)", schemaName));
             statement.execute(String.format("create index concurrently if not exists i_clients_last_name " +
                     "on %s.clients (last_name)", schemaName));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        });
+    }
+
+    private void createDuplicatedHashIndex() {
+        executeOnDatabase(dataSource, statement -> {
+            statement.execute(String.format("create index concurrently if not exists i_accounts_account_number " +
+                    "on %s.accounts using hash(account_number)", schemaName));
+            statement.execute(String.format("create index concurrently if not exists i_clients_last_first " +
+                    "on %s.clients (last_name, first_name)", schemaName));
+            statement.execute(String.format("create index concurrently if not exists i_clients_last_name " +
+                    "on %s.clients using hash(last_name)", schemaName));
+        });
     }
 
     private void createIndexWithNulls() {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(String.format("create index concurrently if not exists i_clients_middle_name " +
-                    "on %s.clients (middle_name)", schemaName));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        executeOnDatabase(dataSource, statement ->
+                statement.execute(String.format("create index concurrently if not exists i_clients_middle_name " +
+                        "on %s.clients (middle_name)", schemaName)));
     }
 
     private void createNotSuitableIndexForForeignKey() {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(String.format("create index concurrently if not exists " +
-                    "i_accounts_account_number_client_id on %s.accounts (account_number, client_id)", schemaName));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        executeOnDatabase(dataSource, statement ->
+                statement.execute(String.format("create index concurrently if not exists " +
+                        "i_accounts_account_number_client_id on %s.accounts (account_number, client_id)", schemaName)));
     }
 
     private void createSuitableIndexForForeignKey() {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(String.format("create index concurrently if not exists " +
-                    "i_accounts_client_id_account_number on %s.accounts (client_id, account_number)", schemaName));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        executeOnDatabase(dataSource, statement ->
+                statement.execute(String.format("create index concurrently if not exists " +
+                        "i_accounts_client_id_account_number on %s.accounts (client_id, account_number)", schemaName)));
     }
 
     private void createTableClients() {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            connection.setAutoCommit(false);
+        executeInTransaction(dataSource, statement -> {
             statement.execute(String.format("create sequence if not exists %s.clients_seq", schemaName));
             statement.execute(String.format("create table if not exists %s.clients (" +
                     "id bigint not null primary key default nextval('%s.clients_seq'), " +
                     "last_name varchar(255) not null, " +
                     "first_name varchar(255) not null, " +
                     "middle_name varchar(255))", schemaName, schemaName));
-            connection.commit();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 
     private void createTableAccounts() {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            connection.setAutoCommit(false);
+        executeInTransaction(dataSource, statement -> {
             statement.execute(String.format("create sequence if not exists %s.accounts_seq", schemaName));
             statement.execute(String.format("create table if not exists %s.accounts (" +
                     "id bigint not null primary key default nextval('%s.accounts_seq'), " +
                     "client_id bigint not null," +
                     "account_number varchar(50) not null unique, " +
                     "account_balance numeric(22,2) not null default 0)", schemaName, schemaName));
-            connection.commit();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 
     private void addLinksBetweenAccountsAndClients() {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(String.format("alter table if exists %s.accounts " +
-                            "add constraint c_accounts_fk_client_id foreign key (client_id) references %s.clients (id);",
-                    schemaName, schemaName));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        executeOnDatabase(dataSource, statement ->
+                statement.execute(String.format("alter table if exists %s.accounts " +
+                                "add constraint c_accounts_fk_client_id foreign key (client_id) references %s.clients (id);",
+                        schemaName, schemaName)));
     }
 
     private void insertDataIntoTables() {
@@ -306,9 +295,8 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     @Override
-    public void close() throws SQLException {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
+    public void close() {
+        executeOnDatabase(dataSource, statement -> {
             statement.execute(String.format("drop table if exists %s.accounts", schemaName));
             statement.execute(String.format("drop sequence if exists %s.accounts_seq", schemaName));
 
@@ -316,12 +304,11 @@ public final class DatabasePopulator implements AutoCloseable {
             statement.execute(String.format("drop sequence if exists %s.clients_seq", schemaName));
 
             statement.execute(String.format("drop table if exists %s.bad_clients", schemaName));
-        }
+        });
     }
 
     private void createTableWithoutPrimaryKey() {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
+        executeOnDatabase(dataSource, statement -> {
             statement.execute(String.format("create table if not exists %s.bad_clients (" +
                     "id bigint not null, " +
                     "name varchar(255) not null)", schemaName));
@@ -342,9 +329,7 @@ public final class DatabasePopulator implements AutoCloseable {
                 }
                 throw new RuntimeException("Table with name 'bad_clients' in schema " + schemaName + " wasn't created");
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 
     private void collectStatistics() {
@@ -352,13 +337,38 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     static void collectStatistics(@Nonnull final DataSource dataSource, @Nonnull final String schemaName) {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
+        executeOnDatabase(dataSource, statement -> {
             final String query = String.format("vacuum analyze %s.", schemaName);
             statement.execute(query + "accounts");
             statement.execute(query + "clients");
+        });
+    }
+
+    private static void executeOnDatabase(@Nonnull final DataSource dataSource,
+                                          @Nonnull DBCallback callback) {
+        try (Connection connection = dataSource.getConnection();
+             final Statement statement = connection.createStatement()) {
+            callback.execute(statement);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static void executeInTransaction(@Nonnull final DataSource dataSource,
+                                             @Nonnull DBCallback callback) {
+        try (Connection connection = dataSource.getConnection();
+             final Statement statement = connection.createStatement()) {
+            connection.setAutoCommit(false);
+            callback.execute(statement);
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FunctionalInterface
+    private interface DBCallback {
+
+        void execute(@Nonnull final Statement statement) throws SQLException;
     }
 }

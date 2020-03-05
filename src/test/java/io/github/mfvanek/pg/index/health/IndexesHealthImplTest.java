@@ -7,11 +7,11 @@
 
 package io.github.mfvanek.pg.index.health;
 
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.index.maintenance.MaintenanceFactoryImpl;
 import io.github.mfvanek.pg.model.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.ForeignKey;
@@ -149,6 +149,18 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
                 });
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getDuplicatedHashIndexesOnDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withDuplicatedHashIndex(),
+                ctx -> {
+                    final List<DuplicatedIndexes> duplicatedIndexes = indexesHealth.getDuplicatedIndexes(ctx);
+                    assertNotNull(duplicatedIndexes);
+                    assertEquals(0, duplicatedIndexes.size());
+                });
+    }
+
     @Test
     void getIntersectedIndexesOnEmptyDatabase() {
         final List<DuplicatedIndexes> intersectedIndexes = indexesHealth.getIntersectedIndexes();
@@ -173,6 +185,39 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
     void getIntersectedIndexesOnDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withDuplicatedIndex(),
+                ctx -> {
+                    final List<DuplicatedIndexes> intersectedIndexes = indexesHealth.getIntersectedIndexes(ctx);
+                    assertNotNull(intersectedIndexes);
+                    assertEquals(1, intersectedIndexes.size());
+                    final DuplicatedIndexes entry = intersectedIndexes.get(0);
+                    if (isDefaultSchema(schemaName)) {
+                        assertEquals("clients", entry.getTableName());
+                    } else {
+                        assertEquals(schemaName + ".clients", entry.getTableName());
+                    }
+                    assertThat(entry.getTotalSize(), greaterThanOrEqualTo(1L));
+                    final List<IndexWithSize> indexes = entry.getDuplicatedIndexes();
+                    assertEquals(2, indexes.size());
+                    final List<String> names = indexes.stream()
+                            .map(IndexWithSize::getIndexName)
+                            .collect(Collectors.toList());
+                    if (isDefaultSchema(schemaName)) {
+                        assertThat(names, containsInAnyOrder(
+                                "i_clients_last_first",
+                                "i_clients_last_name"));
+                    } else {
+                        assertThat(names, containsInAnyOrder(
+                                schemaName + ".i_clients_last_first",
+                                schemaName + ".i_clients_last_name"));
+                    }
+                });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getIntersectedHashIndexesOnDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withData().withDuplicatedHashIndex(),
                 ctx -> {
                     final List<DuplicatedIndexes> intersectedIndexes = indexesHealth.getIntersectedIndexes(ctx);
                     assertNotNull(intersectedIndexes);
