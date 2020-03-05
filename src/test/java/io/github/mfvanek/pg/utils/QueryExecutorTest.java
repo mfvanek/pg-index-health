@@ -7,8 +7,8 @@
 
 package io.github.mfvanek.pg.utils;
 
-import io.github.mfvanek.pg.PostgresExtensionFactory;
-import io.github.mfvanek.pg.PostgresDbExtension;
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.model.PgContext;

@@ -16,18 +16,7 @@ repositories {
     mavenCentral()
 }
 
-def postgresType = project.properties.getOrDefault('postgresType', 'opentablePostgres')
-def pickPostgres = { embeddedPgOption, containerPgOption ->
-    switch (postgresType) {
-        case 'opentablePostgres':
-            return embeddedPgOption
-        case 'testContainersPostgres':
-            return containerPgOption
-        default:
-            throw new GradleException("Unsupported postgres type: $postgresType")
-    }
-}
-
+def postgresVersion = System.getenv('TEST_PG_VERSION') ?: '10.11.0'
 dependencies {
     compile 'com.google.code.findbugs:jsr305:3.0.2'
     compile 'org.apache.commons:commons-lang3:3.9'
@@ -41,26 +30,9 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'ch.qos.logback:logback-classic:1.2.3'
     testImplementation 'org.mockito:mockito-core:3.2.0'
-
-    pickPostgres(
-            [
-                    'com.opentable.components:otj-pg-embedded:0.13.3'
-            ],
-            [
-                    'org.testcontainers:testcontainers:1.12.5',
-                    'org.testcontainers:junit-jupiter:1.12.5',
-                    'org.testcontainers:postgresql:1.12.5',
-                    'org.postgresql:postgresql:42.2.10'
-            ]
-    ).each { testImplementation it }
-}
-
-sourceSets {
-    test {
-        java {
-            srcDir pickPostgres('src/embedded-pg/java', 'src/testcontainers-pg/java')
-        }
-    }
+    testImplementation 'com.vdurmont:semver4j:3.1.0'
+    testImplementation 'io.zonky.test:embedded-postgres:1.2.6'
+    testImplementation enforcedPlatform("io.zonky.test.postgres:embedded-postgres-binaries-bom:$postgresVersion")
 }
 
 test {

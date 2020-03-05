@@ -7,8 +7,8 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.PostgresExtensionFactory;
-import io.github.mfvanek.pg.PostgresDbExtension;
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;

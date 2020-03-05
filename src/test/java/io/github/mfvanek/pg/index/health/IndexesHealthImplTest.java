@@ -7,8 +7,8 @@
 
 package io.github.mfvanek.pg.index.health;
 
-import io.github.mfvanek.pg.PostgresExtensionFactory;
-import io.github.mfvanek.pg.PostgresDbExtension;
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;

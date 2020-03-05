@@ -5,11 +5,11 @@
  * This file is a part of "pg-index-health" - a Java library for analyzing and maintaining indexes health in PostgreSQL databases.
  */
 
-package io.github.mfvanek.pg;
+package io.github.mfvanek.pg.embedded;
 
-import com.opentable.db.postgres.embedded.ConnectionInfo;
-import com.opentable.db.postgres.embedded.EmbeddedPostgres;
-import com.opentable.db.postgres.embedded.PreparedDbProvider;
+import io.zonky.test.db.postgres.embedded.ConnectionInfo;
+import io.zonky.test.db.postgres.embedded.EmbeddedPostgres;
+import io.zonky.test.db.postgres.embedded.PreparedDbProvider;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -19,6 +19,13 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
+/**
+ * JUnit test extension that provides configurable PostgreSQL instance.
+ * Additional layer of abstraction that allow to easily switch between
+ * embedded PostgreSQL implementations (otj-opentable, zonkyio, testcontainers).
+ *
+ * @author Nikolay Kondratyev
+ */
 public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback {
 
     private volatile DataSource dataSource;

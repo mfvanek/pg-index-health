@@ -5,8 +5,13 @@
  * This file is a part of "pg-index-health" - a Java library for analyzing and maintaining indexes health in PostgreSQL databases.
  */
 
-package io.github.mfvanek.pg;
+package io.github.mfvanek.pg.embedded;
 
+/**
+ * Factory to provide JUnit test extension for PostgreSQL instance.
+ *
+ * @author Nikolay Kondratyev
+ */
 public final class PostgresExtensionFactory {
 
     private PostgresExtensionFactory() {}
