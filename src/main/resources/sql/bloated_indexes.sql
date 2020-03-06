@@ -26,7 +26,7 @@ with indexes_data as (
     where
         pc.relam = (select oid from pg_catalog.pg_am where amname = 'btree') and
         pc.relpages > 0 and
-        pn.nspname = ?::text
+        pn.nspname = :schema_name_param::text
 ),
 nested_indexes_attributes as (
     select
@@ -71,7 +71,7 @@ rows_data_stats as (
         i.index_oid,
         i.fill_factor,
         current_setting('block_size')::bigint as block_size,
-        /* max_align: 4 on 32bits, 8 on 64bits (and mingw32 ?) */
+        /* max_align: 4 on 32bits, 8 on 64bits */
         case when version() ~ 'mingw32' or version() ~ '64-bit|x86_64|ppc64|ia64|amd64' then 8 else 4 end as max_align,
         /* per page header, fixed size: 20 for 7.x, 24 for others */
         24 as page_header_size,
@@ -148,5 +148,5 @@ corrected_relation_stats as (
  )
 select *
 from bloat_stats
-where bloat_percentage >= ?::integer
+where bloat_percentage >= :bloat_percentage_threshold::integer
 order by table_name, index_name;
