@@ -3,6 +3,7 @@
 
 ![Java CI](https://github.com/mfvanek/pg-index-health/workflows/Java%20CI/badge.svg)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.mfvanek/pg-index-health.svg)](https://search.maven.org/artifact/io.github.mfvanek/pg-index-health/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/mfvanek/pg-index-health/blob/master/LICENSE)
 
 ## Supported PostgreSQL versions
 * 9.6
