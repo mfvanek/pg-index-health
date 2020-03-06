@@ -32,7 +32,7 @@ with tables_stats as (
         not pa.attisdropped
         and pc.relkind = 'r'
         and pc.relpages > 0
-        and pn.nspname = ?::text
+        and pn.nspname = :schema_name_param::text
     group by table_oid, pc.reltuples, heap_pages, toast_pages, toast_tuples, fill_factor, block_size, page_header_size
 ),
 tables_pages_size as (
@@ -82,5 +82,5 @@ bloat_stats as (
 )
 select *
 from bloat_stats
-where bloat_percentage >= ?::integer
+where bloat_percentage >= :bloat_percentage_threshold::integer
 order by table_name;
