@@ -30,7 +30,7 @@ public enum ImportantParam implements ParamNameAware {
     ImportantParam(@Nonnull final String name, @Nonnull final String defaultValue) {
         this.name = Validators.notBlank(name, "name");
         this.defaultValue = Validators.paramValueNotNull(
-                defaultValue, "defaultValue for '" + name + "\' cannot be null");
+                defaultValue, "defaultValue for '" + name + "' cannot be null");
     }
 
     @Nonnull
