@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'io.github.mfvanek'
-version '0.1.6-SNAPSHOT'
+version '0.1.7-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
