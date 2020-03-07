@@ -32,7 +32,7 @@ You can call `pg_stat_reset()` to reset all statistics counters for the current 
 
 Using Gradle:
 ```groovy
-implementation 'io.github.mfvanek:pg-index-health:0.1.5'
+implementation 'io.github.mfvanek:pg-index-health:0.1.7'
 ```
 
 Using Maven:
@@ -40,7 +40,7 @@ Using Maven:
 <dependency>
   <groupId>io.github.mfvanek</groupId>
   <artifactId>pg-index-health</artifactId>
-  <version>0.1.5</version>
+  <version>0.1.7</version>
 </dependency>
 ```
 
