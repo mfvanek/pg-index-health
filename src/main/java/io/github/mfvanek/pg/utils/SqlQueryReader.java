@@ -7,15 +7,14 @@
 
 package io.github.mfvanek.pg.utils;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public final class SqlQueryReader {
@@ -28,14 +27,12 @@ public final class SqlQueryReader {
 
     public static String getQueryFromFile(@Nonnull final String sqlFileName) {
         final String fileName = Validators.validateSqlFileName(sqlFileName);
-        try {
-            final ClassLoader classLoader = SqlQueryReader.class.getClassLoader();
-            final URL resource = classLoader.getResource("sql/" + fileName);
-            if (resource == null) {
+        final ClassLoader classLoader = SqlQueryReader.class.getClassLoader();
+        try (InputStream inputStream = classLoader.getResourceAsStream("sql/" + fileName)) {
+            if (inputStream == null) {
                 throw new FileNotFoundException(fileName);
             }
-            final String pathToFile = resource.getFile();
-            final String sqlQueryFromFile = FileUtils.readFileToString(new File(pathToFile), StandardCharsets.UTF_8);
+            final String sqlQueryFromFile = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             LOGGER.trace("Query from file {}", sqlQueryFromFile);
             return NamedParametersParser.parse(sqlQueryFromFile);
         } catch (IOException ex) {
