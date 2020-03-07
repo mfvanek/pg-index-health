@@ -11,7 +11,7 @@ select psui.relid::regclass::text as table_name,
     psui.idx_scan as index_scans
 from pg_catalog.pg_stat_user_indexes psui
          join pg_catalog.pg_index i on psui.indexrelid = i.indexrelid
-where psui.schemaname = ?::text
+where psui.schemaname = :schema_name_param::text
   and not i.indisunique
   and i.indexrelid not in (select * from foreign_key_indexes) /*retain indexes on foreign keys*/
   and psui.idx_scan < 50::integer

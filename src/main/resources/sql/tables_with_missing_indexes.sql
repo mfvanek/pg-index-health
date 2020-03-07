@@ -5,7 +5,7 @@ with tables_without_indexes as (
         coalesce(psat.seq_scan, 0) as seq_scan,
         coalesce(psat.idx_scan, 0) as idx_scan
     from pg_catalog.pg_stat_all_tables psat
-    where psat.schemaname = ?::text
+    where psat.schemaname = :schema_name_param::text
 )
 select table_name,
     table_size,

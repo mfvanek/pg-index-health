@@ -8,6 +8,8 @@
 package io.github.mfvanek.pg.utils;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -17,6 +19,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public final class SqlQueryReader {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SqlQueryReader.class);
 
     private SqlQueryReader() {
         throw new UnsupportedOperationException();
@@ -31,7 +35,9 @@ public final class SqlQueryReader {
                 throw new FileNotFoundException(fileName);
             }
             final String pathToFile = resource.getFile();
-            return FileUtils.readFileToString(new File(pathToFile), StandardCharsets.UTF_8);
+            final String sqlQueryFromFile = FileUtils.readFileToString(new File(pathToFile), StandardCharsets.UTF_8);
+            LOGGER.trace("Query from file {}", sqlQueryFromFile);
+            return NamedParametersParser.parse(sqlQueryFromFile);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

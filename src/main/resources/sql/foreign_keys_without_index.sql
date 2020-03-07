@@ -7,7 +7,7 @@ from pg_catalog.pg_constraint c
          join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
          join pg_catalog.pg_attribute col on (col.attrelid = t.oid and col.attnum = u.attnum)
 where c.contype = 'f'
-  and nsp.nspname = ?::text
+  and nsp.nspname = :schema_name_param::text
   and not exists(
         select 1
         from pg_catalog.pg_index pi
