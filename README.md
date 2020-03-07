@@ -111,3 +111,8 @@ public class DemoApp {
 ```
 
 For more examples see [pg-index-health-demo](https://github.com/mfvanek/pg-index-health-demo) project.
+
+## Questions, issues, feature requests and contributions
+
+ * If you have any question or a problem with the library, please [file an issue](https://github.com/mfvanek/pg-index-health/issues).
+ * Contributions are always welcome! Please see [contributing guide](CONTRIBUTING.md) for more details.
