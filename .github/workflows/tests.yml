@@ -19,7 +19,10 @@ jobs:
             TEST_PG_VERSION: ${{ matrix.pg_version }}
         runs-on: ${{ matrix.os }}
         steps:
-            -   uses: actions/checkout@v1
+            -   name: Checkout
+                uses: actions/checkout@v1
+                with:
+                    submodules: true
             -   name: Set up JDK 8
                 uses: actions/setup-java@v1
                 with:
