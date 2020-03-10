@@ -4,7 +4,7 @@ Java >= 8 is required.
 
 1. Clone the repository
 
-       git clone https://github.com/mfvanek/pg-index-health.git
+       git clone --recursive https://github.com/mfvanek/pg-index-health.git
        cd pg-index-health
 
 1. Build with Gradle
