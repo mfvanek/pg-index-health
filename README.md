@@ -3,7 +3,7 @@
 
 [![Java CI](https://github.com/mfvanek/pg-index-health/workflows/Java%20CI/badge.svg)](https://github.com/mfvanek/pg-index-health/actions "Java CI")
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.mfvanek/pg-index-health.svg)](https://search.maven.org/artifact/io.github.mfvanek/pg-index-health/ "Maven Central")
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/mfvanek/pg-index-health/blob/master/LICENSE "License GPLv3")
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/mfvanek/pg-index-health/blob/master/LICENSE "Apache License 2.0")
 [![javadoc](https://javadoc.io/badge2/io.github.mfvanek/pg-index-health/javadoc.svg)](https://javadoc.io/doc/io.github.mfvanek/pg-index-health "javadoc")
 
 ## Supported PostgreSQL versions
