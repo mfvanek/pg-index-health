@@ -18,6 +18,7 @@ repositories {
 }
 
 def postgresVersion = System.getenv('TEST_PG_VERSION') ?: '10.11.0'
+def junitVersion = '5.6.0'
 dependencies {
     compile 'com.google.code.findbugs:jsr305:3.0.2'
     compile 'org.apache.commons:commons-lang3:3.9'
@@ -26,12 +27,12 @@ dependencies {
     compile 'org.apache.commons:commons-dbcp2:2.7.0'
     compile 'org.slf4j:slf4j-api:1.7.29'
 
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.5.2'
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'ch.qos.logback:logback-classic:1.2.3'
-    testImplementation 'org.mockito:mockito-core:3.2.0'
+    testImplementation 'org.mockito:mockito-core:3.3.3'
     testImplementation 'com.vdurmont:semver4j:3.1.0'
     testImplementation 'io.zonky.test:embedded-postgres:1.2.6'
     testImplementation enforcedPlatform("io.zonky.test.postgres:embedded-postgres-binaries-bom:$postgresVersion")
@@ -72,8 +73,8 @@ publishing {
                 url = 'https://github.com/mfvanek/pg-index-health'
                 licenses {
                     license {
-                        name = 'GNU General Public License v3.0'
-                        url = 'https://www.gnu.org/licenses/gpl-3.0.html'
+                        name = 'Apache License Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0'
                     }
                 }
 
