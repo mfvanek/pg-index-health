@@ -163,6 +163,18 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
                 });
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getDuplicatedIndexesWithDifferentOpclassShouldReturnNothing(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withDifferentOpclassIndexes(),
+                ctx -> {
+                    final List<DuplicatedIndexes> duplicatedIndexes = indexMaintenance.getDuplicatedIndexes(ctx);
+                    assertNotNull(duplicatedIndexes);
+                    assertEquals(0, duplicatedIndexes.size());
+                });
+    }
+
     @Test
     void getIntersectedIndexesOnEmptyDataBase() {
         final List<DuplicatedIndexes> intersectedIndexes = indexMaintenance.getIntersectedIndexes();
@@ -245,6 +257,18 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
                                 schemaName + ".i_clients_last_first",
                                 schemaName + ".i_clients_last_name"));
                     }
+                });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getIntersectedIndexesWithDifferentOpclassShouldReturnNothing(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withDifferentOpclassIndexes(),
+                ctx -> {
+                    final List<DuplicatedIndexes> intersectedIndexes = indexMaintenance.getIntersectedIndexes(ctx);
+                    assertNotNull(intersectedIndexes);
+                    assertEquals(0, intersectedIndexes.size());
                 });
     }
 

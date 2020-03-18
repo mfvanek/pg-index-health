@@ -20,25 +20,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 public final class DatabasePopulator implements AutoCloseable {
 
     private final DataSource dataSource;
     private String schemaName = "public";
-    private boolean needCreateReferences = false;
-    private boolean needInsertData = false;
-    private boolean needCreateInvalidIndex = false;
-    private boolean needCreateDuplicatedIndex = false;
-    private boolean needCreateNotSuitableIndex = false;
-    private boolean needCreateSuitableIndex = false;
-    private boolean needCreateTableWithoutPrimaryKey = false;
-    private boolean needCreateIndexWithNulls = false;
-    private boolean needCollectStatistics = false;
-    private boolean needCreateDuplicatedHashIndex = false;
+    private final Map<Integer, Runnable> actions;
 
     private DatabasePopulator(@Nonnull final DataSource dataSource) {
         this.dataSource = Objects.requireNonNull(dataSource);
+        this.actions = new TreeMap<>();
+        this.actions.putIfAbsent(1, this::createSchema);
+        this.actions.putIfAbsent(2, this::createTableClients);
+        this.actions.putIfAbsent(3, this::createTableAccounts);
     }
 
     static DatabasePopulator builder(@Nonnull final DataSource dataSource) {
@@ -47,55 +44,55 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Nonnull
     public DatabasePopulator withReferences() {
-        this.needCreateReferences = true;
+        actions.putIfAbsent(10, this::addLinksBetweenAccountsAndClients);
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withData() {
-        this.needInsertData = true;
+        actions.putIfAbsent(20, this::insertDataIntoTables);
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withInvalidIndex() {
-        this.needCreateInvalidIndex = true;
+        actions.putIfAbsent(30, this::createInvalidIndex);
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withDuplicatedIndex() {
-        this.needCreateDuplicatedIndex = true;
+        actions.putIfAbsent(40, this::createDuplicatedIndex);
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withDuplicatedHashIndex() {
-        this.needCreateDuplicatedHashIndex = true;
+        this.actions.putIfAbsent(50, this::createDuplicatedHashIndex);
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withNonSuitableIndex() {
-        this.needCreateNotSuitableIndex = true;
+        actions.putIfAbsent(100, this::createNotSuitableIndexForForeignKey);
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withSuitableIndex() {
-        this.needCreateSuitableIndex = true;
+        actions.putIfAbsent(110, this::createSuitableIndexForForeignKey);
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withTableWithoutPrimaryKey() {
-        this.needCreateTableWithoutPrimaryKey = true;
+        actions.putIfAbsent(150, this::createTableWithoutPrimaryKey);
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withNullValuesInIndex() {
-        this.needCreateIndexWithNulls = true;
+        actions.putIfAbsent(160, this::createIndexWithNulls);
         return this;
     }
 
@@ -107,46 +104,19 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Nonnull
     public DatabasePopulator withStatistics() {
-        this.needCollectStatistics = true;
+        // should be the last step in pipeline
+        actions.putIfAbsent(Integer.MAX_VALUE, this::collectStatistics);
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withDifferentOpclassIndexes() {
+        actions.putIfAbsent(200, this::createIndexesWithDifferentOpclass);
         return this;
     }
 
     public void populate() {
-        createSchema();
-        createTableClients();
-        createTableAccounts();
-        if (needCreateReferences) {
-            addLinksBetweenAccountsAndClients();
-        }
-        if (needInsertData) {
-            insertDataIntoTables();
-        }
-        if (needCreateInvalidIndex) {
-            createInvalidIndex();
-        }
-        if (needCreateDuplicatedIndex) {
-            createDuplicatedIndex();
-        }
-        if (needCreateNotSuitableIndex) {
-            createNotSuitableIndexForForeignKey();
-        }
-        if (needCreateSuitableIndex) {
-            createSuitableIndexForForeignKey();
-        }
-        if (needCreateTableWithoutPrimaryKey) {
-            createTableWithoutPrimaryKey();
-        }
-        if (needCreateIndexWithNulls) {
-            createIndexWithNulls();
-        }
-        if (needCreateDuplicatedHashIndex) {
-            createDuplicatedHashIndex();
-        }
-
-        // should be the last step in pipeline
-        if (needCollectStatistics) {
-            collectStatistics();
-        }
+        actions.forEach((k, v) -> v.run());
     }
 
     private void createSchema() {
@@ -344,6 +314,15 @@ public final class DatabasePopulator implements AutoCloseable {
             final String query = String.format("vacuum analyze %s.", schemaName);
             statement.execute(query + "accounts");
             statement.execute(query + "clients");
+        });
+    }
+
+    private void createIndexesWithDifferentOpclass() {
+        executeOnDatabase(dataSource, statement -> {
+            statement.execute(String.format("create index concurrently if not exists i_clients_last_name " +
+                    "on %s.clients using btree(lower(last_name))", schemaName));
+            statement.execute(String.format("create index concurrently if not exists i_clients_last_name_ops " +
+                    "on %s.clients using btree(lower(last_name) text_pattern_ops)", schemaName));
         });
     }
 

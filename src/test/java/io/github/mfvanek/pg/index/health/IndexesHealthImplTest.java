@@ -48,6 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
+
     @RegisterExtension
     static final PostgresDbExtension embeddedPostgres =
             PostgresExtensionFactory.database();
@@ -164,6 +165,18 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
                 });
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getDuplicatedIndexesWithDifferentOpclassShouldReturnNothing(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withDifferentOpclassIndexes(),
+                ctx -> {
+                    final List<DuplicatedIndexes> duplicatedIndexes = indexesHealth.getDuplicatedIndexes(ctx);
+                    assertNotNull(duplicatedIndexes);
+                    assertEquals(0, duplicatedIndexes.size());
+                });
+    }
+
     @Test
     void getIntersectedIndexesOnEmptyDatabase() {
         final List<DuplicatedIndexes> intersectedIndexes = indexesHealth.getIntersectedIndexes();
@@ -246,6 +259,18 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
                                 schemaName + ".i_clients_last_first",
                                 schemaName + ".i_clients_last_name"));
                     }
+                });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getIntersectedIndexesWithDifferentOpclassShouldReturnNothing(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withDifferentOpclassIndexes(),
+                ctx -> {
+                    final List<DuplicatedIndexes> intersectedIndexes = indexesHealth.getIntersectedIndexes(ctx);
+                    assertNotNull(intersectedIndexes);
+                    assertEquals(0, intersectedIndexes.size());
                 });
     }
 
