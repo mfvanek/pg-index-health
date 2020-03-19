@@ -59,3 +59,6 @@ All these cases are covered with examples in the [pg-index-health-demo](https://
 ## Questions, issues, feature requests and contributions
 * If you have any question or a problem with the library, please [file an issue](https://github.com/mfvanek/pg-index-health/issues).
 * Contributions are always welcome! Please see [contributing guide](CONTRIBUTING.md) for more details.
+
+## Related projects
+[pg_analyse](https://github.com/idlesign/pg_analyse)
