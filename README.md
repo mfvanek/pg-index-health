@@ -31,7 +31,7 @@ For raw sql queries see [pg-index-health-sql](https://github.com/mfvanek/pg-inde
 ## How does it work
 **pg_index_health** utilizes the [PostgreSQL's statistics collector](https://www.postgresql.org/docs/10/monitoring-stats.html).  
 You can call `pg_stat_reset()` on each host to reset all statistics counters for the current database to zero
-but the best way todo it is to use [IndexesHealth::resetStatistics()](https://github.com/mfvanek/pg-index-health/blob/9251f99e2952bc7490137f40c83873ff54ac1ffa/src/main/java/io/github/mfvanek/pg/index/health/IndexesHealth.java#L168) method.
+but the best way to do it is to use [IndexesHealth::resetStatistics()](https://github.com/mfvanek/pg-index-health/blob/9251f99e2952bc7490137f40c83873ff54ac1ffa/src/main/java/io/github/mfvanek/pg/index/health/IndexesHealth.java#L168) method.
 
 ## Installation
 Using Gradle:
@@ -61,4 +61,5 @@ All these cases are covered with examples in the [pg-index-health-demo](https://
 * Contributions are always welcome! Please see [contributing guide](CONTRIBUTING.md) for more details.
 
 ## Related projects
-[pg_analyse](https://github.com/idlesign/pg_analyse)
+[pg_analyse](https://github.com/idlesign/pg_analyse) - a set of tools to gather useful information from PostgreSQL,
+written in Python, with command line interface.
