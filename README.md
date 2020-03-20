@@ -28,12 +28,12 @@
 
 For raw sql queries see [pg-index-health-sql](https://github.com/mfvanek/pg-index-health-sql) project.
 
-## Important note
-**pg_index_health** uses the [PostgreSQL's statistics collector](https://www.postgresql.org/docs/10/monitoring-stats.html).  
-You can call `pg_stat_reset()` to reset all statistics counters for the current database to zero.
+## How does it work
+**pg_index_health** utilizes the [PostgreSQL's statistics collector](https://www.postgresql.org/docs/10/monitoring-stats.html).  
+You can call `pg_stat_reset()` on each host to reset all statistics counters for the current database to zero
+but the best way to do it is to use [IndexesHealth::resetStatistics()](https://github.com/mfvanek/pg-index-health/blob/9251f99e2952bc7490137f40c83873ff54ac1ffa/src/main/java/io/github/mfvanek/pg/index/health/IndexesHealth.java#L168) method.
 
 ## Installation
-
 Using Gradle:
 ```groovy
 implementation 'io.github.mfvanek:pg-index-health:0.1.8'
@@ -48,75 +48,18 @@ Using Maven:
 </dependency>
 ```
 
-## Demo application
-```java
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
-import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
-import io.github.mfvanek.pg.index.health.IndexesHealth;
-import io.github.mfvanek.pg.index.health.IndexesHealthImpl;
-import io.github.mfvanek.pg.index.health.logger.Exclusions;
-import io.github.mfvanek.pg.index.health.logger.IndexesHealthLogger;
-import io.github.mfvanek.pg.index.health.logger.SimpleHealthLogger;
-import io.github.mfvanek.pg.index.maintenance.MaintenanceFactoryImpl;
-import io.github.mfvanek.pg.model.MemoryUnit;
-import io.github.mfvanek.pg.model.PgContext;
+## How to use
+There are three main scenarios of using **pg-index-health** in your projects:
+* unit\functional testing;
+* collecting indexes health data and monitoring bloat;
+* analysis of database configuration.
 
-public class DemoApp {
-
-    public static void main(String[] args) {
-        loadDriver();
-        forTesting();
-        forProduction();
-    }
-
-    private static void loadDriver() {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void forTesting() {
-        final String writeUrl = "jdbc:postgresql://host-name-1:6432,host-name-2:6432,host-name-3:6432/db_name_testing?targetServerType=master&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require";
-        final String readUrl = "jdbc:postgresql://host-name-1:6432,host-name-2:6432,host-name-3:6432/db_name_testing?targetServerType=preferSlave&loadBalanceHosts=true&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require";
-        final String userName = "user_name_testing";
-        final String password = "password_testing";
-        final HighAvailabilityPgConnectionFactory haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
-        final HighAvailabilityPgConnection haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl);
-        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealth);
-        logger.logAll(Exclusions.empty(), PgContext.ofPublic())
-                .forEach(System.out::println);
-        // Resetting current statistics
-        // indexesHealth.resetStatistics();
-    }
-
-    private static void forProduction() {
-        final String writeUrl = "jdbc:postgresql://host-name-1:6432,host-name-2:6432,host-name-3:6432/db_name_production?ssl=true&targetServerType=master&prepareThreshold=0&preparedStatementCacheQueries=0&connectTimeout=2&socketTimeout=50&loginTimeout=10&sslmode=require";
-        final String readUrl = "jdbc:postgresql://host-name-1:6432,host-name-2:6432,host-name-3:6432,host-name-4:6432,host-name-5:6432/db_name_production?ssl=true&targetServerType=preferSlave&loadBalanceHosts=true&prepareThreshold=0&preparedStatementCacheQueries=0&connectTimeout=2&socketTimeout=50&loginTimeout=10&sslmode=require";
-        final String cascadeAsyncReadUrl = "jdbc:postgresql://host-name-6:6432/db_name_production?ssl=true&targetServerType=preferSlave&loadBalanceHosts=true&prepareThreshold=0&preparedStatementCacheQueries=0&connectTimeout=2&socketTimeout=50&loginTimeout=10&sslmode=require";
-        final String userName = "user_name_production";
-        final String password = "password_production";
-        final HighAvailabilityPgConnectionFactory haPgConnectionFactory = new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl());
-        final HighAvailabilityPgConnection haPgConnection = haPgConnectionFactory.of(writeUrl, userName, password, readUrl, cascadeAsyncReadUrl);
-        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
-        final Exclusions exclusions = Exclusions.builder()
-                .withIndexSizeThreshold(10, MemoryUnit.MB)
-                .withTableSizeThreshold(10, MemoryUnit.MB)
-                .build();
-        final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealth);
-        logger.logAll(exclusions, PgContext.ofPublic())
-                .forEach(System.out::println);
-    }
-}
-```
-
-For more examples see [pg-index-health-demo](https://github.com/mfvanek/pg-index-health-demo) project.
+All these cases are covered with examples in the [pg-index-health-demo](https://github.com/mfvanek/pg-index-health-demo) project.
 
 ## Questions, issues, feature requests and contributions
+* If you have any question or a problem with the library, please [file an issue](https://github.com/mfvanek/pg-index-health/issues).
+* Contributions are always welcome! Please see [contributing guide](CONTRIBUTING.md) for more details.
 
- * If you have any question or a problem with the library, please [file an issue](https://github.com/mfvanek/pg-index-health/issues).
- * Contributions are always welcome! Please see [contributing guide](CONTRIBUTING.md) for more details.
+## Related projects
+[pg_analyse](https://github.com/idlesign/pg_analyse) - a set of tools to gather useful information from PostgreSQL,
+written in Python, with command line interface.
