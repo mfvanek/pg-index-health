@@ -10,12 +10,12 @@
 
 package io.github.mfvanek.pg.utils;
 
-import io.github.mfvanek.pg.model.PgContext;
-
 import javax.annotation.Nonnull;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 @FunctionalInterface
-public interface TestExecutor {
+interface DBCallback {
 
-    void execute(@Nonnull PgContext pgContext);
+    void execute(@Nonnull final Statement statement) throws SQLException;
 }
