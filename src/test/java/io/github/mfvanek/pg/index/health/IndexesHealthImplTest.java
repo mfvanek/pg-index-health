@@ -463,6 +463,18 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
                 });
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getTablesWithoutPrimaryKeyShouldReturnNothingForMaterializedViews(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withData().withMaterializedView(),
+                ctx -> {
+                    final List<Table> tables = indexesHealth.getTablesWithoutPrimaryKey(ctx);
+                    assertNotNull(tables);
+                    assertThat(tables, hasSize(0));
+                });
+    }
+
     @Test
     void getIndexesWithNullValuesOnEmptyDatabase() {
         final List<IndexWithNulls> indexes = indexesHealth.getIndexesWithNullValues();

@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
+import static io.github.mfvanek.pg.utils.TestUtils.executeInTransaction;
+import static io.github.mfvanek.pg.utils.TestUtils.executeOnDatabase;
+
 public final class DatabasePopulator implements AutoCloseable {
 
     private final DataSource dataSource;
@@ -112,6 +115,12 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withDifferentOpclassIndexes() {
         actions.putIfAbsent(200, this::createIndexesWithDifferentOpclass);
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withMaterializedView() {
+        actions.putIfAbsent(210, this::createMaterializedView);
         return this;
     }
 
@@ -270,7 +279,7 @@ public final class DatabasePopulator implements AutoCloseable {
     @Override
     public void close() {
         executeOnDatabase(dataSource, statement -> {
-            statement.execute(String.format("drop table if exists %s.accounts", schemaName));
+            statement.execute(String.format("drop table if exists %s.accounts cascade", schemaName));
             statement.execute(String.format("drop sequence if exists %s.accounts_seq", schemaName));
 
             statement.execute(String.format("drop table if exists %s.clients", schemaName));
@@ -326,31 +335,9 @@ public final class DatabasePopulator implements AutoCloseable {
         });
     }
 
-    private static void executeOnDatabase(@Nonnull final DataSource dataSource,
-                                          @Nonnull DBCallback callback) {
-        try (Connection connection = dataSource.getConnection();
-             final Statement statement = connection.createStatement()) {
-            callback.execute(statement);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void executeInTransaction(@Nonnull final DataSource dataSource,
-                                             @Nonnull DBCallback callback) {
-        try (Connection connection = dataSource.getConnection();
-             final Statement statement = connection.createStatement()) {
-            connection.setAutoCommit(false);
-            callback.execute(statement);
-            connection.commit();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @FunctionalInterface
-    private interface DBCallback {
-
-        void execute(@Nonnull final Statement statement) throws SQLException;
+    private void createMaterializedView() {
+        executeOnDatabase(dataSource, statement ->
+                statement.execute(String.format("create materialized view if not exists %s.accounts_mat_view as (" +
+                        "select client_id, account_number from %s.accounts);", schemaName, schemaName)));
     }
 }

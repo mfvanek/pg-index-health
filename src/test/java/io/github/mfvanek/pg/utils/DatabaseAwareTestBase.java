@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -46,12 +47,12 @@ public abstract class DatabaseAwareTestBase {
 
     protected void executeTestOnDatabase(@Nonnull final String schemaName,
                                          @Nonnull final DatabaseConfigurer databaseConfigurer,
-                                         @Nonnull final TestExecutor testExecutor) {
+                                         @Nonnull final Consumer<PgContext> testExecutor) {
         try (DatabasePopulator databasePopulator = createDatabasePopulator()) {
             databaseConfigurer.configure(databasePopulator)
                     .withSchema(schemaName)
                     .populate();
-            testExecutor.execute(PgContext.of(schemaName, 0));
+            testExecutor.accept(PgContext.of(schemaName, 0));
         }
     }
 

@@ -11,8 +11,12 @@
 package io.github.mfvanek.pg.utils;
 
 import javax.annotation.Nonnull;
+import javax.sql.DataSource;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public final class TestUtils {
 
@@ -25,6 +29,28 @@ public final class TestUtils {
             constructor.newInstance();
         } catch (InvocationTargetException ex) {
             throw ex.getTargetException();
+        }
+    }
+
+    public static void executeOnDatabase(@Nonnull final DataSource dataSource,
+                                         @Nonnull DBCallback callback) {
+        try (Connection connection = dataSource.getConnection();
+             final Statement statement = connection.createStatement()) {
+            callback.execute(statement);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void executeInTransaction(@Nonnull final DataSource dataSource,
+                                            @Nonnull DBCallback callback) {
+        try (Connection connection = dataSource.getConnection();
+             final Statement statement = connection.createStatement()) {
+            connection.setAutoCommit(false);
+            callback.execute(statement);
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
