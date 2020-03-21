@@ -12,13 +12,14 @@ package io.github.mfvanek.pg.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -32,21 +33,33 @@ class DuplicatedIndexesTest {
         assertNotNull(index);
         assertEquals("t", index.getTableName());
         assertEquals(303L, index.getTotalSize());
-        assertThat(index.getDuplicatedIndexes().stream()
-                        .map(IndexWithSize::getIndexName)
-                        .collect(Collectors.toList()),
-                containsInAnyOrder("i1", "i2"));
+        assertThat(index.getIndexNames(), contains("i1", "i2"));
+    }
+
+    @Test
+    void ordering() {
+        final DuplicatedIndexes indexes = DuplicatedIndexes.of(Arrays.asList(
+                IndexWithSize.of("t1", "i3", 303L),
+                IndexWithSize.of("t1", "i1", 101L),
+                IndexWithSize.of("t1", "i2", 202L)));
+        assertNotNull(indexes);
+        assertThat(indexes.getDuplicatedIndexes(),
+                contains(IndexWithSize.of("t1", "i1", 101L),
+                        IndexWithSize.of("t1", "i2", 202L),
+                        IndexWithSize.of("t1", "i3", 303L)));
     }
 
     @Test
     void testToString() {
         final DuplicatedIndexes indexes = DuplicatedIndexes.of(Arrays.asList(
+                IndexWithSize.of("t", "i3", 303L),
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
         assertNotNull(indexes);
-        assertEquals("DuplicatedIndexes{tableName='t', totalSize=303, indexes=[" +
+        assertEquals("DuplicatedIndexes{tableName='t', totalSize=606, indexes=[" +
                         "IndexWithSize{tableName='t', indexName='i1', indexSizeInBytes=101}, " +
-                        "IndexWithSize{tableName='t', indexName='i2', indexSizeInBytes=202}]}",
+                        "IndexWithSize{tableName='t', indexName='i2', indexSizeInBytes=202}, " +
+                        "IndexWithSize{tableName='t', indexName='i3', indexSizeInBytes=303}]}",
                 indexes.toString());
     }
 
@@ -72,10 +85,7 @@ class DuplicatedIndexesTest {
         assertNotNull(index);
         assertEquals("t", index.getTableName());
         assertEquals(178L, index.getTotalSize());
-        assertThat(index.getDuplicatedIndexes().stream()
-                        .map(IndexWithSize::getIndexName)
-                        .collect(Collectors.toList()),
-                containsInAnyOrder("i3", "i4"));
+        assertThat(index.getIndexNames(), contains("i3", "i4"));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -87,5 +97,40 @@ class DuplicatedIndexesTest {
         assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of("t", ""));
         assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of("t", "i"));
         assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of("t", "idx=i1, size=1"));
+    }
+
+    @Test
+    void testEqualsAndHashCode() {
+        final DuplicatedIndexes first = DuplicatedIndexes.of(Arrays.asList(
+                IndexWithSize.of("t1", "i1", 101L),
+                IndexWithSize.of("t1", "i2", 202L)));
+        final DuplicatedIndexes second = DuplicatedIndexes.of(Arrays.asList(
+                IndexWithSize.of("t1", "i3", 301L),
+                IndexWithSize.of("t1", "i4", 402L)));
+        final DuplicatedIndexes third = DuplicatedIndexes.of(Arrays.asList(
+                IndexWithSize.of("t2", "i5", 101L),
+                IndexWithSize.of("t2", "i6", 202L)));
+
+        assertNotEquals(first, null);
+        assertNotEquals(first, BigDecimal.ZERO);
+
+        // self
+        assertEquals(first, first);
+        assertEquals(first.hashCode(), first.hashCode());
+
+        // the same
+        assertEquals(first, DuplicatedIndexes.of(Arrays.asList(
+                IndexWithSize.of("t1", "i2", 505L), // different order
+                IndexWithSize.of("t1", "i1", 606L)))); // different size
+
+        // others
+        assertNotEquals(first, second);
+        assertNotEquals(first.hashCode(), second.hashCode());
+
+        assertNotEquals(first, third);
+        assertNotEquals(first.hashCode(), third.hashCode());
+
+        assertNotEquals(second, third);
+        assertNotEquals(second.hashCode(), third.hashCode());
     }
 }

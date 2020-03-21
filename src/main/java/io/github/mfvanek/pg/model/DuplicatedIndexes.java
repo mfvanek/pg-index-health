@@ -17,27 +17,38 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
  * A representation of duplicated indexes in a database.
- * <p>
- * A typical error is when you create a column with an UNIQUE CONSTRAINT and then manually create an unique index on it.
- * See documentation https://www.postgresql.org/docs/10/ddl-constraints.html#DDL-CONSTRAINTS-UNIQUE-CONSTRAINTS.
+ *
+ * @author Ivan Vakhrushev
+ * @see TableNameAware
  */
 public class DuplicatedIndexes implements TableNameAware {
 
+    private static final Comparator<IndexWithSize> INDEX_WITH_SIZE_COMPARATOR =
+            Comparator.comparing(IndexWithSize::getTableName)
+                    .thenComparing(IndexWithSize::getIndexName)
+                    .thenComparing(IndexWithSize::getIndexSizeInBytes);
+
     private final List<IndexWithSize> duplicatedIndexes;
     private final long totalSize;
+    private final List<String> indexesNames;
 
     private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
         this.duplicatedIndexes = new ArrayList<>(Validators.validateThatTableIsTheSame(duplicatedIndexes));
         this.totalSize = duplicatedIndexes.stream()
                 .mapToLong(IndexWithSize::getIndexSizeInBytes)
                 .sum();
+        this.indexesNames = duplicatedIndexes.stream()
+                .map(Index::getIndexName)
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     /**
@@ -49,19 +60,51 @@ public class DuplicatedIndexes implements TableNameAware {
         return duplicatedIndexes.get(0).getTableName();
     }
 
+    /**
+     * Gets raw list of duplicated indexes.
+     *
+     * @return list of duplicated indexes
+     */
     @Nonnull
     public List<IndexWithSize> getDuplicatedIndexes() {
         return Collections.unmodifiableList(duplicatedIndexes);
     }
 
+    /**
+     * Gets total size in bytes of all duplicated indexes.
+     *
+     * @return size in bytes
+     */
     public long getTotalSize() {
         return totalSize;
     }
 
-    public Set<String> getIndexNames() {
-        return duplicatedIndexes.stream()
-                .map(Index::getIndexName)
-                .collect(Collectors.toSet());
+    /**
+     * Gets names of all duplicated indexes.
+     *
+     * @return sorted list
+     */
+    public List<String> getIndexNames() {
+        return indexesNames;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        DuplicatedIndexes that = (DuplicatedIndexes) o;
+        return duplicatedIndexes.equals(that.duplicatedIndexes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(duplicatedIndexes);
     }
 
     @Override
@@ -74,7 +117,9 @@ public class DuplicatedIndexes implements TableNameAware {
     }
 
     public static DuplicatedIndexes of(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
-        return new DuplicatedIndexes(duplicatedIndexes);
+        return new DuplicatedIndexes(duplicatedIndexes.stream()
+                .sorted(INDEX_WITH_SIZE_COMPARATOR)
+                .collect(Collectors.toList()));
     }
 
     public static DuplicatedIndexes of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
@@ -83,6 +128,7 @@ public class DuplicatedIndexes implements TableNameAware {
                 Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
         final List<IndexWithSize> duplicatedIndexes = indexesWithNameAndSize.stream()
                 .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
+                .sorted(INDEX_WITH_SIZE_COMPARATOR)
                 .collect(Collectors.toList());
         return new DuplicatedIndexes(duplicatedIndexes);
     }

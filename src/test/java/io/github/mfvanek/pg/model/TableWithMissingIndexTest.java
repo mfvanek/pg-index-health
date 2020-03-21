@@ -72,7 +72,7 @@ class TableWithMissingIndexTest {
     }
 
     @Test
-    void comparison() {
+    void compareToTest() {
         final TableWithMissingIndex first = TableWithMissingIndex.of("t1", 1L, 0, 1);
         final TableWithMissingIndex theSame = TableWithMissingIndex.of("t1", 2L, 2, 3);
         final TableWithMissingIndex third = TableWithMissingIndex.of("t2", 3L, 4, 5);

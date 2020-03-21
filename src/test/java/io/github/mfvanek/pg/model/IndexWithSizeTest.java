@@ -14,6 +14,9 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,5 +78,29 @@ class IndexWithSizeTest {
 
         assertNotEquals(second, third);
         assertNotEquals(second.hashCode(), third.hashCode());
+    }
+
+    @SuppressWarnings({"ConstantConditions", "EqualsWithItself", "ResultOfMethodCallIgnored"})
+    @Test
+    void compareToTest() {
+        final IndexWithSize first = IndexWithSize.of("t1", "i1", 22L);
+        final IndexWithSize theSame = IndexWithSize.of("t1", "i1", 44L); // different size!
+        final IndexWithSize second = IndexWithSize.of("t1", "i2", 33L);
+        final IndexWithSize third = IndexWithSize.of("t3", "i3", 22L);
+
+        assertThrows(NullPointerException.class, () -> first.compareTo(null));
+
+        // self
+        assertEquals(0, first.compareTo(first));
+
+        // the same
+        assertEquals(0, first.compareTo(theSame));
+
+        // others
+        assertEquals(-1, first.compareTo(second));
+        assertEquals(1, second.compareTo(first));
+
+        assertThat(second.compareTo(third), lessThanOrEqualTo(-1));
+        assertThat(third.compareTo(second), greaterThanOrEqualTo(1));
     }
 }

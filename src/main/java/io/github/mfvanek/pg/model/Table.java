@@ -20,7 +20,7 @@ import java.util.Objects;
  *
  * @author Ivan Vakhrushev
  */
-public class Table implements TableNameAware, TableSizeAware {
+public class Table implements TableNameAware, TableSizeAware, Comparable<Table> {
 
     private final String tableName;
     private final long tableSizeInBytes;
@@ -76,6 +76,12 @@ public class Table implements TableNameAware, TableSizeAware {
     @Override
     public int hashCode() {
         return Objects.hash(tableName);
+    }
+
+    @Override
+    public int compareTo(@Nonnull Table other) {
+        Objects.requireNonNull(other, "other");
+        return tableName.compareTo(other.tableName);
     }
 
     /**

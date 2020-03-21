@@ -71,4 +71,28 @@ class TableTest {
         assertNotEquals(second, third);
         assertNotEquals(second.hashCode(), third.hashCode());
     }
+
+    @SuppressWarnings({"ConstantConditions", "EqualsWithItself", "ResultOfMethodCallIgnored"})
+    @Test
+    void compareToTest() {
+        final Table first = Table.of("t1", 22L);
+        final Table theSame = Table.of("t1", 0L); // different size!
+        final Table second = Table.of("t2", 30L);
+        final Table third = Table.of("t3", 22L);
+
+        assertThrows(NullPointerException.class, () -> first.compareTo(null));
+
+        // self
+        assertEquals(0, first.compareTo(first));
+
+        // the same
+        assertEquals(0, first.compareTo(theSame));
+
+        // others
+        assertEquals(-1, first.compareTo(second));
+        assertEquals(1, second.compareTo(first));
+
+        assertEquals(-1, second.compareTo(third));
+        assertEquals(1, third.compareTo(second));
+    }
 }
