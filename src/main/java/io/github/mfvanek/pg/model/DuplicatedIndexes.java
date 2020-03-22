@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A representation of duplicated indexes in a database.
@@ -41,13 +41,14 @@ public class DuplicatedIndexes implements TableNameAware {
     private final List<String> indexesNames;
 
     private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
-        this.duplicatedIndexes = new ArrayList<>(Validators.validateThatTableIsTheSame(duplicatedIndexes));
+        this.duplicatedIndexes = Validators.validateThatTableIsTheSame(duplicatedIndexes).stream()
+                .sorted(INDEX_WITH_SIZE_COMPARATOR)
+                .collect(Collectors.toList());
         this.totalSize = duplicatedIndexes.stream()
                 .mapToLong(IndexWithSize::getIndexSizeInBytes)
                 .sum();
-        this.indexesNames = duplicatedIndexes.stream()
+        this.indexesNames = this.duplicatedIndexes.stream()
                 .map(Index::getIndexName)
-                .sorted()
                 .collect(Collectors.toList());
     }
 
@@ -116,21 +117,33 @@ public class DuplicatedIndexes implements TableNameAware {
                 '}';
     }
 
+    @Nonnull
     public static DuplicatedIndexes of(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
-        return new DuplicatedIndexes(duplicatedIndexes.stream()
-                .sorted(INDEX_WITH_SIZE_COMPARATOR)
-                .collect(Collectors.toList()));
+        return new DuplicatedIndexes(duplicatedIndexes);
     }
 
+    @Nonnull
     public static DuplicatedIndexes of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
         Validators.tableNameNotBlank(tableName);
         final List<Map.Entry<String, Long>> indexesWithNameAndSize = parseAsIndexNameAndSize(
                 Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
         final List<IndexWithSize> duplicatedIndexes = indexesWithNameAndSize.stream()
                 .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
-                .sorted(INDEX_WITH_SIZE_COMPARATOR)
                 .collect(Collectors.toList());
         return new DuplicatedIndexes(duplicatedIndexes);
+    }
+
+    @Nonnull
+    public static DuplicatedIndexes of(@Nonnull final IndexWithSize firstIndex,
+                                       @Nonnull final IndexWithSize secondIndex,
+                                       @Nonnull final IndexWithSize... otherIndexes) {
+        final Stream<IndexWithSize> basePart = Stream.of(Objects.requireNonNull(firstIndex, "firstIndex"),
+                Objects.requireNonNull(secondIndex, "secondIndex"));
+        if (Stream.of(otherIndexes).anyMatch(Objects::isNull)) {
+            throw new NullPointerException("otherIndexes");
+        }
+        return new DuplicatedIndexes(Stream.concat(basePart, Stream.of(otherIndexes))
+                .collect(Collectors.toList()));
     }
 
     private static List<Map.Entry<String, Long>> parseAsIndexNameAndSize(@Nonnull final String duplicatedAsString) {

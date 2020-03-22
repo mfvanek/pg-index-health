@@ -119,9 +119,9 @@ class DuplicatedIndexesTest {
         assertEquals(first.hashCode(), first.hashCode());
 
         // the same
-        assertEquals(first, DuplicatedIndexes.of(Arrays.asList(
+        assertEquals(first, DuplicatedIndexes.of(
                 IndexWithSize.of("t1", "i2", 505L), // different order
-                IndexWithSize.of("t1", "i1", 606L)))); // different size
+                IndexWithSize.of("t1", "i1", 606L))); // different size
 
         // others
         assertNotEquals(first, second);
@@ -132,5 +132,32 @@ class DuplicatedIndexesTest {
 
         assertNotEquals(second, third);
         assertNotEquals(second.hashCode(), third.hashCode());
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void newFactoryConstructor() {
+        assertThrows(NullPointerException.class, () ->
+                DuplicatedIndexes.of(null, null));
+        assertThrows(NullPointerException.class, () ->
+                DuplicatedIndexes.of(IndexWithSize.of("t", "i1", 1L), null));
+        assertThrows(NullPointerException.class, () ->
+                DuplicatedIndexes.of(
+                        IndexWithSize.of("t", "i1", 1L),
+                        IndexWithSize.of("t", "i2", 2L),
+                        null,
+                        IndexWithSize.of("t", "i4", 4L)));
+        final DuplicatedIndexes indexes = DuplicatedIndexes.of(
+                IndexWithSize.of("t", "i3", 3L),
+                IndexWithSize.of("t", "i1", 1L),
+                IndexWithSize.of("t", "i2", 2L),
+                IndexWithSize.of("t", "i4", 4L));
+        assertNotNull(indexes);
+        assertThat(indexes.getDuplicatedIndexes(), contains(
+                IndexWithSize.of("t", "i1", 1L),
+                IndexWithSize.of("t", "i2", 2L),
+                IndexWithSize.of("t", "i3", 3L),
+                IndexWithSize.of("t", "i4", 4L)
+        ));
     }
 }
