@@ -11,16 +11,16 @@
 package io.github.mfvanek.pg.model;
 
 import io.github.mfvanek.pg.utils.Validators;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 
 /**
- * Normally, indexes should be used primarily when accessing a table.
- * If there are few or no indexes in the table, then seqScans will be larger than indexScans.
+ * Representation of a table in a database with additional information on reads amount via index or sequential scans.
  */
-public class TableWithMissingIndex extends Table implements Comparable<TableWithMissingIndex> {
+public class TableWithMissingIndex extends Table {
 
+    // Normally, indexes should be used primarily when accessing a table.
+    // If there are few or no indexes in the table, then seqScans will be larger than indexScans.
     private final long seqScans;
     private final long indexScans;
 
@@ -66,11 +66,6 @@ public class TableWithMissingIndex extends Table implements Comparable<TableWith
     @Override
     public int hashCode() {
         return super.hashCode();
-    }
-
-    @Override
-    public int compareTo(TableWithMissingIndex other) {
-        return StringUtils.compare(this.getTableName(), other.getTableName());
     }
 
     public static TableWithMissingIndex of(@Nonnull final String tableName,

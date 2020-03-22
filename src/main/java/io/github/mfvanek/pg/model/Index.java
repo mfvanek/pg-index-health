@@ -22,7 +22,7 @@ import java.util.Objects;
  * @see TableNameAware
  * @see IndexNameAware
  */
-public class Index implements TableNameAware, IndexNameAware {
+public class Index implements TableNameAware, IndexNameAware, Comparable<Index> {
 
     private final String tableName;
     private final String indexName;
@@ -72,7 +72,7 @@ public class Index implements TableNameAware, IndexNameAware {
             return false;
         }
 
-        Index that = (Index) o;
+        final Index that = (Index) o;
         return tableName.equals(that.tableName) &&
                 indexName.equals(that.indexName);
     }
@@ -80,6 +80,15 @@ public class Index implements TableNameAware, IndexNameAware {
     @Override
     public int hashCode() {
         return Objects.hash(tableName, indexName);
+    }
+
+    @Override
+    public int compareTo(@Nonnull Index other) {
+        Objects.requireNonNull(other, "other");
+        if (!tableName.equals(other.tableName)) {
+            return tableName.compareTo(other.tableName);
+        }
+        return indexName.compareTo(other.indexName);
     }
 
     /**

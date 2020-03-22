@@ -73,4 +73,27 @@ class IndexTest {
         assertNotEquals(second, third);
         assertNotEquals(second.hashCode(), third.hashCode());
     }
+
+    @SuppressWarnings({"ConstantConditions", "EqualsWithItself", "ResultOfMethodCallIgnored"})
+    @Test
+    void compareToTest() {
+        final Index first = Index.of("t1", "i1");
+        final Index second = Index.of("t1", "i2");
+        final Index third = Index.of("t2", "i2");
+
+        assertThrows(NullPointerException.class, () -> first.compareTo(null));
+
+        // self
+        assertEquals(0, first.compareTo(first));
+
+        // the same
+        assertEquals(0, first.compareTo(Index.of("t1", "i1")));
+
+        // others
+        assertEquals(-1, first.compareTo(second));
+        assertEquals(1, second.compareTo(first));
+
+        assertEquals(-1, second.compareTo(third));
+        assertEquals(1, third.compareTo(second));
+    }
 }
