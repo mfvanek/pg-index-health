@@ -60,7 +60,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void getInvalidIndexesOnEmptyDataBase() {
+    void getInvalidIndexesOnEmptyDatabase() {
         final List<Index> invalidIndexes = indexMaintenance.getInvalidIndexes();
         assertNotNull(invalidIndexes);
         assertThat(invalidIndexes, empty());
@@ -99,7 +99,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void getDuplicatedIndexesOnEmptyDataBase() {
+    void getDuplicatedIndexesOnEmptyDatabase() {
         final List<DuplicatedIndexes> duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
         assertNotNull(duplicatedIndexes);
         assertThat(duplicatedIndexes, empty());
@@ -168,7 +168,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void getIntersectedIndexesOnEmptyDataBase() {
+    void getIntersectedIndexesOnEmptyDatabase() {
         final List<DuplicatedIndexes> intersectedIndexes = indexMaintenance.getIntersectedIndexes();
         assertNotNull(intersectedIndexes);
         assertThat(intersectedIndexes, empty());
@@ -262,7 +262,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void getPotentiallyUnusedIndexesOnEmptyDataBase() {
+    void getPotentiallyUnusedIndexesOnEmptyDatabase() {
         final List<UnusedIndex> unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
         assertNotNull(unusedIndexes);
         assertThat(unusedIndexes, empty());
@@ -311,7 +311,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void getForeignKeysNotCoveredWithIndexOnEmptyDataBase() {
+    void getForeignKeysNotCoveredWithIndexOnEmptyDatabase() {
         final List<ForeignKey> foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
         assertNotNull(foreignKeys);
         assertThat(foreignKeys, empty());
@@ -380,7 +380,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void getTablesWithMissingIndexesOnEmptyDataBase() {
+    void getTablesWithMissingIndexesOnEmptyDatabase() {
         final List<TableWithMissingIndex> tables = indexMaintenance.getTablesWithMissingIndexes();
         assertNotNull(tables);
         assertThat(tables, empty());
@@ -420,7 +420,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void getTablesWithoutPrimaryKeyOnEmptyDataBase() {
+    void getTablesWithoutPrimaryKeyOnEmptyDatabase() {
         final List<Table> tables = indexMaintenance.getTablesWithoutPrimaryKey();
         assertNotNull(tables);
         assertThat(tables, empty());
@@ -469,7 +469,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void getIndexesWithNullValuesOnEmptyDataBase() {
+    void getIndexesWithNullValuesOnEmptyDatabase() {
         final List<IndexWithNulls> indexes = indexMaintenance.getIndexesWithNullValues();
         assertNotNull(indexes);
         assertThat(indexes, empty());
@@ -507,7 +507,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void getIndexesWithBloatOnEmptyDataBase() {
+    void getIndexesWithBloatOnEmptyDatabase() {
         final List<IndexWithBloat> indexes = indexMaintenance.getIndexesWithBloat();
         assertNotNull(indexes);
         assertThat(indexes, empty());
@@ -553,7 +553,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void getTablesWithBloatOnEmptyDataBase() {
+    void getTablesWithBloatOnEmptyDatabase() {
         final List<TableWithBloat> tables = indexMaintenance.getTablesWithBloat();
         assertNotNull(tables);
         assertThat(tables, empty());
