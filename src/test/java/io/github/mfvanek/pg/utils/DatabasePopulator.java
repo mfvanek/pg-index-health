@@ -159,10 +159,16 @@ public final class DatabasePopulator implements AutoCloseable {
         executeOnDatabase(dataSource, statement -> {
             statement.execute(String.format("create index concurrently if not exists i_accounts_account_number " +
                     "on %s.accounts (account_number)", schemaName));
+            statement.execute(String.format("create index concurrently if not exists i_accounts_account_number_not_deleted " +
+                    "on %s.accounts (account_number) where not deleted", schemaName));
+            statement.execute(String.format("create index concurrently if not exists i_accounts_number_balance_not_deleted " +
+                    "on %s.accounts (account_number, account_balance) where not deleted", schemaName));
             statement.execute(String.format("create index concurrently if not exists i_clients_last_first " +
                     "on %s.clients (last_name, first_name)", schemaName));
             statement.execute(String.format("create index concurrently if not exists i_clients_last_name " +
                     "on %s.clients (last_name)", schemaName));
+            statement.execute(String.format("create index concurrently if not exists i_accounts_id_account_number_not_deleted " +
+                    "on %s.accounts (id, account_number) where not deleted", schemaName));
         });
     }
 
@@ -199,9 +205,9 @@ public final class DatabasePopulator implements AutoCloseable {
         executeInTransaction(dataSource, statement -> {
             statement.execute(String.format("create sequence if not exists %s.clients_seq", schemaName));
             statement.execute(String.format("create table if not exists %s.clients (" +
-                    "id bigint not null primary key default nextval('%s.clients_seq'), " +
-                    "last_name varchar(255) not null, " +
-                    "first_name varchar(255) not null, " +
+                    "id bigint not null primary key default nextval('%s.clients_seq')," +
+                    "last_name varchar(255) not null," +
+                    "first_name varchar(255) not null," +
                     "middle_name varchar(255))", schemaName, schemaName));
         });
     }
@@ -210,10 +216,11 @@ public final class DatabasePopulator implements AutoCloseable {
         executeInTransaction(dataSource, statement -> {
             statement.execute(String.format("create sequence if not exists %s.accounts_seq", schemaName));
             statement.execute(String.format("create table if not exists %s.accounts (" +
-                    "id bigint not null primary key default nextval('%s.accounts_seq'), " +
+                    "id bigint not null primary key default nextval('%s.accounts_seq')," +
                     "client_id bigint not null," +
-                    "account_number varchar(50) not null unique, " +
-                    "account_balance numeric(22,2) not null default 0)", schemaName, schemaName));
+                    "account_number varchar(50) not null unique," +
+                    "account_balance numeric(22,2) not null default 0," +
+                    "deleted boolean not null default false)", schemaName, schemaName));
         });
     }
 

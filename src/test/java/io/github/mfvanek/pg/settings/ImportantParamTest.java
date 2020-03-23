@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -34,7 +36,7 @@ class ImportantParamTest {
         for (ImportantParam param : ImportantParam.values()) {
             names.add(param.getName());
         }
-        assertEquals(ImportantParam.values().length, names.size());
+        assertThat(names, hasSize(ImportantParam.values().length));
     }
 
     @Test
