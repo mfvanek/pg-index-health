@@ -53,26 +53,35 @@ class ForeignKeyTest {
 
     @Test
     void testEquals() {
+        // equals part
         ForeignKey key11 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
         ForeignKey key12 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
         ForeignKey key13 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("limit", "order_id"));
         ForeignKey key14 = ForeignKey.of("t", "c_t_order_id", Sets.newHashSet("limit", "order_id"));
-
-        ForeignKey key21 = ForeignKey.of("table", "c_t_order_id", Arrays.asList("order_id", "limit"));
-        ForeignKey key22 = ForeignKey.of("t", "other_id", Arrays.asList("order_id", "limit"));
-        ForeignKey key23 = ForeignKey.of("t", "c_t_order_id", Collections.singletonList("order_id"));
-        ForeignKey key24 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit_2"));
-        ForeignKey key25 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit", "offset"));
 
         assertEquals(key11, key11);
         assertEquals(key11, key12);
         assertEquals(key11, key13);
         assertEquals(key11, key14);
 
+        assertEquals(Collections.singletonList(key11), Collections.singletonList(key12));
+        assertEquals(Arrays.asList(key11, key12), Arrays.asList(key13, key14));
+
+        // not equals part
+        ForeignKey key21 = ForeignKey.of("table", "c_t_order_id", Arrays.asList("order_id", "limit"));
+        ForeignKey key22 = ForeignKey.of("t", "other_id", Arrays.asList("order_id", "limit"));
+        ForeignKey key23 = ForeignKey.of("t", "c_t_order_id", Collections.singletonList("order_id"));
+        ForeignKey key24 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit_2"));
+        ForeignKey key25 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit", "offset"));
+
         assertNotEquals(key11, key21);
         assertNotEquals(key11, key22);
         assertNotEquals(key11, key23);
         assertNotEquals(key11, key24);
         assertNotEquals(key11, key25);
+
+        assertNotEquals(Collections.singletonList(key11), Collections.singletonList(key21));
+        assertNotEquals(Arrays.asList(key11, key13, key14), Arrays.asList(key21, key23, key25));
+        assertNotEquals(Arrays.asList(key11, key13, key14), Arrays.asList(key21, key23));
     }
 }
