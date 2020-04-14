@@ -12,11 +12,13 @@ package io.github.mfvanek.pg.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ForeignKeyTest {
@@ -45,5 +47,16 @@ class ForeignKeyTest {
         assertThrows(NullPointerException.class, () -> ForeignKey.of("t", null, null));
         assertThrows(IllegalArgumentException.class, () -> ForeignKey.of("t", "c_t_order_id", null));
         assertThrows(IllegalArgumentException.class, () -> ForeignKey.of("t", "c_t_order_id", Collections.emptyList()));
+    }
+
+    @Test
+    void testEquals() {
+        ForeignKey key1 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
+        ForeignKey key2 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
+        ForeignKey key3 = ForeignKey.of("t", "c_t_other_id", Arrays.asList("order_id", "limit"));
+
+        assertEquals(key1, key2);
+        assertNotEquals(key1, key3);
+        assertNotEquals(key2, key3);
     }
 }

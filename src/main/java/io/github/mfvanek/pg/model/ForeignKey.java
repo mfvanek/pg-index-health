@@ -14,8 +14,10 @@ import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class ForeignKey implements TableNameAware {
 
@@ -48,6 +50,25 @@ public class ForeignKey implements TableNameAware {
     @Nonnull
     public List<String> getColumnsInConstraint() {
         return Collections.unmodifiableList(columnsInConstraint);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ForeignKey that = (ForeignKey) o;
+        return tableName.equals(that.tableName) &&
+                constraintName.equals(that.constraintName) &&
+                columnsInConstraint.equals(that.columnsInConstraint);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableName, constraintName, columnsInConstraint);
     }
 
     @Override
