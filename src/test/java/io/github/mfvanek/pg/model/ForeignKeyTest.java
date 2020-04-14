@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -50,12 +51,15 @@ class ForeignKeyTest {
     }
 
     @Test
-    void testEquals() {
+    void equalsAndHashCode() {
         // equals part
         ForeignKey key11 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
         ForeignKey key12 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
         ForeignKey key13 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("limit", "order_id"));
         ForeignKey key14 = ForeignKey.of("t", "c_t_order_id", Collections.singletonList("no_matter_what"));
+
+        assertNotEquals(key11, null);
+        assertNotEquals(key11, BigDecimal.ZERO);
 
         assertEquals(key11, key11);
         assertEquals(key11.hashCode(), key11.hashCode());
@@ -66,18 +70,13 @@ class ForeignKeyTest {
         assertEquals(key11, key14);
         assertEquals(key11.hashCode(), key14.hashCode());
 
-        assertEquals(Collections.singletonList(key11), Collections.singletonList(key12));
-        assertEquals(Arrays.asList(key11, key12), Arrays.asList(key13, key14));
-
         // not equals part
         ForeignKey key21 = ForeignKey.of("table", "c_t_order_id", Arrays.asList("order_id", "limit"));
         ForeignKey key22 = ForeignKey.of("t", "other_id", Arrays.asList("order_id", "limit"));
 
         assertNotEquals(key11, key21);
+        assertNotEquals(key11.hashCode(), key21.hashCode());
         assertNotEquals(key11, key22);
-
-        assertNotEquals(Collections.singletonList(key11), Collections.singletonList(key21));
-        assertNotEquals(Arrays.asList(key11, key13), Arrays.asList(key21, key22));
-        assertNotEquals(Arrays.asList(key11, key13), Collections.singletonList(key21));
+        assertNotEquals(key11.hashCode(), key22.hashCode());
     }
 }
