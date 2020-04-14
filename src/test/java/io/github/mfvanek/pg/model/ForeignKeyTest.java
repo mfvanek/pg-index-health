@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model;
 
+import org.apache.commons.compress.utils.Sets;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -47,16 +48,31 @@ class ForeignKeyTest {
         assertThrows(NullPointerException.class, () -> ForeignKey.of("t", null, null));
         assertThrows(IllegalArgumentException.class, () -> ForeignKey.of("t", "c_t_order_id", null));
         assertThrows(IllegalArgumentException.class, () -> ForeignKey.of("t", "c_t_order_id", Collections.emptyList()));
+        assertThrows(IllegalArgumentException.class, () -> ForeignKey.of("t", "c_t_order_id", Collections.emptySet()));
     }
 
     @Test
     void testEquals() {
-        ForeignKey key1 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
-        ForeignKey key2 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
-        ForeignKey key3 = ForeignKey.of("t", "c_t_other_id", Arrays.asList("order_id", "limit"));
+        ForeignKey key11 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
+        ForeignKey key12 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
+        ForeignKey key13 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("limit", "order_id"));
+        ForeignKey key14 = ForeignKey.of("t", "c_t_order_id", Sets.newHashSet("limit", "order_id"));
 
-        assertEquals(key1, key2);
-        assertNotEquals(key1, key3);
-        assertNotEquals(key2, key3);
+        ForeignKey key21 = ForeignKey.of("table", "c_t_order_id", Arrays.asList("order_id", "limit"));
+        ForeignKey key22 = ForeignKey.of("t", "other_id", Arrays.asList("order_id", "limit"));
+        ForeignKey key23 = ForeignKey.of("t", "c_t_order_id", Collections.singletonList("order_id"));
+        ForeignKey key24 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit_2"));
+        ForeignKey key25 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit", "offset"));
+
+        assertEquals(key11, key11);
+        assertEquals(key11, key12);
+        assertEquals(key11, key13);
+        assertEquals(key11, key14);
+
+        assertNotEquals(key11, key21);
+        assertNotEquals(key11, key22);
+        assertNotEquals(key11, key23);
+        assertNotEquals(key11, key24);
+        assertNotEquals(key11, key25);
     }
 }

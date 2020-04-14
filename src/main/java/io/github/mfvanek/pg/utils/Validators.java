@@ -15,6 +15,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -102,7 +103,7 @@ public final class Validators {
     }
 
     @Nonnull
-    public static List<String> validateThatNotEmpty(@Nonnull final List<String> columnsInConstraint) {
+    public static Collection<String> validateThatNotEmpty(@Nonnull final Collection<String> columnsInConstraint) {
         if (CollectionUtils.isEmpty(columnsInConstraint)) {
             throw new IllegalArgumentException("columnsInConstraint cannot be empty");
         }

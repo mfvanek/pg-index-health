@@ -13,24 +13,24 @@ package io.github.mfvanek.pg.model;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class ForeignKey implements TableNameAware {
 
     private final String tableName;
     private final String constraintName;
-    private final List<String> columnsInConstraint;
+    private final Set<String> columnsInConstraint;
 
     private ForeignKey(@Nonnull String tableName,
                        @Nonnull String constraintName,
-                       @Nonnull List<String> columnsInConstraint) {
+                       @Nonnull Collection<String> columnsInConstraint) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
-        this.columnsInConstraint = new ArrayList<>(Validators.validateThatNotEmpty(columnsInConstraint));
+        this.columnsInConstraint = new HashSet<>(Validators.validateThatNotEmpty(columnsInConstraint));
     }
 
     /**
@@ -48,8 +48,8 @@ public class ForeignKey implements TableNameAware {
     }
 
     @Nonnull
-    public List<String> getColumnsInConstraint() {
-        return Collections.unmodifiableList(columnsInConstraint);
+    public Set<String> getColumnsInConstraint() {
+        return Collections.unmodifiableSet(columnsInConstraint);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ForeignKey implements TableNameAware {
 
     public static ForeignKey of(@Nonnull String tableName,
                                 @Nonnull String constraintName,
-                                @Nonnull List<String> columnsInConstraint) {
+                                @Nonnull Collection<String> columnsInConstraint) {
         return new ForeignKey(tableName, constraintName, columnsInConstraint);
     }
 }
