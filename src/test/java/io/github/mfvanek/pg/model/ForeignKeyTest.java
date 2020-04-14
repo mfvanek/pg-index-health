@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.model;
 
-import org.apache.commons.compress.utils.Sets;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -48,7 +47,6 @@ class ForeignKeyTest {
         assertThrows(NullPointerException.class, () -> ForeignKey.of("t", null, null));
         assertThrows(IllegalArgumentException.class, () -> ForeignKey.of("t", "c_t_order_id", null));
         assertThrows(IllegalArgumentException.class, () -> ForeignKey.of("t", "c_t_order_id", Collections.emptyList()));
-        assertThrows(IllegalArgumentException.class, () -> ForeignKey.of("t", "c_t_order_id", Collections.emptySet()));
     }
 
     @Test
@@ -57,12 +55,16 @@ class ForeignKeyTest {
         ForeignKey key11 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
         ForeignKey key12 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
         ForeignKey key13 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("limit", "order_id"));
-        ForeignKey key14 = ForeignKey.of("t", "c_t_order_id", Sets.newHashSet("limit", "order_id"));
+        ForeignKey key14 = ForeignKey.of("t", "c_t_order_id", Collections.singletonList("no_matter_what"));
 
         assertEquals(key11, key11);
+        assertEquals(key11.hashCode(), key11.hashCode());
         assertEquals(key11, key12);
+        assertEquals(key11.hashCode(), key12.hashCode());
         assertEquals(key11, key13);
+        assertEquals(key11.hashCode(), key13.hashCode());
         assertEquals(key11, key14);
+        assertEquals(key11.hashCode(), key14.hashCode());
 
         assertEquals(Collections.singletonList(key11), Collections.singletonList(key12));
         assertEquals(Arrays.asList(key11, key12), Arrays.asList(key13, key14));
@@ -70,18 +72,12 @@ class ForeignKeyTest {
         // not equals part
         ForeignKey key21 = ForeignKey.of("table", "c_t_order_id", Arrays.asList("order_id", "limit"));
         ForeignKey key22 = ForeignKey.of("t", "other_id", Arrays.asList("order_id", "limit"));
-        ForeignKey key23 = ForeignKey.of("t", "c_t_order_id", Collections.singletonList("order_id"));
-        ForeignKey key24 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit_2"));
-        ForeignKey key25 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit", "offset"));
 
         assertNotEquals(key11, key21);
         assertNotEquals(key11, key22);
-        assertNotEquals(key11, key23);
-        assertNotEquals(key11, key24);
-        assertNotEquals(key11, key25);
 
         assertNotEquals(Collections.singletonList(key11), Collections.singletonList(key21));
-        assertNotEquals(Arrays.asList(key11, key13, key14), Arrays.asList(key21, key23, key25));
-        assertNotEquals(Arrays.asList(key11, key13, key14), Arrays.asList(key21, key23));
+        assertNotEquals(Arrays.asList(key11, key13), Arrays.asList(key21, key22));
+        assertNotEquals(Arrays.asList(key11, key13), Collections.singletonList(key21));
     }
 }

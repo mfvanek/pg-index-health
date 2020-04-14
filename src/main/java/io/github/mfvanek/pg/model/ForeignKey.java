@@ -13,24 +13,23 @@ package io.github.mfvanek.pg.model;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class ForeignKey implements TableNameAware {
 
     private final String tableName;
     private final String constraintName;
-    private final Set<String> columnsInConstraint;
+    private final List<String> columnsInConstraint;
 
     private ForeignKey(@Nonnull String tableName,
                        @Nonnull String constraintName,
-                       @Nonnull Collection<String> columnsInConstraint) {
+                       @Nonnull List<String> columnsInConstraint) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
-        this.columnsInConstraint = new HashSet<>(Validators.validateThatNotEmpty(columnsInConstraint));
+        this.columnsInConstraint = new ArrayList<>(Validators.validateThatNotEmpty(columnsInConstraint));
     }
 
     /**
@@ -48,8 +47,8 @@ public class ForeignKey implements TableNameAware {
     }
 
     @Nonnull
-    public Set<String> getColumnsInConstraint() {
-        return Collections.unmodifiableSet(columnsInConstraint);
+    public List<String> getColumnsInConstraint() {
+        return Collections.unmodifiableList(columnsInConstraint);
     }
 
     @Override
@@ -62,13 +61,12 @@ public class ForeignKey implements TableNameAware {
         }
         ForeignKey that = (ForeignKey) o;
         return tableName.equals(that.tableName) &&
-                constraintName.equals(that.constraintName) &&
-                columnsInConstraint.equals(that.columnsInConstraint);
+                constraintName.equals(that.constraintName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tableName, constraintName, columnsInConstraint);
+        return Objects.hash(tableName, constraintName);
     }
 
     @Override
@@ -82,7 +80,7 @@ public class ForeignKey implements TableNameAware {
 
     public static ForeignKey of(@Nonnull String tableName,
                                 @Nonnull String constraintName,
-                                @Nonnull Collection<String> columnsInConstraint) {
+                                @Nonnull List<String> columnsInConstraint) {
         return new ForeignKey(tableName, constraintName, columnsInConstraint);
     }
 }
