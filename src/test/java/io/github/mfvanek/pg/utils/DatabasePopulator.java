@@ -363,16 +363,17 @@ public final class DatabasePopulator implements AutoCloseable {
 
     private void createCustomCollation() {
         executeOnDatabase(dataSource, statement -> {
-            if (isCollationExist(statement)) {
+            final String customCollation = "C.UTF-8";
+            if (isCollationExist(statement, customCollation)) {
                 return;
             }
-            createCustomCollation(statement);
+            createCustomCollation(statement, customCollation);
         });
     }
 
-    private boolean isCollationExist(@Nonnull final Statement statement) {
-        final String sqlQuery = "select exists(select 1 from pg_catalog.pg_collation as pgc where pgc.collname = 'C.UTF-8')";
-        try (ResultSet rs = statement.executeQuery(sqlQuery)) {
+    private boolean isCollationExist(@Nonnull final Statement statement, @Nonnull final String collation) {
+        final String sqlQuery = "select exists(select 1 from pg_catalog.pg_collation as pgc where pgc.collname = '%s'::text)";
+        try (ResultSet rs = statement.executeQuery(String.format(sqlQuery, collation))) {
             rs.next();
             return rs.getBoolean(1);
         } catch (SQLException e) {
@@ -380,11 +381,17 @@ public final class DatabasePopulator implements AutoCloseable {
         }
     }
 
-    private void createCustomCollation(@Nonnull final Statement statement) throws SQLException {
-        final String query = "create collation \"C.UTF-8\" from \"%s\";";
+    private void createCustomCollation(@Nonnull final Statement statement,
+                                       @Nonnull final String customCollation) throws SQLException {
+        final String query = "create collation \"%s\" from \"%s\";";
         final String systemLocale;
         if (SystemUtils.IS_OS_WINDOWS) {
-            systemLocale = "en-US-x-icu";
+            final String icuCollation = "en-US-x-icu";
+            if (isCollationExist(statement, icuCollation)) {
+                systemLocale = icuCollation; // for Pg 10+
+            } else {
+                systemLocale = "C"; // for Pg 9.6
+            }
         } else {
             if (SystemUtils.IS_OS_LINUX) {
                 systemLocale = "en_US.utf8";
@@ -394,7 +401,7 @@ public final class DatabasePopulator implements AutoCloseable {
                 throw new RuntimeException("Unsupported operation system");
             }
         }
-        statement.execute(String.format(query, systemLocale));
+        statement.execute(String.format(query, customCollation, systemLocale));
     }
 
     private void createDuplicatedCustomCollationIndex() {
