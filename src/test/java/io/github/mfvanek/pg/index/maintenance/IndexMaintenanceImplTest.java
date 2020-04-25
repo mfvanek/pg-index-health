@@ -167,6 +167,18 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
                 });
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getDuplicatedIndexesWithDifferentCollationShouldReturnNothing(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withCustomCollation().withDuplicatedCustomCollationIndex(),
+                ctx -> {
+                    final List<DuplicatedIndexes> duplicatedIndexes = indexMaintenance.getDuplicatedIndexes(ctx);
+                    assertNotNull(duplicatedIndexes);
+                    assertThat(duplicatedIndexes, empty());
+                });
+    }
+
     @Test
     void getIntersectedIndexesOnEmptyDatabase() {
         final List<DuplicatedIndexes> intersectedIndexes = indexMaintenance.getIntersectedIndexes();

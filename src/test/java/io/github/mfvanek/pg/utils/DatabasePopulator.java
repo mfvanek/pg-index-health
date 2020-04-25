@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -121,6 +122,18 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withMaterializedView() {
         actions.putIfAbsent(210, this::createMaterializedView);
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withCustomCollation() {
+        actions.putIfAbsent(4, this::createCustomCollation);
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withDuplicatedCustomCollationIndex() {
+        this.actions.putIfAbsent(220, this::createDuplicatedCustomCollationIndex);
         return this;
     }
 
@@ -346,5 +359,48 @@ public final class DatabasePopulator implements AutoCloseable {
         executeOnDatabase(dataSource, statement ->
                 statement.execute(String.format("create materialized view if not exists %s.accounts_mat_view as (" +
                         "select client_id, account_number from %s.accounts);", schemaName, schemaName)));
+    }
+
+    private void createCustomCollation() {
+        executeOnDatabase(dataSource, statement -> {
+            if (isCollationExist(statement)) {
+                return;
+            }
+            createCustomCollation(statement);
+        });
+    }
+
+    private boolean isCollationExist(@Nonnull final Statement statement) {
+        final String sqlQuery = "select exists(select 1 from pg_catalog.pg_collation as pgc where pgc.collname = 'C.UTF-8')";
+        try (ResultSet rs = statement.executeQuery(sqlQuery)) {
+            rs.next();
+            return rs.getBoolean(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private void createCustomCollation(@Nonnull final Statement statement) throws SQLException {
+        final String query = "create collation \"C.UTF-8\" from \"%s\";";
+        final String systemLocale;
+        if (SystemUtils.IS_OS_WINDOWS) {
+            systemLocale = "en-US-x-icu";
+        } else {
+            if (SystemUtils.IS_OS_LINUX) {
+                systemLocale = "en_US.utf8";
+            } else if (SystemUtils.IS_OS_MAC) {
+                systemLocale = "en_US.UTF-8";
+            } else {
+                throw new RuntimeException("Unsupported operation system");
+            }
+        }
+        statement.execute(String.format(query, systemLocale));
+    }
+
+    private void createDuplicatedCustomCollationIndex() {
+        executeOnDatabase(dataSource, statement -> {
+            statement.execute(String.format("create index concurrently if not exists i_accounts_account_number " +
+                    "on %s.accounts (account_number collate \"C.UTF-8\")", schemaName));
+        });
     }
 }
