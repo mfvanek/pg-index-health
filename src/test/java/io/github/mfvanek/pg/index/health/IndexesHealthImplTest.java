@@ -169,6 +169,18 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
                 });
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void getDuplicatedIndexesWithDifferentCollationShouldReturnNothing(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withCustomCollation().withDuplicatedCustomCollationIndex(),
+                ctx -> {
+                    final List<DuplicatedIndexes> duplicatedIndexes = indexesHealth.getDuplicatedIndexes(ctx);
+                    assertNotNull(duplicatedIndexes);
+                    assertThat(duplicatedIndexes, empty());
+                });
+    }
+
     @Test
     void getIntersectedIndexesOnEmptyDatabase() {
         final List<DuplicatedIndexes> intersectedIndexes = indexesHealth.getIntersectedIndexes();
