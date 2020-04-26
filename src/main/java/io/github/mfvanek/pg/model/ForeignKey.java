@@ -18,6 +18,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A representation of foreign key in a database.
+ *
+ * @author Ivan Vakhrushev
+ * @see TableNameAware
+ */
 public class ForeignKey implements TableNameAware {
 
     private final String tableName;
@@ -41,11 +47,21 @@ public class ForeignKey implements TableNameAware {
         return tableName;
     }
 
+    /**
+     * Gets the name of foreign key constraint.
+     *
+     * @return the name of foreign key
+     */
     @Nonnull
     public String getConstraintName() {
         return constraintName;
     }
 
+    /**
+     * Gets column names of foreign key constraint.
+     *
+     * @return column names of foreign key constraint
+     */
     @Nonnull
     public List<String> getColumnsInConstraint() {
         return Collections.unmodifiableList(columnsInConstraint);
@@ -78,9 +94,18 @@ public class ForeignKey implements TableNameAware {
                 '}';
     }
 
+    @Nonnull
     public static ForeignKey of(@Nonnull String tableName,
                                 @Nonnull String constraintName,
                                 @Nonnull List<String> columnsInConstraint) {
         return new ForeignKey(tableName, constraintName, columnsInConstraint);
+    }
+
+    @Nonnull
+    public static ForeignKey ofColumn(@Nonnull String tableName,
+                                      @Nonnull String constraintName,
+                                      @Nonnull String columnName) {
+        return new ForeignKey(tableName, constraintName,
+                Collections.singletonList(Validators.notBlank(columnName, "columnName")));
     }
 }

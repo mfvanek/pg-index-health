@@ -84,6 +84,21 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns duplicated (completely identical) indexes (candidates for deletion)
+     * on the current host in the specified schemas.
+     *
+     * @param pgContexts a set of contexts specifying schemas
+     * @return list of duplicated indexes
+     */
+    @Nonnull
+    default List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getDuplicatedIndexes)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns duplicated (completely identical) indexes (candidates for deletion)
      * on the current host in the public schema.
      *
      * @return list of duplicated indexes
@@ -105,6 +120,21 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns intersected indexes (partially identical, candidates for deletion)
+     * on the current host in the specified schemas.
+     *
+     * @param pgContexts a set of contexts specifying schemas
+     * @return list of intersected indexes
+     */
+    @Nonnull
+    default List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getIntersectedIndexes)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns intersected indexes (partially identical, candidates for deletion)
      * on the current host in the public schema.
      *
      * @return list of intersected indexes
@@ -122,6 +152,20 @@ public interface IndexMaintenance extends HostAware {
      */
     @Nonnull
     List<UnusedIndex> getPotentiallyUnusedIndexes(@Nonnull PgContext pgContext);
+
+    /**
+     * Returns potentially unused indexes (candidates for deletion) on the current host in the specified schemas.
+     *
+     * @param pgContexts a set of contexts specifying schemas
+     * @return list of potentially unused indexes
+     */
+    @Nonnull
+    default List<UnusedIndex> getPotentiallyUnusedIndexes(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getPotentiallyUnusedIndexes)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
 
     /**
      * Returns potentially unused indexes (candidates for deletion) on the current host in the public schema.
@@ -145,6 +189,21 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns foreign keys without associated indexes (potential performance degradation)
+     * on the current host in the specified schemas.
+     *
+     * @param pgContexts a set of contexts specifying schemas
+     * @return list of foreign keys without associated indexes
+     */
+    @Nonnull
+    default List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getForeignKeysNotCoveredWithIndex)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns foreign keys without associated indexes (potential performance degradation)
      * on the current host in the public schema.
      *
      * @return list of foreign keys without associated indexes
@@ -163,6 +222,21 @@ public interface IndexMaintenance extends HostAware {
      */
     @Nonnull
     List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull PgContext pgContext);
+
+    /**
+     * Returns tables with potentially missing indexes (potential performance degradation)
+     * on the current host in the specified schemas.
+     *
+     * @param pgContexts a set of contexts specifying schemas
+     * @return list of tables with potentially missing indexes
+     */
+    @Nonnull
+    default List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getTablesWithMissingIndexes)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
 
     /**
      * Returns tables with potentially missing indexes (potential performance degradation)

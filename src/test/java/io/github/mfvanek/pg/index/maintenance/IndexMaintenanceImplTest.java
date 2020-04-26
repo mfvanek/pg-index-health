@@ -223,7 +223,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
                     assertThat(intersectedIndexes, hasSize(1));
                     final DuplicatedIndexes entry = intersectedIndexes.get(0);
                     assertThat(entry.getDuplicatedIndexes(), hasSize(2));
-                    assertEquals("clients", entry.getTableName());
+                    assertEquals(ctx.enrichWithSchema("clients"), entry.getTableName());
                     assertThat(entry.getIndexNames(), contains(
                             ctx.enrichWithSchema("i_clients_last_first"),
                             ctx.enrichWithSchema("i_clients_last_name")));
@@ -312,6 +312,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
                     assertThat(foreignKeys, hasSize(1));
                     final ForeignKey foreignKey = foreignKeys.get(0);
                     assertEquals(ctx.enrichWithSchema("accounts"), foreignKey.getTableName());
+                    assertEquals("c_accounts_fk_client_id", foreignKey.getConstraintName());
                     assertThat(foreignKey.getColumnsInConstraint(), contains("client_id"));
                 });
     }
@@ -327,6 +328,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
                     assertThat(foreignKeys, hasSize(1));
                     final ForeignKey foreignKey = foreignKeys.get(0);
                     assertEquals(ctx.enrichWithSchema("accounts"), foreignKey.getTableName());
+                    assertEquals("c_accounts_fk_client_id", foreignKey.getConstraintName());
                     assertThat(foreignKey.getColumnsInConstraint(), contains("client_id"));
                 });
     }

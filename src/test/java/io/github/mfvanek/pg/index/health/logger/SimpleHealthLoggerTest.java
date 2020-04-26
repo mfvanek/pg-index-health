@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static io.github.mfvanek.pg.utils.HealthLoggerAssertions.assertContainsKey;
@@ -157,8 +156,8 @@ class SimpleHealthLoggerTest {
     void logForeignKeysNotCoveredWithIndex() {
         Mockito.when(indexesHealthMock.getForeignKeysNotCoveredWithIndex(any(PgContext.class)))
                 .thenReturn(Arrays.asList(
-                        ForeignKey.of("t1", "c1", Collections.singletonList("f1")),
-                        ForeignKey.of("t1", "c2", Collections.singletonList("f2")),
+                        ForeignKey.ofColumn("t1", "c1", "f1"),
+                        ForeignKey.ofColumn("t1", "c2", "f2"),
                         ForeignKey.of("t2", "c3", Arrays.asList("f3", "f4"))
                 ));
         final IndexesHealthLogger logger = new SimpleHealthLogger(indexesHealthMock);

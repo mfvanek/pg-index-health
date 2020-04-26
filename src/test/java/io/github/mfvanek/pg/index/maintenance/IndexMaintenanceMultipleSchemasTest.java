@@ -10,8 +10,14 @@
 
 package io.github.mfvanek.pg.index.maintenance;
 
+import io.github.mfvanek.pg.model.DuplicatedIndexes;
+import io.github.mfvanek.pg.model.ForeignKey;
 import io.github.mfvanek.pg.model.Index;
+import io.github.mfvanek.pg.model.IndexWithSize;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.TableNameAware;
+import io.github.mfvanek.pg.model.TableWithMissingIndex;
+import io.github.mfvanek.pg.model.UnusedIndex;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -19,8 +25,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,24 +40,105 @@ class IndexMaintenanceMultipleSchemasTest {
             PgContext.of("demo"), PgContext.of("test"), PgContext.ofPublic());
 
     @Test
-    void getInvalidIndexesShouldWork() {
+    void getInvalidIndexes() {
         Mockito.when(indexMaintenance.getInvalidIndexes(any(PgContext.class)))
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Collections.singletonList(
                             Index.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i1")));
                 });
-        /*
-        Mockito.when(indexMaintenance.getDuplicatedIndexes(any()))
+        final List<Index> indexes = indexMaintenance.getInvalidIndexes(contexts);
+        assertNotNull(indexes);
+        assertThat(indexes, hasSize(3));
+        assertThat(indexes.stream()
+                .map(TableNameAware::getTableName)
+                .collect(Collectors.toSet()), containsInAnyOrder("t", "demo.t", "test.t"));
+    }
+
+    @Test
+    void getDuplicatedIndexes() {
+        Mockito.when(indexMaintenance.getDuplicatedIndexes(any(PgContext.class)))
                 .thenAnswer(invocation -> {
-                    final PgContext ctx = invocation.getArgument(1);
+                    final PgContext ctx = invocation.getArgument(0);
                     return Collections.singletonList(DuplicatedIndexes.of(
                             IndexWithSize.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i1"), 1L),
                             IndexWithSize.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i2"), 1L)));
                 });
-*/
-        final List<Index> indexes = indexMaintenance.getInvalidIndexes(contexts);
+        final List<DuplicatedIndexes> indexes = indexMaintenance.getDuplicatedIndexes(contexts);
         assertNotNull(indexes);
         assertThat(indexes, hasSize(3));
+        assertThat(indexes.stream()
+                .map(TableNameAware::getTableName)
+                .collect(Collectors.toSet()), containsInAnyOrder("t", "demo.t", "test.t"));
+    }
+
+    @Test
+    void getIntersectedIndexes() {
+        Mockito.when(indexMaintenance.getIntersectedIndexes(any(PgContext.class)))
+                .thenAnswer(invocation -> {
+                    final PgContext ctx = invocation.getArgument(0);
+                    return Arrays.asList(
+                            DuplicatedIndexes.of(
+                                    IndexWithSize.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i1"), 1L),
+                                    IndexWithSize.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i2"), 2L)),
+                            DuplicatedIndexes.of(
+                                    IndexWithSize.of(ctx.enrichWithSchema("t2"), ctx.enrichWithSchema("i3"), 3L),
+                                    IndexWithSize.of(ctx.enrichWithSchema("t2"), ctx.enrichWithSchema("i4"), 4L)));
+                });
+        final List<DuplicatedIndexes> indexes = indexMaintenance.getIntersectedIndexes(contexts);
+        assertNotNull(indexes);
+        assertThat(indexes, hasSize(6));
+        assertThat(indexes.stream()
+                .map(TableNameAware::getTableName)
+                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2"));
+    }
+
+    @Test
+    void getPotentiallyUnusedIndexes() {
+        Mockito.when(indexMaintenance.getPotentiallyUnusedIndexes(any(PgContext.class)))
+                .thenAnswer(invocation -> {
+                    final PgContext ctx = invocation.getArgument(0);
+                    return Arrays.asList(
+                            UnusedIndex.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i1"), 1L, 1L),
+                            UnusedIndex.of(ctx.enrichWithSchema("t2"), ctx.enrichWithSchema("i2"), 2L, 0L));
+                });
+        final List<UnusedIndex> indexes = indexMaintenance.getPotentiallyUnusedIndexes(contexts);
+        assertNotNull(indexes);
+        assertThat(indexes, hasSize(6));
+        assertThat(indexes.stream()
+                .map(TableNameAware::getTableName)
+                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2"));
+    }
+
+    @Test
+    void getForeignKeysNotCoveredWithIndex() {
+        Mockito.when(indexMaintenance.getForeignKeysNotCoveredWithIndex(any(PgContext.class)))
+                .thenAnswer(invocation -> {
+                    final PgContext ctx = invocation.getArgument(0);
+                    return Arrays.asList(
+                            ForeignKey.ofColumn(ctx.enrichWithSchema("t1"), "f1", "col1"),
+                            ForeignKey.ofColumn(ctx.enrichWithSchema("t1"), "f2", "col2"));
+                });
+        final List<ForeignKey> foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(contexts);
+        assertNotNull(foreignKeys);
+        assertThat(foreignKeys, hasSize(6));
+        assertThat(foreignKeys.stream()
+                .map(TableNameAware::getTableName)
+                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1"));
+    }
+
+    @Test
+    void getTablesWithMissingIndexes() {
+        Mockito.when(indexMaintenance.getTablesWithMissingIndexes(any(PgContext.class)))
+                .thenAnswer(invocation -> {
+                    final PgContext ctx = invocation.getArgument(0);
+                    return Collections.singletonList(TableWithMissingIndex.of(ctx.enrichWithSchema("t"), 1L, 100L, 2L));
+                });
+        final List<TableWithMissingIndex> tables = indexMaintenance.getTablesWithMissingIndexes(contexts);
+        assertNotNull(tables);
+        assertThat(tables, hasSize(3));
+        assertThat(tables.stream()
+                .map(TableNameAware::getTableName)
+                .collect(Collectors.toSet()), containsInAnyOrder("t", "demo.t", "test.t"));
     }
 }
