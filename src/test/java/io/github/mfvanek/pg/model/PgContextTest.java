@@ -13,14 +13,31 @@ package io.github.mfvanek.pg.model;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PgContextTest {
 
     @Test
-    void getSchemeName() {
-        assertEquals("s", PgContext.of("s").getSchemaName());
-        assertEquals("public", PgContext.ofPublic().getSchemaName());
+    void getSchemaNameForCustomSchema() {
+        final PgContext pgContext = PgContext.of("s");
+        assertEquals("s", pgContext.getSchemaName());
+        assertFalse(pgContext.isDefaultSchema());
+    }
+
+    @Test
+    void getSchemaNameForPublicSchema() {
+        final PgContext pgContext = PgContext.ofPublic();
+        assertEquals("public", pgContext.getSchemaName());
+        assertTrue(pgContext.isDefaultSchema());
+    }
+
+    @Test
+    void getSchemaNameForPublicSchemaWithUpperCase() {
+        final PgContext pgContext = PgContext.of("PUBLIC");
+        assertEquals("public", pgContext.getSchemaName());
+        assertTrue(pgContext.isDefaultSchema());
     }
 
     @Test
@@ -44,5 +61,32 @@ class PgContextTest {
         assertEquals("PgContext{schemaName='s', bloatPercentageThreshold=10}", PgContext.of("s").toString());
         assertEquals("PgContext{schemaName='s', bloatPercentageThreshold=11}", PgContext.of("s", 11).toString());
         assertEquals("PgContext{schemaName='public', bloatPercentageThreshold=10}", PgContext.ofPublic().toString());
+    }
+
+    @Test
+    void complementWithCustomSchema() {
+        final PgContext pgContext = PgContext.of("TEST");
+        assertEquals("test.table1", pgContext.enrichWithSchema("table1"));
+        assertEquals("test.index1", pgContext.enrichWithSchema("index1"));
+        assertEquals("test.table2", pgContext.enrichWithSchema("test.table2"));
+        assertEquals("TEST.table2", pgContext.enrichWithSchema("TEST.table2"));
+    }
+
+    @Test
+    void complementWithPublicSchema() {
+        final PgContext pgContext = PgContext.ofPublic();
+        assertEquals("table1", pgContext.enrichWithSchema("table1"));
+        assertEquals("index1", pgContext.enrichWithSchema("index1"));
+        assertEquals("public.table2", pgContext.enrichWithSchema("public.table2"));
+        assertEquals("PUBLIC.table2", pgContext.enrichWithSchema("PUBLIC.table2"));
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void complementWithSchemaWithInvalidArguments() {
+        final PgContext pgContext = PgContext.ofPublic();
+        assertThrows(NullPointerException.class, () -> pgContext.enrichWithSchema(null));
+        assertThrows(IllegalArgumentException.class, () -> pgContext.enrichWithSchema(""));
+        assertThrows(IllegalArgumentException.class, () -> pgContext.enrichWithSchema("   "));
     }
 }

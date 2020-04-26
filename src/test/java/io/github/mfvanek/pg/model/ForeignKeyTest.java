@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -26,19 +26,23 @@ class ForeignKeyTest {
 
     @Test
     void testToString() {
-        final ForeignKey foreignKey = ForeignKey.of("t", "c_t_order_id",
-                Collections.singletonList("order_id"));
+        final ForeignKey foreignKey = ForeignKey.ofColumn("t", "c_t_order_id", "order_id");
         assertEquals("ForeignKey{tableName='t', constraintName='c_t_order_id', " +
                 "columnsInConstraint=[order_id]}", foreignKey.toString());
     }
 
     @Test
     void foreignKey() {
-        final ForeignKey foreignKey = ForeignKey.of("t", "c_t_order_id",
-                Collections.singletonList("order_id"));
+        final ForeignKey foreignKey = ForeignKey.ofColumn("t", "c_t_order_id", "order_id");
         assertEquals("t", foreignKey.getTableName());
         assertEquals("c_t_order_id", foreignKey.getConstraintName());
-        assertThat(foreignKey.getColumnsInConstraint(), containsInAnyOrder("order_id"));
+        assertThat(foreignKey.getColumnsInConstraint(), contains("order_id"));
+    }
+
+    @Test
+    void getColumnsInConstraint() {
+        ForeignKey key = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "item_id"));
+        assertThat(key.getColumnsInConstraint(), contains("order_id", "item_id"));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -48,6 +52,9 @@ class ForeignKeyTest {
         assertThrows(NullPointerException.class, () -> ForeignKey.of("t", null, null));
         assertThrows(IllegalArgumentException.class, () -> ForeignKey.of("t", "c_t_order_id", null));
         assertThrows(IllegalArgumentException.class, () -> ForeignKey.of("t", "c_t_order_id", Collections.emptyList()));
+        assertThrows(NullPointerException.class, () -> ForeignKey.ofColumn("t", "fk", null));
+        assertThrows(IllegalArgumentException.class, () -> ForeignKey.ofColumn("t", "fk", ""));
+        assertThrows(IllegalArgumentException.class, () -> ForeignKey.ofColumn("t", "fk", "  "));
     }
 
     @Test
@@ -56,7 +63,7 @@ class ForeignKeyTest {
         ForeignKey key11 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
         ForeignKey key12 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
         ForeignKey key13 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("limit", "order_id"));
-        ForeignKey key14 = ForeignKey.of("t", "c_t_order_id", Collections.singletonList("no_matter_what"));
+        ForeignKey key14 = ForeignKey.ofColumn("t", "c_t_order_id", "no_matter_what");
 
         assertNotEquals(key11, null);
         assertNotEquals(key11, BigDecimal.ZERO);
