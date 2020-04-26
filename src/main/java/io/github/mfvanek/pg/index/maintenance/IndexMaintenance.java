@@ -262,6 +262,23 @@ public interface IndexMaintenance extends HostAware {
     List<Table> getTablesWithoutPrimaryKey(@Nonnull PgContext pgContext);
 
     /**
+     * Returns tables without primary key on the current host in the specified schemas.
+     * <p>
+     * Tables without primary key might become a huge problem when bloat occurs
+     * because pg_repack will not be able to process them.
+     *
+     * @param pgContexts a set of contexts specifying schemas
+     * @return list of tables without primary key
+     */
+    @Nonnull
+    default List<Table> getTablesWithoutPrimaryKey(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getTablesWithoutPrimaryKey)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Returns tables without primary key on the current host in the public schema.
      * <p>
      * Tables without primary key might become a huge problem when bloat occurs
@@ -282,6 +299,20 @@ public interface IndexMaintenance extends HostAware {
      */
     @Nonnull
     List<IndexWithNulls> getIndexesWithNullValues(@Nonnull PgContext pgContext);
+
+    /**
+     * Returns indexes that contain null values on the current host in the specified schemas.
+     *
+     * @param pgContexts a set of contexts specifying schemas
+     * @return list of indexes with null values
+     */
+    @Nonnull
+    default List<IndexWithNulls> getIndexesWithNullValues(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getIndexesWithNullValues)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
 
     /**
      * Returns indexes that contain null values on the current host in the public schema.
@@ -305,6 +336,24 @@ public interface IndexMaintenance extends HostAware {
      */
     @Nonnull
     List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext);
+
+    /**
+     * Returns indexes that are bloated on the current host in the specified schemas.
+     * <p>
+     * Note: The database user on whose behalf this method will be executed
+     * have to have read permissions for the corresponding tables.
+     * </p>
+     *
+     * @param pgContexts a set of contexts specifying schemas
+     * @return list of bloated indexes
+     */
+    @Nonnull
+    default List<IndexWithBloat> getIndexesWithBloat(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getIndexesWithBloat)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
 
     /**
      * Returns indexes that are bloated on the current host in the public schema.
@@ -332,6 +381,24 @@ public interface IndexMaintenance extends HostAware {
      */
     @Nonnull
     List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext);
+
+    /**
+     * Returns tables that are bloated on the current host in the specified schemas.
+     * <p>
+     * Note: The database user on whose behalf this method will be executed
+     * have to have read permissions for the corresponding tables.
+     * </p>
+     *
+     * @param pgContexts a set of contexts specifying schemas
+     * @return list of bloated tables
+     */
+    @Nonnull
+    default List<TableWithBloat> getTablesWithBloat(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getTablesWithBloat)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
 
     /**
      * Returns tables that are bloated on the current host in the public schema.

@@ -13,9 +13,13 @@ package io.github.mfvanek.pg.index.maintenance;
 import io.github.mfvanek.pg.model.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.ForeignKey;
 import io.github.mfvanek.pg.model.Index;
+import io.github.mfvanek.pg.model.IndexWithBloat;
+import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.IndexWithSize;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.Table;
 import io.github.mfvanek.pg.model.TableNameAware;
+import io.github.mfvanek.pg.model.TableWithBloat;
 import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
 import org.junit.jupiter.api.Test;
@@ -140,5 +144,71 @@ class IndexMaintenanceMultipleSchemasTest {
         assertThat(tables.stream()
                 .map(TableNameAware::getTableName)
                 .collect(Collectors.toSet()), containsInAnyOrder("t", "demo.t", "test.t"));
+    }
+
+    @Test
+    void getTablesWithoutPrimaryKey() {
+        Mockito.when(indexMaintenance.getTablesWithoutPrimaryKey(any(PgContext.class)))
+                .thenAnswer(invocation -> {
+                    final PgContext ctx = invocation.getArgument(0);
+                    return Arrays.asList(
+                            Table.of(ctx.enrichWithSchema("t1"), 1L),
+                            Table.of(ctx.enrichWithSchema("t2"), 1L));
+                });
+        final List<Table> tables = indexMaintenance.getTablesWithoutPrimaryKey(contexts);
+        assertNotNull(tables);
+        assertThat(tables, hasSize(6));
+        assertThat(tables.stream()
+                .map(TableNameAware::getTableName)
+                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2"));
+    }
+
+    @Test
+    void getIndexesWithNullValues() {
+        Mockito.when(indexMaintenance.getIndexesWithNullValues(any(PgContext.class)))
+                .thenAnswer(invocation -> {
+                    final PgContext ctx = invocation.getArgument(0);
+                    return Collections.singletonList(
+                            IndexWithNulls.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i1"), 1L, "col1"));
+                });
+        final List<IndexWithNulls> indexes = indexMaintenance.getIndexesWithNullValues(contexts);
+        assertNotNull(indexes);
+        assertThat(indexes, hasSize(3));
+        assertThat(indexes.stream()
+                .map(TableNameAware::getTableName)
+                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1"));
+    }
+
+    @Test
+    void getIndexesWithBloat() {
+        Mockito.when(indexMaintenance.getIndexesWithBloat(any(PgContext.class)))
+                .thenAnswer(invocation -> {
+                    final PgContext ctx = invocation.getArgument(0);
+                    return Collections.singletonList(
+                            IndexWithBloat.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i1"), 100L, 30L, 30));
+                });
+        final List<IndexWithBloat> indexes = indexMaintenance.getIndexesWithBloat(contexts);
+        assertNotNull(indexes);
+        assertThat(indexes, hasSize(3));
+        assertThat(indexes.stream()
+                .map(TableNameAware::getTableName)
+                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1"));
+    }
+
+    @Test
+    void getTablesWithBloat() {
+        Mockito.when(indexMaintenance.getTablesWithBloat(any(PgContext.class)))
+                .thenAnswer(invocation -> {
+                    final PgContext ctx = invocation.getArgument(0);
+                    return Arrays.asList(
+                            TableWithBloat.of(ctx.enrichWithSchema("t1"), 100L, 45L, 45),
+                            TableWithBloat.of(ctx.enrichWithSchema("t2"), 10L, 9L, 90));
+                });
+        final List<TableWithBloat> tables = indexMaintenance.getTablesWithBloat(contexts);
+        assertNotNull(tables);
+        assertThat(tables, hasSize(6));
+        assertThat(tables.stream()
+                .map(TableNameAware::getTableName)
+                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2"));
     }
 }
