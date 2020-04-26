@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
+import io.github.mfvanek.pg.model.PgContext;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -31,7 +32,7 @@ import static io.github.mfvanek.pg.utils.TestUtils.executeOnDatabase;
 public final class DatabasePopulator implements AutoCloseable {
 
     private final DataSource dataSource;
-    private String schemaName = "public";
+    private String schemaName = PgContext.DEFAULT_SCHEMA_NAME;
     private final Map<Integer, Runnable> actions;
 
     private DatabasePopulator(@Nonnull final DataSource dataSource) {

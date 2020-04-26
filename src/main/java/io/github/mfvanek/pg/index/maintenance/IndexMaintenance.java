@@ -23,7 +23,9 @@ import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A set of diagnostics for collecting statistics about the health of tables and indexes on a specific host.
@@ -35,7 +37,7 @@ import java.util.List;
 public interface IndexMaintenance extends HostAware {
 
     /**
-     * Returns invalid (broken) indexes to be deleted or re-indexed on current host in the specified schema.
+     * Returns invalid (broken) indexes to be deleted or re-indexed on the current host in the specified schema.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of invalid indexes
@@ -45,7 +47,22 @@ public interface IndexMaintenance extends HostAware {
     List<Index> getInvalidIndexes(@Nonnull PgContext pgContext);
 
     /**
-     * Returns invalid (broken) indexes to be deleted or re-indexed on current host in the public schema.
+     * Returns invalid (broken) indexes to be deleted or re-indexed on the current host in the specified schemas.
+     *
+     * @param pgContexts a set of contexts specifying schemas
+     * @return list of invalid indexes
+     * @see Index
+     */
+    @Nonnull
+    default List<Index> getInvalidIndexes(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getInvalidIndexes)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns invalid (broken) indexes to be deleted or re-indexed on the current host in the public schema.
      *
      * @return list of invalid indexes
      * @see Index
@@ -57,7 +74,7 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns duplicated (completely identical) indexes (candidates for deletion)
-     * on current host in the specified schema.
+     * on the current host in the specified schema.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of duplicated indexes
@@ -66,7 +83,8 @@ public interface IndexMaintenance extends HostAware {
     List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull PgContext pgContext);
 
     /**
-     * Returns duplicated (completely identical) indexes (candidates for deletion) on current host in the public schema.
+     * Returns duplicated (completely identical) indexes (candidates for deletion)
+     * on the current host in the public schema.
      *
      * @return list of duplicated indexes
      */
@@ -77,7 +95,7 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns intersected indexes (partially identical, candidates for deletion)
-     * on current host in the specified schema.
+     * on the current host in the specified schema.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of intersected indexes
@@ -86,7 +104,8 @@ public interface IndexMaintenance extends HostAware {
     List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull PgContext pgContext);
 
     /**
-     * Returns intersected indexes (partially identical, candidates for deletion) on current host in the public schema.
+     * Returns intersected indexes (partially identical, candidates for deletion)
+     * on the current host in the public schema.
      *
      * @return list of intersected indexes
      */
@@ -96,7 +115,7 @@ public interface IndexMaintenance extends HostAware {
     }
 
     /**
-     * Returns potentially unused indexes (candidates for deletion) on current host in the specified schema.
+     * Returns potentially unused indexes (candidates for deletion) on the current host in the specified schema.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of potentially unused indexes
@@ -105,7 +124,7 @@ public interface IndexMaintenance extends HostAware {
     List<UnusedIndex> getPotentiallyUnusedIndexes(@Nonnull PgContext pgContext);
 
     /**
-     * Returns potentially unused indexes (candidates for deletion) on current host in the public schema.
+     * Returns potentially unused indexes (candidates for deletion) on the current host in the public schema.
      *
      * @return list of potentially unused indexes
      */
@@ -116,7 +135,7 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns foreign keys without associated indexes (potential performance degradation)
-     * on current host in the specified schema.
+     * on the current host in the specified schema.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of foreign keys without associated indexes
@@ -126,7 +145,7 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns foreign keys without associated indexes (potential performance degradation)
-     * on current host in the public schema.
+     * on the current host in the public schema.
      *
      * @return list of foreign keys without associated indexes
      */
@@ -137,7 +156,7 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns tables with potentially missing indexes (potential performance degradation)
-     * on current host in the specified schema.
+     * on the current host in the specified schema.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of tables with potentially missing indexes
@@ -147,7 +166,7 @@ public interface IndexMaintenance extends HostAware {
 
     /**
      * Returns tables with potentially missing indexes (potential performance degradation)
-     * on current host in the public schema.
+     * on the current host in the public schema.
      *
      * @return list of tables with potentially missing indexes
      */
@@ -157,7 +176,7 @@ public interface IndexMaintenance extends HostAware {
     }
 
     /**
-     * Returns tables without primary key on current host in the specified schema.
+     * Returns tables without primary key on the current host in the specified schema.
      * <p>
      * Tables without primary key might become a huge problem when bloat occurs
      * because pg_repack will not be able to process them.
@@ -169,7 +188,7 @@ public interface IndexMaintenance extends HostAware {
     List<Table> getTablesWithoutPrimaryKey(@Nonnull PgContext pgContext);
 
     /**
-     * Returns tables without primary key on current host in the public schema.
+     * Returns tables without primary key on the current host in the public schema.
      * <p>
      * Tables without primary key might become a huge problem when bloat occurs
      * because pg_repack will not be able to process them.
@@ -182,7 +201,7 @@ public interface IndexMaintenance extends HostAware {
     }
 
     /**
-     * Returns indexes that contain null values on current host in the specified schema.
+     * Returns indexes that contain null values on the current host in the specified schema.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of indexes with null values
@@ -191,7 +210,7 @@ public interface IndexMaintenance extends HostAware {
     List<IndexWithNulls> getIndexesWithNullValues(@Nonnull PgContext pgContext);
 
     /**
-     * Returns indexes that contain null values on current host in the public schema.
+     * Returns indexes that contain null values on the current host in the public schema.
      *
      * @return list of indexes with null values
      */
@@ -201,7 +220,7 @@ public interface IndexMaintenance extends HostAware {
     }
 
     /**
-     * Returns indexes that are bloated on current host in the specified schema.
+     * Returns indexes that are bloated on the current host in the specified schema.
      * <p>
      * Note: The database user on whose behalf this method will be executed
      * have to have read permissions for the corresponding tables.
@@ -214,7 +233,7 @@ public interface IndexMaintenance extends HostAware {
     List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext);
 
     /**
-     * Returns indexes that are bloated on current host in the public schema.
+     * Returns indexes that are bloated on the current host in the public schema.
      * <p>
      * Note: The database user on whose behalf this method will be executed
      * have to have read permissions for the corresponding tables.
@@ -228,7 +247,7 @@ public interface IndexMaintenance extends HostAware {
     }
 
     /**
-     * Returns tables that are bloated on current host in the specified schema.
+     * Returns tables that are bloated on the current host in the specified schema.
      * <p>
      * Note: The database user on whose behalf this method will be executed
      * have to have read permissions for the corresponding tables.
@@ -241,7 +260,7 @@ public interface IndexMaintenance extends HostAware {
     List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext);
 
     /**
-     * Returns tables that are bloated on current host in the public schema.
+     * Returns tables that are bloated on the current host in the public schema.
      * <p>
      * Note: The database user on whose behalf this method will be executed
      * have to have read permissions for the corresponding tables.

@@ -25,21 +25,41 @@ public class PgContext {
      * Default bloat percentage threshold.
      */
     public static final int DEFAULT_BLOAT_PERCENTAGE_THRESHOLD = 10;
+    public static final String DEFAULT_SCHEMA_NAME = "public";
 
     private final String schemaName;
     private final int bloatPercentageThreshold;
 
     private PgContext(@Nonnull final String schemaName, int bloatPercentageThreshold) {
-        this.schemaName = Validators.notBlank(schemaName, "schemaName");
+        this.schemaName = Validators.notBlank(schemaName, "schemaName").toLowerCase();
         this.bloatPercentageThreshold = Validators.argumentNotNegative(
                 bloatPercentageThreshold, "bloatPercentageThreshold");
     }
 
+    /**
+     * Returns the specified schema name.
+     *
+     * @return schema name
+     */
     @Nonnull
     public String getSchemaName() {
         return schemaName;
     }
 
+    /**
+     * Determines whether the specified schema is public or not.
+     *
+     * @return true if it is the public schema
+     */
+    public boolean isDefaultSchema() {
+        return DEFAULT_SCHEMA_NAME.equalsIgnoreCase(schemaName);
+    }
+
+    /**
+     * Returns the specified bloat percentage threshold.
+     *
+     * @return bloat percentage threshold
+     */
     public int getBloatPercentageThreshold() {
         return bloatPercentageThreshold;
     }
@@ -50,6 +70,28 @@ public class PgContext {
                 "schemaName='" + schemaName + '\'' +
                 ", bloatPercentageThreshold=" + bloatPercentageThreshold +
                 '}';
+    }
+
+    /**
+     * Complement the given object name with the specified schema name if it is necessary.
+     *
+     * @param objectName given object name
+     * @return object name with schema for non default schemas
+     */
+    @Nonnull
+    public String enrichWithSchema(@Nonnull final String objectName) {
+        Validators.notBlank(objectName, "objectName");
+
+        if (isDefaultSchema()) {
+            return objectName;
+        }
+
+        final String prefix = schemaName + ".";
+        if (objectName.toLowerCase().startsWith(prefix)) {
+            return objectName;
+        }
+
+        return prefix + objectName;
     }
 
     /**
@@ -84,6 +126,6 @@ public class PgContext {
      */
     @Nonnull
     public static PgContext ofPublic() {
-        return of("public");
+        return of(DEFAULT_SCHEMA_NAME);
     }
 }

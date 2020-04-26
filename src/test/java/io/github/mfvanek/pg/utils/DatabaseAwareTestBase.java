@@ -101,10 +101,6 @@ public abstract class DatabaseAwareTestBase {
         }
     }
 
-    protected boolean isDefaultSchema(@Nonnull final String schemaName) {
-        return "public".equals(schemaName);
-    }
-
     protected void tryToFindAccountByClientId(@Nonnull final String schemaName) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
