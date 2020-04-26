@@ -22,19 +22,50 @@ import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * An entry point for collecting and managing statistics about the health of tables and indexes on all hosts in the cluster.
+ * An entry point for collecting and managing statistics
+ * about the health of tables and indexes on all hosts in the cluster.
  *
  * @author Ivan Vakhrushev
  * @see PgContext
  */
 public interface IndexesHealth {
 
+    /**
+     * Returns invalid (broken) indexes to be deleted or re-indexed on the master host in the specified schema.
+     *
+     * @param pgContext {@code PgContext} with the specified schema
+     * @return list of invalid indexes
+     * @see Index
+     */
     @Nonnull
     List<Index> getInvalidIndexes(@Nonnull PgContext pgContext);
 
+    /**
+     * Returns invalid (broken) indexes to be deleted or re-indexed on the master host in the specified schemas.
+     *
+     * @param pgContexts a set of contexts specifying schemas
+     * @return list of invalid indexes
+     * @see Index
+     */
+    @Nonnull
+    default List<Index> getInvalidIndexes(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getInvalidIndexes)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns invalid (broken) indexes to be deleted or re-indexed on the master host in the public schema.
+     *
+     * @return list of invalid indexes
+     * @see Index
+     */
     @Nonnull
     default List<Index> getInvalidIndexes() {
         return getInvalidIndexes(PgContext.ofPublic());
@@ -42,6 +73,14 @@ public interface IndexesHealth {
 
     @Nonnull
     List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull PgContext pgContext);
+
+    @Nonnull
+    default List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getDuplicatedIndexes)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
 
     @Nonnull
     default List<DuplicatedIndexes> getDuplicatedIndexes() {
@@ -52,12 +91,28 @@ public interface IndexesHealth {
     List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull PgContext pgContext);
 
     @Nonnull
+    default List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getIntersectedIndexes)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    @Nonnull
     default List<DuplicatedIndexes> getIntersectedIndexes() {
         return getIntersectedIndexes(PgContext.ofPublic());
     }
 
     @Nonnull
     List<UnusedIndex> getUnusedIndexes(@Nonnull PgContext pgContext);
+
+    @Nonnull
+    default List<UnusedIndex> getUnusedIndexes(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getUnusedIndexes)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
 
     @Nonnull
     default List<UnusedIndex> getUnusedIndexes() {
@@ -68,6 +123,14 @@ public interface IndexesHealth {
     List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull PgContext pgContext);
 
     @Nonnull
+    default List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getForeignKeysNotCoveredWithIndex)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    @Nonnull
     default List<ForeignKey> getForeignKeysNotCoveredWithIndex() {
         return getForeignKeysNotCoveredWithIndex(PgContext.ofPublic());
     }
@@ -76,12 +139,28 @@ public interface IndexesHealth {
     List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull PgContext pgContext);
 
     @Nonnull
+    default List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getTablesWithMissingIndexes)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    @Nonnull
     default List<TableWithMissingIndex> getTablesWithMissingIndexes() {
         return getTablesWithMissingIndexes(PgContext.ofPublic());
     }
 
     @Nonnull
     List<Table> getTablesWithoutPrimaryKey(@Nonnull PgContext pgContext);
+
+    @Nonnull
+    default List<Table> getTablesWithoutPrimaryKey(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getTablesWithoutPrimaryKey)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
 
     @Nonnull
     default List<Table> getTablesWithoutPrimaryKey() {
@@ -98,6 +177,14 @@ public interface IndexesHealth {
      */
     @Nonnull
     List<IndexWithNulls> getIndexesWithNullValues(@Nonnull PgContext pgContext);
+
+    @Nonnull
+    default List<IndexWithNulls> getIndexesWithNullValues(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getIndexesWithNullValues)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
 
     /**
      * Returns indexes in the public schema on master host that contain null values.
@@ -122,6 +209,14 @@ public interface IndexesHealth {
     @Nonnull
     List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext);
 
+    @Nonnull
+    default List<IndexWithBloat> getIndexesWithBloat(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getIndexesWithBloat)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
     /**
      * Returns bloated indexes in the public schema on master host.
      *
@@ -144,6 +239,14 @@ public interface IndexesHealth {
      */
     @Nonnull
     List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext);
+
+    @Nonnull
+    default List<TableWithBloat> getTablesWithBloat(@Nonnull Collection<PgContext> pgContexts) {
+        return pgContexts.stream()
+                .map(this::getTablesWithBloat)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
 
     /**
      * Returns bloated tables in the public schema on master host.
