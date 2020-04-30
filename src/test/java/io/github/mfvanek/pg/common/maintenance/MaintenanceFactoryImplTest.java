@@ -21,6 +21,11 @@ import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.util.Collection;
+import java.util.Collections;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
@@ -41,17 +46,32 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
     void forIndexes() {
         final IndexesMaintenanceOnHost maintenance = factory.forIndexes(pgConnection);
         assertNotNull(maintenance);
+
+        final Collection<IndexesMaintenanceOnHost> maintenanceOnHosts =
+                factory.forIndexes(Collections.singletonList(pgConnection));
+        assertNotNull(maintenanceOnHosts);
+        assertThat(maintenanceOnHosts, hasSize(1));
     }
 
     @Test
     void forTables() {
         final TablesMaintenanceOnHost maintenance = factory.forTables(pgConnection);
         assertNotNull(maintenance);
+
+        final Collection<TablesMaintenanceOnHost> maintenanceOnHosts =
+                factory.forTables(Collections.singletonList(pgConnection));
+        assertNotNull(maintenanceOnHosts);
+        assertThat(maintenanceOnHosts, hasSize(1));
     }
 
     @Test
     void forStatistics() {
         final StatisticsMaintenance maintenance = factory.forStatistics(pgConnection);
         assertNotNull(maintenance);
+
+        final Collection<StatisticsMaintenance> maintenanceOnHosts =
+                factory.forStatistics(Collections.singletonList(pgConnection));
+        assertNotNull(maintenanceOnHosts);
+        assertThat(maintenanceOnHosts, hasSize(1));
     }
 }
