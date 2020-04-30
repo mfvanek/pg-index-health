@@ -17,12 +17,12 @@ import java.util.Set;
 
 public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConnection {
 
-    private final PgConnection connectionToMaster;
+    private final PgConnection connectionToPrimary;
     private final Set<PgConnection> connectionsToAllHostsInCluster;
 
-    private HighAvailabilityPgConnectionImpl(@Nonnull final PgConnection connectionToMaster,
+    private HighAvailabilityPgConnectionImpl(@Nonnull final PgConnection connectionToPrimary,
                                              @Nonnull final Set<PgConnection> connectionsToAllHostsInCluster) {
-        this.connectionToMaster = Objects.requireNonNull(connectionToMaster);
+        this.connectionToPrimary = Objects.requireNonNull(connectionToPrimary);
         this.connectionsToAllHostsInCluster = Objects.requireNonNull(connectionsToAllHostsInCluster);
     }
 
@@ -31,8 +31,8 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
      */
     @Override
     @Nonnull
-    public PgConnection getConnectionToMaster() {
-        return connectionToMaster;
+    public PgConnection getConnectionToPrimary() {
+        return connectionToPrimary;
     }
 
     /**
@@ -45,13 +45,13 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
     }
 
     @Nonnull
-    public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToMaster) {
-        return new HighAvailabilityPgConnectionImpl(connectionToMaster, Collections.singleton(connectionToMaster));
+    public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToPrimary) {
+        return new HighAvailabilityPgConnectionImpl(connectionToPrimary, Collections.singleton(connectionToPrimary));
     }
 
     @Nonnull
-    public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToMaster,
+    public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToPrimary,
                                                   @Nonnull final Set<PgConnection> connectionsToAllHostsInCluster) {
-        return new HighAvailabilityPgConnectionImpl(connectionToMaster, connectionsToAllHostsInCluster);
+        return new HighAvailabilityPgConnectionImpl(connectionToPrimary, connectionsToAllHostsInCluster);
     }
 }

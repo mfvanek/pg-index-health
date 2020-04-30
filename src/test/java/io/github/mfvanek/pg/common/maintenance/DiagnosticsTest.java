@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index.maintenance;
+package io.github.mfvanek.pg.common.maintenance;
 
 import org.junit.jupiter.api.Test;
 

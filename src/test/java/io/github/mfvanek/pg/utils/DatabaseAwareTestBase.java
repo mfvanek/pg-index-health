@@ -102,7 +102,7 @@ public abstract class DatabaseAwareTestBase {
     }
 
     protected void tryToFindAccountByClientId(@Nonnull final String schemaName) {
-        try (Connection connection = dataSource.getConnection();
+        try (Connection connection = getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
             for (int counter = 0; counter < AMOUNT_OF_TRIES; ++counter) {
                 statement.execute(String.format(
@@ -111,13 +111,13 @@ public abstract class DatabaseAwareTestBase {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        DatabasePopulator.collectStatistics(dataSource, schemaName);
+        DatabasePopulator.collectStatistics(getDataSource(), schemaName);
         waitForStatisticsCollector();
     }
 
     protected long getRowsCount(@Nonnull final String schemaName,
                                 @Nonnull final String tableName) {
-        try (Connection connection = dataSource.getConnection();
+        try (Connection connection = getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet resultSet = statement.executeQuery(
                     "select count(*) from " + schemaName + "." + tableName)) {

@@ -17,7 +17,7 @@ import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.index.health.IndexesHealth;
 import io.github.mfvanek.pg.index.health.IndexesHealthImpl;
-import io.github.mfvanek.pg.index.maintenance.MaintenanceFactoryImpl;
+import io.github.mfvanek.pg.common.maintenance.MaintenanceFactoryImpl;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;

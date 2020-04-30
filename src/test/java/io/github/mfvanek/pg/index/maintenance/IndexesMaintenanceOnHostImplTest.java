@@ -20,9 +20,6 @@ import io.github.mfvanek.pg.model.Index;
 import io.github.mfvanek.pg.model.IndexWithBloat;
 import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.Table;
-import io.github.mfvanek.pg.model.TableWithBloat;
-import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.utils.DatabasePopulator;
@@ -45,23 +42,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
+public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres =
-            PostgresExtensionFactory.database();
+    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
 
-    private final IndexMaintenance indexMaintenance;
+    private final IndexesMaintenanceOnHost indexesMaintenance;
 
-    IndexMaintenanceImplTest() {
+    IndexesMaintenanceOnHostImplTest() {
         super(embeddedPostgres.getTestDatabase());
         final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
-        this.indexMaintenance = new IndexMaintenanceImpl(pgConnection);
+        this.indexesMaintenance = new IndexMaintenanceOnHostImpl(pgConnection);
     }
 
     @Test
     void getInvalidIndexesOnEmptyDatabase() {
-        final List<Index> invalidIndexes = indexMaintenance.getInvalidIndexes();
+        final List<Index> invalidIndexes = indexesMaintenance.getInvalidIndexes();
         assertNotNull(invalidIndexes);
         assertThat(invalidIndexes, empty());
     }
@@ -72,7 +68,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final List<Index> invalidIndexes = indexMaintenance.getInvalidIndexes(ctx);
+                    final List<Index> invalidIndexes = indexesMaintenance.getInvalidIndexes(ctx);
                     assertNotNull(invalidIndexes);
                     assertThat(invalidIndexes, empty());
                 });
@@ -84,7 +80,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withInvalidIndex(),
                 ctx -> {
-                    final List<Index> invalidIndexes = indexMaintenance.getInvalidIndexes(ctx);
+                    final List<Index> invalidIndexes = indexesMaintenance.getInvalidIndexes(ctx);
                     assertNotNull(invalidIndexes);
                     assertThat(invalidIndexes, hasSize(1));
                     final Index index = invalidIndexes.get(0);
@@ -95,7 +91,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getDuplicatedIndexesOnEmptyDatabase() {
-        final List<DuplicatedIndexes> duplicatedIndexes = indexMaintenance.getDuplicatedIndexes();
+        final List<DuplicatedIndexes> duplicatedIndexes = indexesMaintenance.getDuplicatedIndexes();
         assertNotNull(duplicatedIndexes);
         assertThat(duplicatedIndexes, empty());
     }
@@ -106,7 +102,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final List<DuplicatedIndexes> duplicatedIndexes = indexMaintenance.getDuplicatedIndexes(ctx);
+                    final List<DuplicatedIndexes> duplicatedIndexes = indexesMaintenance.getDuplicatedIndexes(ctx);
                     assertNotNull(duplicatedIndexes);
                     assertThat(duplicatedIndexes, empty());
                 });
@@ -118,7 +114,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withDuplicatedIndex(),
                 ctx -> {
-                    final List<DuplicatedIndexes> duplicatedIndexes = indexMaintenance.getDuplicatedIndexes(ctx);
+                    final List<DuplicatedIndexes> duplicatedIndexes = indexesMaintenance.getDuplicatedIndexes(ctx);
                     assertNotNull(duplicatedIndexes);
                     assertThat(duplicatedIndexes, hasSize(1));
                     final DuplicatedIndexes entry = duplicatedIndexes.get(0);
@@ -137,7 +133,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withDuplicatedHashIndex(),
                 ctx -> {
-                    final List<DuplicatedIndexes> duplicatedIndexes = indexMaintenance.getDuplicatedIndexes(ctx);
+                    final List<DuplicatedIndexes> duplicatedIndexes = indexesMaintenance.getDuplicatedIndexes(ctx);
                     assertNotNull(duplicatedIndexes);
                     assertThat(duplicatedIndexes, empty());
                 });
@@ -149,7 +145,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withDifferentOpclassIndexes(),
                 ctx -> {
-                    final List<DuplicatedIndexes> duplicatedIndexes = indexMaintenance.getDuplicatedIndexes(ctx);
+                    final List<DuplicatedIndexes> duplicatedIndexes = indexesMaintenance.getDuplicatedIndexes(ctx);
                     assertNotNull(duplicatedIndexes);
                     assertThat(duplicatedIndexes, empty());
                 });
@@ -161,7 +157,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withCustomCollation().withDuplicatedCustomCollationIndex(),
                 ctx -> {
-                    final List<DuplicatedIndexes> duplicatedIndexes = indexMaintenance.getDuplicatedIndexes(ctx);
+                    final List<DuplicatedIndexes> duplicatedIndexes = indexesMaintenance.getDuplicatedIndexes(ctx);
                     assertNotNull(duplicatedIndexes);
                     assertThat(duplicatedIndexes, empty());
                 });
@@ -169,7 +165,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getIntersectedIndexesOnEmptyDatabase() {
-        final List<DuplicatedIndexes> intersectedIndexes = indexMaintenance.getIntersectedIndexes();
+        final List<DuplicatedIndexes> intersectedIndexes = indexesMaintenance.getIntersectedIndexes();
         assertNotNull(intersectedIndexes);
         assertThat(intersectedIndexes, empty());
     }
@@ -180,7 +176,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final List<DuplicatedIndexes> intersectedIndexes = indexMaintenance.getIntersectedIndexes(ctx);
+                    final List<DuplicatedIndexes> intersectedIndexes = indexesMaintenance.getIntersectedIndexes(ctx);
                     assertNotNull(intersectedIndexes);
                     assertThat(intersectedIndexes, empty());
                 });
@@ -192,7 +188,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withDuplicatedIndex(),
                 ctx -> {
-                    final List<DuplicatedIndexes> intersectedIndexes = indexMaintenance.getIntersectedIndexes(ctx);
+                    final List<DuplicatedIndexes> intersectedIndexes = indexesMaintenance.getIntersectedIndexes(ctx);
                     assertNotNull(intersectedIndexes);
                     assertThat(intersectedIndexes, hasSize(2));
                     final DuplicatedIndexes firstEntry = intersectedIndexes.get(0);
@@ -218,7 +214,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withDuplicatedHashIndex(),
                 ctx -> {
-                    final List<DuplicatedIndexes> intersectedIndexes = indexMaintenance.getIntersectedIndexes(ctx);
+                    final List<DuplicatedIndexes> intersectedIndexes = indexesMaintenance.getIntersectedIndexes(ctx);
                     assertNotNull(intersectedIndexes);
                     assertThat(intersectedIndexes, hasSize(1));
                     final DuplicatedIndexes entry = intersectedIndexes.get(0);
@@ -237,26 +233,26 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withDifferentOpclassIndexes(),
                 ctx -> {
-                    final List<DuplicatedIndexes> intersectedIndexes = indexMaintenance.getIntersectedIndexes(ctx);
+                    final List<DuplicatedIndexes> intersectedIndexes = indexesMaintenance.getIntersectedIndexes(ctx);
                     assertNotNull(intersectedIndexes);
                     assertThat(intersectedIndexes, empty());
                 });
     }
 
     @Test
-    void getPotentiallyUnusedIndexesOnEmptyDatabase() {
-        final List<UnusedIndex> unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes();
+    void getUnusedIndexesOnEmptyDatabase() {
+        final List<UnusedIndex> unusedIndexes = indexesMaintenance.getUnusedIndexes();
         assertNotNull(unusedIndexes);
         assertThat(unusedIndexes, empty());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
-    void getPotentiallyUnusedIndexesOnDatabaseWithoutThem(final String schemaName) {
+    void getUnusedIndexesOnDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final List<UnusedIndex> unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes(ctx);
+                    final List<UnusedIndex> unusedIndexes = indexesMaintenance.getUnusedIndexes(ctx);
                     assertNotNull(unusedIndexes);
                     assertThat(unusedIndexes, empty());
                 });
@@ -264,11 +260,11 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
 
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
-    void getPotentiallyUnusedIndexesOnDatabaseWithThem(final String schemaName) {
+    void getUnusedIndexesOnDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withDuplicatedIndex(),
                 ctx -> {
-                    final List<UnusedIndex> unusedIndexes = indexMaintenance.getPotentiallyUnusedIndexes(ctx);
+                    final List<UnusedIndex> unusedIndexes = indexesMaintenance.getUnusedIndexes(ctx);
                     assertNotNull(unusedIndexes);
                     assertThat(unusedIndexes, hasSize(6));
                     final Set<String> names = unusedIndexes.stream().map(UnusedIndex::getIndexName).collect(toSet());
@@ -284,7 +280,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnEmptyDatabase() {
-        final List<ForeignKey> foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex();
+        final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex();
         assertNotNull(foreignKeys);
         assertThat(foreignKeys, empty());
     }
@@ -295,7 +291,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp,
                 ctx -> {
-                    final List<ForeignKey> foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
+                    final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
                     assertNotNull(foreignKeys);
                     assertThat(foreignKeys, empty());
                 });
@@ -307,7 +303,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final List<ForeignKey> foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
+                    final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
                     assertNotNull(foreignKeys);
                     assertThat(foreignKeys, hasSize(1));
                     final ForeignKey foreignKey = foreignKeys.get(0);
@@ -323,7 +319,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withNonSuitableIndex(),
                 ctx -> {
-                    final List<ForeignKey> foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
+                    final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
                     assertNotNull(foreignKeys);
                     assertThat(foreignKeys, hasSize(1));
                     final ForeignKey foreignKey = foreignKeys.get(0);
@@ -339,96 +335,15 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withSuitableIndex(),
                 ctx -> {
-                    final List<ForeignKey> foreignKeys = indexMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
+                    final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
                     assertNotNull(foreignKeys);
                     assertThat(foreignKeys, empty());
                 });
     }
 
     @Test
-    void getTablesWithMissingIndexesOnEmptyDatabase() {
-        final List<TableWithMissingIndex> tables = indexMaintenance.getTablesWithMissingIndexes();
-        assertNotNull(tables);
-        assertThat(tables, empty());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithMissingIndexesOnDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData(),
-                ctx -> {
-                    final List<TableWithMissingIndex> tables = indexMaintenance.getTablesWithMissingIndexes(ctx);
-                    assertNotNull(tables);
-                    assertThat(tables, empty());
-                });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithMissingIndexesOnDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData(),
-                ctx -> {
-                    tryToFindAccountByClientId(schemaName);
-                    final List<TableWithMissingIndex> tables = indexMaintenance.getTablesWithMissingIndexes(ctx);
-                    assertNotNull(tables);
-                    assertThat(tables, hasSize(1));
-                    final TableWithMissingIndex table = tables.get(0);
-                    assertEquals(ctx.enrichWithSchema("accounts"), table.getTableName());
-                    assertThat(table.getSeqScans(), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
-                    assertEquals(0, table.getIndexScans());
-                });
-    }
-
-    @Test
-    void getTablesWithoutPrimaryKeyOnEmptyDatabase() {
-        final List<Table> tables = indexMaintenance.getTablesWithoutPrimaryKey();
-        assertNotNull(tables);
-        assertThat(tables, empty());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithoutPrimaryKeyOnDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData(),
-                ctx -> {
-                    final List<Table> tables = indexMaintenance.getTablesWithoutPrimaryKey(ctx);
-                    assertNotNull(tables);
-                    assertThat(tables, empty());
-                });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithoutPrimaryKeyOnDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData().withTableWithoutPrimaryKey(),
-                ctx -> {
-                    final List<Table> tables = indexMaintenance.getTablesWithoutPrimaryKey(ctx);
-                    assertNotNull(tables);
-                    assertThat(tables, hasSize(1));
-                    final Table table = tables.get(0);
-                    assertEquals(ctx.enrichWithSchema("bad_clients"), table.getTableName());
-                });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithoutPrimaryKeyShouldReturnNothingForMaterializedViews(final String schemaName) {
-        executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData().withMaterializedView(),
-                ctx -> {
-                    final List<Table> tables = indexMaintenance.getTablesWithoutPrimaryKey(ctx);
-                    assertNotNull(tables);
-                    assertThat(tables, empty());
-                });
-    }
-
-    @Test
     void getIndexesWithNullValuesOnEmptyDatabase() {
-        final List<IndexWithNulls> indexes = indexMaintenance.getIndexesWithNullValues();
+        final List<IndexWithNulls> indexes = indexesMaintenance.getIndexesWithNullValues();
         assertNotNull(indexes);
         assertThat(indexes, empty());
     }
@@ -439,7 +354,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
-                    final List<IndexWithNulls> indexes = indexMaintenance.getIndexesWithNullValues(ctx);
+                    final List<IndexWithNulls> indexes = indexesMaintenance.getIndexesWithNullValues(ctx);
                     assertNotNull(indexes);
                     assertThat(indexes, empty());
                 });
@@ -451,7 +366,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withNullValuesInIndex(),
                 ctx -> {
-                    final List<IndexWithNulls> indexes = indexMaintenance.getIndexesWithNullValues(ctx);
+                    final List<IndexWithNulls> indexes = indexesMaintenance.getIndexesWithNullValues(ctx);
                     assertNotNull(indexes);
                     assertThat(indexes, hasSize(1));
                     final IndexWithNulls indexWithNulls = indexes.get(0);
@@ -462,7 +377,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getIndexesWithBloatOnEmptyDatabase() {
-        final List<IndexWithBloat> indexes = indexMaintenance.getIndexesWithBloat();
+        final List<IndexWithBloat> indexes = indexesMaintenance.getIndexesWithBloat();
         assertNotNull(indexes);
         assertThat(indexes, empty());
     }
@@ -474,7 +389,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
                 dbp -> dbp.withReferences().withStatistics(),
                 ctx -> {
                     waitForStatisticsCollector();
-                    final List<IndexWithBloat> indexes = indexMaintenance.getIndexesWithBloat(ctx);
+                    final List<IndexWithBloat> indexes = indexesMaintenance.getIndexesWithBloat(ctx);
                     assertNotNull(indexes);
                     assertThat(indexes, empty());
                 });
@@ -489,7 +404,7 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
                     waitForStatisticsCollector();
                     assertTrue(existsStatisticsForTable(ctx, "accounts"));
 
-                    final List<IndexWithBloat> indexes = indexMaintenance.getIndexesWithBloat(ctx);
+                    final List<IndexWithBloat> indexes = indexesMaintenance.getIndexesWithBloat(ctx);
                     assertNotNull(indexes);
                     assertThat(indexes, hasSize(3));
                     final IndexWithBloat index = indexes.get(0);
@@ -502,63 +417,23 @@ public final class IndexMaintenanceImplTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void getTablesWithBloatOnEmptyDatabase() {
-        final List<TableWithBloat> tables = indexMaintenance.getTablesWithBloat();
-        assertNotNull(tables);
-        assertThat(tables, empty());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithBloatOnDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withStatistics(),
-                ctx -> {
-                    waitForStatisticsCollector();
-                    final List<TableWithBloat> tables = indexMaintenance.getTablesWithBloat(ctx);
-                    assertNotNull(tables);
-                    assertThat(tables, empty());
-                });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithBloatOnDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData().withStatistics(),
-                ctx -> {
-                    waitForStatisticsCollector();
-                    assertTrue(existsStatisticsForTable(ctx, "accounts"));
-
-                    final List<TableWithBloat> tables = indexMaintenance.getTablesWithBloat(ctx);
-                    assertNotNull(tables);
-                    assertThat(tables, hasSize(2));
-                    final TableWithBloat table = tables.get(0);
-                    assertEquals(ctx.enrichWithSchema("accounts"), table.getTableName());
-                    assertEquals(114688L, table.getTableSizeInBytes());
-                    assertEquals(0L, table.getBloatSizeInBytes());
-                    assertEquals(0, table.getBloatPercentage());
-                });
-    }
-
-    @Test
     void securityTest() {
         executeTestOnDatabase("public",
                 dbp -> dbp.withReferences().withData().withNullValuesInIndex(),
                 ctx -> {
                     final long before = getRowsCount(ctx.getSchemaName(), "clients");
                     assertEquals(1001L, before);
-                    List<IndexWithNulls> indexes = indexMaintenance.getIndexesWithNullValues
+                    List<IndexWithNulls> indexes = indexesMaintenance.getIndexesWithNullValues
                             (PgContext.of("; truncate table clients;"));
                     assertNotNull(indexes);
                     assertThat(indexes, empty());
                     assertEquals(before, getRowsCount(ctx.getSchemaName(), "clients"));
 
-                    indexes = indexMaintenance.getIndexesWithNullValues(PgContext.of("; select pg_sleep(100000000);"));
+                    indexes = indexesMaintenance.getIndexesWithNullValues(PgContext.of("; select pg_sleep(100000000);"));
                     assertNotNull(indexes);
                     assertThat(indexes, empty());
 
-                    indexes = indexMaintenance.getIndexesWithNullValues(ctx);
+                    indexes = indexesMaintenance.getIndexesWithNullValues(ctx);
                     assertNotNull(indexes);
                     assertThat(indexes, hasSize(1));
                 });

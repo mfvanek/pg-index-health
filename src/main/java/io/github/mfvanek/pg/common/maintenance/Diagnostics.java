@@ -8,13 +8,13 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index.maintenance;
+package io.github.mfvanek.pg.common.maintenance;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
- * A list of all the supported diagnostics with corresponding sql queries.
+ * A list of all supported diagnostics with corresponding sql queries.
  *
  * @author Ivan Vakhrushev
  */

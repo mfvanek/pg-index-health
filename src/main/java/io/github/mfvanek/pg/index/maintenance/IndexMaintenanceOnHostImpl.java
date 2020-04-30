@@ -10,6 +10,9 @@
 
 package io.github.mfvanek.pg.index.maintenance;
 
+import io.github.mfvanek.pg.common.maintenance.AbstractMaintenance;
+import io.github.mfvanek.pg.common.maintenance.Diagnostics;
+import io.github.mfvanek.pg.connection.HostAware;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.DuplicatedIndexes;
@@ -18,32 +21,23 @@ import io.github.mfvanek.pg.model.Index;
 import io.github.mfvanek.pg.model.IndexWithBloat;
 import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.Table;
-import io.github.mfvanek.pg.model.TableWithBloat;
-import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
-import io.github.mfvanek.pg.utils.QueryExecutor;
-import io.github.mfvanek.pg.utils.ResultSetExtractor;
-import io.github.mfvanek.pg.utils.SqlQueryReader;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
- * Implementation of {@code IndexMaintenance} which collects information from current host in the cluster.
+ * Implementation of {@code IndexMaintenance} which collects information from the current host in the cluster.
  *
  * @author Ivan Vakhrushev
- * @see io.github.mfvanek.pg.connection.HostAware
+ * @see HostAware
  * @see PgHost
  */
-public class IndexMaintenanceImpl implements IndexMaintenance {
+public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements IndexesMaintenanceOnHost {
 
-    private final PgConnection pgConnection;
-
-    public IndexMaintenanceImpl(@Nonnull final PgConnection pgConnection) {
-        this.pgConnection = Objects.requireNonNull(pgConnection);
+    public IndexMaintenanceOnHostImpl(@Nonnull final PgConnection pgConnection) {
+        super(pgConnection);
     }
 
     /**
@@ -84,7 +78,7 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
      */
     @Nonnull
     @Override
-    public List<UnusedIndex> getPotentiallyUnusedIndexes(@Nonnull final PgContext pgContext) {
+    public List<UnusedIndex> getUnusedIndexes(@Nonnull final PgContext pgContext) {
         return executeQuery(Diagnostics.UNUSED_INDEXES, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final String indexName = rs.getString("index_name");
@@ -106,34 +100,6 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
             final String columnsAsString = rs.getString("columns");
             final String[] columns = columnsAsString.split(", ");
             return ForeignKey.of(tableName, constraintName, Arrays.asList(columns));
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Nonnull
-    @Override
-    public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
-        return executeQuery(Diagnostics.TABLES_WITH_MISSING_INDEXES, pgContext, rs -> {
-            final String tableName = rs.getString("table_name");
-            final long tableSize = rs.getLong("table_size");
-            final long seqScans = rs.getLong("seq_scan");
-            final long indexScans = rs.getLong("idx_scan");
-            return TableWithMissingIndex.of(tableName, tableSize, seqScans, indexScans);
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Nonnull
-    @Override
-    public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
-        return executeQuery(Diagnostics.TABLES_WITHOUT_PRIMARY_KEY, pgContext, rs -> {
-            final String tableName = rs.getString("table_name");
-            final long tableSize = rs.getLong("table_size");
-            return Table.of(tableName, tableSize);
         });
     }
 
@@ -177,43 +143,5 @@ public class IndexMaintenanceImpl implements IndexMaintenance {
             final int bloatPercentage = rs.getInt("bloat_percentage");
             return IndexWithBloat.of(tableName, indexName, indexSize, bloatSize, bloatPercentage);
         });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Nonnull
-    public List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext) {
-        return executeQueryWithBloatThreshold(Diagnostics.BLOATED_TABLES, pgContext, rs -> {
-            final String tableName = rs.getString("table_name");
-            final long tableSize = rs.getLong("table_size");
-            final long bloatSize = rs.getLong("bloat_size");
-            final int bloatPercentage = rs.getInt("bloat_percentage");
-            return TableWithBloat.of(tableName, tableSize, bloatSize, bloatPercentage);
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Nonnull
-    public PgHost getHost() {
-        return pgConnection.getHost();
-    }
-
-    private <T> List<T> executeQuery(@Nonnull final Diagnostics diagnostics,
-                                     @Nonnull final PgContext pgContext,
-                                     @Nonnull final ResultSetExtractor<T> rse) {
-        final String sqlQuery = SqlQueryReader.getQueryFromFile(diagnostics.getSqlQueryFileName());
-        return QueryExecutor.executeQueryWithSchema(pgConnection, pgContext, sqlQuery, rse);
-    }
-
-    private <T> List<T> executeQueryWithBloatThreshold(@Nonnull final Diagnostics diagnostics,
-                                                       @Nonnull final PgContext pgContext,
-                                                       @Nonnull final ResultSetExtractor<T> rse) {
-        final String sqlQuery = SqlQueryReader.getQueryFromFile(diagnostics.getSqlQueryFileName());
-        return QueryExecutor.executeQueryWithBloatThreshold(pgConnection, pgContext, sqlQuery, rse);
     }
 }

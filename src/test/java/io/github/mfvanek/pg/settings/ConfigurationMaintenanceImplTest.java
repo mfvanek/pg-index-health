@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.settings;
 
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
@@ -32,11 +32,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public final class ConfigurationMaintenanceImplTest extends DatabaseAwareTestBase {
+
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres =
-            PostgresExtensionFactory
-                    .database()
-                    .withAdditionalStartupParameter(ImportantParam.LOCK_TIMEOUT.getName(), "1000");
+    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database()
+            .withAdditionalStartupParameter(ImportantParam.LOCK_TIMEOUT.getName(), "1000");
 
     private final ConfigurationMaintenance configurationMaintenance;
 

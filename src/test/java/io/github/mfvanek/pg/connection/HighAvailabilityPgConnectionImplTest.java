@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -37,7 +37,7 @@ class HighAvailabilityPgConnectionImplTest {
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
         assertNotNull(haPgConnection);
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), hasSize(1));
-        assertEquals(haPgConnection.getConnectionToMaster(), haPgConnection.getConnectionsToAllHostsInCluster().iterator().next());
+        assertEquals(haPgConnection.getConnectionToPrimary(), haPgConnection.getConnectionsToAllHostsInCluster().iterator().next());
     }
 
     @Test

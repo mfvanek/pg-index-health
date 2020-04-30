@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
- * An abstraction of a connection to a high availability cluster (with set of master host and replicas).
+ * An abstraction of a connection to a high availability cluster (with set of primary host and replicas).
  *
  * @author Ivan Vakhrushev
  * @see PgConnection
@@ -22,15 +22,15 @@ import java.util.Set;
 public interface HighAvailabilityPgConnection {
 
     /**
-     * Gets connection to a master host in target cluster.
+     * Gets connection to a primary host in the cluster.
      *
-     * @return {@code PgConnection} to a master host in target cluster
+     * @return {@code PgConnection} to a primary host in the cluster
      */
     @Nonnull
-    PgConnection getConnectionToMaster();
+    PgConnection getConnectionToPrimary();
 
     /**
-     * Gets connections to all hosts in target cluster (including a connection to a master host).
+     * Gets connections to all hosts in the cluster (including a connection to a primary host).
      *
      * @return {@code Set} of connections to all hosts in target cluster
      */

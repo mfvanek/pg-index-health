@@ -10,11 +10,11 @@
 
 package io.github.mfvanek.pg.index.health;
 
+import io.github.mfvanek.pg.common.maintenance.MaintenanceFactory;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
-import io.github.mfvanek.pg.index.maintenance.IndexMaintenance;
-import io.github.mfvanek.pg.index.maintenance.MaintenanceFactory;
-import io.github.mfvanek.pg.index.maintenance.StatisticsMaintenance;
+import io.github.mfvanek.pg.index.maintenance.IndexesMaintenanceOnHost;
 import io.github.mfvanek.pg.model.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.ForeignKey;
 import io.github.mfvanek.pg.model.Index;
@@ -25,38 +25,45 @@ import io.github.mfvanek.pg.model.Table;
 import io.github.mfvanek.pg.model.TableWithBloat;
 import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
+import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenance;
+import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHost;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
  * Implementation of {@code IndexesHealth} which collects information from all hosts in the cluster.
  *
  * @author Ivan Vakhrushev
- * @see IndexMaintenance
+ * @see IndexesMaintenanceOnHost
  */
 public class IndexesHealthImpl implements IndexesHealth {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexesHealthImpl.class);
 
-    private final IndexMaintenance maintenanceForMaster;
-    private final List<IndexMaintenance> indexMaintenanceForAllHostsInCluster;
-    private final List<StatisticsMaintenance> statisticsMaintenanceForAllHostsInCluster;
+    private final IndexesMaintenanceOnHost indexesMaintenanceForPrimary;
+    private final TablesMaintenanceOnHost tablesMaintenanceForPrimary;
+    private final Collection<IndexesMaintenanceOnHost> indexesMaintenanceForAllHostsInCluster;
+    private final Collection<TablesMaintenanceOnHost> tablesMaintenanceForAllHostsInCluster;
+    private final Collection<StatisticsMaintenance> statisticsMaintenanceForAllHostsInCluster;
 
     public IndexesHealthImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
                              @Nonnull final MaintenanceFactory maintenanceFactory) {
         Objects.requireNonNull(haPgConnection);
         Objects.requireNonNull(maintenanceFactory);
-        this.maintenanceForMaster = maintenanceFactory.forIndex(haPgConnection.getConnectionToMaster());
-        this.indexMaintenanceForAllHostsInCluster = ReplicasHelper.createIndexMaintenanceForReplicas(
-                haPgConnection.getConnectionsToAllHostsInCluster(), maintenanceFactory);
-        this.statisticsMaintenanceForAllHostsInCluster = ReplicasHelper.createStatisticsMaintenanceForReplicas(
-                haPgConnection.getConnectionsToAllHostsInCluster(), maintenanceFactory);
+        this.indexesMaintenanceForPrimary = maintenanceFactory.forIndexes(haPgConnection.getConnectionToPrimary());
+        this.tablesMaintenanceForPrimary = maintenanceFactory.forTables(haPgConnection.getConnectionToPrimary());
+        final Set<PgConnection> pgConnections = haPgConnection.getConnectionsToAllHostsInCluster();
+        this.indexesMaintenanceForAllHostsInCluster = maintenanceFactory.forIndexes(pgConnections);
+        this.tablesMaintenanceForAllHostsInCluster = maintenanceFactory.forTables(pgConnections);
+        this.statisticsMaintenanceForAllHostsInCluster = maintenanceFactory.forStatistics(pgConnections);
     }
 
     /**
@@ -66,7 +73,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<Index> getInvalidIndexes(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getInvalidIndexes(pgContext);
+        return indexesMaintenanceForPrimary.getInvalidIndexes(pgContext);
     }
 
     /**
@@ -76,7 +83,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getDuplicatedIndexes(pgContext);
+        return indexesMaintenanceForPrimary.getDuplicatedIndexes(pgContext);
     }
 
     /**
@@ -86,7 +93,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getIntersectedIndexes(pgContext);
+        return indexesMaintenanceForPrimary.getIntersectedIndexes(pgContext);
     }
 
     /**
@@ -96,10 +103,10 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<UnusedIndex> getUnusedIndexes(@Nonnull final PgContext pgContext) {
         final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = new ArrayList<>();
-        for (IndexMaintenance maintenanceForHost : indexMaintenanceForAllHostsInCluster) {
+        for (IndexesMaintenanceOnHost maintenanceForHost : indexesMaintenanceForAllHostsInCluster) {
             potentiallyUnusedIndexesFromAllHosts.add(
                     doOnHost(maintenanceForHost.getHost(),
-                            () -> maintenanceForHost.getPotentiallyUnusedIndexes(pgContext)));
+                            () -> maintenanceForHost.getUnusedIndexes(pgContext)));
         }
         return ReplicasHelper.getUnusedIndexesAsIntersectionResult(potentiallyUnusedIndexesFromAllHosts);
     }
@@ -111,7 +118,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getForeignKeysNotCoveredWithIndex(pgContext);
+        return indexesMaintenanceForPrimary.getForeignKeysNotCoveredWithIndex(pgContext);
     }
 
     /**
@@ -121,7 +128,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
         final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = new ArrayList<>();
-        for (IndexMaintenance maintenanceForHost : indexMaintenanceForAllHostsInCluster) {
+        for (TablesMaintenanceOnHost maintenanceForHost : tablesMaintenanceForAllHostsInCluster) {
             tablesWithMissingIndexesFromAllHosts.add(
                     doOnHost(maintenanceForHost.getHost(),
                             () -> maintenanceForHost.getTablesWithMissingIndexes(pgContext)));
@@ -136,7 +143,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getTablesWithoutPrimaryKey(pgContext);
+        return tablesMaintenanceForPrimary.getTablesWithoutPrimaryKey(pgContext);
     }
 
     /**
@@ -146,7 +153,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getIndexesWithNullValues(pgContext);
+        return indexesMaintenanceForPrimary.getIndexesWithNullValues(pgContext);
     }
 
     /**
@@ -156,7 +163,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Override
     public List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getIndexesWithBloat(pgContext);
+        return indexesMaintenanceForPrimary.getIndexesWithBloat(pgContext);
     }
 
     /**
@@ -166,7 +173,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     @Nonnull
     public List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext) {
         logExecutingOnMaster();
-        return maintenanceForMaster.getTablesWithBloat(pgContext);
+        return tablesMaintenanceForPrimary.getTablesWithBloat(pgContext);
     }
 
     /**
@@ -180,7 +187,7 @@ public class IndexesHealthImpl implements IndexesHealth {
     }
 
     private void logExecutingOnMaster() {
-        LOGGER.debug("Going to execute on master host [{}]", maintenanceForMaster.getHost().getName());
+        LOGGER.debug("Going to execute on master host [{}]", indexesMaintenanceForPrimary.getHost().getName());
     }
 
     private <T> T doOnHost(@Nonnull final PgHost host, Supplier<T> action) {

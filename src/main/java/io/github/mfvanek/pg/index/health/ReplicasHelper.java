@@ -10,10 +10,6 @@
 
 package io.github.mfvanek.pg.index.health;
 
-import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.index.maintenance.IndexMaintenance;
-import io.github.mfvanek.pg.index.maintenance.MaintenanceFactory;
-import io.github.mfvanek.pg.index.maintenance.StatisticsMaintenance;
 import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;
 import org.apache.commons.collections4.CollectionUtils;
@@ -25,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 final class ReplicasHelper {
@@ -34,24 +29,6 @@ final class ReplicasHelper {
 
     private ReplicasHelper() {
         throw new UnsupportedOperationException();
-    }
-
-    @Nonnull
-    static List<IndexMaintenance> createIndexMaintenanceForReplicas(
-            @Nonnull final Set<PgConnection> connectionsToReplicas,
-            @Nonnull final MaintenanceFactory maintenanceFactory) {
-        return connectionsToReplicas.stream()
-                .map(maintenanceFactory::forIndex)
-                .collect(Collectors.toList());
-    }
-
-    @Nonnull
-    static List<StatisticsMaintenance> createStatisticsMaintenanceForReplicas(
-            @Nonnull final Set<PgConnection> connectionsToReplicas,
-            @Nonnull final MaintenanceFactory maintenanceFactory) {
-        return connectionsToReplicas.stream()
-                .map(maintenanceFactory::forStatistics)
-                .collect(Collectors.toList());
     }
 
     @Nonnull
