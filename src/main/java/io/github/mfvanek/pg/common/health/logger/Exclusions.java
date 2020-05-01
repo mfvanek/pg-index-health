@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index.health.logger;
+package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.utils.Validators;
@@ -20,11 +20,11 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * A listing of exclusions for {@link IndexesHealthLogger}.
+ * A listing of exclusions for {@link HealthLogger}.
  *
  * @author Ivan Vakhrushev
- * @see IndexesHealthLogger
- * @see AbstractIndexesHealthLogger
+ * @see HealthLogger
+ * @see AbstractHealthLogger
  */
 public class Exclusions {
 
@@ -198,7 +198,7 @@ public class Exclusions {
         }
 
         /**
-         * Sets a list of duplicated indexes that should be excluded by {@link IndexesHealthLogger}.
+         * Sets a list of duplicated indexes that should be excluded by {@link HealthLogger}.
          *
          * @param duplicatedIndexesExclusions comma-separated list of duplicated indexes,
          *                                    for example {@code "idx_name_1, idx_name_2"}
@@ -210,7 +210,7 @@ public class Exclusions {
         }
 
         /**
-         * Sets a list of intersected indexes that should be excluded by {@link IndexesHealthLogger}.
+         * Sets a list of intersected indexes that should be excluded by {@link HealthLogger}.
          *
          * @param intersectedIndexesExclusions comma-separated list of intersected indexes,
          *                                     for example {@code "idx_name_1, idx_name_2"}
@@ -222,7 +222,7 @@ public class Exclusions {
         }
 
         /**
-         * Sets a list of unused indexes that should be excluded by {@link IndexesHealthLogger}.
+         * Sets a list of unused indexes that should be excluded by {@link HealthLogger}.
          *
          * @param unusedIndexesExclusions comma-separated list of unused indexes,
          *                                for example {@code "idx_name_1, idx_name_2"}

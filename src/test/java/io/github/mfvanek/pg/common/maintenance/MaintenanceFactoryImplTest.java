@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.index.maintenance.IndexesMaintenanceOnHost;
-import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenance;
+import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHost;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
@@ -66,10 +66,10 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
 
     @Test
     void forStatistics() {
-        final StatisticsMaintenance maintenance = factory.forStatistics(pgConnection);
+        final StatisticsMaintenanceOnHost maintenance = factory.forStatistics(pgConnection);
         assertNotNull(maintenance);
 
-        final Collection<StatisticsMaintenance> maintenanceOnHosts =
+        final Collection<StatisticsMaintenanceOnHost> maintenanceOnHosts =
                 factory.forStatistics(Collections.singletonList(pgConnection));
         assertNotNull(maintenanceOnHosts);
         assertThat(maintenanceOnHosts, hasSize(1));

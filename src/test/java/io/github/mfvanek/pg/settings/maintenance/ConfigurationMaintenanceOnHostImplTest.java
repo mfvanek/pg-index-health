@@ -8,12 +8,16 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.settings;
+package io.github.mfvanek.pg.settings.maintenance;
 
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.MemoryUnit;
+import io.github.mfvanek.pg.settings.ImportantParam;
+import io.github.mfvanek.pg.settings.PgParam;
+import io.github.mfvanek.pg.settings.PgParamImpl;
+import io.github.mfvanek.pg.settings.ServerSpecification;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -31,17 +35,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class ConfigurationMaintenanceImplTest extends DatabaseAwareTestBase {
+public final class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
     static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database()
             .withAdditionalStartupParameter(ImportantParam.LOCK_TIMEOUT.getName(), "1000");
 
-    private final ConfigurationMaintenance configurationMaintenance;
+    private final ConfigurationMaintenanceOnHost configurationMaintenance;
 
-    ConfigurationMaintenanceImplTest() {
+    ConfigurationMaintenanceOnHostImplTest() {
         super(embeddedPostgres.getTestDatabase());
-        this.configurationMaintenance = new ConfigurationMaintenanceImpl(
+        this.configurationMaintenance = new ConfigurationMaintenanceOnHostImpl(
                 PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase()));
     }
 

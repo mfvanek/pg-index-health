@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index.health;
+package io.github.mfvanek.pg.common.health;
 
 import io.github.mfvanek.pg.model.TableWithMissingIndex;
 import io.github.mfvanek.pg.model.UnusedIndex;

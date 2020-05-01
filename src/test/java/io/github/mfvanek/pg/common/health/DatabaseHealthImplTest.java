@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index.health;
+package io.github.mfvanek.pg.common.health;
 
 import io.github.mfvanek.pg.common.maintenance.MaintenanceFactoryImpl;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
@@ -46,24 +46,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
+class DatabaseHealthImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
     static final PostgresDbExtension embeddedPostgres =
             PostgresExtensionFactory.database();
 
-    private final IndexesHealth indexesHealth;
+    private final DatabaseHealth databaseHealth;
 
-    IndexesHealthImplTest() {
+    DatabaseHealthImplTest() {
         super(embeddedPostgres.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(
                 PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase()));
-        this.indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
+        this.databaseHealth = new DatabaseHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
     }
 
     @Test
     void getInvalidIndexesOnEmptyDatabase() {
-        final List<Index> invalidIndexes = indexesHealth.getInvalidIndexes();
+        final List<Index> invalidIndexes = databaseHealth.getInvalidIndexes();
         assertNotNull(invalidIndexes);
         assertThat(invalidIndexes, empty());
     }
@@ -74,7 +74,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final List<Index> invalidIndexes = indexesHealth.getInvalidIndexes(ctx);
+                    final List<Index> invalidIndexes = databaseHealth.getInvalidIndexes(ctx);
                     assertNotNull(invalidIndexes);
                     assertThat(invalidIndexes, empty());
                 });
@@ -86,7 +86,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withInvalidIndex(),
                 ctx -> {
-                    final List<Index> invalidIndexes = indexesHealth.getInvalidIndexes(ctx);
+                    final List<Index> invalidIndexes = databaseHealth.getInvalidIndexes(ctx);
                     assertNotNull(invalidIndexes);
                     assertThat(invalidIndexes, hasSize(1));
                     final Index index = invalidIndexes.get(0);
@@ -97,7 +97,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getDuplicatedIndexesOnEmptyDatabase() {
-        final List<DuplicatedIndexes> duplicatedIndexes = indexesHealth.getDuplicatedIndexes();
+        final List<DuplicatedIndexes> duplicatedIndexes = databaseHealth.getDuplicatedIndexes();
         assertNotNull(duplicatedIndexes);
         assertThat(duplicatedIndexes, empty());
     }
@@ -108,7 +108,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final List<DuplicatedIndexes> duplicatedIndexes = indexesHealth.getDuplicatedIndexes(ctx);
+                    final List<DuplicatedIndexes> duplicatedIndexes = databaseHealth.getDuplicatedIndexes(ctx);
                     assertNotNull(duplicatedIndexes);
                     assertThat(duplicatedIndexes, empty());
                 });
@@ -120,7 +120,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withDuplicatedIndex(),
                 ctx -> {
-                    final List<DuplicatedIndexes> duplicatedIndexes = indexesHealth.getDuplicatedIndexes(ctx);
+                    final List<DuplicatedIndexes> duplicatedIndexes = databaseHealth.getDuplicatedIndexes(ctx);
                     assertNotNull(duplicatedIndexes);
                     assertThat(duplicatedIndexes, hasSize(1));
                     final DuplicatedIndexes entry = duplicatedIndexes.get(0);
@@ -139,7 +139,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withDuplicatedHashIndex(),
                 ctx -> {
-                    final List<DuplicatedIndexes> duplicatedIndexes = indexesHealth.getDuplicatedIndexes(ctx);
+                    final List<DuplicatedIndexes> duplicatedIndexes = databaseHealth.getDuplicatedIndexes(ctx);
                     assertNotNull(duplicatedIndexes);
                     assertThat(duplicatedIndexes, empty());
                 });
@@ -151,7 +151,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withDifferentOpclassIndexes(),
                 ctx -> {
-                    final List<DuplicatedIndexes> duplicatedIndexes = indexesHealth.getDuplicatedIndexes(ctx);
+                    final List<DuplicatedIndexes> duplicatedIndexes = databaseHealth.getDuplicatedIndexes(ctx);
                     assertNotNull(duplicatedIndexes);
                     assertThat(duplicatedIndexes, empty());
                 });
@@ -163,7 +163,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withCustomCollation().withDuplicatedCustomCollationIndex(),
                 ctx -> {
-                    final List<DuplicatedIndexes> duplicatedIndexes = indexesHealth.getDuplicatedIndexes(ctx);
+                    final List<DuplicatedIndexes> duplicatedIndexes = databaseHealth.getDuplicatedIndexes(ctx);
                     assertNotNull(duplicatedIndexes);
                     assertThat(duplicatedIndexes, empty());
                 });
@@ -171,7 +171,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getIntersectedIndexesOnEmptyDatabase() {
-        final List<DuplicatedIndexes> intersectedIndexes = indexesHealth.getIntersectedIndexes();
+        final List<DuplicatedIndexes> intersectedIndexes = databaseHealth.getIntersectedIndexes();
         assertNotNull(intersectedIndexes);
         assertThat(intersectedIndexes, empty());
     }
@@ -182,7 +182,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final List<DuplicatedIndexes> intersectedIndexes = indexesHealth.getIntersectedIndexes(ctx);
+                    final List<DuplicatedIndexes> intersectedIndexes = databaseHealth.getIntersectedIndexes(ctx);
                     assertNotNull(intersectedIndexes);
                     assertThat(intersectedIndexes, empty());
                 });
@@ -194,7 +194,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withDuplicatedIndex(),
                 ctx -> {
-                    final List<DuplicatedIndexes> intersectedIndexes = indexesHealth.getIntersectedIndexes(ctx);
+                    final List<DuplicatedIndexes> intersectedIndexes = databaseHealth.getIntersectedIndexes(ctx);
                     assertNotNull(intersectedIndexes);
                     assertThat(intersectedIndexes, hasSize(2));
                     final DuplicatedIndexes firstEntry = intersectedIndexes.get(0);
@@ -220,7 +220,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withDuplicatedHashIndex(),
                 ctx -> {
-                    final List<DuplicatedIndexes> intersectedIndexes = indexesHealth.getIntersectedIndexes(ctx);
+                    final List<DuplicatedIndexes> intersectedIndexes = databaseHealth.getIntersectedIndexes(ctx);
                     assertNotNull(intersectedIndexes);
                     assertThat(intersectedIndexes, hasSize(1));
                     final DuplicatedIndexes entry = intersectedIndexes.get(0);
@@ -239,7 +239,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withDifferentOpclassIndexes(),
                 ctx -> {
-                    final List<DuplicatedIndexes> intersectedIndexes = indexesHealth.getIntersectedIndexes(ctx);
+                    final List<DuplicatedIndexes> intersectedIndexes = databaseHealth.getIntersectedIndexes(ctx);
                     assertNotNull(intersectedIndexes);
                     assertThat(intersectedIndexes, empty());
                 });
@@ -247,7 +247,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getUnusedIndexesOnEmptyDatabase() {
-        final List<UnusedIndex> unusedIndexes = indexesHealth.getUnusedIndexes();
+        final List<UnusedIndex> unusedIndexes = databaseHealth.getUnusedIndexes();
         assertNotNull(unusedIndexes);
         assertThat(unusedIndexes, empty());
     }
@@ -258,7 +258,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final List<UnusedIndex> unusedIndexes = indexesHealth.getUnusedIndexes(ctx);
+                    final List<UnusedIndex> unusedIndexes = databaseHealth.getUnusedIndexes(ctx);
                     assertNotNull(unusedIndexes);
                     assertThat(unusedIndexes, empty());
                 });
@@ -270,7 +270,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withDuplicatedIndex(),
                 ctx -> {
-                    final List<UnusedIndex> unusedIndexes = indexesHealth.getUnusedIndexes(ctx);
+                    final List<UnusedIndex> unusedIndexes = databaseHealth.getUnusedIndexes(ctx);
                     assertNotNull(unusedIndexes);
                     assertThat(unusedIndexes, hasSize(6));
                     final Set<String> names = unusedIndexes.stream().map(UnusedIndex::getIndexName).collect(toSet());
@@ -286,7 +286,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getForeignKeysNotCoveredWithIndexOnEmptyDatabase() {
-        final List<ForeignKey> foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex();
+        final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex();
         assertNotNull(foreignKeys);
         assertThat(foreignKeys, empty());
     }
@@ -297,7 +297,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp,
                 ctx -> {
-                    final List<ForeignKey> foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex(ctx);
+                    final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex(ctx);
                     assertNotNull(foreignKeys);
                     assertThat(foreignKeys, empty());
                 });
@@ -309,7 +309,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 DatabasePopulator::withReferences,
                 ctx -> {
-                    final List<ForeignKey> foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex(ctx);
+                    final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex(ctx);
                     assertNotNull(foreignKeys);
                     assertThat(foreignKeys, hasSize(1));
                     final ForeignKey foreignKey = foreignKeys.get(0);
@@ -324,7 +324,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withNonSuitableIndex(),
                 ctx -> {
-                    final List<ForeignKey> foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex(ctx);
+                    final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex(ctx);
                     assertNotNull(foreignKeys);
                     assertThat(foreignKeys, hasSize(1));
                     final ForeignKey foreignKey = foreignKeys.get(0);
@@ -339,7 +339,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withSuitableIndex(),
                 ctx -> {
-                    final List<ForeignKey> foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex(ctx);
+                    final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex(ctx);
                     assertNotNull(foreignKeys);
                     assertThat(foreignKeys, empty());
                 });
@@ -347,7 +347,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithMissingIndexesOnEmptyDatabase() {
-        final List<TableWithMissingIndex> tables = indexesHealth.getTablesWithMissingIndexes();
+        final List<TableWithMissingIndex> tables = databaseHealth.getTablesWithMissingIndexes();
         assertNotNull(tables);
         assertThat(tables, empty());
     }
@@ -358,7 +358,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
-                    final List<TableWithMissingIndex> tables = indexesHealth.getTablesWithMissingIndexes(ctx);
+                    final List<TableWithMissingIndex> tables = databaseHealth.getTablesWithMissingIndexes(ctx);
                     assertNotNull(tables);
                     assertThat(tables, empty());
                 });
@@ -371,7 +371,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
                     tryToFindAccountByClientId(schemaName);
-                    final List<TableWithMissingIndex> tables = indexesHealth.getTablesWithMissingIndexes(ctx);
+                    final List<TableWithMissingIndex> tables = databaseHealth.getTablesWithMissingIndexes(ctx);
                     assertNotNull(tables);
                     assertThat(tables, hasSize(1));
                     final TableWithMissingIndex table = tables.get(0);
@@ -383,7 +383,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithoutPrimaryKeyOnEmptyDatabase() {
-        final List<Table> tables = indexesHealth.getTablesWithoutPrimaryKey();
+        final List<Table> tables = databaseHealth.getTablesWithoutPrimaryKey();
         assertNotNull(tables);
         assertThat(tables, empty());
     }
@@ -394,7 +394,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
-                    final List<Table> tables = indexesHealth.getTablesWithoutPrimaryKey(ctx);
+                    final List<Table> tables = databaseHealth.getTablesWithoutPrimaryKey(ctx);
                     assertNotNull(tables);
                     assertThat(tables, empty());
                 });
@@ -406,7 +406,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withTableWithoutPrimaryKey(),
                 ctx -> {
-                    final List<Table> tables = indexesHealth.getTablesWithoutPrimaryKey(ctx);
+                    final List<Table> tables = databaseHealth.getTablesWithoutPrimaryKey(ctx);
                     assertNotNull(tables);
                     assertThat(tables, hasSize(1));
                     final Table table = tables.get(0);
@@ -420,7 +420,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withMaterializedView(),
                 ctx -> {
-                    final List<Table> tables = indexesHealth.getTablesWithoutPrimaryKey(ctx);
+                    final List<Table> tables = databaseHealth.getTablesWithoutPrimaryKey(ctx);
                     assertNotNull(tables);
                     assertThat(tables, empty());
                 });
@@ -428,7 +428,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getIndexesWithNullValuesOnEmptyDatabase() {
-        final List<IndexWithNulls> indexes = indexesHealth.getIndexesWithNullValues();
+        final List<IndexWithNulls> indexes = databaseHealth.getIndexesWithNullValues();
         assertNotNull(indexes);
         assertThat(indexes, empty());
     }
@@ -439,7 +439,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
-                    final List<IndexWithNulls> indexes = indexesHealth.getIndexesWithNullValues(ctx);
+                    final List<IndexWithNulls> indexes = databaseHealth.getIndexesWithNullValues(ctx);
                     assertNotNull(indexes);
                     assertThat(indexes, empty());
                 });
@@ -451,7 +451,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withNullValuesInIndex(),
                 ctx -> {
-                    final List<IndexWithNulls> indexes = indexesHealth.getIndexesWithNullValues(ctx);
+                    final List<IndexWithNulls> indexes = databaseHealth.getIndexesWithNullValues(ctx);
                     assertNotNull(indexes);
                     assertThat(indexes, hasSize(1));
                     final IndexWithNulls indexWithNulls = indexes.get(0);
@@ -462,7 +462,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getIndexesWithBloatOnEmptyDataBase() {
-        final List<IndexWithBloat> indexes = indexesHealth.getIndexesWithBloat();
+        final List<IndexWithBloat> indexes = databaseHealth.getIndexesWithBloat();
         assertNotNull(indexes);
         assertThat(indexes, empty());
     }
@@ -474,7 +474,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
                 dbp -> dbp.withReferences().withStatistics(),
                 ctx -> {
                     waitForStatisticsCollector();
-                    final List<IndexWithBloat> indexes = indexesHealth.getIndexesWithBloat(ctx);
+                    final List<IndexWithBloat> indexes = databaseHealth.getIndexesWithBloat(ctx);
                     assertNotNull(indexes);
                     assertThat(indexes, empty());
                 });
@@ -489,7 +489,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
                     waitForStatisticsCollector();
                     assertTrue(existsStatisticsForTable(ctx, "accounts"));
 
-                    final List<IndexWithBloat> indexes = indexesHealth.getIndexesWithBloat(ctx);
+                    final List<IndexWithBloat> indexes = databaseHealth.getIndexesWithBloat(ctx);
                     assertNotNull(indexes);
                     assertThat(indexes, hasSize(3));
                     final IndexWithBloat index = indexes.get(0);
@@ -503,7 +503,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getTablesWithBloatOnEmptyDataBase() {
-        final List<TableWithBloat> tables = indexesHealth.getTablesWithBloat();
+        final List<TableWithBloat> tables = databaseHealth.getTablesWithBloat();
         assertNotNull(tables);
         assertThat(tables, empty());
     }
@@ -515,7 +515,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
                 dbp -> dbp.withReferences().withStatistics(),
                 ctx -> {
                     waitForStatisticsCollector();
-                    final List<TableWithBloat> tables = indexesHealth.getTablesWithBloat(ctx);
+                    final List<TableWithBloat> tables = databaseHealth.getTablesWithBloat(ctx);
                     assertNotNull(tables);
                     assertThat(tables, empty());
                 });
@@ -530,7 +530,7 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
                     waitForStatisticsCollector();
                     assertTrue(existsStatisticsForTable(ctx, "accounts"));
 
-                    final List<TableWithBloat> tables = indexesHealth.getTablesWithBloat(ctx);
+                    final List<TableWithBloat> tables = databaseHealth.getTablesWithBloat(ctx);
                     assertNotNull(tables);
                     assertThat(tables, hasSize(2));
                     final TableWithBloat table = tables.get(0);
@@ -538,20 +538,6 @@ public final class IndexesHealthImplTest extends DatabaseAwareTestBase {
                     assertEquals(114688L, table.getTableSizeInBytes());
                     assertEquals(0L, table.getBloatSizeInBytes());
                     assertEquals(0, table.getBloatPercentage());
-                });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void shouldResetCounters(final String schemaName) {
-        executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData(),
-                ctx -> {
-                    tryToFindAccountByClientId(schemaName);
-                    assertThat(getSeqScansForAccounts(ctx), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
-                    indexesHealth.resetStatistics();
-                    waitForStatisticsCollector();
-                    assertEquals(0L, getSeqScansForAccounts(ctx));
                 });
     }
 }

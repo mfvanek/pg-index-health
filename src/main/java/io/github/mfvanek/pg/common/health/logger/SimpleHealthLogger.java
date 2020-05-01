@@ -8,9 +8,9 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index.health.logger;
+package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.index.health.IndexesHealth;
+import io.github.mfvanek.pg.common.health.DatabaseHealth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,12 +18,12 @@ import javax.annotation.Nonnull;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class SimpleHealthLogger extends AbstractIndexesHealthLogger {
+public class SimpleHealthLogger extends AbstractHealthLogger {
 
     private static final Logger KV_LOG = LoggerFactory.getLogger("key-value.log");
 
-    public SimpleHealthLogger(@Nonnull final IndexesHealth indexesHealth) {
-        super(indexesHealth);
+    public SimpleHealthLogger(@Nonnull final DatabaseHealth databaseHealth) {
+        super(databaseHealth);
     }
 
     @Override

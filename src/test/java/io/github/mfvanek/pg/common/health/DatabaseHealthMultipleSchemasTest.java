@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index.health;
+package io.github.mfvanek.pg.common.health;
 
 import io.github.mfvanek.pg.model.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.ForeignKey;
@@ -37,21 +37,21 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 
-class IndexesHealthMultipleSchemasTest {
+class DatabaseHealthMultipleSchemasTest {
 
-    private final IndexesHealth indexesHealth = Mockito.spy(IndexesHealth.class);
+    private final DatabaseHealth databaseHealth = Mockito.spy(DatabaseHealth.class);
     private final Collection<PgContext> contexts = Arrays.asList(
             PgContext.of("demo"), PgContext.of("test"), PgContext.ofPublic());
 
     @Test
     void getInvalidIndexes() {
-        Mockito.when(indexesHealth.getInvalidIndexes(any(PgContext.class)))
+        Mockito.when(databaseHealth.getInvalidIndexes(any(PgContext.class)))
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Collections.singletonList(
                             Index.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i1")));
                 });
-        final List<Index> indexes = indexesHealth.getInvalidIndexes(contexts);
+        final List<Index> indexes = databaseHealth.getInvalidIndexes(contexts);
         assertNotNull(indexes);
         assertThat(indexes, hasSize(3));
         assertThat(indexes.stream()
@@ -61,14 +61,14 @@ class IndexesHealthMultipleSchemasTest {
 
     @Test
     void getDuplicatedIndexes() {
-        Mockito.when(indexesHealth.getDuplicatedIndexes(any(PgContext.class)))
+        Mockito.when(databaseHealth.getDuplicatedIndexes(any(PgContext.class)))
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Collections.singletonList(DuplicatedIndexes.of(
                             IndexWithSize.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i1"), 1L),
                             IndexWithSize.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i2"), 1L)));
                 });
-        final List<DuplicatedIndexes> indexes = indexesHealth.getDuplicatedIndexes(contexts);
+        final List<DuplicatedIndexes> indexes = databaseHealth.getDuplicatedIndexes(contexts);
         assertNotNull(indexes);
         assertThat(indexes, hasSize(3));
         assertThat(indexes.stream()
@@ -78,7 +78,7 @@ class IndexesHealthMultipleSchemasTest {
 
     @Test
     void getIntersectedIndexes() {
-        Mockito.when(indexesHealth.getIntersectedIndexes(any(PgContext.class)))
+        Mockito.when(databaseHealth.getIntersectedIndexes(any(PgContext.class)))
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Arrays.asList(
@@ -89,7 +89,7 @@ class IndexesHealthMultipleSchemasTest {
                                     IndexWithSize.of(ctx.enrichWithSchema("t2"), ctx.enrichWithSchema("i3"), 3L),
                                     IndexWithSize.of(ctx.enrichWithSchema("t2"), ctx.enrichWithSchema("i4"), 4L)));
                 });
-        final List<DuplicatedIndexes> indexes = indexesHealth.getIntersectedIndexes(contexts);
+        final List<DuplicatedIndexes> indexes = databaseHealth.getIntersectedIndexes(contexts);
         assertNotNull(indexes);
         assertThat(indexes, hasSize(6));
         assertThat(indexes.stream()
@@ -99,14 +99,14 @@ class IndexesHealthMultipleSchemasTest {
 
     @Test
     void getUnusedIndexes() {
-        Mockito.when(indexesHealth.getUnusedIndexes(any(PgContext.class)))
+        Mockito.when(databaseHealth.getUnusedIndexes(any(PgContext.class)))
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Arrays.asList(
                             UnusedIndex.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i1"), 1L, 1L),
                             UnusedIndex.of(ctx.enrichWithSchema("t2"), ctx.enrichWithSchema("i2"), 2L, 0L));
                 });
-        final List<UnusedIndex> indexes = indexesHealth.getUnusedIndexes(contexts);
+        final List<UnusedIndex> indexes = databaseHealth.getUnusedIndexes(contexts);
         assertNotNull(indexes);
         assertThat(indexes, hasSize(6));
         assertThat(indexes.stream()
@@ -116,14 +116,14 @@ class IndexesHealthMultipleSchemasTest {
 
     @Test
     void getForeignKeysNotCoveredWithIndex() {
-        Mockito.when(indexesHealth.getForeignKeysNotCoveredWithIndex(any(PgContext.class)))
+        Mockito.when(databaseHealth.getForeignKeysNotCoveredWithIndex(any(PgContext.class)))
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Arrays.asList(
                             ForeignKey.ofColumn(ctx.enrichWithSchema("t1"), "f1", "col1"),
                             ForeignKey.ofColumn(ctx.enrichWithSchema("t1"), "f2", "col2"));
                 });
-        final List<ForeignKey> foreignKeys = indexesHealth.getForeignKeysNotCoveredWithIndex(contexts);
+        final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex(contexts);
         assertNotNull(foreignKeys);
         assertThat(foreignKeys, hasSize(6));
         assertThat(foreignKeys.stream()
@@ -133,12 +133,12 @@ class IndexesHealthMultipleSchemasTest {
 
     @Test
     void getTablesWithMissingIndexes() {
-        Mockito.when(indexesHealth.getTablesWithMissingIndexes(any(PgContext.class)))
+        Mockito.when(databaseHealth.getTablesWithMissingIndexes(any(PgContext.class)))
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Collections.singletonList(TableWithMissingIndex.of(ctx.enrichWithSchema("t"), 1L, 100L, 2L));
                 });
-        final List<TableWithMissingIndex> tables = indexesHealth.getTablesWithMissingIndexes(contexts);
+        final List<TableWithMissingIndex> tables = databaseHealth.getTablesWithMissingIndexes(contexts);
         assertNotNull(tables);
         assertThat(tables, hasSize(3));
         assertThat(tables.stream()
@@ -148,14 +148,14 @@ class IndexesHealthMultipleSchemasTest {
 
     @Test
     void getTablesWithoutPrimaryKey() {
-        Mockito.when(indexesHealth.getTablesWithoutPrimaryKey(any(PgContext.class)))
+        Mockito.when(databaseHealth.getTablesWithoutPrimaryKey(any(PgContext.class)))
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Arrays.asList(
                             Table.of(ctx.enrichWithSchema("t1"), 1L),
                             Table.of(ctx.enrichWithSchema("t2"), 1L));
                 });
-        final List<Table> tables = indexesHealth.getTablesWithoutPrimaryKey(contexts);
+        final List<Table> tables = databaseHealth.getTablesWithoutPrimaryKey(contexts);
         assertNotNull(tables);
         assertThat(tables, hasSize(6));
         assertThat(tables.stream()
@@ -165,13 +165,13 @@ class IndexesHealthMultipleSchemasTest {
 
     @Test
     void getIndexesWithNullValues() {
-        Mockito.when(indexesHealth.getIndexesWithNullValues(any(PgContext.class)))
+        Mockito.when(databaseHealth.getIndexesWithNullValues(any(PgContext.class)))
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Collections.singletonList(
                             IndexWithNulls.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i1"), 1L, "col1"));
                 });
-        final List<IndexWithNulls> indexes = indexesHealth.getIndexesWithNullValues(contexts);
+        final List<IndexWithNulls> indexes = databaseHealth.getIndexesWithNullValues(contexts);
         assertNotNull(indexes);
         assertThat(indexes, hasSize(3));
         assertThat(indexes.stream()
@@ -181,13 +181,13 @@ class IndexesHealthMultipleSchemasTest {
 
     @Test
     void getIndexesWithBloat() {
-        Mockito.when(indexesHealth.getIndexesWithBloat(any(PgContext.class)))
+        Mockito.when(databaseHealth.getIndexesWithBloat(any(PgContext.class)))
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Collections.singletonList(
                             IndexWithBloat.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i1"), 100L, 30L, 30));
                 });
-        final List<IndexWithBloat> indexes = indexesHealth.getIndexesWithBloat(contexts);
+        final List<IndexWithBloat> indexes = databaseHealth.getIndexesWithBloat(contexts);
         assertNotNull(indexes);
         assertThat(indexes, hasSize(3));
         assertThat(indexes.stream()
@@ -197,14 +197,14 @@ class IndexesHealthMultipleSchemasTest {
 
     @Test
     void getTablesWithBloat() {
-        Mockito.when(indexesHealth.getTablesWithBloat(any(PgContext.class)))
+        Mockito.when(databaseHealth.getTablesWithBloat(any(PgContext.class)))
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Arrays.asList(
                             TableWithBloat.of(ctx.enrichWithSchema("t1"), 100L, 45L, 45),
                             TableWithBloat.of(ctx.enrichWithSchema("t2"), 10L, 9L, 90));
                 });
-        final List<TableWithBloat> tables = indexesHealth.getTablesWithBloat(contexts);
+        final List<TableWithBloat> tables = databaseHealth.getTablesWithBloat(contexts);
         assertNotNull(tables);
         assertThat(tables, hasSize(6));
         assertThat(tables.stream()

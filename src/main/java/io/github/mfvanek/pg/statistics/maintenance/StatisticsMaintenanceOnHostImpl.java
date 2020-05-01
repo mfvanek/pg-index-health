@@ -10,31 +10,22 @@
 
 package io.github.mfvanek.pg.statistics.maintenance;
 
+import io.github.mfvanek.pg.common.maintenance.AbstractMaintenance;
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.utils.QueryExecutor;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Objects;
 
-public class StatisticsMaintenanceImpl implements StatisticsMaintenance {
+public class StatisticsMaintenanceOnHostImpl extends AbstractMaintenance implements StatisticsMaintenanceOnHost {
 
-    private final PgConnection pgConnection;
-
-    public StatisticsMaintenanceImpl(@Nonnull final PgConnection pgConnection) {
-        this.pgConnection = Objects.requireNonNull(pgConnection);
+    public StatisticsMaintenanceOnHostImpl(@Nonnull final PgConnection pgConnection) {
+        super(pgConnection);
     }
 
     @Override
     public boolean resetStatistics() {
         final List<Boolean> result = QueryExecutor.executeQuery(pgConnection, "select pg_stat_reset()", rs -> true);
         return result.size() == 1;
-    }
-
-    @Nonnull
-    @Override
-    public PgHost getHost() {
-        return pgConnection.getHost();
     }
 }

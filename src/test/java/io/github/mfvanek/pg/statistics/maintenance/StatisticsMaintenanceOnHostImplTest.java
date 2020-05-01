@@ -27,17 +27,17 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public final class StatisticsMaintenanceImplTest extends DatabaseAwareTestBase {
+public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
     static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
 
-    private final StatisticsMaintenance statisticsMaintenance;
+    private final StatisticsMaintenanceOnHost statisticsMaintenance;
 
-    StatisticsMaintenanceImplTest() {
+    StatisticsMaintenanceOnHostImplTest() {
         super(embeddedPostgres.getTestDatabase());
         final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
-        this.statisticsMaintenance = new StatisticsMaintenanceImpl(pgConnection);
+        this.statisticsMaintenance = new StatisticsMaintenanceOnHostImpl(pgConnection);
     }
 
     @Test

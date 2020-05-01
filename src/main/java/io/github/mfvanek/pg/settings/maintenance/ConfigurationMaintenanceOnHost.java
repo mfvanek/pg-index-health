@@ -8,12 +8,23 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.settings;
+package io.github.mfvanek.pg.settings.maintenance;
+
+import io.github.mfvanek.pg.connection.HostAware;
+import io.github.mfvanek.pg.settings.ParamNameAware;
+import io.github.mfvanek.pg.settings.PgParam;
+import io.github.mfvanek.pg.settings.ServerSpecification;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public interface ConfigurationMaintenance {
+/**
+ * An entry point for working with database configuration on the specified host.
+ *
+ * @author Ivan Vakhrushev
+ * @see HostAware
+ */
+public interface ConfigurationMaintenanceOnHost extends HostAware {
 
     @Nonnull
     Set<PgParam> getParamsWithDefaultValues(@Nonnull ServerSpecification specification);

@@ -8,16 +8,16 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index.health.logger;
+package io.github.mfvanek.pg.common.health.logger;
 
+import io.github.mfvanek.pg.common.health.DatabaseHealth;
+import io.github.mfvanek.pg.common.health.DatabaseHealthImpl;
+import io.github.mfvanek.pg.common.maintenance.MaintenanceFactoryImpl;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
-import io.github.mfvanek.pg.index.health.IndexesHealth;
-import io.github.mfvanek.pg.index.health.IndexesHealthImpl;
-import io.github.mfvanek.pg.common.maintenance.MaintenanceFactoryImpl;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -31,18 +31,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public final class IndexesHealthLoggerTest extends DatabaseAwareTestBase {
+public final class HealthLoggerTest extends DatabaseAwareTestBase {
+
     @RegisterExtension
     static final PostgresDbExtension embeddedPostgres =
             PostgresExtensionFactory.database();
 
-    private final IndexesHealthLogger logger;
+    private final HealthLogger logger;
 
-    IndexesHealthLoggerTest() {
+    HealthLoggerTest() {
         super(embeddedPostgres.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase()));
-        final IndexesHealth indexesHealth = new IndexesHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
-        this.logger = new SimpleHealthLogger(indexesHealth);
+        final DatabaseHealth databaseHealth = new DatabaseHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
+        this.logger = new SimpleHealthLogger(databaseHealth);
     }
 
     @ParameterizedTest

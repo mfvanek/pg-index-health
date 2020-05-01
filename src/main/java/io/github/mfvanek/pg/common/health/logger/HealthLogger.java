@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index.health.logger;
+package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.model.PgContext;
 
@@ -16,14 +16,14 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * An abstraction of indexes health logger.
+ * An abstraction of indexes and tables health logger.
  *
  * @author Ivan Vakhrushev
  */
-public interface IndexesHealthLogger {
+public interface HealthLogger {
 
     /**
-     * Logs indexes health with given exclusions in given schema.
+     * Logs indexes and tables health with given exclusions in given schema.
      *
      * @param exclusions {@link Exclusions}
      * @param pgContext  {@link PgContext}
@@ -33,7 +33,7 @@ public interface IndexesHealthLogger {
     List<String> logAll(@Nonnull Exclusions exclusions, @Nonnull PgContext pgContext);
 
     /**
-     * Logs indexes health with given exclusions in public schema.
+     * Logs indexes and tables health with given exclusions in public schema.
      *
      * @param exclusions {@link Exclusions}
      * @return results of logging health indexes

@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.statistics.maintenance;
 
 import io.github.mfvanek.pg.connection.HostAware;
+import io.github.mfvanek.pg.statistics.StatisticsAware;
 
 /**
  * An entry point for managing statistics on the specified host.
@@ -18,7 +19,7 @@ import io.github.mfvanek.pg.connection.HostAware;
  * @author Ivan Vakhrushev
  * @see HostAware
  */
-public interface StatisticsMaintenance extends HostAware {
+public interface StatisticsMaintenanceOnHost extends StatisticsAware, HostAware {
 
     /**
      * Resets all statistics counters for the current database on current host to zero.
@@ -26,5 +27,6 @@ public interface StatisticsMaintenance extends HostAware {
      *
      * @return true if has been called successfully
      */
+    @Override
     boolean resetStatistics();
 }

@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index.health.logger;
+package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
 import org.junit.jupiter.api.Test;

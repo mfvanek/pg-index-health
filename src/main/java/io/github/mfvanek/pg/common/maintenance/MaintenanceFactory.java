@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.index.maintenance.IndexesMaintenanceOnHost;
-import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenance;
+import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHost;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @author Ivan Vakhrushev
  * @see IndexesMaintenanceOnHost
  * @see TablesMaintenanceOnHost
- * @see StatisticsMaintenance
+ * @see StatisticsMaintenanceOnHost
  * @see PgConnection
  */
 public interface MaintenanceFactory {
@@ -57,10 +57,10 @@ public interface MaintenanceFactory {
      * @return {@code StatisticsMaintenance} object
      */
     @Nonnull
-    StatisticsMaintenance forStatistics(@Nonnull PgConnection pgConnection);
+    StatisticsMaintenanceOnHost forStatistics(@Nonnull PgConnection pgConnection);
 
     @Nonnull
-    default Collection<StatisticsMaintenance> forStatistics(@Nonnull final Collection<PgConnection> pgConnections) {
+    default Collection<StatisticsMaintenanceOnHost> forStatistics(@Nonnull final Collection<PgConnection> pgConnections) {
         return pgConnections.stream()
                 .map(this::forStatistics)
                 .collect(Collectors.toList());

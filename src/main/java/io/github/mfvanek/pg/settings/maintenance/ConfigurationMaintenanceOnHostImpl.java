@@ -8,24 +8,27 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.settings;
+package io.github.mfvanek.pg.settings.maintenance;
 
+import io.github.mfvanek.pg.common.maintenance.AbstractMaintenance;
 import io.github.mfvanek.pg.connection.PgConnection;
+import io.github.mfvanek.pg.settings.ImportantParam;
+import io.github.mfvanek.pg.settings.ParamNameAware;
+import io.github.mfvanek.pg.settings.PgParam;
+import io.github.mfvanek.pg.settings.PgParamImpl;
+import io.github.mfvanek.pg.settings.ServerSpecification;
 import io.github.mfvanek.pg.utils.QueryExecutor;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Set;
 
-public class ConfigurationMaintenanceImpl implements ConfigurationMaintenance {
+public class ConfigurationMaintenanceOnHostImpl extends AbstractMaintenance implements ConfigurationMaintenanceOnHost {
 
-    private final PgConnection pgConnection;
-
-    public ConfigurationMaintenanceImpl(@Nonnull final PgConnection pgConnection) {
-        this.pgConnection = Objects.requireNonNull(pgConnection);
+    public ConfigurationMaintenanceOnHostImpl(@Nonnull final PgConnection pgConnection) {
+        super(pgConnection);
     }
 
     @Nonnull
