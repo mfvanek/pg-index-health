@@ -51,7 +51,7 @@ class PgUrlParserTest {
     }
 
     @Test
-    void extractNamesAndUrlsForMaster() {
+    void extractNamesAndUrlsForPrimary() {
         final List<Pair<String, String>> extractResult = PgUrlParser.extractNameWithPortAndUrlForEachHost(
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?targetServerType=master&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require");
         assertThat(extractResult, hasSize(4));

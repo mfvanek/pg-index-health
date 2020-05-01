@@ -13,6 +13,8 @@ package io.github.mfvanek.pg.settings;
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.utils.Validators;
 
+import javax.annotation.Nonnull;
+
 public class ServerSpecification {
 
     private final int cpuCoresAmount;
@@ -49,7 +51,7 @@ public class ServerSpecification {
                 '}';
     }
 
-    public static class Builder {
+    public static final class Builder {
 
         private int cpuCoresAmount;
         private long memoryAmountInBytes;
@@ -61,28 +63,42 @@ public class ServerSpecification {
             this.hasSSD = false;
         }
 
+        @Nonnull
         public Builder withCpuCores(final int cpuCoresAmount) {
             Validators.valueIsPositive(cpuCoresAmount, "cpuCoresAmount");
             this.cpuCoresAmount = cpuCoresAmount;
             return this;
         }
 
+        @Nonnull
         public Builder withMemoryAmount(final int unitsCount, final MemoryUnit unit) {
             Validators.valueIsPositive(unitsCount, "unitsCount");
             this.memoryAmountInBytes = unit.convertToBytes(unitsCount);
             return this;
         }
 
+        @Nonnull
         public Builder withSSD() {
             this.hasSSD = true;
             return this;
         }
 
+        @Nonnull
         public ServerSpecification build() {
             return new ServerSpecification(cpuCoresAmount, memoryAmountInBytes, hasSSD);
         }
+
+        @Override
+        public String toString() {
+            return ServerSpecification.Builder.class.getSimpleName() + '{' +
+                    "cpuCoresAmount=" + cpuCoresAmount +
+                    ", memoryAmountInBytes=" + memoryAmountInBytes +
+                    ", hasSSD=" + hasSSD +
+                    '}';
+        }
     }
 
+    @Nonnull
     public static Builder builder() {
         return new Builder();
     }

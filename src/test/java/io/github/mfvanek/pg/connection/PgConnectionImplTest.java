@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -27,27 +27,26 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class PgConnectionImplTest {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres =
-            PostgresExtensionFactory.database();
+    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
 
     @Test
-    void getMasterDataSource() {
-        final PgConnection connection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+    void getPrimaryDataSource() {
+        final PgConnection connection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         assertNotNull(connection.getDataSource());
-        assertThat(connection.getHost(), equalTo(PgHostImpl.ofMaster()));
+        assertThat(connection.getHost(), equalTo(PgHostImpl.ofPrimary()));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThrows(NullPointerException.class, () -> PgConnectionImpl.ofMaster(null));
+        assertThrows(NullPointerException.class, () -> PgConnectionImpl.ofPrimary(null));
         assertThrows(NullPointerException.class, () -> PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), null));
     }
 
     @Test
     void equalsAndHashCode() {
-        final PgConnection first = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
-        final PgConnection theSame = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final PgConnection first = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
+        final PgConnection theSame = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         final PgConnection second = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("second"));
 
         assertNotEquals(first, null);
@@ -65,8 +64,8 @@ class PgConnectionImplTest {
 
     @Test
     void toStringTest() {
-        final PgConnection connection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
-        assertEquals("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://master', hostNames=[master]}}",
+        final PgConnection connection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
+        assertEquals("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary]}}",
                 connection.toString());
     }
 }

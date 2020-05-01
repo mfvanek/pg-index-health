@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
-import io.github.mfvanek.pg.index.health.logger.SimpleLoggingKey;
+import io.github.mfvanek.pg.common.health.logger.SimpleLoggingKey;
 
 import javax.annotation.Nonnull;
 import java.util.List;

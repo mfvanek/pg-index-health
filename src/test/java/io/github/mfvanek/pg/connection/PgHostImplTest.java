@@ -22,11 +22,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class PgHostImplTest {
 
     @Test
-    void ofMaster() {
-        final PgHost host = PgHostImpl.ofMaster();
+    void ofPrimary() {
+        final PgHost host = PgHostImpl.ofPrimary();
         assertNotNull(host);
-        assertEquals("master", host.getName());
-        assertEquals("jdbc:postgresql://master", host.getPgUrl());
+        assertEquals("primary", host.getName());
+        assertEquals("jdbc:postgresql://primary", host.getPgUrl());
     }
 
     @Test
@@ -65,9 +65,9 @@ class PgHostImplTest {
 
     @Test
     void toStringTest() {
-        final PgHost host = PgHostImpl.ofMaster();
+        final PgHost host = PgHostImpl.ofPrimary();
         assertNotNull(host);
-        assertEquals("PgHostImpl{pgUrl='jdbc:postgresql://master', hostNames=[master]}", host.toString());
+        assertEquals("PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary]}", host.toString());
     }
 
     @Test
@@ -75,7 +75,7 @@ class PgHostImplTest {
         final PgHost first = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
         final PgHost theSame = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
         final PgHost withDifferentHostsOrder = PgHostImpl.ofUrl("jdbc:postgresql://host-2:5432,host-1:4432,host-4:3432,host-3:2432/db_name?ssl=true&sslmode=require");
-        final PgHost second = PgHostImpl.ofMaster();
+        final PgHost second = PgHostImpl.ofPrimary();
 
         assertNotEquals(first, null);
         assertNotEquals(first, BigDecimal.ZERO);

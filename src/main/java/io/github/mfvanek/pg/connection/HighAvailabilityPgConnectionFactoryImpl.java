@@ -65,7 +65,7 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
                                                 @Nonnull final String password,
                                                 @Nullable final String readUrl,
                                                 @Nullable final String cascadeAsyncReadUrl) {
-        final PgConnection connectionToMaster = pgConnectionFactory.forUrl(writeUrl, userName, password);
+        final PgConnection connectionToPrimary = pgConnectionFactory.forUrl(writeUrl, userName, password);
         final Map<String, PgConnection> connectionsToAllHostsInCluster = new HashMap<>();
         addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, writeUrl, userName, password);
         if (StringUtils.isNotBlank(readUrl)) {
@@ -74,7 +74,7 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
         if (StringUtils.isNotBlank(cascadeAsyncReadUrl)) {
             addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, cascadeAsyncReadUrl, userName, password);
         }
-        return HighAvailabilityPgConnectionImpl.of(connectionToMaster, new HashSet<>(connectionsToAllHostsInCluster.values()));
+        return HighAvailabilityPgConnectionImpl.of(connectionToPrimary, new HashSet<>(connectionsToAllHostsInCluster.values()));
     }
 
     private void addDataSourcesForAllHostsFromUrl(@Nonnull final Map<String, PgConnection> connectionsToAllHostsInCluster,
