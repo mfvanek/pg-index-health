@@ -81,6 +81,15 @@ public class ServerSpecification {
         public ServerSpecification build() {
             return new ServerSpecification(cpuCoresAmount, memoryAmountInBytes, hasSSD);
         }
+
+        @Override
+        public String toString() {
+            return ServerSpecification.Builder.class.getSimpleName() + '{' +
+                    "cpuCoresAmount=" + cpuCoresAmount +
+                    ", memoryAmountInBytes=" + memoryAmountInBytes +
+                    ", hasSSD=" + hasSSD +
+                    '}';
+        }
     }
 
     public static Builder builder() {

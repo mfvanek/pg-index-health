@@ -67,4 +67,17 @@ class ServerSpecificationTest {
         assertEquals("ServerSpecification{cpuCoresAmount=1, memoryAmountInBytes=1073741824, hasSSD=false}",
                 specification.toString());
     }
+
+    @Test
+    void builder() {
+        final ServerSpecification.Builder builder = ServerSpecification.builder();
+        assertNotNull(builder);
+        assertEquals("Builder{cpuCoresAmount=1, memoryAmountInBytes=1073741824, hasSSD=false}",
+                builder.toString());
+        builder.withCpuCores(2)
+                .withMemoryAmount(512, MemoryUnit.MB)
+                .withSSD();
+        assertEquals("Builder{cpuCoresAmount=2, memoryAmountInBytes=536870912, hasSSD=true}",
+                builder.toString());
+    }
 }
