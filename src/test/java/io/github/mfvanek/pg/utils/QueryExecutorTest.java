@@ -29,7 +29,7 @@ public final class QueryExecutorTest extends DatabaseAwareTestBase {
 
     QueryExecutorTest() {
         super(embeddedPostgres.getTestDatabase());
-        this.pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        this.pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
     }
 
     @Test

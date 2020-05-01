@@ -39,7 +39,7 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
     MaintenanceFactoryImplTest() {
         super(embeddedPostgres.getTestDatabase());
         this.factory = new MaintenanceFactoryImpl();
-        this.pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        this.pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
     }
 
     @Test

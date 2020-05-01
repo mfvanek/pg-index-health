@@ -69,7 +69,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<Index> getInvalidIndexes(@Nonnull final PgContext pgContext) {
-        logExecutingOnMaster(indexesMaintenanceForPrimary.getHost());
+        logExecutingOnPrimary(indexesMaintenanceForPrimary.getHost());
         return indexesMaintenanceForPrimary.getInvalidIndexes(pgContext);
     }
 
@@ -79,7 +79,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull final PgContext pgContext) {
-        logExecutingOnMaster(indexesMaintenanceForPrimary.getHost());
+        logExecutingOnPrimary(indexesMaintenanceForPrimary.getHost());
         return indexesMaintenanceForPrimary.getDuplicatedIndexes(pgContext);
     }
 
@@ -89,7 +89,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull final PgContext pgContext) {
-        logExecutingOnMaster(indexesMaintenanceForPrimary.getHost());
+        logExecutingOnPrimary(indexesMaintenanceForPrimary.getHost());
         return indexesMaintenanceForPrimary.getIntersectedIndexes(pgContext);
     }
 
@@ -114,7 +114,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull final PgContext pgContext) {
-        logExecutingOnMaster(indexesMaintenanceForPrimary.getHost());
+        logExecutingOnPrimary(indexesMaintenanceForPrimary.getHost());
         return indexesMaintenanceForPrimary.getForeignKeysNotCoveredWithIndex(pgContext);
     }
 
@@ -139,7 +139,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
-        logExecutingOnMaster(tablesMaintenanceForPrimary.getHost());
+        logExecutingOnPrimary(tablesMaintenanceForPrimary.getHost());
         return tablesMaintenanceForPrimary.getTablesWithoutPrimaryKey(pgContext);
     }
 
@@ -149,7 +149,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final PgContext pgContext) {
-        logExecutingOnMaster(indexesMaintenanceForPrimary.getHost());
+        logExecutingOnPrimary(indexesMaintenanceForPrimary.getHost());
         return indexesMaintenanceForPrimary.getIndexesWithNullValues(pgContext);
     }
 
@@ -159,7 +159,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext) {
-        logExecutingOnMaster(indexesMaintenanceForPrimary.getHost());
+        logExecutingOnPrimary(indexesMaintenanceForPrimary.getHost());
         return indexesMaintenanceForPrimary.getIndexesWithBloat(pgContext);
     }
 
@@ -169,12 +169,12 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Override
     @Nonnull
     public List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext) {
-        logExecutingOnMaster(tablesMaintenanceForPrimary.getHost());
+        logExecutingOnPrimary(tablesMaintenanceForPrimary.getHost());
         return tablesMaintenanceForPrimary.getTablesWithBloat(pgContext);
     }
 
-    private static void logExecutingOnMaster(@Nonnull final PgHost host) {
-        LOGGER.debug("Going to execute on master host [{}]", host.getName());
+    private static void logExecutingOnPrimary(@Nonnull final PgHost host) {
+        LOGGER.debug("Going to execute on primary host [{}]", host.getName());
     }
 
     private static <T> T doOnHost(@Nonnull final PgHost host, Supplier<T> action) {

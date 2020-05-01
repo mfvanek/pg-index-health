@@ -46,8 +46,8 @@ public class PgHostImpl implements PgHost {
     }
 
     @Nonnull
-    public static PgHost ofMaster() {
-        return new PgHostImpl("master");
+    public static PgHost ofPrimary() {
+        return new PgHostImpl("primary");
     }
 
     @Nonnull

@@ -37,7 +37,7 @@ public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTest
 
     StatisticsMaintenanceOnHostImplTest() {
         super(embeddedPostgres.getTestDatabase());
-        final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         this.statisticsMaintenance = new StatisticsMaintenanceOnHostImpl(pgConnection);
     }
 
@@ -66,6 +66,6 @@ public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTest
     void getHost() {
         final PgHost host = statisticsMaintenance.getHost();
         assertNotNull(host);
-        assertEquals("master", host.getName());
+        assertEquals("primary", host.getName());
     }
 }

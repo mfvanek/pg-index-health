@@ -42,7 +42,7 @@ public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase
 
     TablesMaintenanceOnHostImplTest() {
         super(embeddedPostgres.getTestDatabase());
-        final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         this.tablesMaintenance = new TablesMaintenanceOnHostImpl(pgConnection);
     }
 

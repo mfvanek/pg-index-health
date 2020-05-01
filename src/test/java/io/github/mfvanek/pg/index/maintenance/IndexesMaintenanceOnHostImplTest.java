@@ -51,7 +51,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
 
     IndexesMaintenanceOnHostImplTest() {
         super(embeddedPostgres.getTestDatabase());
-        final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         this.indexesMaintenance = new IndexMaintenanceOnHostImpl(pgConnection);
     }
 

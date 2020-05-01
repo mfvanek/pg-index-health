@@ -56,7 +56,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
     DatabaseHealthImplTest() {
         super(embeddedPostgres.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(
-                PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase()));
+                PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase()));
         this.databaseHealth = new DatabaseHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
     }
 

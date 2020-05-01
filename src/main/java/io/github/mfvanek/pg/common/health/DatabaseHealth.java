@@ -36,7 +36,7 @@ import java.util.List;
 public interface DatabaseHealth extends IndexesHealthAware, TablesHealthAware {
 
     /**
-     * Returns invalid (broken) indexes on the master host in the specified schema.
+     * Returns invalid (broken) indexes on the primary host in the specified schema.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of invalid indexes
@@ -63,7 +63,7 @@ public interface DatabaseHealth extends IndexesHealthAware, TablesHealthAware {
     List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull PgContext pgContext);
 
     /**
-     * Returns indexes in the specified schema on master host that contain null values.
+     * Returns indexes in the specified schema on primary host that contain null values.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of indexes with null values
@@ -75,7 +75,7 @@ public interface DatabaseHealth extends IndexesHealthAware, TablesHealthAware {
     List<IndexWithNulls> getIndexesWithNullValues(@Nonnull PgContext pgContext);
 
     /**
-     * Returns bloated indexes in the specified schema on master host.
+     * Returns bloated indexes in the specified schema on primary host.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of bloated indexes
@@ -95,7 +95,7 @@ public interface DatabaseHealth extends IndexesHealthAware, TablesHealthAware {
     List<Table> getTablesWithoutPrimaryKey(@Nonnull PgContext pgContext);
 
     /**
-     * Returns bloated tables in the specified schema on master host.
+     * Returns bloated tables in the specified schema on primary host.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of bloated tables

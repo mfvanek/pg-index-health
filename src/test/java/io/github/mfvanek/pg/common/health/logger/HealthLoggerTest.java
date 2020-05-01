@@ -40,7 +40,7 @@ public final class HealthLoggerTest extends DatabaseAwareTestBase {
 
     HealthLoggerTest() {
         super(embeddedPostgres.getTestDatabase());
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase()));
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase()));
         final DatabaseHealth databaseHealth = new DatabaseHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
         this.logger = new SimpleHealthLogger(databaseHealth);
     }

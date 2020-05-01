@@ -31,8 +31,8 @@ class HighAvailabilityPgConnectionImplTest {
     static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
 
     @Test
-    void ofMaster() {
-        final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+    void ofPrimary() {
+        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
         assertNotNull(haPgConnection);
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), hasSize(1));
@@ -41,7 +41,7 @@ class HighAvailabilityPgConnectionImplTest {
 
     @Test
     void shouldBeUnmodifiable() {
-        final PgConnection pgConnection = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
         assertNotNull(haPgConnection);
         assertThrows(UnsupportedOperationException.class, () -> haPgConnection.getConnectionsToAllHostsInCluster().clear());
@@ -49,13 +49,13 @@ class HighAvailabilityPgConnectionImplTest {
 
     @Test
     void withReplicas() {
-        final PgConnection master = PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase());
+        final PgConnection primary = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         final PgConnection replica = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(),
                 PgHostImpl.ofName("replica"));
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(master,
-                new HashSet<>(Arrays.asList(master, replica)));
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary,
+                new HashSet<>(Arrays.asList(primary, replica)));
         assertNotNull(haPgConnection);
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), hasSize(2));
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), containsInAnyOrder(master, replica));
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), containsInAnyOrder(primary, replica));
     }
 }

@@ -47,7 +47,7 @@ public final class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareT
     ConfigurationMaintenanceOnHostImplTest() {
         super(embeddedPostgres.getTestDatabase());
         this.configurationMaintenance = new ConfigurationMaintenanceOnHostImpl(
-                PgConnectionImpl.ofMaster(embeddedPostgres.getTestDatabase()));
+                PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase()));
     }
 
     @Test

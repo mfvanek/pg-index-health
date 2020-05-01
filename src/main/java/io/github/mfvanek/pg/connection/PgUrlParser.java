@@ -44,9 +44,9 @@ final class PgUrlParser {
 
     @Nonnull
     private static String convertToReplicaConnectionString(@Nonnull final String dbNameWithParams) {
-        final String masterServerType = "targetServerType=master";
-        if (dbNameWithParams.contains(masterServerType)) {
-            return dbNameWithParams.replace(masterServerType, "targetServerType=any");
+        final String primaryServerType = "targetServerType=master";
+        if (dbNameWithParams.contains(primaryServerType)) {
+            return dbNameWithParams.replace(primaryServerType, "targetServerType=any");
         }
         return dbNameWithParams;
     }

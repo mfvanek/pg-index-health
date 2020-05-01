@@ -37,8 +37,8 @@ public class PgConnectionImpl implements PgConnection {
     }
 
     @Nonnull
-    public static PgConnection ofMaster(@Nonnull final DataSource dataSource) {
-        return new PgConnectionImpl(dataSource, PgHostImpl.ofMaster());
+    public static PgConnection ofPrimary(@Nonnull final DataSource dataSource) {
+        return new PgConnectionImpl(dataSource, PgHostImpl.ofPrimary());
     }
 
     @Nonnull
