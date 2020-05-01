@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.utils.QueryExecutor;
 
 import javax.annotation.Nonnull;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class StatisticsMaintenanceOnHostImpl extends AbstractMaintenance implements StatisticsMaintenanceOnHost {
@@ -23,9 +24,24 @@ public class StatisticsMaintenanceOnHostImpl extends AbstractMaintenance impleme
         super(pgConnection);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean resetStatistics() {
         final List<Boolean> result = QueryExecutor.executeQuery(pgConnection, "select pg_stat_reset()", rs -> true);
         return result.size() == 1;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Nonnull
+    public OffsetDateTime getLastStatsResetTimestamp() {
+        final String query = "select stats_reset from pg_stat_database where datname = current_database()";
+        final List<OffsetDateTime> statsResetTimes = QueryExecutor.executeQuery(pgConnection, query,
+                rs -> rs.getObject(1, OffsetDateTime.class));
+        return statsResetTimes.get(0);
     }
 }
