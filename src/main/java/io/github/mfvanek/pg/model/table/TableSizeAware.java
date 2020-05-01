@@ -8,25 +8,26 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model;
+package io.github.mfvanek.pg.model.table;
 
 import io.github.mfvanek.pg.common.health.logger.AbstractHealthLogger;
+import io.github.mfvanek.pg.model.index.IndexSizeAware;
 
 /**
- * Allows to get index size in bytes.
+ * Allows to get table size in bytes.
  * Used as a marker interface for filtering exclusions in
  * {@link AbstractHealthLogger}
  *
  * @author Ivan Vakhrushev
- * @see TableSizeAware
+ * @see IndexSizeAware
  * @see io.github.mfvanek.pg.common.health.logger.Exclusions
  */
-public interface IndexSizeAware {
+public interface TableSizeAware {
 
     /**
-     * Gets index size in bytes.
+     * Gets table size in bytes.
      *
-     * @return index size in bytes
+     * @return table size in bytes
      */
-    long getIndexSizeInBytes();
+    long getTableSizeInBytes();
 }

@@ -26,6 +26,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
@@ -45,7 +46,7 @@ public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTest
         statisticsMaintenance.resetStatistics();
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{arguments}")
     @ValueSource(strings = {"public", "custom"})
     void shouldResetCounters(final String schemaName) {
         executeTestOnDatabase(schemaName,
@@ -54,7 +55,8 @@ public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTest
                     tryToFindAccountByClientId(schemaName);
                     final PgContext pgContext = PgContext.of(schemaName);
                     assertThat(getSeqScansForAccounts(pgContext), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
-                    statisticsMaintenance.resetStatistics();
+                    final boolean resetResult = statisticsMaintenance.resetStatistics();
+                    assertTrue(resetResult);
                     waitForStatisticsCollector();
                     assertEquals(0L, getSeqScansForAccounts(pgContext));
                 });

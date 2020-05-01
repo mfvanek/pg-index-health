@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model;
+package io.github.mfvanek.pg.model.table;
 
 import org.junit.jupiter.api.Test;
 
@@ -56,13 +56,20 @@ class TableWithMissingIndexTest {
         assertNotEquals(first, null);
         assertNotEquals(first, BigDecimal.ZERO);
 
+        // self
+        assertEquals(first, first);
+        assertEquals(first.hashCode(), first.hashCode());
+
+        // another type
         final Table anotherType = Table.of("t1", 1L);
         assertNotEquals(first, anotherType);
         assertEquals(first.hashCode(), anotherType.hashCode());
 
+        // the same
         assertEquals(first, theSame);
         assertEquals(first.hashCode(), theSame.hashCode());
 
+        // others
         assertNotEquals(first, third);
         assertNotEquals(third, first);
         assertNotEquals(first.hashCode(), third.hashCode());

@@ -8,57 +8,49 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model;
+package io.github.mfvanek.pg.model.table;
 
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class IndexWithSizeTest {
+class TableTest {
 
     @Test
-    void indexWithZeroSize() {
-        final IndexWithSize index = IndexWithSize.of("t", "i", 0L);
-        assertEquals(0L, index.getIndexSizeInBytes());
+    void getTableName() {
+        final Table table = Table.of("t", 1L);
+        assertEquals("t", table.getTableName());
+        assertEquals(1L, table.getTableSizeInBytes());
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
-    void indexWithPositiveSize() {
-        final IndexWithSize index = IndexWithSize.of("t", "i", 123L);
-        assertEquals(123L, index.getIndexSizeInBytes());
-    }
-
-    @Test
-    void indexWithNegativeSize() {
-        assertThrows(IllegalArgumentException.class, () -> IndexWithSize.of("t", "i", -1L));
+    void withInvalidValues() {
+        assertThrows(NullPointerException.class, () -> Table.of(null, 1L));
+        assertThrows(IllegalArgumentException.class, () -> Table.of("", 1L));
+        assertThrows(IllegalArgumentException.class, () -> Table.of("  ", 1L));
+        assertThrows(IllegalArgumentException.class, () -> Table.of("t", -1L));
     }
 
     @Test
     void testToString() {
-        final IndexWithSize index = IndexWithSize.of("t", "i", 33L);
-        assertEquals("IndexWithSize{tableName='t', indexName='i', indexSizeInBytes=33}", index.toString());
+        final Table table = Table.of("t", 2L);
+        assertEquals("Table{tableName='t', tableSizeInBytes=2}", table.toString());
     }
 
     @Test
     void testEqualsAndHashCode() {
-        final IndexWithSize first = IndexWithSize.of("t1", "i1", 22L);
-        final IndexWithSize theSame = IndexWithSize.of("t1", "i1", 44L); // different size!
-        final IndexWithSize second = IndexWithSize.of("t1", "i2", 33L);
-        final IndexWithSize third = IndexWithSize.of("t3", "i3", 22L);
+        final Table first = Table.of("t1", 22L);
+        final Table theSame = Table.of("t1", 0L); // different size!
+        final Table second = Table.of("t2", 30L);
+        final Table third = Table.of("t3", 22L);
 
         assertNotEquals(first, null);
         assertNotEquals(first, BigDecimal.ZERO);
-
-        final Index anotherType = Index.of("t1", "i1");
-        assertNotEquals(first, anotherType);
-        assertEquals(first.hashCode(), anotherType.hashCode());
 
         // self
         assertEquals(first, first);
@@ -83,10 +75,10 @@ class IndexWithSizeTest {
     @SuppressWarnings({"ConstantConditions", "EqualsWithItself", "ResultOfMethodCallIgnored"})
     @Test
     void compareToTest() {
-        final IndexWithSize first = IndexWithSize.of("t1", "i1", 22L);
-        final IndexWithSize theSame = IndexWithSize.of("t1", "i1", 44L); // different size!
-        final IndexWithSize second = IndexWithSize.of("t1", "i2", 33L);
-        final IndexWithSize third = IndexWithSize.of("t3", "i3", 22L);
+        final Table first = Table.of("t1", 22L);
+        final Table theSame = Table.of("t1", 0L); // different size!
+        final Table second = Table.of("t2", 30L);
+        final Table third = Table.of("t3", 22L);
 
         assertThrows(NullPointerException.class, () -> first.compareTo(null));
 
@@ -100,7 +92,7 @@ class IndexWithSizeTest {
         assertEquals(-1, first.compareTo(second));
         assertEquals(1, second.compareTo(first));
 
-        assertThat(second.compareTo(third), lessThanOrEqualTo(-1));
-        assertThat(third.compareTo(second), greaterThanOrEqualTo(1));
+        assertEquals(-1, second.compareTo(third));
+        assertEquals(1, third.compareTo(second));
     }
 }

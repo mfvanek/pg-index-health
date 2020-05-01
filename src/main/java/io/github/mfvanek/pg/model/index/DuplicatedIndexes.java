@@ -8,8 +8,9 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model;
+package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;

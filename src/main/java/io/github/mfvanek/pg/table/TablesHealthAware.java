@@ -11,9 +11,9 @@
 package io.github.mfvanek.pg.table;
 
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.Table;
-import io.github.mfvanek.pg.model.TableWithBloat;
-import io.github.mfvanek.pg.model.TableWithMissingIndex;
+import io.github.mfvanek.pg.model.table.Table;
+import io.github.mfvanek.pg.model.table.TableWithBloat;
+import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

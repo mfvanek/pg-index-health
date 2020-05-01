@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.common.health;
 
-import io.github.mfvanek.pg.model.TableWithMissingIndex;
-import io.github.mfvanek.pg.model.UnusedIndex;
+import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.common.health;
 
-import io.github.mfvanek.pg.model.TableWithMissingIndex;
-import io.github.mfvanek.pg.model.UnusedIndex;
+import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 

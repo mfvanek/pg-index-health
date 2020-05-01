@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model;
+package io.github.mfvanek.pg.model.table;
 
 import org.junit.jupiter.api.Test;
 

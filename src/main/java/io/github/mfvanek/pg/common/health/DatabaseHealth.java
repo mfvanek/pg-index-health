@@ -11,16 +11,16 @@
 package io.github.mfvanek.pg.common.health;
 
 import io.github.mfvanek.pg.index.IndexesHealthAware;
-import io.github.mfvanek.pg.model.DuplicatedIndexes;
-import io.github.mfvanek.pg.model.ForeignKey;
-import io.github.mfvanek.pg.model.Index;
-import io.github.mfvanek.pg.model.IndexWithBloat;
-import io.github.mfvanek.pg.model.IndexWithNulls;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.Table;
-import io.github.mfvanek.pg.model.TableWithBloat;
-import io.github.mfvanek.pg.model.TableWithMissingIndex;
-import io.github.mfvanek.pg.model.UnusedIndex;
+import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
+import io.github.mfvanek.pg.model.index.ForeignKey;
+import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.index.IndexWithBloat;
+import io.github.mfvanek.pg.model.index.IndexWithNulls;
+import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.table.Table;
+import io.github.mfvanek.pg.model.table.TableWithBloat;
+import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.table.TablesHealthAware;
 
 import javax.annotation.Nonnull;

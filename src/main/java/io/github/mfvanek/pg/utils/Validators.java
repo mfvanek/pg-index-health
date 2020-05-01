@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
-import io.github.mfvanek.pg.model.IndexWithSize;
+import io.github.mfvanek.pg.model.index.IndexWithSize;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 

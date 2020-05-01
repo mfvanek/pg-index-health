@@ -11,10 +11,10 @@
 package io.github.mfvanek.pg.table.maintenance;
 
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.Table;
-import io.github.mfvanek.pg.model.TableNameAware;
-import io.github.mfvanek.pg.model.TableWithBloat;
-import io.github.mfvanek.pg.model.TableWithMissingIndex;
+import io.github.mfvanek.pg.model.table.Table;
+import io.github.mfvanek.pg.model.table.TableNameAware;
+import io.github.mfvanek.pg.model.table.TableWithBloat;
+import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

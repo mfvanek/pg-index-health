@@ -8,8 +8,9 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model;
+package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.BloatAware;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
@@ -21,8 +22,8 @@ import javax.annotation.Nonnull;
  */
 public class IndexWithBloat extends IndexWithSize implements BloatAware {
 
-    private long bloatSizeInBytes;
-    private int bloatPercentage;
+    private final long bloatSizeInBytes;
+    private final int bloatPercentage;
 
     private IndexWithBloat(@Nonnull final String tableName,
                            @Nonnull final String indexName,

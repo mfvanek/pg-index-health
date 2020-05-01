@@ -8,25 +8,29 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model;
+package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.common.health.logger.AbstractHealthLogger;
+import io.github.mfvanek.pg.model.table.TableNameAware;
+
+import javax.annotation.Nonnull;
 
 /**
- * Allows to get table size in bytes.
+ * Allows to get index name.
  * Used as a marker interface for filtering exclusions in
  * {@link AbstractHealthLogger}
  *
  * @author Ivan Vakhrushev
- * @see IndexSizeAware
+ * @see TableNameAware
  * @see io.github.mfvanek.pg.common.health.logger.Exclusions
  */
-public interface TableSizeAware {
+public interface IndexNameAware {
 
     /**
-     * Gets table size in bytes.
+     * Gets index name.
      *
-     * @return table size in bytes
+     * @return index name
      */
-    long getTableSizeInBytes();
+    @Nonnull
+    String getIndexName();
 }

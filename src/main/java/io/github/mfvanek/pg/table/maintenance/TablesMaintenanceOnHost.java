@@ -12,9 +12,9 @@ package io.github.mfvanek.pg.table.maintenance;
 
 import io.github.mfvanek.pg.connection.HostAware;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.Table;
-import io.github.mfvanek.pg.model.TableWithBloat;
-import io.github.mfvanek.pg.model.TableWithMissingIndex;
+import io.github.mfvanek.pg.model.table.Table;
+import io.github.mfvanek.pg.model.table.TableWithBloat;
+import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.table.TablesHealthAware;
 
 import javax.annotation.Nonnull;
