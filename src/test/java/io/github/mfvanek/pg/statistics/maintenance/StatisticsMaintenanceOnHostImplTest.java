@@ -46,7 +46,7 @@ public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTest
         statisticsMaintenance.resetStatistics();
     }
 
-    @ParameterizedTest(name = "{arguments}")
+    @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void shouldResetCounters(final String schemaName) {
         executeTestOnDatabase(schemaName,

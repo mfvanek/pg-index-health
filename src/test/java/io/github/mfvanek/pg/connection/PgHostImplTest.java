@@ -26,7 +26,7 @@ class PgHostImplTest {
         final PgHost host = PgHostImpl.ofPrimary();
         assertNotNull(host);
         assertEquals("primary", host.getName());
-        assertEquals("jdbc:postgresql://master", host.getPgUrl());
+        assertEquals("jdbc:postgresql://primary", host.getPgUrl());
     }
 
     @Test
@@ -67,7 +67,7 @@ class PgHostImplTest {
     void toStringTest() {
         final PgHost host = PgHostImpl.ofPrimary();
         assertNotNull(host);
-        assertEquals("PgHostImpl{pgUrl='jdbc:postgresql://master', hostNames=[master]}", host.toString());
+        assertEquals("PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary]}", host.toString());
     }
 
     @Test
