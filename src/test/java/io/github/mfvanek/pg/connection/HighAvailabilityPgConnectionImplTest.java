@@ -28,8 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class HighAvailabilityPgConnectionImplTest {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres =
-            PostgresExtensionFactory.database();
+    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
 
     @Test
     void ofMaster() {

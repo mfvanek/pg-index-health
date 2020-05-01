@@ -29,8 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class DatabaseManagementImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres =
-            PostgresExtensionFactory.database();
+    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
 
     private final DatabaseManagement databaseManagement;
 

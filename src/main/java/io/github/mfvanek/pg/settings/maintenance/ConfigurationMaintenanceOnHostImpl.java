@@ -22,7 +22,6 @@ import io.github.mfvanek.pg.utils.QueryExecutor;
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 public class ConfigurationMaintenanceOnHostImpl extends AbstractMaintenance implements ConfigurationMaintenanceOnHost {
@@ -69,9 +68,6 @@ public class ConfigurationMaintenanceOnHostImpl extends AbstractMaintenance impl
             final String currentValue = rs.getString(paramName);
             return PgParamImpl.of(paramName, currentValue);
         });
-        if (params.size() != 1) {
-            throw new NoSuchElementException(paramName);
-        }
         return params.get(0);
     }
 }

@@ -49,8 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class DatabaseHealthImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres =
-            PostgresExtensionFactory.database();
+    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
 
     private final DatabaseHealth databaseHealth;
 

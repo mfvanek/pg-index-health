@@ -34,8 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public final class HealthLoggerTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres =
-            PostgresExtensionFactory.database();
+    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
 
     private final HealthLogger logger;
 

@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -27,8 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class PgConnectionImplTest {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres =
-            PostgresExtensionFactory.database();
+    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
 
     @Test
     void getMasterDataSource() {

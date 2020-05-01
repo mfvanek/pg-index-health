@@ -35,6 +35,7 @@ public final class QueryExecutor {
         throw new UnsupportedOperationException();
     }
 
+    @Nonnull
     public static <T> List<T> executeQuery(@Nonnull final PgConnection pgConnection,
                                            @Nonnull final String sqlQuery,
                                            @Nonnull final ResultSetExtractor<T> rse) {
@@ -57,6 +58,7 @@ public final class QueryExecutor {
         }
     }
 
+    @Nonnull
     public static <T> List<T> executeQueryWithSchema(@Nonnull final PgConnection pgConnection,
                                                      @Nonnull final PgContext pgContext,
                                                      @Nonnull final String sqlQuery,
@@ -71,6 +73,7 @@ public final class QueryExecutor {
         });
     }
 
+    @Nonnull
     public static <T> List<T> executeQueryWithBloatThreshold(@Nonnull final PgConnection pgConnection,
                                                              @Nonnull final PgContext pgContext,
                                                              @Nonnull final String sqlQuery,
@@ -86,6 +89,7 @@ public final class QueryExecutor {
         });
     }
 
+    @Nonnull
     private static <T> List<T> executeQuery(@Nonnull final PgConnection pgConnection,
                                             @Nonnull final PgContext pgContext,
                                             @Nonnull final String sqlQuery,

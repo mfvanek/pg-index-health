@@ -28,6 +28,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
@@ -96,6 +97,10 @@ public final class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareT
 
     @Test
     void getCurrentValueForUnknownParam() {
-        assertThrows(RuntimeException.class, () -> configurationMaintenance.getParamCurrentValue(PgParamImpl.of("unknown_param", "")));
+        final RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> configurationMaintenance.getParamCurrentValue(PgParamImpl.of("unknown_param", "")));
+        assertNotNull(exception);
+        assertNotNull(exception.getCause());
+        assertThat(exception.getCause().getMessage(), containsString("unknown_param"));
     }
 }

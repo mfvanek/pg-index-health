@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.utils;
 
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.PgContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -23,8 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public final class QueryExecutorTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres =
-            PostgresExtensionFactory.database();
+    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
 
     private final PgConnection pgConnection;
 

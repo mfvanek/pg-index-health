@@ -18,7 +18,6 @@ public final class NamedParametersParser {
     private final int queryLength;
     private final StringBuilder resultQuery;
 
-    private boolean isParsed = false;
     private boolean isInSingleQuotes = false;
     private boolean isInDoubleQuotes = false;
     private boolean isPartOfSingleLineComment = false;
@@ -33,9 +32,6 @@ public final class NamedParametersParser {
 
     @Nonnull
     private String parse() {
-        if (isParsed) {
-            return resultQuery.toString();
-        }
         return doParse();
     }
 
@@ -86,7 +82,6 @@ public final class NamedParametersParser {
             resultQuery.append(c);
         }
 
-        isParsed = true;
         return resultQuery.toString();
     }
 
