@@ -27,6 +27,12 @@ final class PgUrlParser {
         throw new UnsupportedOperationException();
     }
 
+    static boolean isReplicaUrl(@Nonnull final String pgUrl) {
+        PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
+        return pgUrl.contains("targetServerType=slave") ||
+                pgUrl.contains("targetServerType=secondary");
+    }
+
     // For example, jdbc:postgresql://host-1:6432/db_name?param=value
     @Nonnull
     static List<Pair<String, String>> extractNameWithPortAndUrlForEachHost(@Nonnull final String pgUrl) {
@@ -44,9 +50,11 @@ final class PgUrlParser {
 
     @Nonnull
     private static String convertToReplicaConnectionString(@Nonnull final String dbNameWithParams) {
-        final String primaryServerType = "targetServerType=master";
-        if (dbNameWithParams.contains(primaryServerType)) {
-            return dbNameWithParams.replace(primaryServerType, "targetServerType=any");
+        final List<String> primaryServerTypes = Arrays.asList("targetServerType=primary", "targetServerType=master");
+        for (final String serverType : primaryServerTypes) {
+            if (dbNameWithParams.contains(serverType)) {
+                return dbNameWithParams.replace(serverType, "targetServerType=any");
+            }
         }
         return dbNameWithParams;
     }
