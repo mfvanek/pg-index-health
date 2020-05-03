@@ -10,13 +10,18 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
+import io.github.mfvanek.pg.connection.HostAware;
 import io.github.mfvanek.pg.connection.PgConnection;
+import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.index.maintenance.IndexesMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHost;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -35,9 +40,11 @@ public interface MaintenanceFactory {
 
     @Nonnull
     default Collection<IndexesMaintenanceOnHost> forIndexes(@Nonnull final Collection<PgConnection> pgConnections) {
-        return pgConnections.stream()
-                .map(this::forIndexes)
-                .collect(Collectors.toList());
+        return Collections.unmodifiableList(
+                pgConnections.stream()
+                        .map(this::forIndexes)
+                        .collect(Collectors.toList())
+        );
     }
 
     @Nonnull
@@ -45,9 +52,11 @@ public interface MaintenanceFactory {
 
     @Nonnull
     default Collection<TablesMaintenanceOnHost> forTables(@Nonnull final Collection<PgConnection> pgConnections) {
-        return pgConnections.stream()
-                .map(this::forTables)
-                .collect(Collectors.toList());
+        return Collections.unmodifiableList(
+                pgConnections.stream()
+                        .map(this::forTables)
+                        .collect(Collectors.toList())
+        );
     }
 
     /**
@@ -59,10 +68,27 @@ public interface MaintenanceFactory {
     @Nonnull
     StatisticsMaintenanceOnHost forStatistics(@Nonnull PgConnection pgConnection);
 
+    /**
+     * Creates statistics maintenance objects for given connections.
+     *
+     * @param pgConnections connections to hosts
+     * @return list of {@code StatisticsMaintenance} objects
+     */
     @Nonnull
     default Collection<StatisticsMaintenanceOnHost> forStatistics(@Nonnull final Collection<PgConnection> pgConnections) {
-        return pgConnections.stream()
-                .map(this::forStatistics)
-                .collect(Collectors.toList());
+        return Collections.unmodifiableList(
+                pgConnections.stream()
+                        .map(this::forStatistics)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    @Nonnull
+    default Map<PgHost, StatisticsMaintenanceOnHost> forStatisticsByHost(@Nonnull final Collection<PgConnection> pgConnections) {
+        return Collections.unmodifiableMap(
+                pgConnections.stream()
+                        .map(this::forStatistics)
+                        .collect(Collectors.toMap(HostAware::getHost, Function.identity()))
+        );
     }
 }

@@ -10,18 +10,27 @@
 
 package io.github.mfvanek.pg.common.health;
 
+import io.github.mfvanek.pg.connection.PgHost;
+import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
+import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.utils.TestUtils;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ReplicasHelperTest {
@@ -64,5 +73,32 @@ class ReplicasHelperTest {
                 tablesWithMissingIndexesFromAllHosts);
         assertThat(tablesWithMissingIndexes, hasSize(3));
         assertThat(tablesWithMissingIndexes, containsInAnyOrder(t1, t2, t3));
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void getLastStatsResetDateLogMessageWithWrongArguments() {
+        assertThrows(NullPointerException.class, () -> ReplicasHelper.getLastStatsResetDateLogMessage(null, null));
+        assertThrows(NoSuchElementException.class, () -> ReplicasHelper.getLastStatsResetDateLogMessage(null, Collections.emptyMap()));
+        assertThrows(NoSuchElementException.class, () -> ReplicasHelper.getLastStatsResetDateLogMessage(PgHostImpl.ofPrimary(), Collections.emptyMap()));
+    }
+
+    @Test
+    void getLastStatsResetDateLogMessageWithoutResetTimestamp() {
+        final PgHost host = PgHostImpl.ofPrimary();
+        final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
+        Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.empty());
+        final String logMessage = ReplicasHelper.getLastStatsResetDateLogMessage(host, Collections.singletonMap(host, statisticsMaintenance));
+        assertEquals("Statistics have never been reset on this host", logMessage);
+    }
+
+    @Test
+    void getLastStatsResetDateLogMessageWithResetTimestamp() {
+        final PgHost host = PgHostImpl.ofPrimary();
+        final OffsetDateTime resetDate = OffsetDateTime.now();
+        final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
+        Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.of(resetDate.minusDays(123L)));
+        final String logMessage = ReplicasHelper.getLastStatsResetDateLogMessage(host, Collections.singletonMap(host, statisticsMaintenance));
+        assertThat(logMessage, startsWith("Last statistics reset on this host was 123 days ago ("));
     }
 }

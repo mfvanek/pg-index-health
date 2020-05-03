@@ -25,6 +25,7 @@ import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
+import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHost;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -51,6 +53,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     private final TablesMaintenanceOnHost tablesMaintenanceForPrimary;
     private final Collection<IndexesMaintenanceOnHost> indexesMaintenanceForAllHostsInCluster;
     private final Collection<TablesMaintenanceOnHost> tablesMaintenanceForAllHostsInCluster;
+    private final Map<PgHost, StatisticsMaintenanceOnHost> statisticsMaintenanceForAllHostsInCluster;
 
     public DatabaseHealthImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
                               @Nonnull final MaintenanceFactory maintenanceFactory) {
@@ -61,6 +64,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
         final Set<PgConnection> pgConnections = haPgConnection.getConnectionsToAllHostsInCluster();
         this.indexesMaintenanceForAllHostsInCluster = maintenanceFactory.forIndexes(pgConnections);
         this.tablesMaintenanceForAllHostsInCluster = maintenanceFactory.forTables(pgConnections);
+        this.statisticsMaintenanceForAllHostsInCluster = maintenanceFactory.forStatisticsByHost(pgConnections);
     }
 
     /**
@@ -101,9 +105,13 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     public List<UnusedIndex> getUnusedIndexes(@Nonnull final PgContext pgContext) {
         final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = new ArrayList<>();
         for (IndexesMaintenanceOnHost maintenanceForHost : indexesMaintenanceForAllHostsInCluster) {
-            potentiallyUnusedIndexesFromAllHosts.add(
-                    doOnHost(maintenanceForHost.getHost(),
-                            () -> maintenanceForHost.getUnusedIndexes(pgContext)));
+            final PgHost currentHost = maintenanceForHost.getHost();
+            final List<UnusedIndex> unusedIndexesFromCurrentHost = doOnHost(currentHost,
+                    () -> {
+                        logLastStatsResetDate(currentHost);
+                        return maintenanceForHost.getUnusedIndexes(pgContext);
+                    });
+            potentiallyUnusedIndexesFromAllHosts.add(unusedIndexesFromCurrentHost);
         }
         return ReplicasHelper.getUnusedIndexesAsIntersectionResult(potentiallyUnusedIndexesFromAllHosts);
     }
@@ -180,5 +188,9 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     private static <T> T doOnHost(@Nonnull final PgHost host, Supplier<T> action) {
         LOGGER.debug("Going to execute on host {}", host.getName());
         return action.get();
+    }
+
+    private void logLastStatsResetDate(@Nonnull final PgHost host) {
+        LOGGER.info(ReplicasHelper.getLastStatsResetDateLogMessage(host, statisticsMaintenanceForAllHostsInCluster));
     }
 }
