@@ -10,6 +10,10 @@
 
 package io.github.mfvanek.pg.statistics;
 
+import javax.annotation.Nonnull;
+import java.time.OffsetDateTime;
+import java.util.Optional;
+
 /**
  * A set of methods to manage statistics.
  *
@@ -24,4 +28,12 @@ public interface StatisticsAware {
      * @return true if has been called successfully
      */
     boolean resetStatistics();
+
+    /**
+     * Gets time at which database statistics were last reset.
+     *
+     * @return {@code Optional} of null or time at which database statistics were last reset.
+     */
+    @Nonnull
+    Optional<OffsetDateTime> getLastStatsResetTimestamp();
 }

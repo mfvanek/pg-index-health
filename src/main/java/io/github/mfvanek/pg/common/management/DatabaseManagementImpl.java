@@ -20,8 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -35,12 +37,14 @@ public class DatabaseManagementImpl implements DatabaseManagement {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseManagementImpl.class);
 
+    private final StatisticsMaintenanceOnHost statisticsMaintenanceForPrimary;
     private final Collection<StatisticsMaintenanceOnHost> statisticsMaintenanceForAllHostsInCluster;
 
     public DatabaseManagementImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
                                   @Nonnull final MaintenanceFactory maintenanceFactory) {
         Objects.requireNonNull(haPgConnection);
         Objects.requireNonNull(maintenanceFactory);
+        this.statisticsMaintenanceForPrimary = maintenanceFactory.forStatistics(haPgConnection.getConnectionToPrimary());
         final Set<PgConnection> pgConnections = haPgConnection.getConnectionsToAllHostsInCluster();
         this.statisticsMaintenanceForAllHostsInCluster = maintenanceFactory.forStatistics(pgConnections);
     }
@@ -55,6 +59,15 @@ public class DatabaseManagementImpl implements DatabaseManagement {
             result &= doOnHost(statisticsMaintenance.getHost(), statisticsMaintenance::resetStatistics);
         }
         return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Nonnull
+    public Optional<OffsetDateTime> getLastStatsResetTimestamp() {
+        return doOnHost(statisticsMaintenanceForPrimary.getHost(), statisticsMaintenanceForPrimary::getLastStatsResetTimestamp);
     }
 
     private <T> T doOnHost(@Nonnull final PgHost host, Supplier<T> action) {

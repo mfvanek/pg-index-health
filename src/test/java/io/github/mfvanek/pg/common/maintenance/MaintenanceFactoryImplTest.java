@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.index.maintenance.IndexesMaintenanceOnHost;
@@ -23,10 +24,14 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
 
@@ -73,5 +78,22 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
                 factory.forStatistics(Collections.singletonList(pgConnection));
         assertNotNull(maintenanceOnHosts);
         assertThat(maintenanceOnHosts, hasSize(1));
+    }
+
+    @Test
+    void forStatisticsByHost() {
+        final Map<PgHost, StatisticsMaintenanceOnHost> maintenanceByHost =
+                factory.forStatisticsByHost(Collections.singletonList(pgConnection));
+        assertNotNull(maintenanceByHost);
+        assertEquals(1, maintenanceByHost.size());
+        assertThat(maintenanceByHost.keySet().iterator().next(), equalTo(pgConnection.getHost()));
+    }
+
+    @Test
+    void forStatisticsByHostEmpty() {
+        final Map<PgHost, StatisticsMaintenanceOnHost> maintenanceByHost =
+                factory.forStatisticsByHost(Collections.emptyList());
+        assertNotNull(maintenanceByHost);
+        assertTrue(maintenanceByHost.isEmpty());
     }
 }

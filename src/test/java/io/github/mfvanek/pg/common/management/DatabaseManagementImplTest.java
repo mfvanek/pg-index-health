@@ -21,9 +21,14 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.time.OffsetDateTime;
+import java.util.Optional;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DatabaseManagementImplTest extends DatabaseAwareTestBase {
@@ -46,12 +51,18 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData(),
                 ctx -> {
+                    final OffsetDateTime testStartTime = OffsetDateTime.now();
                     tryToFindAccountByClientId(schemaName);
                     assertThat(getSeqScansForAccounts(ctx), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
                     final boolean resetResult = databaseManagement.resetStatistics();
                     assertTrue(resetResult);
                     waitForStatisticsCollector();
                     assertEquals(0L, getSeqScansForAccounts(ctx));
+
+                    final Optional<OffsetDateTime> statsResetTimestamp = databaseManagement.getLastStatsResetTimestamp();
+                    assertNotNull(statsResetTimestamp);
+                    assertTrue(statsResetTimestamp.isPresent());
+                    assertThat(statsResetTimestamp.get(), greaterThan(testStartTime));
                 });
     }
 }

@@ -13,6 +13,10 @@ package io.github.mfvanek.pg.statistics.maintenance;
 import io.github.mfvanek.pg.connection.HostAware;
 import io.github.mfvanek.pg.statistics.StatisticsAware;
 
+import javax.annotation.Nonnull;
+import java.time.OffsetDateTime;
+import java.util.Optional;
+
 /**
  * An entry point for managing statistics on the specified host.
  *
@@ -29,4 +33,13 @@ public interface StatisticsMaintenanceOnHost extends StatisticsAware, HostAware 
      */
     @Override
     boolean resetStatistics();
+
+    /**
+     * Gets time at which database statistics were last reset on current host.
+     *
+     * @return {@code Optional} of null or time at which database statistics were last reset.
+     */
+    @Override
+    @Nonnull
+    Optional<OffsetDateTime> getLastStatsResetTimestamp();
 }
