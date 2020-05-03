@@ -23,6 +23,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -64,9 +65,10 @@ public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTest
                     waitForStatisticsCollector();
                     assertEquals(0L, getSeqScansForAccounts(pgContext));
 
-                    final OffsetDateTime statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
+                    final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
                     assertNotNull(statsResetTimestamp);
-                    assertThat(statsResetTimestamp, greaterThan(testStartTime));
+                    assertTrue(statsResetTimestamp.isPresent());
+                    assertThat(statsResetTimestamp.get(), greaterThan(testStartTime));
                 });
     }
 

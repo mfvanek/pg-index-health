@@ -40,16 +40,17 @@ public final class PostgresVersionTest extends DatabaseAwareTestBase {
     @Test
     void checkPgVersion() {
         String requiredPgVersionString = System.getenv(PG_VERSION_ENVIRONMENT_VARIABLE);
-        if (requiredPgVersionString != null) {
-            Semver actualPgVersion = new Semver(readPgVersion(), Semver.SemverType.LOOSE);
-            Semver requiredPgVersion = new Semver(requiredPgVersionString);
-            assertEquals(requiredPgVersion.getMajor(), actualPgVersion.getMajor());
-            assertEquals(requiredPgVersion.getMinor(), actualPgVersion.getMinor());
-            if (actualPgVersion.getPatch() == null) {
-                assertEquals(0, requiredPgVersion.getPatch());
-            } else {
-                assertEquals(requiredPgVersion.getPatch(), actualPgVersion.getPatch());
-            }
+        if (requiredPgVersionString == null) {
+            requiredPgVersionString = "10.11.0";
+        }
+        Semver actualPgVersion = new Semver(readPgVersion(), Semver.SemverType.LOOSE);
+        Semver requiredPgVersion = new Semver(requiredPgVersionString);
+        assertEquals(requiredPgVersion.getMajor(), actualPgVersion.getMajor());
+        assertEquals(requiredPgVersion.getMinor(), actualPgVersion.getMinor());
+        if (actualPgVersion.getPatch() == null) {
+            assertEquals(0, requiredPgVersion.getPatch());
+        } else {
+            assertEquals(requiredPgVersion.getPatch(), actualPgVersion.getPatch());
         }
     }
 

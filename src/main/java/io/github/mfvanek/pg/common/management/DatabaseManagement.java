@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 
 import javax.annotation.Nonnull;
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 public interface DatabaseManagement extends StatisticsAware {
 
@@ -32,9 +33,9 @@ public interface DatabaseManagement extends StatisticsAware {
     /**
      * Gets time at which database statistics were last reset on the primary host.
      *
-     * @return time of the last statistics reset for the database
+     * @return {@code Optional} of null or time at which database statistics were last reset.
      */
     @Override
     @Nonnull
-    OffsetDateTime getLastStatsResetTimestamp();
+    Optional<OffsetDateTime> getLastStatsResetTimestamp();
 }

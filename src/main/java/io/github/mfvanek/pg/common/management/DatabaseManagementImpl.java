@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -65,7 +66,7 @@ public class DatabaseManagementImpl implements DatabaseManagement {
      */
     @Override
     @Nonnull
-    public OffsetDateTime getLastStatsResetTimestamp() {
+    public Optional<OffsetDateTime> getLastStatsResetTimestamp() {
         return doOnHost(statisticsMaintenanceForPrimary.getHost(), statisticsMaintenanceForPrimary::getLastStatsResetTimestamp);
     }
 

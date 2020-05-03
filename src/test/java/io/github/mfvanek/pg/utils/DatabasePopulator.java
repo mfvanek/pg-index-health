@@ -347,6 +347,10 @@ public final class DatabasePopulator implements AutoCloseable {
         });
     }
 
+    public static void collectStatistics(@Nonnull final DataSource dataSource) {
+        executeOnDatabase(dataSource, statement -> statement.execute("vacuum analyze"));
+    }
+
     private void createIndexesWithDifferentOpclass() {
         executeOnDatabase(dataSource, statement -> {
             statement.execute(String.format("create index concurrently if not exists i_clients_last_name " +

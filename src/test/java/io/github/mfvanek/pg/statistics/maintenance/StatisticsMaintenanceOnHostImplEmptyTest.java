@@ -15,14 +15,17 @@ import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
-import org.junit.jupiter.api.RepeatedTest;
+import io.github.mfvanek.pg.utils.DatabasePopulator;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StatisticsMaintenanceOnHostImplEmptyTest extends DatabaseAwareTestBase {
 
@@ -37,11 +40,14 @@ class StatisticsMaintenanceOnHostImplEmptyTest extends DatabaseAwareTestBase {
         this.statisticsMaintenance = new StatisticsMaintenanceOnHostImpl(pgConnection);
     }
 
-    @RepeatedTest(5)
+    @Test
     void getLastStatsResetTimestamp() {
         // Time of the last statistics reset is initialized to the system time during the first connection to the database.
-        final OffsetDateTime statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
+        DatabasePopulator.collectStatistics(embeddedPostgres.getTestDatabase());
+        waitForStatisticsCollector();
+        final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
         assertNotNull(statsResetTimestamp);
-        assertThat(statsResetTimestamp, lessThanOrEqualTo(OffsetDateTime.now()));
+        assertTrue(statsResetTimestamp.isPresent());
+        assertThat(statsResetTimestamp.get(), lessThanOrEqualTo(OffsetDateTime.now()));
     }
 }
