@@ -11,13 +11,14 @@
 package io.github.mfvanek.pg.connection;
 
 import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 
-public interface PgConnectionFactory {
+public interface PrimaryHostDeterminer {
 
-    @Nonnull
-    PgConnection forUrl(@Nonnull String pgUrl, @Nonnull String userName, @Nonnull String password);
-
-    @Nonnull
-    DataSource dataSourceFor(@Nonnull String pgUrl, @Nonnull String userName, @Nonnull String password);
+    /**
+     * Determines whether given connection is a connection to a primary host.
+     *
+     * @param pgConnection {@code PgConnection} object
+     * @return {@code true} if this is a connection to a primary host.
+     */
+    boolean isPrimary(@Nonnull PgConnection pgConnection);
 }

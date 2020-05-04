@@ -27,7 +27,15 @@ public class PgConnectionFactoryImpl implements PgConnectionFactory {
                                @Nonnull final String password) {
         LOGGER.debug("Creating {} with pgUrl = {}, userName = {}, password = {}",
                 PgConnection.class.getSimpleName(), pgUrl, userName, "*****");
-        final DataSource dataSource = PgConnectionHelper.createDataSource(pgUrl, userName, password);
+        final DataSource dataSource = dataSourceFor(pgUrl, userName, password);
         return PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl(pgUrl));
+    }
+
+    @Override
+    @Nonnull
+    public DataSource dataSourceFor(@Nonnull final String pgUrl,
+                                    @Nonnull final String userName,
+                                    @Nonnull final String password) {
+        return PgConnectionHelper.createDataSource(pgUrl, userName, password);
     }
 }

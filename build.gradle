@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'jacoco'
-    id 'com.github.spotbugs' version '3.0.0'
+    id 'com.github.spotbugs' version '4.0.8'
 }
 
 group 'io.github.mfvanek'
@@ -120,15 +120,20 @@ javadoc {
     }
 }
 
-tasks.withType(com.github.spotbugs.SpotBugsTask) {
+spotbugsMain {
     reports {
-        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+spotbugsTest {
+    reports {
         html.enabled = true
     }
 }
 
 spotbugs {
-    toolVersion = '4.0.0'
+    showProgress = true
     excludeFilter = file("spotbugs/exclude.xml")
 }
 

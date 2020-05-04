@@ -36,6 +36,15 @@ class PgConnectionImplTest {
         assertThat(connection.getHost(), equalTo(PgHostImpl.ofPrimary()));
     }
 
+    @Test
+    void isPrimaryForAnyHost() {
+        final int port = embeddedPostgres.getPort();
+        final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
+                "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=preferSecondary", port);
+        final PgConnection any = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofUrl(readUrl));
+        assertNotNull(any);
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
@@ -65,7 +74,7 @@ class PgConnectionImplTest {
     @Test
     void toStringTest() {
         final PgConnection connection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
-        assertEquals("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary]}}",
+        assertEquals("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}}",
                 connection.toString());
     }
 }

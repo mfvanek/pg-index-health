@@ -19,24 +19,35 @@ public class PgHostImpl implements PgHost {
 
     private final String pgUrl;
     private final Set<String> hostNames;
+    private final boolean maybePrimary;
 
     private PgHostImpl(@Nonnull final String pgUrl,
-                       @SuppressWarnings("SameParameterValue") boolean withValidation) {
+                       final boolean withValidation,
+                       final boolean maybePrimary) {
         this.pgUrl = PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
         this.hostNames = PgUrlParser.extractHostNames(pgUrl);
+        this.maybePrimary = maybePrimary;
     }
 
-    private PgHostImpl(@Nonnull final String hostName) {
-        this.hostNames = Collections.singleton(Objects.requireNonNull(hostName));
+    private PgHostImpl(@Nonnull final String hostName, final boolean maybePrimary) {
+        Objects.requireNonNull(hostName, "hostName");
+        this.hostNames = Collections.singleton(hostName);
         this.pgUrl = PgUrlParser.URL_HEADER + hostName;
+        this.maybePrimary = maybePrimary;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public String getPgUrl() {
         return pgUrl;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public String getName() {
@@ -45,19 +56,27 @@ public class PgHostImpl implements PgHost {
                 "One of " + hostNames;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean canBePrimary() {
+        return maybePrimary;
+    }
+
     @Nonnull
     public static PgHost ofPrimary() {
-        return new PgHostImpl("primary");
+        return new PgHostImpl("primary", true);
     }
 
     @Nonnull
     public static PgHost ofUrl(@Nonnull final String pgUrl) {
-        return new PgHostImpl(pgUrl, true);
+        return new PgHostImpl(pgUrl, true, !PgUrlParser.isReplicaUrl(pgUrl));
     }
 
     @Nonnull
     public static PgHost ofName(@Nonnull final String hostName) {
-        return new PgHostImpl(hostName);
+        return new PgHostImpl(hostName, true);
     }
 
     @Override
@@ -70,7 +89,7 @@ public class PgHostImpl implements PgHost {
             return false;
         }
 
-        PgHostImpl pgHost = (PgHostImpl) o;
+        final PgHostImpl pgHost = (PgHostImpl) o;
         return hostNames.equals(pgHost.hostNames);
     }
 
@@ -84,6 +103,7 @@ public class PgHostImpl implements PgHost {
         return PgHostImpl.class.getSimpleName() + '{' +
                 "pgUrl='" + pgUrl + '\'' +
                 ", hostNames=" + hostNames +
+                ", maybePrimary=" + maybePrimary +
                 '}';
     }
 }

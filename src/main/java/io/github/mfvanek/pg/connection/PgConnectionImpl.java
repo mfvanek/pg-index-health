@@ -24,12 +24,18 @@ public class PgConnectionImpl implements PgConnection {
         this.host = Objects.requireNonNull(host);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Nonnull
     public DataSource getDataSource() {
         return dataSource;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public PgHost getHost() {

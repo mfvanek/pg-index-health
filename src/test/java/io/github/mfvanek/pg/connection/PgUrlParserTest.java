@@ -20,7 +20,9 @@ import java.util.Set;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PgUrlParserTest {
 
@@ -51,9 +53,22 @@ class PgUrlParserTest {
     }
 
     @Test
-    void extractNamesAndUrlsForPrimary() {
+    void extractNamesAndUrlsForDeprecatedMaster() {
         final List<Pair<String, String>> extractResult = PgUrlParser.extractNameWithPortAndUrlForEachHost(
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?targetServerType=master&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require");
+        assertThat(extractResult, hasSize(4));
+        assertThat(extractResult, containsInAnyOrder(
+                Pair.of("host-1:6432", "jdbc:postgresql://host-1:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
+                Pair.of("host-2:6432", "jdbc:postgresql://host-2:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
+                Pair.of("host-3:6432", "jdbc:postgresql://host-3:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
+                Pair.of("host-4:6432", "jdbc:postgresql://host-4:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require")
+        ));
+    }
+
+    @Test
+    void extractNamesAndUrlsForPrimary() {
+        final List<Pair<String, String>> extractResult = PgUrlParser.extractNameWithPortAndUrlForEachHost(
+                "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?targetServerType=primary&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require");
         assertThat(extractResult, hasSize(4));
         assertThat(extractResult, containsInAnyOrder(
                 Pair.of("host-1:6432", "jdbc:postgresql://host-1:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
@@ -77,5 +92,24 @@ class PgUrlParserTest {
         assertThrows(NullPointerException.class, () -> PgUrlParser.extractHostNames(null));
         assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractHostNames(""));
         assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractHostNames("host-name:5432"));
+    }
+
+    @Test
+    void isReplicaUrl() {
+        assertFalse(PgUrlParser.isReplicaUrl("jdbc:postgresql://host-1:6432/db_name?targetServerType=primary&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"));
+        assertFalse(PgUrlParser.isReplicaUrl("jdbc:postgresql://host-1:6432/db_name?targetServerType=master&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"));
+        assertFalse(PgUrlParser.isReplicaUrl("jdbc:postgresql://host-1:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"));
+        assertFalse(PgUrlParser.isReplicaUrl("jdbc:postgresql://host-1:6432/db_name?targetServerType=preferSlave&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"));
+        assertFalse(PgUrlParser.isReplicaUrl("jdbc:postgresql://host-1:6432/db_name?targetServerType=preferSecondary&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"));
+        assertTrue(PgUrlParser.isReplicaUrl("jdbc:postgresql://host-1:6432/db_name?targetServerType=slave&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"));
+        assertTrue(PgUrlParser.isReplicaUrl("jdbc:postgresql://host-1:6432/db_name?targetServerType=secondary&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"));
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void isReplicaUrlWithInvalidUrl() {
+        assertThrows(NullPointerException.class, () -> PgUrlParser.isReplicaUrl(null));
+        assertThrows(IllegalArgumentException.class, () -> PgUrlParser.isReplicaUrl(""));
+        assertThrows(IllegalArgumentException.class, () -> PgUrlParser.isReplicaUrl("host-name:5432"));
     }
 }

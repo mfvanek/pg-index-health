@@ -2,8 +2,24 @@
 <FindBugsFilter>
     <Match>
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+        <Or>
+            <Class name="io.github.mfvanek.pg.utils.QueryExecutor"/>
+            <Class name="io.github.mfvanek.pg.utils.DatabaseAwareTestBase"/>
+            <Class name="io.github.mfvanek.pg.utils.DatabasePopulator"/>
+            <Class name="io.github.mfvanek.pg.utils.PostgresVersionTest"/>
+            <Class name="io.github.mfvanek.pg.utils.TestUtils"/>
+            <Class name="io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl"/>
+        </Or>
     </Match>
     <Match>
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+        <Class name="io.github.mfvanek.pg.utils.SqlQueryReader"/>
+    </Match>
+    <Match>
+        <Bug pattern="OBL_UNSATISFIED_OBLIGATION" file=""/>
+        <Or>
+            <Class name="io.github.mfvanek.pg.utils.QueryExecutorTest"/>
+            <Class name="io.github.mfvanek.pg.connection.PrimaryHostDeterminerImplTest"/>
+        </Or>
     </Match>
 </FindBugsFilter>
