@@ -11,11 +11,10 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.table.TableNameAware;
+import io.github.mfvanek.pg.utils.DuplicatedIndexesParser;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
-import java.util.AbstractMap;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -126,7 +125,7 @@ public class DuplicatedIndexes implements TableNameAware {
     @Nonnull
     public static DuplicatedIndexes of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
         Validators.tableNameNotBlank(tableName);
-        final List<Map.Entry<String, Long>> indexesWithNameAndSize = parseAsIndexNameAndSize(
+        final List<Map.Entry<String, Long>> indexesWithNameAndSize = DuplicatedIndexesParser.parseAsIndexNameAndSize(
                 Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
         final List<IndexWithSize> duplicatedIndexes = indexesWithNameAndSize.stream()
                 .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
@@ -145,18 +144,5 @@ public class DuplicatedIndexes implements TableNameAware {
         }
         return new DuplicatedIndexes(Stream.concat(basePart, Stream.of(otherIndexes))
                 .collect(Collectors.toList()));
-    }
-
-    private static List<Map.Entry<String, Long>> parseAsIndexNameAndSize(@Nonnull final String duplicatedAsString) {
-        final String[] indexes = duplicatedAsString.split("; ");
-        return Arrays.stream(indexes)
-                .map(s -> s.split(", "))
-                .filter(a -> a[0].startsWith("idx=") && a[1].startsWith("size="))
-                .map(a -> {
-                    final String indexName = a[0].substring("idx=".length());
-                    final String sizeAsString = a[1].substring("size=".length());
-                    return new AbstractMap.SimpleEntry<>(indexName, Long.parseLong(sizeAsString));
-                })
-                .collect(Collectors.toList());
     }
 }
