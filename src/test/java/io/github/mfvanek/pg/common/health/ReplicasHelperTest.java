@@ -28,9 +28,11 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ReplicasHelperTest {
@@ -56,6 +58,13 @@ class ReplicasHelperTest {
                 potentiallyUnusedIndexesFromAllHosts);
         assertThat(unusedIndexes, hasSize(2));
         assertThat(unusedIndexes, containsInAnyOrder(i1, i5));
+    }
+
+    @Test
+    void getUnusedIndexesAsIntersectionResultWithEmptyInput() {
+        final List<UnusedIndex> unusedIndexes = ReplicasHelper.getUnusedIndexesAsIntersectionResult(Collections.emptyList());
+        assertNotNull(unusedIndexes);
+        assertThat(unusedIndexes, empty());
     }
 
     @Test

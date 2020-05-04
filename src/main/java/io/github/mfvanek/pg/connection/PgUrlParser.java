@@ -72,7 +72,7 @@ final class PgUrlParser {
     @Nonnull
     private static String extractAllHostsWithPort(@Nonnull final String pgUrl) {
         final int lastIndex = pgUrl.lastIndexOf('/');
-        if (lastIndex > -1 && lastIndex >= URL_HEADER.length()) {
+        if (lastIndex >= URL_HEADER.length()) {
             return pgUrl.substring(URL_HEADER.length(), lastIndex);
         }
 

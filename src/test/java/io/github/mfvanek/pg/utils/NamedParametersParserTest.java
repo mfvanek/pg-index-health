@@ -71,4 +71,19 @@ class NamedParametersParserTest {
         assertEquals("select c.* from clients c where c.first_name = ?::text and c.last_name = ?::text;",
                 parse("select c.* from clients c where c.first_name = :p_name::text and c.last_name = :p_surname::text;"));
     }
+
+    @Test
+    void parseWithInvalidNameAfterDoubleColon() {
+        assertEquals("select * from accounts where account_number = ?%num::text",
+                parse("select * from accounts where account_number = :p%num::text"));
+    }
+
+    @Test
+    void parseWithDoubleColonInTheEnd() {
+        assertEquals("select * from accounts where account_number = :",
+                parse("select * from accounts where account_number = :"));
+
+        assertEquals("select * from accounts where account_number = :%",
+                parse("select * from accounts where account_number = :%"));
+    }
 }
