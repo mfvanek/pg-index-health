@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.utils.Validators;
 import org.apache.commons.lang3.StringUtils;
 
@@ -41,18 +40,18 @@ public class Exclusions {
     private final long tableBloatSizeThresholdInBytes;
     private final int tableBloatPercentageThreshold;
 
-    private Exclusions(@Nonnull String duplicatedIndexesExclusions,
-                       @Nonnull String intersectedIndexesExclusions,
-                       @Nonnull String unusedIndexesExclusions,
-                       @Nonnull String tablesWithMissingIndexesExclusions,
-                       @Nonnull String tablesWithoutPrimaryKeyExclusions,
-                       @Nonnull String indexesWithNullValuesExclusions,
-                       final long indexSizeThresholdInBytes,
-                       final long tableSizeThresholdInBytes,
-                       final long indexBloatSizeThresholdInBytes,
-                       final int indexBloatPercentageThreshold,
-                       final long tableBloatSizeThresholdInBytes,
-                       final int tableBloatPercentageThreshold) {
+    Exclusions(@Nonnull String duplicatedIndexesExclusions,
+               @Nonnull String intersectedIndexesExclusions,
+               @Nonnull String unusedIndexesExclusions,
+               @Nonnull String tablesWithMissingIndexesExclusions,
+               @Nonnull String tablesWithoutPrimaryKeyExclusions,
+               @Nonnull String indexesWithNullValuesExclusions,
+               final long indexSizeThresholdInBytes,
+               final long tableSizeThresholdInBytes,
+               final long indexBloatSizeThresholdInBytes,
+               final int indexBloatPercentageThreshold,
+               final long tableBloatSizeThresholdInBytes,
+               final int tableBloatPercentageThreshold) {
         this.duplicatedIndexesExclusions = prepareExclusions(duplicatedIndexesExclusions);
         this.intersectedIndexesExclusions = prepareExclusions(intersectedIndexesExclusions);
         this.unusedIndexesExclusions = prepareExclusions(unusedIndexesExclusions);
@@ -173,174 +172,7 @@ public class Exclusions {
      *
      * @return {@code Builder}
      */
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-
-        private static final String EMPTY = "";
-
-        private String duplicatedIndexesExclusions = EMPTY;
-        private String intersectedIndexesExclusions = EMPTY;
-        private String unusedIndexesExclusions = EMPTY;
-        private String tablesWithMissingIndexesExclusions = EMPTY;
-        private String tablesWithoutPrimaryKeyExclusions = EMPTY;
-        private String indexesWithNullValuesExclusions = EMPTY;
-        private long indexSizeThresholdInBytes = 0L;
-        private long tableSizeThresholdInBytes = 0L;
-        private long indexBloatSizeThresholdInBytes = 0L;
-        private int indexBloatPercentageThreshold = 0;
-        private long tableBloatSizeThresholdInBytes = 0L;
-        private int tableBloatPercentageThreshold = 0;
-
-        private Builder() {
-        }
-
-        /**
-         * Sets a list of duplicated indexes that should be excluded by {@link HealthLogger}.
-         *
-         * @param duplicatedIndexesExclusions comma-separated list of duplicated indexes,
-         *                                    for example {@code "idx_name_1, idx_name_2"}
-         * @return {@code Builder}
-         */
-        public Builder withDuplicatedIndexesExclusions(@Nonnull final String duplicatedIndexesExclusions) {
-            this.duplicatedIndexesExclusions = Objects.requireNonNull(duplicatedIndexesExclusions);
-            return this;
-        }
-
-        /**
-         * Sets a list of intersected indexes that should be excluded by {@link HealthLogger}.
-         *
-         * @param intersectedIndexesExclusions comma-separated list of intersected indexes,
-         *                                     for example {@code "idx_name_1, idx_name_2"}
-         * @return {@code Builder}
-         */
-        public Builder withIntersectedIndexesExclusions(@Nonnull final String intersectedIndexesExclusions) {
-            this.intersectedIndexesExclusions = Objects.requireNonNull(intersectedIndexesExclusions);
-            return this;
-        }
-
-        /**
-         * Sets a list of unused indexes that should be excluded by {@link HealthLogger}.
-         *
-         * @param unusedIndexesExclusions comma-separated list of unused indexes,
-         *                                for example {@code "idx_name_1, idx_name_2"}
-         * @return {@code Builder}
-         */
-        public Builder withUnusedIndexesExclusions(@Nonnull final String unusedIndexesExclusions) {
-            this.unusedIndexesExclusions = Objects.requireNonNull(unusedIndexesExclusions);
-            return this;
-        }
-
-        public Builder withTablesWithMissingIndexesExclusions(
-                @Nonnull final String tablesWithMissingIndexesExclusions) {
-            this.tablesWithMissingIndexesExclusions = Objects.requireNonNull(tablesWithMissingIndexesExclusions);
-            return this;
-        }
-
-        public Builder withTablesWithoutPrimaryKeyExclusions(@Nonnull final String tablesWithoutPrimaryKeyExclusions) {
-            this.tablesWithoutPrimaryKeyExclusions = Objects.requireNonNull(tablesWithoutPrimaryKeyExclusions);
-            return this;
-        }
-
-        public Builder withIndexesWithNullValuesExclusions(@Nonnull final String indexesWithNullValuesExclusions) {
-            this.indexesWithNullValuesExclusions = Objects.requireNonNull(indexesWithNullValuesExclusions);
-            return this;
-        }
-
-        public Builder withIndexSizeThreshold(final long indexSizeThresholdInBytes) {
-            this.indexSizeThresholdInBytes = Validators.sizeNotNegative(
-                    indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
-            return this;
-        }
-
-        public Builder withIndexSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
-            final long indexSizeInBytes = unit.convertToBytes(
-                    Validators.argumentNotNegative(thresholdUnitsCount, "thresholdUnitsCount"));
-            return withIndexSizeThreshold(indexSizeInBytes);
-        }
-
-        public Builder withTableSizeThreshold(final long tableSizeThresholdInBytes) {
-            this.tableSizeThresholdInBytes = Validators.sizeNotNegative(
-                    tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
-            return this;
-        }
-
-        public Builder withTableSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
-            final long tableSizeInBytes = unit.convertToBytes(
-                    Validators.argumentNotNegative(thresholdUnitsCount, "thresholdUnitsCount"));
-            return withTableSizeThreshold(tableSizeInBytes);
-        }
-
-        public Builder withIndexBloatSizeThreshold(final long indexBloatSizeThresholdInBytes) {
-            this.indexBloatSizeThresholdInBytes = Validators.sizeNotNegative(indexBloatSizeThresholdInBytes,
-                    "indexBloatSizeThresholdInBytes");
-            return this;
-        }
-
-        public Builder withIndexBloatSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
-            final long indexBloatSizeInBytes = unit.convertToBytes(
-                    Validators.argumentNotNegative(thresholdUnitsCount, "thresholdUnitsCount"));
-            return withIndexBloatSizeThreshold(indexBloatSizeInBytes);
-        }
-
-        public Builder withIndexBloatPercentageThreshold(final int indexBloatPercentageThreshold) {
-            this.indexBloatPercentageThreshold = Validators.validPercent(
-                    indexBloatPercentageThreshold, "indexBloatPercentageThreshold");
-            return this;
-        }
-
-        public Builder withTableBloatSizeThreshold(final long tableBloatSizeThresholdInBytes) {
-            this.tableBloatSizeThresholdInBytes = Validators.sizeNotNegative(
-                    tableBloatSizeThresholdInBytes, "tableBloatSizeThresholdInBytes");
-            return this;
-        }
-
-        public Builder withTableBloatSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
-            final long tableBloatSizeInBytes = unit.convertToBytes(
-                    Validators.argumentNotNegative(thresholdUnitsCount, "thresholdUnitsCount"));
-            return withTableBloatSizeThreshold(tableBloatSizeInBytes);
-        }
-
-        public Builder withTableBloatPercentageThreshold(final int tableBloatPercentageThreshold) {
-            this.tableBloatPercentageThreshold = Validators.validPercent(
-                    tableBloatPercentageThreshold, "tableBloatPercentageThreshold");
-            return this;
-        }
-
-        public Exclusions build() {
-            return new Exclusions(
-                    duplicatedIndexesExclusions,
-                    intersectedIndexesExclusions,
-                    unusedIndexesExclusions,
-                    tablesWithMissingIndexesExclusions,
-                    tablesWithoutPrimaryKeyExclusions,
-                    indexesWithNullValuesExclusions,
-                    indexSizeThresholdInBytes,
-                    tableSizeThresholdInBytes,
-                    indexBloatSizeThresholdInBytes,
-                    indexBloatPercentageThreshold,
-                    tableBloatSizeThresholdInBytes,
-                    tableBloatPercentageThreshold);
-        }
-
-        @Override
-        public String toString() {
-            return Builder.class.getSimpleName() + '{' +
-                    "duplicatedIndexesExclusions='" + duplicatedIndexesExclusions + '\'' +
-                    ", intersectedIndexesExclusions='" + intersectedIndexesExclusions + '\'' +
-                    ", unusedIndexesExclusions='" + unusedIndexesExclusions + '\'' +
-                    ", tablesWithMissingIndexesExclusions='" + tablesWithMissingIndexesExclusions + '\'' +
-                    ", tablesWithoutPrimaryKeyExclusions='" + tablesWithoutPrimaryKeyExclusions + '\'' +
-                    ", indexesWithNullValuesExclusions='" + indexesWithNullValuesExclusions + '\'' +
-                    ", indexSizeThresholdInBytes=" + indexSizeThresholdInBytes +
-                    ", tableSizeThresholdInBytes=" + tableSizeThresholdInBytes +
-                    ", indexBloatSizeThresholdInBytes=" + indexBloatSizeThresholdInBytes +
-                    ", indexBloatPercentageThreshold=" + indexBloatPercentageThreshold +
-                    ", tableBloatSizeThresholdInBytes=" + tableBloatSizeThresholdInBytes +
-                    ", tableBloatPercentageThreshold=" + tableBloatPercentageThreshold +
-                    '}';
-        }
+    public static ExclusionsBuilder builder() {
+        return new ExclusionsBuilder();
     }
 }

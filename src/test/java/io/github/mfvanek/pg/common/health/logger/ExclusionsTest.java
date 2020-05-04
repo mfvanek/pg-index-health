@@ -133,18 +133,6 @@ class ExclusionsTest {
     }
 
     @Test
-    void toStringBuilderTest() {
-        final Exclusions.Builder builder = Exclusions.builder();
-        assertNotNull(builder);
-        assertEquals("Builder{duplicatedIndexesExclusions='', intersectedIndexesExclusions='', " +
-                        "unusedIndexesExclusions='', tablesWithMissingIndexesExclusions='', tablesWithoutPrimaryKeyExclusions='', " +
-                        "indexesWithNullValuesExclusions='', indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " +
-                        "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0, " +
-                        "tableBloatSizeThresholdInBytes=0, tableBloatPercentageThreshold=0}",
-                builder.toString());
-    }
-
-    @Test
     void builderWithZeroSizeInBytes() {
         final Exclusions e = Exclusions.builder()
                 .withIndexSizeThreshold(0L)
