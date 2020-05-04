@@ -24,10 +24,8 @@ public interface StatisticsAware {
     /**
      * Resets all statistics counters for the current database to zero.
      * For more information, see https://www.postgresql.org/docs/current/monitoring-stats.html
-     *
-     * @return true if has been called successfully
      */
-    boolean resetStatistics();
+    void resetStatistics();
 
     /**
      * Gets time at which database statistics were last reset.

@@ -53,12 +53,13 @@ public class DatabaseManagementImpl implements DatabaseManagement {
      * {@inheritDoc}
      */
     @Override
-    public boolean resetStatistics() {
-        boolean result = true;
+    public void resetStatistics() {
         for (StatisticsMaintenanceOnHost statisticsMaintenance : statisticsMaintenanceForAllHostsInCluster) {
-            result &= doOnHost(statisticsMaintenance.getHost(), statisticsMaintenance::resetStatistics);
+            doOnHost(statisticsMaintenance.getHost(), () -> {
+                statisticsMaintenance.resetStatistics();
+                return true;
+            });
         }
-        return result;
     }
 
     /**

@@ -60,8 +60,7 @@ public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTest
                     tryToFindAccountByClientId(schemaName);
                     final PgContext pgContext = PgContext.of(schemaName);
                     assertThat(getSeqScansForAccounts(pgContext), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
-                    final boolean resetResult = statisticsMaintenance.resetStatistics();
-                    assertTrue(resetResult);
+                    statisticsMaintenance.resetStatistics();
                     waitForStatisticsCollector();
                     assertEquals(0L, getSeqScansForAccounts(pgContext));
 

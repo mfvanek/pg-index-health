@@ -28,7 +28,7 @@ public interface DatabaseManagement extends StatisticsAware {
      * @see StatisticsMaintenanceOnHost
      */
     @Override
-    boolean resetStatistics();
+    void resetStatistics();
 
     /**
      * Gets time at which database statistics were last reset on the primary host.

@@ -29,9 +29,8 @@ public class StatisticsMaintenanceOnHostImpl extends AbstractMaintenance impleme
      * {@inheritDoc}
      */
     @Override
-    public boolean resetStatistics() {
-        final List<Boolean> result = QueryExecutor.executeQuery(pgConnection, "select pg_stat_reset()", rs -> true);
-        return result.size() == 1;
+    public void resetStatistics() {
+        QueryExecutor.executeQuery(pgConnection, "select pg_stat_reset()", rs -> true);
     }
 
     /**

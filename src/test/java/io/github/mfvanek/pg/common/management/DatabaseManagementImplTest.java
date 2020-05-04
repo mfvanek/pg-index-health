@@ -54,8 +54,7 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
                     final OffsetDateTime testStartTime = OffsetDateTime.now();
                     tryToFindAccountByClientId(schemaName);
                     assertThat(getSeqScansForAccounts(ctx), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
-                    final boolean resetResult = databaseManagement.resetStatistics();
-                    assertTrue(resetResult);
+                    databaseManagement.resetStatistics();
                     waitForStatisticsCollector();
                     assertEquals(0L, getSeqScansForAccounts(ctx));
 

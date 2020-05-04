@@ -28,11 +28,9 @@ public interface StatisticsMaintenanceOnHost extends StatisticsAware, HostAware 
     /**
      * Resets all statistics counters for the current database on current host to zero.
      * For more information, see https://www.postgresql.org/docs/current/monitoring-stats.html
-     *
-     * @return true if has been called successfully
      */
     @Override
-    boolean resetStatistics();
+    void resetStatistics();
 
     /**
      * Gets time at which database statistics were last reset on current host.
