@@ -10,6 +10,8 @@
 
 package io.github.mfvanek.pg.connection;
 
+import io.github.mfvanek.pg.utils.QueryExecutor;
+
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 import java.util.Objects;
@@ -18,10 +20,14 @@ public class PgConnectionImpl implements PgConnection {
 
     private final DataSource dataSource;
     private final PgHost host;
+    private final boolean isPrimaryByDefault;
 
-    private PgConnectionImpl(@Nonnull final DataSource dataSource, @Nonnull final PgHost host) {
+    private PgConnectionImpl(@Nonnull final DataSource dataSource,
+                             @Nonnull final PgHost host,
+                             final boolean isPrimaryByDefault) {
         this.dataSource = Objects.requireNonNull(dataSource);
         this.host = Objects.requireNonNull(host);
+        this.isPrimaryByDefault = isPrimaryByDefault;
     }
 
     /**
@@ -42,14 +48,30 @@ public class PgConnectionImpl implements PgConnection {
         return host;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isPrimary() {
+        if (isPrimaryByDefault) {
+            return true;
+        }
+
+        if (host.cannotBePrimary()) {
+            return false;
+        }
+
+        return QueryExecutor.isPrimary(dataSource);
+    }
+
     @Nonnull
     public static PgConnection ofPrimary(@Nonnull final DataSource dataSource) {
-        return new PgConnectionImpl(dataSource, PgHostImpl.ofPrimary());
+        return new PgConnectionImpl(dataSource, PgHostImpl.ofPrimary(), true);
     }
 
     @Nonnull
     public static PgConnection of(@Nonnull final DataSource dataSource, @Nonnull final PgHost host) {
-        return new PgConnectionImpl(dataSource, host);
+        return new PgConnectionImpl(dataSource, host, false);
     }
 
     @Override
@@ -75,6 +97,7 @@ public class PgConnectionImpl implements PgConnection {
     public String toString() {
         return PgConnectionImpl.class.getSimpleName() + '{' +
                 "host=" + host +
+                ", isPrimaryByDefault=" + isPrimaryByDefault +
                 '}';
     }
 }

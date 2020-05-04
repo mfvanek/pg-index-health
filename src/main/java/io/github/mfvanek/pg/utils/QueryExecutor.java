@@ -114,4 +114,22 @@ public final class QueryExecutor {
             throw new RuntimeException(e);
         }
     }
+
+    public static boolean isPrimary(@Nonnull final DataSource dataSource) {
+        final String sqlQuery = "select not pg_is_in_recovery()";
+        LOGGER.debug("Executing query: {}", sqlQuery);
+        Objects.requireNonNull(dataSource, "dataSource");
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(sqlQuery)) {
+                resultSet.next();
+                final boolean executionResult = resultSet.getBoolean(1);
+                LOGGER.debug("Query completed with result {}", executionResult);
+                return executionResult;
+            }
+        } catch (SQLException e) {
+            LOGGER.trace("Query failed", e);
+            throw new RuntimeException(e);
+        }
+    }
 }

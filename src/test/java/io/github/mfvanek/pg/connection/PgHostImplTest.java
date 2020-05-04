@@ -29,7 +29,8 @@ class PgHostImplTest {
         assertNotNull(host);
         assertEquals("primary", host.getName());
         assertEquals("jdbc:postgresql://primary", host.getPgUrl());
-        assertTrue(host.couldBePrimary());
+        assertTrue(host.canBePrimary());
+        assertFalse(host.cannotBePrimary());
     }
 
     @Test
@@ -38,7 +39,8 @@ class PgHostImplTest {
         assertNotNull(host);
         assertEquals("any-host", host.getName());
         assertEquals("jdbc:postgresql://any-host", host.getPgUrl());
-        assertTrue(host.couldBePrimary());
+        assertTrue(host.canBePrimary());
+        assertFalse(host.cannotBePrimary());
     }
 
     @Test
@@ -47,7 +49,8 @@ class PgHostImplTest {
         assertNotNull(host);
         assertEquals("One of [host-3, host-4, host-1, host-2]", host.getName());
         assertEquals("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require", host.getPgUrl());
-        assertTrue(host.couldBePrimary());
+        assertTrue(host.canBePrimary());
+        assertFalse(host.cannotBePrimary());
     }
 
     @Test
@@ -57,7 +60,8 @@ class PgHostImplTest {
         assertEquals("One of [host-3, host-4, host-1, host-2]", host.getName());
         assertEquals("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require&targetServerType=secondary",
                 host.getPgUrl());
-        assertFalse(host.couldBePrimary());
+        assertFalse(host.canBePrimary());
+        assertTrue(host.cannotBePrimary());
     }
 
     @SuppressWarnings("ConstantConditions")

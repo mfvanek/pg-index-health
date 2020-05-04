@@ -29,4 +29,11 @@ public interface PgConnection extends HostAware {
      */
     @Nonnull
     DataSource getDataSource();
+
+    /**
+     * Determines whether this connection is a connection to a primary host.
+     *
+     * @return {@code true} if this is a connection to a primary host.
+     */
+    boolean isPrimary();
 }

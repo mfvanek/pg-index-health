@@ -60,7 +60,7 @@ public class PgHostImpl implements PgHost {
      * {@inheritDoc}
      */
     @Override
-    public boolean couldBePrimary() {
+    public boolean canBePrimary() {
         return maybePrimary;
     }
 

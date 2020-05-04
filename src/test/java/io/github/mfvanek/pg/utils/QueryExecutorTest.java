@@ -17,8 +17,21 @@ import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.PgContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.mockito.Mockito;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 
 public final class QueryExecutorTest extends DatabaseAwareTestBase {
 
@@ -56,5 +69,59 @@ public final class QueryExecutorTest extends DatabaseAwareTestBase {
     void executeNullQuery() {
         assertThrows(NullPointerException.class, () -> QueryExecutor.executeQuery(
                 pgConnection, null, (rs) -> null));
+        assertThrows(NullPointerException.class, () -> QueryExecutor.isPrimary(null));
+    }
+
+    @Test
+    void isPrimaryWithExecutionError() throws SQLException {
+        final DataSource dataSource = Mockito.mock(DataSource.class);
+        final Connection connection = Mockito.mock(Connection.class);
+        final Statement statement = Mockito.mock(Statement.class);
+        Mockito.when(dataSource.getConnection()).thenReturn(connection);
+        Mockito.when(connection.createStatement()).thenReturn(statement);
+        Mockito.when(statement.executeQuery(anyString())).thenThrow(new SQLException("bad query"));
+        final RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> QueryExecutor.isPrimary(dataSource));
+        final Throwable cause = runtimeException.getCause();
+        assertNotNull(cause);
+        assertThat(cause, instanceOf(SQLException.class));
+        assertEquals("bad query", cause.getMessage());
+    }
+
+    @Test
+    void executeQueryWithSchemaWithExecutionError() throws SQLException {
+        final DataSource dataSource = Mockito.mock(DataSource.class);
+        final Connection connection = Mockito.mock(Connection.class);
+        final PreparedStatement statement = Mockito.mock(PreparedStatement.class);
+        Mockito.when(dataSource.getConnection()).thenReturn(connection);
+        Mockito.when(connection.prepareStatement(anyString())).thenReturn(statement);
+        Mockito.doAnswer(invocation -> {
+            throw new SQLException("bad parameter");
+        }).when(statement).setString(anyInt(), anyString());
+        final RuntimeException runtimeException = assertThrows(RuntimeException.class,
+                () -> QueryExecutor.executeQueryWithSchema(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(),
+                        "select version()", (rs) -> rs.getString(1)));
+        final Throwable cause = runtimeException.getCause();
+        assertNotNull(cause);
+        assertThat(cause, instanceOf(SQLException.class));
+        assertEquals("bad parameter", cause.getMessage());
+    }
+
+    @Test
+    void executeQueryWithBloatThresholdWithExecutionError() throws SQLException {
+        final DataSource dataSource = Mockito.mock(DataSource.class);
+        final Connection connection = Mockito.mock(Connection.class);
+        final PreparedStatement statement = Mockito.mock(PreparedStatement.class);
+        Mockito.when(dataSource.getConnection()).thenReturn(connection);
+        Mockito.when(connection.prepareStatement(anyString())).thenReturn(statement);
+        Mockito.doAnswer(invocation -> {
+            throw new SQLException("bad parameter");
+        }).when(statement).setString(anyInt(), anyString());
+        final RuntimeException runtimeException = assertThrows(RuntimeException.class,
+                () -> QueryExecutor.executeQueryWithBloatThreshold(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(),
+                        "select version()", (rs) -> rs.getString(1)));
+        final Throwable cause = runtimeException.getCause();
+        assertNotNull(cause);
+        assertThat(cause, instanceOf(SQLException.class));
+        assertEquals("bad parameter", cause.getMessage());
     }
 }

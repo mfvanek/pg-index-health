@@ -20,9 +20,11 @@ import java.math.BigDecimal;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PgConnectionImplTest {
 
@@ -34,6 +36,27 @@ class PgConnectionImplTest {
         final PgConnection connection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         assertNotNull(connection.getDataSource());
         assertThat(connection.getHost(), equalTo(PgHostImpl.ofPrimary()));
+        assertTrue(connection.isPrimary());
+    }
+
+    @Test
+    void isPrimaryForSecondaryHost() {
+        final int port = embeddedPostgres.getPort();
+        final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
+                "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=secondary", port);
+        final PgConnection secondary = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofUrl(readUrl));
+        assertNotNull(secondary);
+        assertFalse(secondary.isPrimary());
+    }
+
+    @Test
+    void isPrimaryForAnyHost() {
+        final int port = embeddedPostgres.getPort();
+        final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
+                "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=preferSecondary", port);
+        final PgConnection any = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofUrl(readUrl));
+        assertNotNull(any);
+        assertTrue(any.isPrimary());
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -65,7 +88,7 @@ class PgConnectionImplTest {
     @Test
     void toStringTest() {
         final PgConnection connection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
-        assertEquals("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}}",
+        assertEquals("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}, isPrimaryByDefault=true}",
                 connection.toString());
     }
 }

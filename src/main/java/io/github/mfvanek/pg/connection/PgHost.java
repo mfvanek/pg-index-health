@@ -39,9 +39,13 @@ public interface PgHost {
     String getName();
 
     /**
-     * Determines whether this host could be a primary host.
+     * Determines whether this host can be a primary host.
      *
-     * @return {@code true} if this host could be a primary host
+     * @return {@code true} if this host can be a primary host
      */
-    boolean couldBePrimary();
+    boolean canBePrimary();
+
+    default boolean cannotBePrimary() {
+        return !canBePrimary();
+    }
 }
