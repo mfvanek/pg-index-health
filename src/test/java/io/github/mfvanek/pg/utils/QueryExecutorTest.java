@@ -23,7 +23,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -69,22 +68,6 @@ public final class QueryExecutorTest extends DatabaseAwareTestBase {
     void executeNullQuery() {
         assertThrows(NullPointerException.class, () -> QueryExecutor.executeQuery(
                 pgConnection, null, (rs) -> null));
-        assertThrows(NullPointerException.class, () -> QueryExecutor.isPrimary(null));
-    }
-
-    @Test
-    void isPrimaryWithExecutionError() throws SQLException {
-        final DataSource dataSource = Mockito.mock(DataSource.class);
-        final Connection connection = Mockito.mock(Connection.class);
-        final Statement statement = Mockito.mock(Statement.class);
-        Mockito.when(dataSource.getConnection()).thenReturn(connection);
-        Mockito.when(connection.createStatement()).thenReturn(statement);
-        Mockito.when(statement.executeQuery(anyString())).thenThrow(new SQLException("bad query"));
-        final RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> QueryExecutor.isPrimary(dataSource));
-        final Throwable cause = runtimeException.getCause();
-        assertNotNull(cause);
-        assertThat(cause, instanceOf(SQLException.class));
-        assertEquals("bad query", cause.getMessage());
     }
 
     @Test

@@ -15,18 +15,23 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Set;
 
 public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailabilityPgConnectionFactory {
 
     private final PgConnectionFactory pgConnectionFactory;
+    private final PrimaryHostDeterminer primaryHostDeterminer;
 
-    public HighAvailabilityPgConnectionFactoryImpl(@Nonnull final PgConnectionFactory pgConnectionFactory) {
+    public HighAvailabilityPgConnectionFactoryImpl(@Nonnull final PgConnectionFactory pgConnectionFactory,
+                                                   @Nonnull final PrimaryHostDeterminer primaryHostDeterminer) {
         this.pgConnectionFactory = Objects.requireNonNull(pgConnectionFactory);
+        this.primaryHostDeterminer = Objects.requireNonNull(primaryHostDeterminer);
     }
 
     @Override
@@ -65,8 +70,7 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
                                                 @Nonnull final String password,
                                                 @Nullable final String readUrl,
                                                 @Nullable final String cascadeAsyncReadUrl) {
-        final PgConnection connectionToPrimary = pgConnectionFactory.forUrl(writeUrl, userName, password);
-        final Map<String, PgConnection> connectionsToAllHostsInCluster = new HashMap<>();
+        final Map<String, PgConnection> connectionsToAllHostsInCluster = new LinkedHashMap<>();
         addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, writeUrl, userName, password);
         if (StringUtils.isNotBlank(readUrl)) {
             addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, readUrl, userName, password);
@@ -74,7 +78,9 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
         if (StringUtils.isNotBlank(cascadeAsyncReadUrl)) {
             addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, cascadeAsyncReadUrl, userName, password);
         }
-        return HighAvailabilityPgConnectionImpl.of(connectionToPrimary, new HashSet<>(connectionsToAllHostsInCluster.values()));
+        final PgConnection connectionToPrimary = findConnectionToPrimary(connectionsToAllHostsInCluster);
+        final Set<PgConnection> pgConnections = new HashSet<>(connectionsToAllHostsInCluster.values());
+        return HighAvailabilityPgConnectionImpl.of(connectionToPrimary, pgConnections);
     }
 
     private void addDataSourcesForAllHostsFromUrl(@Nonnull final Map<String, PgConnection> connectionsToAllHostsInCluster,
@@ -86,5 +92,14 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
             connectionsToAllHostsInCluster.computeIfAbsent(
                     host.getKey(), h -> pgConnectionFactory.forUrl(host.getValue(), userName, password));
         }
+    }
+
+    private PgConnection findConnectionToPrimary(final Map<String, PgConnection> connectionsToAllHostsInCluster) {
+        for (PgConnection pgConnection : connectionsToAllHostsInCluster.values()) {
+            if (primaryHostDeterminer.isPrimary(pgConnection)) {
+                return pgConnection;
+            }
+        }
+        throw new NoSuchElementException("Connection to primary host not found in " + connectionsToAllHostsInCluster);
     }
 }

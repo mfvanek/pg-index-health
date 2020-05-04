@@ -11,9 +11,13 @@
 package io.github.mfvanek.pg.connection;
 
 import javax.annotation.Nonnull;
+import javax.sql.DataSource;
 
 public interface PgConnectionFactory {
 
     @Nonnull
     PgConnection forUrl(@Nonnull String pgUrl, @Nonnull String userName, @Nonnull String password);
+
+    @Nonnull
+    DataSource dataSourceFor(@Nonnull String pgUrl, @Nonnull String userName, @Nonnull String password);
 }

@@ -8,6 +8,7 @@
             <Class name="io.github.mfvanek.pg.utils.DatabasePopulator"/>
             <Class name="io.github.mfvanek.pg.utils.PostgresVersionTest"/>
             <Class name="io.github.mfvanek.pg.utils.TestUtils"/>
+            <Class name="io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl"/>
         </Or>
     </Match>
     <Match>
@@ -16,6 +17,9 @@
     </Match>
     <Match>
         <Bug pattern="OBL_UNSATISFIED_OBLIGATION" file=""/>
-        <Class name="io.github.mfvanek.pg.utils.QueryExecutorTest"/>
+        <Or>
+            <Class name="io.github.mfvanek.pg.utils.QueryExecutorTest"/>
+            <Class name="io.github.mfvanek.pg.connection.PrimaryHostDeterminerImplTest"/>
+        </Or>
     </Match>
 </FindBugsFilter>
