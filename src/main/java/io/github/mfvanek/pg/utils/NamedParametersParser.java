@@ -68,9 +68,9 @@ public final class NamedParametersParser {
                     isPartOfMultiLineComment = true;
                 } else if (c == '-' && nextChar(i) == '-') {
                     isPartOfSingleLineComment = true;
-                } else if (c == ':' && nextChar(i) == ':') {
+                } else if (c == ':' && hasNextChar(i) && nextChar(i) == ':') {
                     isDoubleColon = true;
-                } else if (c == ':' && i + 1 < queryLength && Character.isJavaIdentifierStart(nextChar(i))) {
+                } else if (c == ':' && hasNextChar(i) && Character.isJavaIdentifierStart(nextChar(i))) {
                     int j = i + 2;
                     while (j < queryLength && Character.isJavaIdentifierPart(originalSqlQuery.charAt(j))) {
                         ++j;
@@ -87,6 +87,10 @@ public final class NamedParametersParser {
 
     private char nextChar(final int currentPosition) {
         return originalSqlQuery.charAt(currentPosition + 1);
+    }
+
+    private boolean hasNextChar(final int currentPosition) {
+        return currentPosition + 1 < queryLength;
     }
 
     @Nonnull
