@@ -52,9 +52,7 @@ public final class NamedParametersParser {
                     isPartOfMultiLineComment = false;
                 }
             } else if (isDoubleColon) {
-                if (!Character.isJavaIdentifierPart(c)) {
-                    isDoubleColon = false;
-                }
+                isDoubleColon = false;
             } else if (isPartOfSingleLineComment) {
                 if (c == '\n') {
                     isPartOfSingleLineComment = false;

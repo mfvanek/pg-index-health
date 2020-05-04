@@ -74,12 +74,18 @@ class NamedParametersParserTest {
 
     @Test
     void parseWithInvalidNameAfterDoubleColon() {
+        assertEquals("select * from accounts where account_number = ?::?",
+                parse("select * from accounts where account_number = :p_num:::text"));
+    }
+
+    @Test
+    void parseWithInvalidNameAfterColon() {
         assertEquals("select * from accounts where account_number = ?%num::text",
                 parse("select * from accounts where account_number = :p%num::text"));
     }
 
     @Test
-    void parseWithDoubleColonInTheEnd() {
+    void parseWithColonInTheEnd() {
         assertEquals("select * from accounts where account_number = :",
                 parse("select * from accounts where account_number = :"));
 
