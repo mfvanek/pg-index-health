@@ -19,6 +19,7 @@ import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -86,12 +87,33 @@ class PgUrlParserTest {
         assertThat(hostNames, containsInAnyOrder("host-1", "host-2", "host-3", "host-4"));
     }
 
+    @Test
+    void extractHostNamesWithIncompleteUrl() {
+        final Set<String> hostNames = PgUrlParser.extractHostNames(
+                "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432");
+        assertThat(hostNames, hasSize(4));
+        assertThat(hostNames, containsInAnyOrder("host-1", "host-2", "host-3", "host-4"));
+    }
+
+    @Test
+    void extractHostNamesWithEmptyUrl() {
+        final Set<String> hostNames = PgUrlParser.extractHostNames("jdbc:postgresql://");
+        assertThat(hostNames, empty());
+    }
+
+    @Test
+    void extractHostNamesWithBadUrl() {
+        final Set<String> hostNames = PgUrlParser.extractHostNames("jdbc:postgresql:///");
+        assertThat(hostNames, empty());
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void extractHostNamesWithInvalidUrl() {
         assertThrows(NullPointerException.class, () -> PgUrlParser.extractHostNames(null));
         assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractHostNames(""));
         assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractHostNames("host-name:5432"));
+        assertThrows(IllegalArgumentException.class, () -> PgUrlParser.extractHostNames("jdbc:postgresql:/"));
     }
 
     @Test
