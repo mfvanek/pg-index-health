@@ -10,11 +10,9 @@
 
 package io.github.mfvanek.pg.connection;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,50 +32,15 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
         this.primaryHostDeterminer = Objects.requireNonNull(primaryHostDeterminer);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
-    @Nonnull
-    public HighAvailabilityPgConnection of(@Nonnull final String writeUrl,
-                                           @Nonnull final String userName,
-                                           @Nonnull final String password) {
-        return create(writeUrl, userName, password, null, null);
-    }
-
-    @Override
-    @Nonnull
-    public HighAvailabilityPgConnection of(@Nonnull final String writeUrl,
-                                           @Nonnull final String userName,
-                                           @Nonnull final String password,
-                                           @Nonnull final String readUrl) {
-        PgConnectionValidators.pgUrlNotBlankAndValid(readUrl, "readUrl");
-        return create(writeUrl, userName, password, readUrl, null);
-    }
-
-    @Override
-    @Nonnull
-    public HighAvailabilityPgConnection of(@Nonnull final String writeUrl,
-                                           @Nonnull final String userName,
-                                           @Nonnull final String password,
-                                           @Nonnull final String readUrl,
-                                           @Nonnull final String cascadeAsyncReadUrl) {
-        PgConnectionValidators.pgUrlNotBlankAndValid(readUrl, "readUrl");
-        PgConnectionValidators.pgUrlNotBlankAndValid(cascadeAsyncReadUrl, "cascadeAsyncReadUrl");
-        return create(writeUrl, userName, password, readUrl, cascadeAsyncReadUrl);
-    }
-
-    @Nonnull
-    private HighAvailabilityPgConnection create(@Nonnull final String writeUrl,
-                                                @Nonnull final String userName,
-                                                @Nonnull final String password,
-                                                @Nullable final String readUrl,
-                                                @Nullable final String cascadeAsyncReadUrl) {
+    public HighAvailabilityPgConnection of(@Nonnull final ConnectionCredentials credentials) {
         final Map<String, PgConnection> connectionsToAllHostsInCluster = new LinkedHashMap<>();
-        addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, writeUrl, userName, password);
-        if (StringUtils.isNotBlank(readUrl)) {
-            addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, readUrl, userName, password);
-        }
-        if (StringUtils.isNotBlank(cascadeAsyncReadUrl)) {
-            addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, cascadeAsyncReadUrl, userName, password);
-        }
+        credentials.getConnectionUrls().forEach(
+                url -> addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, url, credentials));
         final PgConnection connectionToPrimary = findConnectionToPrimary(connectionsToAllHostsInCluster);
         final Set<PgConnection> pgConnections = new HashSet<>(connectionsToAllHostsInCluster.values());
         return HighAvailabilityPgConnectionImpl.of(connectionToPrimary, pgConnections);
@@ -85,12 +48,11 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
 
     private void addDataSourcesForAllHostsFromUrl(@Nonnull final Map<String, PgConnection> connectionsToAllHostsInCluster,
                                                   @Nonnull final String anyUrl,
-                                                  @Nonnull final String userName,
-                                                  @Nonnull final String password) {
+                                                  @Nonnull final ConnectionCredentials credentials) {
         final List<Pair<String, String>> allHosts = PgUrlParser.extractNameWithPortAndUrlForEachHost(anyUrl);
         for (Pair<String, String> host : allHosts) {
-            connectionsToAllHostsInCluster.computeIfAbsent(
-                    host.getKey(), h -> pgConnectionFactory.forUrl(host.getValue(), userName, password));
+            connectionsToAllHostsInCluster.computeIfAbsent(host.getKey(),
+                    h -> pgConnectionFactory.forUrl(host.getValue(), credentials.getUserName(), credentials.getPassword()));
         }
     }
 

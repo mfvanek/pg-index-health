@@ -11,24 +11,30 @@
 package io.github.mfvanek.pg.connection;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 
 public interface HighAvailabilityPgConnectionFactory {
 
+    /**
+     * Creates instance of {@code HighAvailabilityPgConnection} with given credentials.
+     *
+     * @param credentials given credentials.
+     * @return instance of {@code HighAvailabilityPgConnection}
+     */
     @Nonnull
-    HighAvailabilityPgConnection of(@Nonnull String writeUrl,
-                                    @Nonnull String userName,
-                                    @Nonnull String password);
+    HighAvailabilityPgConnection of(@Nonnull ConnectionCredentials credentials);
 
     @Nonnull
-    HighAvailabilityPgConnection of(@Nonnull String writeUrl,
-                                    @Nonnull String userName,
-                                    @Nonnull String password,
-                                    @Nonnull String readUrl);
+    default HighAvailabilityPgConnection ofUrl(@Nonnull final String writeUrl,
+                                               @Nonnull final String userName,
+                                               @Nonnull final String password) {
+        return of(ConnectionCredentials.ofUrl(writeUrl, userName, password));
+    }
 
     @Nonnull
-    HighAvailabilityPgConnection of(@Nonnull String writeUrl,
-                                    @Nonnull String userName,
-                                    @Nonnull String password,
-                                    @Nonnull String readUrl,
-                                    @Nonnull String cascadeAsyncReadUrl);
+    default HighAvailabilityPgConnection ofUrls(@Nonnull final Collection<String> connectionUrls,
+                                                @Nonnull final String userName,
+                                                @Nonnull final String password) {
+        return of(ConnectionCredentials.of(connectionUrls, userName, password));
+    }
 }

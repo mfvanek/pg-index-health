@@ -10,7 +10,9 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.common.health.DatabaseHealth;
+import io.github.mfvanek.pg.common.health.DatabaseHealthFactory;
+import io.github.mfvanek.pg.connection.ConnectionCredentials;
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +24,10 @@ public class SimpleHealthLogger extends AbstractHealthLogger {
 
     private static final Logger KV_LOG = LoggerFactory.getLogger("key-value.log");
 
-    public SimpleHealthLogger(@Nonnull final DatabaseHealth databaseHealth) {
-        super(databaseHealth);
+    public SimpleHealthLogger(@Nonnull final ConnectionCredentials credentials,
+                              @Nonnull final HighAvailabilityPgConnectionFactory connectionFactory,
+                              @Nonnull final DatabaseHealthFactory databaseHealthFactory) {
+        super(credentials, connectionFactory, databaseHealthFactory);
     }
 
     @Override

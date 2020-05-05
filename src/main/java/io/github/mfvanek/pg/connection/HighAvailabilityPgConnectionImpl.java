@@ -23,7 +23,8 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
     private HighAvailabilityPgConnectionImpl(@Nonnull final PgConnection connectionToPrimary,
                                              @Nonnull final Set<PgConnection> connectionsToAllHostsInCluster) {
         this.connectionToPrimary = Objects.requireNonNull(connectionToPrimary);
-        this.connectionsToAllHostsInCluster = Objects.requireNonNull(connectionsToAllHostsInCluster);
+        this.connectionsToAllHostsInCluster = Collections.unmodifiableSet(
+                Objects.requireNonNull(connectionsToAllHostsInCluster));
     }
 
     /**
@@ -41,7 +42,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
     @Override
     @Nonnull
     public Set<PgConnection> getConnectionsToAllHostsInCluster() {
-        return Collections.unmodifiableSet(connectionsToAllHostsInCluster);
+        return connectionsToAllHostsInCluster;
     }
 
     @Nonnull
