@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.connection;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.Objects;
 
 final class PgConnectionValidators {
@@ -30,12 +31,24 @@ final class PgConnectionValidators {
         return pgUrl;
     }
 
-    static void userNameNotBlank(@Nonnull final String userName) {
+    @Nonnull
+    static String userNameNotBlank(@Nonnull final String userName) {
         notBlank(userName, "userName");
+        return userName;
     }
 
-    static void passwordNotBlank(@Nonnull final String password) {
+    @Nonnull
+    static String passwordNotBlank(@Nonnull final String password) {
         notBlank(password, "password");
+        return password;
+    }
+
+    static void connectionUrlsNotEmptyAndValid(@Nonnull final Collection<String> connectionUrls) {
+        Objects.requireNonNull(connectionUrls, "connectionUrls");
+        if (connectionUrls.isEmpty()) {
+            throw new IllegalArgumentException("connectionUrls have to contain at least one url");
+        }
+        connectionUrls.forEach(url -> pgUrlNotBlankAndValid(url, "connectionUrl"));
     }
 
     private static void notBlank(@Nonnull final String argumentValue, @Nonnull final String argumentName) {

@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -51,22 +52,31 @@ public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback 
         provider = null;
     }
 
+    @Nonnull
     public DataSource getTestDatabase() {
-        if (dataSource == null) {
-            throw new AssertionError("not initialized");
-        }
+        throwErrorIfNotInitialized();
         return dataSource;
     }
 
     public int getPort() {
-        if (connectionInfo == null) {
-            throw new AssertionError("not initialized");
-        }
+        throwErrorIfNotInitialized();
         return connectionInfo.getPort();
+    }
+
+    @Nonnull
+    public String getUrl() {
+        throwErrorIfNotInitialized();
+        return String.format("jdbc:postgresql://localhost:%d/%s", connectionInfo.getPort(), connectionInfo.getDbName());
     }
 
     public PostgresDbExtension withAdditionalStartupParameter(String key, String value) {
         builderCustomizers.add(builder -> builder.setServerConfig(key, value));
         return this;
+    }
+
+    private void throwErrorIfNotInitialized() {
+        if (connectionInfo == null) {
+            throw new AssertionError("not initialized");
+        }
     }
 }

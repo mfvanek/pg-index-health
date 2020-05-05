@@ -11,6 +11,9 @@
 package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.common.health.DatabaseHealth;
+import io.github.mfvanek.pg.common.health.DatabaseHealthFactory;
+import io.github.mfvanek.pg.connection.ConnectionCredentials;
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
@@ -23,6 +26,7 @@ import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -34,7 +38,16 @@ import static org.mockito.ArgumentMatchers.any;
 
 class SimpleHealthLoggerTest {
 
+    private final ConnectionCredentials credentials = Mockito.mock(ConnectionCredentials.class);
     private final DatabaseHealth databaseHealth = Mockito.mock(DatabaseHealth.class);
+    private final DatabaseHealthFactory databaseHealthFactory = Mockito.mock(DatabaseHealthFactory.class);
+    private final HighAvailabilityPgConnectionFactory connectionFactory = Mockito.mock(HighAvailabilityPgConnectionFactory.class);
+    private final HealthLogger logger = new SimpleHealthLogger(credentials, connectionFactory, databaseHealthFactory);
+
+    @BeforeEach
+    void setUp() {
+        Mockito.when(databaseHealthFactory.of(any())).thenReturn(databaseHealth);
+    }
 
     @Test
     void logInvalidIndexes() {
@@ -44,7 +57,6 @@ class SimpleHealthLoggerTest {
                         Index.of("t1", "i2"),
                         Index.of("t2", "i3")
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(Exclusions.empty());
         assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes\t3");
     }
@@ -69,7 +81,6 @@ class SimpleHealthLoggerTest {
                                 IndexWithSize.of("t3", "i6", 6L)
                         ))
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.DUPLICATED_INDEXES, "duplicated_indexes\t1");
     }
@@ -86,7 +97,6 @@ class SimpleHealthLoggerTest {
                         UnusedIndex.of("t2", "i3", 3L, 3L),
                         UnusedIndex.of("t2", "i4", 4L, 4L)
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t2");
     }
@@ -111,7 +121,6 @@ class SimpleHealthLoggerTest {
                                 IndexWithSize.of("t3", "i6", 6L)
                         ))
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.INTERSECTED_INDEXES, "intersected_indexes\t1");
     }
@@ -129,7 +138,6 @@ class SimpleHealthLoggerTest {
                         UnusedIndex.of("t2", "i3", 3L, 3L),
                         UnusedIndex.of("t2", "i4", 4L, 4L)
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t1");
     }
@@ -147,7 +155,6 @@ class SimpleHealthLoggerTest {
                         UnusedIndex.of("t2", "i3", 1_048_574L, 3L),
                         UnusedIndex.of("t2", "i4", 1_048_573L, 4L)
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.UNUSED_INDEXES, "unused_indexes\t1");
     }
@@ -160,7 +167,6 @@ class SimpleHealthLoggerTest {
                         ForeignKey.ofColumn("t1", "c2", "f2"),
                         ForeignKey.of("t2", "c3", Arrays.asList("f3", "f4"))
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(Exclusions.empty());
         assertContainsKey(logs, SimpleLoggingKey.FOREIGN_KEYS, "foreign_keys_without_index\t3");
     }
@@ -177,7 +183,6 @@ class SimpleHealthLoggerTest {
                         TableWithMissingIndex.of("t3", 0L, 303L, 3L),
                         TableWithMissingIndex.of("t4", 0L, 404L, 4L)
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES, "tables_with_missing_indexes\t2");
     }
@@ -194,7 +199,6 @@ class SimpleHealthLoggerTest {
                         TableWithMissingIndex.of("t3", 99L, 303L, 3L),
                         TableWithMissingIndex.of("t4", 100L, 404L, 4L)
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES, "tables_with_missing_indexes\t3");
     }
@@ -211,7 +215,6 @@ class SimpleHealthLoggerTest {
                         Table.of("t3", 0L),
                         Table.of("t4", 0L)
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key\t3");
     }
@@ -228,7 +231,6 @@ class SimpleHealthLoggerTest {
                         Table.of("t3", 100L),
                         Table.of("t4", 200L)
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key\t2");
     }
@@ -245,7 +247,6 @@ class SimpleHealthLoggerTest {
                         IndexWithNulls.of("t2", "i3", 3L, "f3"),
                         IndexWithNulls.of("t2", "i4", 4L, "f4")
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.INDEXES_WITH_NULLS, "indexes_with_null_values\t3");
     }
@@ -263,7 +264,6 @@ class SimpleHealthLoggerTest {
                         IndexWithBloat.of("t2", "i3", 30L, 10L, 33),
                         IndexWithBloat.of("t2", "i4", 40L, 20L, 50)
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat\t2");
     }
@@ -281,7 +281,6 @@ class SimpleHealthLoggerTest {
                         IndexWithBloat.of("t2", "i3", 30L, 10L, 33),
                         IndexWithBloat.of("t2", "i4", 40L, 21L, 52)
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat\t1");
     }
@@ -299,7 +298,6 @@ class SimpleHealthLoggerTest {
                         TableWithBloat.of("t3", 30L, 10L, 33),
                         TableWithBloat.of("t4", 40L, 20L, 50)
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.TABLES_BLOAT, "tables_bloat\t1");
     }
@@ -317,7 +315,6 @@ class SimpleHealthLoggerTest {
                         TableWithBloat.of("t3", 30L, 10L, 33),
                         TableWithBloat.of("t4", 40L, 20L, 50)
                 ));
-        final HealthLogger logger = new SimpleHealthLogger(databaseHealth);
         final List<String> logs = logger.logAll(exclusions);
         assertContainsKey(logs, SimpleLoggingKey.TABLES_BLOAT, "tables_bloat\t2");
     }

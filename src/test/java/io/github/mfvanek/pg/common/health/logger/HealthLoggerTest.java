@@ -10,12 +10,12 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.common.health.DatabaseHealth;
-import io.github.mfvanek.pg.common.health.DatabaseHealthImpl;
+import io.github.mfvanek.pg.common.health.DatabaseHealthFactoryImpl;
 import io.github.mfvanek.pg.common.maintenance.MaintenanceFactoryImpl;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.connection.ConnectionCredentials;
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
+import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
+import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
@@ -40,9 +40,10 @@ public final class HealthLoggerTest extends DatabaseAwareTestBase {
 
     HealthLoggerTest() {
         super(embeddedPostgres.getTestDatabase());
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase()));
-        final DatabaseHealth databaseHealth = new DatabaseHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
-        this.logger = new SimpleHealthLogger(databaseHealth);
+        this.logger = new SimpleHealthLogger(
+                ConnectionCredentials.ofUrl(embeddedPostgres.getUrl(), "postgres", "postgres"),
+                new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
+                new DatabaseHealthFactoryImpl(new MaintenanceFactoryImpl()));
     }
 
     @ParameterizedTest

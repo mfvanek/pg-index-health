@@ -11,10 +11,12 @@
 package io.github.mfvanek.pg.connection;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
+@Immutable
 public class PgHostImpl implements PgHost {
 
     private final String pgUrl;
@@ -25,7 +27,7 @@ public class PgHostImpl implements PgHost {
                        final boolean withValidation,
                        final boolean maybePrimary) {
         this.pgUrl = PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
-        this.hostNames = PgUrlParser.extractHostNames(pgUrl);
+        this.hostNames = Collections.unmodifiableSet(PgUrlParser.extractHostNames(pgUrl));
         this.maybePrimary = maybePrimary;
     }
 
