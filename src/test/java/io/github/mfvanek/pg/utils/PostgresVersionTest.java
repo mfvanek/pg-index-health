@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.utils;
 
-import com.vdurmont.semver4j.Semver;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +22,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.startsWith;
 
 final class PostgresVersionTest extends DatabaseAwareTestBase {
 
@@ -41,17 +41,10 @@ final class PostgresVersionTest extends DatabaseAwareTestBase {
     void checkPgVersion() {
         String requiredPgVersionString = System.getenv(PG_VERSION_ENVIRONMENT_VARIABLE);
         if (requiredPgVersionString == null) {
-            requiredPgVersionString = "10.11.0";
+            requiredPgVersionString = "10.13";
         }
-        Semver actualPgVersion = new Semver(readPgVersion(), Semver.SemverType.LOOSE);
-        Semver requiredPgVersion = new Semver(requiredPgVersionString);
-        assertEquals(requiredPgVersion.getMajor(), actualPgVersion.getMajor());
-        assertEquals(requiredPgVersion.getMinor(), actualPgVersion.getMinor());
-        if (actualPgVersion.getPatch() == null) {
-            assertEquals(0, requiredPgVersion.getPatch());
-        } else {
-            assertEquals(requiredPgVersion.getPatch(), actualPgVersion.getPatch());
-        }
+        final String actualPgVersionString = readPgVersion();
+        assertThat(actualPgVersionString, startsWith(requiredPgVersionString));
     }
 
     @Nonnull

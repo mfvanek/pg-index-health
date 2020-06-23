@@ -17,8 +17,8 @@ repositories {
     mavenCentral()
 }
 
-def postgresVersion = System.getenv('TEST_PG_VERSION') ?: '10.11.0'
 def junitVersion = '5.6.0'
+def testContainersVersion = '1.14.3'
 dependencies {
     compile 'com.google.code.findbugs:jsr305:3.0.2'
     compile 'org.apache.commons:commons-lang3:3.9'
@@ -33,9 +33,11 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'ch.qos.logback:logback-classic:1.2.3'
     testImplementation 'org.mockito:mockito-core:3.3.3'
-    testImplementation 'com.vdurmont:semver4j:3.1.0'
-    testImplementation 'io.zonky.test:embedded-postgres:1.2.6'
-    testImplementation enforcedPlatform("io.zonky.test.postgres:embedded-postgres-binaries-bom:$postgresVersion")
+
+    testImplementation 'org.postgresql:postgresql:42.2.14'
+    testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
+    testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
+    testImplementation "org.testcontainers:postgresql:$testContainersVersion"
 }
 
 test {

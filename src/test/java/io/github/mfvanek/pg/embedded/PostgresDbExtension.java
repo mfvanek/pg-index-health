@@ -10,18 +10,22 @@
 
 package io.github.mfvanek.pg.embedded;
 
-import io.zonky.test.db.postgres.embedded.ConnectionInfo;
-import io.zonky.test.db.postgres.embedded.EmbeddedPostgres;
-import io.zonky.test.db.postgres.embedded.PreparedDbProvider;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.PostgreSQLContainerProvider;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Consumer;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * JUnit test extension that provides configurable PostgreSQL instance.
@@ -32,24 +36,42 @@ import java.util.function.Consumer;
  */
 public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback {
 
+    private volatile JdbcDatabaseContainer<?> container;
     private volatile DataSource dataSource;
-    private volatile PreparedDbProvider provider;
-    private volatile ConnectionInfo connectionInfo;
-
-    private final List<Consumer<EmbeddedPostgres.Builder>> builderCustomizers = new CopyOnWriteArrayList<>();
+    private final List<Pair<String, String>> additionalParameters = new ArrayList<>();
 
     @Override
-    public void beforeAll(ExtensionContext extensionContext) throws Exception {
-        provider = PreparedDbProvider.forPreparer(dataSource -> {}, builderCustomizers);
-        connectionInfo = provider.createNewDatabase();
-        dataSource = provider.createDataSourceFromConnectionInfo(connectionInfo);
+    public void beforeAll(ExtensionContext extensionContext) {
+        final String pgVersion = preparePostgresVersion();
+        container = new PostgreSQLContainerProvider().newInstance(pgVersion);
+        final String[] startupCommand = prepareStartupCommand(container, additionalParameters);
+        container.setCommand(startupCommand);
+        container.start();
+
+        dataSource = getDataSource();
+    }
+
+    @Nonnull
+    private static String preparePostgresVersion() {
+        return Optional.ofNullable(System.getenv("TEST_PG_VERSION")).orElse("10.13");
+    }
+
+    @Nonnull
+    private static String[] prepareStartupCommand(@Nonnull JdbcDatabaseContainer<?> container,
+                                                  @Nonnull List<Pair<String, String>> additionalParameters) {
+        return Stream.concat(
+                Arrays.stream(container.getCommandParts()),
+                additionalParameters.stream()
+                        .flatMap(kv -> Stream.of("-c", kv.getKey() + "=" + kv.getValue()))
+        ).toArray(String[]::new);
     }
 
     @Override
     public void afterAll(ExtensionContext extensionContext) {
+        additionalParameters.clear();
+        container.close();
         dataSource = null;
-        connectionInfo = null;
-        provider = null;
+        container = null;
     }
 
     @Nonnull
@@ -60,23 +82,45 @@ public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback 
 
     public int getPort() {
         throwErrorIfNotInitialized();
-        return connectionInfo.getPort();
+        return container.getFirstMappedPort();
     }
 
     @Nonnull
     public String getUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://localhost:%d/%s", connectionInfo.getPort(), connectionInfo.getDbName());
+        return String.format("jdbc:postgresql://localhost:%d/%s", getPort(), container.getDatabaseName());
+    }
+
+    @Nonnull
+    public String getUsername() {
+        throwErrorIfNotInitialized();
+        return container.getUsername();
+    }
+
+    @Nonnull
+    public String getPassword() {
+        throwErrorIfNotInitialized();
+        return container.getPassword();
     }
 
     public PostgresDbExtension withAdditionalStartupParameter(String key, String value) {
-        builderCustomizers.add(builder -> builder.setServerConfig(key, value));
+        additionalParameters.add(Pair.of(key, value));
         return this;
     }
 
     private void throwErrorIfNotInitialized() {
-        if (connectionInfo == null) {
+        if (container == null || dataSource == null) {
             throw new AssertionError("not initialized");
         }
+    }
+
+    @Nonnull
+    private BasicDataSource getDataSource() {
+        BasicDataSource basicDataSource = new BasicDataSource();
+        basicDataSource.setUrl(container.getJdbcUrl());
+        basicDataSource.setUsername(container.getUsername());
+        basicDataSource.setPassword(container.getPassword());
+        basicDataSource.setDriverClassName(container.getDriverClassName());
+        return basicDataSource;
     }
 }
