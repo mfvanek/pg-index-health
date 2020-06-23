@@ -14,7 +14,7 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest, windows-latest, macos-latest]
-                pg_version: [9.6.16, 10.11.0, 11.6.0, 12.1.0]
+                pg_version: [9.6.17, 10.12, 11.7, 12.7]
         env:
             TEST_PG_VERSION: ${{ matrix.pg_version }}
         runs-on: ${{ matrix.os }}
