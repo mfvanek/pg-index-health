@@ -12,6 +12,7 @@
 [![PostgreSQL 10](https://img.shields.io/badge/PostgreSQL-10-green.svg)](https://www.postgresql.org/about/news/1786/ "PostgreSQL 10")
 [![PostgreSQL 11](https://img.shields.io/badge/PostgreSQL-11-green.svg)](https://www.postgresql.org/about/news/1894/ "PostgreSQL 11")
 [![PostgreSQL 12](https://img.shields.io/badge/PostgreSQL-12-green.svg)](https://www.postgresql.org/about/news/1976/ "PostgreSQL 12")
+[![PostgreSQL 13](https://img.shields.io/badge/PostgreSQL-13-green.svg)](https://www.postgresql.org/about/news/postgresql-13-released-2077/ "PostgreSQL 13")
 
 ## Available checks
 **pg-index-health** allows you to detect the following problems:
@@ -59,6 +60,8 @@ All these cases are covered with examples in the [pg-index-health-demo](https://
 ## Questions, issues, feature requests and contributions
 * If you have any question or a problem with the library, please [file an issue](https://github.com/mfvanek/pg-index-health/issues).
 * Contributions are always welcome! Please see [contributing guide](CONTRIBUTING.md) for more details.
+* We utilize [Testcontainers](https://www.testcontainers.org/) for testing **pg-index-health**. 
+So you need to have [Docker](https://www.docker.com/) installed on your machine.
 
 ## Related projects
 [pg_analyse](https://github.com/idlesign/pg_analyse) - a set of tools to gather useful information from PostgreSQL,
