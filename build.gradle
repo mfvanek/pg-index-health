@@ -18,7 +18,7 @@ repositories {
 }
 
 def junitVersion = '5.6.0'
-def testContainersVersion = '1.15.0-rc2'
+def testContainersVersion = '1.15.1'
 dependencies {
     compile 'com.google.code.findbugs:jsr305:3.0.2'
     compile 'org.apache.commons:commons-lang3:3.9'
