@@ -52,7 +52,7 @@ public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback 
 
     @Nonnull
     private static String preparePostgresVersion() {
-        return Optional.ofNullable(System.getenv("TEST_PG_VERSION")).orElse("13.1");
+        return Optional.ofNullable(System.getenv("TEST_PG_VERSION")).orElse("13.0");
     }
 
     @Nonnull
