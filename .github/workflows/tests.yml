@@ -13,7 +13,7 @@ jobs:
     build:
         strategy:
             matrix:
-                pg_version: ["9.6.20", 10.15, "11.10", 12.5, 13.1]
+                pg_version: ["9.6.20", 10.15, "11.10", 12.5, 13.0]
         env:
             TEST_PG_VERSION: ${{ matrix.pg_version }}
         runs-on: ubuntu-latest
