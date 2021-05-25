@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'jacoco'
-    id 'com.github.spotbugs' version '4.0.8'
+    id 'com.github.spotbugs' version '4.7.1'
 }
 
 group 'io.github.mfvanek'
