@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -47,6 +48,7 @@ class TableWithMissingIndexTest {
                 table.toString());
     }
 
+    @SuppressWarnings("AssertBetweenInconvertibleTypes")
     @Test
     void testEqualsAndHashCode() {
         final TableWithMissingIndex first = TableWithMissingIndex.of("t1", 1L, 0, 1);
@@ -60,11 +62,6 @@ class TableWithMissingIndexTest {
         assertEquals(first, first);
         assertEquals(first.hashCode(), first.hashCode());
 
-        // another type
-        final Table anotherType = Table.of("t1", 1L);
-        assertNotEquals(first, anotherType);
-        assertEquals(first.hashCode(), anotherType.hashCode());
-
         // the same
         assertEquals(first, theSame);
         assertEquals(first.hashCode(), theSame.hashCode());
@@ -76,6 +73,18 @@ class TableWithMissingIndexTest {
 
         assertNotEquals(theSame, third);
         assertNotEquals(theSame.hashCode(), third.hashCode());
+
+        // another Table
+        final TableWithBloat anotherType = TableWithBloat.of("t1", 4L, 11L, 50);
+        assertEquals(first, anotherType);
+        assertEquals(first.hashCode(), anotherType.hashCode());
+    }
+
+    @Test
+    void equalsHashCodeShouldAdhereContracts() {
+        EqualsVerifier.forClass(TableWithMissingIndex.class)
+                .withIgnoredFields("tableSizeInBytes", "seqScans", "indexScans")
+                .verify();
     }
 
     @Test

@@ -60,21 +60,21 @@ public class Table implements TableNameAware, TableSizeAware, Comparable<Table> 
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
 
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Table)) {
             return false;
         }
 
-        Table that = (Table) o;
+        final Table that = (Table) o;
         return Objects.equals(tableName, that.tableName);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(tableName);
     }
 

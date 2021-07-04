@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.connection;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
@@ -115,6 +116,13 @@ class PgHostImplTest {
 
         assertNotEquals(first, second);
         assertNotEquals(first.hashCode(), second.hashCode());
+
+        // another implementation of PgHost
+        final PgHost pgHostMock = Mockito.mock(PgHost.class);
+        Mockito.when(pgHostMock.canBePrimary()).thenReturn(true);
+        Mockito.when(pgHostMock.getName()).thenReturn("primary");
+        Mockito.when(pgHostMock.getPgUrl()).thenReturn("jdbc:postgresql://primary");
+        assertNotEquals(second, pgHostMock);
     }
 
     @Test
