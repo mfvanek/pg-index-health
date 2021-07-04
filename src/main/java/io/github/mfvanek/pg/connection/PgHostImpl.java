@@ -82,21 +82,22 @@ public class PgHostImpl implements PgHost {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
 
-        if (o == null || getClass() != o.getClass()) {
+        // Ignoring Liskov substitution principle
+        if (!(o instanceof PgHostImpl)) {
             return false;
         }
 
         final PgHostImpl pgHost = (PgHostImpl) o;
-        return hostNames.equals(pgHost.hostNames);
+        return Objects.equals(hostNames, pgHost.hostNames);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(hostNames);
     }
 

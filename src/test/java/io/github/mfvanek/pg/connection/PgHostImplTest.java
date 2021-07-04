@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.connection;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -97,18 +98,29 @@ class PgHostImplTest {
         final PgHost second = PgHostImpl.ofPrimary();
 
         assertNotEquals(first, null);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(first, BigDecimal.ZERO);
 
+        // self
         assertEquals(first, first);
         assertEquals(first.hashCode(), first.hashCode());
 
+        // the same
         assertEquals(first, theSame);
         assertEquals(first.hashCode(), theSame.hashCode());
 
+        // others
         assertEquals(first, withDifferentHostsOrder);
         assertEquals(first.hashCode(), withDifferentHostsOrder.hashCode());
 
         assertNotEquals(first, second);
         assertNotEquals(first.hashCode(), second.hashCode());
+    }
+
+    @Test
+    void equalsHashCodeShouldAdhereContracts() {
+        EqualsVerifier.forClass(PgHostImpl.class)
+                .withIgnoredFields("pgUrl", "maybePrimary")
+                .verify();
     }
 }

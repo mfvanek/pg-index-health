@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.connection;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -50,7 +51,9 @@ class ConnectionCredentialsTest {
         final ConnectionCredentials third = ConnectionCredentials.of(Arrays.asList(DEFAULT_URL, "jdbc:postgresql://host1:5432/postgres"), "u", "p");
         final ConnectionCredentials fourth = ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "pswd");
 
+        // null
         assertNotEquals(first, null);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(first, BigDecimal.ZERO);
 
         // self
@@ -72,6 +75,12 @@ class ConnectionCredentialsTest {
 
         assertNotEquals(first, fourth);
         assertNotEquals(first.hashCode(), fourth.hashCode());
+    }
+
+    @Test
+    void equalsHashCodeShouldAdhereContracts() {
+        EqualsVerifier.forClass(ConnectionCredentials.class)
+                .verify();
     }
 
     @Test
