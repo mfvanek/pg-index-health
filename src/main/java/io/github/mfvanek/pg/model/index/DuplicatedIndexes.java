@@ -56,35 +56,6 @@ public class DuplicatedIndexes implements TableNameAware {
                         .collect(Collectors.toList()));
     }
 
-    @Nonnull
-    public static DuplicatedIndexes of(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
-        return new DuplicatedIndexes(duplicatedIndexes);
-    }
-
-    @Nonnull
-    public static DuplicatedIndexes of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
-        Validators.tableNameNotBlank(tableName);
-        final List<Map.Entry<String, Long>> indexesWithNameAndSize = DuplicatedIndexesParser.parseAsIndexNameAndSize(
-                Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
-        final List<IndexWithSize> duplicatedIndexes = indexesWithNameAndSize.stream()
-                .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
-                .collect(Collectors.toList());
-        return new DuplicatedIndexes(duplicatedIndexes);
-    }
-
-    @Nonnull
-    public static DuplicatedIndexes of(@Nonnull final IndexWithSize firstIndex,
-                                       @Nonnull final IndexWithSize secondIndex,
-                                       @Nonnull final IndexWithSize... otherIndexes) {
-        final Stream<IndexWithSize> basePart = Stream.of(Objects.requireNonNull(firstIndex, "firstIndex"),
-                Objects.requireNonNull(secondIndex, "secondIndex"));
-        if (Stream.of(otherIndexes).anyMatch(Objects::isNull)) {
-            throw new NullPointerException("otherIndexes");
-        }
-        return new DuplicatedIndexes(Stream.concat(basePart, Stream.of(otherIndexes))
-                .collect(Collectors.toList()));
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -148,5 +119,34 @@ public class DuplicatedIndexes implements TableNameAware {
                 ", totalSize=" + totalSize +
                 ", indexes=" + duplicatedIndexes +
                 '}';
+    }
+
+    @Nonnull
+    public static DuplicatedIndexes of(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+        return new DuplicatedIndexes(duplicatedIndexes);
+    }
+
+    @Nonnull
+    public static DuplicatedIndexes of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
+        Validators.tableNameNotBlank(tableName);
+        final List<Map.Entry<String, Long>> indexesWithNameAndSize = DuplicatedIndexesParser.parseAsIndexNameAndSize(
+                Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
+        final List<IndexWithSize> duplicatedIndexes = indexesWithNameAndSize.stream()
+                .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
+        return new DuplicatedIndexes(duplicatedIndexes);
+    }
+
+    @Nonnull
+    public static DuplicatedIndexes of(@Nonnull final IndexWithSize firstIndex,
+                                       @Nonnull final IndexWithSize secondIndex,
+                                       @Nonnull final IndexWithSize... otherIndexes) {
+        final Stream<IndexWithSize> basePart = Stream.of(Objects.requireNonNull(firstIndex, "firstIndex"),
+                Objects.requireNonNull(secondIndex, "secondIndex"));
+        if (Stream.of(otherIndexes).anyMatch(Objects::isNull)) {
+            throw new NullPointerException("otherIndexes");
+        }
+        return new DuplicatedIndexes(Stream.concat(basePart, Stream.of(otherIndexes))
+                .collect(Collectors.toList()));
     }
 }
