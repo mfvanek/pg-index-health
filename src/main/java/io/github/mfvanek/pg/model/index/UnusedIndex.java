@@ -13,7 +13,9 @@ package io.github.mfvanek.pg.model.index;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
+@Immutable
 public final class UnusedIndex extends IndexWithSize {
 
     private final long indexScans;
@@ -36,24 +38,6 @@ public final class UnusedIndex extends IndexWithSize {
                 innerToString() +
                 ", indexScans=" + indexScans +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        return super.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
     }
 
     public static UnusedIndex of(@Nonnull final String tableName,

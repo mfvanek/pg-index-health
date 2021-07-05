@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -54,11 +55,8 @@ class IndexWithSizeTest {
         final IndexWithSize third = IndexWithSize.of("t3", "i3", 22L);
 
         assertNotEquals(first, null);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(first, BigDecimal.ZERO);
-
-        final Index anotherType = Index.of("t1", "i1");
-        assertNotEquals(first, anotherType);
-        assertEquals(first.hashCode(), anotherType.hashCode());
 
         // self
         assertEquals(first, first);
@@ -78,6 +76,18 @@ class IndexWithSizeTest {
 
         assertNotEquals(second, third);
         assertNotEquals(second.hashCode(), third.hashCode());
+
+        // another
+        final Index another = Index.of("t1", "i1");
+        assertEquals(first, another);
+        assertEquals(first.hashCode(), another.hashCode());
+    }
+
+    @Test
+    void equalsHashCodeShouldAdhereContracts() {
+        EqualsVerifier.forClass(IndexWithSize.class)
+                .withIgnoredFields("indexSizeInBytes")
+                .verify();
     }
 
     @SuppressWarnings({"ConstantConditions", "EqualsWithItself", "ResultOfMethodCallIgnored"})
