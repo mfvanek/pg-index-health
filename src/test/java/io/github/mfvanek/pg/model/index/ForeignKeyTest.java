@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -59,31 +60,43 @@ class ForeignKeyTest {
 
     @Test
     void equalsAndHashCode() {
-        // equals part
-        ForeignKey key11 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
-        ForeignKey key12 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
-        ForeignKey key13 = ForeignKey.of("t", "c_t_order_id", Arrays.asList("limit", "order_id"));
-        ForeignKey key14 = ForeignKey.ofColumn("t", "c_t_order_id", "no_matter_what");
+        final ForeignKey first = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
+        final ForeignKey theSame = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
+        final ForeignKey withDifferentOrderOfColumns = ForeignKey.of("t", "c_t_order_id", Arrays.asList("limit", "order_id"));
+        final ForeignKey second = ForeignKey.ofColumn("t", "c_t_order_id", "no_matter_what");
 
-        assertNotEquals(key11, null);
-        assertNotEquals(key11, BigDecimal.ZERO);
+        assertNotEquals(first, null);
+        //noinspection AssertBetweenInconvertibleTypes
+        assertNotEquals(first, BigDecimal.ZERO);
 
-        assertEquals(key11, key11);
-        assertEquals(key11.hashCode(), key11.hashCode());
-        assertEquals(key11, key12);
-        assertEquals(key11.hashCode(), key12.hashCode());
-        assertEquals(key11, key13);
-        assertEquals(key11.hashCode(), key13.hashCode());
-        assertEquals(key11, key14);
-        assertEquals(key11.hashCode(), key14.hashCode());
+        // self
+        assertEquals(first, first);
+        assertEquals(first.hashCode(), first.hashCode());
 
-        // not equals part
-        ForeignKey key21 = ForeignKey.of("table", "c_t_order_id", Arrays.asList("order_id", "limit"));
-        ForeignKey key22 = ForeignKey.of("t", "other_id", Arrays.asList("order_id", "limit"));
+        // the same
+        assertEquals(first, theSame);
+        assertEquals(first.hashCode(), theSame.hashCode());
 
-        assertNotEquals(key11, key21);
-        assertNotEquals(key11.hashCode(), key21.hashCode());
-        assertNotEquals(key11, key22);
-        assertNotEquals(key11.hashCode(), key22.hashCode());
+        // others
+        assertEquals(first, withDifferentOrderOfColumns);
+        assertEquals(first.hashCode(), withDifferentOrderOfColumns.hashCode());
+
+        assertEquals(first, second);
+        assertEquals(first.hashCode(), second.hashCode());
+
+        final ForeignKey third = ForeignKey.of("table", "c_t_order_id", Arrays.asList("order_id", "limit"));
+        assertNotEquals(first, third);
+        assertNotEquals(first.hashCode(), third.hashCode());
+
+        final ForeignKey fourth = ForeignKey.of("t", "other_id", Arrays.asList("order_id", "limit"));
+        assertNotEquals(first, fourth);
+        assertNotEquals(first.hashCode(), fourth.hashCode());
+    }
+
+    @Test
+    void equalsHashCodeShouldAdhereContracts() {
+        EqualsVerifier.forClass(ForeignKey.class)
+                .withIgnoredFields("columnsInConstraint")
+                .verify();
     }
 }
