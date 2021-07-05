@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.model.table;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import java.util.Objects;
 
 /**
@@ -20,6 +21,7 @@ import java.util.Objects;
  *
  * @author Ivan Vakhrushev
  */
+@Immutable
 public class Table implements TableNameAware, TableSizeAware, Comparable<Table> {
 
     private final String tableName;

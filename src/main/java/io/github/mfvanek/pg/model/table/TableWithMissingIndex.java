@@ -13,10 +13,14 @@ package io.github.mfvanek.pg.model.table;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Representation of a table in a database with additional information on reads amount via index or sequential scans.
+ *
+ * @author Ivan Vakhrushev
  */
+@Immutable
 public class TableWithMissingIndex extends Table {
 
     // Normally, indexes should be used primarily when accessing a table.
