@@ -10,7 +10,9 @@
 
 package io.github.mfvanek.pg.connection;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
@@ -97,18 +99,36 @@ class PgHostImplTest {
         final PgHost second = PgHostImpl.ofPrimary();
 
         assertNotEquals(first, null);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(first, BigDecimal.ZERO);
 
+        // self
         assertEquals(first, first);
         assertEquals(first.hashCode(), first.hashCode());
 
+        // the same
         assertEquals(first, theSame);
         assertEquals(first.hashCode(), theSame.hashCode());
 
+        // others
         assertEquals(first, withDifferentHostsOrder);
         assertEquals(first.hashCode(), withDifferentHostsOrder.hashCode());
 
         assertNotEquals(first, second);
         assertNotEquals(first.hashCode(), second.hashCode());
+
+        // another implementation of PgHost
+        final PgHost pgHostMock = Mockito.mock(PgHost.class);
+        Mockito.when(pgHostMock.canBePrimary()).thenReturn(true);
+        Mockito.when(pgHostMock.getName()).thenReturn("primary");
+        Mockito.when(pgHostMock.getPgUrl()).thenReturn("jdbc:postgresql://primary");
+        assertNotEquals(second, pgHostMock);
+    }
+
+    @Test
+    void equalsHashCodeShouldAdhereContracts() {
+        EqualsVerifier.forClass(PgHostImpl.class)
+                .withIgnoredFields("pgUrl", "maybePrimary")
+                .verify();
     }
 }

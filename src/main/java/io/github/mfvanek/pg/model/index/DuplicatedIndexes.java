@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.DuplicatedIndexesParser;
 import io.github.mfvanek.pg.utils.Validators;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -22,6 +21,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * A representation of duplicated indexes in a database.
@@ -29,6 +30,7 @@ import java.util.stream.Stream;
  * @author Ivan Vakhrushev
  * @see TableNameAware
  */
+@Immutable
 public class DuplicatedIndexes implements TableNameAware {
 
     private static final Comparator<IndexWithSize> INDEX_WITH_SIZE_COMPARATOR =
@@ -41,15 +43,17 @@ public class DuplicatedIndexes implements TableNameAware {
     private final List<String> indexesNames;
 
     private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
-        this.duplicatedIndexes = Validators.validateThatTableIsTheSame(duplicatedIndexes).stream()
-                .sorted(INDEX_WITH_SIZE_COMPARATOR)
-                .collect(Collectors.toList());
+        this.duplicatedIndexes = Collections.unmodifiableList(
+                Validators.validateThatTableIsTheSame(duplicatedIndexes).stream()
+                        .sorted(INDEX_WITH_SIZE_COMPARATOR)
+                        .collect(Collectors.toList()));
         this.totalSize = duplicatedIndexes.stream()
                 .mapToLong(IndexWithSize::getIndexSizeInBytes)
                 .sum();
-        this.indexesNames = this.duplicatedIndexes.stream()
-                .map(Index::getIndexName)
-                .collect(Collectors.toList());
+        this.indexesNames = Collections.unmodifiableList(
+                this.duplicatedIndexes.stream()
+                        .map(Index::getIndexName)
+                        .collect(Collectors.toList()));
     }
 
     /**
@@ -68,7 +72,7 @@ public class DuplicatedIndexes implements TableNameAware {
      */
     @Nonnull
     public List<IndexWithSize> getDuplicatedIndexes() {
-        return Collections.unmodifiableList(duplicatedIndexes);
+        return duplicatedIndexes;
     }
 
     /**
@@ -90,21 +94,21 @@ public class DuplicatedIndexes implements TableNameAware {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
 
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DuplicatedIndexes)) {
             return false;
         }
 
-        DuplicatedIndexes that = (DuplicatedIndexes) o;
-        return duplicatedIndexes.equals(that.duplicatedIndexes);
+        final DuplicatedIndexes that = (DuplicatedIndexes) o;
+        return Objects.equals(duplicatedIndexes, that.duplicatedIndexes);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(duplicatedIndexes);
     }
 

@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.model.table;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import java.util.Objects;
 
 /**
@@ -20,6 +21,7 @@ import java.util.Objects;
  *
  * @author Ivan Vakhrushev
  */
+@Immutable
 public class Table implements TableNameAware, TableSizeAware, Comparable<Table> {
 
     private final String tableName;
@@ -60,21 +62,21 @@ public class Table implements TableNameAware, TableSizeAware, Comparable<Table> 
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
 
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Table)) {
             return false;
         }
 
-        Table that = (Table) o;
+        final Table that = (Table) o;
         return Objects.equals(tableName, that.tableName);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(tableName);
     }
 

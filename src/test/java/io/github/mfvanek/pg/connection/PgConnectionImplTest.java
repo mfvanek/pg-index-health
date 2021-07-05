@@ -12,8 +12,10 @@ package io.github.mfvanek.pg.connection;
 
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
@@ -59,16 +61,32 @@ class PgConnectionImplTest {
         final PgConnection second = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("second"));
 
         assertNotEquals(first, null);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(first, BigDecimal.ZERO);
 
+        // self
         assertEquals(first, first);
         assertEquals(first.hashCode(), first.hashCode());
 
+        // the same
         assertEquals(first, theSame);
         assertEquals(first.hashCode(), theSame.hashCode());
 
+        // others
         assertNotEquals(first, second);
         assertNotEquals(first.hashCode(), second.hashCode());
+
+        // another implementation of PgConnection
+        final PgConnection connectionMock = Mockito.mock(PgConnection.class);
+        Mockito.when(connectionMock.getHost()).thenReturn(PgHostImpl.ofPrimary());
+        assertEquals(first, connectionMock);
+    }
+
+    @Test
+    void equalsHashCodeShouldAdhereContracts() {
+        EqualsVerifier.forClass(PgConnectionImpl.class)
+                .withIgnoredFields("dataSource")
+                .verify();
     }
 
     @Test

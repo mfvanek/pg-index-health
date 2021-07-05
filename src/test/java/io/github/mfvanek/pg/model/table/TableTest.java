@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -50,6 +51,7 @@ class TableTest {
         final Table third = Table.of("t3", 22L);
 
         assertNotEquals(first, null);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(first, BigDecimal.ZERO);
 
         // self
@@ -70,6 +72,17 @@ class TableTest {
 
         assertNotEquals(second, third);
         assertNotEquals(second.hashCode(), third.hashCode());
+
+        // another implementation of Table
+        final TableWithBloat another = TableWithBloat.of("t1", 23L, 11L, 50);
+        assertEquals(first, another);
+    }
+
+    @Test
+    void equalsHashCodeShouldAdhereContracts() {
+        EqualsVerifier.forClass(Table.class)
+                .withIgnoredFields("tableSizeInBytes")
+                .verify();
     }
 
     @SuppressWarnings({"ConstantConditions", "EqualsWithItself", "ResultOfMethodCallIgnored"})

@@ -14,12 +14,14 @@ import io.github.mfvanek.pg.model.BloatAware;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Represents database index with information about bloat.
  *
  * @author Ivan Vakhrushev
  */
+@Immutable
 public class IndexWithBloat extends IndexWithSize implements BloatAware {
 
     private final long bloatSizeInBytes;
@@ -60,24 +62,6 @@ public class IndexWithBloat extends IndexWithSize implements BloatAware {
     @Override
     public String toString() {
         return IndexWithBloat.class.getSimpleName() + '{' + innerToString() + '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        return super.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
     }
 
     /**

@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -112,6 +113,7 @@ class DuplicatedIndexesTest {
                 IndexWithSize.of("t2", "i6", 202L)));
 
         assertNotEquals(first, null);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(first, BigDecimal.ZERO);
 
         // self
@@ -132,6 +134,13 @@ class DuplicatedIndexesTest {
 
         assertNotEquals(second, third);
         assertNotEquals(second.hashCode(), third.hashCode());
+    }
+
+    @Test
+    void equalsHashCodeShouldAdhereContracts() {
+        EqualsVerifier.forClass(DuplicatedIndexes.class)
+                .withIgnoredFields("totalSize", "indexesNames")
+                .verify();
     }
 
     @SuppressWarnings("ConstantConditions")

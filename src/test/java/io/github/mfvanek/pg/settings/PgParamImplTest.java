@@ -10,7 +10,9 @@
 
 package io.github.mfvanek.pg.settings;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
@@ -63,15 +65,31 @@ class PgParamImplTest {
         final PgParam second = PgParamImpl.of("lock_timeout", "2s");
 
         assertNotEquals(first, null);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(first, BigDecimal.ZERO);
 
+        // self
         assertEquals(first, first);
         assertEquals(first.hashCode(), first.hashCode());
 
+        // the same
         assertEquals(first, theSame);
         assertEquals(first.hashCode(), theSame.hashCode());
 
+        // others
         assertNotEquals(first, second);
         assertNotEquals(first.hashCode(), second.hashCode());
+
+        // another implementation of PgParam
+        final PgParam pgParamMock = Mockito.mock(PgParam.class);
+        Mockito.when(pgParamMock.getName()).thenReturn("statement_timeout");
+        assertEquals(first, pgParamMock);
+    }
+
+    @Test
+    void equalsHashCodeShouldAdhereContracts() {
+        EqualsVerifier.forClass(PgParamImpl.class)
+                .withIgnoredFields("value")
+                .verify();
     }
 }

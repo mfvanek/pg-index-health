@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import java.util.Objects;
 
 /**
@@ -23,6 +24,7 @@ import java.util.Objects;
  * @see TableNameAware
  * @see IndexNameAware
  */
+@Immutable
 public class Index implements TableNameAware, IndexNameAware, Comparable<Index> {
 
     private final String tableName;
@@ -64,22 +66,22 @@ public class Index implements TableNameAware, IndexNameAware, Comparable<Index> 
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
 
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Index)) {
             return false;
         }
 
         final Index that = (Index) o;
-        return tableName.equals(that.tableName) &&
-                indexName.equals(that.indexName);
+        return Objects.equals(tableName, that.tableName) &&
+                Objects.equals(indexName, that.indexName);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(tableName, indexName);
     }
 

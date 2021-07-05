@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.Objects;
  * @author Ivan Vakhrushev
  * @see TableNameAware
  */
+@Immutable
 public class ForeignKey implements TableNameAware {
 
     private final String tableName;
@@ -36,7 +38,8 @@ public class ForeignKey implements TableNameAware {
                        @Nonnull List<String> columnsInConstraint) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
-        this.columnsInConstraint = new ArrayList<>(Validators.validateThatNotEmpty(columnsInConstraint));
+        this.columnsInConstraint = Collections.unmodifiableList(
+                new ArrayList<>(Validators.validateThatNotEmpty(columnsInConstraint)));
     }
 
     /**
@@ -65,24 +68,26 @@ public class ForeignKey implements TableNameAware {
      */
     @Nonnull
     public List<String> getColumnsInConstraint() {
-        return Collections.unmodifiableList(columnsInConstraint);
+        return columnsInConstraint;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+
+        if (!(o instanceof ForeignKey)) {
             return false;
         }
-        ForeignKey that = (ForeignKey) o;
-        return tableName.equals(that.tableName) &&
-                constraintName.equals(that.constraintName);
+
+        final ForeignKey that = (ForeignKey) o;
+        return Objects.equals(tableName, that.tableName) &&
+                Objects.equals(constraintName, that.constraintName);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(tableName, constraintName);
     }
 

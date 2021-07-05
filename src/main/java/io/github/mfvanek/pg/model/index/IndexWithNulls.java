@@ -13,7 +13,9 @@ package io.github.mfvanek.pg.model.index;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
+@Immutable
 public final class IndexWithNulls extends IndexWithSize {
 
     private final String nullableField;
@@ -37,24 +39,6 @@ public final class IndexWithNulls extends IndexWithSize {
                 innerToString() +
                 ", nullableField='" + nullableField + '\'' +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        return super.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
     }
 
     public static IndexWithNulls of(@Nonnull final String tableName,

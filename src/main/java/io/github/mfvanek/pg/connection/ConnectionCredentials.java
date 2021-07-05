@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.connection;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -23,6 +24,7 @@ import java.util.TreeSet;
  *
  * @author Ivan Vakhrushev
  */
+@Immutable
 public class ConnectionCredentials {
 
     private final SortedSet<String> connectionUrls;
@@ -69,12 +71,12 @@ public class ConnectionCredentials {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
 
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof ConnectionCredentials)) {
             return false;
         }
 
@@ -85,7 +87,7 @@ public class ConnectionCredentials {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(connectionUrls, userName, password);
     }
 
