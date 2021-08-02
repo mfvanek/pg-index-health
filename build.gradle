@@ -4,6 +4,7 @@ plugins {
     id 'signing'
     id 'jacoco'
     id 'com.github.spotbugs' version '4.7.1'
+    id 'checkstyle'
 }
 
 group 'io.github.mfvanek'
@@ -137,7 +138,7 @@ spotbugsTest {
 
 spotbugs {
     showProgress = true
-    excludeFilter = file("spotbugs/exclude.xml")
+    excludeFilter = file("config/spotbugs/exclude.xml")
 }
 
 jacocoTestReport {
@@ -145,6 +146,17 @@ jacocoTestReport {
         xml.enabled true
         html.enabled true
     }
+}
+
+checkstyle {
+    toolVersion '8.45'
+    configFile file("config/checkstyle/checkstyle.xml")
+}
+checkstyleMain {
+    source ='src/main/java'
+}
+checkstyleTest {
+    source ='src/test/java'
 }
 
 check.dependsOn jacocoTestReport

@@ -13,9 +13,9 @@ package io.github.mfvanek.pg.common.management;
 import io.github.mfvanek.pg.statistics.StatisticsAware;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 
-import javax.annotation.Nonnull;
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public interface DatabaseManagement extends StatisticsAware {
 

@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.DuplicatedIndexesParser;
 import io.github.mfvanek.pg.utils.Validators;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import static java.util.stream.Collectors.toList;
 

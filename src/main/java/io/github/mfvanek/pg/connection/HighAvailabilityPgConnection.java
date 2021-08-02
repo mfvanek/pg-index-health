@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.connection;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 /**
  * An abstraction of a connection to a high availability cluster (with set of primary host and replicas).

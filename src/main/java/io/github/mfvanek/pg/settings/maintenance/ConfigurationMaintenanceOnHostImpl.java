@@ -19,10 +19,10 @@ import io.github.mfvanek.pg.settings.PgParamImpl;
 import io.github.mfvanek.pg.settings.ServerSpecification;
 import io.github.mfvanek.pg.utils.QueryExecutor;
 
-import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 public class ConfigurationMaintenanceOnHostImpl extends AbstractMaintenance implements ConfigurationMaintenanceOnHost {
 

@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 
 public enum SimpleLoggingKey implements LoggingKey {
 

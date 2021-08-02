@@ -12,9 +12,9 @@ package io.github.mfvanek.pg.connection;
 
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 
 final class PgConnectionValidators {
 

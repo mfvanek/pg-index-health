@@ -12,9 +12,9 @@ package io.github.mfvanek.pg.model.table;
 
 import io.github.mfvanek.pg.utils.Validators;
 
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import java.util.Objects;
 
 /**
  * A base representation of database table.

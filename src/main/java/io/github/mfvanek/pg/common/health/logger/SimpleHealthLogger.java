@@ -16,9 +16,9 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.annotation.Nonnull;
 
 public class SimpleHealthLogger extends AbstractHealthLogger {
 

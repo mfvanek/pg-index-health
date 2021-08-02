@@ -18,13 +18,13 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.PostgreSQLContainerProvider;
 
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import javax.sql.DataSource;
 
 /**
  * JUnit test extension that provides configurable PostgreSQL instance.

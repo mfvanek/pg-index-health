@@ -12,8 +12,6 @@ package io.github.mfvanek.pg.utils;
 
 import io.github.mfvanek.pg.model.PgContext;
 
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +20,8 @@ import java.sql.Statement;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
+import javax.annotation.Nonnull;
+import javax.sql.DataSource;
 
 import static org.junit.jupiter.api.Assertions.fail;
 

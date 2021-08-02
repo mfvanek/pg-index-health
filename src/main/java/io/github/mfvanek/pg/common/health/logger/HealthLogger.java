@@ -12,8 +12,8 @@ package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.model.PgContext;
 
-import javax.annotation.Nonnull;
 import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * An abstraction of indexes and tables health logger.

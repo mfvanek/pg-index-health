@@ -16,11 +16,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import javax.annotation.Nonnull;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.annotation.Nonnull;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.startsWith;
@@ -30,7 +30,7 @@ final class PostgresVersionTest extends DatabaseAwareTestBase {
     @RegisterExtension
     static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
 
-    private final static String PG_VERSION_ENVIRONMENT_VARIABLE = "TEST_PG_VERSION";
+    private static final String PG_VERSION_ENVIRONMENT_VARIABLE = "TEST_PG_VERSION";
 
     PostgresVersionTest() {
         super(embeddedPostgres.getTestDatabase());

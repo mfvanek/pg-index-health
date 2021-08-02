@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.connection;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,6 +19,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailabilityPgConnectionFactory {
 

@@ -13,11 +13,11 @@ package io.github.mfvanek.pg.connection;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.NoSuchElementException;
+import javax.annotation.Nonnull;
 
+import static java.util.Collections.singleton;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -40,7 +40,8 @@ class HighAvailabilityPgConnectionFactoryImplTest {
             final PgConnection connection = invocation.getArgument(0, PgConnection.class);
             return "host-1".equals(connection.getHost().getName());
         }).when(primaryHostDeterminer).isPrimary(any(PgConnection.class));
-        final HighAvailabilityPgConnection haPgConnection = connectionFactory.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432/db_name?ssl=true&sslmode=require", "postgres", "postgres");
+        final HighAvailabilityPgConnection haPgConnection = connectionFactory.ofUrl(
+                "jdbc:postgresql://host-1:6432,host-2:6432/db_name?ssl=true&sslmode=require", "postgres", "postgres");
         assertNotNull(haPgConnection);
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), hasSize(2));
         checkPrimary(haPgConnection);
@@ -67,7 +68,8 @@ class HighAvailabilityPgConnectionFactoryImplTest {
             final PgConnection connection = invocation.getArgument(0, PgConnection.class);
             return "host-2".equals(connection.getHost().getName());
         }).when(primaryHostDeterminer).isPrimary(any(PgConnection.class));
-        final ConnectionCredentials credentials = ConnectionCredentials.of(Arrays.asList("jdbc:postgresql://host-1:6432,host-2:6432/db_name?ssl=true&sslmode=require",
+        final ConnectionCredentials credentials = ConnectionCredentials.of(Arrays.asList(
+                "jdbc:postgresql://host-1:6432,host-2:6432/db_name?ssl=true&sslmode=require",
                 "jdbc:postgresql://host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require",
                 "jdbc:postgresql://host-5:6432/db_name?ssl=true&sslmode=require"), "postgres", "postgres");
         final HighAvailabilityPgConnection haPgConnection = connectionFactory.of(credentials);
@@ -86,8 +88,8 @@ class HighAvailabilityPgConnectionFactoryImplTest {
         assertThrows(NullPointerException.class, () -> connectionFactory.ofUrl("jdbc:postgresql://host-1:6432/db_name", "u", null));
 
         assertThrows(NullPointerException.class, () -> connectionFactory.ofUrls(null, null, null));
-        assertThrows(NullPointerException.class, () -> connectionFactory.ofUrls(Collections.singleton("jdbc:postgresql://host-1:6432/db_name"), null, null));
-        assertThrows(NullPointerException.class, () -> connectionFactory.ofUrls(Collections.singleton("jdbc:postgresql://host-1:6432/db_name"), "u", null));
+        assertThrows(NullPointerException.class, () -> connectionFactory.ofUrls(singleton("jdbc:postgresql://host-1:6432/db_name"), null, null));
+        assertThrows(NullPointerException.class, () -> connectionFactory.ofUrls(singleton("jdbc:postgresql://host-1:6432/db_name"), "u", null));
     }
 
     @Test
@@ -101,7 +103,8 @@ class HighAvailabilityPgConnectionFactoryImplTest {
     @Test
     void shouldNotFailWhenSplitBrainOrMultyMasterConfiguration() {
         Mockito.when(primaryHostDeterminer.isPrimary(any(PgConnection.class))).thenReturn(true);
-        final HighAvailabilityPgConnection haPgConnection = connectionFactory.ofUrl("jdbc:postgresql://host-D:6432,host-A:6432/db_name", "postgres", "postgres");
+        final HighAvailabilityPgConnection haPgConnection = connectionFactory.ofUrl(
+                "jdbc:postgresql://host-D:6432,host-A:6432/db_name", "postgres", "postgres");
         assertNotNull(haPgConnection);
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), hasSize(2));
         assertNotNull(haPgConnection.getConnectionToPrimary());

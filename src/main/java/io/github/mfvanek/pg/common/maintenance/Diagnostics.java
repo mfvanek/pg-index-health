@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 
 /**
  * A list of all supported diagnostics with corresponding sql queries.

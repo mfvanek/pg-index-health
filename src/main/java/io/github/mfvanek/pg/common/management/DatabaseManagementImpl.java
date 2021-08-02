@@ -19,13 +19,13 @@ import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import javax.annotation.Nonnull;
 
 /**
  * Implementation of {@code DatabaseManagement}.

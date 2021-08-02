@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.connection;
 
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
-import java.util.Objects;
 
 public class PgConnectionImpl implements PgConnection {
 

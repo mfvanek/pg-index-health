@@ -55,11 +55,11 @@ class TableWithBloatTest {
     @SuppressWarnings("AssertBetweenInconvertibleTypes")
     @Test
     void equalsAndHashCode() {
-        final long TABLE_SIZE = 22L;
-        final TableWithBloat first = TableWithBloat.of("t1", TABLE_SIZE, 11L, 50);
-        final TableWithBloat theSame = TableWithBloat.of("t1", TABLE_SIZE, 11L, 50);
+        final long tableSize = 22L;
+        final TableWithBloat first = TableWithBloat.of("t1", tableSize, 11L, 50);
+        final TableWithBloat theSame = TableWithBloat.of("t1", tableSize, 11L, 50);
         final TableWithBloat second = TableWithBloat.of("t2", 30L, 3L, 10);
-        final TableWithBloat third = TableWithBloat.of("t3", TABLE_SIZE, 11L, 50);
+        final TableWithBloat third = TableWithBloat.of("t3", tableSize, 11L, 50);
 
         assertNotEquals(first, null);
         assertNotEquals(first, BigDecimal.ZERO);

@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.statistics;
 
-import javax.annotation.Nonnull;
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 /**
  * A set of methods to manage statistics.

@@ -18,9 +18,9 @@ import io.github.mfvanek.pg.utils.QueryExecutor;
 import io.github.mfvanek.pg.utils.ResultSetExtractor;
 import io.github.mfvanek.pg.utils.SqlQueryReader;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 
 /**
  * Abstract helper class for implementing statistics collection on a specific host in the cluster.
