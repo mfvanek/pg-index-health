@@ -14,11 +14,15 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,12 +50,23 @@ class ForeignKeyTest {
         assertThat(key.getColumnsInConstraint(), contains("order_id", "item_id"));
     }
 
+    @Test
+    void shouldCreateDefensiveCopyOfColumnsList() {
+        final List<String> columns = new ArrayList<>(Arrays.asList("first", "second", "third"));
+        final ForeignKey key = ForeignKey.of("t", "c_t_fk", columns);
+
+        columns.add("fourth");
+        assertThat(key.getColumnsInConstraint(), hasSize(3));
+        assertThat(key.getColumnsInConstraint(), not(contains("fourth")));
+        assertThrows(UnsupportedOperationException.class, () -> key.getColumnsInConstraint().clear());
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
         assertThrows(NullPointerException.class, () -> ForeignKey.of(null, null, null));
         assertThrows(NullPointerException.class, () -> ForeignKey.of("t", null, null));
-        assertThrows(IllegalArgumentException.class, () -> ForeignKey.of("t", "c_t_order_id", null));
+        assertThrows(NullPointerException.class, () -> ForeignKey.of("t", "c_t_order_id", null));
         assertThrows(IllegalArgumentException.class, () -> ForeignKey.of("t", "c_t_order_id", Collections.emptyList()));
         assertThrows(NullPointerException.class, () -> ForeignKey.ofColumn("t", "fk", null));
         assertThrows(IllegalArgumentException.class, () -> ForeignKey.ofColumn("t", "fk", ""));
