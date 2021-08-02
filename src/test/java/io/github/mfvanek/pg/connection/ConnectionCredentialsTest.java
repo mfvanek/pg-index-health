@@ -14,12 +14,15 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -42,6 +45,21 @@ class ConnectionCredentialsTest {
         final ConnectionCredentials credentials = ConnectionCredentials.of(Arrays.asList(DEFAULT_URL, DEFAULT_URL, DEFAULT_URL), "user", "pswrd");
         assertThat(credentials.getConnectionUrls(), hasSize(1));
         assertThat(credentials.getConnectionUrls(), contains(DEFAULT_URL));
+    }
+
+    @Test
+    void shouldCreateDefensiveCopyOfUrlsList() {
+        final List<String> urls = new ArrayList<>(Arrays.asList(
+                "jdbc:postgresql://localhost/first",
+                "jdbc:postgresql://localhost/second",
+                "jdbc:postgresql://localhost/third"));
+        final ConnectionCredentials credentials = ConnectionCredentials.of(urls, "user", "password");
+
+        urls.add("jdbc:postgresql://localhost/fourth");
+
+        assertThat(credentials.getConnectionUrls(), hasSize(3));
+        assertThat(credentials.getConnectionUrls(), not(contains("jdbc:postgresql://localhost/fourth")));
+        assertThrows(UnsupportedOperationException.class, () -> credentials.getConnectionUrls().clear());
     }
 
     @Test

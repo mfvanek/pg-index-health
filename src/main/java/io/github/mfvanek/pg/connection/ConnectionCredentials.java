@@ -12,8 +12,10 @@ package io.github.mfvanek.pg.connection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
@@ -34,8 +36,9 @@ public class ConnectionCredentials {
     private ConnectionCredentials(@Nonnull final Collection<String> connectionUrls,
                                   @Nonnull final String userName,
                                   @Nonnull final String password) {
-        PgConnectionValidators.connectionUrlsNotEmptyAndValid(connectionUrls);
-        this.connectionUrls = Collections.unmodifiableSortedSet(new TreeSet<>(connectionUrls));
+        final List<String> defensiveCopy = new ArrayList<>(Objects.requireNonNull(connectionUrls, "connectionUrls"));
+        PgConnectionValidators.connectionUrlsNotEmptyAndValid(defensiveCopy);
+        this.connectionUrls = Collections.unmodifiableSortedSet(new TreeSet<>(defensiveCopy));
         this.userName = PgConnectionValidators.userNameNotBlank(userName);
         this.password = PgConnectionValidators.passwordNotBlank(password);
     }

@@ -38,8 +38,9 @@ public class ForeignKey implements TableNameAware {
                        @Nonnull List<String> columnsInConstraint) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
-        this.columnsInConstraint = Collections.unmodifiableList(
-                new ArrayList<>(Validators.validateThatNotEmpty(columnsInConstraint)));
+        final List<String> defensiveCopy = new ArrayList<>(
+                Objects.requireNonNull(columnsInConstraint, "columnsInConstraint"));
+        this.columnsInConstraint = Collections.unmodifiableList(Validators.validateThatNotEmpty(defensiveCopy));
     }
 
     /**

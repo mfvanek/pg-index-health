@@ -14,11 +14,15 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -44,10 +48,33 @@ class DuplicatedIndexesTest {
                 IndexWithSize.of("t1", "i1", 101L),
                 IndexWithSize.of("t1", "i2", 202L)));
         assertNotNull(indexes);
+
+        assertEquals(606L, indexes.getTotalSize());
         assertThat(indexes.getDuplicatedIndexes(),
                 contains(IndexWithSize.of("t1", "i1", 101L),
                         IndexWithSize.of("t1", "i2", 202L),
                         IndexWithSize.of("t1", "i3", 303L)));
+        assertThat(indexes.getIndexNames(), contains("i1", "i2", "i3"));
+    }
+
+    @Test
+    void shouldCreateDefensiveCopyOfIndexesList() {
+        final List<IndexWithSize> sourceIndexes = new ArrayList<>(Arrays.asList(
+                IndexWithSize.of("t1", "i3", 303L),
+                IndexWithSize.of("t1", "i1", 101L),
+                IndexWithSize.of("t1", "i2", 202L)));
+        final DuplicatedIndexes indexes = DuplicatedIndexes.of(sourceIndexes);
+
+        final IndexWithSize fourth = IndexWithSize.of("t1", "i4", 404L);
+        sourceIndexes.add(fourth);
+
+        assertThat(indexes.getDuplicatedIndexes(), hasSize(3));
+        assertThat(indexes.getDuplicatedIndexes(), not(contains(fourth)));
+        assertThrows(UnsupportedOperationException.class, () -> indexes.getDuplicatedIndexes().clear());
+
+        assertThat(indexes.getIndexNames(), hasSize(3));
+        assertThat(indexes.getIndexNames(), not(contains("i4")));
+        assertThrows(UnsupportedOperationException.class, () -> indexes.getIndexNames().clear());
     }
 
     @Test
