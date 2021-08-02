@@ -108,8 +108,7 @@ class ConnectionCredentialsTest {
                 credentials.toString());
 
         credentials = ConnectionCredentials.of(Arrays.asList(DEFAULT_URL, "jdbc:postgresql://host1:5432/postgres"), "user", "pswrd");
-        assertEquals("ConnectionCredentials{connectionUrls=[jdbc:postgresql://host1:5432/postgres, " +
-                        "jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}",
+        assertEquals("ConnectionCredentials{connectionUrls=[jdbc:postgresql://host1:5432/postgres, jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}",
                 credentials.toString());
     }
 
