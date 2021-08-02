@@ -36,7 +36,7 @@ public abstract class AbstractMaintenance implements HostAware {
     protected final PgConnection pgConnection;
 
     protected AbstractMaintenance(@Nonnull final PgConnection pgConnection) {
-        this.pgConnection = Objects.requireNonNull(pgConnection);
+        this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection");
     }
 
     /**
