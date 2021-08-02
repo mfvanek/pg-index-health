@@ -78,14 +78,12 @@ public final class Validators {
         return argumentValue;
     }
 
-    @Nonnull
-    public static List<IndexWithSize> validateThatTableIsTheSame(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+    public static void validateThatTableIsTheSame(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
         final String tableName = validateThatContainsAtLeastTwoRows(duplicatedIndexes).get(0).getTableName();
         final boolean tableIsTheSame = duplicatedIndexes.stream().allMatch(i -> i.getTableName().equals(tableName));
         if (!tableIsTheSame) {
             throw new IllegalArgumentException("Table name is not the same within given rows");
         }
-        return duplicatedIndexes;
     }
 
     @Nonnull

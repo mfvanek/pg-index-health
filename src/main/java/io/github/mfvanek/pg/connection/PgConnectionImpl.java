@@ -20,8 +20,8 @@ public class PgConnectionImpl implements PgConnection {
     private final PgHost host;
 
     private PgConnectionImpl(@Nonnull final DataSource dataSource, @Nonnull final PgHost host) {
-        this.dataSource = Objects.requireNonNull(dataSource);
-        this.host = Objects.requireNonNull(host);
+        this.dataSource = Objects.requireNonNull(dataSource, "dataSource");
+        this.host = Objects.requireNonNull(host, "host");
     }
 
     /**

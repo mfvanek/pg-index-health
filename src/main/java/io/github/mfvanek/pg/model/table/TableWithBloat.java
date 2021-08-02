@@ -29,8 +29,8 @@ public class TableWithBloat extends Table implements BloatAware {
 
     private TableWithBloat(@Nonnull final String tableName,
                            final long tableSizeInBytes,
-                           long bloatSizeInBytes,
-                           int bloatPercentage) {
+                           final long bloatSizeInBytes,
+                           final int bloatPercentage) {
         super(tableName, tableSizeInBytes);
         this.bloatSizeInBytes = Validators.sizeNotNegative(bloatSizeInBytes, "bloatSizeInBytes");
         this.bloatPercentage = Validators.argumentNotNegative(bloatPercentage, "bloatPercentage");
@@ -74,8 +74,8 @@ public class TableWithBloat extends Table implements BloatAware {
      */
     public static TableWithBloat of(@Nonnull final String tableName,
                                     final long tableSizeInBytes,
-                                    long bloatSizeInBytes,
-                                    int bloatPercentage) {
+                                    final long bloatSizeInBytes,
+                                    final int bloatPercentage) {
         return new TableWithBloat(tableName, tableSizeInBytes, bloatSizeInBytes, bloatPercentage);
     }
 }
