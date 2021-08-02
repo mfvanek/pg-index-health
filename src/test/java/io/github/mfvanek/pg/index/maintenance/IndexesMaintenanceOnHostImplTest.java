@@ -423,8 +423,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
                 ctx -> {
                     final long before = getRowsCount(ctx.getSchemaName(), "clients");
                     assertEquals(1001L, before);
-                    List<IndexWithNulls> indexes = indexesMaintenance.getIndexesWithNullValues
-                            (PgContext.of("; truncate table clients;"));
+                    List<IndexWithNulls> indexes = indexesMaintenance.getIndexesWithNullValues(PgContext.of("; truncate table clients;"));
                     assertNotNull(indexes);
                     assertThat(indexes, empty());
                     assertEquals(before, getRowsCount(ctx.getSchemaName(), "clients"));

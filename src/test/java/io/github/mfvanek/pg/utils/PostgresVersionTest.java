@@ -30,7 +30,7 @@ final class PostgresVersionTest extends DatabaseAwareTestBase {
     @RegisterExtension
     static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
 
-    private final static String PG_VERSION_ENVIRONMENT_VARIABLE = "TEST_PG_VERSION";
+    private static final String PG_VERSION_ENVIRONMENT_VARIABLE = "TEST_PG_VERSION";
 
     PostgresVersionTest() {
         super(embeddedPostgres.getTestDatabase());

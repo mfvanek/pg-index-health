@@ -33,7 +33,7 @@ public final class TestUtils {
     }
 
     public static void executeOnDatabase(@Nonnull final DataSource dataSource,
-                                         @Nonnull DBCallback callback) {
+                                         @Nonnull DbCallback callback) {
         try (Connection connection = dataSource.getConnection();
              final Statement statement = connection.createStatement()) {
             callback.execute(statement);
@@ -43,7 +43,7 @@ public final class TestUtils {
     }
 
     public static void executeInTransaction(@Nonnull final DataSource dataSource,
-                                            @Nonnull DBCallback callback) {
+                                            @Nonnull DbCallback callback) {
         try (Connection connection = dataSource.getConnection();
              final Statement statement = connection.createStatement()) {
             connection.setAutoCommit(false);

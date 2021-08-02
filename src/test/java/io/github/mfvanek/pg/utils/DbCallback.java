@@ -15,7 +15,7 @@ import java.sql.Statement;
 import javax.annotation.Nonnull;
 
 @FunctionalInterface
-interface DBCallback {
+interface DbCallback {
 
     void execute(@Nonnull final Statement statement) throws SQLException;
 }
