@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static java.util.Collections.emptyMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
@@ -88,8 +89,8 @@ class ReplicasHelperTest {
     @Test
     void getLastStatsResetDateLogMessageWithWrongArguments() {
         assertThrows(NullPointerException.class, () -> ReplicasHelper.getLastStatsResetDateLogMessage(null, null));
-        assertThrows(NoSuchElementException.class, () -> ReplicasHelper.getLastStatsResetDateLogMessage(null, Collections.emptyMap()));
-        assertThrows(NoSuchElementException.class, () -> ReplicasHelper.getLastStatsResetDateLogMessage(PgHostImpl.ofPrimary(), Collections.emptyMap()));
+        assertThrows(NoSuchElementException.class, () -> ReplicasHelper.getLastStatsResetDateLogMessage(null, emptyMap()));
+        assertThrows(NoSuchElementException.class, () -> ReplicasHelper.getLastStatsResetDateLogMessage(PgHostImpl.ofPrimary(), emptyMap()));
     }
 
     @Test

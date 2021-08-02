@@ -23,9 +23,9 @@ import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * Implementation of {@code IndexMaintenance} which collects information from the current host in the cluster.

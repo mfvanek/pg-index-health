@@ -14,10 +14,10 @@ import io.github.mfvanek.pg.common.maintenance.AbstractMaintenance;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.utils.QueryExecutor;
 
-import javax.annotation.Nonnull;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public class StatisticsMaintenanceOnHostImpl extends AbstractMaintenance implements StatisticsMaintenanceOnHost {
 

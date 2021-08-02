@@ -15,8 +15,6 @@ import io.github.mfvanek.pg.model.PgContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import javax.annotation.Nonnull;
+import javax.sql.DataSource;
 
 public final class QueryExecutor {
 

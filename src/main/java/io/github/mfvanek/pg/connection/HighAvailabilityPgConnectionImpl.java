@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.connection;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConnection {
 

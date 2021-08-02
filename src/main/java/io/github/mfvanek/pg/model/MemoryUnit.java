@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 
 /**
  * Units of information.

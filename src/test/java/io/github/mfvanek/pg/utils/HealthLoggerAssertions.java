@@ -12,9 +12,9 @@ package io.github.mfvanek.pg.utils;
 
 import io.github.mfvanek.pg.common.health.logger.SimpleLoggingKey;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.NoSuchElementException;
+import javax.annotation.Nonnull;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;

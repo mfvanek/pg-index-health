@@ -13,8 +13,8 @@ package io.github.mfvanek.pg.common.health;
 import io.github.mfvanek.pg.common.maintenance.MaintenanceFactory;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 
 public class DatabaseHealthFactoryImpl implements DatabaseHealthFactory {
 

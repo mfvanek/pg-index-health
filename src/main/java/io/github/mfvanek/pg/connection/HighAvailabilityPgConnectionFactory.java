@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.connection;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
+import javax.annotation.Nonnull;
 
 public interface HighAvailabilityPgConnectionFactory {
 

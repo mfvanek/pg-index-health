@@ -17,8 +17,8 @@ import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.table.TablesHealthAware;
 
-import javax.annotation.Nonnull;
 import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * A set of diagnostics for collecting statistics about the health of tables on a specific host.

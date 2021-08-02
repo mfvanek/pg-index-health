@@ -10,12 +10,12 @@
 
 package io.github.mfvanek.pg.utils;
 
-import javax.annotation.Nonnull;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 
 public final class DuplicatedIndexesParser {
 

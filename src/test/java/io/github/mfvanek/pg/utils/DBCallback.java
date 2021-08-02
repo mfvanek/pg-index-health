@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.utils;
 
-import javax.annotation.Nonnull;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.annotation.Nonnull;
 
 @FunctionalInterface
 interface DBCallback {

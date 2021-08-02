@@ -15,8 +15,8 @@ import io.github.mfvanek.pg.settings.ParamNameAware;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.ServerSpecification;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 /**
  * An entry point for working with database configuration on the specified host.

@@ -13,10 +13,10 @@ package io.github.mfvanek.pg.common.health.logger;
 import io.github.mfvanek.pg.utils.Validators;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 /**
  * A listing of exclusions for {@link HealthLogger}.

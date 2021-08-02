@@ -14,9 +14,9 @@ import io.github.mfvanek.pg.model.index.IndexWithSize;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 
 public final class Validators {
 

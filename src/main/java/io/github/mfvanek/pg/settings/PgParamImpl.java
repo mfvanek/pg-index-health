@@ -12,8 +12,8 @@ package io.github.mfvanek.pg.settings;
 
 import io.github.mfvanek.pg.utils.Validators;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 
 public class PgParamImpl implements PgParam {
 

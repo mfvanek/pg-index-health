@@ -13,9 +13,9 @@ package io.github.mfvanek.pg.model.index;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.Validators;
 
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import java.util.Objects;
 
 /**
  * A base representation of database index.

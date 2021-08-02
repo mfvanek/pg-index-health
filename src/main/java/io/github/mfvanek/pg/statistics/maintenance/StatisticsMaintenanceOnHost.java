@@ -13,9 +13,9 @@ package io.github.mfvanek.pg.statistics.maintenance;
 import io.github.mfvanek.pg.connection.HostAware;
 import io.github.mfvanek.pg.statistics.StatisticsAware;
 
-import javax.annotation.Nonnull;
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 /**
  * An entry point for managing statistics on the specified host.

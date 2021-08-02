@@ -13,8 +13,8 @@ package io.github.mfvanek.pg.common.health.logger;
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.utils.Validators;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 
 /**
  * A listing of exclusions for {@link HealthLogger}.

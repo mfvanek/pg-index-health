@@ -15,8 +15,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,6 +23,8 @@ import java.sql.Statement;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
+import javax.annotation.Nonnull;
+import javax.sql.DataSource;
 
 import static io.github.mfvanek.pg.utils.TestUtils.executeInTransaction;
 import static io.github.mfvanek.pg.utils.TestUtils.executeOnDatabase;

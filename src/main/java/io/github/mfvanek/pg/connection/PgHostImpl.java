@@ -10,11 +10,11 @@
 
 package io.github.mfvanek.pg.connection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 @Immutable
 public class PgHostImpl implements PgHost {
