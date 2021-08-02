@@ -80,7 +80,7 @@ final class ReplicasHelper {
         if (statsResetTimestamp.isPresent()) {
             final long daysBetween = ChronoUnit.DAYS.between(statsResetTimestamp.get(), OffsetDateTime.now());
             return String.format("Last statistics reset on this host was %d days ago (%s)",
-                    daysBetween, statsResetTimestamp.get().toString());
+                    daysBetween, statsResetTimestamp.get());
         }
         return "Statistics have never been reset on this host";
     }

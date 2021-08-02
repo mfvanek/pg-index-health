@@ -410,9 +410,8 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     private void createDuplicatedCustomCollationIndex() {
-        executeOnDatabase(dataSource, statement -> {
-            statement.execute(String.format("create index concurrently if not exists i_accounts_account_number " +
-                    "on %s.accounts (account_number collate \"C.UTF-8\")", schemaName));
-        });
+        executeOnDatabase(dataSource, statement ->
+                statement.execute(String.format("create index concurrently if not exists i_accounts_account_number " +
+                "on %s.accounts (account_number collate \"C.UTF-8\")", schemaName)));
     }
 }
