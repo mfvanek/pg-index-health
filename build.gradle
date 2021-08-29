@@ -44,6 +44,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+    finalizedBy jacocoTestCoverageVerification
 }
 
 jar {
@@ -148,9 +150,39 @@ jacocoTestReport {
     }
 }
 
+jacocoTestCoverageVerification {
+    dependsOn test
+    violationRules {
+        rule {
+            limit {
+                counter = 'CLASS'
+                value = 'MISSEDCOUNT'
+                maximum = 0
+            }
+        }
+        rule {
+            limit {
+                counter = 'METHOD'
+                value = 'MISSEDCOUNT'
+                maximum = 0
+            }
+        }
+        rule {
+            limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 1.0
+            }
+        }
+    }
+}
+
 checkstyle {
     toolVersion '8.45'
     configFile file("config/checkstyle/checkstyle.xml")
+    ignoreFailures = false
+    maxWarnings = 0
+    maxErrors = 0
 }
 checkstyleMain {
     source ='src/main/java'
@@ -160,3 +192,4 @@ checkstyleTest {
 }
 
 check.dependsOn jacocoTestReport
+check.dependsOn jacocoTestCoverageVerification
