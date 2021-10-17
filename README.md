@@ -15,6 +15,9 @@
 [![PostgreSQL 13](https://img.shields.io/badge/PostgreSQL-13-green.svg)](https://www.postgresql.org/about/news/postgresql-13-released-2077/ "PostgreSQL 13")
 [![PostgreSQL 14](https://img.shields.io/badge/PostgreSQL-14-green.svg)](https://www.postgresql.org/about/news/postgresql-14-released-2318/ "PostgreSQL 14")
 
+### Supported Java versions
+Java 8 and above
+
 ## Available checks
 **pg-index-health** allows you to detect the following problems:
 1. Invalid (broken) indexes ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/invalid_indexes.sql)).
@@ -38,7 +41,7 @@ but the best way to do it is to use [IndexesHealth::resetStatistics()](https://g
 ## Installation
 Using Gradle:
 ```groovy
-implementation 'io.github.mfvanek:pg-index-health:0.3.1'
+implementation 'io.github.mfvanek:pg-index-health:0.3.2'
 ```
 
 Using Maven:
@@ -46,7 +49,7 @@ Using Maven:
 <dependency>
   <groupId>io.github.mfvanek</groupId>
   <artifactId>pg-index-health</artifactId>
-  <version>0.3.1</version>
+  <version>0.3.2</version>
 </dependency>
 ```
 
