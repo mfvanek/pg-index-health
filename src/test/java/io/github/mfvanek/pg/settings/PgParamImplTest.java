@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.settings;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
@@ -77,11 +76,6 @@ class PgParamImplTest {
         // others
         assertThat(second).isNotEqualTo(first);
         assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
-
-        // another implementation of PgParam
-        final PgParam pgParamMock = Mockito.mock(PgParam.class);
-        Mockito.when(pgParamMock.getName()).thenReturn("statement_timeout");
-        assertThat(pgParamMock).isEqualTo(first);
     }
 
     @Test

@@ -83,6 +83,6 @@ public final class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareT
         final PgParam pgParam = PgParamImpl.of("unknown_param", "");
         assertThatThrownBy(() -> configurationMaintenance.getParamCurrentValue(pgParam))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessage("unknown_param");
+                .hasMessageContaining("unknown_param");
     }
 }

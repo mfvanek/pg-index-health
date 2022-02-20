@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
@@ -71,11 +70,6 @@ class PgConnectionImplTest {
         // others
         assertThat(second).isNotEqualTo(first);
         assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
-
-        // another implementation of PgConnection
-        final PgConnection connectionMock = Mockito.mock(PgConnection.class);
-        Mockito.when(connectionMock.getHost()).thenReturn(PgHostImpl.ofPrimary());
-        assertThat(connectionMock).isEqualTo(first);
     }
 
     @Test

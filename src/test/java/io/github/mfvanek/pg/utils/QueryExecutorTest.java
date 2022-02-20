@@ -79,7 +79,7 @@ public final class QueryExecutorTest extends DatabaseAwareTestBase {
         assertThatThrownBy(() -> QueryExecutor.executeQueryWithSchema(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(), "select version()", (rs) -> rs.getString(1)))
                 .isInstanceOf(RuntimeException.class)
                 .hasCauseInstanceOf(SQLException.class)
-                .hasMessage("bad parameter");
+                .hasMessageContaining("bad parameter");
     }
 
     @Test
@@ -95,6 +95,6 @@ public final class QueryExecutorTest extends DatabaseAwareTestBase {
         assertThatThrownBy(() -> QueryExecutor.executeQueryWithBloatThreshold(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(), "select version()", (rs) -> rs.getString(1)))
                 .isInstanceOf(RuntimeException.class)
                 .hasCauseInstanceOf(SQLException.class)
-                .hasMessage("bad parameter");
+                .hasMessageContaining("bad parameter");
     }
 }

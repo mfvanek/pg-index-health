@@ -52,7 +52,7 @@ class ForeignKeyTest {
 
         columns.add("fourth");
         assertThat(key.getColumnsInConstraint()).hasSize(3);
-        assertThat(key.getColumnsInConstraint()).contains("fourth");
+        assertThat(key.getColumnsInConstraint()).doesNotContain("fourth");
         assertThatThrownBy(() -> key.getColumnsInConstraint().clear()).isInstanceOf(UnsupportedOperationException.class);
     }
 

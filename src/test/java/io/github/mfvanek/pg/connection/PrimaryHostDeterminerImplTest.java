@@ -56,7 +56,7 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
         assertThatThrownBy(() -> primaryHostDeterminer.isPrimary(pgConnection))
                 .isInstanceOf(RuntimeException.class)
                 .hasCauseInstanceOf(SQLException.class)
-                .hasMessage("bad query");
+                .hasMessageContaining("bad query");
     }
 
     @SuppressWarnings("ConstantConditions")
