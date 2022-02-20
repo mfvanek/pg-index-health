@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021. Ivan Vakhrushev and others.
+ * Copyright (c) 2019-2022. Ivan Vakhrushev and others.
  * https://github.com/mfvanek/pg-index-health
  *
  * This file is a part of "pg-index-health" - a Java library for
@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.connection;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -23,8 +24,9 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
     private HighAvailabilityPgConnectionImpl(@Nonnull final PgConnection connectionToPrimary,
                                              @Nonnull final Set<PgConnection> connectionsToAllHostsInCluster) {
         this.connectionToPrimary = Objects.requireNonNull(connectionToPrimary, "connectionToPrimary");
-        this.connectionsToAllHostsInCluster = Collections.unmodifiableSet(
-                Objects.requireNonNull(connectionsToAllHostsInCluster));
+        final Set<PgConnection> defensiveCopy = new HashSet<>(
+                Objects.requireNonNull(connectionsToAllHostsInCluster, "connectionsToAllHostsInCluster"));
+        this.connectionsToAllHostsInCluster = Collections.unmodifiableSet(defensiveCopy);
     }
 
     /**
