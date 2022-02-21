@@ -16,6 +16,10 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.model.MemoryUnit;
+import io.github.mfvanek.pg.settings.ImportantParam;
+import io.github.mfvanek.pg.settings.PgParam;
+import io.github.mfvanek.pg.settings.ServerSpecification;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,10 +27,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import java.util.Set;
 
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -62,6 +70,49 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
                     assertNotNull(statsResetTimestamp);
                     assertTrue(statsResetTimestamp.isPresent());
                     assertThat(statsResetTimestamp.get(), greaterThan(testStartTime));
+                });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void shouldReturnParamsWithDefaultValues(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withData(),
+                ctx -> {
+                    final ServerSpecification specification = ServerSpecification.builder()
+                            .withCpuCores(2)
+                            .withMemoryAmount(2, MemoryUnit.GB)
+                            .withSSD()
+                            .build();
+                    final Set<PgParam> paramsWithDefaultValues = databaseManagement.getParamsWithDefaultValues(specification);
+                    assertNotNull(paramsWithDefaultValues);
+                    assertThat(paramsWithDefaultValues, hasSize(10));
+                    assertThat(paramsWithDefaultValues.stream()
+                            .map(PgParam::getName)
+                            .collect(toList()), containsInAnyOrder(
+                            "shared_buffers",
+                            "work_mem",
+                            "maintenance_work_mem",
+                            "random_page_cost",
+                            "log_min_duration_statement",
+                            "idle_in_transaction_session_timeout",
+                            "statement_timeout",
+                            "effective_cache_size",
+                            "lock_timeout",
+                            "temp_file_limit")
+                    );
+                });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void shouldReturnParamsCurrentValues(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withData(),
+                ctx -> {
+                    final Set<PgParam> paramsCurrentValues = databaseManagement.getParamsCurrentValues();
+                    assertNotNull(paramsCurrentValues);
+                    assertThat(paramsCurrentValues.size(), greaterThan(ImportantParam.values().length));
                 });
     }
 }

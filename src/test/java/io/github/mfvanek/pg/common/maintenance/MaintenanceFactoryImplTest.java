@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.index.maintenance.IndexesMaintenanceOnHost;
+import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHost;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
@@ -73,17 +74,12 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
     void forStatistics() {
         final StatisticsMaintenanceOnHost maintenance = factory.forStatistics(pgConnection);
         assertNotNull(maintenance);
-
-        final Collection<StatisticsMaintenanceOnHost> maintenanceOnHosts =
-                factory.forStatistics(Collections.singletonList(pgConnection));
-        assertNotNull(maintenanceOnHosts);
-        assertThat(maintenanceOnHosts, hasSize(1));
     }
 
     @Test
     void forStatisticsByHost() {
         final Map<PgHost, StatisticsMaintenanceOnHost> maintenanceByHost =
-                factory.forStatisticsByHost(Collections.singletonList(pgConnection));
+                factory.forStatistics(Collections.singletonList(pgConnection));
         assertNotNull(maintenanceByHost);
         assertEquals(1, maintenanceByHost.size());
         assertThat(maintenanceByHost.keySet().iterator().next(), equalTo(pgConnection.getHost()));
@@ -92,7 +88,30 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
     @Test
     void forStatisticsByHostEmpty() {
         final Map<PgHost, StatisticsMaintenanceOnHost> maintenanceByHost =
-                factory.forStatisticsByHost(Collections.emptyList());
+                factory.forStatistics(Collections.emptyList());
+        assertNotNull(maintenanceByHost);
+        assertTrue(maintenanceByHost.isEmpty());
+    }
+
+    @Test
+    void forConfiguration() {
+        final ConfigurationMaintenanceOnHost maintenance = factory.forConfiguration(pgConnection);
+        assertNotNull(maintenance);
+    }
+
+    @Test
+    void forConfigurationByHost() {
+        final Map<PgHost, ConfigurationMaintenanceOnHost> maintenanceByHost =
+                factory.forConfiguration(Collections.singletonList(pgConnection));
+        assertNotNull(maintenanceByHost);
+        assertEquals(1, maintenanceByHost.size());
+        assertThat(maintenanceByHost.keySet().iterator().next(), equalTo(pgConnection.getHost()));
+    }
+
+    @Test
+    void forConfigurationByHostEmpty() {
+        final Map<PgHost, ConfigurationMaintenanceOnHost> maintenanceByHost =
+                factory.forConfiguration(Collections.emptyList());
         assertNotNull(maintenanceByHost);
         assertTrue(maintenanceByHost.isEmpty());
     }

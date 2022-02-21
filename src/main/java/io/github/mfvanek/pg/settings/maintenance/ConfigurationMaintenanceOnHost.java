@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.settings.maintenance;
 
 import io.github.mfvanek.pg.connection.HostAware;
+import io.github.mfvanek.pg.settings.ConfigurationAware;
 import io.github.mfvanek.pg.settings.ParamNameAware;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.ServerSpecification;
@@ -23,12 +24,15 @@ import javax.annotation.Nonnull;
  *
  * @author Ivan Vakhrushev
  * @see HostAware
+ * @see ConfigurationAware
  */
-public interface ConfigurationMaintenanceOnHost extends HostAware {
+public interface ConfigurationMaintenanceOnHost extends ConfigurationAware, HostAware {
 
+    @Override
     @Nonnull
     Set<PgParam> getParamsWithDefaultValues(@Nonnull ServerSpecification specification);
 
+    @Override
     @Nonnull
     Set<PgParam> getParamsCurrentValues();
 

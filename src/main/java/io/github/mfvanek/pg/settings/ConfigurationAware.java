@@ -8,23 +8,22 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.connection;
+package io.github.mfvanek.pg.settings;
 
+import java.util.Set;
 import javax.annotation.Nonnull;
 
 /**
- * Allows getting information about database host.
+ * An abstraction for getting database configuration.
  *
  * @author Ivan Vakhrushev
+ * @since 0.4.0
  */
-public interface HostAware {
+public interface ConfigurationAware {
 
-    /**
-     * Gets information about host in the cluster.
-     *
-     * @return {@code PgHost}
-     * @see PgHost
-     */
     @Nonnull
-    PgHost getHost();
+    Set<PgParam> getParamsWithDefaultValues(@Nonnull ServerSpecification specification);
+
+    @Nonnull
+    Set<PgParam> getParamsCurrentValues();
 }

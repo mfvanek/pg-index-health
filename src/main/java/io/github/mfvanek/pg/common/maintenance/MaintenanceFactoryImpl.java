@@ -13,6 +13,8 @@ package io.github.mfvanek.pg.common.maintenance;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.index.maintenance.IndexMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.index.maintenance.IndexesMaintenanceOnHost;
+import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;
+import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHost;
@@ -47,5 +49,11 @@ public class MaintenanceFactoryImpl implements MaintenanceFactory {
     @Nonnull
     public StatisticsMaintenanceOnHost forStatistics(@Nonnull PgConnection pgConnection) {
         return new StatisticsMaintenanceOnHostImpl(pgConnection);
+    }
+
+    @Override
+    @Nonnull
+    public ConfigurationMaintenanceOnHost forConfiguration(@Nonnull PgConnection pgConnection) {
+        return new ConfigurationMaintenanceOnHostImpl(pgConnection);
     }
 }

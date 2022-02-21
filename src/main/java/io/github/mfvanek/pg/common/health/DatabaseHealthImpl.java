@@ -64,7 +64,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
         final Set<PgConnection> pgConnections = haPgConnection.getConnectionsToAllHostsInCluster();
         this.indexesMaintenanceForAllHostsInCluster = maintenanceFactory.forIndexes(pgConnections);
         this.tablesMaintenanceForAllHostsInCluster = maintenanceFactory.forTables(pgConnections);
-        this.statisticsMaintenanceForAllHostsInCluster = maintenanceFactory.forStatisticsByHost(pgConnections);
+        this.statisticsMaintenanceForAllHostsInCluster = maintenanceFactory.forStatistics(pgConnections);
     }
 
     /**
@@ -73,8 +73,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<Index> getInvalidIndexes(@Nonnull final PgContext pgContext) {
-        logExecutingOnPrimary(indexesMaintenanceForPrimary.getHost());
-        return indexesMaintenanceForPrimary.getInvalidIndexes(pgContext);
+        return doOnPrimary(indexesMaintenanceForPrimary.getHost(), () -> indexesMaintenanceForPrimary.getInvalidIndexes(pgContext));
     }
 
     /**
@@ -83,8 +82,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull final PgContext pgContext) {
-        logExecutingOnPrimary(indexesMaintenanceForPrimary.getHost());
-        return indexesMaintenanceForPrimary.getDuplicatedIndexes(pgContext);
+        return doOnPrimary(indexesMaintenanceForPrimary.getHost(), () -> indexesMaintenanceForPrimary.getDuplicatedIndexes(pgContext));
     }
 
     /**
@@ -93,8 +91,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull final PgContext pgContext) {
-        logExecutingOnPrimary(indexesMaintenanceForPrimary.getHost());
-        return indexesMaintenanceForPrimary.getIntersectedIndexes(pgContext);
+        return doOnPrimary(indexesMaintenanceForPrimary.getHost(), () -> indexesMaintenanceForPrimary.getIntersectedIndexes(pgContext));
     }
 
     /**
@@ -122,8 +119,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull final PgContext pgContext) {
-        logExecutingOnPrimary(indexesMaintenanceForPrimary.getHost());
-        return indexesMaintenanceForPrimary.getForeignKeysNotCoveredWithIndex(pgContext);
+        return doOnPrimary(indexesMaintenanceForPrimary.getHost(), () -> indexesMaintenanceForPrimary.getForeignKeysNotCoveredWithIndex(pgContext));
     }
 
     /**
@@ -147,8 +143,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
-        logExecutingOnPrimary(tablesMaintenanceForPrimary.getHost());
-        return tablesMaintenanceForPrimary.getTablesWithoutPrimaryKey(pgContext);
+        return doOnPrimary(tablesMaintenanceForPrimary.getHost(), () -> tablesMaintenanceForPrimary.getTablesWithoutPrimaryKey(pgContext));
     }
 
     /**
@@ -157,8 +152,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final PgContext pgContext) {
-        logExecutingOnPrimary(indexesMaintenanceForPrimary.getHost());
-        return indexesMaintenanceForPrimary.getIndexesWithNullValues(pgContext);
+        return doOnPrimary(indexesMaintenanceForPrimary.getHost(), () -> indexesMaintenanceForPrimary.getIndexesWithNullValues(pgContext));
     }
 
     /**
@@ -167,8 +161,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext) {
-        logExecutingOnPrimary(indexesMaintenanceForPrimary.getHost());
-        return indexesMaintenanceForPrimary.getIndexesWithBloat(pgContext);
+        return doOnPrimary(indexesMaintenanceForPrimary.getHost(), () -> indexesMaintenanceForPrimary.getIndexesWithBloat(pgContext));
     }
 
     /**
@@ -177,15 +170,15 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Override
     @Nonnull
     public List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext) {
-        logExecutingOnPrimary(tablesMaintenanceForPrimary.getHost());
-        return tablesMaintenanceForPrimary.getTablesWithBloat(pgContext);
+        return doOnPrimary(tablesMaintenanceForPrimary.getHost(), () -> tablesMaintenanceForPrimary.getTablesWithBloat(pgContext));
     }
 
-    private static void logExecutingOnPrimary(@Nonnull final PgHost host) {
+    private static <T> T doOnPrimary(@Nonnull final PgHost host, @Nonnull final Supplier<T> action) {
         LOGGER.debug("Going to execute on primary host [{}]", host.getName());
+        return action.get();
     }
 
-    private static <T> T doOnHost(@Nonnull final PgHost host, Supplier<T> action) {
+    private static <T> T doOnHost(@Nonnull final PgHost host, @Nonnull final Supplier<T> action) {
         LOGGER.debug("Going to execute on host {}", host.getName());
         return action.get();
     }
