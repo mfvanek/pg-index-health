@@ -42,7 +42,7 @@ public final class HealthLoggerTest extends DatabaseAwareTestBase {
         super(embeddedPostgres.getTestDatabase());
         final ConnectionCredentials credentials = ConnectionCredentials.ofUrl(
                 embeddedPostgres.getUrl(), embeddedPostgres.getUsername(), embeddedPostgres.getPassword());
-        this.logger = new SimpleHealthLogger(
+        this.logger = new KeyValueFileHealthLogger(
                 credentials,
                 new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
                 new DatabaseHealthFactoryImpl(new MaintenanceFactoryImpl()));

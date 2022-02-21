@@ -36,13 +36,13 @@ import java.util.List;
 import static io.github.mfvanek.pg.utils.HealthLoggerAssertions.assertContainsKey;
 import static org.mockito.ArgumentMatchers.any;
 
-class SimpleHealthLoggerTest {
+class KeyValueFileHealthLoggerTest {
 
     private final ConnectionCredentials credentials = Mockito.mock(ConnectionCredentials.class);
     private final DatabaseHealth databaseHealth = Mockito.mock(DatabaseHealth.class);
     private final DatabaseHealthFactory databaseHealthFactory = Mockito.mock(DatabaseHealthFactory.class);
     private final HighAvailabilityPgConnectionFactory connectionFactory = Mockito.mock(HighAvailabilityPgConnectionFactory.class);
-    private final HealthLogger logger = new SimpleHealthLogger(credentials, connectionFactory, databaseHealthFactory);
+    private final HealthLogger logger = new KeyValueFileHealthLogger(credentials, connectionFactory, databaseHealthFactory);
 
     @BeforeEach
     void setUp() {

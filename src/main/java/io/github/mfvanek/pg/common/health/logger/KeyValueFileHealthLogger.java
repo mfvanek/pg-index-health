@@ -39,13 +39,13 @@ import javax.annotation.Nonnull;
  *
  * @author Ivan Vakhrushev
  */
-public class SimpleHealthLogger extends AbstractHealthLogger {
+public class KeyValueFileHealthLogger extends AbstractHealthLogger {
 
     private static final Logger KV_LOG = LoggerFactory.getLogger("key-value.log");
 
-    public SimpleHealthLogger(@Nonnull final ConnectionCredentials credentials,
-                              @Nonnull final HighAvailabilityPgConnectionFactory connectionFactory,
-                              @Nonnull final DatabaseHealthFactory databaseHealthFactory) {
+    public KeyValueFileHealthLogger(@Nonnull final ConnectionCredentials credentials,
+                                    @Nonnull final HighAvailabilityPgConnectionFactory connectionFactory,
+                                    @Nonnull final DatabaseHealthFactory databaseHealthFactory) {
         super(credentials, connectionFactory, databaseHealthFactory);
     }
 

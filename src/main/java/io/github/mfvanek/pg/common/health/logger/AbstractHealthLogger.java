@@ -67,6 +67,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                      @Nonnull final PgContext pgContext) {
         Objects.requireNonNull(exclusions);
         Objects.requireNonNull(pgContext);
+        // The main idea here is to create haPgConnection for a short period of time.
+        // This helps to avoid dealing with failover/switch-over situations that occur in real clusters.
         final HighAvailabilityPgConnection haPgConnection = connectionFactory.of(credentials);
         final DatabaseHealth databaseHealth = databaseHealthFactory.of(haPgConnection);
         final List<String> logResult = new ArrayList<>();
