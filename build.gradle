@@ -131,13 +131,11 @@ spotbugsMain {
         html.enabled = true
     }
 }
-
 spotbugsTest {
     reports {
         html.enabled = true
     }
 }
-
 spotbugs {
     showProgress = true
     excludeFilter = file("config/spotbugs/exclude.xml")
