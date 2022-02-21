@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 import javax.annotation.Nonnull;
 
 final class PgConnectionValidators {
@@ -49,6 +50,13 @@ final class PgConnectionValidators {
             throw new IllegalArgumentException("connectionUrls have to contain at least one url");
         }
         connectionUrls.forEach(url -> pgUrlNotBlankAndValid(url, "connectionUrl"));
+    }
+
+    static void shouldContainsConnectionToPrimary(@Nonnull final PgConnection connectionToPrimary,
+                                                  @Nonnull final Set<PgConnection> connectionsToAllHostsInCluster) {
+        if (!connectionsToAllHostsInCluster.contains(connectionToPrimary)) {
+            throw new IllegalArgumentException("connectionsToAllHostsInCluster have to contain a connection to the primary");
+        }
     }
 
     private static void notBlank(@Nonnull final String argumentValue, @Nonnull final String argumentName) {

@@ -12,13 +12,11 @@ package io.github.mfvanek.pg.connection;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Set;
 import javax.annotation.Nonnull;
 
 public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailabilityPgConnectionFactory {
@@ -42,8 +40,7 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
         credentials.getConnectionUrls().forEach(
                 url -> addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, url, credentials));
         final PgConnection connectionToPrimary = findConnectionToPrimary(connectionsToAllHostsInCluster);
-        final Set<PgConnection> pgConnections = new HashSet<>(connectionsToAllHostsInCluster.values());
-        return HighAvailabilityPgConnectionImpl.of(connectionToPrimary, pgConnections);
+        return HighAvailabilityPgConnectionImpl.of(connectionToPrimary, connectionsToAllHostsInCluster.values());
     }
 
     private void addDataSourcesForAllHostsFromUrl(@Nonnull final Map<String, PgConnection> connectionsToAllHostsInCluster,

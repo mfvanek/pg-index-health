@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.connection;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -18,14 +19,17 @@ import javax.annotation.Nonnull;
 
 public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConnection {
 
+    // TODO Bad design. Need logic here to deal with failover/switch-over in real cluster.
+    //  As a possible solution - cache connectionToPrimary for a short period of time (e.g. 1 minute)
     private final PgConnection connectionToPrimary;
     private final Set<PgConnection> connectionsToAllHostsInCluster;
 
     private HighAvailabilityPgConnectionImpl(@Nonnull final PgConnection connectionToPrimary,
-                                             @Nonnull final Set<PgConnection> connectionsToAllHostsInCluster) {
+                                             @Nonnull final Collection<PgConnection> connectionsToAllHostsInCluster) {
         this.connectionToPrimary = Objects.requireNonNull(connectionToPrimary, "connectionToPrimary");
         final Set<PgConnection> defensiveCopy = new HashSet<>(
                 Objects.requireNonNull(connectionsToAllHostsInCluster, "connectionsToAllHostsInCluster"));
+        PgConnectionValidators.shouldContainsConnectionToPrimary(connectionToPrimary, defensiveCopy);
         this.connectionsToAllHostsInCluster = Collections.unmodifiableSet(defensiveCopy);
     }
 
@@ -54,7 +58,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
 
     @Nonnull
     public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToPrimary,
-                                                  @Nonnull final Set<PgConnection> connectionsToAllHostsInCluster) {
+                                                  @Nonnull final Collection<PgConnection> connectionsToAllHostsInCluster) {
         return new HighAvailabilityPgConnectionImpl(connectionToPrimary, connectionsToAllHostsInCluster);
     }
 }
