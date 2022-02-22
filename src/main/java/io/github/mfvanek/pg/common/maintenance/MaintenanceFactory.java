@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.connection.HostAware;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.index.maintenance.IndexesMaintenanceOnHost;
+import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHost;
 
@@ -31,6 +32,7 @@ import javax.annotation.Nonnull;
  * @see IndexesMaintenanceOnHost
  * @see TablesMaintenanceOnHost
  * @see StatisticsMaintenanceOnHost
+ * @see ConfigurationMaintenanceOnHost
  * @see PgConnection
  */
 public interface MaintenanceFactory {
@@ -39,11 +41,11 @@ public interface MaintenanceFactory {
     IndexesMaintenanceOnHost forIndexes(@Nonnull PgConnection pgConnection);
 
     @Nonnull
-    default Collection<IndexesMaintenanceOnHost> forIndexes(@Nonnull final Collection<PgConnection> pgConnections) {
-        return Collections.unmodifiableList(
+    default Map<PgHost, IndexesMaintenanceOnHost> forIndexes(@Nonnull final Collection<PgConnection> pgConnections) {
+        return Collections.unmodifiableMap(
                 pgConnections.stream()
                         .map(this::forIndexes)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toMap(HostAware::getHost, Function.identity()))
         );
     }
 
@@ -51,11 +53,11 @@ public interface MaintenanceFactory {
     TablesMaintenanceOnHost forTables(@Nonnull PgConnection pgConnection);
 
     @Nonnull
-    default Collection<TablesMaintenanceOnHost> forTables(@Nonnull final Collection<PgConnection> pgConnections) {
-        return Collections.unmodifiableList(
+    default Map<PgHost, TablesMaintenanceOnHost> forTables(@Nonnull final Collection<PgConnection> pgConnections) {
+        return Collections.unmodifiableMap(
                 pgConnections.stream()
                         .map(this::forTables)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toMap(HostAware::getHost, Function.identity()))
         );
     }
 
@@ -63,31 +65,28 @@ public interface MaintenanceFactory {
      * Creates statistics maintenance object.
      *
      * @param pgConnection given connection to the host
-     * @return {@code StatisticsMaintenance} object
+     * @return {@code StatisticsMaintenanceOnHost} object
      */
     @Nonnull
     StatisticsMaintenanceOnHost forStatistics(@Nonnull PgConnection pgConnection);
 
-    /**
-     * Creates statistics maintenance objects for given connections.
-     *
-     * @param pgConnections connections to hosts
-     * @return list of {@code StatisticsMaintenance} objects
-     */
     @Nonnull
-    default Collection<StatisticsMaintenanceOnHost> forStatistics(@Nonnull final Collection<PgConnection> pgConnections) {
-        return Collections.unmodifiableList(
+    default Map<PgHost, StatisticsMaintenanceOnHost> forStatistics(@Nonnull final Collection<PgConnection> pgConnections) {
+        return Collections.unmodifiableMap(
                 pgConnections.stream()
                         .map(this::forStatistics)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toMap(HostAware::getHost, Function.identity()))
         );
     }
 
     @Nonnull
-    default Map<PgHost, StatisticsMaintenanceOnHost> forStatisticsByHost(@Nonnull final Collection<PgConnection> pgConnections) {
+    ConfigurationMaintenanceOnHost forConfiguration(@Nonnull PgConnection pgConnection);
+
+    @Nonnull
+    default Map<PgHost, ConfigurationMaintenanceOnHost> forConfiguration(@Nonnull final Collection<PgConnection> pgConnections) {
         return Collections.unmodifiableMap(
                 pgConnections.stream()
-                        .map(this::forStatistics)
+                        .map(this::forConfiguration)
                         .collect(Collectors.toMap(HostAware::getHost, Function.identity()))
         );
     }
