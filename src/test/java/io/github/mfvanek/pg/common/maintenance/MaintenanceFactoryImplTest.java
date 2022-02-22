@@ -23,13 +23,11 @@ import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -52,22 +50,36 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
     void forIndexes() {
         final IndexesMaintenanceOnHost maintenance = factory.forIndexes(pgConnection);
         assertNotNull(maintenance);
+    }
 
-        final Collection<IndexesMaintenanceOnHost> maintenanceOnHosts =
-                factory.forIndexes(Collections.singletonList(pgConnection));
-        assertNotNull(maintenanceOnHosts);
-        assertThat(maintenanceOnHosts, hasSize(1));
+    @Test
+    void forIndexesByHost() {
+        final Map<PgHost, IndexesMaintenanceOnHost> maintenanceOnHosts = factory.forIndexes(Collections.singletonList(pgConnection));
+        checkThatContainsOneItem(maintenanceOnHosts);
+    }
+
+    @Test
+    void forIndexesByHostEmpty() {
+        final Map<PgHost, IndexesMaintenanceOnHost> maintenanceOnHosts = factory.forIndexes(Collections.emptyList());
+        checkThatEmpty(maintenanceOnHosts);
     }
 
     @Test
     void forTables() {
         final TablesMaintenanceOnHost maintenance = factory.forTables(pgConnection);
         assertNotNull(maintenance);
+    }
 
-        final Collection<TablesMaintenanceOnHost> maintenanceOnHosts =
-                factory.forTables(Collections.singletonList(pgConnection));
-        assertNotNull(maintenanceOnHosts);
-        assertThat(maintenanceOnHosts, hasSize(1));
+    @Test
+    void forTablesByHost() {
+        final Map<PgHost, TablesMaintenanceOnHost> maintenanceOnHosts = factory.forTables(Collections.singletonList(pgConnection));
+        checkThatContainsOneItem(maintenanceOnHosts);
+    }
+
+    @Test
+    void forTablesByHostEmpty() {
+        final Map<PgHost, TablesMaintenanceOnHost> maintenanceOnHosts = factory.forTables(Collections.emptyList());
+        checkThatEmpty(maintenanceOnHosts);
     }
 
     @Test
@@ -78,19 +90,14 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
 
     @Test
     void forStatisticsByHost() {
-        final Map<PgHost, StatisticsMaintenanceOnHost> maintenanceByHost =
-                factory.forStatistics(Collections.singletonList(pgConnection));
-        assertNotNull(maintenanceByHost);
-        assertEquals(1, maintenanceByHost.size());
-        assertThat(maintenanceByHost.keySet().iterator().next(), equalTo(pgConnection.getHost()));
+        final Map<PgHost, StatisticsMaintenanceOnHost> maintenanceOnHosts = factory.forStatistics(Collections.singletonList(pgConnection));
+        checkThatContainsOneItem(maintenanceOnHosts);
     }
 
     @Test
     void forStatisticsByHostEmpty() {
-        final Map<PgHost, StatisticsMaintenanceOnHost> maintenanceByHost =
-                factory.forStatistics(Collections.emptyList());
-        assertNotNull(maintenanceByHost);
-        assertTrue(maintenanceByHost.isEmpty());
+        final Map<PgHost, StatisticsMaintenanceOnHost> maintenanceOnHosts = factory.forStatistics(Collections.emptyList());
+        checkThatEmpty(maintenanceOnHosts);
     }
 
     @Test
@@ -101,18 +108,24 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
 
     @Test
     void forConfigurationByHost() {
-        final Map<PgHost, ConfigurationMaintenanceOnHost> maintenanceByHost =
-                factory.forConfiguration(Collections.singletonList(pgConnection));
-        assertNotNull(maintenanceByHost);
-        assertEquals(1, maintenanceByHost.size());
-        assertThat(maintenanceByHost.keySet().iterator().next(), equalTo(pgConnection.getHost()));
+        final Map<PgHost, ConfigurationMaintenanceOnHost> maintenanceOnHosts = factory.forConfiguration(Collections.singletonList(pgConnection));
+        checkThatContainsOneItem(maintenanceOnHosts);
     }
 
     @Test
     void forConfigurationByHostEmpty() {
-        final Map<PgHost, ConfigurationMaintenanceOnHost> maintenanceByHost =
-                factory.forConfiguration(Collections.emptyList());
-        assertNotNull(maintenanceByHost);
-        assertTrue(maintenanceByHost.isEmpty());
+        final Map<PgHost, ConfigurationMaintenanceOnHost> maintenanceOnHosts = factory.forConfiguration(Collections.emptyList());
+        checkThatEmpty(maintenanceOnHosts);
+    }
+
+    private <T> void checkThatContainsOneItem(Map<PgHost, T> maintenanceOnHosts) {
+        assertNotNull(maintenanceOnHosts);
+        assertEquals(1, maintenanceOnHosts.size());
+        assertThat(maintenanceOnHosts.keySet().iterator().next(), equalTo(pgConnection.getHost()));
+    }
+
+    private <T> void checkThatEmpty(Map<PgHost, T> maintenanceOnHosts) {
+        assertNotNull(maintenanceOnHosts);
+        assertTrue(maintenanceOnHosts.isEmpty());
     }
 }

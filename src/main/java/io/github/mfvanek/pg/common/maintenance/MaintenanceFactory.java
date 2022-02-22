@@ -41,11 +41,11 @@ public interface MaintenanceFactory {
     IndexesMaintenanceOnHost forIndexes(@Nonnull PgConnection pgConnection);
 
     @Nonnull
-    default Collection<IndexesMaintenanceOnHost> forIndexes(@Nonnull final Collection<PgConnection> pgConnections) {
-        return Collections.unmodifiableList(
+    default Map<PgHost, IndexesMaintenanceOnHost> forIndexes(@Nonnull final Collection<PgConnection> pgConnections) {
+        return Collections.unmodifiableMap(
                 pgConnections.stream()
                         .map(this::forIndexes)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toMap(HostAware::getHost, Function.identity()))
         );
     }
 
@@ -53,11 +53,11 @@ public interface MaintenanceFactory {
     TablesMaintenanceOnHost forTables(@Nonnull PgConnection pgConnection);
 
     @Nonnull
-    default Collection<TablesMaintenanceOnHost> forTables(@Nonnull final Collection<PgConnection> pgConnections) {
-        return Collections.unmodifiableList(
+    default Map<PgHost, TablesMaintenanceOnHost> forTables(@Nonnull final Collection<PgConnection> pgConnections) {
+        return Collections.unmodifiableMap(
                 pgConnections.stream()
                         .map(this::forTables)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toMap(HostAware::getHost, Function.identity()))
         );
     }
 

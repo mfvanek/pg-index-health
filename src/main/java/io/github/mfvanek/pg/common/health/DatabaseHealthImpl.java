@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.common.health;
 
 import io.github.mfvanek.pg.common.maintenance.MaintenanceFactory;
+import io.github.mfvanek.pg.common.management.AbstractManagement;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
@@ -31,12 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 
 /**
@@ -45,22 +44,18 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @see IndexesMaintenanceOnHost
  */
-public class DatabaseHealthImpl implements DatabaseHealth {
+public class DatabaseHealthImpl extends AbstractManagement implements DatabaseHealth {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHealthImpl.class);
 
-    private final IndexesMaintenanceOnHost indexesMaintenanceForPrimary;
-    private final TablesMaintenanceOnHost tablesMaintenanceForPrimary;
-    private final Collection<IndexesMaintenanceOnHost> indexesMaintenanceForAllHostsInCluster;
-    private final Collection<TablesMaintenanceOnHost> tablesMaintenanceForAllHostsInCluster;
+    private final Map<PgHost, IndexesMaintenanceOnHost> indexesMaintenanceForAllHostsInCluster;
+    private final Map<PgHost, TablesMaintenanceOnHost> tablesMaintenanceForAllHostsInCluster;
     private final Map<PgHost, StatisticsMaintenanceOnHost> statisticsMaintenanceForAllHostsInCluster;
 
     public DatabaseHealthImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
                               @Nonnull final MaintenanceFactory maintenanceFactory) {
-        Objects.requireNonNull(haPgConnection);
+        super(haPgConnection);
         Objects.requireNonNull(maintenanceFactory);
-        this.indexesMaintenanceForPrimary = maintenanceFactory.forIndexes(haPgConnection.getConnectionToPrimary());
-        this.tablesMaintenanceForPrimary = maintenanceFactory.forTables(haPgConnection.getConnectionToPrimary());
         final Set<PgConnection> pgConnections = haPgConnection.getConnectionsToAllHostsInCluster();
         this.indexesMaintenanceForAllHostsInCluster = maintenanceFactory.forIndexes(pgConnections);
         this.tablesMaintenanceForAllHostsInCluster = maintenanceFactory.forTables(pgConnections);
@@ -73,7 +68,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<Index> getInvalidIndexes(@Nonnull final PgContext pgContext) {
-        return doOnPrimary(indexesMaintenanceForPrimary.getHost(), () -> indexesMaintenanceForPrimary.getInvalidIndexes(pgContext));
+        return doOnPrimary(indexesMaintenanceForAllHostsInCluster, IndexesMaintenanceOnHost::getInvalidIndexes, pgContext);
     }
 
     /**
@@ -82,7 +77,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull final PgContext pgContext) {
-        return doOnPrimary(indexesMaintenanceForPrimary.getHost(), () -> indexesMaintenanceForPrimary.getDuplicatedIndexes(pgContext));
+        return doOnPrimary(indexesMaintenanceForAllHostsInCluster, IndexesMaintenanceOnHost::getDuplicatedIndexes, pgContext);
     }
 
     /**
@@ -91,7 +86,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull final PgContext pgContext) {
-        return doOnPrimary(indexesMaintenanceForPrimary.getHost(), () -> indexesMaintenanceForPrimary.getIntersectedIndexes(pgContext));
+        return doOnPrimary(indexesMaintenanceForAllHostsInCluster, IndexesMaintenanceOnHost::getIntersectedIndexes, pgContext);
     }
 
     /**
@@ -101,7 +96,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Override
     public List<UnusedIndex> getUnusedIndexes(@Nonnull final PgContext pgContext) {
         final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = new ArrayList<>();
-        for (IndexesMaintenanceOnHost maintenanceForHost : indexesMaintenanceForAllHostsInCluster) {
+        for (IndexesMaintenanceOnHost maintenanceForHost : indexesMaintenanceForAllHostsInCluster.values()) {
             final PgHost currentHost = maintenanceForHost.getHost();
             final List<UnusedIndex> unusedIndexesFromCurrentHost = doOnHost(currentHost,
                     () -> {
@@ -119,7 +114,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull final PgContext pgContext) {
-        return doOnPrimary(indexesMaintenanceForPrimary.getHost(), () -> indexesMaintenanceForPrimary.getForeignKeysNotCoveredWithIndex(pgContext));
+        return doOnPrimary(indexesMaintenanceForAllHostsInCluster, IndexesMaintenanceOnHost::getForeignKeysNotCoveredWithIndex, pgContext);
     }
 
     /**
@@ -129,7 +124,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
         final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = new ArrayList<>();
-        for (TablesMaintenanceOnHost maintenanceForHost : tablesMaintenanceForAllHostsInCluster) {
+        for (TablesMaintenanceOnHost maintenanceForHost : tablesMaintenanceForAllHostsInCluster.values()) {
             tablesWithMissingIndexesFromAllHosts.add(
                     doOnHost(maintenanceForHost.getHost(),
                             () -> maintenanceForHost.getTablesWithMissingIndexes(pgContext)));
@@ -143,7 +138,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
-        return doOnPrimary(tablesMaintenanceForPrimary.getHost(), () -> tablesMaintenanceForPrimary.getTablesWithoutPrimaryKey(pgContext));
+        return doOnPrimary(tablesMaintenanceForAllHostsInCluster, TablesMaintenanceOnHost::getTablesWithoutPrimaryKey, pgContext);
     }
 
     /**
@@ -152,7 +147,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final PgContext pgContext) {
-        return doOnPrimary(indexesMaintenanceForPrimary.getHost(), () -> indexesMaintenanceForPrimary.getIndexesWithNullValues(pgContext));
+        return doOnPrimary(indexesMaintenanceForAllHostsInCluster, IndexesMaintenanceOnHost::getIndexesWithNullValues, pgContext);
     }
 
     /**
@@ -161,7 +156,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Nonnull
     @Override
     public List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext) {
-        return doOnPrimary(indexesMaintenanceForPrimary.getHost(), () -> indexesMaintenanceForPrimary.getIndexesWithBloat(pgContext));
+        return doOnPrimary(indexesMaintenanceForAllHostsInCluster, IndexesMaintenanceOnHost::getIndexesWithBloat, pgContext);
     }
 
     /**
@@ -170,17 +165,7 @@ public class DatabaseHealthImpl implements DatabaseHealth {
     @Override
     @Nonnull
     public List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext) {
-        return doOnPrimary(tablesMaintenanceForPrimary.getHost(), () -> tablesMaintenanceForPrimary.getTablesWithBloat(pgContext));
-    }
-
-    private static <T> T doOnPrimary(@Nonnull final PgHost host, @Nonnull final Supplier<T> action) {
-        LOGGER.debug("Going to execute on primary host [{}]", host.getName());
-        return action.get();
-    }
-
-    private static <T> T doOnHost(@Nonnull final PgHost host, @Nonnull final Supplier<T> action) {
-        LOGGER.debug("Going to execute on host {}", host.getName());
-        return action.get();
+        return doOnPrimary(tablesMaintenanceForAllHostsInCluster, TablesMaintenanceOnHost::getTablesWithBloat, pgContext);
     }
 
     private void logLastStatsResetDate(@Nonnull final PgHost host) {
