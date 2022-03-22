@@ -25,12 +25,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
@@ -53,28 +48,25 @@ public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTest
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void shouldResetCounters(final String schemaName) {
-        executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData(),
-                ctx -> {
-                    final OffsetDateTime testStartTime = OffsetDateTime.now();
-                    tryToFindAccountByClientId(schemaName);
-                    final PgContext pgContext = PgContext.of(schemaName);
-                    assertThat(getSeqScansForAccounts(pgContext), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
-                    statisticsMaintenance.resetStatistics();
-                    waitForStatisticsCollector();
-                    assertEquals(0L, getSeqScansForAccounts(pgContext));
-
-                    final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
-                    assertNotNull(statsResetTimestamp);
-                    assertTrue(statsResetTimestamp.isPresent());
-                    assertThat(statsResetTimestamp.get(), greaterThan(testStartTime));
-                });
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
+            final OffsetDateTime testStartTime = OffsetDateTime.now();
+            tryToFindAccountByClientId(schemaName);
+            final PgContext pgContext = PgContext.of(schemaName);
+            assertThat(getSeqScansForAccounts(pgContext)).isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
+            statisticsMaintenance.resetStatistics();
+            waitForStatisticsCollector();
+            assertThat(getSeqScansForAccounts(pgContext)).isEqualTo(0L);
+            final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
+            assertThat(statsResetTimestamp).isNotNull();
+            assertThat(statsResetTimestamp).isPresent();
+            assertThat(statsResetTimestamp.get()).isAfter(testStartTime);
+        });
     }
 
     @Test
     void getHost() {
         final PgHost host = statisticsMaintenance.getHost();
-        assertNotNull(host);
-        assertEquals("primary", host.getName());
+        assertThat(host).isNotNull();
+        assertThat(host.getName()).isEqualTo("primary");
     }
 }

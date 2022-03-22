@@ -15,41 +15,38 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class IndexWithBloatTest {
 
     @Test
     void getBloatSizeInBytes() {
         final IndexWithBloat bloat = IndexWithBloat.of("t", "i", 10L, 2L, 20);
-        assertEquals(2L, bloat.getBloatSizeInBytes());
+        assertThat(bloat.getBloatSizeInBytes()).isEqualTo(2L);
     }
 
     @Test
     void getBloatPercentage() {
         final IndexWithBloat bloat = IndexWithBloat.of("t", "i", 5L, 1L, 25);
-        assertEquals(25, bloat.getBloatPercentage());
+        assertThat(bloat.getBloatPercentage()).isEqualTo(25);
     }
 
     @Test
     void testToString() {
         final IndexWithBloat bloat = IndexWithBloat.of("t", "i", 2L, 1L, 50);
-        assertNotNull(bloat);
-        assertEquals(
-                "IndexWithBloat{tableName='t', indexName='i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}",
-                bloat.toString());
+        assertThat(bloat).isNotNull();
+        assertThat(bloat.toString()).isEqualTo("IndexWithBloat{tableName='t', indexName='i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}")
+        ;
     }
 
     @Test
     void withInvalidArguments() {
-        assertThrows(IllegalArgumentException.class, () -> IndexWithBloat.of("t", "i", 0L, -1L, 0));
-        assertThrows(IllegalArgumentException.class, () -> IndexWithBloat.of("t", "i", 0L, 0L, -1));
-        assertThrows(IllegalArgumentException.class, () -> IndexWithBloat.of("t", "i", -1L, 0L, 0));
+        assertThatThrownBy(() -> IndexWithBloat.of("t", "i", 0L, -1L, 0)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> IndexWithBloat.of("t", "i", 0L, 0L, -1)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> IndexWithBloat.of("t", "i", -1L, 0L, 0)).isInstanceOf(IllegalArgumentException.class);
         final IndexWithBloat bloat = IndexWithBloat.of("t", "i", 0L, 0L, 0);
-        assertNotNull(bloat);
+        assertThat(bloat).isNotNull();
     }
 
     @Test
@@ -59,33 +56,33 @@ class IndexWithBloatTest {
         final IndexWithBloat second = IndexWithBloat.of("t2", "i2", 30L, 3L, 10);
         final IndexWithBloat third = IndexWithBloat.of("t3", "i3", 22L, 11L, 50);
 
-        assertNotEquals(first, null);
+        assertThat(first).isNotNull();
         //noinspection AssertBetweenInconvertibleTypes
-        assertNotEquals(first, BigDecimal.ZERO);
+        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
 
         // self
-        assertEquals(first, first);
-        assertEquals(first.hashCode(), first.hashCode());
+        assertThat(first).isEqualTo(first);
+        assertThat(first.hashCode()).isEqualTo(first.hashCode());
 
         // the same
-        assertEquals(first, theSame);
-        assertEquals(first.hashCode(), theSame.hashCode());
+        assertThat(theSame).isEqualTo(first);
+        assertThat(theSame.hashCode()).isEqualTo(first.hashCode());
 
         // others
-        assertNotEquals(first, second);
-        assertNotEquals(second, first);
-        assertNotEquals(first.hashCode(), second.hashCode());
+        assertThat(second).isNotEqualTo(first);
+        assertThat(first).isNotEqualTo(second);
+        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(first, third);
-        assertNotEquals(first.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(first);
+        assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(second, third);
-        assertNotEquals(second.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(second);
+        assertThat(third.hashCode()).isNotEqualTo(second.hashCode());
 
         // another
         final Index anotherType = Index.of("t1", "i1");
-        assertEquals(first, anotherType);
-        assertEquals(first.hashCode(), anotherType.hashCode());
+        assertThat(anotherType).isEqualTo(first);
+        assertThat(anotherType.hashCode()).isEqualTo(first.hashCode());
     }
 
     @Test

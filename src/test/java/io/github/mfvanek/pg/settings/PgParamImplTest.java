@@ -16,46 +16,44 @@ import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PgParamImplTest {
 
     @Test
     void getNameAndValue() {
         final PgParam param = PgParamImpl.of("statement_timeout", "2s");
-        assertNotNull(param);
-        assertEquals("statement_timeout", param.getName());
-        assertEquals("2s", param.getValue());
+        assertThat(param).isNotNull();
+        assertThat(param.getName()).isEqualTo("statement_timeout");
+        assertThat(param.getValue()).isEqualTo("2s");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThrows(NullPointerException.class, () -> PgParamImpl.of(null, null));
-        assertThrows(IllegalArgumentException.class, () -> PgParamImpl.of("", null));
-        assertThrows(IllegalArgumentException.class, () -> PgParamImpl.of("  ", null));
-        assertThrows(NullPointerException.class, () -> PgParamImpl.of("param_name", null));
+        assertThatThrownBy(() -> PgParamImpl.of(null, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> PgParamImpl.of("", null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> PgParamImpl.of("  ", null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> PgParamImpl.of("param_name", null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
     void withEmptyValue() {
         PgParam param = PgParamImpl.of("statement_timeout", "");
-        assertNotNull(param);
-        assertEquals("", param.getValue());
+        assertThat(param).isNotNull();
+        assertThat(param.getValue()).isEmpty();
 
         param = PgParamImpl.of("statement_timeout", "       ");
-        assertNotNull(param);
-        assertEquals("", param.getValue());
+        assertThat(param).isNotNull();
+        assertThat(param.getValue()).isEmpty();
     }
 
     @Test
     void testToString() {
         final PgParam param = PgParamImpl.of("statement_timeout", "2s");
-        assertNotNull(param);
-        assertEquals("PgParamImpl{name='statement_timeout', value='2s'}", param.toString());
+        assertThat(param).isNotNull();
+        assertThat(param.toString()).isEqualTo("PgParamImpl{name='statement_timeout', value='2s'}");
     }
 
     @Test
@@ -64,26 +62,26 @@ class PgParamImplTest {
         final PgParam theSame = PgParamImpl.of("statement_timeout", "2s");
         final PgParam second = PgParamImpl.of("lock_timeout", "2s");
 
-        assertNotEquals(first, null);
+        assertThat(first).isNotNull();
         //noinspection AssertBetweenInconvertibleTypes
-        assertNotEquals(first, BigDecimal.ZERO);
+        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
 
         // self
-        assertEquals(first, first);
-        assertEquals(first.hashCode(), first.hashCode());
+        assertThat(first).isEqualTo(first);
+        assertThat(first.hashCode()).isEqualTo(first.hashCode());
 
         // the same
-        assertEquals(first, theSame);
-        assertEquals(first.hashCode(), theSame.hashCode());
+        assertThat(theSame).isEqualTo(first);
+        assertThat(theSame.hashCode()).isEqualTo(first.hashCode());
 
         // others
-        assertNotEquals(first, second);
-        assertNotEquals(first.hashCode(), second.hashCode());
+        assertThat(second).isNotEqualTo(first);
+        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
 
         // another implementation of PgParam
         final PgParam pgParamMock = Mockito.mock(PgParam.class);
         Mockito.when(pgParamMock.getName()).thenReturn("statement_timeout");
-        assertEquals(first, pgParamMock);
+        assertThat(pgParamMock).isEqualTo(first);
     }
 
     @Test

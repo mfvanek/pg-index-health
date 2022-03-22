@@ -15,37 +15,36 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TableWithMissingIndexTest {
 
     @Test
     void getters() {
         final TableWithMissingIndex table = TableWithMissingIndex.of("t", 1L, 2L, 3L);
-        assertEquals("t", table.getTableName());
-        assertEquals(1L, table.getTableSizeInBytes());
-        assertEquals(2L, table.getSeqScans());
-        assertEquals(3L, table.getIndexScans());
+        assertThat(table.getTableName()).isEqualTo("t");
+        assertThat(table.getTableSizeInBytes()).isEqualTo(1L);
+        assertThat(table.getSeqScans()).isEqualTo(2L);
+        assertThat(table.getIndexScans()).isEqualTo(3L);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void invalidArguments() {
-        assertThrows(NullPointerException.class, () -> TableWithMissingIndex.of(null, 0, 0, 0));
-        assertThrows(IllegalArgumentException.class, () -> TableWithMissingIndex.of("", 0, 0, 0));
-        assertThrows(IllegalArgumentException.class, () -> TableWithMissingIndex.of(" ", 0, 0, 0));
-        assertThrows(IllegalArgumentException.class, () -> TableWithMissingIndex.of("t", -1, 0, 0));
-        assertThrows(IllegalArgumentException.class, () -> TableWithMissingIndex.of("t", 0, -1, 0));
-        assertThrows(IllegalArgumentException.class, () -> TableWithMissingIndex.of("t", 0, 0, -1));
+        assertThatThrownBy(() -> TableWithMissingIndex.of(null, 0, 0, 0)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> TableWithMissingIndex.of("", 0, 0, 0)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> TableWithMissingIndex.of(" ", 0, 0, 0)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> TableWithMissingIndex.of("t", -1, 0, 0)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> TableWithMissingIndex.of("t", 0, -1, 0)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> TableWithMissingIndex.of("t", 0, 0, -1)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testToString() {
         final TableWithMissingIndex table = TableWithMissingIndex.of("t", 11L, 33L, 22L);
-        assertEquals("TableWithMissingIndex{tableName='t', tableSizeInBytes=11, seqScans=33, indexScans=22}",
-                table.toString());
+        assertThat(table.toString()).isEqualTo("TableWithMissingIndex{tableName='t', tableSizeInBytes=11, seqScans=33, indexScans=22}")
+        ;
     }
 
     @SuppressWarnings("AssertBetweenInconvertibleTypes")
@@ -55,29 +54,29 @@ class TableWithMissingIndexTest {
         final TableWithMissingIndex theSame = TableWithMissingIndex.of("t1", 2L, 2, 3);
         final TableWithMissingIndex third = TableWithMissingIndex.of("t2", 3L, 4, 5);
 
-        assertNotEquals(first, null);
-        assertNotEquals(first, BigDecimal.ZERO);
+        assertThat(first).isNotNull();
+        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
 
         // self
-        assertEquals(first, first);
-        assertEquals(first.hashCode(), first.hashCode());
+        assertThat(first).isEqualTo(first);
+        assertThat(first.hashCode()).isEqualTo(first.hashCode());
 
         // the same
-        assertEquals(first, theSame);
-        assertEquals(first.hashCode(), theSame.hashCode());
+        assertThat(theSame).isEqualTo(first);
+        assertThat(theSame.hashCode()).isEqualTo(first.hashCode());
 
         // others
-        assertNotEquals(first, third);
-        assertNotEquals(third, first);
-        assertNotEquals(first.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(first);
+        assertThat(first).isNotEqualTo(third);
+        assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(theSame, third);
-        assertNotEquals(theSame.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(theSame);
+        assertThat(third.hashCode()).isNotEqualTo(theSame.hashCode());
 
         // another Table
         final TableWithBloat anotherType = TableWithBloat.of("t1", 4L, 11L, 50);
-        assertEquals(first, anotherType);
-        assertEquals(first.hashCode(), anotherType.hashCode());
+        assertThat(anotherType).isEqualTo(first);
+        assertThat(anotherType.hashCode()).isEqualTo(first.hashCode());
     }
 
     @Test
@@ -92,8 +91,8 @@ class TableWithMissingIndexTest {
         final TableWithMissingIndex first = TableWithMissingIndex.of("t1", 1L, 0, 1);
         final TableWithMissingIndex theSame = TableWithMissingIndex.of("t1", 2L, 2, 3);
         final TableWithMissingIndex third = TableWithMissingIndex.of("t2", 3L, 4, 5);
-        assertEquals(0, first.compareTo(theSame));
-        assertEquals(-1, first.compareTo(third));
-        assertEquals(1, third.compareTo(theSame));
+        assertThat(first.compareTo(theSame)).isEqualTo(0);
+        assertThat(first.compareTo(third)).isEqualTo(-1);
+        assertThat(third.compareTo(theSame)).isEqualTo(1);
     }
 }

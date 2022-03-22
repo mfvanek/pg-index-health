@@ -22,13 +22,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.sql.DataSource;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 
 class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
@@ -46,7 +41,7 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
     @Test
     void isPrimary() {
         final PgConnection pgConnection = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), localhost);
-        assertTrue(primaryHostDeterminer.isPrimary(pgConnection));
+        assertThat(primaryHostDeterminer.isPrimary(pgConnection)).isTrue();
     }
 
     @Test
@@ -58,18 +53,16 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
         Mockito.when(connection.createStatement()).thenReturn(statement);
         Mockito.when(statement.executeQuery(anyString())).thenThrow(new SQLException("bad query"));
         final PgConnection pgConnection = PgConnectionImpl.of(dataSource, localhost);
-        final RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> primaryHostDeterminer.isPrimary(pgConnection));
-        final Throwable cause = runtimeException.getCause();
-        assertNotNull(cause);
-        assertThat(cause, instanceOf(SQLException.class));
-        assertEquals("bad query", cause.getMessage());
+        assertThatThrownBy(() -> primaryHostDeterminer.isPrimary(pgConnection))
+                .isInstanceOf(RuntimeException.class)
+                .hasCauseInstanceOf(SQLException.class)
+                .hasMessage("bad query");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArgument() {
-        assertThrows(NullPointerException.class, () -> primaryHostDeterminer.isPrimary(null));
+        assertThatThrownBy(() -> primaryHostDeterminer.isPrimary(null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -78,7 +71,7 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
         final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
                 "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=secondary", port);
         final PgConnection secondary = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofUrl(readUrl));
-        assertNotNull(secondary);
-        assertFalse(primaryHostDeterminer.isPrimary(secondary));
+        assertThat(secondary).isNotNull();
+        assertThat(primaryHostDeterminer.isPrimary(secondary)).isFalse();
     }
 }

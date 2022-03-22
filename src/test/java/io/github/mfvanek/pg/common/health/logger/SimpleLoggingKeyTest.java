@@ -15,9 +15,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SimpleLoggingKeyTest {
 
@@ -25,19 +23,19 @@ class SimpleLoggingKeyTest {
     void getKeyName() {
         final Set<String> keyNames = new HashSet<>();
         for (LoggingKey key : SimpleLoggingKey.values()) {
-            assertNotNull(key.getKeyName());
+            assertThat(key.getKeyName()).isNotNull();
             keyNames.add(key.getKeyName());
         }
-        assertThat(keyNames, hasSize(1));
+        assertThat(keyNames).hasSize(1);
     }
 
     @Test
     void getSubKeyName() {
         final Set<String> subKeyNames = new HashSet<>();
         for (LoggingKey key : SimpleLoggingKey.values()) {
-            assertNotNull(key.getSubKeyName());
+            assertThat(key.getSubKeyName()).isNotNull();
             subKeyNames.add(key.getSubKeyName());
         }
-        assertThat(subKeyNames, hasSize(SimpleLoggingKey.values().length));
+        assertThat(subKeyNames).hasSize(SimpleLoggingKey.values().length);
     }
 }

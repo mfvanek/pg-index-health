@@ -24,11 +24,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 
@@ -46,28 +42,28 @@ public final class QueryExecutorTest extends DatabaseAwareTestBase {
 
     @Test
     void privateConstructor() {
-        assertThrows(UnsupportedOperationException.class, () -> TestUtils.invokePrivateConstructor(QueryExecutor.class));
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(QueryExecutor.class)).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void executeInvalidQuery() {
         final String invalidSql = "select unknown_field from unknown_table";
-        assertThrows(RuntimeException.class, () -> QueryExecutor.executeQuery(
-                pgConnection, invalidSql, (rs) -> null));
+        assertThatThrownBy(() -> QueryExecutor.executeQuery(pgConnection, invalidSql, (rs) -> null)).isInstanceOf(RuntimeException.class)
+        ;
     }
 
     @Test
     void executeInvalidQueryWithSchema() {
         final String invalidSqlWithParam = "select unknown_field from unknown_table where schema = ?::text";
-        assertThrows(RuntimeException.class, () -> QueryExecutor.executeQueryWithSchema(
-                pgConnection, PgContext.of("s"), invalidSqlWithParam, (rs) -> null));
+        assertThatThrownBy(() -> QueryExecutor.executeQueryWithSchema(pgConnection, PgContext.of("s"), invalidSqlWithParam, (rs) -> null)).isInstanceOf(RuntimeException.class)
+        ;
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void executeNullQuery() {
-        assertThrows(NullPointerException.class, () -> QueryExecutor.executeQuery(
-                pgConnection, null, (rs) -> null));
+        assertThatThrownBy(() -> QueryExecutor.executeQuery(pgConnection, null, (rs) -> null)).isInstanceOf(NullPointerException.class)
+        ;
     }
 
     @Test
@@ -80,13 +76,10 @@ public final class QueryExecutorTest extends DatabaseAwareTestBase {
         Mockito.doAnswer(invocation -> {
             throw new SQLException("bad parameter");
         }).when(statement).setString(anyInt(), anyString());
-        final RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> QueryExecutor.executeQueryWithSchema(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(),
-                        "select version()", (rs) -> rs.getString(1)));
-        final Throwable cause = runtimeException.getCause();
-        assertNotNull(cause);
-        assertThat(cause, instanceOf(SQLException.class));
-        assertEquals("bad parameter", cause.getMessage());
+        assertThatThrownBy(() -> QueryExecutor.executeQueryWithSchema(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(), "select version()", (rs) -> rs.getString(1)))
+                .isInstanceOf(RuntimeException.class)
+                .hasCauseInstanceOf(SQLException.class)
+                .hasMessage("bad parameter");
     }
 
     @Test
@@ -99,12 +92,9 @@ public final class QueryExecutorTest extends DatabaseAwareTestBase {
         Mockito.doAnswer(invocation -> {
             throw new SQLException("bad parameter");
         }).when(statement).setString(anyInt(), anyString());
-        final RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> QueryExecutor.executeQueryWithBloatThreshold(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(),
-                        "select version()", (rs) -> rs.getString(1)));
-        final Throwable cause = runtimeException.getCause();
-        assertNotNull(cause);
-        assertThat(cause, instanceOf(SQLException.class));
-        assertEquals("bad parameter", cause.getMessage());
+        assertThatThrownBy(() -> QueryExecutor.executeQueryWithBloatThreshold(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(), "select version()", (rs) -> rs.getString(1)))
+                .isInstanceOf(RuntimeException.class)
+                .hasCauseInstanceOf(SQLException.class)
+                .hasMessage("bad parameter");
     }
 }

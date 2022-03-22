@@ -30,14 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DatabaseManagementImplTest extends DatabaseAwareTestBase {
 
@@ -56,63 +49,43 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void shouldResetCounters(final String schemaName) {
-        executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData(),
-                ctx -> {
-                    final OffsetDateTime testStartTime = OffsetDateTime.now();
-                    tryToFindAccountByClientId(schemaName);
-                    assertThat(getSeqScansForAccounts(ctx), greaterThanOrEqualTo(AMOUNT_OF_TRIES));
-                    databaseManagement.resetStatistics();
-                    waitForStatisticsCollector();
-                    assertEquals(0L, getSeqScansForAccounts(ctx));
-
-                    final Optional<OffsetDateTime> statsResetTimestamp = databaseManagement.getLastStatsResetTimestamp();
-                    assertNotNull(statsResetTimestamp);
-                    assertTrue(statsResetTimestamp.isPresent());
-                    assertThat(statsResetTimestamp.get(), greaterThan(testStartTime));
-                });
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
+            final OffsetDateTime testStartTime = OffsetDateTime.now();
+            tryToFindAccountByClientId(schemaName);
+            assertThat(getSeqScansForAccounts(ctx)).isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
+            databaseManagement.resetStatistics();
+            waitForStatisticsCollector();
+            assertThat(getSeqScansForAccounts(ctx)).isEqualTo(0L);
+            final Optional<OffsetDateTime> statsResetTimestamp = databaseManagement.getLastStatsResetTimestamp();
+            assertThat(statsResetTimestamp).isNotNull();
+            assertThat(statsResetTimestamp).isPresent();
+            assertThat(statsResetTimestamp.get()).isAfter(testStartTime);
+        })
+        ;
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void shouldReturnParamsWithDefaultValues(final String schemaName) {
-        executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData(),
-                ctx -> {
-                    final ServerSpecification specification = ServerSpecification.builder()
-                            .withCpuCores(2)
-                            .withMemoryAmount(2, MemoryUnit.GB)
-                            .withSSD()
-                            .build();
-                    final Set<PgParam> paramsWithDefaultValues = databaseManagement.getParamsWithDefaultValues(specification);
-                    assertNotNull(paramsWithDefaultValues);
-                    assertThat(paramsWithDefaultValues, hasSize(10));
-                    assertThat(paramsWithDefaultValues.stream()
-                            .map(PgParam::getName)
-                            .collect(toList()), containsInAnyOrder(
-                            "shared_buffers",
-                            "work_mem",
-                            "maintenance_work_mem",
-                            "random_page_cost",
-                            "log_min_duration_statement",
-                            "idle_in_transaction_session_timeout",
-                            "statement_timeout",
-                            "effective_cache_size",
-                            "lock_timeout",
-                            "temp_file_limit")
-                    );
-                });
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
+            final ServerSpecification specification = ServerSpecification.builder().withCpuCores(2).withMemoryAmount(2, MemoryUnit.GB).withSSD().build();
+            final Set<PgParam> paramsWithDefaultValues = databaseManagement.getParamsWithDefaultValues(specification);
+            assertThat(paramsWithDefaultValues).isNotNull();
+            assertThat(paramsWithDefaultValues).hasSize(10);
+            assertThat(paramsWithDefaultValues.stream().map(PgParam::getName).collect(toList()))
+                    .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement", "idle_in_transaction_session_timeout",
+                            "statement_timeout", "effective_cache_size", "lock_timeout", "temp_file_limit");
+        });
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void shouldReturnParamsCurrentValues(final String schemaName) {
-        executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData(),
-                ctx -> {
-                    final Set<PgParam> paramsCurrentValues = databaseManagement.getParamsCurrentValues();
-                    assertNotNull(paramsCurrentValues);
-                    assertThat(paramsCurrentValues.size(), greaterThan(ImportantParam.values().length));
-                });
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
+            final Set<PgParam> paramsCurrentValues = databaseManagement.getParamsCurrentValues();
+            assertThat(paramsCurrentValues).isNotNull();
+            assertThat(paramsCurrentValues.size()).isGreaterThan(ImportantParam.values().length);
+        })
+        ;
     }
 }

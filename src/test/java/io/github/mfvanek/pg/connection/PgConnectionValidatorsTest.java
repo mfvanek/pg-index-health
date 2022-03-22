@@ -13,12 +13,12 @@ package io.github.mfvanek.pg.connection;
 import io.github.mfvanek.pg.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PgConnectionValidatorsTest {
 
     @Test
     void privateConstructor() {
-        assertThrows(UnsupportedOperationException.class, () -> TestUtils.invokePrivateConstructor(PgConnectionValidators.class));
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(PgConnectionValidators.class)).isInstanceOf(UnsupportedOperationException.class);
     }
 }

@@ -12,81 +12,79 @@ package io.github.mfvanek.pg.model;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PgContextTest {
 
     @Test
     void getSchemaNameForCustomSchema() {
         final PgContext pgContext = PgContext.of("s");
-        assertEquals("s", pgContext.getSchemaName());
-        assertFalse(pgContext.isDefaultSchema());
+        assertThat(pgContext.getSchemaName()).isEqualTo("s");
+        assertThat(pgContext.isDefaultSchema()).isFalse();
     }
 
     @Test
     void getSchemaNameForPublicSchema() {
         final PgContext pgContext = PgContext.ofPublic();
-        assertEquals("public", pgContext.getSchemaName());
-        assertTrue(pgContext.isDefaultSchema());
+        assertThat(pgContext.getSchemaName()).isEqualTo("public");
+        assertThat(pgContext.isDefaultSchema()).isTrue();
     }
 
     @Test
     void getSchemaNameForPublicSchemaWithUpperCase() {
         final PgContext pgContext = PgContext.of("PUBLIC");
-        assertEquals("public", pgContext.getSchemaName());
-        assertTrue(pgContext.isDefaultSchema());
+        assertThat(pgContext.getSchemaName()).isEqualTo("public");
+        assertThat(pgContext.isDefaultSchema()).isTrue();
     }
 
     @Test
     void getBloatPercentageThreshold() {
-        assertEquals(10, PgContext.of("s").getBloatPercentageThreshold());
-        assertEquals(22, PgContext.of("s", 22).getBloatPercentageThreshold());
-        assertEquals(10, PgContext.ofPublic().getBloatPercentageThreshold());
+        assertThat(PgContext.of("s").getBloatPercentageThreshold()).isEqualTo(10);
+        assertThat(PgContext.of("s", 22).getBloatPercentageThreshold()).isEqualTo(22);
+        assertThat(PgContext.ofPublic().getBloatPercentageThreshold()).isEqualTo(10);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThrows(NullPointerException.class, () -> PgContext.of(null));
-        assertThrows(IllegalArgumentException.class, () -> PgContext.of(""));
-        assertThrows(IllegalArgumentException.class, () -> PgContext.of("   "));
-        assertThrows(IllegalArgumentException.class, () -> PgContext.of("s", -1));
+        assertThatThrownBy(() -> PgContext.of(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> PgContext.of("")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> PgContext.of("   ")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> PgContext.of("s", -1)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testToString() {
-        assertEquals("PgContext{schemaName='s', bloatPercentageThreshold=10}", PgContext.of("s").toString());
-        assertEquals("PgContext{schemaName='s', bloatPercentageThreshold=11}", PgContext.of("s", 11).toString());
-        assertEquals("PgContext{schemaName='public', bloatPercentageThreshold=10}", PgContext.ofPublic().toString());
+        assertThat(PgContext.of("s").toString()).isEqualTo("PgContext{schemaName='s', bloatPercentageThreshold=10}");
+        assertThat(PgContext.of("s", 11).toString()).isEqualTo("PgContext{schemaName='s', bloatPercentageThreshold=11}");
+        assertThat(PgContext.ofPublic().toString()).isEqualTo("PgContext{schemaName='public', bloatPercentageThreshold=10}");
     }
 
     @Test
     void complementWithCustomSchema() {
         final PgContext pgContext = PgContext.of("TEST");
-        assertEquals("test.table1", pgContext.enrichWithSchema("table1"));
-        assertEquals("test.index1", pgContext.enrichWithSchema("index1"));
-        assertEquals("test.table2", pgContext.enrichWithSchema("test.table2"));
-        assertEquals("TEST.table2", pgContext.enrichWithSchema("TEST.table2"));
+        assertThat(pgContext.enrichWithSchema("table1")).isEqualTo("test.table1");
+        assertThat(pgContext.enrichWithSchema("index1")).isEqualTo("test.index1");
+        assertThat(pgContext.enrichWithSchema("test.table2")).isEqualTo("test.table2");
+        assertThat(pgContext.enrichWithSchema("TEST.table2")).isEqualTo("TEST.table2");
     }
 
     @Test
     void complementWithPublicSchema() {
         final PgContext pgContext = PgContext.ofPublic();
-        assertEquals("table1", pgContext.enrichWithSchema("table1"));
-        assertEquals("index1", pgContext.enrichWithSchema("index1"));
-        assertEquals("public.table2", pgContext.enrichWithSchema("public.table2"));
-        assertEquals("PUBLIC.table2", pgContext.enrichWithSchema("PUBLIC.table2"));
+        assertThat(pgContext.enrichWithSchema("table1")).isEqualTo("table1");
+        assertThat(pgContext.enrichWithSchema("index1")).isEqualTo("index1");
+        assertThat(pgContext.enrichWithSchema("public.table2")).isEqualTo("public.table2");
+        assertThat(pgContext.enrichWithSchema("PUBLIC.table2")).isEqualTo("PUBLIC.table2");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void complementWithSchemaWithInvalidArguments() {
         final PgContext pgContext = PgContext.ofPublic();
-        assertThrows(NullPointerException.class, () -> pgContext.enrichWithSchema(null));
-        assertThrows(IllegalArgumentException.class, () -> pgContext.enrichWithSchema(""));
-        assertThrows(IllegalArgumentException.class, () -> pgContext.enrichWithSchema("   "));
+        assertThatThrownBy(() -> pgContext.enrichWithSchema(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> pgContext.enrichWithSchema("")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> pgContext.enrichWithSchema("   ")).isInstanceOf(IllegalArgumentException.class);
     }
 }

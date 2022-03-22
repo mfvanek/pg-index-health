@@ -31,10 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
 class DatabaseHealthMultipleSchemasTest {
@@ -52,11 +49,9 @@ class DatabaseHealthMultipleSchemasTest {
                             Index.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i1")));
                 });
         final List<Index> indexes = databaseHealth.getInvalidIndexes(contexts);
-        assertNotNull(indexes);
-        assertThat(indexes, hasSize(3));
-        assertThat(indexes.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t", "demo.t", "test.t"));
+        assertThat(indexes).isNotNull();
+        assertThat(indexes).hasSize(3);
+        assertThat(indexes.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t", "demo.t", "test.t");
     }
 
     @Test
@@ -69,11 +64,9 @@ class DatabaseHealthMultipleSchemasTest {
                             IndexWithSize.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i2"), 1L)));
                 });
         final List<DuplicatedIndexes> indexes = databaseHealth.getDuplicatedIndexes(contexts);
-        assertNotNull(indexes);
-        assertThat(indexes, hasSize(3));
-        assertThat(indexes.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t", "demo.t", "test.t"));
+        assertThat(indexes).isNotNull();
+        assertThat(indexes).hasSize(3);
+        assertThat(indexes.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t", "demo.t", "test.t");
     }
 
     @Test
@@ -90,11 +83,9 @@ class DatabaseHealthMultipleSchemasTest {
                                     IndexWithSize.of(ctx.enrichWithSchema("t2"), ctx.enrichWithSchema("i4"), 4L)));
                 });
         final List<DuplicatedIndexes> indexes = databaseHealth.getIntersectedIndexes(contexts);
-        assertNotNull(indexes);
-        assertThat(indexes, hasSize(6));
-        assertThat(indexes.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2"));
+        assertThat(indexes).isNotNull();
+        assertThat(indexes).hasSize(6);
+        assertThat(indexes.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
     }
 
     @Test
@@ -107,11 +98,9 @@ class DatabaseHealthMultipleSchemasTest {
                             UnusedIndex.of(ctx.enrichWithSchema("t2"), ctx.enrichWithSchema("i2"), 2L, 0L));
                 });
         final List<UnusedIndex> indexes = databaseHealth.getUnusedIndexes(contexts);
-        assertNotNull(indexes);
-        assertThat(indexes, hasSize(6));
-        assertThat(indexes.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2"));
+        assertThat(indexes).isNotNull();
+        assertThat(indexes).hasSize(6);
+        assertThat(indexes.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
     }
 
     @Test
@@ -124,11 +113,9 @@ class DatabaseHealthMultipleSchemasTest {
                             ForeignKey.ofColumn(ctx.enrichWithSchema("t1"), "f2", "col2"));
                 });
         final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex(contexts);
-        assertNotNull(foreignKeys);
-        assertThat(foreignKeys, hasSize(6));
-        assertThat(foreignKeys.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1"));
+        assertThat(foreignKeys).isNotNull();
+        assertThat(foreignKeys).hasSize(6);
+        assertThat(foreignKeys.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1");
     }
 
     @Test
@@ -139,11 +126,9 @@ class DatabaseHealthMultipleSchemasTest {
                     return Collections.singletonList(TableWithMissingIndex.of(ctx.enrichWithSchema("t"), 1L, 100L, 2L));
                 });
         final List<TableWithMissingIndex> tables = databaseHealth.getTablesWithMissingIndexes(contexts);
-        assertNotNull(tables);
-        assertThat(tables, hasSize(3));
-        assertThat(tables.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t", "demo.t", "test.t"));
+        assertThat(tables).isNotNull();
+        assertThat(tables).hasSize(3);
+        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t", "demo.t", "test.t");
     }
 
     @Test
@@ -156,11 +141,9 @@ class DatabaseHealthMultipleSchemasTest {
                             Table.of(ctx.enrichWithSchema("t2"), 1L));
                 });
         final List<Table> tables = databaseHealth.getTablesWithoutPrimaryKey(contexts);
-        assertNotNull(tables);
-        assertThat(tables, hasSize(6));
-        assertThat(tables.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2"));
+        assertThat(tables).isNotNull();
+        assertThat(tables).hasSize(6);
+        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
     }
 
     @Test
@@ -172,11 +155,9 @@ class DatabaseHealthMultipleSchemasTest {
                             IndexWithNulls.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i1"), 1L, "col1"));
                 });
         final List<IndexWithNulls> indexes = databaseHealth.getIndexesWithNullValues(contexts);
-        assertNotNull(indexes);
-        assertThat(indexes, hasSize(3));
-        assertThat(indexes.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1"));
+        assertThat(indexes).isNotNull();
+        assertThat(indexes).hasSize(3);
+        assertThat(indexes.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1");
     }
 
     @Test
@@ -188,11 +169,9 @@ class DatabaseHealthMultipleSchemasTest {
                             IndexWithBloat.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i1"), 100L, 30L, 30));
                 });
         final List<IndexWithBloat> indexes = databaseHealth.getIndexesWithBloat(contexts);
-        assertNotNull(indexes);
-        assertThat(indexes, hasSize(3));
-        assertThat(indexes.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1"));
+        assertThat(indexes).isNotNull();
+        assertThat(indexes).hasSize(3);
+        assertThat(indexes.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1");
     }
 
     @Test
@@ -205,10 +184,8 @@ class DatabaseHealthMultipleSchemasTest {
                             TableWithBloat.of(ctx.enrichWithSchema("t2"), 10L, 9L, 90));
                 });
         final List<TableWithBloat> tables = databaseHealth.getTablesWithBloat(contexts);
-        assertNotNull(tables);
-        assertThat(tables, hasSize(6));
-        assertThat(tables.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2"));
+        assertThat(tables).isNotNull();
+        assertThat(tables).hasSize(6);
+        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
     }
 }

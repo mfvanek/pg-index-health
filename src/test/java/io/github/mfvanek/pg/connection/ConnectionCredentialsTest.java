@@ -19,13 +19,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.not;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ConnectionCredentialsTest {
 
@@ -34,17 +29,17 @@ class ConnectionCredentialsTest {
     @Test
     void getters() {
         final ConnectionCredentials credentials = ConnectionCredentials.ofUrl(DEFAULT_URL, "user", "pswrd");
-        assertEquals("user", credentials.getUserName());
-        assertEquals("pswrd", credentials.getPassword());
-        assertThat(credentials.getConnectionUrls(), hasSize(1));
-        assertThat(credentials.getConnectionUrls(), contains(DEFAULT_URL));
+        assertThat(credentials.getUserName()).isEqualTo("user");
+        assertThat(credentials.getPassword()).isEqualTo("pswrd");
+        assertThat(credentials.getConnectionUrls()).hasSize(1);
+        assertThat(credentials.getConnectionUrls()).contains(DEFAULT_URL);
     }
 
     @Test
     void shouldDeduplicateUrls() {
         final ConnectionCredentials credentials = ConnectionCredentials.of(Arrays.asList(DEFAULT_URL, DEFAULT_URL, DEFAULT_URL), "user", "pswrd");
-        assertThat(credentials.getConnectionUrls(), hasSize(1));
-        assertThat(credentials.getConnectionUrls(), contains(DEFAULT_URL));
+        assertThat(credentials.getConnectionUrls()).hasSize(1);
+        assertThat(credentials.getConnectionUrls()).contains(DEFAULT_URL);
     }
 
     @Test
@@ -57,9 +52,9 @@ class ConnectionCredentialsTest {
 
         urls.add("jdbc:postgresql://localhost/fourth");
 
-        assertThat(credentials.getConnectionUrls(), hasSize(3));
-        assertThat(credentials.getConnectionUrls(), not(contains("jdbc:postgresql://localhost/fourth")));
-        assertThrows(UnsupportedOperationException.class, () -> credentials.getConnectionUrls().clear());
+        assertThat(credentials.getConnectionUrls()).hasSize(3);
+        assertThat(credentials.getConnectionUrls()).doesNotContain("jdbc:postgresql://localhost/fourth");
+        assertThatThrownBy(() -> credentials.getConnectionUrls().clear()).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
@@ -70,29 +65,29 @@ class ConnectionCredentialsTest {
         final ConnectionCredentials fourth = ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "pswd");
 
         // null
-        assertNotEquals(first, null);
+        assertThat(first).isNotNull();
         //noinspection AssertBetweenInconvertibleTypes
-        assertNotEquals(first, BigDecimal.ZERO);
+        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
 
         // self
-        assertEquals(first, first);
-        assertEquals(first.hashCode(), first.hashCode());
+        assertThat(first).isEqualTo(first);
+        assertThat(first.hashCode()).isEqualTo(first.hashCode());
 
         // the same
-        assertEquals(first, ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "p"));
+        assertThat(ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "p")).isEqualTo(first);
 
         // others
-        assertNotEquals(first, second);
-        assertNotEquals(first.hashCode(), second.hashCode());
+        assertThat(second).isNotEqualTo(first);
+        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(first, third);
-        assertNotEquals(first.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(first);
+        assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(second, third);
-        assertNotEquals(second.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(second);
+        assertThat(third.hashCode()).isNotEqualTo(second.hashCode());
 
-        assertNotEquals(first, fourth);
-        assertNotEquals(first.hashCode(), fourth.hashCode());
+        assertThat(fourth).isNotEqualTo(first);
+        assertThat(fourth.hashCode()).isNotEqualTo(first.hashCode());
     }
 
     @Test
@@ -104,31 +99,32 @@ class ConnectionCredentialsTest {
     @Test
     void testToString() {
         ConnectionCredentials credentials = ConnectionCredentials.ofUrl(DEFAULT_URL, "user", "pswrd");
-        assertEquals("ConnectionCredentials{connectionUrls=[jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}",
-                credentials.toString());
+        assertThat(credentials.toString()).isEqualTo("ConnectionCredentials{connectionUrls=[jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}")
+        ;
 
         credentials = ConnectionCredentials.of(Arrays.asList(DEFAULT_URL, "jdbc:postgresql://host1:5432/postgres"), "user", "pswrd");
-        assertEquals("ConnectionCredentials{connectionUrls=[jdbc:postgresql://host1:5432/postgres, jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}",
-                credentials.toString());
+        assertThat(credentials.toString()).isEqualTo(
+                "ConnectionCredentials{connectionUrls=[jdbc:postgresql://host1:5432/postgres, jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}")
+        ;
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThrows(NullPointerException.class, () -> ConnectionCredentials.ofUrl(null, null, null));
-        assertThrows(NullPointerException.class, () -> ConnectionCredentials.ofUrl(DEFAULT_URL, null, null));
-        assertThrows(NullPointerException.class, () -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", null));
-        assertThrows(IllegalArgumentException.class, () -> ConnectionCredentials.ofUrl("", "u", "p"));
-        assertThrows(IllegalArgumentException.class, () -> ConnectionCredentials.ofUrl("  ", "u", "p"));
-        assertThrows(IllegalArgumentException.class, () -> ConnectionCredentials.ofUrl("url", "u", "p"));
-        assertThrows(IllegalArgumentException.class, () -> ConnectionCredentials.ofUrl(DEFAULT_URL, "", "p"));
-        assertThrows(IllegalArgumentException.class, () -> ConnectionCredentials.ofUrl(DEFAULT_URL, "  ", "p"));
-        assertThrows(IllegalArgumentException.class, () -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", ""));
-        assertThrows(IllegalArgumentException.class, () -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "  "));
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(null, null, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, null, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl("", "u", "p")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl("  ", "u", "p")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl("url", "u", "p")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "", "p")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "  ", "p")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "  ")).isInstanceOf(IllegalArgumentException.class);
 
-        assertThrows(NullPointerException.class, () -> ConnectionCredentials.of(null, null, null));
-        assertThrows(NullPointerException.class, () -> ConnectionCredentials.of(Collections.singleton(DEFAULT_URL), null, null));
-        assertThrows(NullPointerException.class, () -> ConnectionCredentials.of(Collections.singleton(DEFAULT_URL), "u", null));
-        assertThrows(IllegalArgumentException.class, () -> ConnectionCredentials.of(Collections.emptyList(), "u", "p"));
+        assertThatThrownBy(() -> ConnectionCredentials.of(null, null, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.of(Collections.singleton(DEFAULT_URL), null, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.of(Collections.singleton(DEFAULT_URL), "u", null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.of(Collections.emptyList(), "u", "p")).isInstanceOf(IllegalArgumentException.class);
     }
 }

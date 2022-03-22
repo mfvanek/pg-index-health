@@ -27,9 +27,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 
 import static io.github.mfvanek.pg.utils.HealthLoggerAssertions.assertContainsKey;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public final class HealthLoggerTest extends DatabaseAwareTestBase {
 
@@ -52,19 +50,11 @@ public final class HealthLoggerTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {"public", "custom"})
     void logAll(final String schemaName) {
         executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences()
-                        .withData()
-                        .withInvalidIndex()
-                        .withNullValuesInIndex()
-                        .withTableWithoutPrimaryKey()
-                        .withDuplicatedIndex()
-                        .withNonSuitableIndex()
-                        .withStatistics(),
-                ctx -> {
+                dbp -> dbp.withReferences().withData().withInvalidIndex().withNullValuesInIndex().withTableWithoutPrimaryKey().withDuplicatedIndex().withNonSuitableIndex().withStatistics(), ctx -> {
                     waitForStatisticsCollector();
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
-                    assertNotNull(logs);
-                    assertThat(logs, hasSize(10));
+                    assertThat(logs).isNotNull();
+                    assertThat(logs).hasSize(10);
                     assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes\t1");
                     assertContainsKey(logs, SimpleLoggingKey.DUPLICATED_INDEXES, "duplicated_indexes\t2");
                     assertContainsKey(logs, SimpleLoggingKey.FOREIGN_KEYS, "foreign_keys_without_index\t1");
@@ -72,14 +62,15 @@ public final class HealthLoggerTest extends DatabaseAwareTestBase {
                     assertContainsKey(logs, SimpleLoggingKey.INDEXES_WITH_NULLS, "indexes_with_null_values\t1");
                     assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat\t11");
                     assertContainsKey(logs, SimpleLoggingKey.TABLES_BLOAT, "tables_bloat\t2");
-                });
+                })
+        ;
     }
 
     @Test
     void logAllWithDefaultSchema() {
         final List<String> logs = logger.logAll(Exclusions.empty());
-        assertNotNull(logs);
-        assertThat(logs, hasSize(10));
+        assertThat(logs).isNotNull();
+        assertThat(logs).hasSize(10);
         for (SimpleLoggingKey key : SimpleLoggingKey.values()) {
             assertContainsKey(logs, key, key.getSubKeyName() + "\t0");
         }

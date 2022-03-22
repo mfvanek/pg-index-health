@@ -24,10 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
 class TablesMaintenanceOnHostMultipleSchemasTest {
@@ -44,11 +41,9 @@ class TablesMaintenanceOnHostMultipleSchemasTest {
                     return Collections.singletonList(TableWithMissingIndex.of(ctx.enrichWithSchema("t"), 1L, 100L, 2L));
                 });
         final List<TableWithMissingIndex> tables = tablesMaintenance.getTablesWithMissingIndexes(contexts);
-        assertNotNull(tables);
-        assertThat(tables, hasSize(3));
-        assertThat(tables.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t", "demo.t", "test.t"));
+        assertThat(tables).isNotNull();
+        assertThat(tables).hasSize(3);
+        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t", "demo.t", "test.t");
     }
 
     @Test
@@ -61,11 +56,9 @@ class TablesMaintenanceOnHostMultipleSchemasTest {
                             Table.of(ctx.enrichWithSchema("t2"), 1L));
                 });
         final List<Table> tables = tablesMaintenance.getTablesWithoutPrimaryKey(contexts);
-        assertNotNull(tables);
-        assertThat(tables, hasSize(6));
-        assertThat(tables.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2"));
+        assertThat(tables).isNotNull();
+        assertThat(tables).hasSize(6);
+        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
     }
 
     @Test
@@ -78,10 +71,8 @@ class TablesMaintenanceOnHostMultipleSchemasTest {
                             TableWithBloat.of(ctx.enrichWithSchema("t2"), 10L, 9L, 90));
                 });
         final List<TableWithBloat> tables = tablesMaintenance.getTablesWithBloat(contexts);
-        assertNotNull(tables);
-        assertThat(tables, hasSize(6));
-        assertThat(tables.stream()
-                .map(TableNameAware::getTableName)
-                .collect(Collectors.toSet()), containsInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2"));
+        assertThat(tables).isNotNull();
+        assertThat(tables).hasSize(6);
+        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
     }
 }

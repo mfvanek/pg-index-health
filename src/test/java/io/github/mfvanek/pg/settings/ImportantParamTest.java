@@ -15,18 +15,15 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ImportantParamTest {
 
     @Test
     void completenessTest() {
         for (ImportantParam param : ImportantParam.values()) {
-            assertNotNull(param.getName());
-            assertNotNull(param.getDefaultValue());
+            assertThat(param.getName()).isNotNull();
+            assertThat(param.getDefaultValue()).isNotNull();
         }
     }
 
@@ -36,12 +33,12 @@ class ImportantParamTest {
         for (ImportantParam param : ImportantParam.values()) {
             names.add(param.getName());
         }
-        assertThat(names, hasSize(ImportantParam.values().length));
+        assertThat(names).hasSize(ImportantParam.values().length);
     }
 
     @Test
     void testToString() {
         final String result = ImportantParam.MAINTENANCE_WORK_MEM.toString();
-        assertEquals("ImportantParam{name='maintenance_work_mem', defaultValue='64MB'}", result);
+        assertThat(result).isEqualTo("ImportantParam{name='maintenance_work_mem', defaultValue='64MB'}");
     }
 }

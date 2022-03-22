@@ -22,10 +22,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class StatisticsMaintenanceOnHostImplEmptyTest extends DatabaseAwareTestBase {
 
@@ -46,8 +43,8 @@ class StatisticsMaintenanceOnHostImplEmptyTest extends DatabaseAwareTestBase {
         DatabasePopulator.collectStatistics(embeddedPostgres.getTestDatabase());
         waitForStatisticsCollector();
         final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
-        assertNotNull(statsResetTimestamp);
-        assertTrue(statsResetTimestamp.isPresent());
-        assertThat(statsResetTimestamp.get(), lessThanOrEqualTo(OffsetDateTime.now()));
+        assertThat(statsResetTimestamp).isNotNull();
+        assertThat(statsResetTimestamp).isPresent();
+        assertThat(statsResetTimestamp.get()).isBeforeOrEqualTo(OffsetDateTime.now());
     }
 }
