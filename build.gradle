@@ -35,6 +35,8 @@ dependencies {
     testImplementation 'ch.qos.logback:logback-classic:1.2.10'
     testImplementation 'org.mockito:mockito-core:4.3.1'
     testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.9'
+    testImplementation 'org.assertj:assertj-core:3.22.0'
+
 
     testImplementation 'org.postgresql:postgresql:42.3.2'
     testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
