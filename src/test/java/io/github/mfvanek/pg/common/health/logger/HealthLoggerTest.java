@@ -62,8 +62,7 @@ public final class HealthLoggerTest extends DatabaseAwareTestBase {
                     assertContainsKey(logs, SimpleLoggingKey.INDEXES_WITH_NULLS, "indexes_with_null_values\t1");
                     assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat\t11");
                     assertContainsKey(logs, SimpleLoggingKey.TABLES_BLOAT, "tables_bloat\t2");
-                })
-        ;
+                });
     }
 
     @Test

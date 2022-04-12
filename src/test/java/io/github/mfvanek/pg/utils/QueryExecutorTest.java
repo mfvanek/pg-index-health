@@ -48,22 +48,19 @@ public final class QueryExecutorTest extends DatabaseAwareTestBase {
     @Test
     void executeInvalidQuery() {
         final String invalidSql = "select unknown_field from unknown_table";
-        assertThatThrownBy(() -> QueryExecutor.executeQuery(pgConnection, invalidSql, (rs) -> null)).isInstanceOf(RuntimeException.class)
-        ;
+        assertThatThrownBy(() -> QueryExecutor.executeQuery(pgConnection, invalidSql, (rs) -> null)).isInstanceOf(RuntimeException.class);
     }
 
     @Test
     void executeInvalidQueryWithSchema() {
         final String invalidSqlWithParam = "select unknown_field from unknown_table where schema = ?::text";
-        assertThatThrownBy(() -> QueryExecutor.executeQueryWithSchema(pgConnection, PgContext.of("s"), invalidSqlWithParam, (rs) -> null)).isInstanceOf(RuntimeException.class)
-        ;
+        assertThatThrownBy(() -> QueryExecutor.executeQueryWithSchema(pgConnection, PgContext.of("s"), invalidSqlWithParam, (rs) -> null)).isInstanceOf(RuntimeException.class);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void executeNullQuery() {
-        assertThatThrownBy(() -> QueryExecutor.executeQuery(pgConnection, null, (rs) -> null)).isInstanceOf(NullPointerException.class)
-        ;
+        assertThatThrownBy(() -> QueryExecutor.executeQuery(pgConnection, null, (rs) -> null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test

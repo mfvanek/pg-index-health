@@ -43,8 +43,7 @@ class TableWithMissingIndexTest {
     @Test
     void testToString() {
         final TableWithMissingIndex table = TableWithMissingIndex.of("t", 11L, 33L, 22L);
-        assertThat(table.toString()).isEqualTo("TableWithMissingIndex{tableName='t', tableSizeInBytes=11, seqScans=33, indexScans=22}")
-        ;
+        assertThat(table.toString()).isEqualTo("TableWithMissingIndex{tableName='t', tableSizeInBytes=11, seqScans=33, indexScans=22}");
     }
 
     @SuppressWarnings("AssertBetweenInconvertibleTypes")

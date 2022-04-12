@@ -66,8 +66,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<Index> invalidIndexes = databaseHealth.getInvalidIndexes(ctx);
             assertThat(invalidIndexes).isNotNull();
             assertThat(invalidIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -80,8 +79,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final Index index = invalidIndexes.get(0);
             assertThat(index.getTableName()).isEqualTo(ctx.enrichWithSchema("clients"));
             assertThat(index.getIndexName()).isEqualTo(ctx.enrichWithSchema("i_clients_last_name_first_name"));
-        })
-        ;
+        });
     }
 
     @Test
@@ -98,8 +96,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<DuplicatedIndexes> duplicatedIndexes = databaseHealth.getDuplicatedIndexes(ctx);
             assertThat(duplicatedIndexes).isNotNull();
             assertThat(duplicatedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -114,8 +111,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             assertThat(entry.getIndexNames()).containsExactlyInAnyOrder(ctx.enrichWithSchema("accounts_account_number_key"), ctx.enrichWithSchema("i_accounts_account_number"));
             assertThat(entry.getTotalSize()).isGreaterThanOrEqualTo(16384L);
             assertThat(entry.getDuplicatedIndexes()).hasSize(2);
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -125,8 +121,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<DuplicatedIndexes> duplicatedIndexes = databaseHealth.getDuplicatedIndexes(ctx);
             assertThat(duplicatedIndexes).isNotNull();
             assertThat(duplicatedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -136,8 +131,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<DuplicatedIndexes> duplicatedIndexes = databaseHealth.getDuplicatedIndexes(ctx);
             assertThat(duplicatedIndexes).isNotNull();
             assertThat(duplicatedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -147,8 +141,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<DuplicatedIndexes> duplicatedIndexes = databaseHealth.getDuplicatedIndexes(ctx);
             assertThat(duplicatedIndexes).isNotNull();
             assertThat(duplicatedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @Test
@@ -165,8 +158,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<DuplicatedIndexes> intersectedIndexes = databaseHealth.getIntersectedIndexes(ctx);
             assertThat(intersectedIndexes).isNotNull();
             assertThat(intersectedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -186,8 +178,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             assertThat(secondEntry.getTableName()).isEqualTo(ctx.enrichWithSchema("clients"));
             assertThat(firstEntry.getIndexNames()).contains(ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"));
             assertThat(secondEntry.getIndexNames()).contains(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_clients_last_name"));
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -202,8 +193,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             assertThat(entry.getTableName()).isEqualTo(ctx.enrichWithSchema("clients"));
             assertThat(entry.getIndexNames()).contains(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_clients_last_name"));
             assertThat(entry.getTotalSize()).isGreaterThanOrEqualTo(106496L);
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -213,8 +203,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<DuplicatedIndexes> intersectedIndexes = databaseHealth.getIntersectedIndexes(ctx);
             assertThat(intersectedIndexes).isNotNull();
             assertThat(intersectedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @Test
@@ -231,8 +220,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<UnusedIndex> unusedIndexes = databaseHealth.getUnusedIndexes(ctx);
             assertThat(unusedIndexes).isNotNull();
             assertThat(unusedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -248,8 +236,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
                     ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"),
                     ctx.enrichWithSchema("i_accounts_id_account_number_not_deleted")
             );
-        })
-        ;
+        });
     }
 
     @Test
@@ -266,8 +253,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex(ctx);
             assertThat(foreignKeys).isNotNull();
             assertThat(foreignKeys).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -280,8 +266,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final ForeignKey foreignKey = foreignKeys.get(0);
             assertThat(foreignKey.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
             assertThat(foreignKey.getColumnsInConstraint()).contains("client_id");
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -294,8 +279,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final ForeignKey foreignKey = foreignKeys.get(0);
             assertThat(foreignKey.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
             assertThat(foreignKey.getColumnsInConstraint()).contains("client_id");
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -305,8 +289,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex(ctx);
             assertThat(foreignKeys).isNotNull();
             assertThat(foreignKeys).isEmpty();
-        })
-        ;
+        });
     }
 
     @Test
@@ -323,8 +306,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<TableWithMissingIndex> tables = databaseHealth.getTablesWithMissingIndexes(ctx);
             assertThat(tables).isNotNull();
             assertThat(tables).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -339,8 +321,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             assertThat(table.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
             assertThat(table.getSeqScans()).isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             assertThat(table.getIndexScans()).isEqualTo(0);
-        })
-        ;
+        });
     }
 
     @Test
@@ -357,8 +338,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<Table> tables = databaseHealth.getTablesWithoutPrimaryKey(ctx);
             assertThat(tables).isNotNull();
             assertThat(tables).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -370,8 +350,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             assertThat(tables).hasSize(1);
             final Table table = tables.get(0);
             assertThat(table.getTableName()).isEqualTo(ctx.enrichWithSchema("bad_clients"));
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -381,8 +360,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<Table> tables = databaseHealth.getTablesWithoutPrimaryKey(ctx);
             assertThat(tables).isNotNull();
             assertThat(tables).isEmpty();
-        })
-        ;
+        });
     }
 
     @Test
@@ -399,8 +377,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<IndexWithNulls> indexes = databaseHealth.getIndexesWithNullValues(ctx);
             assertThat(indexes).isNotNull();
             assertThat(indexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -413,8 +390,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final IndexWithNulls indexWithNulls = indexes.get(0);
             assertThat(indexWithNulls.getIndexName()).isEqualTo(ctx.enrichWithSchema("i_clients_middle_name"));
             assertThat(indexWithNulls.getNullableField()).isEqualTo("middle_name");
-        })
-        ;
+        });
     }
 
     @Test
@@ -432,8 +408,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<IndexWithBloat> indexes = databaseHealth.getIndexesWithBloat(ctx);
             assertThat(indexes).isNotNull();
             assertThat(indexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -451,8 +426,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             assertThat(index.getIndexSizeInBytes()).isEqualTo(57344L);
             assertThat(index.getBloatSizeInBytes()).isEqualTo(8192L);
             assertThat(index.getBloatPercentage()).isEqualTo(14);
-        })
-        ;
+        });
     }
 
     @Test
@@ -470,8 +444,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final List<TableWithBloat> tables = databaseHealth.getTablesWithBloat(ctx);
             assertThat(tables).isNotNull();
             assertThat(tables).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -488,7 +461,6 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             assertThat(table.getTableSizeInBytes()).isEqualTo(114688L);
             assertThat(table.getBloatSizeInBytes()).isEqualTo(0L);
             assertThat(table.getBloatPercentage()).isEqualTo(0);
-        })
-        ;
+        });
     }
 }

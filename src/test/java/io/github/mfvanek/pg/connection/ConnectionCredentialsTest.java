@@ -99,13 +99,11 @@ class ConnectionCredentialsTest {
     @Test
     void testToString() {
         ConnectionCredentials credentials = ConnectionCredentials.ofUrl(DEFAULT_URL, "user", "pswrd");
-        assertThat(credentials.toString()).isEqualTo("ConnectionCredentials{connectionUrls=[jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}")
-        ;
+        assertThat(credentials.toString()).isEqualTo("ConnectionCredentials{connectionUrls=[jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}");
 
         credentials = ConnectionCredentials.of(Arrays.asList(DEFAULT_URL, "jdbc:postgresql://host1:5432/postgres"), "user", "pswrd");
         assertThat(credentials.toString()).isEqualTo(
-                "ConnectionCredentials{connectionUrls=[jdbc:postgresql://host1:5432/postgres, jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}")
-        ;
+                "ConnectionCredentials{connectionUrls=[jdbc:postgresql://host1:5432/postgres, jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}");
     }
 
     @SuppressWarnings("ConstantConditions")

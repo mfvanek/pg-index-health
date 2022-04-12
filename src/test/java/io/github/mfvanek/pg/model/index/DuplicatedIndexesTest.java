@@ -88,14 +88,12 @@ class DuplicatedIndexesTest {
     void withoutIndexes() {
         assertThatThrownBy(() -> DuplicatedIndexes.of(null)).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.emptyList())).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.singletonList(IndexWithSize.of("t", "i", 1L)))).isInstanceOf(IllegalArgumentException.class)
-        ;
+        assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.singletonList(IndexWithSize.of("t", "i", 1L)))).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void withDifferentTables() {
-        assertThatThrownBy(() -> DuplicatedIndexes.of(Arrays.asList(IndexWithSize.of("t1", "i1", 1L), IndexWithSize.of("t2", "i2", 2L)))).isInstanceOf(IllegalArgumentException.class)
-        ;
+        assertThatThrownBy(() -> DuplicatedIndexes.of(Arrays.asList(IndexWithSize.of("t1", "i1", 1L), IndexWithSize.of("t2", "i2", 2L)))).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

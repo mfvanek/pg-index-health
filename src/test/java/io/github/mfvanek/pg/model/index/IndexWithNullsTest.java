@@ -45,8 +45,7 @@ class IndexWithNullsTest {
     @Test
     void testToString() {
         final IndexWithNulls index = IndexWithNulls.of("t", "i", 22L, "f");
-        assertThat(index.toString()).isEqualTo("IndexWithNulls{tableName='t', indexName='i', " + "indexSizeInBytes=22, nullableField='f'}")
-        ;
+        assertThat(index.toString()).isEqualTo("IndexWithNulls{tableName='t', indexName='i', " + "indexSizeInBytes=22, nullableField='f'}");
     }
 
     @Test

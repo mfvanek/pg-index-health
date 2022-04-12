@@ -61,8 +61,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final List<Index> invalidIndexes = indexesMaintenance.getInvalidIndexes(ctx);
             assertThat(invalidIndexes).isNotNull();
             assertThat(invalidIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -75,8 +74,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final Index index = invalidIndexes.get(0);
             assertThat(index.getTableName()).isEqualTo(ctx.enrichWithSchema("clients"));
             assertThat(index.getIndexName()).isEqualTo(ctx.enrichWithSchema("i_clients_last_name_first_name"));
-        })
-        ;
+        });
     }
 
     @Test
@@ -93,8 +91,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final List<DuplicatedIndexes> duplicatedIndexes = indexesMaintenance.getDuplicatedIndexes(ctx);
             assertThat(duplicatedIndexes).isNotNull();
             assertThat(duplicatedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -109,8 +106,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             assertThat(entry.getIndexNames()).containsExactlyInAnyOrder(ctx.enrichWithSchema("accounts_account_number_key"), ctx.enrichWithSchema("i_accounts_account_number"));
             assertThat(entry.getTotalSize()).isGreaterThanOrEqualTo(16384L);
             assertThat(entry.getDuplicatedIndexes()).hasSize(2);
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -120,8 +116,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final List<DuplicatedIndexes> duplicatedIndexes = indexesMaintenance.getDuplicatedIndexes(ctx);
             assertThat(duplicatedIndexes).isNotNull();
             assertThat(duplicatedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -131,8 +126,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final List<DuplicatedIndexes> duplicatedIndexes = indexesMaintenance.getDuplicatedIndexes(ctx);
             assertThat(duplicatedIndexes).isNotNull();
             assertThat(duplicatedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -142,8 +136,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final List<DuplicatedIndexes> duplicatedIndexes = indexesMaintenance.getDuplicatedIndexes(ctx);
             assertThat(duplicatedIndexes).isNotNull();
             assertThat(duplicatedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @Test
@@ -160,8 +153,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final List<DuplicatedIndexes> intersectedIndexes = indexesMaintenance.getIntersectedIndexes(ctx);
             assertThat(intersectedIndexes).isNotNull();
             assertThat(intersectedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -181,8 +173,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             assertThat(secondEntry.getTableName()).isEqualTo(ctx.enrichWithSchema("clients"));
             assertThat(firstEntry.getIndexNames()).contains(ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"));
             assertThat(secondEntry.getIndexNames()).contains(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_clients_last_name"));
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -197,8 +188,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             assertThat(entry.getTableName()).isEqualTo(ctx.enrichWithSchema("clients"));
             assertThat(entry.getIndexNames()).contains(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_clients_last_name"));
             assertThat(entry.getTotalSize()).isGreaterThanOrEqualTo(106496L);
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -208,8 +198,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final List<DuplicatedIndexes> intersectedIndexes = indexesMaintenance.getIntersectedIndexes(ctx);
             assertThat(intersectedIndexes).isNotNull();
             assertThat(intersectedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @Test
@@ -226,8 +215,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final List<UnusedIndex> unusedIndexes = indexesMaintenance.getUnusedIndexes(ctx);
             assertThat(unusedIndexes).isNotNull();
             assertThat(unusedIndexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -243,8 +231,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
                     ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"),
                     ctx.enrichWithSchema("i_accounts_id_account_number_not_deleted")
             );
-        })
-        ;
+        });
     }
 
     @Test
@@ -261,8 +248,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
             assertThat(foreignKeys).isNotNull();
             assertThat(foreignKeys).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -276,8 +262,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             assertThat(foreignKey.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
             assertThat(foreignKey.getConstraintName()).isEqualTo("c_accounts_fk_client_id");
             assertThat(foreignKey.getColumnsInConstraint()).contains("client_id");
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -291,8 +276,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             assertThat(foreignKey.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
             assertThat(foreignKey.getConstraintName()).isEqualTo("c_accounts_fk_client_id");
             assertThat(foreignKey.getColumnsInConstraint()).contains("client_id");
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -302,8 +286,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
             assertThat(foreignKeys).isNotNull();
             assertThat(foreignKeys).isEmpty();
-        })
-        ;
+        });
     }
 
     @Test
@@ -320,8 +303,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final List<IndexWithNulls> indexes = indexesMaintenance.getIndexesWithNullValues(ctx);
             assertThat(indexes).isNotNull();
             assertThat(indexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -334,8 +316,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final IndexWithNulls indexWithNulls = indexes.get(0);
             assertThat(indexWithNulls.getIndexName()).isEqualTo(ctx.enrichWithSchema("i_clients_middle_name"));
             assertThat(indexWithNulls.getNullableField()).isEqualTo("middle_name");
-        })
-        ;
+        });
     }
 
     @Test
@@ -353,8 +334,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final List<IndexWithBloat> indexes = indexesMaintenance.getIndexesWithBloat(ctx);
             assertThat(indexes).isNotNull();
             assertThat(indexes).isEmpty();
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -372,8 +352,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             assertThat(index.getIndexSizeInBytes()).isEqualTo(57344L);
             assertThat(index.getBloatSizeInBytes()).isEqualTo(8192L);
             assertThat(index.getBloatPercentage()).isEqualTo(14);
-        })
-        ;
+        });
     }
 
     @Test
@@ -391,7 +370,6 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             indexes = indexesMaintenance.getIndexesWithNullValues(ctx);
             assertThat(indexes).isNotNull();
             assertThat(indexes).hasSize(1);
-        })
-        ;
+        });
     }
 }

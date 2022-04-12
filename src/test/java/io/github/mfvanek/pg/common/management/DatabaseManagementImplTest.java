@@ -60,8 +60,7 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
             assertThat(statsResetTimestamp).isNotNull();
             assertThat(statsResetTimestamp).isPresent();
             assertThat(statsResetTimestamp.get()).isAfter(testStartTime);
-        })
-        ;
+        });
     }
 
     @ParameterizedTest
@@ -85,7 +84,6 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
             final Set<PgParam> paramsCurrentValues = databaseManagement.getParamsCurrentValues();
             assertThat(paramsCurrentValues).isNotNull();
             assertThat(paramsCurrentValues.size()).isGreaterThan(ImportantParam.values().length);
-        })
-        ;
+        });
     }
 }

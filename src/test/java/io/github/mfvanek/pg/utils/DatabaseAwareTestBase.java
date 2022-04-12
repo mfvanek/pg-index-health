@@ -64,8 +64,7 @@ public abstract class DatabaseAwareTestBase {
             } catch (InterruptedException e) {
                 fail("unknown failure", e);
             }
-        })
-        ;
+        });
     }
 
     protected long getSeqScansForAccounts(@Nonnull final PgContext pgContext) {

@@ -27,8 +27,7 @@ class ForeignKeyTest {
     @Test
     void testToString() {
         final ForeignKey foreignKey = ForeignKey.ofColumn("t", "c_t_order_id", "order_id");
-        assertThat(foreignKey.toString()).isEqualTo("ForeignKey{tableName='t', constraintName='c_t_order_id', " + "columnsInConstraint=[order_id]}")
-        ;
+        assertThat(foreignKey.toString()).isEqualTo("ForeignKey{tableName='t', constraintName='c_t_order_id', " + "columnsInConstraint=[order_id]}");
     }
 
     @Test

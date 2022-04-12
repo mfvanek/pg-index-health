@@ -56,8 +56,7 @@ class PgHostImplTest {
         final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require&targetServerType=secondary");
         assertThat(host).isNotNull();
         assertThat(host.getName()).isEqualTo("One of [host-3, host-4, host-1, host-2]");
-        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require&targetServerType=secondary")
-        ;
+        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require&targetServerType=secondary");
         assertThat(host.canBePrimary()).isFalse();
         assertThat(host.cannotBePrimary()).isTrue();
     }
@@ -83,8 +82,7 @@ class PgHostImplTest {
     void toStringTest() {
         final PgHost host = PgHostImpl.ofPrimary();
         assertThat(host).isNotNull();
-        assertThat(host.toString()).isEqualTo("PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}")
-        ;
+        assertThat(host.toString()).isEqualTo("PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}");
     }
 
     @Test

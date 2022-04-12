@@ -36,8 +36,7 @@ class IndexWithBloatTest {
     void testToString() {
         final IndexWithBloat bloat = IndexWithBloat.of("t", "i", 2L, 1L, 50);
         assertThat(bloat).isNotNull();
-        assertThat(bloat.toString()).isEqualTo("IndexWithBloat{tableName='t', indexName='i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}")
-        ;
+        assertThat(bloat.toString()).isEqualTo("IndexWithBloat{tableName='t', indexName='i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}");
     }
 
     @Test
