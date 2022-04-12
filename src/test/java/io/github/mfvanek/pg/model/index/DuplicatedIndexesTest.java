@@ -138,11 +138,11 @@ class DuplicatedIndexesTest {
 
         // the same
         assertThat(
-                DuplicatedIndexes.of(// different order
-                        IndexWithSize.of("t1", "i2", 505L), // different size
-                        IndexWithSize.of("t1", "i1", 606L)
+                DuplicatedIndexes.of(
+                        IndexWithSize.of("t1", "i2", 505L), // different order
+                        IndexWithSize.of("t1", "i1", 606L) // different size
                 )
-        ).isEqualTo(first); // different size
+        ).isEqualTo(first);
 
         // others
         assertThat(second).isNotEqualTo(first);

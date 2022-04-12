@@ -57,7 +57,7 @@ class IndexWithBloatTest {
 
         assertThat(first).isNotNull();
         //noinspection AssertBetweenInconvertibleTypes
-        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
+        assertThat(first).isNotEqualTo(BigDecimal.ZERO);
 
         // self
         assertThat(first).isEqualTo(first);

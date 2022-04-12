@@ -25,5 +25,4 @@ class PgConnectionFactoryImplTest {
         assertThat(pgConnection).isNotNull();
         assertThat(pgConnection.getHost().getPgUrl()).isEqualTo("jdbc:postgresql://localhost:5432/postgres?prepareThreshold=0&preparedStatementCacheQueries=0");
     }
-
 }

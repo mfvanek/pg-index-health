@@ -25,5 +25,4 @@ class ExclusionsBuilderTest {
                 "indexesWithNullValuesExclusions='', indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " + "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0, " +
                 "tableBloatSizeThresholdInBytes=0, tableBloatPercentageThreshold=0}");
     }
-
 }
