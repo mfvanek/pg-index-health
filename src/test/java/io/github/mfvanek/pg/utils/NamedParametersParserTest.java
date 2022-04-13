@@ -28,51 +28,67 @@ class NamedParametersParserTest {
 
     @Test
     void parseWithoutNamedParams() {
-        assertThat(parse("select * from orders;")).isEqualTo("select * from orders;");
-        assertThat(parse("select * from accounts where account_number = ?")).isEqualTo("select * from accounts where account_number = ?");
+        assertThat(parse("select * from orders;"))
+                .isEqualTo("select * from orders;");
+        assertThat(parse("select * from accounts where account_number = ?"))
+                .isEqualTo("select * from accounts where account_number = ?");
     }
 
     @Test
     void parseWithSingleLineComment() {
-        assertThat(parse("select * from accounts --test")).isEqualTo("select * from accounts --test");
-        assertThat(parse("select * from accounts where account_number = ? --test")).isEqualTo("select * from accounts where account_number = ? --test");
-        assertThat(parse("select * from clients where id = :p_id --test\n and name = :p_name")).isEqualTo("select * from clients where id = ? --test\n and name = ?");
+        assertThat(parse("select * from accounts --test"))
+                .isEqualTo("select * from accounts --test");
+        assertThat(parse("select * from accounts where account_number = ? --test"))
+                .isEqualTo("select * from accounts where account_number = ? --test");
+        assertThat(parse("select * from clients where id = :p_id --test\n and name = :p_name"))
+                .isEqualTo("select * from clients where id = ? --test\n and name = ?");
     }
 
     @Test
     void parseWithMultiLineComment() {
-        assertThat(parse("select * from /* test \ncomment */ accounts")).isEqualTo("select * from /* test \ncomment */ accounts");
-        assertThat(parse("select * from /* test \n:comment */ accounts where id = :p_id;")).isEqualTo("select * from /* test \n:comment */ accounts where id = ?;");
+        assertThat(parse("select * from /* test \ncomment */ accounts"))
+                .isEqualTo("select * from /* test \ncomment */ accounts");
+        assertThat(parse("select * from /* test \n:comment */ accounts where id = :p_id;"))
+                .isEqualTo("select * from /* test \n:comment */ accounts where id = ?;");
     }
 
     @Test
     void parseWithQuotes() {
-        assertThat(parse("select id as \"counter\" from orders where name = 'test';")).isEqualTo("select id as \"counter\" from orders where name = 'test';");
-        assertThat(parse("select id as \"counter\" from orders where name = :p_name;")).isEqualTo("select id as \"counter\" from orders where name = ?;");
+        assertThat(parse("select id as \"counter\" from orders where name = 'test';"))
+                .isEqualTo("select id as \"counter\" from orders where name = 'test';");
+        assertThat(parse("select id as \"counter\" from orders where name = :p_name;"))
+                .isEqualTo("select id as \"counter\" from orders where name = ?;");
     }
 
     @Test
     void parseWithDoubleColon() {
-        assertThat(parse("select id::text from orders where id < 10::bigint")).isEqualTo("select id::text from orders where id < 10::bigint");
-        assertThat(parse("select * from accounts where account_number = ?::text")).isEqualTo("select * from accounts where account_number = ?::text");
-        assertThat(parse("select * from accounts where account_number = :p_num::text")).isEqualTo("select * from accounts where account_number = ?::text");
-        assertThat(parse("select c.* from clients c where c.first_name = :p_name::text and c.last_name = :p_surname::text;")).isEqualTo(
-                "select c.* from clients c where c.first_name = ?::text and c.last_name = ?::text;");
+        assertThat(parse("select id::text from orders where id < 10::bigint"))
+                .isEqualTo("select id::text from orders where id < 10::bigint");
+        assertThat(parse("select * from accounts where account_number = ?::text"))
+                .isEqualTo("select * from accounts where account_number = ?::text");
+        assertThat(parse("select * from accounts where account_number = :p_num::text"))
+                .isEqualTo("select * from accounts where account_number = ?::text");
+        assertThat(parse("select c.* from clients c where c.first_name = :p_name::text and c.last_name = :p_surname::text;"))
+                .isEqualTo("select c.* from clients c where c.first_name = ?::text and c.last_name = ?::text;");
     }
 
     @Test
     void parseWithInvalidNameAfterDoubleColon() {
-        assertThat(parse("select * from accounts where account_number = :p_num:::text")).isEqualTo("select * from accounts where account_number = ?::?");
+        assertThat(parse("select * from accounts where account_number = :p_num:::text"))
+                .isEqualTo("select * from accounts where account_number = ?::?");
     }
 
     @Test
     void parseWithInvalidNameAfterColon() {
-        assertThat(parse("select * from accounts where account_number = :p%num::text")).isEqualTo("select * from accounts where account_number = ?%num::text");
+        assertThat(parse("select * from accounts where account_number = :p%num::text"))
+                .isEqualTo("select * from accounts where account_number = ?%num::text");
     }
 
     @Test
     void parseWithColonInTheEnd() {
-        assertThat(parse("select * from accounts where account_number = :")).isEqualTo("select * from accounts where account_number = :");
-        assertThat(parse("select * from accounts where account_number = :%")).isEqualTo("select * from accounts where account_number = :%");
+        assertThat(parse("select * from accounts where account_number = :"))
+                .isEqualTo("select * from accounts where account_number = :");
+        assertThat(parse("select * from accounts where account_number = :%"))
+                .isEqualTo("select * from accounts where account_number = :%");
     }
 }

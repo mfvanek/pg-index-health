@@ -41,8 +41,6 @@ class PgConnectionHelperTest {
     @Nonnull
     private String getWriteUrl() {
         final int port = embeddedPostgres.getPort();
-        return String.format(
-                "jdbc:postgresql://localhost:%d/postgres?prepareThreshold=0&preparedStatementCacheQueries=0",
-                port);
+        return String.format("jdbc:postgresql://localhost:%d/postgres?prepareThreshold=0&preparedStatementCacheQueries=0", port);
     }
 }

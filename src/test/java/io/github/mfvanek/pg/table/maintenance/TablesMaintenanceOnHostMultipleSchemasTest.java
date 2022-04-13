@@ -43,7 +43,8 @@ class TablesMaintenanceOnHostMultipleSchemasTest {
         final List<TableWithMissingIndex> tables = tablesMaintenance.getTablesWithMissingIndexes(contexts);
         assertThat(tables).isNotNull();
         assertThat(tables).hasSize(3);
-        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t", "demo.t", "test.t");
+        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet()))
+                .containsExactlyInAnyOrder("t", "demo.t", "test.t");
     }
 
     @Test
@@ -58,7 +59,8 @@ class TablesMaintenanceOnHostMultipleSchemasTest {
         final List<Table> tables = tablesMaintenance.getTablesWithoutPrimaryKey(contexts);
         assertThat(tables).isNotNull();
         assertThat(tables).hasSize(6);
-        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
+        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet()))
+                .containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
     }
 
     @Test
@@ -73,6 +75,7 @@ class TablesMaintenanceOnHostMultipleSchemasTest {
         final List<TableWithBloat> tables = tablesMaintenance.getTablesWithBloat(contexts);
         assertThat(tables).isNotNull();
         assertThat(tables).hasSize(6);
-        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
+        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet()))
+                .containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
     }
 }
