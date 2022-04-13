@@ -27,20 +27,14 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static java.util.Collections.emptyMap;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.startsWith;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReplicasHelperTest {
 
     @Test
     void privateConstructor() {
-        assertThrows(UnsupportedOperationException.class, () -> TestUtils.invokePrivateConstructor(ReplicasHelper.class));
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(ReplicasHelper.class)).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
@@ -57,15 +51,15 @@ class ReplicasHelperTest {
         );
         final List<UnusedIndex> unusedIndexes = ReplicasHelper.getUnusedIndexesAsIntersectionResult(
                 potentiallyUnusedIndexesFromAllHosts);
-        assertThat(unusedIndexes, hasSize(2));
-        assertThat(unusedIndexes, containsInAnyOrder(i1, i5));
+        assertThat(unusedIndexes).hasSize(2);
+        assertThat(unusedIndexes).containsExactlyInAnyOrder(i1, i5);
     }
 
     @Test
     void getUnusedIndexesAsIntersectionResultWithEmptyInput() {
         final List<UnusedIndex> unusedIndexes = ReplicasHelper.getUnusedIndexesAsIntersectionResult(Collections.emptyList());
-        assertNotNull(unusedIndexes);
-        assertThat(unusedIndexes, empty());
+        assertThat(unusedIndexes).isNotNull();
+        assertThat(unusedIndexes).isEmpty();
     }
 
     @Test
@@ -81,16 +75,16 @@ class ReplicasHelperTest {
         );
         final List<TableWithMissingIndex> tablesWithMissingIndexes = ReplicasHelper.getTablesWithMissingIndexesAsUnionResult(
                 tablesWithMissingIndexesFromAllHosts);
-        assertThat(tablesWithMissingIndexes, hasSize(3));
-        assertThat(tablesWithMissingIndexes, containsInAnyOrder(t1, t2, t3));
+        assertThat(tablesWithMissingIndexes).hasSize(3);
+        assertThat(tablesWithMissingIndexes).containsExactlyInAnyOrder(t1, t2, t3);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void getLastStatsResetDateLogMessageWithWrongArguments() {
-        assertThrows(NullPointerException.class, () -> ReplicasHelper.getLastStatsResetDateLogMessage(null, null));
-        assertThrows(NoSuchElementException.class, () -> ReplicasHelper.getLastStatsResetDateLogMessage(null, emptyMap()));
-        assertThrows(NoSuchElementException.class, () -> ReplicasHelper.getLastStatsResetDateLogMessage(PgHostImpl.ofPrimary(), emptyMap()));
+        assertThatThrownBy(() -> ReplicasHelper.getLastStatsResetDateLogMessage(null, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> ReplicasHelper.getLastStatsResetDateLogMessage(null, emptyMap())).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> ReplicasHelper.getLastStatsResetDateLogMessage(PgHostImpl.ofPrimary(), emptyMap())).isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
@@ -99,7 +93,7 @@ class ReplicasHelperTest {
         final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
         Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.empty());
         final String logMessage = ReplicasHelper.getLastStatsResetDateLogMessage(host, Collections.singletonMap(host, statisticsMaintenance));
-        assertEquals("Statistics have never been reset on this host", logMessage);
+        assertThat(logMessage).isEqualTo("Statistics have never been reset on this host");
     }
 
     @Test
@@ -109,6 +103,6 @@ class ReplicasHelperTest {
         final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
         Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.of(resetDate.minusDays(123L)));
         final String logMessage = ReplicasHelper.getLastStatsResetDateLogMessage(host, Collections.singletonMap(host, statisticsMaintenance));
-        assertThat(logMessage, startsWith("Last statistics reset on this host was 123 days ago ("));
+        assertThat(logMessage).startsWith("Last statistics reset on this host was 123 days ago (");
     }
 }

@@ -12,8 +12,7 @@ package io.github.mfvanek.pg.connection;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class PgConnectionFactoryImplTest {
 
@@ -23,8 +22,7 @@ class PgConnectionFactoryImplTest {
     void forUrlTest() {
         final PgConnection pgConnection = pgConnectionFactory.forUrl(
                 "jdbc:postgresql://localhost:5432/postgres?prepareThreshold=0&preparedStatementCacheQueries=0", "postgres", "postgres");
-        assertNotNull(pgConnection);
-        assertEquals("jdbc:postgresql://localhost:5432/postgres?prepareThreshold=0&preparedStatementCacheQueries=0",
-                pgConnection.getHost().getPgUrl());
+        assertThat(pgConnection).isNotNull();
+        assertThat(pgConnection.getHost().getPgUrl()).isEqualTo("jdbc:postgresql://localhost:5432/postgres?prepareThreshold=0&preparedStatementCacheQueries=0");
     }
 }

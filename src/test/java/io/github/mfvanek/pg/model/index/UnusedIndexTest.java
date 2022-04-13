@@ -15,32 +15,30 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UnusedIndexTest {
 
     @Test
     void getIndexScans() {
         final UnusedIndex index = UnusedIndex.of("t", "i", 1L, 2L);
-        assertEquals("t", index.getTableName());
-        assertEquals("i", index.getIndexName());
-        assertEquals(1L, index.getIndexSizeInBytes());
-        assertEquals(2L, index.getIndexScans());
+        assertThat(index.getTableName()).isEqualTo("t");
+        assertThat(index.getIndexName()).isEqualTo("i");
+        assertThat(index.getIndexSizeInBytes()).isEqualTo(1L);
+        assertThat(index.getIndexScans()).isEqualTo(2L);
     }
 
     @Test
     void testToString() {
         final UnusedIndex index = UnusedIndex.of("t", "i", 1L, 2L);
-        assertEquals("UnusedIndex{tableName='t', indexName='i', " +
-                "indexSizeInBytes=1, indexScans=2}", index.toString());
+        assertThat(index.toString()).isEqualTo("UnusedIndex{tableName='t', indexName='i', " + "indexSizeInBytes=1, indexScans=2}");
     }
 
     @Test
     void indexWithNegativeScans() {
-        assertThrows(IllegalArgumentException.class, () -> UnusedIndex.of("t", "i", -1L, 0L));
-        assertThrows(IllegalArgumentException.class, () -> UnusedIndex.of("t", "i", 1L, -1L));
+        assertThatThrownBy(() -> UnusedIndex.of("t", "i", -1L, 0L)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> UnusedIndex.of("t", "i", 1L, -1L)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -50,33 +48,33 @@ class UnusedIndexTest {
         final UnusedIndex second = UnusedIndex.of("t1", "i2", 1L, 3L);
         final UnusedIndex third = UnusedIndex.of("t2", "i3", 2L, 2L);
 
-        assertNotEquals(first, null);
+        assertThat(first).isNotNull();
         //noinspection AssertBetweenInconvertibleTypes
-        assertNotEquals(first, BigDecimal.ZERO);
+        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
 
         // self
-        assertEquals(first, first);
-        assertEquals(first.hashCode(), first.hashCode());
+        assertThat(first).isEqualTo(first);
+        assertThat(first.hashCode()).isEqualTo(first.hashCode());
 
         // the same
-        assertEquals(first, theSame);
-        assertEquals(first.hashCode(), theSame.hashCode());
+        assertThat(theSame).isEqualTo(first);
+        assertThat(theSame.hashCode()).isEqualTo(first.hashCode());
 
         // others
-        assertNotEquals(first, second);
-        assertNotEquals(second, first);
-        assertNotEquals(first.hashCode(), second.hashCode());
+        assertThat(second).isNotEqualTo(first);
+        assertThat(first).isNotEqualTo(second);
+        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(first, third);
-        assertNotEquals(first.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(first);
+        assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(second, third);
-        assertNotEquals(second.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(second);
+        assertThat(third.hashCode()).isNotEqualTo(second.hashCode());
 
         // another
         final Index anotherType = Index.of("t1", "i1");
-        assertEquals(first, anotherType);
-        assertEquals(first.hashCode(), anotherType.hashCode());
+        assertThat(anotherType).isEqualTo(first);
+        assertThat(anotherType.hashCode()).isEqualTo(first.hashCode());
     }
 
     @Test

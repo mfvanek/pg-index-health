@@ -18,13 +18,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class HighAvailabilityPgConnectionImplTest {
 
@@ -35,17 +30,17 @@ class HighAvailabilityPgConnectionImplTest {
     void ofPrimary() {
         final PgConnection pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
-        assertNotNull(haPgConnection);
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), hasSize(1));
-        assertEquals(haPgConnection.getConnectionToPrimary(), haPgConnection.getConnectionsToAllHostsInCluster().iterator().next());
+        assertThat(haPgConnection).isNotNull();
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster()).hasSize(1);
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster().iterator().next()).isEqualTo(haPgConnection.getConnectionToPrimary());
     }
 
     @Test
     void shouldBeUnmodifiable() {
         final PgConnection pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
-        assertNotNull(haPgConnection);
-        assertThrows(UnsupportedOperationException.class, () -> haPgConnection.getConnectionsToAllHostsInCluster().clear());
+        assertThat(haPgConnection).isNotNull();
+        assertThatThrownBy(() -> haPgConnection.getConnectionsToAllHostsInCluster().clear()).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
@@ -54,9 +49,9 @@ class HighAvailabilityPgConnectionImplTest {
         final PgConnection replica = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(),
                 PgHostImpl.ofName("replica"));
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary, Arrays.asList(primary, replica));
-        assertNotNull(haPgConnection);
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), hasSize(2));
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster(), containsInAnyOrder(primary, replica));
+        assertThat(haPgConnection).isNotNull();
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster()).hasSize(2);
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster()).containsExactlyInAnyOrder(primary, replica);
     }
 
     @Test
@@ -64,8 +59,8 @@ class HighAvailabilityPgConnectionImplTest {
         final PgConnection primary = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         final PgConnection replica = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(),
                 PgHostImpl.ofName("replica"));
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> HighAvailabilityPgConnectionImpl.of(primary, Collections.singletonList(replica)));
-        assertThat(exception.getMessage(), containsString("connectionsToAllHostsInCluster have to contain a connection to the primary"));
+        assertThatThrownBy(() -> HighAvailabilityPgConnectionImpl.of(primary, Collections.singletonList(replica)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("connectionsToAllHostsInCluster have to contain a connection to the primary");
     }
 }

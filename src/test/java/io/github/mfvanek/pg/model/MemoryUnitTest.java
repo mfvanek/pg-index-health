@@ -12,19 +12,19 @@ package io.github.mfvanek.pg.model;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MemoryUnitTest {
 
     @Test
     void convertToBytes() {
-        assertEquals(1024L, MemoryUnit.KB.convertToBytes(1));
-        assertEquals(2097152L, MemoryUnit.MB.convertToBytes(2));
-        assertEquals(3221225472L, MemoryUnit.GB.convertToBytes(3));
+        assertThat(MemoryUnit.KB.convertToBytes(1)).isEqualTo(1024L);
+        assertThat(MemoryUnit.MB.convertToBytes(2)).isEqualTo(2097152L);
+        assertThat(MemoryUnit.GB.convertToBytes(3)).isEqualTo(3221225472L);
     }
 
     @Test
     void toStringTest() {
-        assertEquals("MemoryUnit{dimension=1048576, description='megabyte'}", MemoryUnit.MB.toString());
+        assertThat(MemoryUnit.MB.toString()).isEqualTo("MemoryUnit{dimension=1048576, description='megabyte'}");
     }
 }

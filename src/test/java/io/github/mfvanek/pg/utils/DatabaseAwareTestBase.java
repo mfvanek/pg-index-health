@@ -23,7 +23,7 @@ import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 public abstract class DatabaseAwareTestBase {
 
@@ -62,7 +62,7 @@ public abstract class DatabaseAwareTestBase {
                 // see PGSTAT_STAT_INTERVAL at https://github.com/postgres/postgres/blob/master/src/backend/postmaster/pgstat.c
                 Thread.sleep(500L);
             } catch (InterruptedException e) {
-                fail(e);
+                fail("unknown failure", e);
             }
         });
     }
@@ -73,7 +73,7 @@ public abstract class DatabaseAwareTestBase {
                         "from pg_catalog.pg_stat_all_tables psat\n" +
                         "where psat.schemaname = ?::text and psat.relname = 'accounts'::text;";
         try (Connection connection = getDataSource().getConnection();
-             PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+                PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
             statement.setString(1, pgContext.getSchemaName());
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
@@ -89,7 +89,7 @@ public abstract class DatabaseAwareTestBase {
                 "select exists (select 1 from pg_catalog.pg_stats ps " +
                         "where ps.schemaname = ?::text and ps.tablename = ?::text);";
         try (Connection connection = getDataSource().getConnection();
-             PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+                PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
             statement.setString(1, pgContext.getSchemaName());
             statement.setString(2, Objects.requireNonNull(tableName));
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -103,7 +103,7 @@ public abstract class DatabaseAwareTestBase {
 
     protected void tryToFindAccountByClientId(@Nonnull final String schemaName) {
         try (Connection connection = getDataSource().getConnection();
-             Statement statement = connection.createStatement()) {
+                Statement statement = connection.createStatement()) {
             for (int counter = 0; counter < AMOUNT_OF_TRIES; ++counter) {
                 statement.execute(String.format(
                         "select count(*) from %s.accounts where client_id = 1::bigint", schemaName));
@@ -118,7 +118,7 @@ public abstract class DatabaseAwareTestBase {
     protected long getRowsCount(@Nonnull final String schemaName,
                                 @Nonnull final String tableName) {
         try (Connection connection = getDataSource().getConnection();
-             Statement statement = connection.createStatement()) {
+                Statement statement = connection.createStatement()) {
             try (ResultSet resultSet = statement.executeQuery(
                     "select count(*) from " + schemaName + "." + tableName)) {
                 resultSet.next();

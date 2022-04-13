@@ -12,12 +12,12 @@ package io.github.mfvanek.pg.utils;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ValidatorsTest {
 
     @Test
     void privateConstructor() {
-        assertThrows(UnsupportedOperationException.class, () -> TestUtils.invokePrivateConstructor(Validators.class));
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(Validators.class)).isInstanceOf(UnsupportedOperationException.class);
     }
 }

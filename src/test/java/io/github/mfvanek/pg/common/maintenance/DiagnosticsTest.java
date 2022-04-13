@@ -15,10 +15,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DiagnosticsTest {
 
@@ -28,21 +25,21 @@ class DiagnosticsTest {
         for (Diagnostics diagnostics : Diagnostics.values()) {
             fileNames.add(diagnostics.getSqlQueryFileName());
         }
-        assertThat(fileNames, hasSize(Diagnostics.values().length));
+        assertThat(fileNames).hasSize(Diagnostics.values().length);
     }
 
     @Test
     void sqlQueryFileNameShouldBeInLowerCase() {
         for (Diagnostics diagnostics : Diagnostics.values()) {
             final String lower = diagnostics.getSqlQueryFileName().toLowerCase();
-            assertEquals(lower, diagnostics.getSqlQueryFileName());
+            assertThat(diagnostics.getSqlQueryFileName()).isEqualTo(lower);
         }
     }
 
     @Test
     void sqlQueryFileNameShouldHaveSqlExtension() {
         for (Diagnostics diagnostics : Diagnostics.values()) {
-            assertTrue(diagnostics.getSqlQueryFileName().endsWith(".sql"));
+            assertThat(diagnostics.getSqlQueryFileName()).endsWith(".sql");
         }
     }
 }

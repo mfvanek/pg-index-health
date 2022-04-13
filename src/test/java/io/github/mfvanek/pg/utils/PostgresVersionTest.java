@@ -22,8 +22,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.annotation.Nonnull;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.startsWith;
+import static org.assertj.core.api.Assertions.assertThat;
 
 final class PostgresVersionTest extends DatabaseAwareTestBase {
 
@@ -44,13 +43,13 @@ final class PostgresVersionTest extends DatabaseAwareTestBase {
             requiredPgVersionString = "14.0 (Debian 14.0-";
         }
         final String actualPgVersionString = readPgVersion();
-        assertThat(actualPgVersionString, startsWith(requiredPgVersionString));
+        assertThat(actualPgVersionString).startsWith(requiredPgVersionString);
     }
 
     @Nonnull
     private String readPgVersion() {
         try (Connection connection = embeddedPostgres.getTestDatabase().getConnection();
-             Statement statement = connection.createStatement()) {
+                Statement statement = connection.createStatement()) {
             try (ResultSet resultSet = statement.executeQuery("show server_version")) {
                 resultSet.next();
                 return resultSet.getString(1);

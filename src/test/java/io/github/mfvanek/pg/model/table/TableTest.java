@@ -15,32 +15,31 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TableTest {
 
     @Test
     void getTableName() {
         final Table table = Table.of("t", 1L);
-        assertEquals("t", table.getTableName());
-        assertEquals(1L, table.getTableSizeInBytes());
+        assertThat(table.getTableName()).isEqualTo("t");
+        assertThat(table.getTableSizeInBytes()).isEqualTo(1L);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidValues() {
-        assertThrows(NullPointerException.class, () -> Table.of(null, 1L));
-        assertThrows(IllegalArgumentException.class, () -> Table.of("", 1L));
-        assertThrows(IllegalArgumentException.class, () -> Table.of("  ", 1L));
-        assertThrows(IllegalArgumentException.class, () -> Table.of("t", -1L));
+        assertThatThrownBy(() -> Table.of(null, 1L)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> Table.of("", 1L)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> Table.of("  ", 1L)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> Table.of("t", -1L)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testToString() {
         final Table table = Table.of("t", 2L);
-        assertEquals("Table{tableName='t', tableSizeInBytes=2}", table.toString());
+        assertThat(table.toString()).isEqualTo("Table{tableName='t', tableSizeInBytes=2}");
     }
 
     @Test
@@ -50,32 +49,32 @@ class TableTest {
         final Table second = Table.of("t2", 30L);
         final Table third = Table.of("t3", 22L);
 
-        assertNotEquals(first, null);
+        assertThat(first).isNotNull();
         //noinspection AssertBetweenInconvertibleTypes
-        assertNotEquals(first, BigDecimal.ZERO);
+        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
 
         // self
-        assertEquals(first, first);
-        assertEquals(first.hashCode(), first.hashCode());
+        assertThat(first).isEqualTo(first);
+        assertThat(first.hashCode()).isEqualTo(first.hashCode());
 
         // the same
-        assertEquals(first, theSame);
-        assertEquals(first.hashCode(), theSame.hashCode());
+        assertThat(theSame).isEqualTo(first);
+        assertThat(theSame.hashCode()).isEqualTo(first.hashCode());
 
         // others
-        assertNotEquals(first, second);
-        assertNotEquals(second, first);
-        assertNotEquals(first.hashCode(), second.hashCode());
+        assertThat(second).isNotEqualTo(first);
+        assertThat(first).isNotEqualTo(second);
+        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(first, third);
-        assertNotEquals(first.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(first);
+        assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(second, third);
-        assertNotEquals(second.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(second);
+        assertThat(third.hashCode()).isNotEqualTo(second.hashCode());
 
         // another implementation of Table
         final TableWithBloat another = TableWithBloat.of("t1", 23L, 11L, 50);
-        assertEquals(first, another);
+        assertThat(another).isEqualTo(first);
     }
 
     @Test
@@ -93,19 +92,19 @@ class TableTest {
         final Table second = Table.of("t2", 30L);
         final Table third = Table.of("t3", 22L);
 
-        assertThrows(NullPointerException.class, () -> first.compareTo(null));
+        assertThatThrownBy(() -> first.compareTo(null)).isInstanceOf(NullPointerException.class);
 
         // self
-        assertEquals(0, first.compareTo(first));
+        assertThat(first.compareTo(first)).isEqualTo(0);
 
         // the same
-        assertEquals(0, first.compareTo(theSame));
+        assertThat(first.compareTo(theSame)).isEqualTo(0);
 
         // others
-        assertEquals(-1, first.compareTo(second));
-        assertEquals(1, second.compareTo(first));
+        assertThat(first.compareTo(second)).isEqualTo(-1);
+        assertThat(second.compareTo(first)).isEqualTo(1);
 
-        assertEquals(-1, second.compareTo(third));
-        assertEquals(1, third.compareTo(second));
+        assertThat(second.compareTo(third)).isEqualTo(-1);
+        assertThat(third.compareTo(second)).isEqualTo(1);
     }
 }

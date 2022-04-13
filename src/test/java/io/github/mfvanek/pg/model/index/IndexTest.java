@@ -15,37 +15,35 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class IndexTest {
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void validation() {
-        assertThrows(NullPointerException.class, () -> Index.of(null, null));
-        assertThrows(NullPointerException.class, () -> Index.of("t", null));
-        assertThrows(IllegalArgumentException.class, () -> Index.of("", ""));
-        assertThrows(IllegalArgumentException.class, () -> Index.of(" ", " "));
-        assertThrows(IllegalArgumentException.class, () -> Index.of("t", ""));
-        assertThrows(IllegalArgumentException.class, () -> Index.of("t", " "));
+        assertThatThrownBy(() -> Index.of(null, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> Index.of("t", null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> Index.of("", "")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> Index.of(" ", " ")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> Index.of("t", "")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> Index.of("t", " ")).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void getTableAndIndexName() {
         final Index index = Index.of("t", "i");
-        assertNotNull(index);
-        assertEquals("t", index.getTableName());
-        assertEquals("i", index.getIndexName());
+        assertThat(index).isNotNull();
+        assertThat(index.getTableName()).isEqualTo("t");
+        assertThat(index.getIndexName()).isEqualTo("i");
     }
 
     @Test
     void testToString() {
         final Index index = Index.of("t", "i");
-        assertNotNull(index);
-        assertEquals("Index{tableName='t', indexName='i'}", index.toString());
+        assertThat(index).isNotNull();
+        assertThat(index.toString()).isEqualTo("Index{tableName='t', indexName='i'}");
     }
 
     @Test
@@ -54,26 +52,26 @@ class IndexTest {
         final Index second = Index.of("t1", "i2");
         final Index third = Index.of("t2", "i2");
 
-        assertNotEquals(first, null);
+        assertThat(first).isNotNull();
         //noinspection AssertBetweenInconvertibleTypes
-        assertNotEquals(first, BigDecimal.ZERO);
+        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
 
         // self
-        assertEquals(first, first);
-        assertEquals(first.hashCode(), first.hashCode());
+        assertThat(first).isEqualTo(first);
+        assertThat(first.hashCode()).isEqualTo(first.hashCode());
 
         // the same
-        assertEquals(first, Index.of("t1", "i1"));
+        assertThat(Index.of("t1", "i1")).isEqualTo(first);
 
         // others
-        assertNotEquals(first, second);
-        assertNotEquals(first.hashCode(), second.hashCode());
+        assertThat(second).isNotEqualTo(first);
+        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(first, third);
-        assertNotEquals(first.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(first);
+        assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(second, third);
-        assertNotEquals(second.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(second);
+        assertThat(third.hashCode()).isNotEqualTo(second.hashCode());
     }
 
     @Test
@@ -89,19 +87,19 @@ class IndexTest {
         final Index second = Index.of("t1", "i2");
         final Index third = Index.of("t2", "i2");
 
-        assertThrows(NullPointerException.class, () -> first.compareTo(null));
+        assertThatThrownBy(() -> first.compareTo(null)).isInstanceOf(NullPointerException.class);
 
         // self
-        assertEquals(0, first.compareTo(first));
+        assertThat(first.compareTo(first)).isEqualTo(0);
 
         // the same
-        assertEquals(0, first.compareTo(Index.of("t1", "i1")));
+        assertThat(first.compareTo(Index.of("t1", "i1"))).isEqualTo(0);
 
         // others
-        assertEquals(-1, first.compareTo(second));
-        assertEquals(1, second.compareTo(first));
+        assertThat(first.compareTo(second)).isEqualTo(-1);
+        assertThat(second.compareTo(first)).isEqualTo(1);
 
-        assertEquals(-1, second.compareTo(third));
-        assertEquals(1, third.compareTo(second));
+        assertThat(second.compareTo(third)).isEqualTo(-1);
+        assertThat(third.compareTo(second)).isEqualTo(1);
     }
 }

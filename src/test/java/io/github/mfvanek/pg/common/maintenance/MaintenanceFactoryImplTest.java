@@ -26,11 +26,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
 
@@ -49,7 +45,7 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
     @Test
     void forIndexes() {
         final IndexesMaintenanceOnHost maintenance = factory.forIndexes(pgConnection);
-        assertNotNull(maintenance);
+        assertThat(maintenance).isNotNull();
     }
 
     @Test
@@ -67,7 +63,7 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
     @Test
     void forTables() {
         final TablesMaintenanceOnHost maintenance = factory.forTables(pgConnection);
-        assertNotNull(maintenance);
+        assertThat(maintenance).isNotNull();
     }
 
     @Test
@@ -85,7 +81,7 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
     @Test
     void forStatistics() {
         final StatisticsMaintenanceOnHost maintenance = factory.forStatistics(pgConnection);
-        assertNotNull(maintenance);
+        assertThat(maintenance).isNotNull();
     }
 
     @Test
@@ -103,7 +99,7 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
     @Test
     void forConfiguration() {
         final ConfigurationMaintenanceOnHost maintenance = factory.forConfiguration(pgConnection);
-        assertNotNull(maintenance);
+        assertThat(maintenance).isNotNull();
     }
 
     @Test
@@ -119,13 +115,13 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
     }
 
     private <T> void checkThatContainsOneItem(Map<PgHost, T> maintenanceOnHosts) {
-        assertNotNull(maintenanceOnHosts);
-        assertEquals(1, maintenanceOnHosts.size());
-        assertThat(maintenanceOnHosts.keySet().iterator().next(), equalTo(pgConnection.getHost()));
+        assertThat(maintenanceOnHosts).isNotNull();
+        assertThat(maintenanceOnHosts).hasSize(1);
+        assertThat(maintenanceOnHosts.keySet().iterator().next()).isEqualTo(pgConnection.getHost());
     }
 
     private <T> void checkThatEmpty(Map<PgHost, T> maintenanceOnHosts) {
-        assertNotNull(maintenanceOnHosts);
-        assertTrue(maintenanceOnHosts.isEmpty());
+        assertThat(maintenanceOnHosts).isNotNull();
+        assertThat(maintenanceOnHosts).isEmpty();
     }
 }

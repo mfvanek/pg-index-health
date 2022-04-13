@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import javax.annotation.Nonnull;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public final class HealthLoggerAssertions {
 
@@ -32,6 +31,6 @@ public final class HealthLoggerAssertions {
                 .filter(l -> l.contains(key.getSubKeyName()))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("No value present"));
-        assertThat(logStr, containsString(Validators.notBlank(expectedValue, "expectedValue")));
+        assertThat(logStr).contains(Validators.notBlank(expectedValue, "expectedValue"));
     }
 }

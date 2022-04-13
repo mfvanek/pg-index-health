@@ -19,14 +19,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.not;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class DuplicatedIndexesTest {
 
@@ -35,10 +29,10 @@ class DuplicatedIndexesTest {
         final DuplicatedIndexes index = DuplicatedIndexes.of(Arrays.asList(
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
-        assertNotNull(index);
-        assertEquals("t", index.getTableName());
-        assertEquals(303L, index.getTotalSize());
-        assertThat(index.getIndexNames(), contains("i1", "i2"));
+        assertThat(index).isNotNull();
+        assertThat(index.getTableName()).isEqualTo("t");
+        assertThat(index.getTotalSize()).isEqualTo(303L);
+        assertThat(index.getIndexNames()).contains("i1", "i2");
     }
 
     @Test
@@ -47,14 +41,15 @@ class DuplicatedIndexesTest {
                 IndexWithSize.of("t1", "i3", 303L),
                 IndexWithSize.of("t1", "i1", 101L),
                 IndexWithSize.of("t1", "i2", 202L)));
-        assertNotNull(indexes);
+        assertThat(indexes).isNotNull();
 
-        assertEquals(606L, indexes.getTotalSize());
-        assertThat(indexes.getDuplicatedIndexes(),
-                contains(IndexWithSize.of("t1", "i1", 101L),
-                        IndexWithSize.of("t1", "i2", 202L),
-                        IndexWithSize.of("t1", "i3", 303L)));
-        assertThat(indexes.getIndexNames(), contains("i1", "i2", "i3"));
+        assertThat(indexes.getTotalSize()).isEqualTo(606L);
+        assertThat(indexes.getDuplicatedIndexes()).contains(
+                IndexWithSize.of("t1", "i1", 101L),
+                IndexWithSize.of("t1", "i2", 202L),
+                IndexWithSize.of("t1", "i3", 303L)
+        );
+        assertThat(indexes.getIndexNames()).contains("i1", "i2", "i3");
     }
 
     @Test
@@ -68,13 +63,13 @@ class DuplicatedIndexesTest {
         final IndexWithSize fourth = IndexWithSize.of("t1", "i4", 404L);
         sourceIndexes.add(fourth);
 
-        assertThat(indexes.getDuplicatedIndexes(), hasSize(3));
-        assertThat(indexes.getDuplicatedIndexes(), not(contains(fourth)));
-        assertThrows(UnsupportedOperationException.class, () -> indexes.getDuplicatedIndexes().clear());
+        assertThat(indexes.getDuplicatedIndexes()).hasSize(3);
+        assertThat(indexes.getDuplicatedIndexes()).doesNotContain(fourth);
+        assertThatThrownBy(() -> indexes.getDuplicatedIndexes().clear()).isInstanceOf(UnsupportedOperationException.class);
 
-        assertThat(indexes.getIndexNames(), hasSize(3));
-        assertThat(indexes.getIndexNames(), not(contains("i4")));
-        assertThrows(UnsupportedOperationException.class, () -> indexes.getIndexNames().clear());
+        assertThat(indexes.getIndexNames()).hasSize(3);
+        assertThat(indexes.getIndexNames()).doesNotContain("i4");
+        assertThatThrownBy(() -> indexes.getIndexNames().clear()).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
@@ -83,48 +78,42 @@ class DuplicatedIndexesTest {
                 IndexWithSize.of("t", "i3", 303L),
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
-        assertNotNull(indexes);
-        assertEquals("DuplicatedIndexes{tableName='t', totalSize=606, indexes=[" +
-                        "IndexWithSize{tableName='t', indexName='i1', indexSizeInBytes=101}, " +
-                        "IndexWithSize{tableName='t', indexName='i2', indexSizeInBytes=202}, " +
-                        "IndexWithSize{tableName='t', indexName='i3', indexSizeInBytes=303}]}",
-                indexes.toString());
+        assertThat(indexes).isNotNull();
+        assertThat(indexes.toString()).isEqualTo("DuplicatedIndexes{tableName='t', totalSize=606, indexes=[" + "IndexWithSize{tableName='t', indexName='i1', indexSizeInBytes=101}, " + 
+                "IndexWithSize{tableName='t', indexName='i2', indexSizeInBytes=202}, " + "IndexWithSize{tableName='t', indexName='i3', indexSizeInBytes=303}]}");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withoutIndexes() {
-        assertThrows(NullPointerException.class, () -> DuplicatedIndexes.of(null));
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of(Collections.emptyList()));
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of(
-                Collections.singletonList(IndexWithSize.of("t", "i", 1L))));
+        assertThatThrownBy(() -> DuplicatedIndexes.of(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.emptyList())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.singletonList(IndexWithSize.of("t", "i", 1L)))).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void withDifferentTables() {
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of(Arrays.asList(
-                IndexWithSize.of("t1", "i1", 1L),
-                IndexWithSize.of("t2", "i2", 2L))));
+        assertThatThrownBy(() -> DuplicatedIndexes.of(Arrays.asList(IndexWithSize.of("t1", "i1", 1L), IndexWithSize.of("t2", "i2", 2L)))).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void fromValidString() {
         final DuplicatedIndexes index = DuplicatedIndexes.of("t", "idx=i3, size=11; idx=i4, size=167");
-        assertNotNull(index);
-        assertEquals("t", index.getTableName());
-        assertEquals(178L, index.getTotalSize());
-        assertThat(index.getIndexNames(), contains("i3", "i4"));
+        assertThat(index).isNotNull();
+        assertThat(index.getTableName()).isEqualTo("t");
+        assertThat(index.getTotalSize()).isEqualTo(178L);
+        assertThat(index.getIndexNames()).contains("i3", "i4");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void fromInvalidString() {
-        assertThrows(NullPointerException.class, () -> DuplicatedIndexes.of(null, null));
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of("", null));
-        assertThrows(NullPointerException.class, () -> DuplicatedIndexes.of("t", null));
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of("t", ""));
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of("t", "i"));
-        assertThrows(IllegalArgumentException.class, () -> DuplicatedIndexes.of("t", "idx=i1, size=1"));
+        assertThatThrownBy(() -> DuplicatedIndexes.of(null, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of("", null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of("t", null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of("t", "")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of("t", "i")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of("t", "idx=i1, size=1")).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -139,28 +128,31 @@ class DuplicatedIndexesTest {
                 IndexWithSize.of("t2", "i5", 101L),
                 IndexWithSize.of("t2", "i6", 202L)));
 
-        assertNotEquals(first, null);
+        assertThat(first).isNotNull();
         //noinspection AssertBetweenInconvertibleTypes
-        assertNotEquals(first, BigDecimal.ZERO);
+        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
 
         // self
-        assertEquals(first, first);
-        assertEquals(first.hashCode(), first.hashCode());
+        assertThat(first).isEqualTo(first);
+        assertThat(first.hashCode()).isEqualTo(first.hashCode());
 
         // the same
-        assertEquals(first, DuplicatedIndexes.of(
-                IndexWithSize.of("t1", "i2", 505L), // different order
-                IndexWithSize.of("t1", "i1", 606L))); // different size
+        assertThat(
+                DuplicatedIndexes.of(
+                        IndexWithSize.of("t1", "i2", 505L), // different order
+                        IndexWithSize.of("t1", "i1", 606L) // different size
+                )
+        ).isEqualTo(first);
 
         // others
-        assertNotEquals(first, second);
-        assertNotEquals(first.hashCode(), second.hashCode());
+        assertThat(second).isNotEqualTo(first);
+        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(first, third);
-        assertNotEquals(first.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(first);
+        assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertNotEquals(second, third);
-        assertNotEquals(second.hashCode(), third.hashCode());
+        assertThat(third).isNotEqualTo(second);
+        assertThat(third.hashCode()).isNotEqualTo(second.hashCode());
     }
 
     @Test
@@ -173,27 +165,16 @@ class DuplicatedIndexesTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void newFactoryConstructor() {
-        assertThrows(NullPointerException.class, () ->
-                DuplicatedIndexes.of(null, null));
-        assertThrows(NullPointerException.class, () ->
-                DuplicatedIndexes.of(IndexWithSize.of("t", "i1", 1L), null));
-        assertThrows(NullPointerException.class, () ->
-                DuplicatedIndexes.of(
-                        IndexWithSize.of("t", "i1", 1L),
-                        IndexWithSize.of("t", "i2", 2L),
-                        null,
-                        IndexWithSize.of("t", "i4", 4L)));
+        assertThatThrownBy(() -> DuplicatedIndexes.of(null, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of(IndexWithSize.of("t", "i1", 1L), null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of(IndexWithSize.of("t", "i1", 1L), IndexWithSize.of("t", "i2", 2L), null, IndexWithSize.of("t", "i4", 4L))).isInstanceOf(
+                NullPointerException.class);
         final DuplicatedIndexes indexes = DuplicatedIndexes.of(
                 IndexWithSize.of("t", "i3", 3L),
                 IndexWithSize.of("t", "i1", 1L),
                 IndexWithSize.of("t", "i2", 2L),
                 IndexWithSize.of("t", "i4", 4L));
-        assertNotNull(indexes);
-        assertThat(indexes.getDuplicatedIndexes(), contains(
-                IndexWithSize.of("t", "i1", 1L),
-                IndexWithSize.of("t", "i2", 2L),
-                IndexWithSize.of("t", "i3", 3L),
-                IndexWithSize.of("t", "i4", 4L)
-        ));
+        assertThat(indexes).isNotNull();
+        assertThat(indexes.getDuplicatedIndexes()).contains(IndexWithSize.of("t", "i1", 1L), IndexWithSize.of("t", "i2", 2L), IndexWithSize.of("t", "i3", 3L), IndexWithSize.of("t", "i4", 4L));
     }
 }

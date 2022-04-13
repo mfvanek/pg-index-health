@@ -26,15 +26,8 @@ import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public final class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
@@ -58,49 +51,38 @@ public final class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareT
                 .withSSD()
                 .build();
         final Set<PgParam> paramsWithDefaultValues = configurationMaintenance.getParamsWithDefaultValues(specification);
-        assertNotNull(paramsWithDefaultValues);
-        assertThat(paramsWithDefaultValues, hasSize(9));
-        assertThat(paramsWithDefaultValues.stream()
-                .map(PgParam::getName)
-                .collect(toList()), containsInAnyOrder(
-                "shared_buffers",
-                "work_mem",
-                "maintenance_work_mem",
-                "random_page_cost",
-                "log_min_duration_statement",
-                "idle_in_transaction_session_timeout",
-                "statement_timeout",
-                "effective_cache_size",
-                "temp_file_limit")
-        );
+        assertThat(paramsWithDefaultValues).isNotNull();
+        assertThat(paramsWithDefaultValues).hasSize(9);
+        assertThat(paramsWithDefaultValues.stream().map(PgParam::getName).collect(toList()))
+                .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement", "idle_in_transaction_session_timeout",
+                        "statement_timeout", "effective_cache_size", "temp_file_limit");
     }
 
     @Test
     void getParamsCurrentValues() {
         final Set<PgParam> currentValues = configurationMaintenance.getParamsCurrentValues();
-        assertNotNull(currentValues);
-        assertThat(currentValues, hasSize(greaterThan(200)));
+        assertThat(currentValues).isNotNull();
+        assertThat(currentValues).hasSizeGreaterThan(200);
         final Set<String> allParamNames = currentValues.stream()
                 .map(PgParam::getName)
                 .collect(toSet());
         for (ImportantParam importantParam : ImportantParam.values()) {
-            assertThat(allParamNames, hasItem(importantParam.getName()));
+            assertThat(allParamNames).contains(importantParam.getName());
         }
     }
 
     @Test
     void getParamCurrentValue() {
         final PgParam currentValue = configurationMaintenance.getParamCurrentValue(ImportantParam.LOG_MIN_DURATION_STATEMENT);
-        assertNotNull(currentValue);
-        assertEquals(ImportantParam.LOG_MIN_DURATION_STATEMENT.getDefaultValue(), currentValue.getValue());
+        assertThat(currentValue).isNotNull();
+        assertThat(currentValue.getValue()).isEqualTo(ImportantParam.LOG_MIN_DURATION_STATEMENT.getDefaultValue());
     }
 
     @Test
     void getCurrentValueForUnknownParam() {
-        final RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> configurationMaintenance.getParamCurrentValue(PgParamImpl.of("unknown_param", "")));
-        assertNotNull(exception);
-        assertNotNull(exception.getCause());
-        assertThat(exception.getCause().getMessage(), containsString("unknown_param"));
+        final PgParam pgParam = PgParamImpl.of("unknown_param", "");
+        assertThatThrownBy(() -> configurationMaintenance.getParamCurrentValue(pgParam))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("unknown_param");
     }
 }

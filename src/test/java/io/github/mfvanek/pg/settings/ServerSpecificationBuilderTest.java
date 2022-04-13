@@ -13,21 +13,18 @@ package io.github.mfvanek.pg.settings;
 import io.github.mfvanek.pg.model.MemoryUnit;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ServerSpecificationBuilderTest {
 
     @Test
     void toStringTest() {
         final ServerSpecificationBuilder builder = ServerSpecification.builder();
-        assertNotNull(builder);
-        assertEquals("ServerSpecificationBuilder{cpuCoresAmount=1, memoryAmountInBytes=1073741824, hasSSD=false}",
-                builder.toString());
+        assertThat(builder).isNotNull();
+        assertThat(builder.toString()).isEqualTo("ServerSpecificationBuilder{cpuCoresAmount=1, memoryAmountInBytes=1073741824, hasSSD=false}");
         builder.withCpuCores(2)
                 .withMemoryAmount(512, MemoryUnit.MB)
                 .withSSD();
-        assertEquals("ServerSpecificationBuilder{cpuCoresAmount=2, memoryAmountInBytes=536870912, hasSSD=true}",
-                builder.toString());
+        assertThat(builder.toString()).isEqualTo("ServerSpecificationBuilder{cpuCoresAmount=2, memoryAmountInBytes=536870912, hasSSD=true}");
     }
 }

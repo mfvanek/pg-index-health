@@ -19,8 +19,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PgConnectionHelperTest {
 
@@ -29,13 +29,13 @@ class PgConnectionHelperTest {
 
     @Test
     void privateConstructor() {
-        assertThrows(UnsupportedOperationException.class, () -> TestUtils.invokePrivateConstructor(PgConnectionHelper.class));
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(PgConnectionHelper.class)).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void createDataSource() {
         final DataSource dataSource = PgConnectionHelper.createDataSource(getWriteUrl(), "postgres", "postgres");
-        assertNotNull(dataSource);
+        assertThat(dataSource).isNotNull();
     }
 
     @Nonnull

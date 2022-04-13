@@ -15,16 +15,11 @@ import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PgConnectionImplTest {
 
@@ -34,8 +29,8 @@ class PgConnectionImplTest {
     @Test
     void getPrimaryDataSource() {
         final PgConnection connection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
-        assertNotNull(connection.getDataSource());
-        assertThat(connection.getHost(), equalTo(PgHostImpl.ofPrimary()));
+        assertThat(connection.getDataSource()).isNotNull();
+        assertThat(connection.getHost()).isEqualTo(PgHostImpl.ofPrimary());
     }
 
     @Test
@@ -44,14 +39,14 @@ class PgConnectionImplTest {
         final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
                 "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=preferSecondary", port);
         final PgConnection any = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofUrl(readUrl));
-        assertNotNull(any);
+        assertThat(any).isNotNull();
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThrows(NullPointerException.class, () -> PgConnectionImpl.ofPrimary(null));
-        assertThrows(NullPointerException.class, () -> PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), null));
+        assertThatThrownBy(() -> PgConnectionImpl.ofPrimary(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -60,26 +55,21 @@ class PgConnectionImplTest {
         final PgConnection theSame = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
         final PgConnection second = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("second"));
 
-        assertNotEquals(first, null);
+        assertThat(first).isNotNull();
         //noinspection AssertBetweenInconvertibleTypes
-        assertNotEquals(first, BigDecimal.ZERO);
+        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
 
         // self
-        assertEquals(first, first);
-        assertEquals(first.hashCode(), first.hashCode());
+        assertThat(first).isEqualTo(first);
+        assertThat(first.hashCode()).isEqualTo(first.hashCode());
 
         // the same
-        assertEquals(first, theSame);
-        assertEquals(first.hashCode(), theSame.hashCode());
+        assertThat(theSame).isEqualTo(first);
+        assertThat(theSame.hashCode()).isEqualTo(first.hashCode());
 
         // others
-        assertNotEquals(first, second);
-        assertNotEquals(first.hashCode(), second.hashCode());
-
-        // another implementation of PgConnection
-        final PgConnection connectionMock = Mockito.mock(PgConnection.class);
-        Mockito.when(connectionMock.getHost()).thenReturn(PgHostImpl.ofPrimary());
-        assertEquals(first, connectionMock);
+        assertThat(second).isNotEqualTo(first);
+        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
     }
 
     @Test
@@ -92,7 +82,6 @@ class PgConnectionImplTest {
     @Test
     void toStringTest() {
         final PgConnection connection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
-        assertEquals("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}}",
-                connection.toString());
+        assertThat(connection.toString()).isEqualTo("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}}");
     }
 }
