@@ -171,8 +171,10 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             assertThat(secondEntry.getDuplicatedIndexes()).hasSize(2);
             assertThat(firstEntry.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
             assertThat(secondEntry.getTableName()).isEqualTo(ctx.enrichWithSchema("clients"));
-            assertThat(firstEntry.getIndexNames()).contains(ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"));
-            assertThat(secondEntry.getIndexNames()).contains(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_clients_last_name"));
+            assertThat(firstEntry.getIndexNames())
+                    .contains(ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"));
+            assertThat(secondEntry.getIndexNames())
+                    .contains(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_clients_last_name"));
         });
     }
 

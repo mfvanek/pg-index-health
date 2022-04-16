@@ -13,6 +13,6 @@ Java >= 8 is required.
     
    This will build the project and run tests.
     
-By default [PostgreSQL 13.1 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
+By default [PostgreSQL 14.0 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
 Set `TEST_PG_VERSION` environment variable to use any of other available PostgreSQL version.  
 List of all available PostgreSQL versions can be found [here](https://hub.docker.com/_/postgres).
