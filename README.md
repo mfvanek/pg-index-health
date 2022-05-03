@@ -74,3 +74,6 @@ So you need to have [Docker](https://www.docker.com/) installed on your machine.
 ## Related projects
 [pg_analyse](https://github.com/idlesign/pg_analyse) - a set of tools to gather useful information from PostgreSQL,
 written in Python, with command line interface.
+
+## Acknowledgements
+Supported by [JetBrains](https://www.jetbrains.com/) with [Licenses for Open Source Development](https://www.jetbrains.com/community/opensource/#support)
