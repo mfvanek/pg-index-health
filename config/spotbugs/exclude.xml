@@ -32,4 +32,27 @@
             <Class name="io.github.mfvanek.pg.embedded.PostgresDbExtension"/>
         </Or>
     </Match>
+    <Match>
+        <Bug pattern="EC_NULL_ARG"/>
+        <Or>
+            <Class name="~io\.github\.mfvanek\.pg\.connection\..*Test"/>
+            <Class name="~io\.github\.mfvanek\.pg\.model\..*Test"/>
+            <Class name="~io\.github\.mfvanek\.pg\.settings\..*Test"/>
+        </Or>
+    </Match>
+    <Match>
+        <Bug pattern="EC_UNRELATED_TYPES"/>
+        <Or>
+            <Class name="~io\.github\.mfvanek\.pg\.connection\..*Test"/>
+            <Class name="~io\.github\.mfvanek\.pg\.model\..*Test"/>
+            <Class name="~io\.github\.mfvanek\.pg\.settings\..*Test"/>
+        </Or>
+    </Match>
+    <Match>
+        <Bug pattern="EC_UNRELATED_CLASS_AND_INTERFACE"/>
+        <Or>
+            <Class name="~io\.github\.mfvanek\.pg\.connection\..*Test"/>
+            <Class name="~io\.github\.mfvanek\.pg\.settings\..*Test"/>
+        </Or>
+    </Match>
 </FindBugsFilter>
