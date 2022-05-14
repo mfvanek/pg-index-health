@@ -34,7 +34,8 @@ class ReplicasHelperTest {
 
     @Test
     void privateConstructor() {
-        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(ReplicasHelper.class)).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(ReplicasHelper.class))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test

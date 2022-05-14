@@ -18,6 +18,7 @@ class ValidatorsTest {
 
     @Test
     void privateConstructor() {
-        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(Validators.class)).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(Validators.class))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 }

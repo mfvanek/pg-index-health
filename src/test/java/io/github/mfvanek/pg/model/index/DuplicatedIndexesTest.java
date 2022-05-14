@@ -116,6 +116,7 @@ class DuplicatedIndexesTest {
         assertThatThrownBy(() -> DuplicatedIndexes.of("t", "idx=i1, size=1")).isInstanceOf(IllegalArgumentException.class);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
         final DuplicatedIndexes first = DuplicatedIndexes.of(Arrays.asList(
@@ -128,9 +129,9 @@ class DuplicatedIndexesTest {
                 IndexWithSize.of("t2", "i5", 101L),
                 IndexWithSize.of("t2", "i6", 202L)));
 
-        assertThat(first).isNotNull();
-        //noinspection AssertBetweenInconvertibleTypes
-        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
+        assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
         assertThat(first).isEqualTo(first);

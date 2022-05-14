@@ -106,8 +106,8 @@ class IndexesMaintenanceOnHostMultipleSchemasTest {
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Arrays.asList(
-                            ForeignKey.ofColumn(ctx.enrichWithSchema("t1"), "f1", "col1"),
-                            ForeignKey.ofColumn(ctx.enrichWithSchema("t1"), "f2", "col2"));
+                            ForeignKey.ofNotNullColumn(ctx.enrichWithSchema("t1"), "f1", "col1"),
+                            ForeignKey.ofNotNullColumn(ctx.enrichWithSchema("t1"), "f2", "col2"));
                 });
         final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex(contexts);
         assertThat(foreignKeys).isNotNull();

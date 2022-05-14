@@ -21,7 +21,8 @@ class SqlQueryReaderTest {
 
     @Test
     void privateConstructor() {
-        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(SqlQueryReader.class)).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(SqlQueryReader.class))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test

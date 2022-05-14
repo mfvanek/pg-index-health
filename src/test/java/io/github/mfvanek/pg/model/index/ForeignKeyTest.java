@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.table.Column;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -26,57 +27,112 @@ class ForeignKeyTest {
 
     @Test
     void testToString() {
-        final ForeignKey foreignKey = ForeignKey.ofColumn("t", "c_t_order_id", "order_id");
-        assertThat(foreignKey.toString()).isEqualTo("ForeignKey{tableName='t', constraintName='c_t_order_id', " + "columnsInConstraint=[order_id]}");
+        final ForeignKey foreignKey = ForeignKey.ofNotNullColumn("t", "c_t_order_id", "order_id");
+        assertThat(foreignKey.toString())
+                .isEqualTo("ForeignKey{tableName='t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='t', columnName='order_id', notNull=true}]}");
+
+        final ForeignKey foreignKeyWithNullableColumn = ForeignKey.ofNullableColumn("t", "c_t_order_id", "order_id");
+        assertThat(foreignKeyWithNullableColumn.toString())
+                .isEqualTo("ForeignKey{tableName='t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='t', columnName='order_id', notNull=false}]}");
     }
 
     @Test
     void foreignKey() {
-        final ForeignKey foreignKey = ForeignKey.ofColumn("t", "c_t_order_id", "order_id");
-        assertThat(foreignKey.getTableName()).isEqualTo("t");
-        assertThat(foreignKey.getConstraintName()).isEqualTo("c_t_order_id");
-        assertThat(foreignKey.getColumnsInConstraint()).contains("order_id");
+        final ForeignKey foreignKey = ForeignKey.ofNotNullColumn("t", "c_t_order_id", "order_id");
+        assertThat(foreignKey.getTableName())
+                .isNotBlank()
+                .isEqualTo("t");
+        assertThat(foreignKey.getConstraintName())
+                .isNotBlank()
+                .isEqualTo("c_t_order_id");
+        assertThat(foreignKey.getColumnsInConstraint())
+                .isNotNull()
+                .hasSize(1)
+                .containsExactly(Column.ofNotNull("t", "order_id"));
     }
 
     @Test
     void getColumnsInConstraint() {
-        ForeignKey key = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "item_id"));
-        assertThat(key.getColumnsInConstraint()).contains("order_id", "item_id");
+        ForeignKey key = ForeignKey.of("t", "c_t_order_id",
+                Arrays.asList(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id")));
+        assertThat(key.getColumnsInConstraint())
+                .isNotNull()
+                .hasSize(2)
+                .containsExactly(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id"));
     }
 
     @Test
     void shouldCreateDefensiveCopyOfColumnsList() {
-        final List<String> columns = new ArrayList<>(Arrays.asList("first", "second", "third"));
+        final List<Column> columns = new ArrayList<>(Arrays.asList(
+                Column.ofNotNull("t", "first"),
+                Column.ofNotNull("t", "second"),
+                Column.ofNotNull("t", "third")));
         final ForeignKey key = ForeignKey.of("t", "c_t_fk", columns);
 
-        columns.add("fourth");
-        assertThat(key.getColumnsInConstraint()).hasSize(3);
-        assertThat(key.getColumnsInConstraint()).doesNotContain("fourth");
-        assertThatThrownBy(() -> key.getColumnsInConstraint().clear()).isInstanceOf(UnsupportedOperationException.class);
+        columns.add(Column.ofNotNull("t", "fourth"));
+
+        assertThat(key.getColumnsInConstraint())
+                .isNotNull()
+                .hasSize(3)
+                .doesNotContain(Column.ofNotNull("t", "fourth"));
+
+        assertThatThrownBy(() -> key.getColumnsInConstraint().clear())
+                .isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    void allColumnMustBelongToTheSameTable() {
+        final List<Column> columns = Arrays.asList(
+                Column.ofNotNull("t", "first"),
+                Column.ofNotNull("t1", "second"));
+        assertThatThrownBy(() -> ForeignKey.of("t", "c_t_fk", columns))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Table name is not the same within given rows");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThatThrownBy(() -> ForeignKey.of(null, null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ForeignKey.of("t", null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", Collections.emptyList())).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> ForeignKey.ofColumn("t", "fk", null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ForeignKey.ofColumn("t", "fk", "")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> ForeignKey.ofColumn("t", "fk", "  ")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ForeignKey.of(null, null, null))
+                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> ForeignKey.of("t", null, null))
+                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", null))
+                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", Collections.emptyList()))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ForeignKey.ofColumn("t", "fk", null))
+                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> ForeignKey.ofNotNullColumn("t", "fk", null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("columnName cannot be null");
+        assertThatThrownBy(() -> ForeignKey.ofNotNullColumn("t", "fk", ""))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ForeignKey.ofNotNullColumn("t", "fk", "  "))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ForeignKey.ofNullableColumn("t", "fk", null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("columnName cannot be null");
+        assertThatThrownBy(() -> ForeignKey.ofNullableColumn("t", "fk", ""))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ForeignKey.ofNullableColumn("t", "fk", "  "))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
-        final ForeignKey first = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
-        final ForeignKey theSame = ForeignKey.of("t", "c_t_order_id", Arrays.asList("order_id", "limit"));
-        final ForeignKey withDifferentOrderOfColumns = ForeignKey.of("t", "c_t_order_id", Arrays.asList("limit", "order_id"));
-        final ForeignKey second = ForeignKey.ofColumn("t", "c_t_order_id", "no_matter_what");
+        final ForeignKey first = ForeignKey.of("t", "c_t_order_id",
+                Arrays.asList(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "limit")));
+        final ForeignKey theSame = ForeignKey.of("t", "c_t_order_id",
+                Arrays.asList(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "limit")));
+        final ForeignKey withDifferentOrderOfColumns = ForeignKey.of("t", "c_t_order_id",
+                Arrays.asList(Column.ofNotNull("t", "limit"), Column.ofNotNull("t", "order_id")));
+        final ForeignKey second = ForeignKey.ofNullableColumn("t", "c_t_order_id", "no_matter_what");
 
-        assertThat(first).isNotNull();
-        //noinspection AssertBetweenInconvertibleTypes
-        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
+        assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
         assertThat(first).isEqualTo(first);
@@ -93,11 +149,13 @@ class ForeignKeyTest {
         assertThat(second).isEqualTo(first);
         assertThat(second.hashCode()).isEqualTo(first.hashCode());
 
-        final ForeignKey third = ForeignKey.of("table", "c_t_order_id", Arrays.asList("order_id", "limit"));
+        final ForeignKey third = ForeignKey.of("table", "c_t_order_id",
+                Arrays.asList(Column.ofNotNull("table", "order_id"), Column.ofNotNull("table", "limit")));
         assertThat(third).isNotEqualTo(first);
         assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
 
-        final ForeignKey fourth = ForeignKey.of("t", "other_id", Arrays.asList("order_id", "limit"));
+        final ForeignKey fourth = ForeignKey.of("t", "other_id",
+                Arrays.asList(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "limit")));
         assertThat(fourth).isNotEqualTo(first);
         assertThat(fourth.hashCode()).isNotEqualTo(first.hashCode());
     }

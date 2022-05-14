@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.table.Column;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.Validators;
 
@@ -31,16 +32,18 @@ public class ForeignKey implements TableNameAware {
 
     private final String tableName;
     private final String constraintName;
-    private final List<String> columnsInConstraint;
+    private final List<Column> columnsInConstraint;
 
     private ForeignKey(@Nonnull String tableName,
                        @Nonnull String constraintName,
-                       @Nonnull List<String> columnsInConstraint) {
+                       @Nonnull List<Column> columnsInConstraint) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
-        final List<String> defensiveCopy = new ArrayList<>(
+        final List<Column> defensiveCopy = new ArrayList<>(
                 Objects.requireNonNull(columnsInConstraint, "columnsInConstraint"));
-        this.columnsInConstraint = Collections.unmodifiableList(Validators.validateThatNotEmpty(defensiveCopy));
+        Validators.validateThatNotEmpty(defensiveCopy);
+        Validators.validateThatTableIsTheSame(tableName, defensiveCopy);
+        this.columnsInConstraint = Collections.unmodifiableList(defensiveCopy);
     }
 
     /**
@@ -63,12 +66,13 @@ public class ForeignKey implements TableNameAware {
     }
 
     /**
-     * Gets column names of foreign key constraint.
+     * Gets columns of foreign key constraint.
      *
-     * @return column names of foreign key constraint
+     * @return columns of foreign key constraint
+     * @see Column
      */
     @Nonnull
-    public List<String> getColumnsInConstraint() {
+    public List<Column> getColumnsInConstraint() {
         return columnsInConstraint;
     }
 
@@ -104,15 +108,29 @@ public class ForeignKey implements TableNameAware {
     @Nonnull
     public static ForeignKey of(@Nonnull String tableName,
                                 @Nonnull String constraintName,
-                                @Nonnull List<String> columnsInConstraint) {
+                                @Nonnull List<Column> columnsInConstraint) {
         return new ForeignKey(tableName, constraintName, columnsInConstraint);
     }
 
     @Nonnull
     public static ForeignKey ofColumn(@Nonnull String tableName,
                                       @Nonnull String constraintName,
-                                      @Nonnull String columnName) {
+                                      @Nonnull Column column) {
         return new ForeignKey(tableName, constraintName,
-                Collections.singletonList(Validators.notBlank(columnName, "columnName")));
+                Collections.singletonList(Objects.requireNonNull(column, "column")));
+    }
+
+    @Nonnull
+    public static ForeignKey ofNotNullColumn(@Nonnull String tableName,
+                                             @Nonnull String constraintName,
+                                             @Nonnull String columnName) {
+        return ofColumn(tableName, constraintName, Column.ofNotNull(tableName, columnName));
+    }
+
+    @Nonnull
+    public static ForeignKey ofNullableColumn(@Nonnull String tableName,
+                                              @Nonnull String constraintName,
+                                              @Nonnull String columnName) {
+        return ofColumn(tableName, constraintName, Column.ofNullable(tableName, columnName));
     }
 }

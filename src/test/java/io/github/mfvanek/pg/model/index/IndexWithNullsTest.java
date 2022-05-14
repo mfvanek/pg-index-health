@@ -48,6 +48,7 @@ class IndexWithNullsTest {
         assertThat(index.toString()).isEqualTo("IndexWithNulls{tableName='t', indexName='i', " + "indexSizeInBytes=22, nullableField='f'}");
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
         final IndexWithNulls first = IndexWithNulls.of("t1", "i1", 1, "f");
@@ -55,9 +56,9 @@ class IndexWithNullsTest {
         final IndexWithNulls second = IndexWithNulls.of("t2", "i2", 2, "f");
         final IndexWithNulls third = IndexWithNulls.of("t3", "i3", 2, "t");
 
-        assertThat(first).isNotNull();
-        //noinspection AssertBetweenInconvertibleTypes
-        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
+        assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
         assertThat(first).isEqualTo(first);

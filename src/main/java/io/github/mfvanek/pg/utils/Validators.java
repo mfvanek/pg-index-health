@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
-import io.github.mfvanek.pg.model.index.IndexWithSize;
+import io.github.mfvanek.pg.model.table.TableNameAware;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -44,7 +44,7 @@ public final class Validators {
     @Nonnull
     public static String notBlank(@Nonnull final String argumentValue, @Nonnull final String argumentName) {
         if (StringUtils.isBlank(Objects.requireNonNull(argumentValue, argumentName + " cannot be null"))) {
-            throw new IllegalArgumentException(argumentName);
+            throw new IllegalArgumentException(argumentName + " cannot be blank");
         }
         return argumentValue;
     }
@@ -78,17 +78,21 @@ public final class Validators {
         return percentValue;
     }
 
-    public static void validateThatTableIsTheSame(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+    public static void validateThatTableIsTheSame(@Nonnull final List<? extends TableNameAware> duplicatedIndexes) {
         final String tableName = validateThatContainsAtLeastTwoRows(duplicatedIndexes).get(0).getTableName();
-        final boolean tableIsTheSame = duplicatedIndexes.stream().allMatch(i -> i.getTableName().equals(tableName));
+        validateThatTableIsTheSame(tableName, duplicatedIndexes);
+    }
+
+    public static void validateThatTableIsTheSame(@Nonnull final String expectedTableName, @Nonnull final List<? extends TableNameAware> rows) {
+        final boolean tableIsTheSame = rows.stream().allMatch(i -> i.getTableName().equals(expectedTableName));
         if (!tableIsTheSame) {
             throw new IllegalArgumentException("Table name is not the same within given rows");
         }
     }
 
+
     @Nonnull
-    private static List<IndexWithSize> validateThatContainsAtLeastTwoRows(
-            @Nonnull final List<IndexWithSize> duplicatedIndexes) {
+    private static <T> List<T> validateThatContainsAtLeastTwoRows(@Nonnull final List<T> duplicatedIndexes) {
         final int size = Objects.requireNonNull(duplicatedIndexes).size();
         if (0 == size) {
             throw new IllegalArgumentException("duplicatedIndexes cannot be empty");
@@ -100,7 +104,7 @@ public final class Validators {
     }
 
     @Nonnull
-    public static List<String> validateThatNotEmpty(@Nonnull final List<String> columnsInConstraint) {
+    public static <T> List<T> validateThatNotEmpty(@Nonnull final List<T> columnsInConstraint) {
         if (CollectionUtils.isEmpty(columnsInConstraint)) {
             throw new IllegalArgumentException("columnsInConstraint cannot be empty");
         }

@@ -109,13 +109,14 @@ class DatabaseHealthMultipleSchemasTest {
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Arrays.asList(
-                            ForeignKey.ofColumn(ctx.enrichWithSchema("t1"), "f1", "col1"),
-                            ForeignKey.ofColumn(ctx.enrichWithSchema("t1"), "f2", "col2"));
+                            ForeignKey.ofNotNullColumn(ctx.enrichWithSchema("t1"), "f1", "col1"),
+                            ForeignKey.ofNotNullColumn(ctx.enrichWithSchema("t1"), "f2", "col2"));
                 });
         final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex(contexts);
         assertThat(foreignKeys).isNotNull();
         assertThat(foreignKeys).hasSize(6);
-        assertThat(foreignKeys.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1");
+        assertThat(foreignKeys.stream().map(TableNameAware::getTableName).collect(Collectors.toSet()))
+                .containsExactlyInAnyOrder("t1", "demo.t1", "test.t1");
     }
 
     @Test

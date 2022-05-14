@@ -30,10 +30,18 @@ class TableTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidValues() {
-        assertThatThrownBy(() -> Table.of(null, 1L)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> Table.of("", 1L)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> Table.of("  ", 1L)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> Table.of("t", -1L)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> Table.of(null, 1L))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("tableName cannot be null");
+        assertThatThrownBy(() -> Table.of("", 1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("tableName cannot be blank");
+        assertThatThrownBy(() -> Table.of("  ", 1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("tableName cannot be blank");
+        assertThatThrownBy(() -> Table.of("t", -1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("tableSizeInBytes cannot be less than zero");
     }
 
     @Test
@@ -42,6 +50,7 @@ class TableTest {
         assertThat(table.toString()).isEqualTo("Table{tableName='t', tableSizeInBytes=2}");
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
         final Table first = Table.of("t1", 22L);
@@ -49,9 +58,9 @@ class TableTest {
         final Table second = Table.of("t2", 30L);
         final Table third = Table.of("t3", 22L);
 
-        assertThat(first).isNotNull();
-        //noinspection AssertBetweenInconvertibleTypes
-        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
+        assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
         assertThat(first).isEqualTo(first);

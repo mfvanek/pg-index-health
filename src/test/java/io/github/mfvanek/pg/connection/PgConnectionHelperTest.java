@@ -29,7 +29,8 @@ class PgConnectionHelperTest {
 
     @Test
     void privateConstructor() {
-        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(PgConnectionHelper.class)).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(PgConnectionHelper.class))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test

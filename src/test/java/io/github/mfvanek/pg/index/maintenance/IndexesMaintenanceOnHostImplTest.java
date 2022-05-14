@@ -21,6 +21,7 @@ import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.table.Column;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.utils.DatabasePopulator;
 import org.junit.jupiter.api.Test;
@@ -258,12 +259,18 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
             final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
-            assertThat(foreignKeys).isNotNull();
-            assertThat(foreignKeys).hasSize(1);
+            assertThat(foreignKeys)
+                    .isNotNull()
+                    .hasSize(1);
             final ForeignKey foreignKey = foreignKeys.get(0);
-            assertThat(foreignKey.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
-            assertThat(foreignKey.getConstraintName()).isEqualTo("c_accounts_fk_client_id");
-            assertThat(foreignKey.getColumnsInConstraint()).contains("client_id");
+            assertThat(foreignKey.getTableName())
+                    .isEqualTo(ctx.enrichWithSchema("accounts"));
+            assertThat(foreignKey.getConstraintName())
+                    .isEqualTo("c_accounts_fk_client_id");
+            assertThat(foreignKey.getColumnsInConstraint())
+                    .isNotNull()
+                    .hasSize(1)
+                    .containsExactly(Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"));
         });
     }
 
@@ -272,12 +279,18 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithNotSuitableIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withNonSuitableIndex(), ctx -> {
             final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
-            assertThat(foreignKeys).isNotNull();
-            assertThat(foreignKeys).hasSize(1);
+            assertThat(foreignKeys)
+                    .isNotNull()
+                    .hasSize(1);
             final ForeignKey foreignKey = foreignKeys.get(0);
-            assertThat(foreignKey.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
-            assertThat(foreignKey.getConstraintName()).isEqualTo("c_accounts_fk_client_id");
-            assertThat(foreignKey.getColumnsInConstraint()).contains("client_id");
+            assertThat(foreignKey.getTableName())
+                    .isEqualTo(ctx.enrichWithSchema("accounts"));
+            assertThat(foreignKey.getConstraintName())
+                    .isEqualTo("c_accounts_fk_client_id");
+            assertThat(foreignKey.getColumnsInConstraint())
+                    .isNotNull()
+                    .hasSize(1)
+                    .containsExactly(Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"));
         });
     }
 

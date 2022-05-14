@@ -22,10 +22,13 @@ import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.table.Column;
 
-import java.util.Arrays;
+import java.sql.Array;
 import java.util.List;
 import javax.annotation.Nonnull;
+
+import static io.github.mfvanek.pg.utils.ColumnsInForeignKeyParser.parseRawColumnData;
 
 /**
  * Implementation of {@code IndexMaintenance} which collects information from the current host in the cluster.
@@ -97,9 +100,10 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
         return executeQuery(Diagnostics.FOREIGN_KEYS_WITHOUT_INDEX, pgContext, rs -> {
             final String tableName = rs.getString("table_name");
             final String constraintName = rs.getString("constraint_name");
-            final String columnsAsString = rs.getString("columns");
-            final String[] columns = columnsAsString.split(", ");
-            return ForeignKey.of(tableName, constraintName, Arrays.asList(columns));
+            final Array columnsArray = rs.getArray("columns");
+            final String[] rawColumns = (String[]) columnsArray.getArray();
+            final List<Column> columns = parseRawColumnData(tableName, rawColumns);
+            return ForeignKey.of(tableName, constraintName, columns);
         });
     }
 

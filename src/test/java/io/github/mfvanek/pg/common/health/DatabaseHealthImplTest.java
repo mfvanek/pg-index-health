@@ -22,6 +22,7 @@ import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.table.Column;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
@@ -264,11 +265,16 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
             final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex(ctx);
-            assertThat(foreignKeys).isNotNull();
-            assertThat(foreignKeys).hasSize(1);
+            assertThat(foreignKeys)
+                    .isNotNull()
+                    .hasSize(1);
             final ForeignKey foreignKey = foreignKeys.get(0);
-            assertThat(foreignKey.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
-            assertThat(foreignKey.getColumnsInConstraint()).contains("client_id");
+            assertThat(foreignKey.getTableName())
+                    .isEqualTo(ctx.enrichWithSchema("accounts"));
+            assertThat(foreignKey.getColumnsInConstraint())
+                    .isNotNull()
+                    .hasSize(1)
+                    .containsExactly(Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"));
         });
     }
 
@@ -277,11 +283,16 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithNotSuitableIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withNonSuitableIndex(), ctx -> {
             final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex(ctx);
-            assertThat(foreignKeys).isNotNull();
-            assertThat(foreignKeys).hasSize(1);
+            assertThat(foreignKeys)
+                    .isNotNull()
+                    .hasSize(1);
             final ForeignKey foreignKey = foreignKeys.get(0);
-            assertThat(foreignKey.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
-            assertThat(foreignKey.getColumnsInConstraint()).contains("client_id");
+            assertThat(foreignKey.getTableName())
+                    .isEqualTo(ctx.enrichWithSchema("accounts"));
+            assertThat(foreignKey.getColumnsInConstraint())
+                    .isNotNull()
+                    .hasSize(1)
+                    .containsExactly(Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"));
         });
     }
 
