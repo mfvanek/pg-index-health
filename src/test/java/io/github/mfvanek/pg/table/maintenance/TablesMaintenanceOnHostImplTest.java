@@ -43,8 +43,9 @@ public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase
     @Test
     void getTablesWithMissingIndexesOnEmptyDatabase() {
         final List<TableWithMissingIndex> tables = tablesMaintenance.getTablesWithMissingIndexes();
-        assertThat(tables).isNotNull();
-        assertThat(tables).isEmpty();
+        assertThat(tables)
+                .isNotNull()
+                .isEmpty();
     }
 
     @ParameterizedTest
@@ -52,8 +53,9 @@ public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase
     void getTablesWithMissingIndexesOnDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final List<TableWithMissingIndex> tables = tablesMaintenance.getTablesWithMissingIndexes(ctx);
-            assertThat(tables).isNotNull();
-            assertThat(tables).isEmpty();
+            assertThat(tables)
+                    .isNotNull()
+                    .isEmpty();
         });
     }
 
@@ -63,8 +65,9 @@ public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             tryToFindAccountByClientId(schemaName);
             final List<TableWithMissingIndex> tables = tablesMaintenance.getTablesWithMissingIndexes(ctx);
-            assertThat(tables).isNotNull();
-            assertThat(tables).hasSize(1);
+            assertThat(tables)
+                    .isNotNull()
+                    .hasSize(1);
             final TableWithMissingIndex table = tables.get(0);
             assertThat(table.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
             assertThat(table.getSeqScans()).isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
@@ -75,8 +78,9 @@ public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase
     @Test
     void getTablesWithoutPrimaryKeyOnEmptyDatabase() {
         final List<Table> tables = tablesMaintenance.getTablesWithoutPrimaryKey();
-        assertThat(tables).isNotNull();
-        assertThat(tables).isEmpty();
+        assertThat(tables)
+                .isNotNull()
+                .isEmpty();
     }
 
     @ParameterizedTest
@@ -84,8 +88,9 @@ public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase
     void getTablesWithoutPrimaryKeyOnDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final List<Table> tables = tablesMaintenance.getTablesWithoutPrimaryKey(ctx);
-            assertThat(tables).isNotNull();
-            assertThat(tables).isEmpty();
+            assertThat(tables)
+                    .isNotNull()
+                    .isEmpty();
         });
     }
 
@@ -94,8 +99,9 @@ public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase
     void getTablesWithoutPrimaryKeyOnDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withTableWithoutPrimaryKey(), ctx -> {
             final List<Table> tables = tablesMaintenance.getTablesWithoutPrimaryKey(ctx);
-            assertThat(tables).isNotNull();
-            assertThat(tables).hasSize(1);
+            assertThat(tables)
+                    .isNotNull()
+                    .hasSize(1);
             final Table table = tables.get(0);
             assertThat(table.getTableName()).isEqualTo(ctx.enrichWithSchema("bad_clients"));
         });
@@ -106,16 +112,18 @@ public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase
     void getTablesWithoutPrimaryKeyShouldReturnNothingForMaterializedViews(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withMaterializedView(), ctx -> {
             final List<Table> tables = tablesMaintenance.getTablesWithoutPrimaryKey(ctx);
-            assertThat(tables).isNotNull();
-            assertThat(tables).isEmpty();
+            assertThat(tables)
+                    .isNotNull()
+                    .isEmpty();
         });
     }
 
     @Test
     void getTablesWithBloatOnEmptyDatabase() {
         final List<TableWithBloat> tables = tablesMaintenance.getTablesWithBloat();
-        assertThat(tables).isNotNull();
-        assertThat(tables).isEmpty();
+        assertThat(tables)
+                .isNotNull()
+                .isEmpty();
     }
 
     @ParameterizedTest
@@ -124,8 +132,9 @@ public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withStatistics(), ctx -> {
             waitForStatisticsCollector();
             final List<TableWithBloat> tables = tablesMaintenance.getTablesWithBloat(ctx);
-            assertThat(tables).isNotNull();
-            assertThat(tables).isEmpty();
+            assertThat(tables)
+                    .isNotNull()
+                    .isEmpty();
         });
     }
 
@@ -136,8 +145,9 @@ public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase
             waitForStatisticsCollector();
             assertThat(existsStatisticsForTable(ctx, "accounts")).isTrue();
             final List<TableWithBloat> tables = tablesMaintenance.getTablesWithBloat(ctx);
-            assertThat(tables).isNotNull();
-            assertThat(tables).hasSize(2);
+            assertThat(tables)
+                    .isNotNull()
+                    .hasSize(2);
             final TableWithBloat table = tables.get(0);
             assertThat(table.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
             assertThat(table.getTableSizeInBytes()).isEqualTo(114688L);

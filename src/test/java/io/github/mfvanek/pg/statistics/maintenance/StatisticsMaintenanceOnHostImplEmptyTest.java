@@ -43,8 +43,9 @@ class StatisticsMaintenanceOnHostImplEmptyTest extends DatabaseAwareTestBase {
         DatabasePopulator.collectStatistics(embeddedPostgres.getTestDatabase());
         waitForStatisticsCollector();
         final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
-        assertThat(statsResetTimestamp).isNotNull();
-        assertThat(statsResetTimestamp).isPresent();
+        assertThat(statsResetTimestamp)
+                .isNotNull()
+                .isPresent();
         assertThat(statsResetTimestamp.get()).isBeforeOrEqualTo(OffsetDateTime.now());
     }
 }

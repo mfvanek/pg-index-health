@@ -57,8 +57,9 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
             waitForStatisticsCollector();
             assertThat(getSeqScansForAccounts(ctx)).isEqualTo(0L);
             final Optional<OffsetDateTime> statsResetTimestamp = databaseManagement.getLastStatsResetTimestamp();
-            assertThat(statsResetTimestamp).isNotNull();
-            assertThat(statsResetTimestamp).isPresent();
+            assertThat(statsResetTimestamp)
+                    .isNotNull()
+                    .isPresent();
             assertThat(statsResetTimestamp.get()).isAfter(testStartTime);
         });
     }
@@ -69,8 +70,9 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final ServerSpecification specification = ServerSpecification.builder().withCpuCores(2).withMemoryAmount(2, MemoryUnit.GB).withSSD().build();
             final Set<PgParam> paramsWithDefaultValues = databaseManagement.getParamsWithDefaultValues(specification);
-            assertThat(paramsWithDefaultValues).isNotNull();
-            assertThat(paramsWithDefaultValues).hasSize(10);
+            assertThat(paramsWithDefaultValues)
+                    .isNotNull()
+                    .hasSize(10);
             assertThat(paramsWithDefaultValues.stream().map(PgParam::getName).collect(toList()))
                     .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement", "idle_in_transaction_session_timeout",
                             "statement_timeout", "effective_cache_size", "lock_timeout", "temp_file_limit");

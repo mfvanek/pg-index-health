@@ -57,8 +57,9 @@ public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTest
             waitForStatisticsCollector();
             assertThat(getSeqScansForAccounts(pgContext)).isEqualTo(0L);
             final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
-            assertThat(statsResetTimestamp).isNotNull();
-            assertThat(statsResetTimestamp).isPresent();
+            assertThat(statsResetTimestamp)
+                    .isNotNull()
+                    .isPresent();
             assertThat(statsResetTimestamp.get()).isAfter(testStartTime);
         });
     }
