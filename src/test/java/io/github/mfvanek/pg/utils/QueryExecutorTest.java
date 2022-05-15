@@ -42,7 +42,8 @@ public final class QueryExecutorTest extends DatabaseAwareTestBase {
 
     @Test
     void privateConstructor() {
-        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(QueryExecutor.class)).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(QueryExecutor.class))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test

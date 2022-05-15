@@ -10,41 +10,45 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.table.Column;
 import io.github.mfvanek.pg.utils.Validators;
 
+import java.util.Collections;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 @Immutable
 public final class IndexWithNulls extends IndexWithSize {
 
-    private final String nullableField;
+    private final Column nullableColumn;
 
     private IndexWithNulls(@Nonnull final String tableName,
                            @Nonnull final String indexName,
                            final long indexSizeInBytes,
-                           @Nonnull final String nullableField) {
+                           @Nonnull final Column nullableColumn) {
         super(tableName, indexName, indexSizeInBytes);
-        this.nullableField = Validators.notBlank(nullableField, "nullableField");
+        Objects.requireNonNull(nullableColumn, "nullableColumn cannot be null");
+        Validators.validateThatTableIsTheSame(tableName, Collections.singletonList(nullableColumn));
+        this.nullableColumn = nullableColumn;
     }
 
     @Nonnull
-    public String getNullableField() {
-        return nullableField;
+    public Column getNullableColumn() {
+        return nullableColumn;
     }
 
     @Override
     public String toString() {
         return IndexWithNulls.class.getSimpleName() + '{' +
                 innerToString() +
-                ", nullableField='" + nullableField + '\'' +
-                '}';
+                ", nullableColumn=" + nullableColumn + '}';
     }
 
     public static IndexWithNulls of(@Nonnull final String tableName,
                                     @Nonnull final String indexName,
                                     final long indexSizeInBytes,
-                                    @Nonnull final String nullableField) {
-        return new IndexWithNulls(tableName, indexName, indexSizeInBytes, nullableField);
+                                    @Nonnull final String nullableColumnName) {
+        return new IndexWithNulls(tableName, indexName, indexSizeInBytes, Column.ofNullable(tableName, nullableColumnName));
     }
 }

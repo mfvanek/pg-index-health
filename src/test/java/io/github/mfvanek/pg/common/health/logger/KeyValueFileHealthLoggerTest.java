@@ -23,6 +23,7 @@ import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.IndexWithSize;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.table.Column;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
@@ -163,9 +164,10 @@ class KeyValueFileHealthLoggerTest {
     void logForeignKeysNotCoveredWithIndex() {
         Mockito.when(databaseHealth.getForeignKeysNotCoveredWithIndex(any(PgContext.class)))
                 .thenReturn(Arrays.asList(
-                        ForeignKey.ofColumn("t1", "c1", "f1"),
-                        ForeignKey.ofColumn("t1", "c2", "f2"),
-                        ForeignKey.of("t2", "c3", Arrays.asList("f3", "f4"))
+                        ForeignKey.ofNotNullColumn("t1", "c1", "f1"),
+                        ForeignKey.ofNotNullColumn("t1", "c2", "f2"),
+                        ForeignKey.of("t2", "c3",
+                                Arrays.asList(Column.ofNotNull("t2", "f3"), Column.ofNotNull("t2", "f4")))
                 ));
         final List<String> logs = logger.logAll(Exclusions.empty());
         assertContainsKey(logs, SimpleLoggingKey.FOREIGN_KEYS, "foreign_keys_without_index\t3");

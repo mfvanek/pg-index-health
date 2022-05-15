@@ -46,15 +46,16 @@ class IndexTest {
         assertThat(index.toString()).isEqualTo("Index{tableName='t', indexName='i'}");
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
         final Index first = Index.of("t1", "i1");
         final Index second = Index.of("t1", "i2");
         final Index third = Index.of("t2", "i2");
 
-        assertThat(first).isNotNull();
-        //noinspection AssertBetweenInconvertibleTypes
-        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
+        assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
         assertThat(first).isEqualTo(first);

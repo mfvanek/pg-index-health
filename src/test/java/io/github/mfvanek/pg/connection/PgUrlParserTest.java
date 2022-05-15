@@ -24,7 +24,8 @@ class PgUrlParserTest {
 
     @Test
     void privateConstructor() {
-        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(PgUrlParser.class)).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(PgUrlParser.class))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test

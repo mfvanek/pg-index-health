@@ -138,6 +138,13 @@ public final class DatabasePopulator implements AutoCloseable {
         return this;
     }
 
+    @Nonnull
+    public DatabasePopulator withForeignKeyOnNullableColumn() {
+        withTableWithoutPrimaryKey();
+        this.actions.putIfAbsent(230, this::createForeignKeyOnNullableColumn);
+        return this;
+    }
+
     public void populate() {
         actions.forEach((k, v) -> v.run());
     }
@@ -303,10 +310,10 @@ public final class DatabasePopulator implements AutoCloseable {
             statement.execute(String.format("drop table if exists %s.accounts cascade", schemaName));
             statement.execute(String.format("drop sequence if exists %s.accounts_seq", schemaName));
 
+            statement.execute(String.format("drop table if exists %s.bad_clients", schemaName));
+
             statement.execute(String.format("drop table if exists %s.clients", schemaName));
             statement.execute(String.format("drop sequence if exists %s.clients_seq", schemaName));
-
-            statement.execute(String.format("drop table if exists %s.bad_clients", schemaName));
         });
     }
 
@@ -314,7 +321,8 @@ public final class DatabasePopulator implements AutoCloseable {
         executeOnDatabase(dataSource, statement -> {
             statement.execute(String.format("create table if not exists %s.bad_clients (" +
                     "id bigint not null, " +
-                    "name varchar(255) not null)", schemaName));
+                    "name varchar(255) not null," +
+                    "real_client_id bigint)", schemaName));
             final String checkQuery = String.format("select exists (%n" +
                     "   select 1 %n" +
                     "   from pg_catalog.pg_class c%n" +
@@ -413,5 +421,12 @@ public final class DatabasePopulator implements AutoCloseable {
         executeOnDatabase(dataSource, statement ->
                 statement.execute(String.format("create index concurrently if not exists i_accounts_account_number " +
                 "on %s.accounts (account_number collate \"C.UTF-8\")", schemaName)));
+    }
+
+    private void createForeignKeyOnNullableColumn() {
+        executeOnDatabase(dataSource, statement ->
+                statement.execute(String.format("alter table if exists %s.bad_clients " +
+                                "add constraint c_bad_clients_fk_real_client_id foreign key (real_client_id) references %s.clients (id);",
+                        schemaName, schemaName)));
     }
 }

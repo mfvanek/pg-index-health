@@ -56,15 +56,16 @@ class PgParamImplTest {
         assertThat(param.toString()).isEqualTo("PgParamImpl{name='statement_timeout', value='2s'}");
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
         final PgParam first = PgParamImpl.of("statement_timeout", "2s");
         final PgParam theSame = PgParamImpl.of("statement_timeout", "2s");
         final PgParam second = PgParamImpl.of("lock_timeout", "2s");
 
-        assertThat(first).isNotNull();
-        //noinspection AssertBetweenInconvertibleTypes
-        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
+        assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
         assertThat(first).isEqualTo(first);

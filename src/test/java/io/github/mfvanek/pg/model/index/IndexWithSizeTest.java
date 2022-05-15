@@ -43,6 +43,7 @@ class IndexWithSizeTest {
         assertThat(index.toString()).isEqualTo("IndexWithSize{tableName='t', indexName='i', indexSizeInBytes=33}");
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
         final IndexWithSize first = IndexWithSize.of("t1", "i1", 22L);
@@ -50,9 +51,9 @@ class IndexWithSizeTest {
         final IndexWithSize second = IndexWithSize.of("t1", "i2", 33L);
         final IndexWithSize third = IndexWithSize.of("t3", "i3", 22L);
 
-        assertThat(first).isNotNull();
-        //noinspection AssertBetweenInconvertibleTypes
-        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
+        assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
         assertThat(first).isEqualTo(first);

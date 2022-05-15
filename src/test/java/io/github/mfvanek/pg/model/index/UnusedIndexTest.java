@@ -41,6 +41,7 @@ class UnusedIndexTest {
         assertThatThrownBy(() -> UnusedIndex.of("t", "i", 1L, -1L)).isInstanceOf(IllegalArgumentException.class);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
         final UnusedIndex first = UnusedIndex.of("t1", "i1", 1L, 2L);
@@ -48,9 +49,9 @@ class UnusedIndexTest {
         final UnusedIndex second = UnusedIndex.of("t1", "i2", 1L, 3L);
         final UnusedIndex third = UnusedIndex.of("t2", "i3", 2L, 2L);
 
-        assertThat(first).isNotNull();
-        //noinspection AssertBetweenInconvertibleTypes
-        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
+        assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
         assertThat(first).isEqualTo(first);

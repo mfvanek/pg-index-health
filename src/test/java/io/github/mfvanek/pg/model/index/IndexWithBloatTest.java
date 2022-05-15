@@ -48,6 +48,7 @@ class IndexWithBloatTest {
         assertThat(bloat).isNotNull();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
         final IndexWithBloat first = IndexWithBloat.of("t1", "i1", 22L, 11L, 50);
@@ -55,9 +56,9 @@ class IndexWithBloatTest {
         final IndexWithBloat second = IndexWithBloat.of("t2", "i2", 30L, 3L, 10);
         final IndexWithBloat third = IndexWithBloat.of("t3", "i3", 22L, 11L, 50);
 
-        assertThat(first).isNotNull();
-        //noinspection AssertBetweenInconvertibleTypes
-        assertThat(first).isNotEqualTo(BigDecimal.ZERO);
+        assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
         assertThat(first).isEqualTo(first);

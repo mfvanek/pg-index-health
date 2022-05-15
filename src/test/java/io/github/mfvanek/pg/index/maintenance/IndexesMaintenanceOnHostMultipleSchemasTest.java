@@ -46,8 +46,9 @@ class IndexesMaintenanceOnHostMultipleSchemasTest {
                             Index.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i1")));
                 });
         final List<Index> indexes = indexesMaintenance.getInvalidIndexes(contexts);
-        assertThat(indexes).isNotNull();
-        assertThat(indexes).hasSize(3);
+        assertThat(indexes)
+                .isNotNull()
+                .hasSize(3);
         assertThat(indexes.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t", "demo.t", "test.t");
     }
 
@@ -61,8 +62,9 @@ class IndexesMaintenanceOnHostMultipleSchemasTest {
                             IndexWithSize.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i2"), 1L)));
                 });
         final List<DuplicatedIndexes> indexes = indexesMaintenance.getDuplicatedIndexes(contexts);
-        assertThat(indexes).isNotNull();
-        assertThat(indexes).hasSize(3);
+        assertThat(indexes)
+                .isNotNull()
+                .hasSize(3);
         assertThat(indexes.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t", "demo.t", "test.t");
     }
 
@@ -80,8 +82,9 @@ class IndexesMaintenanceOnHostMultipleSchemasTest {
                                     IndexWithSize.of(ctx.enrichWithSchema("t2"), ctx.enrichWithSchema("i4"), 4L)));
                 });
         final List<DuplicatedIndexes> indexes = indexesMaintenance.getIntersectedIndexes(contexts);
-        assertThat(indexes).isNotNull();
-        assertThat(indexes).hasSize(6);
+        assertThat(indexes)
+                .isNotNull()
+                .hasSize(6);
         assertThat(indexes.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
     }
 
@@ -95,8 +98,9 @@ class IndexesMaintenanceOnHostMultipleSchemasTest {
                             UnusedIndex.of(ctx.enrichWithSchema("t2"), ctx.enrichWithSchema("i2"), 2L, 0L));
                 });
         final List<UnusedIndex> indexes = indexesMaintenance.getUnusedIndexes(contexts);
-        assertThat(indexes).isNotNull();
-        assertThat(indexes).hasSize(6);
+        assertThat(indexes)
+                .isNotNull()
+                .hasSize(6);
         assertThat(indexes.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
     }
 
@@ -106,12 +110,13 @@ class IndexesMaintenanceOnHostMultipleSchemasTest {
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
                     return Arrays.asList(
-                            ForeignKey.ofColumn(ctx.enrichWithSchema("t1"), "f1", "col1"),
-                            ForeignKey.ofColumn(ctx.enrichWithSchema("t1"), "f2", "col2"));
+                            ForeignKey.ofNotNullColumn(ctx.enrichWithSchema("t1"), "f1", "col1"),
+                            ForeignKey.ofNotNullColumn(ctx.enrichWithSchema("t1"), "f2", "col2"));
                 });
         final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex(contexts);
-        assertThat(foreignKeys).isNotNull();
-        assertThat(foreignKeys).hasSize(6);
+        assertThat(foreignKeys)
+                .isNotNull()
+                .hasSize(6);
         assertThat(foreignKeys.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1");
     }
 
@@ -124,8 +129,9 @@ class IndexesMaintenanceOnHostMultipleSchemasTest {
                             IndexWithNulls.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i1"), 1L, "col1"));
                 });
         final List<IndexWithNulls> indexes = indexesMaintenance.getIndexesWithNullValues(contexts);
-        assertThat(indexes).isNotNull();
-        assertThat(indexes).hasSize(3);
+        assertThat(indexes)
+                .isNotNull()
+                .hasSize(3);
         assertThat(indexes.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1");
     }
 
@@ -138,8 +144,9 @@ class IndexesMaintenanceOnHostMultipleSchemasTest {
                             IndexWithBloat.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i1"), 100L, 30L, 30));
                 });
         final List<IndexWithBloat> indexes = indexesMaintenance.getIndexesWithBloat(contexts);
-        assertThat(indexes).isNotNull();
-        assertThat(indexes).hasSize(3);
+        assertThat(indexes)
+                .isNotNull()
+                .hasSize(3);
         assertThat(indexes.stream().map(TableNameAware::getTableName).collect(Collectors.toSet())).containsExactlyInAnyOrder("t1", "demo.t1", "test.t1");
     }
 }

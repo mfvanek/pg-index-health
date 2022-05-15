@@ -10,9 +10,12 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.table.Column;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,33 +24,58 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class IndexWithNullsTest {
 
     @Test
-    void getNullableField() {
+    void getterShouldWork() {
         final IndexWithNulls index = IndexWithNulls.of("t", "i", 11L, "f");
         assertThat(index.getTableName()).isEqualTo("t");
         assertThat(index.getIndexName()).isEqualTo("i");
         assertThat(index.getIndexSizeInBytes()).isEqualTo(11L);
-        assertThat(index.getNullableField()).isEqualTo("f");
+        assertThat(index.getNullableColumn()).isEqualTo(Column.ofNullable("t", "f"));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThatThrownBy(() -> IndexWithNulls.of(null, null, 0, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> IndexWithNulls.of("", null, 0, null)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> IndexWithNulls.of("  ", null, 0, null)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> IndexWithNulls.of("t", null, 0, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> IndexWithNulls.of("t", "", 0, null)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, "")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, "  ")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> IndexWithNulls.of(null, null, 0, "f"))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("tableName cannot be null");
+        assertThatThrownBy(() -> IndexWithNulls.of("", null, 0, "f"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("tableName cannot be blank");
+        assertThatThrownBy(() -> IndexWithNulls.of("  ", null, 0, "f"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("tableName cannot be blank");
+        assertThatThrownBy(() -> IndexWithNulls.of("t", null, 0, "f"))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("indexName cannot be null");
+        assertThatThrownBy(() -> IndexWithNulls.of("t", "", 0, "f"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("indexName cannot be blank");
+        assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("columnName cannot be null");
+        assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, ""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("columnName cannot be blank");
+        assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, "  "))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("columnName cannot be blank");
+    }
+
+    @Test
+    void tableShouldBeTheSame() {
+        assertThatThrownBy(() -> invokePrivateConstructor("t", "i", 1L, Column.ofNullable("t2", "f")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Table name is not the same within given rows");
     }
 
     @Test
     void testToString() {
         final IndexWithNulls index = IndexWithNulls.of("t", "i", 22L, "f");
-        assertThat(index.toString()).isEqualTo("IndexWithNulls{tableName='t', indexName='i', " + "indexSizeInBytes=22, nullableField='f'}");
+        assertThat(index.toString())
+                .isEqualTo("IndexWithNulls{tableName='t', indexName='i', " + "indexSizeInBytes=22, nullableColumn=Column{tableName='t', columnName='f', notNull=false}}");
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
         final IndexWithNulls first = IndexWithNulls.of("t1", "i1", 1, "f");
@@ -55,9 +83,9 @@ class IndexWithNullsTest {
         final IndexWithNulls second = IndexWithNulls.of("t2", "i2", 2, "f");
         final IndexWithNulls third = IndexWithNulls.of("t3", "i3", 2, "t");
 
-        assertThat(first).isNotNull();
-        //noinspection AssertBetweenInconvertibleTypes
-        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
+        assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
         assertThat(first).isEqualTo(first);
@@ -88,7 +116,19 @@ class IndexWithNullsTest {
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(IndexWithNulls.class)
-                .withIgnoredFields("indexSizeInBytes", "nullableField")
+                .withIgnoredFields("indexSizeInBytes", "nullableColumn")
                 .verify();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void invokePrivateConstructor(Object ... initargs) throws Throwable {
+        final Constructor<IndexWithNulls> constructor = (Constructor<IndexWithNulls>) IndexWithNulls.class.getDeclaredConstructors()[0];
+        constructor.setAccessible(true);
+
+        try {
+            constructor.newInstance(initargs);
+        } catch (InvocationTargetException ex) {
+            throw ex.getTargetException();
+        }
     }
 }

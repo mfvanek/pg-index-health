@@ -34,7 +34,8 @@ class ReplicasHelperTest {
 
     @Test
     void privateConstructor() {
-        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(ReplicasHelper.class)).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(ReplicasHelper.class))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
@@ -58,8 +59,9 @@ class ReplicasHelperTest {
     @Test
     void getUnusedIndexesAsIntersectionResultWithEmptyInput() {
         final List<UnusedIndex> unusedIndexes = ReplicasHelper.getUnusedIndexesAsIntersectionResult(Collections.emptyList());
-        assertThat(unusedIndexes).isNotNull();
-        assertThat(unusedIndexes).isEmpty();
+        assertThat(unusedIndexes)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
@@ -75,8 +77,9 @@ class ReplicasHelperTest {
         );
         final List<TableWithMissingIndex> tablesWithMissingIndexes = ReplicasHelper.getTablesWithMissingIndexesAsUnionResult(
                 tablesWithMissingIndexesFromAllHosts);
-        assertThat(tablesWithMissingIndexes).hasSize(3);
-        assertThat(tablesWithMissingIndexes).containsExactlyInAnyOrder(t1, t2, t3);
+        assertThat(tablesWithMissingIndexes)
+                .hasSize(3)
+                .containsExactlyInAnyOrder(t1, t2, t3);
     }
 
     @SuppressWarnings("ConstantConditions")

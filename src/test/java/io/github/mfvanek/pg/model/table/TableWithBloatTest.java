@@ -48,7 +48,7 @@ class TableWithBloatTest {
         assertThat(bloat).isNotNull();
     }
 
-    @SuppressWarnings("AssertBetweenInconvertibleTypes")
+    @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
         final long tableSize = 22L;
@@ -57,8 +57,9 @@ class TableWithBloatTest {
         final TableWithBloat second = TableWithBloat.of("t2", 30L, 3L, 10);
         final TableWithBloat third = TableWithBloat.of("t3", tableSize, 11L, 50);
 
-        assertThat(first).isNotNull();
-        assertThat(BigDecimal.ZERO).isNotEqualTo(first);
+        assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
         assertThat(first).isEqualTo(first);
@@ -79,6 +80,7 @@ class TableWithBloatTest {
 
         // another Table
         final TableWithMissingIndex anotherType = TableWithMissingIndex.of("t1", 1L, 0, 1);
+        //noinspection AssertBetweenInconvertibleTypes
         assertThat(anotherType).isEqualTo(first);
         assertThat(anotherType.hashCode()).isEqualTo(first.hashCode());
     }
