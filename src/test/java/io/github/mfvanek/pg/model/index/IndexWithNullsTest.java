@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class IndexWithNullsTest {
 
     @Test
-    void getterShouldWork() {
+    void gettersShouldWork() {
         final IndexWithNulls index = IndexWithNulls.of("t", "i", 11L, "f");
         assertThat(index.getTableName()).isEqualTo("t");
         assertThat(index.getIndexName()).isEqualTo("i");
