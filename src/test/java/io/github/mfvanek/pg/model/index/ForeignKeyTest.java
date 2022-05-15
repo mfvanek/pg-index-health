@@ -142,12 +142,12 @@ class ForeignKeyTest {
         assertThat(theSame).isEqualTo(first);
         assertThat(theSame.hashCode()).isEqualTo(first.hashCode());
 
-        // others
-        assertThat(withDifferentOrderOfColumns).isEqualTo(first);
-        assertThat(withDifferentOrderOfColumns.hashCode()).isEqualTo(first.hashCode());
+        // column order matters
+        assertThat(withDifferentOrderOfColumns).isNotEqualTo(first);
+        assertThat(withDifferentOrderOfColumns.hashCode()).isNotEqualTo(first.hashCode());
 
-        assertThat(second).isEqualTo(first);
-        assertThat(second.hashCode()).isEqualTo(first.hashCode());
+        assertThat(second).isNotEqualTo(first);
+        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
 
         final ForeignKey third = ForeignKey.of("table", "c_t_order_id",
                 Arrays.asList(Column.ofNotNull("table", "order_id"), Column.ofNotNull("table", "limit")));
@@ -163,7 +163,6 @@ class ForeignKeyTest {
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(ForeignKey.class)
-                .withIgnoredFields("columnsInConstraint")
                 .verify();
     }
 }

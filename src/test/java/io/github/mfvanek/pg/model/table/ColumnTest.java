@@ -96,9 +96,9 @@ class ColumnTest {
         assertThat(theSame).isEqualTo(first);
         assertThat(theSame.hashCode()).isEqualTo(first.hashCode());
 
-        // ignoring nullability of column
-        assertThat(theSameButNullable).isEqualTo(first);
-        assertThat(theSameButNullable.hashCode()).isEqualTo(first.hashCode());
+        // do not ignore nullability of column
+        assertThat(theSameButNullable).isNotEqualTo(first);
+        assertThat(theSameButNullable.hashCode()).isNotEqualTo(first.hashCode());
 
         // others
         assertThat(second).isNotEqualTo(first);
@@ -109,7 +109,6 @@ class ColumnTest {
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(Column.class)
-                .withIgnoredFields("notNull")
                 .verify();
     }
 
@@ -132,8 +131,9 @@ class ColumnTest {
         // the same
         assertThat(first.compareTo(theSame)).isEqualTo(0);
 
-        // ignoring nullability of column
-        assertThat(theSameButNullable.compareTo(first)).isEqualTo(0);
+        // do not ignore nullability of column
+        assertThat(theSameButNullable.compareTo(first)).isEqualTo(-1);
+        assertThat(first.compareTo(theSameButNullable)).isEqualTo(1);
 
         // others
         assertThat(first.compareTo(second)).isEqualTo(-1);

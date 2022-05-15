@@ -81,12 +81,13 @@ public class Column implements TableNameAware, Comparable<Column> {
 
         final Column that = (Column) o;
         return Objects.equals(tableName, that.tableName) &&
-                Objects.equals(columnName, that.columnName);
+                Objects.equals(columnName, that.columnName) &&
+                notNull == that.notNull;
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(tableName, columnName);
+        return Objects.hash(tableName, columnName, notNull);
     }
 
     @Override
@@ -95,7 +96,10 @@ public class Column implements TableNameAware, Comparable<Column> {
         if (!tableName.equals(other.tableName)) {
             return tableName.compareTo(other.tableName);
         }
-        return columnName.compareTo(other.columnName);
+        if (!columnName.equals(other.columnName)) {
+            return columnName.compareTo(other.columnName);
+        }
+        return Boolean.compare(notNull, other.notNull);
     }
 
     @Nonnull

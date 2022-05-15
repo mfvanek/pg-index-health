@@ -280,40 +280,42 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn(), ctx -> {
             final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
             assertThat(foreignKeys)
                     .isNotNull()
-                    .hasSize(1);
-            final ForeignKey foreignKey = foreignKeys.get(0);
-            assertThat(foreignKey.getTableName())
-                    .isEqualTo(ctx.enrichWithSchema("accounts"));
-            assertThat(foreignKey.getConstraintName())
-                    .isEqualTo("c_accounts_fk_client_id");
-            assertThat(foreignKey.getColumnsInConstraint())
-                    .isNotNull()
-                    .hasSize(1)
-                    .containsExactly(Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"));
+                    .hasSize(2)
+                    .containsExactlyInAnyOrder(
+                            ForeignKey.ofColumn(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id",
+                                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id")),
+                            ForeignKey.ofColumn(ctx.enrichWithSchema("bad_clients"), "c_bad_clients_fk_real_client_id",
+                                    Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id")));
+            // additional check on column nullability
+            assertThat(foreignKeys.stream().flatMap(f -> f.getColumnsInConstraint().stream()))
+                    .containsExactlyInAnyOrder(
+                            Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"),
+                            Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id"));
         });
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void getForeignKeysNotCoveredWithIndexOnDatabaseWithNotSuitableIndex(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withNonSuitableIndex(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withNonSuitableIndex(), ctx -> {
             final List<ForeignKey> foreignKeys = indexesMaintenance.getForeignKeysNotCoveredWithIndex(ctx);
             assertThat(foreignKeys)
                     .isNotNull()
-                    .hasSize(1);
-            final ForeignKey foreignKey = foreignKeys.get(0);
-            assertThat(foreignKey.getTableName())
-                    .isEqualTo(ctx.enrichWithSchema("accounts"));
-            assertThat(foreignKey.getConstraintName())
-                    .isEqualTo("c_accounts_fk_client_id");
-            assertThat(foreignKey.getColumnsInConstraint())
-                    .isNotNull()
-                    .hasSize(1)
-                    .containsExactly(Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"));
+                    .hasSize(2)
+                    .containsExactlyInAnyOrder(
+                            ForeignKey.ofColumn(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id",
+                                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id")),
+                            ForeignKey.ofColumn(ctx.enrichWithSchema("bad_clients"), "c_bad_clients_fk_real_client_id",
+                                    Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id")));
+            // additional check on column nullability
+            assertThat(foreignKeys.stream().flatMap(f -> f.getColumnsInConstraint().stream()))
+                    .containsExactlyInAnyOrder(
+                            Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"),
+                            Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id"));
         });
     }
 
@@ -358,7 +360,7 @@ public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBas
             final IndexWithNulls indexWithNulls = indexes.get(0);
             assertThat(indexWithNulls.getIndexName()).isEqualTo(ctx.enrichWithSchema("i_clients_middle_name"));
             assertThat(indexWithNulls.getNullableColumn())
-                    .isEqualTo(Column.ofNotNull(ctx.enrichWithSchema("clients"), "middle_name"));
+                    .isEqualTo(Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name"));
         });
     }
 

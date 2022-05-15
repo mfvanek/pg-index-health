@@ -88,12 +88,13 @@ public class ForeignKey implements TableNameAware {
 
         final ForeignKey that = (ForeignKey) o;
         return Objects.equals(tableName, that.tableName) &&
-                Objects.equals(constraintName, that.constraintName);
+                Objects.equals(constraintName, that.constraintName) &&
+                Objects.equals(columnsInConstraint, that.columnsInConstraint);
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(tableName, constraintName);
+        return Objects.hash(tableName, constraintName, columnsInConstraint);
     }
 
     @Override
