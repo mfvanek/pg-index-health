@@ -24,5 +24,5 @@ import javax.annotation.Nonnull;
 public interface DbMigrationGenerator {
 
     @Nonnull
-    String generate(@Nonnull List<ForeignKey> foreignKeys, @Nonnull final GeneratingOptions options);
+    String generate(@Nonnull final List<ForeignKey> foreignKeys, @Nonnull final GeneratingOptions options);
 }

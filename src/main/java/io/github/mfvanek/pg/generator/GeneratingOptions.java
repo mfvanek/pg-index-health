@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.generator;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Options to generate sql queries for database migration.
@@ -19,6 +20,7 @@ import javax.annotation.Nonnull;
  * @author Ivan Vahrushev
  * @since 0.5.0
  */
+@Immutable
 public class GeneratingOptions {
 
     /**
@@ -88,6 +90,10 @@ public class GeneratingOptions {
     @Nonnull
     public IdxPosition getIdxPosition() {
         return idxPosition;
+    }
+
+    public boolean isNeedToAddIdx() {
+        return idxPosition != IdxPosition.NONE;
     }
 
     @Override

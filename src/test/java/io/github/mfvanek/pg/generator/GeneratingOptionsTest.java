@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2019-2022. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health
+ *
+ * This file is a part of "pg-index-health" - a Java library for
+ * analyzing and maintaining indexes health in PostgreSQL databases.
+ *
+ * Licensed under the Apache License 2.0
+ */
+
 package io.github.mfvanek.pg.generator;
 
 import org.junit.jupiter.api.Test;
@@ -74,8 +84,10 @@ class GeneratingOptionsTest {
         assertThat(builder.build().isNameWithoutNulls()).isTrue();
 
         assertThat(builder.build().getIdxPosition()).isEqualTo(IdxPosition.SUFFIX);
+        assertThat(builder.build().isNeedToAddIdx()).isTrue();
         builder.withIdxPosition(IdxPosition.NONE);
         assertThat(builder.build().getIdxPosition()).isEqualTo(IdxPosition.NONE);
+        assertThat(builder.build().isNeedToAddIdx()).isFalse();
     }
 
     @Test
