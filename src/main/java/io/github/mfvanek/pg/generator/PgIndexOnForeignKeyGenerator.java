@@ -48,13 +48,13 @@ public class PgIndexOnForeignKeyGenerator {
             queryBuilder.append("/* ")
                     .append(fullIndexName)
                     .append(" */")
-                    .append(System.lineSeparator());
+                    .append(options.isBreakLines() ? System.lineSeparator() : " ");
         }
         queryBuilder.append(keyword("create index "))
                 .append(options.isConcurrently() ? keyword("concurrently ") : "")
                 .append(keyword("if not exists "))
                 .append(hasToTruncate ? nameGenerator.generateTruncatedIndexName() : fullIndexName)
-                .append(options.isBreakLines() ? System.lineSeparator() : "")
+                .append(options.isBreakLines() ? System.lineSeparator() : " ")
                 .append(options.isBreakLines() ? StringUtils.repeat(' ', options.getIndentation()) : "")
                 .append(keyword("on "))
                 .append(foreignKey.getTableName())

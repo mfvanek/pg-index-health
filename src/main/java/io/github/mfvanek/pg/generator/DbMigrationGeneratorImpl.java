@@ -36,10 +36,12 @@ public class DbMigrationGeneratorImpl implements DbMigrationGenerator {
         Objects.requireNonNull(options, "options cannot be null");
 
         final StringBuilder queryBuilder = new StringBuilder();
-        for (final ForeignKey foreignKey : foreignKeys) {
-            generate(queryBuilder, foreignKey, options);
-            queryBuilder.append(System.lineSeparator())
-                    .append(System.lineSeparator());
+        for (int i = 0; i < foreignKeys.size(); ++i) {
+            if (i != 0) {
+                queryBuilder.append(System.lineSeparator())
+                        .append(System.lineSeparator());
+            }
+            generate(queryBuilder, foreignKeys.get(i), options);
         }
         return queryBuilder.toString();
     }
