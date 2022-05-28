@@ -55,7 +55,7 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
             assertThat(getSeqScansForAccounts(ctx)).isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             databaseManagement.resetStatistics();
             waitForStatisticsCollector();
-            assertThat(getSeqScansForAccounts(ctx)).isEqualTo(0L);
+            assertThat(getSeqScansForAccounts(ctx)).isZero();
             final Optional<OffsetDateTime> statsResetTimestamp = databaseManagement.getLastStatsResetTimestamp();
             assertThat(statsResetTimestamp)
                     .isNotNull()

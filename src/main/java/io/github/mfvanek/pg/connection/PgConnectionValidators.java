@@ -61,7 +61,7 @@ final class PgConnectionValidators {
 
     private static void notBlank(@Nonnull final String argumentValue, @Nonnull final String argumentName) {
         if (StringUtils.isBlank(Objects.requireNonNull(argumentValue, argumentName + " cannot be null"))) {
-            throw new IllegalArgumentException(argumentName);
+            throw new IllegalArgumentException(argumentName + " cannot be blank or empty");
         }
     }
 }

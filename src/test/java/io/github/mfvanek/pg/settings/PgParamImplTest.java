@@ -52,8 +52,9 @@ class PgParamImplTest {
     @Test
     void testToString() {
         final PgParam param = PgParamImpl.of("statement_timeout", "2s");
-        assertThat(param).isNotNull();
-        assertThat(param.toString()).isEqualTo("PgParamImpl{name='statement_timeout', value='2s'}");
+        assertThat(param)
+                .isNotNull()
+                .hasToString("PgParamImpl{name='statement_timeout', value='2s'}");
     }
 
     @SuppressWarnings("ConstantConditions")

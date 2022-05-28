@@ -35,7 +35,7 @@ import java.util.Set;
 import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
+class IndexesMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
     static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();

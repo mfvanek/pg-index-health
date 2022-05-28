@@ -23,7 +23,7 @@ class IndexWithSizeTest {
     @Test
     void indexWithZeroSize() {
         final IndexWithSize index = IndexWithSize.of("t", "i", 0L);
-        assertThat(index.getIndexSizeInBytes()).isEqualTo(0L);
+        assertThat(index.getIndexSizeInBytes()).isZero();
     }
 
     @Test
@@ -40,7 +40,7 @@ class IndexWithSizeTest {
     @Test
     void testToString() {
         final IndexWithSize index = IndexWithSize.of("t", "i", 33L);
-        assertThat(index.toString()).isEqualTo("IndexWithSize{tableName='t', indexName='i', indexSizeInBytes=33}");
+        assertThat(index).hasToString("IndexWithSize{tableName='t', indexName='i', indexSizeInBytes=33}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -98,10 +98,10 @@ class IndexWithSizeTest {
         assertThatThrownBy(() -> first.compareTo(null)).isInstanceOf(NullPointerException.class);
 
         // self
-        assertThat(first.compareTo(first)).isEqualTo(0);
+        assertThat(first.compareTo(first)).isZero();
 
         // the same
-        assertThat(first.compareTo(theSame)).isEqualTo(0);
+        assertThat(first.compareTo(theSame)).isZero();
 
         // others
         assertThat(first.compareTo(second)).isEqualTo(-1);

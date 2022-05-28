@@ -35,8 +35,9 @@ class TableWithBloatTest {
     @Test
     void testToString() {
         final TableWithBloat bloat = TableWithBloat.of("t", 2L, 1L, 50);
-        assertThat(bloat).isNotNull();
-        assertThat(bloat.toString()).isEqualTo("TableWithBloat{tableName='t', tableSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}");
+        assertThat(bloat)
+                .isNotNull()
+                .hasToString("TableWithBloat{tableName='t', tableSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}");
     }
 
     @Test
@@ -81,7 +82,7 @@ class TableWithBloatTest {
         // another Table
         final TableWithMissingIndex anotherType = TableWithMissingIndex.of("t1", 1L, 0, 1);
         //noinspection AssertBetweenInconvertibleTypes
-        assertThat(anotherType).isEqualTo(first);
+        assertThat(anotherType).isEqualTo(first); //NOSONAR
         assertThat(anotherType.hashCode()).isEqualTo(first.hashCode());
     }
 

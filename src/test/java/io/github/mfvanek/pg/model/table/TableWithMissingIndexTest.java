@@ -43,7 +43,7 @@ class TableWithMissingIndexTest {
     @Test
     void testToString() {
         final TableWithMissingIndex table = TableWithMissingIndex.of("t", 11L, 33L, 22L);
-        assertThat(table.toString()).isEqualTo("TableWithMissingIndex{tableName='t', tableSizeInBytes=11, seqScans=33, indexScans=22}");
+        assertThat(table).hasToString("TableWithMissingIndex{tableName='t', tableSizeInBytes=11, seqScans=33, indexScans=22}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -76,7 +76,7 @@ class TableWithMissingIndexTest {
         // another Table
         final TableWithBloat anotherType = TableWithBloat.of("t1", 4L, 11L, 50);
         //noinspection AssertBetweenInconvertibleTypes
-        assertThat(anotherType).isEqualTo(first);
+        assertThat(anotherType).isEqualTo(first); //NOSONAR
         assertThat(anotherType.hashCode()).isEqualTo(first.hashCode());
     }
 
@@ -92,7 +92,7 @@ class TableWithMissingIndexTest {
         final TableWithMissingIndex first = TableWithMissingIndex.of("t1", 1L, 0, 1);
         final TableWithMissingIndex theSame = TableWithMissingIndex.of("t1", 2L, 2, 3);
         final TableWithMissingIndex third = TableWithMissingIndex.of("t2", 3L, 4, 5);
-        assertThat(first.compareTo(theSame)).isEqualTo(0);
+        assertThat(first.compareTo(theSame)).isZero();
         assertThat(first.compareTo(third)).isEqualTo(-1);
         assertThat(third.compareTo(theSame)).isEqualTo(1);
     }
