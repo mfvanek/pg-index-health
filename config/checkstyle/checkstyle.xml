@@ -213,6 +213,7 @@
             <property name="tokens" value="IMPORT, STATIC_IMPORT, PACKAGE_DEF"/>
         </module>
         <module name="UnusedImports"/>
+        <module name="RedundantImport"/>
         <module name="IllegalImport">
             <property name="regexp" value="true"/>
             <property name="illegalClasses"

@@ -24,7 +24,7 @@ public class PgHostImpl implements PgHost {
     private final boolean maybePrimary;
 
     private PgHostImpl(@Nonnull final String pgUrl,
-                       @SuppressWarnings("unused") final boolean withValidation,
+                       @SuppressWarnings("unused") final boolean withValidation, //NOSONAR
                        final boolean maybePrimary) {
         this.pgUrl = PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
         this.hostNames = Collections.unmodifiableSet(PgUrlParser.extractHostNames(pgUrl));

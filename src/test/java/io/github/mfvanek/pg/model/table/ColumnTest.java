@@ -70,10 +70,10 @@ class ColumnTest {
     @Test
     void testToString() {
         final Column column = Column.ofNotNull("t1", "c1");
-        assertThat(column.toString()).isEqualTo("Column{tableName='t1', columnName='c1', notNull=true}");
+        assertThat(column).hasToString("Column{tableName='t1', columnName='c1', notNull=true}");
 
         final Column nullableColumn = Column.ofNullable("t2", "c2");
-        assertThat(nullableColumn.toString()).isEqualTo("Column{tableName='t2', columnName='c2', notNull=false}");
+        assertThat(nullableColumn).hasToString("Column{tableName='t2', columnName='c2', notNull=false}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -126,10 +126,10 @@ class ColumnTest {
 
         // self
         //noinspection EqualsWithItself
-        assertThat(first.compareTo(first)).isEqualTo(0);
+        assertThat(first.compareTo(first)).isZero();
 
         // the same
-        assertThat(first.compareTo(theSame)).isEqualTo(0);
+        assertThat(first.compareTo(theSame)).isZero();
 
         // do not ignore nullability of column
         assertThat(theSameButNullable.compareTo(first)).isEqualTo(-1);

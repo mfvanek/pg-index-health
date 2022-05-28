@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class ExclusionsBuilder {
 
+    private static final String THRESHOLD_UNITS_COUNT = "thresholdUnitsCount";
     private static final String EMPTY = "";
 
     private String duplicatedIndexesExclusions = EMPTY;
@@ -103,7 +104,7 @@ public class ExclusionsBuilder {
 
     public ExclusionsBuilder withIndexSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
         final long indexSizeInBytes = unit.convertToBytes(
-                Validators.argumentNotNegative(thresholdUnitsCount, "thresholdUnitsCount"));
+                Validators.argumentNotNegative(thresholdUnitsCount, THRESHOLD_UNITS_COUNT));
         return withIndexSizeThreshold(indexSizeInBytes);
     }
 
@@ -115,7 +116,7 @@ public class ExclusionsBuilder {
 
     public ExclusionsBuilder withTableSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
         final long tableSizeInBytes = unit.convertToBytes(
-                Validators.argumentNotNegative(thresholdUnitsCount, "thresholdUnitsCount"));
+                Validators.argumentNotNegative(thresholdUnitsCount, THRESHOLD_UNITS_COUNT));
         return withTableSizeThreshold(tableSizeInBytes);
     }
 
@@ -127,7 +128,7 @@ public class ExclusionsBuilder {
 
     public ExclusionsBuilder withIndexBloatSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
         final long indexBloatSizeInBytes = unit.convertToBytes(
-                Validators.argumentNotNegative(thresholdUnitsCount, "thresholdUnitsCount"));
+                Validators.argumentNotNegative(thresholdUnitsCount, THRESHOLD_UNITS_COUNT));
         return withIndexBloatSizeThreshold(indexBloatSizeInBytes);
     }
 
@@ -145,7 +146,7 @@ public class ExclusionsBuilder {
 
     public ExclusionsBuilder withTableBloatSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
         final long tableBloatSizeInBytes = unit.convertToBytes(
-                Validators.argumentNotNegative(thresholdUnitsCount, "thresholdUnitsCount"));
+                Validators.argumentNotNegative(thresholdUnitsCount, THRESHOLD_UNITS_COUNT));
         return withTableBloatSizeThreshold(tableBloatSizeInBytes);
     }
 

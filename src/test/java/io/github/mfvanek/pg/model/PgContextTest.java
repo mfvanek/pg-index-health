@@ -56,9 +56,12 @@ class PgContextTest {
 
     @Test
     void testToString() {
-        assertThat(PgContext.of("s").toString()).isEqualTo("PgContext{schemaName='s', bloatPercentageThreshold=10}");
-        assertThat(PgContext.of("s", 11).toString()).isEqualTo("PgContext{schemaName='s', bloatPercentageThreshold=11}");
-        assertThat(PgContext.ofPublic().toString()).isEqualTo("PgContext{schemaName='public', bloatPercentageThreshold=10}");
+        assertThat(PgContext.of("s"))
+                .hasToString("PgContext{schemaName='s', bloatPercentageThreshold=10}");
+        assertThat(PgContext.of("s", 11))
+                .hasToString("PgContext{schemaName='s', bloatPercentageThreshold=11}");
+        assertThat(PgContext.ofPublic())
+                .hasToString("PgContext{schemaName='public', bloatPercentageThreshold=10}");
     }
 
     @Test

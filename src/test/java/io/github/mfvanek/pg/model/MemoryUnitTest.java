@@ -25,6 +25,6 @@ class MemoryUnitTest {
 
     @Test
     void toStringTest() {
-        assertThat(MemoryUnit.MB.toString()).isEqualTo("MemoryUnit{dimension=1048576, description='megabyte'}");
+        assertThat(MemoryUnit.MB).hasToString("MemoryUnit{dimension=1048576, description='megabyte'}");
     }
 }

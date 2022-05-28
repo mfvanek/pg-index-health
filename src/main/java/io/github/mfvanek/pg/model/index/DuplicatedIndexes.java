@@ -46,7 +46,7 @@ public class DuplicatedIndexes implements TableNameAware {
 
     private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
         final List<IndexWithSize> defensiveCopy = new ArrayList<>(
-                Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes"));
+                Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes cannot be null"));
         Validators.validateThatTableIsTheSame(defensiveCopy);
         this.duplicatedIndexes = Collections.unmodifiableList(
                 defensiveCopy.stream()

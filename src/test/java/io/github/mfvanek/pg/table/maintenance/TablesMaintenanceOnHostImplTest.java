@@ -27,7 +27,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
+class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
     static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
@@ -71,7 +71,7 @@ public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase
             final TableWithMissingIndex table = tables.get(0);
             assertThat(table.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
             assertThat(table.getSeqScans()).isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
-            assertThat(table.getIndexScans()).isEqualTo(0);
+            assertThat(table.getIndexScans()).isZero();
         });
     }
 
@@ -151,8 +151,8 @@ public final class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase
             final TableWithBloat table = tables.get(0);
             assertThat(table.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
             assertThat(table.getTableSizeInBytes()).isEqualTo(114688L);
-            assertThat(table.getBloatSizeInBytes()).isEqualTo(0L);
-            assertThat(table.getBloatPercentage()).isEqualTo(0);
+            assertThat(table.getBloatSizeInBytes()).isZero();
+            assertThat(table.getBloatPercentage()).isZero();
         });
     }
 }

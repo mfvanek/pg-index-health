@@ -220,17 +220,17 @@ public class GeneratingOptions {
                     ", idxPosition=" + idxPosition +
                     '}';
         }
+
+        private static int validateIndentation(final int indentation) {
+            if (indentation < 0 || indentation > 8) {
+                throw new IllegalArgumentException("indentation should be in the range [0, 8]");
+            }
+            return indentation;
+        }
     }
 
     @Nonnull
     public static Builder builder() {
         return new Builder();
-    }
-
-    private static int validateIndentation(final int indentation) {
-        if (indentation < 0 || indentation > 8) {
-            throw new IllegalArgumentException("indentation should be in the range [0, 8]");
-        }
-        return indentation;
     }
 }

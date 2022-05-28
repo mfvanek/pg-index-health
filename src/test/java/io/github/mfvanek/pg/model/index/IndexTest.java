@@ -42,8 +42,9 @@ class IndexTest {
     @Test
     void testToString() {
         final Index index = Index.of("t", "i");
-        assertThat(index).isNotNull();
-        assertThat(index.toString()).isEqualTo("Index{tableName='t', indexName='i'}");
+        assertThat(index)
+                .isNotNull()
+                .hasToString("Index{tableName='t', indexName='i'}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -91,10 +92,10 @@ class IndexTest {
         assertThatThrownBy(() -> first.compareTo(null)).isInstanceOf(NullPointerException.class);
 
         // self
-        assertThat(first.compareTo(first)).isEqualTo(0);
+        assertThat(first.compareTo(first)).isZero();
 
         // the same
-        assertThat(first.compareTo(Index.of("t1", "i1"))).isEqualTo(0);
+        assertThat(first.compareTo(Index.of("t1", "i1"))).isZero();
 
         // others
         assertThat(first.compareTo(second)).isEqualTo(-1);

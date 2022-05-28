@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 
 final class PgUrlParser {
 
+    private static final String PG_URL = "pgUrl";
     static final String URL_HEADER = "jdbc:postgresql://";
 
     private PgUrlParser() {
@@ -28,7 +29,7 @@ final class PgUrlParser {
     }
 
     static boolean isReplicaUrl(@Nonnull final String pgUrl) {
-        PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
+        PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
         return pgUrl.contains("targetServerType=slave") ||
                 pgUrl.contains("targetServerType=secondary");
     }
@@ -36,7 +37,7 @@ final class PgUrlParser {
     // For example, jdbc:postgresql://host-1:6432/db_name?param=value
     @Nonnull
     static List<Pair<String, String>> extractNameWithPortAndUrlForEachHost(@Nonnull final String pgUrl) {
-        PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
+        PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
         final int lastIndex = pgUrl.lastIndexOf('/');
         final String dbNameWithParams = pgUrl.substring(lastIndex);
         final String dbNameWithParamsForReplica = convertToReplicaConnectionString(dbNameWithParams);
@@ -61,7 +62,7 @@ final class PgUrlParser {
 
     @Nonnull
     static Set<String> extractHostNames(@Nonnull final String pgUrl) {
-        PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
+        PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
         final String allHostsWithPort = extractAllHostsWithPort(pgUrl);
         return Arrays.stream(allHostsWithPort.split(","))
                 .filter(StringUtils::isNotBlank)

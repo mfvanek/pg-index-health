@@ -26,8 +26,9 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
-public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
+class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
     static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
@@ -42,7 +43,8 @@ public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTest
 
     @Test
     void resetStatisticsOnEmptyDatabaseShouldExecuteCorrectly() {
-        statisticsMaintenance.resetStatistics();
+        assertThatCode(statisticsMaintenance::resetStatistics)
+                .doesNotThrowAnyException();
     }
 
     @ParameterizedTest
@@ -55,7 +57,7 @@ public final class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTest
             assertThat(getSeqScansForAccounts(pgContext)).isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             statisticsMaintenance.resetStatistics();
             waitForStatisticsCollector();
-            assertThat(getSeqScansForAccounts(pgContext)).isEqualTo(0L);
+            assertThat(getSeqScansForAccounts(pgContext)).isZero();
             final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
             assertThat(statsResetTimestamp)
                     .isNotNull()

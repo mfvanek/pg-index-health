@@ -29,7 +29,7 @@ import java.util.List;
 import static io.github.mfvanek.pg.utils.HealthLoggerAssertions.assertContainsKey;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class HealthLoggerTest extends DatabaseAwareTestBase {
+class HealthLoggerTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
     static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();

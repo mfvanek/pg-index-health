@@ -78,15 +78,18 @@ class DuplicatedIndexesTest {
                 IndexWithSize.of("t", "i3", 303L),
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
-        assertThat(indexes).isNotNull();
-        assertThat(indexes.toString()).isEqualTo("DuplicatedIndexes{tableName='t', totalSize=606, indexes=[" + "IndexWithSize{tableName='t', indexName='i1', indexSizeInBytes=101}, " + 
-                "IndexWithSize{tableName='t', indexName='i2', indexSizeInBytes=202}, " + "IndexWithSize{tableName='t', indexName='i3', indexSizeInBytes=303}]}");
+        assertThat(indexes)
+                .isNotNull()
+                .hasToString("DuplicatedIndexes{tableName='t', totalSize=606, indexes=[" + "IndexWithSize{tableName='t', indexName='i1', indexSizeInBytes=101}, " +
+                        "IndexWithSize{tableName='t', indexName='i2', indexSizeInBytes=202}, " + "IndexWithSize{tableName='t', indexName='i3', indexSizeInBytes=303}]}");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withoutIndexes() {
-        assertThatThrownBy(() -> DuplicatedIndexes.of(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("duplicatedIndexes cannot be null");
         assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.emptyList())).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.singletonList(IndexWithSize.of("t", "i", 1L)))).isInstanceOf(IllegalArgumentException.class);
     }

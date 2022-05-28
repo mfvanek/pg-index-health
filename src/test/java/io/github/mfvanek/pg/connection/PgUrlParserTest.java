@@ -32,84 +32,104 @@ class PgUrlParserTest {
     void extractNamesAndUrlsForEachHost() {
         final List<Pair<String, String>> extractResult = PgUrlParser.extractNameWithPortAndUrlForEachHost(
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
-        assertThat(extractResult).hasSize(4);
-        assertThat(extractResult).containsExactlyInAnyOrder(
-                Pair.of("host-1:6432", "jdbc:postgresql://host-1:6432/db_name?ssl=true&sslmode=require"),
-                Pair.of("host-2:6432", "jdbc:postgresql://host-2:6432/db_name?ssl=true&sslmode=require"),
-                Pair.of("host-3:6432", "jdbc:postgresql://host-3:6432/db_name?ssl=true&sslmode=require"),
-                Pair.of("host-4:6432", "jdbc:postgresql://host-4:6432/db_name?ssl=true&sslmode=require")
-        );
+        assertThat(extractResult)
+                .hasSize(4)
+                .containsExactlyInAnyOrder(
+                        Pair.of("host-1:6432", "jdbc:postgresql://host-1:6432/db_name?ssl=true&sslmode=require"),
+                        Pair.of("host-2:6432", "jdbc:postgresql://host-2:6432/db_name?ssl=true&sslmode=require"),
+                        Pair.of("host-3:6432", "jdbc:postgresql://host-3:6432/db_name?ssl=true&sslmode=require"),
+                        Pair.of("host-4:6432", "jdbc:postgresql://host-4:6432/db_name?ssl=true&sslmode=require"));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void extractNamesAndUrlsForEachHostWithInvalidUrl() {
-        assertThatThrownBy(() -> PgUrlParser.extractNameWithPortAndUrlForEachHost(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> PgUrlParser.extractNameWithPortAndUrlForEachHost("")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> PgUrlParser.extractNameWithPortAndUrlForEachHost("host-name:5432")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> PgUrlParser.extractNameWithPortAndUrlForEachHost(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("pgUrl cannot be null");
+        assertThatThrownBy(() -> PgUrlParser.extractNameWithPortAndUrlForEachHost(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("pgUrl cannot be blank or empty");
+        assertThatThrownBy(() -> PgUrlParser.extractNameWithPortAndUrlForEachHost("host-name:5432"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("pgUrl has invalid format");
     }
 
     @Test
     void extractNamesAndUrlsForDeprecatedMaster() {
         final List<Pair<String, String>> extractResult = PgUrlParser.extractNameWithPortAndUrlForEachHost(
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?targetServerType=master&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require");
-        assertThat(extractResult).hasSize(4);
-        assertThat(extractResult).containsExactlyInAnyOrder(
-                Pair.of("host-1:6432", "jdbc:postgresql://host-1:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
-                Pair.of("host-2:6432", "jdbc:postgresql://host-2:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
-                Pair.of("host-3:6432", "jdbc:postgresql://host-3:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
-                Pair.of("host-4:6432", "jdbc:postgresql://host-4:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require")
-        );
+        assertThat(extractResult)
+                .hasSize(4)
+                .containsExactlyInAnyOrder(
+                        Pair.of("host-1:6432", "jdbc:postgresql://host-1:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
+                        Pair.of("host-2:6432", "jdbc:postgresql://host-2:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
+                        Pair.of("host-3:6432", "jdbc:postgresql://host-3:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
+                        Pair.of("host-4:6432", "jdbc:postgresql://host-4:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"));
     }
 
     @Test
     void extractNamesAndUrlsForPrimary() {
         final List<Pair<String, String>> extractResult = PgUrlParser.extractNameWithPortAndUrlForEachHost(
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?targetServerType=primary&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require");
-        assertThat(extractResult).hasSize(4);
-        assertThat(extractResult).containsExactlyInAnyOrder(
-                Pair.of("host-1:6432", "jdbc:postgresql://host-1:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
-                Pair.of("host-2:6432", "jdbc:postgresql://host-2:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
-                Pair.of("host-3:6432", "jdbc:postgresql://host-3:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
-                Pair.of("host-4:6432", "jdbc:postgresql://host-4:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require")
-        );
+        assertThat(extractResult)
+                .hasSize(4)
+                .containsExactlyInAnyOrder(
+                        Pair.of("host-1:6432", "jdbc:postgresql://host-1:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
+                        Pair.of("host-2:6432", "jdbc:postgresql://host-2:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
+                        Pair.of("host-3:6432", "jdbc:postgresql://host-3:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"),
+                        Pair.of("host-4:6432", "jdbc:postgresql://host-4:6432/db_name?targetServerType=any&ssl=true&prepareThreshold=0&preparedStatementCacheQueries=0&sslmode=require"));
     }
 
     @Test
     void extractHostNames() {
         final Set<String> hostNames = PgUrlParser.extractHostNames(
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
-        assertThat(hostNames).hasSize(4);
-        assertThat(hostNames).containsExactlyInAnyOrder("host-1", "host-2", "host-3", "host-4");
+        assertThat(hostNames)
+                .hasSize(4)
+                .containsExactlyInAnyOrder("host-1", "host-2", "host-3", "host-4");
     }
 
     @Test
     void extractHostNamesWithIncompleteUrl() {
         final Set<String> hostNames = PgUrlParser.extractHostNames(
                 "jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432");
-        assertThat(hostNames).hasSize(4);
-        assertThat(hostNames).containsExactlyInAnyOrder("host-1", "host-2", "host-3", "host-4");
+        assertThat(hostNames)
+                .hasSize(4)
+                .containsExactlyInAnyOrder("host-1", "host-2", "host-3", "host-4");
     }
 
     @Test
     void extractHostNamesWithEmptyUrl() {
         final Set<String> hostNames = PgUrlParser.extractHostNames("jdbc:postgresql://");
-        assertThat(hostNames).isEmpty();
+        assertThat(hostNames)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
     void extractHostNamesWithBadUrl() {
         final Set<String> hostNames = PgUrlParser.extractHostNames("jdbc:postgresql:///");
-        assertThat(hostNames).isEmpty();
+        assertThat(hostNames)
+                .isNotNull()
+                .isEmpty();
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void extractHostNamesWithInvalidUrl() {
-        assertThatThrownBy(() -> PgUrlParser.extractHostNames(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> PgUrlParser.extractHostNames("")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> PgUrlParser.extractHostNames("host-name:5432")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> PgUrlParser.extractHostNames("jdbc:postgresql:/")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> PgUrlParser.extractHostNames(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("pgUrl cannot be null");
+        assertThatThrownBy(() -> PgUrlParser.extractHostNames(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("pgUrl cannot be blank or empty");
+        assertThatThrownBy(() -> PgUrlParser.extractHostNames("host-name:5432"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("pgUrl has invalid format");
+        assertThatThrownBy(() -> PgUrlParser.extractHostNames("jdbc:postgresql:/"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("pgUrl has invalid format");
     }
 
     @Test

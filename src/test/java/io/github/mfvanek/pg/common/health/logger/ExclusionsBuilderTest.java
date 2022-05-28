@@ -19,10 +19,11 @@ class ExclusionsBuilderTest {
     @Test
     void toStringBuilderTest() {
         final ExclusionsBuilder builder = Exclusions.builder();
-        assertThat(builder).isNotNull();
-        assertThat(builder.toString()).isEqualTo("ExclusionsBuilder{duplicatedIndexesExclusions='', intersectedIndexesExclusions='', " +
-                "unusedIndexesExclusions='', tablesWithMissingIndexesExclusions='', tablesWithoutPrimaryKeyExclusions='', " +
-                "indexesWithNullValuesExclusions='', indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " + "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0, " +
-                "tableBloatSizeThresholdInBytes=0, tableBloatPercentageThreshold=0}");
+        assertThat(builder)
+                .isNotNull()
+                .hasToString("ExclusionsBuilder{duplicatedIndexesExclusions='', intersectedIndexesExclusions='', " +
+                        "unusedIndexesExclusions='', tablesWithMissingIndexesExclusions='', tablesWithoutPrimaryKeyExclusions='', " +
+                        "indexesWithNullValuesExclusions='', indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " + "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0, " +
+                        "tableBloatSizeThresholdInBytes=0, tableBloatPercentageThreshold=0}");
     }
 }

@@ -28,8 +28,12 @@ class ServerSpecificationTest {
         assertThat(specification.getMemoryAmountInBytes()).isEqualTo(1024L * 1024L * 1024L);
         assertThat(specification.hasSSD()).isFalse();
 
-        assertThatThrownBy(() -> ServerSpecification.builder().withCpuCores(0)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> ServerSpecification.builder().withCpuCores(-1)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ServerSpecification.builder().withCpuCores(0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("cpuCoresAmount should be greater than zero");
+        assertThatThrownBy(() -> ServerSpecification.builder().withCpuCores(-1))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("cpuCoresAmount should be greater than zero");
     }
 
     @Test
@@ -42,8 +46,12 @@ class ServerSpecificationTest {
         assertThat(specification.getMemoryAmountInBytes()).isEqualTo(160L * 1024L * 1024L * 1024L);
         assertThat(specification.hasSSD()).isFalse();
 
-        assertThatThrownBy(() -> ServerSpecification.builder().withMemoryAmount(0, MemoryUnit.GB)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> ServerSpecification.builder().withMemoryAmount(-1, MemoryUnit.GB)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ServerSpecification.builder().withMemoryAmount(0, MemoryUnit.GB))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("unitsCount should be greater than zero");
+        assertThatThrownBy(() -> ServerSpecification.builder().withMemoryAmount(-1, MemoryUnit.GB))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("unitsCount should be greater than zero");
     }
 
     @Test
@@ -60,7 +68,8 @@ class ServerSpecificationTest {
     @Test
     void toStringTest() {
         final ServerSpecification specification = ServerSpecification.builder().build();
-        assertThat(specification).isNotNull();
-        assertThat(specification.toString()).isEqualTo("ServerSpecification{cpuCoresAmount=1, memoryAmountInBytes=1073741824, hasSSD=false}");
+        assertThat(specification)
+                .isNotNull()
+                .hasToString("ServerSpecification{cpuCoresAmount=1, memoryAmountInBytes=1073741824, hasSSD=false}");
     }
 }

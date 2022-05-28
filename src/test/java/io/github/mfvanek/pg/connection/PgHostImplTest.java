@@ -81,8 +81,9 @@ class PgHostImplTest {
     @Test
     void toStringTest() {
         final PgHost host = PgHostImpl.ofPrimary();
-        assertThat(host).isNotNull();
-        assertThat(host.toString()).isEqualTo("PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}");
+        assertThat(host)
+                .isNotNull()
+                .hasToString("PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}");
     }
 
     @SuppressWarnings("ConstantConditions")

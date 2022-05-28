@@ -47,7 +47,7 @@ class TableTest {
     @Test
     void testToString() {
         final Table table = Table.of("t", 2L);
-        assertThat(table.toString()).isEqualTo("Table{tableName='t', tableSizeInBytes=2}");
+        assertThat(table).hasToString("Table{tableName='t', tableSizeInBytes=2}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -104,10 +104,10 @@ class TableTest {
         assertThatThrownBy(() -> first.compareTo(null)).isInstanceOf(NullPointerException.class);
 
         // self
-        assertThat(first.compareTo(first)).isEqualTo(0);
+        assertThat(first.compareTo(first)).isZero();
 
         // the same
-        assertThat(first.compareTo(theSame)).isEqualTo(0);
+        assertThat(first.compareTo(theSame)).isZero();
 
         // others
         assertThat(first.compareTo(second)).isEqualTo(-1);
