@@ -30,46 +30,60 @@ class DuplicatedIndexesParserTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThatThrownBy(() -> parseAsIndexNameAndSize(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> parseAsIndexNameAndSize("")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> parseAsIndexNameAndSize("  ")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> parseAsIndexNameAndSize(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("duplicatedAsString cannot be null");
+        assertThatThrownBy(() -> parseAsIndexNameAndSize(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("duplicatedAsString cannot be blank");
+        assertThatThrownBy(() -> parseAsIndexNameAndSize("  "))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("duplicatedAsString cannot be blank");
     }
 
     @Test
     void withIncompleteString() {
         List<Map.Entry<String, Long>> entries = parseAsIndexNameAndSize("i");
-        assertThat(entries).isNotNull();
-        assertThat(entries).isEmpty();
+        assertThat(entries)
+                .isNotNull()
+                .isEmpty();
 
         entries = parseAsIndexNameAndSize("idx=i1, size=1");
-        assertThat(entries).isNotNull();
-        assertThat(entries).hasSize(1);
+        assertThat(entries)
+                .isNotNull()
+                .hasSize(1);
 
         entries = parseAsIndexNameAndSize("idx=i2,size=3");
-        assertThat(entries).isNotNull();
-        assertThat(entries).hasSize(1);
+        assertThat(entries)
+                .isNotNull()
+                .hasSize(1);
     }
 
     @Test
     void withSpaces() {
         final List<Map.Entry<String, Long>> entries = parseAsIndexNameAndSize("   idx=i2,   size=3   ; idx=i3   ,   size=5   ");
-        assertThat(entries).isNotNull();
-        assertThat(entries).hasSize(2);
+        assertThat(entries)
+                .isNotNull()
+                .hasSize(2);
     }
 
     @Test
     void withWrongDataFormat() {
         List<Map.Entry<String, Long>> entries = parseAsIndexNameAndSize("idx=i2, input=3");
-        assertThat(entries).isNotNull();
-        assertThat(entries).isEmpty();
+        assertThat(entries)
+                .isNotNull()
+                .isEmpty();
 
         entries = parseAsIndexNameAndSize("indx=i2, size=3");
-        assertThat(entries).isNotNull();
-        assertThat(entries).isEmpty();
+        assertThat(entries)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
     void withWrongNumberFormat() {
-        assertThatThrownBy(() -> parseAsIndexNameAndSize("idx=i2, size=AB3")).isInstanceOf(NumberFormatException.class);
+        assertThatThrownBy(() -> parseAsIndexNameAndSize("idx=i2, size=AB3"))
+                .isInstanceOf(NumberFormatException.class)
+                .hasMessage("For input string: \"AB3\"");
     }
 }

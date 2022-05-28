@@ -51,8 +51,9 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
                 .withSSD()
                 .build();
         final Set<PgParam> paramsWithDefaultValues = configurationMaintenance.getParamsWithDefaultValues(specification);
-        assertThat(paramsWithDefaultValues).isNotNull();
-        assertThat(paramsWithDefaultValues).hasSize(9);
+        assertThat(paramsWithDefaultValues)
+                .isNotNull()
+                .hasSize(9);
         assertThat(paramsWithDefaultValues.stream().map(PgParam::getName).collect(toList()))
                 .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement", "idle_in_transaction_session_timeout",
                         "statement_timeout", "effective_cache_size", "temp_file_limit");
@@ -61,8 +62,9 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
     @Test
     void getParamsCurrentValues() {
         final Set<PgParam> currentValues = configurationMaintenance.getParamsCurrentValues();
-        assertThat(currentValues).isNotNull();
-        assertThat(currentValues).hasSizeGreaterThan(200);
+        assertThat(currentValues)
+                .isNotNull()
+                .hasSizeGreaterThan(200);
         final Set<String> allParamNames = currentValues.stream()
                 .map(PgParam::getName)
                 .collect(toSet());

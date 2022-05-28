@@ -86,7 +86,7 @@ class IndexTest {
                 .verify();
     }
 
-    @SuppressWarnings({"ConstantConditions", "EqualsWithItself", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
     @Test
     void compareToTest() {
         final Index first = Index.of("t1", "i1");
@@ -97,11 +97,9 @@ class IndexTest {
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("other cannot be null");
 
-        // self
-        assertThat(first.compareTo(first)).isZero();
-
-        // the same
-        assertThat(first.compareTo(Index.of("t1", "i1"))).isZero();
+        assertThat(first)
+                .isEqualByComparingTo(first) // self
+                .isEqualByComparingTo(Index.of("t1", "i1")); // the same
 
         // others
         assertThat(first.compareTo(second)).isEqualTo(-1);

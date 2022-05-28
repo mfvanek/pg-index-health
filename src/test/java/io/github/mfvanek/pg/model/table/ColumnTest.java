@@ -125,14 +125,12 @@ class ColumnTest {
 
         //noinspection ResultOfMethodCallIgnored,ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("other cannot be null");
 
-        // self
-        //noinspection EqualsWithItself
-        assertThat(first.compareTo(first)).isZero();
-
-        // the same
-        assertThat(first.compareTo(theSame)).isZero();
+        assertThat(first)
+                .isEqualByComparingTo(first) // self
+                .isEqualByComparingTo(theSame); // the same
 
         // do not ignore nullability of column
         assertThat(theSameButNullable.compareTo(first)).isEqualTo(-1);
