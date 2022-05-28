@@ -54,7 +54,7 @@ public final class QueryExecutor {
             return executionResult;
         } catch (SQLException e) {
             LOGGER.trace("Query failed", e);
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); //NOSONAR
         }
     }
 
@@ -68,7 +68,7 @@ public final class QueryExecutor {
                 statement.setString(1, pgContext.getSchemaName());
             } catch (SQLException e) {
                 LOGGER.trace("Error occurs while setting params", e);
-                throw new RuntimeException(e);
+                throw new RuntimeException(e); //NOSONAR
             }
         });
     }
@@ -84,7 +84,7 @@ public final class QueryExecutor {
                 statement.setInt(2, pgContext.getBloatPercentageThreshold());
             } catch (SQLException e) {
                 LOGGER.trace("Error occurs while setting params", e);
-                throw new RuntimeException(e);
+                throw new RuntimeException(e); //NOSONAR
             }
         });
     }
@@ -111,7 +111,7 @@ public final class QueryExecutor {
             return executionResult;
         } catch (SQLException e) {
             LOGGER.trace("Query failed", e);
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); //NOSONAR
         }
     }
 }

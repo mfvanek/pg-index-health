@@ -60,7 +60,7 @@ public abstract class DatabaseAwareTestBase {
         IntStream.of(1, 2, 3, 4, 5, 6).forEach((i) -> {
             try {
                 // see PGSTAT_STAT_INTERVAL at https://github.com/postgres/postgres/blob/master/src/backend/postmaster/pgstat.c
-                Thread.sleep(500L);
+                Thread.sleep(500L); //NOSONAR
             } catch (InterruptedException e) {
                 fail("unknown failure", e);
             }

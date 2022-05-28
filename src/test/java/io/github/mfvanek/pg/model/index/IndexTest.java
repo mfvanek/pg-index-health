@@ -59,21 +59,25 @@ class IndexTest {
         assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
-        assertThat(first).isEqualTo(first);
-        assertThat(first.hashCode()).isEqualTo(first.hashCode());
+        assertThat(first)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // the same
-        assertThat(Index.of("t1", "i1")).isEqualTo(first);
+        assertThat(Index.of("t1", "i1"))
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // others
-        assertThat(second).isNotEqualTo(first);
-        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(second)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
 
-        assertThat(third).isNotEqualTo(first);
-        assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
-
-        assertThat(third).isNotEqualTo(second);
-        assertThat(third.hashCode()).isNotEqualTo(second.hashCode());
+        assertThat(third)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first)
+                .isNotEqualTo(second)
+                .doesNotHaveSameHashCodeAs(second);
     }
 
     @Test
@@ -89,7 +93,9 @@ class IndexTest {
         final Index second = Index.of("t1", "i2");
         final Index third = Index.of("t2", "i2");
 
-        assertThatThrownBy(() -> first.compareTo(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> first.compareTo(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("other cannot be null");
 
         // self
         assertThat(first.compareTo(first)).isZero();

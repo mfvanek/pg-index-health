@@ -87,7 +87,7 @@ public class Index implements TableNameAware, IndexNameAware, Comparable<Index> 
 
     @Override
     public int compareTo(@Nonnull Index other) {
-        Objects.requireNonNull(other, "other");
+        Objects.requireNonNull(other, "other cannot be null");
         if (!tableName.equals(other.tableName)) {
             return tableName.compareTo(other.tableName);
         }

@@ -53,8 +53,9 @@ class HealthLoggerTest extends DatabaseAwareTestBase {
                 dbp -> dbp.withReferences().withData().withInvalidIndex().withNullValuesInIndex().withTableWithoutPrimaryKey().withDuplicatedIndex().withNonSuitableIndex().withStatistics(), ctx -> {
                     waitForStatisticsCollector();
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
-                    assertThat(logs).isNotNull();
-                    assertThat(logs).hasSize(10);
+                    assertThat(logs)
+                            .isNotNull()
+                            .hasSize(10);
                     assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes\t1");
                     assertContainsKey(logs, SimpleLoggingKey.DUPLICATED_INDEXES, "duplicated_indexes\t2");
                     assertContainsKey(logs, SimpleLoggingKey.FOREIGN_KEYS, "foreign_keys_without_index\t1");
@@ -68,8 +69,9 @@ class HealthLoggerTest extends DatabaseAwareTestBase {
     @Test
     void logAllWithDefaultSchema() {
         final List<String> logs = logger.logAll(Exclusions.empty());
-        assertThat(logs).isNotNull();
-        assertThat(logs).hasSize(10);
+        assertThat(logs)
+                .isNotNull()
+                .hasSize(10);
         for (SimpleLoggingKey key : SimpleLoggingKey.values()) {
             assertContainsKey(logs, key, key.getSubKeyName() + "\t0");
         }

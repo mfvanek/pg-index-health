@@ -48,7 +48,7 @@ public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
             }
         } catch (SQLException e) {
             LOGGER.trace("Query failed", e);
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); //NOSONAR
         }
     }
 }

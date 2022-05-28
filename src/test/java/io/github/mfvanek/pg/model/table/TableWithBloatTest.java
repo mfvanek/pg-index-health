@@ -63,27 +63,32 @@ class TableWithBloatTest {
         assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
-        assertThat(first).isEqualTo(first);
-        assertThat(first.hashCode()).isEqualTo(first.hashCode());
+        assertThat(first)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // the same
-        assertThat(theSame).isEqualTo(first);
+        assertThat(theSame)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // others
-        assertThat(second).isNotEqualTo(first);
-        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(second)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
 
-        assertThat(third).isNotEqualTo(first);
-        assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
-
-        assertThat(third).isNotEqualTo(second);
-        assertThat(third.hashCode()).isNotEqualTo(second.hashCode());
+        assertThat(third)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first)
+                .isNotEqualTo(second)
+                .doesNotHaveSameHashCodeAs(second);
 
         // another Table
         final TableWithMissingIndex anotherType = TableWithMissingIndex.of("t1", 1L, 0, 1);
         //noinspection AssertBetweenInconvertibleTypes
-        assertThat(anotherType).isEqualTo(first); //NOSONAR
-        assertThat(anotherType.hashCode()).isEqualTo(first.hashCode());
+        assertThat(anotherType)
+                .isEqualTo(first) //NOSONAR
+                .hasSameHashCodeAs(first);
     }
 
     @Test

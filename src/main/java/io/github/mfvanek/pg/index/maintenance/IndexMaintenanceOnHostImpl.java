@@ -39,6 +39,8 @@ import static io.github.mfvanek.pg.utils.ColumnsInForeignKeyParser.parseRawColum
  */
 public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements IndexesMaintenanceOnHost {
 
+    private static final String INDEX_SIZE = "index_size";
+
     public IndexMaintenanceOnHostImpl(@Nonnull final PgConnection pgConnection) {
         super(pgConnection);
     }
@@ -50,8 +52,8 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Override
     public List<Index> getInvalidIndexes(@Nonnull final PgContext pgContext) {
         return executeQuery(Diagnostics.INVALID_INDEXES, pgContext, rs -> {
-            final String tableName = rs.getString("table_name");
-            final String indexName = rs.getString("index_name");
+            final String tableName = rs.getString(TABLE_NAME);
+            final String indexName = rs.getString(INDEX_NAME);
             return Index.of(tableName, indexName);
         });
     }
@@ -83,9 +85,9 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Override
     public List<UnusedIndex> getUnusedIndexes(@Nonnull final PgContext pgContext) {
         return executeQuery(Diagnostics.UNUSED_INDEXES, pgContext, rs -> {
-            final String tableName = rs.getString("table_name");
-            final String indexName = rs.getString("index_name");
-            final long indexSize = rs.getLong("index_size");
+            final String tableName = rs.getString(TABLE_NAME);
+            final String indexName = rs.getString(INDEX_NAME);
+            final long indexSize = rs.getLong(INDEX_SIZE);
             final long indexScans = rs.getLong("index_scans");
             return UnusedIndex.of(tableName, indexName, indexSize, indexScans);
         });
@@ -98,7 +100,7 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Override
     public List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull final PgContext pgContext) {
         return executeQuery(Diagnostics.FOREIGN_KEYS_WITHOUT_INDEX, pgContext, rs -> {
-            final String tableName = rs.getString("table_name");
+            final String tableName = rs.getString(TABLE_NAME);
             final String constraintName = rs.getString("constraint_name");
             final Array columnsArray = rs.getArray("columns");
             final String[] rawColumns = (String[]) columnsArray.getArray();
@@ -114,9 +116,9 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Override
     public List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final PgContext pgContext) {
         return executeQuery(Diagnostics.INDEXES_WITH_NULL_VALUES, pgContext, rs -> {
-            final String tableName = rs.getString("table_name");
-            final String indexName = rs.getString("index_name");
-            final long indexSize = rs.getLong("index_size");
+            final String tableName = rs.getString(TABLE_NAME);
+            final String indexName = rs.getString(INDEX_NAME);
+            final long indexSize = rs.getLong(INDEX_SIZE);
             final String nullableField = rs.getString("nullable_fields");
             return IndexWithNulls.of(tableName, indexName, indexSize, nullableField);
         });
@@ -127,7 +129,7 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
                                                                       @Nonnull final PgContext pgContext,
                                                                       @Nonnull final String columnName) {
         return executeQuery(diagnostics, pgContext, rs -> {
-            final String tableName = rs.getString("table_name");
+            final String tableName = rs.getString(TABLE_NAME);
             final String duplicatedAsString = rs.getString(columnName);
             return DuplicatedIndexes.of(tableName, duplicatedAsString);
         });
@@ -140,11 +142,11 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Override
     public List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext) {
         return executeQueryWithBloatThreshold(Diagnostics.BLOATED_INDEXES, pgContext, rs -> {
-            final String tableName = rs.getString("table_name");
-            final String indexName = rs.getString("index_name");
-            final long indexSize = rs.getLong("index_size");
-            final long bloatSize = rs.getLong("bloat_size");
-            final int bloatPercentage = rs.getInt("bloat_percentage");
+            final String tableName = rs.getString(TABLE_NAME);
+            final String indexName = rs.getString(INDEX_NAME);
+            final long indexSize = rs.getLong(INDEX_SIZE);
+            final long bloatSize = rs.getLong(BLOAT_SIZE);
+            final int bloatPercentage = rs.getInt(BLOAT_PERCENTAGE);
             return IndexWithBloat.of(tableName, indexName, indexSize, bloatSize, bloatPercentage);
         });
     }

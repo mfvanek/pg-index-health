@@ -31,15 +31,19 @@ class ConnectionCredentialsTest {
         final ConnectionCredentials credentials = ConnectionCredentials.ofUrl(DEFAULT_URL, "user", "pswrd");
         assertThat(credentials.getUserName()).isEqualTo("user");
         assertThat(credentials.getPassword()).isEqualTo("pswrd");
-        assertThat(credentials.getConnectionUrls()).hasSize(1);
-        assertThat(credentials.getConnectionUrls()).contains(DEFAULT_URL);
+        assertThat(credentials.getConnectionUrls())
+                .hasSize(1)
+                .contains(DEFAULT_URL)
+                .isUnmodifiable();
     }
 
     @Test
     void shouldDeduplicateUrls() {
         final ConnectionCredentials credentials = ConnectionCredentials.of(Arrays.asList(DEFAULT_URL, DEFAULT_URL, DEFAULT_URL), "user", "pswrd");
-        assertThat(credentials.getConnectionUrls()).hasSize(1);
-        assertThat(credentials.getConnectionUrls()).contains(DEFAULT_URL);
+        assertThat(credentials.getConnectionUrls())
+                .hasSize(1)
+                .contains(DEFAULT_URL)
+                .isUnmodifiable();
     }
 
     @Test
@@ -52,9 +56,10 @@ class ConnectionCredentialsTest {
 
         urls.add("jdbc:postgresql://localhost/fourth");
 
-        assertThat(credentials.getConnectionUrls()).hasSize(3);
-        assertThat(credentials.getConnectionUrls()).doesNotContain("jdbc:postgresql://localhost/fourth");
-        assertThatThrownBy(() -> credentials.getConnectionUrls().clear()).isInstanceOf(UnsupportedOperationException.class);
+        assertThat(credentials.getConnectionUrls())
+                .hasSize(3)
+                .doesNotContain("jdbc:postgresql://localhost/fourth")
+                .isUnmodifiable();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -70,24 +75,28 @@ class ConnectionCredentialsTest {
         assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
-        assertThat(first).isEqualTo(first);
-        assertThat(first.hashCode()).isEqualTo(first.hashCode());
+        assertThat(first)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // the same
-        assertThat(ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "p")).isEqualTo(first);
+        assertThat(ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "p"))
+                .isEqualTo(first);
 
         // others
-        assertThat(second).isNotEqualTo(first);
-        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(second)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
 
-        assertThat(third).isNotEqualTo(first);
-        assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(third)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first)
+                .isNotEqualTo(second)
+                .doesNotHaveSameHashCodeAs(second);
 
-        assertThat(third).isNotEqualTo(second);
-        assertThat(third.hashCode()).isNotEqualTo(second.hashCode());
-
-        assertThat(fourth).isNotEqualTo(first);
-        assertThat(fourth.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(fourth)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
     }
 
     @Test
