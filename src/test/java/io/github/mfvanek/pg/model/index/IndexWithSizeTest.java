@@ -104,13 +104,16 @@ class IndexWithSizeTest {
 
         assertThat(first)
                 .isEqualByComparingTo(first) // self
-                .isEqualByComparingTo(theSame); // the same
+                .isEqualByComparingTo(theSame) // the same
+                .isLessThan(second)
+                .isLessThan(third);
 
-        // others
-        assertThat(first.compareTo(second)).isEqualTo(-1);
-        assertThat(second.compareTo(first)).isEqualTo(1);
+        assertThat(second)
+                .isGreaterThan(first)
+                .isLessThan(third);
 
-        assertThat(second.compareTo(third)).isNegative();
-        assertThat(third.compareTo(second)).isPositive();
+        assertThat(third)
+                .isGreaterThan(first)
+                .isGreaterThan(second);
     }
 }

@@ -109,13 +109,16 @@ class TableTest {
 
         assertThat(first)
                 .isEqualByComparingTo(first) // self
-                .isEqualByComparingTo(theSame); // the same
+                .isEqualByComparingTo(theSame) // the same
+                .isLessThan(second)
+                .isLessThan(third);
 
-        // others
-        assertThat(first.compareTo(second)).isEqualTo(-1);
-        assertThat(second.compareTo(first)).isEqualTo(1);
+        assertThat(second)
+                .isGreaterThan(first)
+                .isLessThan(third);
 
-        assertThat(second.compareTo(third)).isEqualTo(-1);
-        assertThat(third.compareTo(second)).isEqualTo(1);
+        assertThat(third)
+                .isGreaterThan(first)
+                .isGreaterThan(second);
     }
 }

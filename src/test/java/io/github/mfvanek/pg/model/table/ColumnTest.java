@@ -130,17 +130,19 @@ class ColumnTest {
 
         assertThat(first)
                 .isEqualByComparingTo(first) // self
-                .isEqualByComparingTo(theSame); // the same
+                .isEqualByComparingTo(theSame) // the same
+                .isGreaterThan(theSameButNullable) // do not ignore nullability of column
+                .isLessThan(second)
+                .isLessThan(third);
 
-        // do not ignore nullability of column
-        assertThat(theSameButNullable.compareTo(first)).isEqualTo(-1);
-        assertThat(first.compareTo(theSameButNullable)).isEqualTo(1);
+        assertThat(theSameButNullable).isLessThan(first);
 
-        // others
-        assertThat(first.compareTo(second)).isEqualTo(-1);
-        assertThat(second.compareTo(first)).isEqualTo(1);
+        assertThat(second)
+                .isGreaterThan(first)
+                .isLessThan(third);
 
-        assertThat(first.compareTo(third)).isEqualTo(-1);
-        assertThat(third.compareTo(first)).isEqualTo(1);
+        assertThat(third)
+                .isGreaterThan(first)
+                .isGreaterThan(second);
     }
 }

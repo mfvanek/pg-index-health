@@ -96,8 +96,11 @@ class TableWithMissingIndexTest {
         final TableWithMissingIndex third = TableWithMissingIndex.of("t2", 3L, 4, 5);
         assertThat(first)
                 .isEqualByComparingTo(first)
-                .isEqualByComparingTo(theSame);
-        assertThat(first.compareTo(third)).isEqualTo(-1);
-        assertThat(third.compareTo(theSame)).isEqualTo(1);
+                .isEqualByComparingTo(theSame)
+                .isLessThan(third);
+
+        assertThat(third)
+                .isGreaterThan(first)
+                .isGreaterThan(theSame);
     }
 }

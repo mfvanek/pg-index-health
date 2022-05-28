@@ -31,7 +31,7 @@ public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
      */
     @Override
     public boolean isPrimary(@Nonnull final PgConnection pgConnection) {
-        Objects.requireNonNull(pgConnection, "pgConnection");
+        Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
         LOGGER.debug("Executing on host {} query: {}", pgConnection.getHost(), SQL_QUERY);
         if (pgConnection.getHost().cannotBePrimary()) {
             return false;
@@ -47,7 +47,7 @@ public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
                 return executionResult;
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Query failed", e);
+            throw new RuntimeException("Query failed", e); //NOSONAR
         }
     }
 }
