@@ -125,24 +125,24 @@ class ColumnTest {
 
         //noinspection ResultOfMethodCallIgnored,ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("other cannot be null");
 
-        // self
-        //noinspection EqualsWithItself
-        assertThat(first.compareTo(first)).isZero();
+        assertThat(first)
+                .isEqualByComparingTo(first) // self
+                .isEqualByComparingTo(theSame) // the same
+                .isGreaterThan(theSameButNullable) // do not ignore nullability of column
+                .isLessThan(second)
+                .isLessThan(third);
 
-        // the same
-        assertThat(first.compareTo(theSame)).isZero();
+        assertThat(theSameButNullable).isLessThan(first);
 
-        // do not ignore nullability of column
-        assertThat(theSameButNullable.compareTo(first)).isEqualTo(-1);
-        assertThat(first.compareTo(theSameButNullable)).isEqualTo(1);
+        assertThat(second)
+                .isGreaterThan(first)
+                .isLessThan(third);
 
-        // others
-        assertThat(first.compareTo(second)).isEqualTo(-1);
-        assertThat(second.compareTo(first)).isEqualTo(1);
-
-        assertThat(first.compareTo(third)).isEqualTo(-1);
-        assertThat(third.compareTo(first)).isEqualTo(1);
+        assertThat(third)
+                .isGreaterThan(first)
+                .isGreaterThan(second);
     }
 }

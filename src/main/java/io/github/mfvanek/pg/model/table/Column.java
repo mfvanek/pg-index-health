@@ -92,7 +92,7 @@ public class Column implements TableNameAware, Comparable<Column> {
 
     @Override
     public int compareTo(@Nonnull Column other) {
-        Objects.requireNonNull(other, "other");
+        Objects.requireNonNull(other, "other cannot be null");
         if (!tableName.equals(other.tableName)) {
             return tableName.compareTo(other.tableName);
         }

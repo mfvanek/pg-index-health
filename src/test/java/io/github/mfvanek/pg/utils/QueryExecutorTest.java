@@ -76,8 +76,9 @@ class QueryExecutorTest extends DatabaseAwareTestBase {
         }).when(statement).setString(anyInt(), anyString());
         assertThatThrownBy(() -> QueryExecutor.executeQueryWithSchema(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(), "select version()", (rs) -> rs.getString(1)))
                 .isInstanceOf(RuntimeException.class)
+                .hasMessage("Error occurs while setting params")
                 .hasCauseInstanceOf(SQLException.class)
-                .hasMessageContaining("bad parameter");
+                .hasRootCauseMessage("bad parameter");
     }
 
     @Test
@@ -92,7 +93,8 @@ class QueryExecutorTest extends DatabaseAwareTestBase {
         }).when(statement).setString(anyInt(), anyString());
         assertThatThrownBy(() -> QueryExecutor.executeQueryWithBloatThreshold(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(), "select version()", (rs) -> rs.getString(1)))
                 .isInstanceOf(RuntimeException.class)
+                .hasMessage("Error occurs while setting params")
                 .hasCauseInstanceOf(SQLException.class)
-                .hasMessageContaining("bad parameter");
+                .hasRootCauseMessage("bad parameter");
     }
 }

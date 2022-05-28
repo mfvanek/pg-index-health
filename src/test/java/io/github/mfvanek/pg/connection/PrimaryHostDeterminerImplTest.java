@@ -55,14 +55,17 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
         final PgConnection pgConnection = PgConnectionImpl.of(dataSource, localhost);
         assertThatThrownBy(() -> primaryHostDeterminer.isPrimary(pgConnection))
                 .isInstanceOf(RuntimeException.class)
+                .hasMessage("Query failed")
                 .hasCauseInstanceOf(SQLException.class)
-                .hasMessageContaining("bad query");
+                .hasRootCauseMessage("bad query");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArgument() {
-        assertThatThrownBy(() -> primaryHostDeterminer.isPrimary(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> primaryHostDeterminer.isPrimary(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("pgConnection cannot be null");
     }
 
     @Test

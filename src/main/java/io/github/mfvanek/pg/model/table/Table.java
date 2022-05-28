@@ -82,7 +82,7 @@ public class Table implements TableNameAware, TableSizeAware, Comparable<Table> 
 
     @Override
     public int compareTo(@Nonnull Table other) {
-        Objects.requireNonNull(other, "other");
+        Objects.requireNonNull(other, "other cannot be null");
         return tableName.compareTo(other.tableName);
     }
 

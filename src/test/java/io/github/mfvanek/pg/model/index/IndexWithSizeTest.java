@@ -90,7 +90,7 @@ class IndexWithSizeTest {
                 .verify();
     }
 
-    @SuppressWarnings({"ConstantConditions", "EqualsWithItself", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
     @Test
     void compareToTest() {
         final IndexWithSize first = IndexWithSize.of("t1", "i1", 22L);
@@ -98,19 +98,22 @@ class IndexWithSizeTest {
         final IndexWithSize second = IndexWithSize.of("t1", "i2", 33L);
         final IndexWithSize third = IndexWithSize.of("t3", "i3", 22L);
 
-        assertThatThrownBy(() -> first.compareTo(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> first.compareTo(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("other cannot be null");
 
-        // self
-        assertThat(first.compareTo(first)).isZero();
+        assertThat(first)
+                .isEqualByComparingTo(first) // self
+                .isEqualByComparingTo(theSame) // the same
+                .isLessThan(second)
+                .isLessThan(third);
 
-        // the same
-        assertThat(first.compareTo(theSame)).isZero();
+        assertThat(second)
+                .isGreaterThan(first)
+                .isLessThan(third);
 
-        // others
-        assertThat(first.compareTo(second)).isEqualTo(-1);
-        assertThat(second.compareTo(first)).isEqualTo(1);
-
-        assertThat(second.compareTo(third)).isLessThanOrEqualTo(-1);
-        assertThat(third.compareTo(second)).isGreaterThanOrEqualTo(1);
+        assertThat(third)
+                .isGreaterThan(first)
+                .isGreaterThan(second);
     }
 }

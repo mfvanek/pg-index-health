@@ -95,7 +95,7 @@ class TableTest {
                 .verify();
     }
 
-    @SuppressWarnings({"ConstantConditions", "EqualsWithItself", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
     @Test
     void compareToTest() {
         final Table first = Table.of("t1", 22L);
@@ -103,19 +103,22 @@ class TableTest {
         final Table second = Table.of("t2", 30L);
         final Table third = Table.of("t3", 22L);
 
-        assertThatThrownBy(() -> first.compareTo(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> first.compareTo(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("other cannot be null");
 
-        // self
-        assertThat(first.compareTo(first)).isZero();
+        assertThat(first)
+                .isEqualByComparingTo(first) // self
+                .isEqualByComparingTo(theSame) // the same
+                .isLessThan(second)
+                .isLessThan(third);
 
-        // the same
-        assertThat(first.compareTo(theSame)).isZero();
+        assertThat(second)
+                .isGreaterThan(first)
+                .isLessThan(third);
 
-        // others
-        assertThat(first.compareTo(second)).isEqualTo(-1);
-        assertThat(second.compareTo(first)).isEqualTo(1);
-
-        assertThat(second.compareTo(third)).isEqualTo(-1);
-        assertThat(third.compareTo(second)).isEqualTo(1);
+        assertThat(third)
+                .isGreaterThan(first)
+                .isGreaterThan(second);
     }
 }

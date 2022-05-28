@@ -39,7 +39,7 @@ public final class SqlQueryReader {
             LOGGER.trace("Query from file {}", sqlQueryFromFile);
             return NamedParametersParser.parse(sqlQueryFromFile);
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex); //NOSONAR
         }
     }
 }
