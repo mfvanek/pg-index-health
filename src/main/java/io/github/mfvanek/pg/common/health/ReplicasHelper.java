@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -71,6 +72,7 @@ final class ReplicasHelper {
     static String getLastStatsResetDateLogMessage(
             @Nonnull final PgHost host,
             @Nonnull final Map<PgHost, StatisticsMaintenanceOnHost> statisticsMaintenanceForAllHosts) {
+        Objects.requireNonNull(statisticsMaintenanceForAllHosts, "statisticsMaintenanceForAllHosts cannot be null");
         final StatisticsMaintenanceOnHost statisticsMaintenance = statisticsMaintenanceForAllHosts.get(host);
         if (statisticsMaintenance == null) {
             throw new NoSuchElementException("StatisticsMaintenanceOnHost object wasn't found for host " + host);

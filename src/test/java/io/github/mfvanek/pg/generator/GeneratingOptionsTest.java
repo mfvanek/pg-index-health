@@ -21,8 +21,8 @@ class GeneratingOptionsTest {
     void testToString() {
         final GeneratingOptions.Builder builder = GeneratingOptions.builder();
         final GeneratingOptions options = builder.build();
-        assertThat(options.toString())
-                .isEqualTo("GeneratingOptions{concurrently=true, excludeNulls=true, breakLines=true, indentation=4, uppercaseForKeywords=false, nameWithoutNulls=true, idxPosition=SUFFIX}");
+        assertThat(options)
+                .hasToString("GeneratingOptions{concurrently=true, excludeNulls=true, breakLines=true, indentation=4, uppercaseForKeywords=false, nameWithoutNulls=true, idxPosition=SUFFIX}");
 
         builder.normally()
                 .includeNulls()
@@ -31,8 +31,8 @@ class GeneratingOptionsTest {
                 .uppercaseForKeywords()
                 .doNotNameWithoutNulls()
                 .withIdxPosition(IdxPosition.PREFIX);
-        assertThat(builder.toString())
-                .isEqualTo("Builder{concurrently=false, excludeNulls=false, breakLines=false, indentation=2, uppercaseForKeywords=true, nameWithoutNulls=false, idxPosition=PREFIX}");
+        assertThat(builder)
+                .hasToString("Builder{concurrently=false, excludeNulls=false, breakLines=false, indentation=2, uppercaseForKeywords=true, nameWithoutNulls=false, idxPosition=PREFIX}");
 
         builder.concurrently()
                 .excludeNulls()
@@ -41,8 +41,8 @@ class GeneratingOptionsTest {
                 .lowercaseForKeywords()
                 .nameWithoutNulls()
                 .withIdxPosition(IdxPosition.SUFFIX);
-        assertThat(builder.toString())
-                .isEqualTo("Builder{concurrently=true, excludeNulls=true, breakLines=true, indentation=4, uppercaseForKeywords=false, nameWithoutNulls=true, idxPosition=SUFFIX}");
+        assertThat(builder)
+                .hasToString("Builder{concurrently=true, excludeNulls=true, breakLines=true, indentation=4, uppercaseForKeywords=false, nameWithoutNulls=true, idxPosition=SUFFIX}");
     }
 
     @Test

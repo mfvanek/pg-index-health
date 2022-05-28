@@ -99,19 +99,23 @@ class PgHostImplTest {
         assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
-        assertThat(first).isEqualTo(first);
-        assertThat(first.hashCode()).isEqualTo(first.hashCode());
+        assertThat(first)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // the same
-        assertThat(theSame).isEqualTo(first);
-        assertThat(theSame.hashCode()).isEqualTo(first.hashCode());
+        assertThat(theSame)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // others
-        assertThat(withDifferentHostsOrder).isEqualTo(first);
-        assertThat(withDifferentHostsOrder.hashCode()).isEqualTo(first.hashCode());
+        assertThat(withDifferentHostsOrder)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
-        assertThat(second).isNotEqualTo(first);
-        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(second)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
 
         // another implementation of PgHost
         final PgHost pgHostMock = Mockito.mock(PgHost.class);

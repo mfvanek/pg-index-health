@@ -32,6 +32,8 @@ import javax.annotation.Nonnull;
  */
 public class TablesMaintenanceOnHostImpl extends AbstractMaintenance implements TablesMaintenanceOnHost {
 
+    private static final String TABLE_SIZE = "table_size";
+
     public TablesMaintenanceOnHostImpl(@Nonnull final PgConnection pgConnection) {
         super(pgConnection);
     }
@@ -43,8 +45,8 @@ public class TablesMaintenanceOnHostImpl extends AbstractMaintenance implements 
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
         return executeQuery(Diagnostics.TABLES_WITH_MISSING_INDEXES, pgContext, rs -> {
-            final String tableName = rs.getString("table_name");
-            final long tableSize = rs.getLong("table_size");
+            final String tableName = rs.getString(TABLE_NAME);
+            final long tableSize = rs.getLong(TABLE_SIZE);
             final long seqScans = rs.getLong("seq_scan");
             final long indexScans = rs.getLong("idx_scan");
             return TableWithMissingIndex.of(tableName, tableSize, seqScans, indexScans);
@@ -58,8 +60,8 @@ public class TablesMaintenanceOnHostImpl extends AbstractMaintenance implements 
     @Override
     public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
         return executeQuery(Diagnostics.TABLES_WITHOUT_PRIMARY_KEY, pgContext, rs -> {
-            final String tableName = rs.getString("table_name");
-            final long tableSize = rs.getLong("table_size");
+            final String tableName = rs.getString(TABLE_NAME);
+            final long tableSize = rs.getLong(TABLE_SIZE);
             return Table.of(tableName, tableSize);
         });
     }
@@ -71,10 +73,10 @@ public class TablesMaintenanceOnHostImpl extends AbstractMaintenance implements 
     @Nonnull
     public List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext) {
         return executeQueryWithBloatThreshold(Diagnostics.BLOATED_TABLES, pgContext, rs -> {
-            final String tableName = rs.getString("table_name");
-            final long tableSize = rs.getLong("table_size");
-            final long bloatSize = rs.getLong("bloat_size");
-            final int bloatPercentage = rs.getInt("bloat_percentage");
+            final String tableName = rs.getString(TABLE_NAME);
+            final long tableSize = rs.getLong(TABLE_SIZE);
+            final long bloatSize = rs.getLong(BLOAT_SIZE);
+            final int bloatPercentage = rs.getInt(BLOAT_PERCENTAGE);
             return TableWithBloat.of(tableName, tableSize, bloatSize, bloatPercentage);
         });
     }

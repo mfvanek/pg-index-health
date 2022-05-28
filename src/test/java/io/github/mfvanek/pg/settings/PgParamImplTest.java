@@ -69,16 +69,19 @@ class PgParamImplTest {
         assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
-        assertThat(first).isEqualTo(first);
-        assertThat(first.hashCode()).isEqualTo(first.hashCode());
+        assertThat(first)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // the same
-        assertThat(theSame).isEqualTo(first);
-        assertThat(theSame.hashCode()).isEqualTo(first.hashCode());
+        assertThat(theSame)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // others
-        assertThat(second).isNotEqualTo(first);
-        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(second)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
 
         // another implementation of PgParam
         final PgParam pgParamMock = Mockito.mock(PgParam.class);

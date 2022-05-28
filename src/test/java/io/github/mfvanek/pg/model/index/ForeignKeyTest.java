@@ -28,12 +28,12 @@ class ForeignKeyTest {
     @Test
     void testToString() {
         final ForeignKey foreignKey = ForeignKey.ofNotNullColumn("t", "c_t_order_id", "order_id");
-        assertThat(foreignKey.toString())
-                .isEqualTo("ForeignKey{tableName='t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='t', columnName='order_id', notNull=true}]}");
+        assertThat(foreignKey)
+                .hasToString("ForeignKey{tableName='t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='t', columnName='order_id', notNull=true}]}");
 
         final ForeignKey foreignKeyWithNullableColumn = ForeignKey.ofNullableColumn("t", "c_t_order_id", "order_id");
-        assertThat(foreignKeyWithNullableColumn.toString())
-                .isEqualTo("ForeignKey{tableName='t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='t', columnName='order_id', notNull=false}]}");
+        assertThat(foreignKeyWithNullableColumn)
+                .hasToString("ForeignKey{tableName='t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='t', columnName='order_id', notNull=false}]}");
     }
 
     @Test
@@ -135,29 +135,35 @@ class ForeignKeyTest {
         assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
-        assertThat(first).isEqualTo(first);
-        assertThat(first.hashCode()).isEqualTo(first.hashCode());
+        assertThat(first)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // the same
-        assertThat(theSame).isEqualTo(first);
-        assertThat(theSame.hashCode()).isEqualTo(first.hashCode());
+        assertThat(theSame)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // column order matters
-        assertThat(withDifferentOrderOfColumns).isNotEqualTo(first);
-        assertThat(withDifferentOrderOfColumns.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(withDifferentOrderOfColumns)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
 
-        assertThat(second).isNotEqualTo(first);
-        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(second)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
 
         final ForeignKey third = ForeignKey.of("table", "c_t_order_id",
                 Arrays.asList(Column.ofNotNull("table", "order_id"), Column.ofNotNull("table", "limit")));
-        assertThat(third).isNotEqualTo(first);
-        assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(third)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
 
         final ForeignKey fourth = ForeignKey.of("t", "other_id",
                 Arrays.asList(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "limit")));
-        assertThat(fourth).isNotEqualTo(first);
-        assertThat(fourth.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(fourth)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
     }
 
     @Test

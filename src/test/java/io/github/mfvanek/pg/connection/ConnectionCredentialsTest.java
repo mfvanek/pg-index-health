@@ -70,24 +70,30 @@ class ConnectionCredentialsTest {
         assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
-        assertThat(first).isEqualTo(first);
-        assertThat(first.hashCode()).isEqualTo(first.hashCode());
+        assertThat(first)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // the same
-        assertThat(ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "p")).isEqualTo(first);
+        assertThat(ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "p"))
+                .isEqualTo(first);
 
         // others
-        assertThat(second).isNotEqualTo(first);
-        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(second)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
 
-        assertThat(third).isNotEqualTo(first);
-        assertThat(third.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(third)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
 
-        assertThat(third).isNotEqualTo(second);
-        assertThat(third.hashCode()).isNotEqualTo(second.hashCode());
+        assertThat(third)
+                .isNotEqualTo(second)
+                .doesNotHaveSameHashCodeAs(second);
 
-        assertThat(fourth).isNotEqualTo(first);
-        assertThat(fourth.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(fourth)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
     }
 
     @Test

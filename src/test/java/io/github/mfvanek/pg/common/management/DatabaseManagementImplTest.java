@@ -84,8 +84,9 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
     void shouldReturnParamsCurrentValues(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final Set<PgParam> paramsCurrentValues = databaseManagement.getParamsCurrentValues();
-            assertThat(paramsCurrentValues).isNotNull();
-            assertThat(paramsCurrentValues.size()).isGreaterThan(ImportantParam.values().length);
+            assertThat(paramsCurrentValues)
+                    .isNotNull()
+                    .hasSizeGreaterThan(ImportantParam.values().length);
         });
     }
 }

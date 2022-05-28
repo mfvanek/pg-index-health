@@ -52,8 +52,10 @@ class ReplicasHelperTest {
         );
         final List<UnusedIndex> unusedIndexes = ReplicasHelper.getUnusedIndexesAsIntersectionResult(
                 potentiallyUnusedIndexesFromAllHosts);
-        assertThat(unusedIndexes).hasSize(2);
-        assertThat(unusedIndexes).containsExactlyInAnyOrder(i1, i5);
+        assertThat(unusedIndexes)
+                .isNotNull()
+                .hasSize(2)
+                .containsExactlyInAnyOrder(i1, i5);
     }
 
     @Test
@@ -85,9 +87,15 @@ class ReplicasHelperTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void getLastStatsResetDateLogMessageWithWrongArguments() {
-        assertThatThrownBy(() -> ReplicasHelper.getLastStatsResetDateLogMessage(null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ReplicasHelper.getLastStatsResetDateLogMessage(null, emptyMap())).isInstanceOf(NoSuchElementException.class);
-        assertThatThrownBy(() -> ReplicasHelper.getLastStatsResetDateLogMessage(PgHostImpl.ofPrimary(), emptyMap())).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> ReplicasHelper.getLastStatsResetDateLogMessage(null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("statisticsMaintenanceForAllHosts cannot be null");
+        assertThatThrownBy(() -> ReplicasHelper.getLastStatsResetDateLogMessage(null, emptyMap()))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("StatisticsMaintenanceOnHost object wasn't found for host null");
+        assertThatThrownBy(() -> ReplicasHelper.getLastStatsResetDateLogMessage(PgHostImpl.ofPrimary(), emptyMap()))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("StatisticsMaintenanceOnHost object wasn't found for host PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}");
     }
 
     @Test

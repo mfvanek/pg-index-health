@@ -30,6 +30,11 @@ import javax.annotation.Nonnull;
  */
 public abstract class AbstractMaintenance implements HostAware {
 
+    protected static final String TABLE_NAME = "table_name";
+    protected static final String INDEX_NAME = "index_name";
+    protected static final String BLOAT_SIZE = "bloat_size";
+    protected static final String BLOAT_PERCENTAGE = "bloat_percentage";
+
     /**
      * A connection to a specific host in the cluster.
      */

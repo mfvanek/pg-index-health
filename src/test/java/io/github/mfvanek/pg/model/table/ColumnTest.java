@@ -89,21 +89,24 @@ class ColumnTest {
         assertThat(first.equals(BigDecimal.ZERO)).isFalse();
 
         // self
-        assertThat(first).isEqualTo(first);
-        assertThat(first.hashCode()).isEqualTo(first.hashCode());
+        assertThat(first)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // the same
-        assertThat(theSame).isEqualTo(first);
-        assertThat(theSame.hashCode()).isEqualTo(first.hashCode());
+        assertThat(theSame)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         // do not ignore nullability of column
-        assertThat(theSameButNullable).isNotEqualTo(first);
-        assertThat(theSameButNullable.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(theSameButNullable)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
 
         // others
-        assertThat(second).isNotEqualTo(first);
-        assertThat(first).isNotEqualTo(second);
-        assertThat(second.hashCode()).isNotEqualTo(first.hashCode());
+        assertThat(second)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
     }
 
     @Test
