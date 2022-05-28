@@ -5,13 +5,18 @@ plugins {
     id 'jacoco'
     id 'com.github.spotbugs' version '5.0.6'
     id 'checkstyle'
+    id 'org.sonarqube' version '3.3'
 }
 
 group 'io.github.mfvanek'
 version '0.5.0-SNAPSHOT'
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withJavadocJar()
+    withSourcesJar()
+}
 
 repositories {
     mavenLocal()
@@ -53,11 +58,6 @@ jar {
         attributes("Implementation-Title": project.name,
                 "Implementation-Version": project.version)
     }
-}
-
-java {
-    withJavadocJar()
-    withSourcesJar()
 }
 
 publishing {
@@ -167,6 +167,13 @@ jacocoTestCoverageVerification {
         }
         rule {
             limit {
+                counter = 'LINE'
+                value = 'MISSEDCOUNT'
+                maximum = 0
+            }
+        }
+        rule {
+            limit {
                 counter = 'INSTRUCTION'
                 value = 'COVEREDRATIO'
                 minimum = 1.0
@@ -191,3 +198,11 @@ checkstyleTest {
 
 check.dependsOn jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "mfvanek_pg-index-health"
+        property "sonar.organization", "mfvanek"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
+}
