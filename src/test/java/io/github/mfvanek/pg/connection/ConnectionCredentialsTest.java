@@ -31,15 +31,19 @@ class ConnectionCredentialsTest {
         final ConnectionCredentials credentials = ConnectionCredentials.ofUrl(DEFAULT_URL, "user", "pswrd");
         assertThat(credentials.getUserName()).isEqualTo("user");
         assertThat(credentials.getPassword()).isEqualTo("pswrd");
-        assertThat(credentials.getConnectionUrls()).hasSize(1);
-        assertThat(credentials.getConnectionUrls()).contains(DEFAULT_URL);
+        assertThat(credentials.getConnectionUrls())
+                .hasSize(1)
+                .contains(DEFAULT_URL)
+                .isUnmodifiable();
     }
 
     @Test
     void shouldDeduplicateUrls() {
         final ConnectionCredentials credentials = ConnectionCredentials.of(Arrays.asList(DEFAULT_URL, DEFAULT_URL, DEFAULT_URL), "user", "pswrd");
-        assertThat(credentials.getConnectionUrls()).hasSize(1);
-        assertThat(credentials.getConnectionUrls()).contains(DEFAULT_URL);
+        assertThat(credentials.getConnectionUrls())
+                .hasSize(1)
+                .contains(DEFAULT_URL)
+                .isUnmodifiable();
     }
 
     @Test
@@ -52,9 +56,10 @@ class ConnectionCredentialsTest {
 
         urls.add("jdbc:postgresql://localhost/fourth");
 
-        assertThat(credentials.getConnectionUrls()).hasSize(3);
-        assertThat(credentials.getConnectionUrls()).doesNotContain("jdbc:postgresql://localhost/fourth");
-        assertThatThrownBy(() -> credentials.getConnectionUrls().clear()).isInstanceOf(UnsupportedOperationException.class);
+        assertThat(credentials.getConnectionUrls())
+                .hasSize(3)
+                .doesNotContain("jdbc:postgresql://localhost/fourth")
+                .isUnmodifiable();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -85,9 +90,7 @@ class ConnectionCredentialsTest {
 
         assertThat(third)
                 .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
-
-        assertThat(third)
+                .doesNotHaveSameHashCodeAs(first)
                 .isNotEqualTo(second)
                 .doesNotHaveSameHashCodeAs(second);
 

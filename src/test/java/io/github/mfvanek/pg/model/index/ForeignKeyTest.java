@@ -48,7 +48,8 @@ class ForeignKeyTest {
         assertThat(foreignKey.getColumnsInConstraint())
                 .isNotNull()
                 .hasSize(1)
-                .containsExactly(Column.ofNotNull("t", "order_id"));
+                .containsExactly(Column.ofNotNull("t", "order_id"))
+                .isUnmodifiable();
     }
 
     @Test
@@ -58,7 +59,8 @@ class ForeignKeyTest {
         assertThat(key.getColumnsInConstraint())
                 .isNotNull()
                 .hasSize(2)
-                .containsExactly(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id"));
+                .containsExactly(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id"))
+                .isUnmodifiable();
     }
 
     @Test
@@ -74,10 +76,8 @@ class ForeignKeyTest {
         assertThat(key.getColumnsInConstraint())
                 .isNotNull()
                 .hasSize(3)
-                .doesNotContain(Column.ofNotNull("t", "fourth"));
-
-        assertThatThrownBy(() -> key.getColumnsInConstraint().clear())
-                .isInstanceOf(UnsupportedOperationException.class);
+                .doesNotContain(Column.ofNotNull("t", "fourth"))
+                .isUnmodifiable();
     }
 
     @Test

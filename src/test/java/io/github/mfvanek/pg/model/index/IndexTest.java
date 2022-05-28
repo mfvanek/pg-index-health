@@ -75,9 +75,7 @@ class IndexTest {
 
         assertThat(third)
                 .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
-
-        assertThat(third)
+                .doesNotHaveSameHashCodeAs(first)
                 .isNotEqualTo(second)
                 .doesNotHaveSameHashCodeAs(second);
     }
@@ -95,7 +93,9 @@ class IndexTest {
         final Index second = Index.of("t1", "i2");
         final Index third = Index.of("t2", "i2");
 
-        assertThatThrownBy(() -> first.compareTo(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> first.compareTo(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("other cannot be null");
 
         // self
         assertThat(first.compareTo(first)).isZero();

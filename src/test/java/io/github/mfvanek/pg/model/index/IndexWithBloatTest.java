@@ -78,9 +78,7 @@ class IndexWithBloatTest {
 
         assertThat(third)
                 .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
-
-        assertThat(third)
+                .doesNotHaveSameHashCodeAs(first)
                 .isNotEqualTo(second)
                 .doesNotHaveSameHashCodeAs(second);
 

@@ -32,7 +32,11 @@ class DuplicatedIndexesTest {
         assertThat(index).isNotNull();
         assertThat(index.getTableName()).isEqualTo("t");
         assertThat(index.getTotalSize()).isEqualTo(303L);
-        assertThat(index.getIndexNames()).contains("i1", "i2");
+        assertThat(index.getIndexNames())
+                .isNotNull()
+                .hasSize(2)
+                .containsExactly("i1", "i2")
+                .isUnmodifiable();
     }
 
     @Test
@@ -44,12 +48,19 @@ class DuplicatedIndexesTest {
         assertThat(indexes).isNotNull();
 
         assertThat(indexes.getTotalSize()).isEqualTo(606L);
-        assertThat(indexes.getDuplicatedIndexes()).contains(
-                IndexWithSize.of("t1", "i1", 101L),
-                IndexWithSize.of("t1", "i2", 202L),
-                IndexWithSize.of("t1", "i3", 303L)
-        );
-        assertThat(indexes.getIndexNames()).contains("i1", "i2", "i3");
+        assertThat(indexes.getDuplicatedIndexes())
+                .isNotNull()
+                .hasSize(3)
+                .containsExactly(
+                        IndexWithSize.of("t1", "i1", 101L),
+                        IndexWithSize.of("t1", "i2", 202L),
+                        IndexWithSize.of("t1", "i3", 303L))
+                .isUnmodifiable();
+        assertThat(indexes.getIndexNames())
+                .isNotNull()
+                .hasSize(3)
+                .containsExactly("i1", "i2", "i3")
+                .isUnmodifiable();
     }
 
     @Test
@@ -63,13 +74,17 @@ class DuplicatedIndexesTest {
         final IndexWithSize fourth = IndexWithSize.of("t1", "i4", 404L);
         sourceIndexes.add(fourth);
 
-        assertThat(indexes.getDuplicatedIndexes()).hasSize(3);
-        assertThat(indexes.getDuplicatedIndexes()).doesNotContain(fourth);
-        assertThatThrownBy(() -> indexes.getDuplicatedIndexes().clear()).isInstanceOf(UnsupportedOperationException.class);
+        assertThat(indexes.getDuplicatedIndexes())
+                .isNotNull()
+                .hasSize(3)
+                .doesNotContain(fourth)
+                .isUnmodifiable();
 
-        assertThat(indexes.getIndexNames()).hasSize(3);
-        assertThat(indexes.getIndexNames()).doesNotContain("i4");
-        assertThatThrownBy(() -> indexes.getIndexNames().clear()).isInstanceOf(UnsupportedOperationException.class);
+        assertThat(indexes.getIndexNames())
+                .isNotNull()
+                .hasSize(3)
+                .doesNotContain("i4")
+                .isUnmodifiable();
     }
 
     @Test
@@ -90,13 +105,21 @@ class DuplicatedIndexesTest {
         assertThatThrownBy(() -> DuplicatedIndexes.of(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("duplicatedIndexes cannot be null");
-        assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.emptyList())).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.singletonList(IndexWithSize.of("t", "i", 1L)))).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.emptyList()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("duplicatedIndexes cannot be empty");
+        assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.singletonList(IndexWithSize.of("t", "i", 1L))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("duplicatedIndexes should contains at least two rows");
     }
 
     @Test
     void withDifferentTables() {
-        assertThatThrownBy(() -> DuplicatedIndexes.of(Arrays.asList(IndexWithSize.of("t1", "i1", 1L), IndexWithSize.of("t2", "i2", 2L)))).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of(Arrays.asList(
+                IndexWithSize.of("t1", "i1", 1L),
+                IndexWithSize.of("t2", "i2", 2L))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Table name is not the same within given rows");
     }
 
     @Test
@@ -105,7 +128,11 @@ class DuplicatedIndexesTest {
         assertThat(index).isNotNull();
         assertThat(index.getTableName()).isEqualTo("t");
         assertThat(index.getTotalSize()).isEqualTo(178L);
-        assertThat(index.getIndexNames()).contains("i3", "i4");
+        assertThat(index.getIndexNames())
+                .isNotNull()
+                .hasSize(2)
+                .containsExactly("i3", "i4")
+                .isUnmodifiable();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -157,9 +184,7 @@ class DuplicatedIndexesTest {
 
         assertThat(third)
                 .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
-
-        assertThat(third)
+                .doesNotHaveSameHashCodeAs(first)
                 .isNotEqualTo(second)
                 .doesNotHaveSameHashCodeAs(second);
     }
@@ -184,6 +209,14 @@ class DuplicatedIndexesTest {
                 IndexWithSize.of("t", "i2", 2L),
                 IndexWithSize.of("t", "i4", 4L));
         assertThat(indexes).isNotNull();
-        assertThat(indexes.getDuplicatedIndexes()).contains(IndexWithSize.of("t", "i1", 1L), IndexWithSize.of("t", "i2", 2L), IndexWithSize.of("t", "i3", 3L), IndexWithSize.of("t", "i4", 4L));
+        assertThat(indexes.getDuplicatedIndexes())
+                .isNotNull()
+                .hasSize(4)
+                .containsExactly(
+                        IndexWithSize.of("t", "i1", 1L),
+                        IndexWithSize.of("t", "i2", 2L),
+                        IndexWithSize.of("t", "i3", 3L),
+                        IndexWithSize.of("t", "i4", 4L))
+                .isUnmodifiable();
     }
 }
