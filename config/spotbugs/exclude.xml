@@ -2,57 +2,23 @@
 <FindBugsFilter>
     <Match>
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
-        <Or>
-            <Class name="io.github.mfvanek.pg.utils.QueryExecutor"/>
-            <Class name="io.github.mfvanek.pg.utils.DatabaseAwareTestBase"/>
-            <Class name="io.github.mfvanek.pg.utils.DatabasePopulator"/>
-            <Class name="io.github.mfvanek.pg.utils.PostgresVersionTest"/>
-            <Class name="io.github.mfvanek.pg.utils.TestUtils"/>
-            <Class name="io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl"/>
-        </Or>
     </Match>
     <Match>
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
-        <Class name="io.github.mfvanek.pg.utils.SqlQueryReader"/>
     </Match>
     <Match>
         <Bug pattern="OBL_UNSATISFIED_OBLIGATION"/>
-        <Or>
-            <Class name="io.github.mfvanek.pg.utils.QueryExecutorTest"/>
-            <Class name="io.github.mfvanek.pg.connection.PrimaryHostDeterminerImplTest"/>
-        </Or>
     </Match>
     <Match>
         <Bug pattern="EI_EXPOSE_REP"/>
-        <Or>
-            <Class name="io.github.mfvanek.pg.model.index.DuplicatedIndexes"/>
-            <Class name="io.github.mfvanek.pg.model.index.ForeignKey"/>
-            <Class name="io.github.mfvanek.pg.connection.PgConnectionImpl"/>
-            <Class name="io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl"/>
-            <Class name="io.github.mfvanek.pg.embedded.PostgresDbExtension"/>
-        </Or>
     </Match>
     <Match>
         <Bug pattern="EC_NULL_ARG"/>
-        <Or>
-            <Class name="~io\.github\.mfvanek\.pg\.connection\..*Test"/>
-            <Class name="~io\.github\.mfvanek\.pg\.model\..*Test"/>
-            <Class name="~io\.github\.mfvanek\.pg\.settings\..*Test"/>
-        </Or>
     </Match>
     <Match>
         <Bug pattern="EC_UNRELATED_TYPES"/>
-        <Or>
-            <Class name="~io\.github\.mfvanek\.pg\.connection\..*Test"/>
-            <Class name="~io\.github\.mfvanek\.pg\.model\..*Test"/>
-            <Class name="~io\.github\.mfvanek\.pg\.settings\..*Test"/>
-        </Or>
     </Match>
     <Match>
         <Bug pattern="EC_UNRELATED_CLASS_AND_INTERFACE"/>
-        <Or>
-            <Class name="~io\.github\.mfvanek\.pg\.connection\..*Test"/>
-            <Class name="~io\.github\.mfvanek\.pg\.settings\..*Test"/>
-        </Or>
     </Match>
 </FindBugsFilter>

@@ -33,6 +33,7 @@ import javax.sql.DataSource;
  *
  * @author Nikolay Kondratyev
  */
+@SuppressWarnings("PMD.AvoidUsingVolatile")
 public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback {
 
     private volatile JdbcDatabaseContainer<?> container;
@@ -40,7 +41,7 @@ public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback 
     private final List<Pair<String, String>> additionalParameters = new ArrayList<>();
 
     @Override
-    public void beforeAll(ExtensionContext extensionContext) {
+    public void beforeAll(final ExtensionContext extensionContext) {
         final String pgVersion = preparePostgresVersion();
         container = new PostgreSQLContainerProvider().newInstance(pgVersion);
         final String[] startupCommand = prepareStartupCommand(container, additionalParameters);
@@ -56,8 +57,8 @@ public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback 
     }
 
     @Nonnull
-    private static String[] prepareStartupCommand(@Nonnull JdbcDatabaseContainer<?> container,
-                                                  @Nonnull List<Pair<String, String>> additionalParameters) {
+    private static String[] prepareStartupCommand(@Nonnull final JdbcDatabaseContainer<?> container,
+                                                  @Nonnull final List<Pair<String, String>> additionalParameters) {
         return Stream.concat(
                 Arrays.stream(container.getCommandParts()),
                 additionalParameters.stream()
@@ -66,7 +67,7 @@ public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback 
     }
 
     @Override
-    public void afterAll(ExtensionContext extensionContext) {
+    public void afterAll(final ExtensionContext extensionContext) {
         additionalParameters.clear();
         container.close();
         dataSource = null;
@@ -102,7 +103,7 @@ public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback 
         return container.getPassword();
     }
 
-    public PostgresDbExtension withAdditionalStartupParameter(String key, String value) {
+    public PostgresDbExtension withAdditionalStartupParameter(final String key, final String value) {
         additionalParameters.add(Pair.of(key, value));
         return this;
     }
@@ -115,7 +116,7 @@ public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback 
 
     @Nonnull
     private BasicDataSource getDataSource() {
-        BasicDataSource basicDataSource = new BasicDataSource();
+        final BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setUrl(container.getJdbcUrl());
         basicDataSource.setUsername(container.getUsername());
         basicDataSource.setPassword(container.getPassword());

@@ -27,20 +27,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 class StatisticsMaintenanceOnHostImplEmptyTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     private final StatisticsMaintenanceOnHost statisticsMaintenance;
 
     StatisticsMaintenanceOnHostImplEmptyTest() {
-        super(embeddedPostgres.getTestDatabase());
-        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
+        super(POSTGRES.getTestDatabase());
+        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
         this.statisticsMaintenance = new StatisticsMaintenanceOnHostImpl(pgConnection);
     }
 
     @Test
     void getLastStatsResetTimestamp() {
         // Time of the last statistics reset is initialized to the system time during the first connection to the database.
-        DatabasePopulator.collectStatistics(embeddedPostgres.getTestDatabase());
+        DatabasePopulator.collectStatistics(POSTGRES.getTestDatabase());
         waitForStatisticsCollector();
         final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
         assertThat(statsResetTimestamp)

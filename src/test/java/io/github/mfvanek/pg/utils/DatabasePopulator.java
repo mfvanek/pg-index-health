@@ -161,11 +161,12 @@ public final class DatabasePopulator implements AutoCloseable {
                         return;
                     }
                 }
-                throw new RuntimeException("Schema with name " + schemaName + " wasn't created");
+                throw new IllegalStateException("Schema with name " + schemaName + " wasn't created");
             }
         });
     }
 
+    @SuppressWarnings("PMD.EmptyCatchBlock")
     private void createInvalidIndex() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -282,7 +283,7 @@ public final class DatabasePopulator implements AutoCloseable {
             insertClientStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PgSqlException(e);
         }
     }
 
@@ -297,10 +298,10 @@ public final class DatabasePopulator implements AutoCloseable {
             if (resultSet.next()) {
                 return resultSet.getLong(1);
             } else {
-                throw new RuntimeException("An error occurred while retrieving a value from the sequence");
+                throw new IllegalStateException("An error occurred while retrieving a value from the sequence");
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PgSqlException(e);
         }
     }
 
@@ -338,7 +339,7 @@ public final class DatabasePopulator implements AutoCloseable {
                         return;
                     }
                 }
-                throw new RuntimeException("Table with name 'bad_clients' in schema " + schemaName + " wasn't created");
+                throw new IllegalStateException("Table with name 'bad_clients' in schema " + schemaName + " wasn't created");
             }
         });
     }
@@ -390,13 +391,12 @@ public final class DatabasePopulator implements AutoCloseable {
             rs.next();
             return rs.getBoolean(1);
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new PgSqlException(e);
         }
     }
 
     private void createCustomCollation(@Nonnull final Statement statement,
                                        @Nonnull final String customCollation) throws SQLException {
-        final String query = "create collation \"%s\" from \"%s\";";
         final String systemLocale;
         if (SystemUtils.IS_OS_WINDOWS) {
             final String icuCollation = "en-US-x-icu";
@@ -411,9 +411,10 @@ public final class DatabasePopulator implements AutoCloseable {
             } else if (SystemUtils.IS_OS_MAC) {
                 systemLocale = "en_US.UTF-8";
             } else {
-                throw new RuntimeException("Unsupported operation system");
+                throw new IllegalStateException("Unsupported operation system");
             }
         }
+        final String query = "create collation \"%s\" from \"%s\";";
         statement.execute(String.format(query, customCollation, systemLocale));
     }
 

@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.connection;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.utils.PgSqlException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mockito;
@@ -29,35 +30,36 @@ import static org.mockito.ArgumentMatchers.anyString;
 class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     private final PrimaryHostDeterminer primaryHostDeterminer = new PrimaryHostDeterminerImpl();
     private final PgHost localhost = PgHostImpl.ofName("localhost");
 
     PrimaryHostDeterminerImplTest() {
-        super(embeddedPostgres.getTestDatabase());
+        super(POSTGRES.getTestDatabase());
     }
 
     @Test
     void isPrimary() {
-        final PgConnection pgConnection = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), localhost);
+        final PgConnection pgConnection = PgConnectionImpl.of(POSTGRES.getTestDatabase(), localhost);
         assertThat(primaryHostDeterminer.isPrimary(pgConnection)).isTrue();
     }
 
     @Test
     void isPrimaryWithExecutionError() throws SQLException {
         final DataSource dataSource = Mockito.mock(DataSource.class);
-        final Connection connection = Mockito.mock(Connection.class);
-        final Statement statement = Mockito.mock(Statement.class);
-        Mockito.when(dataSource.getConnection()).thenReturn(connection);
-        Mockito.when(connection.createStatement()).thenReturn(statement);
-        Mockito.when(statement.executeQuery(anyString())).thenThrow(new SQLException("bad query"));
-        final PgConnection pgConnection = PgConnectionImpl.of(dataSource, localhost);
-        assertThatThrownBy(() -> primaryHostDeterminer.isPrimary(pgConnection))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Query failed")
-                .hasCauseInstanceOf(SQLException.class)
-                .hasRootCauseMessage("bad query");
+        try (Connection connection = Mockito.mock(Connection.class);
+             Statement statement = Mockito.mock(Statement.class)) {
+            Mockito.when(dataSource.getConnection()).thenReturn(connection);
+            Mockito.when(connection.createStatement()).thenReturn(statement);
+            Mockito.when(statement.executeQuery(anyString())).thenThrow(new SQLException("bad query"));
+            final PgConnection pgConnection = PgConnectionImpl.of(dataSource, localhost);
+            assertThatThrownBy(() -> primaryHostDeterminer.isPrimary(pgConnection))
+                    .isInstanceOf(PgSqlException.class)
+                    .hasMessage("bad query")
+                    .hasCauseInstanceOf(SQLException.class)
+                    .hasRootCauseMessage("bad query");
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -70,10 +72,10 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
 
     @Test
     void isPrimaryForSecondaryHost() {
-        final int port = embeddedPostgres.getPort();
+        final int port = POSTGRES.getPort();
         final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
                 "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=secondary", port);
-        final PgConnection secondary = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofUrl(readUrl));
+        final PgConnection secondary = PgConnectionImpl.of(POSTGRES.getTestDatabase(), PgHostImpl.ofUrl(readUrl));
         assertThat(secondary).isNotNull();
         assertThat(primaryHostDeterminer.isPrimary(secondary)).isFalse();
     }

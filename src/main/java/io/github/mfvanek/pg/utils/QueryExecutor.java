@@ -53,7 +53,7 @@ public final class QueryExecutor {
             LOGGER.debug("Query completed with result {}", executionResult);
             return executionResult;
         } catch (SQLException e) {
-            throw new PgSQLException("Query failed", e);
+            throw new PgSqlException(e);
         }
     }
 
@@ -66,7 +66,7 @@ public final class QueryExecutor {
             try {
                 statement.setString(1, pgContext.getSchemaName());
             } catch (SQLException e) {
-                throw new PgSQLException("Error occurs while setting params", e);
+                throw new PgSqlException(e);
             }
         });
     }
@@ -81,7 +81,7 @@ public final class QueryExecutor {
                 statement.setString(1, pgContext.getSchemaName());
                 statement.setInt(2, pgContext.getBloatPercentageThreshold());
             } catch (SQLException e) {
-                throw new PgSQLException("Error occurs while setting params", e);
+                throw new PgSqlException(e);
             }
         });
     }
@@ -107,7 +107,7 @@ public final class QueryExecutor {
             LOGGER.debug("Query completed with result {}", executionResult);
             return executionResult;
         } catch (SQLException e) {
-            throw new PgSQLException("Query failed", e);
+            throw new PgSqlException(e);
         }
     }
 }

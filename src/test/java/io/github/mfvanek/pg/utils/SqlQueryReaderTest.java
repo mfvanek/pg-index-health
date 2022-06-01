@@ -27,14 +27,14 @@ class SqlQueryReaderTest {
 
     @Test
     void getQueryFromFileShouldFindFileAndReadIt() {
-        String query = SqlQueryReader.getQueryFromFile("bloated_tables.sql");
+        final String query = SqlQueryReader.getQueryFromFile("bloated_tables.sql");
         assertThat(query).isNotNull();
         assertThat(query.length()).isGreaterThan(1_000);
     }
 
     @Test
     void getQueryFromFileShouldFindFileInUppercase() {
-        String query = SqlQueryReader.getQueryFromFile("BLOATED_TABLES.SQL");
+        final String query = SqlQueryReader.getQueryFromFile("BLOATED_TABLES.SQL");
         assertThat(query).isNotNull();
         assertThat(query.length()).isGreaterThan(1_000);
     }

@@ -22,7 +22,7 @@ class SimpleLoggingKeyTest {
     @Test
     void getKeyName() {
         final Set<String> keyNames = new HashSet<>();
-        for (LoggingKey key : SimpleLoggingKey.values()) {
+        for (final LoggingKey key : SimpleLoggingKey.values()) {
             assertThat(key.getKeyName()).isNotNull();
             keyNames.add(key.getKeyName());
         }
@@ -32,7 +32,7 @@ class SimpleLoggingKeyTest {
     @Test
     void getSubKeyName() {
         final Set<String> subKeyNames = new HashSet<>();
-        for (LoggingKey key : SimpleLoggingKey.values()) {
+        for (final LoggingKey key : SimpleLoggingKey.values()) {
             assertThat(key.getSubKeyName()).isNotNull();
             subKeyNames.add(key.getSubKeyName());
         }

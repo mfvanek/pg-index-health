@@ -24,11 +24,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class HighAvailabilityPgConnectionImplTest {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     @Test
     void ofPrimary() {
-        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
+        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
@@ -41,7 +41,7 @@ class HighAvailabilityPgConnectionImplTest {
 
     @Test
     void shouldBeUnmodifiable() {
-        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
+        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
@@ -53,8 +53,8 @@ class HighAvailabilityPgConnectionImplTest {
 
     @Test
     void withReplicas() {
-        final PgConnection primary = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
-        final PgConnection replica = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("replica"));
+        final PgConnection primary = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
+        final PgConnection replica = PgConnectionImpl.of(POSTGRES.getTestDatabase(), PgHostImpl.ofName("replica"));
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary, Arrays.asList(primary, replica));
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
@@ -66,8 +66,8 @@ class HighAvailabilityPgConnectionImplTest {
 
     @Test
     void shouldContainsConnectionToPrimary() {
-        final PgConnection primary = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
-        final PgConnection replica = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("replica"));
+        final PgConnection primary = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
+        final PgConnection replica = PgConnectionImpl.of(POSTGRES.getTestDatabase(), PgHostImpl.ofName("replica"));
         assertThatThrownBy(() -> HighAvailabilityPgConnectionImpl.of(primary, Collections.singletonList(replica)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("connectionsToAllHostsInCluster have to contain a connection to the primary");

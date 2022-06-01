@@ -80,7 +80,7 @@ public abstract class DatabaseAwareTestBase {
                 return resultSet.getLong(2);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PgSqlException(e);
         }
     }
 
@@ -97,7 +97,7 @@ public abstract class DatabaseAwareTestBase {
                 return resultSet.getBoolean(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PgSqlException(e);
         }
     }
 
@@ -109,7 +109,7 @@ public abstract class DatabaseAwareTestBase {
                         "select count(*) from %s.accounts where client_id = 1::bigint", schemaName));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PgSqlException(e);
         }
         DatabasePopulator.collectStatistics(getDataSource(), schemaName);
         waitForStatisticsCollector();
@@ -125,7 +125,7 @@ public abstract class DatabaseAwareTestBase {
                 return resultSet.getLong(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PgSqlException(e);
         }
     }
 }

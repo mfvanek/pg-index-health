@@ -23,7 +23,7 @@ class DiagnosticsTest {
     @Test
     void sqlQueryFileNameShouldBeUnique() {
         final Set<String> fileNames = new HashSet<>();
-        for (Diagnostics diagnostics : Diagnostics.values()) {
+        for (final Diagnostics diagnostics : Diagnostics.values()) {
             fileNames.add(diagnostics.getSqlQueryFileName());
         }
         assertThat(fileNames).hasSize(Diagnostics.values().length);
@@ -31,7 +31,7 @@ class DiagnosticsTest {
 
     @Test
     void sqlQueryFileNameShouldBeInLowerCase() {
-        for (Diagnostics diagnostics : Diagnostics.values()) {
+        for (final Diagnostics diagnostics : Diagnostics.values()) {
             final String lower = diagnostics.getSqlQueryFileName().toLowerCase(Locales.DEFAULT);
             assertThat(diagnostics.getSqlQueryFileName()).isEqualTo(lower);
         }
@@ -39,7 +39,7 @@ class DiagnosticsTest {
 
     @Test
     void sqlQueryFileNameShouldHaveSqlExtension() {
-        for (Diagnostics diagnostics : Diagnostics.values()) {
+        for (final Diagnostics diagnostics : Diagnostics.values()) {
             assertThat(diagnostics.getSqlQueryFileName()).endsWith(".sql");
         }
     }

@@ -123,7 +123,7 @@ class IndexWithNullsTest {
     }
 
     @SuppressWarnings("unchecked")
-    private static void invokePrivateConstructor(Object ... initargs) throws Throwable {
+    private static void invokePrivateConstructor(final Object ... initargs) throws Throwable {
         final Constructor<IndexWithNulls> constructor = (Constructor<IndexWithNulls>) IndexWithNulls.class.getDeclaredConstructors()[0];
         constructor.setAccessible(true);
 

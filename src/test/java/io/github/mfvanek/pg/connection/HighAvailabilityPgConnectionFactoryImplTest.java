@@ -108,7 +108,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
     private void checkPrimary(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         assertThat(haPgConnection.getConnectionToPrimary()).isNotNull();
         assertThat(primaryHostDeterminer.isPrimary(haPgConnection.getConnectionToPrimary())).isTrue();
-        for (PgConnection connection : haPgConnection.getConnectionsToAllHostsInCluster()) {
+        for (final PgConnection connection : haPgConnection.getConnectionsToAllHostsInCluster()) {
             if (primaryHostDeterminer.isPrimary(connection)) {
                 assertThat(connection).isSameAs(haPgConnection.getConnectionToPrimary());
             }

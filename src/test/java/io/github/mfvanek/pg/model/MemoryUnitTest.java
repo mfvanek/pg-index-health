@@ -18,9 +18,9 @@ class MemoryUnitTest {
 
     @Test
     void convertToBytes() {
-        assertThat(MemoryUnit.KB.convertToBytes(1)).isEqualTo(1024L);
-        assertThat(MemoryUnit.MB.convertToBytes(2)).isEqualTo(2097152L);
-        assertThat(MemoryUnit.GB.convertToBytes(3)).isEqualTo(3221225472L);
+        assertThat(MemoryUnit.KB.convertToBytes(1)).isEqualTo(1_024L);
+        assertThat(MemoryUnit.MB.convertToBytes(2)).isEqualTo(2_097_152L);
+        assertThat(MemoryUnit.GB.convertToBytes(3)).isEqualTo(3_221_225_472L);
     }
 
     @Test

@@ -27,12 +27,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 final class PostgresVersionTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     private static final String PG_VERSION_ENVIRONMENT_VARIABLE = "TEST_PG_VERSION";
 
     PostgresVersionTest() {
-        super(embeddedPostgres.getTestDatabase());
+        super(POSTGRES.getTestDatabase());
     }
 
     @DisplayName("PostgreSQL version is the same as specified in environment variable " + PG_VERSION_ENVIRONMENT_VARIABLE)
@@ -48,14 +48,14 @@ final class PostgresVersionTest extends DatabaseAwareTestBase {
 
     @Nonnull
     private String readPgVersion() {
-        try (Connection connection = embeddedPostgres.getTestDatabase().getConnection();
-                Statement statement = connection.createStatement()) {
+        try (Connection connection = POSTGRES.getTestDatabase().getConnection();
+             Statement statement = connection.createStatement()) {
             try (ResultSet resultSet = statement.executeQuery("show server_version")) {
                 resultSet.next();
                 return resultSet.getString(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PgSqlException(e);
         }
     }
 }

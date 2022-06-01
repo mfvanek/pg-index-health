@@ -21,7 +21,7 @@ class ImportantParamTest {
 
     @Test
     void completenessTest() {
-        for (ImportantParam param : ImportantParam.values()) {
+        for (final ImportantParam param : ImportantParam.values()) {
             assertThat(param.getName()).isNotNull();
             assertThat(param.getDefaultValue()).isNotNull();
         }
@@ -30,7 +30,7 @@ class ImportantParamTest {
     @Test
     void uniquenessTest() {
         final Set<String> names = new HashSet<>();
-        for (ImportantParam param : ImportantParam.values()) {
+        for (final ImportantParam param : ImportantParam.values()) {
             names.add(param.getName());
         }
         assertThat(names).hasSize(ImportantParam.values().length);

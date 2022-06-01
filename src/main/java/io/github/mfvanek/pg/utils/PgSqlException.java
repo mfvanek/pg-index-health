@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.utils;
 
-import javax.annotation.Nonnull;
 import java.sql.SQLException;
+import javax.annotation.Nonnull;
 
 /**
  * Custom unchecked exception for SQL errors.
@@ -19,11 +19,11 @@ import java.sql.SQLException;
  * @author Ivan Vahrushev
  * @since 0.5.0
  */
-public class PgSQLException extends RuntimeException {
+public class PgSqlException extends RuntimeException {
 
     private static final long serialVersionUID = -6917248037245766939L;
 
-    public PgSQLException(@Nonnull final String message, @Nonnull final SQLException cause) {
-        super(message, cause);
+    public PgSqlException(@Nonnull final SQLException cause) {
+        super(cause.getMessage(), cause);
     }
 }

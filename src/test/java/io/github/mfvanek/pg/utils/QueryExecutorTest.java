@@ -31,13 +31,13 @@ import static org.mockito.ArgumentMatchers.anyString;
 class QueryExecutorTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     private final PgConnection pgConnection;
 
     QueryExecutorTest() {
-        super(embeddedPostgres.getTestDatabase());
-        this.pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
+        super(POSTGRES.getTestDatabase());
+        this.pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
     }
 
     @Test
@@ -49,52 +49,59 @@ class QueryExecutorTest extends DatabaseAwareTestBase {
     @Test
     void executeInvalidQuery() {
         final String invalidSql = "select unknown_field from unknown_table";
-        assertThatThrownBy(() -> QueryExecutor.executeQuery(pgConnection, invalidSql, (rs) -> null)).isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(() -> QueryExecutor.executeQuery(pgConnection, invalidSql, (rs) -> null))
+                .isInstanceOf(PgSqlException.class)
+                .hasCauseInstanceOf(SQLException.class);
     }
 
     @Test
     void executeInvalidQueryWithSchema() {
         final String invalidSqlWithParam = "select unknown_field from unknown_table where schema = ?::text";
-        assertThatThrownBy(() -> QueryExecutor.executeQueryWithSchema(pgConnection, PgContext.of("s"), invalidSqlWithParam, (rs) -> null)).isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(() -> QueryExecutor.executeQueryWithSchema(pgConnection, PgContext.of("s"), invalidSqlWithParam, (rs) -> null))
+                .isInstanceOf(PgSqlException.class)
+                .hasCauseInstanceOf(SQLException.class);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void executeNullQuery() {
-        assertThatThrownBy(() -> QueryExecutor.executeQuery(pgConnection, null, (rs) -> null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> QueryExecutor.executeQuery(pgConnection, null, (rs) -> null))
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test
     void executeQueryWithSchemaWithExecutionError() throws SQLException {
         final DataSource dataSource = Mockito.mock(DataSource.class);
-        final Connection connection = Mockito.mock(Connection.class);
-        final PreparedStatement statement = Mockito.mock(PreparedStatement.class);
-        Mockito.when(dataSource.getConnection()).thenReturn(connection);
-        Mockito.when(connection.prepareStatement(anyString())).thenReturn(statement);
-        Mockito.doAnswer(invocation -> {
-            throw new SQLException("bad parameter");
-        }).when(statement).setString(anyInt(), anyString());
-        assertThatThrownBy(() -> QueryExecutor.executeQueryWithSchema(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(), "select version()", (rs) -> rs.getString(1)))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Error occurs while setting params")
-                .hasCauseInstanceOf(SQLException.class)
-                .hasRootCauseMessage("bad parameter");
+        try (Connection connection = Mockito.mock(Connection.class);
+             PreparedStatement statement = Mockito.mock(PreparedStatement.class)) {
+            Mockito.when(dataSource.getConnection()).thenReturn(connection);
+            Mockito.when(connection.prepareStatement(anyString())).thenReturn(statement);
+            Mockito.doAnswer(invocation -> {
+                throw new SQLException("bad parameter");
+            }).when(statement).setString(anyInt(), anyString());
+            assertThatThrownBy(() -> QueryExecutor.executeQueryWithSchema(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(), "select version()", (rs) -> rs.getString(1)))
+                    .isInstanceOf(PgSqlException.class)
+                    .hasMessage("bad parameter")
+                    .hasCauseInstanceOf(SQLException.class)
+                    .hasRootCauseMessage("bad parameter");
+        }
     }
 
     @Test
     void executeQueryWithBloatThresholdWithExecutionError() throws SQLException {
         final DataSource dataSource = Mockito.mock(DataSource.class);
-        final Connection connection = Mockito.mock(Connection.class);
-        final PreparedStatement statement = Mockito.mock(PreparedStatement.class);
-        Mockito.when(dataSource.getConnection()).thenReturn(connection);
-        Mockito.when(connection.prepareStatement(anyString())).thenReturn(statement);
-        Mockito.doAnswer(invocation -> {
-            throw new SQLException("bad parameter");
-        }).when(statement).setString(anyInt(), anyString());
-        assertThatThrownBy(() -> QueryExecutor.executeQueryWithBloatThreshold(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(), "select version()", (rs) -> rs.getString(1)))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Error occurs while setting params")
-                .hasCauseInstanceOf(SQLException.class)
-                .hasRootCauseMessage("bad parameter");
+        try (Connection connection = Mockito.mock(Connection.class);
+             PreparedStatement statement = Mockito.mock(PreparedStatement.class)) {
+            Mockito.when(dataSource.getConnection()).thenReturn(connection);
+            Mockito.when(connection.prepareStatement(anyString())).thenReturn(statement);
+            Mockito.doAnswer(invocation -> {
+                throw new SQLException("bad parameter");
+            }).when(statement).setString(anyInt(), anyString());
+            assertThatThrownBy(() -> QueryExecutor.executeQueryWithBloatThreshold(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(), "select version()", (rs) -> rs.getString(1)))
+                    .isInstanceOf(PgSqlException.class)
+                    .hasMessage("bad parameter")
+                    .hasCauseInstanceOf(SQLException.class)
+                    .hasRootCauseMessage("bad parameter");
+        }
     }
 }

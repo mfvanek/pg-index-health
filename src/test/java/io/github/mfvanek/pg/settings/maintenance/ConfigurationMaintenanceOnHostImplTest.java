@@ -19,9 +19,11 @@ import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.PgParamImpl;
 import io.github.mfvanek.pg.settings.ServerSpecification;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.utils.PgSqlException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.sql.SQLException;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
@@ -32,15 +34,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database()
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database()
             .withAdditionalStartupParameter(ImportantParam.LOCK_TIMEOUT.getName(), "1000");
 
     private final ConfigurationMaintenanceOnHost configurationMaintenance;
 
     ConfigurationMaintenanceOnHostImplTest() {
-        super(embeddedPostgres.getTestDatabase());
+        super(POSTGRES.getTestDatabase());
         this.configurationMaintenance = new ConfigurationMaintenanceOnHostImpl(
-                PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase()));
+                PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
     }
 
     @Test
@@ -68,7 +70,7 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
         final Set<String> allParamNames = currentValues.stream()
                 .map(PgParam::getName)
                 .collect(toSet());
-        for (ImportantParam importantParam : ImportantParam.values()) {
+        for (final ImportantParam importantParam : ImportantParam.values()) {
             assertThat(allParamNames).contains(importantParam.getName());
         }
     }
@@ -84,7 +86,8 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
     void getCurrentValueForUnknownParam() {
         final PgParam pgParam = PgParamImpl.of("unknown_param", "");
         assertThatThrownBy(() -> configurationMaintenance.getParamCurrentValue(pgParam))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(PgSqlException.class)
+                .hasCauseInstanceOf(SQLException.class)
                 .hasMessageContaining("unknown_param");
     }
 }

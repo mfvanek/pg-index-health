@@ -23,6 +23,7 @@
         <exclude name="AtLeastOneConstructor"/>
         <exclude name="CommentDefaultAccessModifier"/>
         <exclude name="LongVariable"/>
+        <exclude name="ShortVariable"/>
     </rule>
 
     <rule ref="category/java/codestyle.xml/ClassNamingConventions">
@@ -57,17 +58,12 @@
         <exclude name="UseUtilityClass"/>
         <exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal"/>
         <exclude name="DataClass"/>
+        <exclude name="TooManyMethods"/>
     </rule>
 
     <rule ref="category/java/design.xml/AbstractClassWithoutAnyMethod">
         <properties>
             <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration['.*TestBase']"/>
-        </properties>
-    </rule>
-
-    <rule ref="category/java/design.xml/TooManyMethods">
-        <properties>
-            <property name="maxmethods" value="20" />
         </properties>
     </rule>
 
@@ -90,5 +86,9 @@
         <exclude name="DataflowAnomalyAnalysis"/>
         <exclude name="AvoidLiteralsInIfCondition"/>
         <exclude name="AvoidFieldNameMatchingMethodName"/>
+        <exclude name="EqualsNull"/>
+        <exclude name="AvoidDuplicateLiterals"/>
+        <exclude name="AvoidAccessibilityAlteration"/>
+        <exclude name="NullAssignment"/>
     </rule>
 </ruleset>

@@ -30,13 +30,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     private final TablesMaintenanceOnHost tablesMaintenance;
 
     TablesMaintenanceOnHostImplTest() {
-        super(embeddedPostgres.getTestDatabase());
-        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
+        super(POSTGRES.getTestDatabase());
+        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
         this.tablesMaintenance = new TablesMaintenanceOnHostImpl(pgConnection);
     }
 
@@ -150,7 +150,7 @@ class TablesMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
                     .hasSize(2);
             final TableWithBloat table = tables.get(0);
             assertThat(table.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
-            assertThat(table.getTableSizeInBytes()).isEqualTo(114688L);
+            assertThat(table.getTableSizeInBytes()).isEqualTo(114_688L);
             assertThat(table.getBloatSizeInBytes()).isZero();
             assertThat(table.getBloatPercentage()).isZero();
         });

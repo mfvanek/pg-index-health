@@ -10,12 +10,15 @@
 
 package io.github.mfvanek.pg.utils;
 
-import java.sql.SQLException;
-import java.sql.Statement;
-import javax.annotation.Nonnull;
+import org.junit.jupiter.api.Test;
 
-@FunctionalInterface
-interface DbCallback {
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-    void execute(@Nonnull Statement statement) throws SQLException;
+class LocalesTest {
+
+    @Test
+    void privateConstructor() {
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(Locales.class))
+                .isInstanceOf(UnsupportedOperationException.class);
+    }
 }
