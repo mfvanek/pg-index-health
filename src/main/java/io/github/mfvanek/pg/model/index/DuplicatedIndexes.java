@@ -40,7 +40,7 @@ public class DuplicatedIndexes implements TableNameAware {
                     .thenComparing(IndexWithSize::getIndexName)
                     .thenComparing(IndexWithSize::getIndexSizeInBytes);
 
-    private final List<IndexWithSize> duplicatedIndexes;
+    private final List<IndexWithSize> indexes;
     private final long totalSize;
     private final List<String> indexesNames;
 
@@ -48,15 +48,15 @@ public class DuplicatedIndexes implements TableNameAware {
         final List<IndexWithSize> defensiveCopy = new ArrayList<>(
                 Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes cannot be null"));
         Validators.validateThatTableIsTheSame(defensiveCopy);
-        this.duplicatedIndexes = Collections.unmodifiableList(
+        this.indexes = Collections.unmodifiableList(
                 defensiveCopy.stream()
                         .sorted(INDEX_WITH_SIZE_COMPARATOR)
                         .collect(toList()));
-        this.totalSize = this.duplicatedIndexes.stream()
+        this.totalSize = this.indexes.stream()
                 .mapToLong(IndexWithSize::getIndexSizeInBytes)
                 .sum();
         this.indexesNames = Collections.unmodifiableList(
-                this.duplicatedIndexes.stream()
+                this.indexes.stream()
                         .map(Index::getIndexName)
                         .collect(toList()));
     }
@@ -67,7 +67,7 @@ public class DuplicatedIndexes implements TableNameAware {
     @Override
     @Nonnull
     public String getTableName() {
-        return duplicatedIndexes.get(0).getTableName();
+        return indexes.get(0).getTableName();
     }
 
     /**
@@ -77,7 +77,7 @@ public class DuplicatedIndexes implements TableNameAware {
      */
     @Nonnull
     public List<IndexWithSize> getDuplicatedIndexes() {
-        return duplicatedIndexes;
+        return indexes;
     }
 
     /**
@@ -99,22 +99,22 @@ public class DuplicatedIndexes implements TableNameAware {
     }
 
     @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
+    public final boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
 
-        if (!(o instanceof DuplicatedIndexes)) {
+        if (!(other instanceof DuplicatedIndexes)) {
             return false;
         }
 
-        final DuplicatedIndexes that = (DuplicatedIndexes) o;
-        return Objects.equals(duplicatedIndexes, that.duplicatedIndexes);
+        final DuplicatedIndexes that = (DuplicatedIndexes) other;
+        return Objects.equals(indexes, that.indexes);
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(duplicatedIndexes);
+        return Objects.hash(indexes);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class DuplicatedIndexes implements TableNameAware {
         return DuplicatedIndexes.class.getSimpleName() + '{' +
                 "tableName='" + getTableName() + '\'' +
                 ", totalSize=" + totalSize +
-                ", indexes=" + duplicatedIndexes +
+                ", indexes=" + indexes +
                 '}';
     }
 
@@ -146,11 +146,12 @@ public class DuplicatedIndexes implements TableNameAware {
     public static DuplicatedIndexes of(@Nonnull final IndexWithSize firstIndex,
                                        @Nonnull final IndexWithSize secondIndex,
                                        @Nonnull final IndexWithSize... otherIndexes) {
-        final Stream<IndexWithSize> basePart = Stream.of(Objects.requireNonNull(firstIndex, "firstIndex"),
-                Objects.requireNonNull(secondIndex, "secondIndex"));
+        Objects.requireNonNull(firstIndex, "firstIndex cannot be null");
+        Objects.requireNonNull(secondIndex, "secondIndex cannot be null");
         if (Stream.of(otherIndexes).anyMatch(Objects::isNull)) {
-            throw new NullPointerException("otherIndexes");
+            throw new IllegalArgumentException("otherIndexes cannot contain nulls");
         }
+        final Stream<IndexWithSize> basePart = Stream.of(firstIndex, secondIndex);
         return new DuplicatedIndexes(Stream.concat(basePart, Stream.of(otherIndexes))
                 .collect(toList()));
     }

@@ -8,21 +8,22 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.generator;
+package io.github.mfvanek.pg.utils;
 
-import io.github.mfvanek.pg.model.index.ForeignKey;
-
-import java.util.List;
 import javax.annotation.Nonnull;
+import java.sql.SQLException;
 
 /**
- * Database migrations generator.
+ * Custom unchecked exception for SQL errors.
  *
  * @author Ivan Vahrushev
  * @since 0.5.0
  */
-public interface DbMigrationGenerator {
+public class PgSQLException extends RuntimeException {
 
-    @Nonnull
-    String generate(@Nonnull List<ForeignKey> foreignKeys, @Nonnull GeneratingOptions options);
+    private static final long serialVersionUID = -6917248037245766939L;
+
+    public PgSQLException(@Nonnull final String message, @Nonnull final SQLException cause) {
+        super(message, cause);
+    }
 }

@@ -12,31 +12,26 @@ package io.github.mfvanek.pg.utils;
 
 import javax.annotation.Nonnull;
 
+@SuppressWarnings({"PMD.ShortVariable", "PMD.AvoidReassigningLoopVariables", "PMD.CognitiveComplexity", "PMD.CyclomaticComplexity"})
 public final class NamedParametersParser {
 
     private final String originalSqlQuery;
     private final int queryLength;
-    private final StringBuilder resultQuery;
 
-    private boolean isInSingleQuotes = false;
-    private boolean isInDoubleQuotes = false;
-    private boolean isPartOfSingleLineComment = false;
-    private boolean isPartOfMultiLineComment = false;
-    private boolean isDoubleColon = false;
+    private boolean isInSingleQuotes;
+    private boolean isInDoubleQuotes;
+    private boolean isPartOfSingleLineComment;
+    private boolean isPartOfMultiLineComment;
+    private boolean isDoubleColon;
 
     private NamedParametersParser(@Nonnull final String originalSqlQuery) {
         this.originalSqlQuery = Validators.notBlank(originalSqlQuery, "originalSqlQuery");
         this.queryLength = originalSqlQuery.length();
-        this.resultQuery = new StringBuilder(queryLength);
-    }
-
-    @Nonnull
-    private String parse() {
-        return doParse();
     }
 
     @Nonnull
     private String doParse() {
+        final StringBuilder resultQuery = new StringBuilder(queryLength);
         for (int i = 0; i < queryLength; ++i) {
             char c = originalSqlQuery.charAt(i);
             if (isInSingleQuotes) {
@@ -93,6 +88,6 @@ public final class NamedParametersParser {
 
     @Nonnull
     public static String parse(@Nonnull final String originalSqlQuery) {
-        return new NamedParametersParser(originalSqlQuery).parse();
+        return new NamedParametersParser(originalSqlQuery).doParse();
     }
 }

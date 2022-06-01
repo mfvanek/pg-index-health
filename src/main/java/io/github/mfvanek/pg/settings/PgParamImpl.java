@@ -47,16 +47,16 @@ public class PgParamImpl implements PgParam {
     }
 
     @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
+    public final boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
 
-        if (!(o instanceof PgParam)) {
+        if (!(other instanceof PgParam)) {
             return false;
         }
 
-        final PgParam that = (PgParam) o;
+        final PgParam that = (PgParam) other;
         return Objects.equals(name, that.getName());
     }
 

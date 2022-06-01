@@ -53,16 +53,16 @@ public class PgConnectionImpl implements PgConnection {
     }
 
     @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
+    public final boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
 
-        if (!(o instanceof PgConnection)) {
+        if (!(other instanceof PgConnection)) {
             return false;
         }
 
-        final PgConnection that = (PgConnection) o;
+        final PgConnection that = (PgConnection) other;
         return Objects.equals(host, that.getHost());
     }
 

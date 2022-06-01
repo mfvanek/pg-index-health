@@ -47,14 +47,14 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
                                                   @Nonnull final String anyUrl,
                                                   @Nonnull final ConnectionCredentials credentials) {
         final List<Pair<String, String>> allHosts = PgUrlParser.extractNameWithPortAndUrlForEachHost(anyUrl);
-        for (Pair<String, String> host : allHosts) {
+        for (final Pair<String, String> host : allHosts) {
             connectionsToAllHostsInCluster.computeIfAbsent(host.getKey(),
                     h -> pgConnectionFactory.forUrl(host.getValue(), credentials.getUserName(), credentials.getPassword()));
         }
     }
 
     private PgConnection findConnectionToPrimary(final Map<String, PgConnection> connectionsToAllHostsInCluster) {
-        for (PgConnection pgConnection : connectionsToAllHostsInCluster.values()) {
+        for (final PgConnection pgConnection : connectionsToAllHostsInCluster.values()) {
             if (primaryHostDeterminer.isPrimary(pgConnection)) {
                 return pgConnection;
             }

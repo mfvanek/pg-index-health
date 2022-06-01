@@ -96,7 +96,7 @@ public class DatabaseHealthImpl extends AbstractManagement implements DatabaseHe
     @Override
     public List<UnusedIndex> getUnusedIndexes(@Nonnull final PgContext pgContext) {
         final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = new ArrayList<>();
-        for (IndexesMaintenanceOnHost maintenanceForHost : indexesMaintenanceForAllHostsInCluster.values()) {
+        for (final IndexesMaintenanceOnHost maintenanceForHost : indexesMaintenanceForAllHostsInCluster.values()) {
             final PgHost currentHost = maintenanceForHost.getHost();
             final List<UnusedIndex> unusedIndexesFromCurrentHost = doOnHost(currentHost,
                     () -> {
@@ -124,7 +124,7 @@ public class DatabaseHealthImpl extends AbstractManagement implements DatabaseHe
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
         final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = new ArrayList<>();
-        for (TablesMaintenanceOnHost maintenanceForHost : tablesMaintenanceForAllHostsInCluster.values()) {
+        for (final TablesMaintenanceOnHost maintenanceForHost : tablesMaintenanceForAllHostsInCluster.values()) {
             tablesWithMissingIndexesFromAllHosts.add(
                     doOnHost(maintenanceForHost.getHost(),
                             () -> maintenanceForHost.getTablesWithMissingIndexes(pgContext)));
@@ -155,7 +155,7 @@ public class DatabaseHealthImpl extends AbstractManagement implements DatabaseHe
      */
     @Nonnull
     @Override
-    public List<IndexWithBloat> getIndexesWithBloat(@Nonnull PgContext pgContext) {
+    public List<IndexWithBloat> getIndexesWithBloat(@Nonnull final PgContext pgContext) {
         return doOnPrimary(indexesMaintenanceForAllHostsInCluster, IndexesMaintenanceOnHost::getIndexesWithBloat, pgContext);
     }
 
@@ -164,7 +164,7 @@ public class DatabaseHealthImpl extends AbstractManagement implements DatabaseHe
      */
     @Override
     @Nonnull
-    public List<TableWithBloat> getTablesWithBloat(@Nonnull PgContext pgContext) {
+    public List<TableWithBloat> getTablesWithBloat(@Nonnull final PgContext pgContext) {
         return doOnPrimary(tablesMaintenanceForAllHostsInCluster, TablesMaintenanceOnHost::getTablesWithBloat, pgContext);
     }
 

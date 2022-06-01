@@ -38,7 +38,7 @@ public class MaintenanceFactoryImpl implements MaintenanceFactory {
      */
     @Override
     @Nonnull
-    public TablesMaintenanceOnHost forTables(@Nonnull PgConnection pgConnection) {
+    public TablesMaintenanceOnHost forTables(@Nonnull final PgConnection pgConnection) {
         return new TablesMaintenanceOnHostImpl(pgConnection);
     }
 
@@ -47,13 +47,13 @@ public class MaintenanceFactoryImpl implements MaintenanceFactory {
      */
     @Override
     @Nonnull
-    public StatisticsMaintenanceOnHost forStatistics(@Nonnull PgConnection pgConnection) {
+    public StatisticsMaintenanceOnHost forStatistics(@Nonnull final PgConnection pgConnection) {
         return new StatisticsMaintenanceOnHostImpl(pgConnection);
     }
 
     @Override
     @Nonnull
-    public ConfigurationMaintenanceOnHost forConfiguration(@Nonnull PgConnection pgConnection) {
+    public ConfigurationMaintenanceOnHost forConfiguration(@Nonnull final PgConnection pgConnection) {
         return new ConfigurationMaintenanceOnHostImpl(pgConnection);
     }
 }

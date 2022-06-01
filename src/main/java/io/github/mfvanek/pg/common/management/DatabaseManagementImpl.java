@@ -52,7 +52,7 @@ public class DatabaseManagementImpl extends AbstractManagement implements Databa
      */
     @Override
     public void resetStatistics() {
-        for (StatisticsMaintenanceOnHost statisticsMaintenance : statisticsMaintenanceForAllHostsInCluster.values()) {
+        for (final StatisticsMaintenanceOnHost statisticsMaintenance : statisticsMaintenanceForAllHostsInCluster.values()) {
             doOnHost(statisticsMaintenance.getHost(), () -> {
                 statisticsMaintenance.resetStatistics();
                 return true;
@@ -71,7 +71,7 @@ public class DatabaseManagementImpl extends AbstractManagement implements Databa
 
     @Override
     @Nonnull
-    public Set<PgParam> getParamsWithDefaultValues(@Nonnull ServerSpecification specification) {
+    public Set<PgParam> getParamsWithDefaultValues(@Nonnull final ServerSpecification specification) {
         return doOnPrimary(configurationMaintenanceForAllHostsInCluster, ConfigurationMaintenanceOnHost::getParamsWithDefaultValues, specification);
     }
 

@@ -66,16 +66,16 @@ public class Index implements TableNameAware, IndexNameAware, Comparable<Index> 
     }
 
     @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
+    public final boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
 
-        if (!(o instanceof Index)) {
+        if (!(other instanceof Index)) {
             return false;
         }
 
-        final Index that = (Index) o;
+        final Index that = (Index) other;
         return Objects.equals(tableName, that.tableName) &&
                 Objects.equals(indexName, that.indexName);
     }
@@ -86,7 +86,7 @@ public class Index implements TableNameAware, IndexNameAware, Comparable<Index> 
     }
 
     @Override
-    public int compareTo(@Nonnull Index other) {
+    public int compareTo(@Nonnull final Index other) {
         Objects.requireNonNull(other, "other cannot be null");
         if (!tableName.equals(other.tableName)) {
             return tableName.compareTo(other.tableName);

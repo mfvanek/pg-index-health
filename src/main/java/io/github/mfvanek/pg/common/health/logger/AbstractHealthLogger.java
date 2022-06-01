@@ -30,6 +30,7 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.table.TableSizeAware;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
+import io.github.mfvanek.pg.utils.Locales;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
+@SuppressWarnings({"PMD.ExcessiveImports", "PMD.UselessParentheses"})
 public abstract class AbstractHealthLogger implements HealthLogger {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHealthLogger.class);
@@ -257,7 +259,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
 
         return rawIndexes.stream()
                 .filter(i -> i.getIndexNames().stream()
-                        .map(String::toLowerCase)
+                        .map(n -> n.toLowerCase(Locales.DEFAULT))
                         .noneMatch(indexesExclusions::contains))
                 .collect(Collectors.toList());
     }
@@ -270,7 +272,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         }
 
         return rawRecords.stream()
-                .filter(i -> !exclusions.contains(i.getIndexName().toLowerCase()))
+                .filter(i -> !exclusions.contains(i.getIndexName().toLowerCase(Locales.DEFAULT)))
                 .collect(Collectors.toList());
     }
 
@@ -294,7 +296,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         }
 
         return rawRecords.stream()
-                .filter(t -> !exclusions.contains(t.getTableName().toLowerCase()))
+                .filter(t -> !exclusions.contains(t.getTableName().toLowerCase(Locales.DEFAULT)))
                 .collect(Collectors.toList());
     }
 

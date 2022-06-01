@@ -28,9 +28,10 @@ public final class SqlQueryReader {
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     public static String getQueryFromFile(@Nonnull final String sqlFileName) {
         final String fileName = Validators.validateSqlFileName(sqlFileName);
-        final ClassLoader classLoader = SqlQueryReader.class.getClassLoader();
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         try (InputStream inputStream = classLoader.getResourceAsStream("sql/" + fileName)) {
             if (inputStream == null) {
                 throw new FileNotFoundException(fileName);

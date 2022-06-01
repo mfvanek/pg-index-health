@@ -10,11 +10,19 @@
 
 package io.github.mfvanek.pg.utils;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Locale;
 
-@FunctionalInterface
-public interface ResultSetExtractor<T> {
+/**
+ * Default locale.
+ *
+ * @author Ivan Vahrushev
+ * @since 0.5.0
+ */
+public final class Locales {
 
-    T extractData(ResultSet resultSet) throws SQLException;
+    public static final Locale DEFAULT = Locale.ENGLISH;
+
+    private Locales() {
+        throw new UnsupportedOperationException();
+    }
 }
