@@ -20,9 +20,9 @@ public class ServerSpecification {
     private final long memoryAmountInBytes;
     private final boolean hasSSD;
 
-    ServerSpecification(int cpuCoresAmount,
-                        long memoryAmountInBytes,
-                        boolean hasSSD) {
+    ServerSpecification(final int cpuCoresAmount,
+                        final long memoryAmountInBytes,
+                        final boolean hasSSD) {
         Validators.valueIsPositive(cpuCoresAmount, "cpuCoresAmount");
         this.cpuCoresAmount = cpuCoresAmount;
         this.memoryAmountInBytes = Validators.valueIsPositive(memoryAmountInBytes, "memoryAmountInBytes");

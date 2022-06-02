@@ -11,11 +11,19 @@
 package io.github.mfvanek.pg.utils;
 
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.annotation.Nonnull;
 
-@FunctionalInterface
-interface DbCallback {
+/**
+ * Custom unchecked exception for SQL errors.
+ *
+ * @author Ivan Vahrushev
+ * @since 0.5.0
+ */
+public class PgSqlException extends RuntimeException {
 
-    void execute(@Nonnull Statement statement) throws SQLException;
+    private static final long serialVersionUID = -6917248037245766939L;
+
+    public PgSqlException(@Nonnull final SQLException cause) {
+        super(cause.getMessage(), cause);
+    }
 }

@@ -70,16 +70,16 @@ public class Column implements TableNameAware, Comparable<Column> {
     }
 
     @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
+    public final boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
 
-        if (!(o instanceof Column)) {
+        if (!(other instanceof Column)) {
             return false;
         }
 
-        final Column that = (Column) o;
+        final Column that = (Column) other;
         return Objects.equals(tableName, that.tableName) &&
                 Objects.equals(columnName, that.columnName) &&
                 notNull == that.notNull;
@@ -91,7 +91,7 @@ public class Column implements TableNameAware, Comparable<Column> {
     }
 
     @Override
-    public int compareTo(@Nonnull Column other) {
+    public int compareTo(@Nonnull final Column other) {
         Objects.requireNonNull(other, "other cannot be null");
         if (!tableName.equals(other.tableName)) {
             return tableName.compareTo(other.tableName);

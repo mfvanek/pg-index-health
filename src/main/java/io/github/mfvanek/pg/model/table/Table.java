@@ -62,16 +62,16 @@ public class Table implements TableNameAware, TableSizeAware, Comparable<Table> 
     }
 
     @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
+    public final boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
 
-        if (!(o instanceof Table)) {
+        if (!(other instanceof Table)) {
             return false;
         }
 
-        final Table that = (Table) o;
+        final Table that = (Table) other;
         return Objects.equals(tableName, that.tableName);
     }
 
@@ -81,7 +81,7 @@ public class Table implements TableNameAware, TableSizeAware, Comparable<Table> 
     }
 
     @Override
-    public int compareTo(@Nonnull Table other) {
+    public int compareTo(@Nonnull final Table other) {
         Objects.requireNonNull(other, "other cannot be null");
         return tableName.compareTo(other.tableName);
     }

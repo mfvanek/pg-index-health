@@ -217,7 +217,7 @@
         <module name="IllegalImport">
             <property name="regexp" value="true"/>
             <property name="illegalClasses"
-                      value="^org\.springframework\.lang\.(NonNull|Nullable),
+                      value="^org\.springframework\.lang\.(NonNull|Nullable), ^org\.jetbrains\.annotations\.(NotNull|Nullable),
                 ^io\.micrometer\.core\.lang\.(NonNull|Nullable),
                 ^org\.elasticsearch\.common\.Nullable, ^org\.apache\.thrift\.annotation\.Nullable,
                 ^org\.junit\.Test, ^org\.junit\.jupiter\.api\.Assertions, ^org\.junit\.Test, ^org\.junit\.jupiter\.api\.Assertions\..*"/>

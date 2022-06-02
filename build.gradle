@@ -6,6 +6,7 @@ plugins {
     id 'com.github.spotbugs' version '5.0.6'
     id 'checkstyle'
     id 'org.sonarqube' version '3.3'
+    id 'pmd'
 }
 
 group 'io.github.mfvanek'
@@ -205,4 +206,11 @@ sonarqube {
         property "sonar.organization", "mfvanek"
         property "sonar.host.url", "https://sonarcloud.io"
     }
+}
+
+pmd {
+    consoleOutput = true
+    toolVersion = "6.42.0"
+    ruleSetFiles = files("config/pmd/pmd.xml")
+    ruleSets = []
 }

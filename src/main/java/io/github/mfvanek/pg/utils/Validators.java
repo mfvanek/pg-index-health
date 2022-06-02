@@ -117,7 +117,7 @@ public final class Validators {
 
     @Nonnull
     public static String validateSqlFileName(@Nonnull final String sqlFileName) {
-        final String fileName = notBlank(sqlFileName, "sqlFileName").toLowerCase();
+        final String fileName = notBlank(sqlFileName, "sqlFileName").toLowerCase(Locales.DEFAULT);
         if (!fileName.endsWith(".sql")) {
             throw new IllegalArgumentException("only *.sql files are supported");
         }

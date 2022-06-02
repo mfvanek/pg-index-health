@@ -33,24 +33,24 @@ public final class TestUtils {
     }
 
     public static void executeOnDatabase(@Nonnull final DataSource dataSource,
-                                         @Nonnull DbCallback callback) {
+                                         @Nonnull final DbCallback callback) {
         try (Connection connection = dataSource.getConnection();
-             final Statement statement = connection.createStatement()) {
+             Statement statement = connection.createStatement()) {
             callback.execute(statement);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PgSqlException(e);
         }
     }
 
     public static void executeInTransaction(@Nonnull final DataSource dataSource,
-                                            @Nonnull DbCallback callback) {
+                                            @Nonnull final DbCallback callback) {
         try (Connection connection = dataSource.getConnection();
-             final Statement statement = connection.createStatement()) {
+             Statement statement = connection.createStatement()) {
             connection.setAutoCommit(false);
             callback.execute(statement);
             connection.commit();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PgSqlException(e);
         }
     }
 }

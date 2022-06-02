@@ -42,14 +42,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DatabaseHealthImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     private final DatabaseHealth databaseHealth;
 
     DatabaseHealthImplTest() {
-        super(embeddedPostgres.getTestDatabase());
+        super(POSTGRES.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(
-                PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase()));
+                PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
         this.databaseHealth = new DatabaseHealthImpl(haPgConnection, new MaintenanceFactoryImpl());
     }
 
@@ -117,7 +117,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
                     .containsExactlyInAnyOrder(
                             ctx.enrichWithSchema("accounts_account_number_key"),
                             ctx.enrichWithSchema("i_accounts_account_number"));
-            assertThat(entry.getTotalSize()).isGreaterThanOrEqualTo(16384L);
+            assertThat(entry.getTotalSize()).isGreaterThanOrEqualTo(16_384L);
             assertThat(entry.getDuplicatedIndexes()).hasSize(2);
         });
     }
@@ -184,8 +184,8 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
                     .hasSize(2);
             final DuplicatedIndexes firstEntry = intersectedIndexes.get(0);
             final DuplicatedIndexes secondEntry = intersectedIndexes.get(1);
-            assertThat(firstEntry.getTotalSize()).isGreaterThanOrEqualTo(114688L);
-            assertThat(secondEntry.getTotalSize()).isGreaterThanOrEqualTo(106496L);
+            assertThat(firstEntry.getTotalSize()).isGreaterThanOrEqualTo(114_688L);
+            assertThat(secondEntry.getTotalSize()).isGreaterThanOrEqualTo(106_496L);
             assertThat(firstEntry.getDuplicatedIndexes()).hasSize(2);
             assertThat(secondEntry.getDuplicatedIndexes()).hasSize(2);
             assertThat(firstEntry.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
@@ -209,7 +209,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             assertThat(entry.getDuplicatedIndexes()).hasSize(2);
             assertThat(entry.getTableName()).isEqualTo(ctx.enrichWithSchema("clients"));
             assertThat(entry.getIndexNames()).contains(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_clients_last_name"));
-            assertThat(entry.getTotalSize()).isGreaterThanOrEqualTo(106496L);
+            assertThat(entry.getTotalSize()).isGreaterThanOrEqualTo(106_496L);
         });
     }
 
@@ -480,8 +480,8 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             final IndexWithBloat index = indexes.get(0);
             assertThat(index.getIndexName()).isEqualTo(ctx.enrichWithSchema("accounts_account_number_key"));
             assertThat(index.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
-            assertThat(index.getIndexSizeInBytes()).isEqualTo(57344L);
-            assertThat(index.getBloatSizeInBytes()).isEqualTo(8192L);
+            assertThat(index.getIndexSizeInBytes()).isEqualTo(57_344L);
+            assertThat(index.getBloatSizeInBytes()).isEqualTo(8_192L);
             assertThat(index.getBloatPercentage()).isEqualTo(14);
         });
     }
@@ -518,7 +518,7 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
                     .hasSize(2);
             final TableWithBloat table = tables.get(0);
             assertThat(table.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
-            assertThat(table.getTableSizeInBytes()).isEqualTo(114688L);
+            assertThat(table.getTableSizeInBytes()).isEqualTo(114_688L);
             assertThat(table.getBloatSizeInBytes()).isZero();
             assertThat(table.getBloatPercentage()).isZero();
         });

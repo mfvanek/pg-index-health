@@ -25,21 +25,21 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class PgConnectionImplTest {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     @Test
     void getPrimaryDataSource() {
-        final PgConnection connection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
+        final PgConnection connection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
         assertThat(connection.getDataSource()).isNotNull();
         assertThat(connection.getHost()).isEqualTo(PgHostImpl.ofPrimary());
     }
 
     @Test
     void isPrimaryForAnyHost() {
-        final int port = embeddedPostgres.getPort();
+        final int port = POSTGRES.getPort();
         final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
                 "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=preferSecondary", port);
-        final PgConnection any = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofUrl(readUrl));
+        final PgConnection any = PgConnectionImpl.of(POSTGRES.getTestDatabase(), PgHostImpl.ofUrl(readUrl));
         assertThat(any).isNotNull();
     }
 
@@ -47,15 +47,15 @@ class PgConnectionImplTest {
     @Test
     void withInvalidArguments() {
         assertThatThrownBy(() -> PgConnectionImpl.ofPrimary(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> PgConnectionImpl.of(POSTGRES.getTestDatabase(), null)).isInstanceOf(NullPointerException.class);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
-        final PgConnection first = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
-        final PgConnection theSame = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
-        final PgConnection second = PgConnectionImpl.of(embeddedPostgres.getTestDatabase(), PgHostImpl.ofName("second"));
+        final PgConnection first = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
+        final PgConnection theSame = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
+        final PgConnection second = PgConnectionImpl.of(POSTGRES.getTestDatabase(), PgHostImpl.ofName("second"));
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -91,7 +91,7 @@ class PgConnectionImplTest {
 
     @Test
     void toStringTest() {
-        final PgConnection connection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
+        final PgConnection connection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
         assertThat(connection).hasToString("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}}");
     }
 }

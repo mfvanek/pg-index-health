@@ -34,9 +34,9 @@ public class ForeignKey implements TableNameAware {
     private final String constraintName;
     private final List<Column> columnsInConstraint;
 
-    private ForeignKey(@Nonnull String tableName,
-                       @Nonnull String constraintName,
-                       @Nonnull List<Column> columnsInConstraint) {
+    private ForeignKey(@Nonnull final String tableName,
+                       @Nonnull final String constraintName,
+                       @Nonnull final List<Column> columnsInConstraint) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
         final List<Column> defensiveCopy = new ArrayList<>(
@@ -77,16 +77,16 @@ public class ForeignKey implements TableNameAware {
     }
 
     @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
+    public final boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
 
-        if (!(o instanceof ForeignKey)) {
+        if (!(other instanceof ForeignKey)) {
             return false;
         }
 
-        final ForeignKey that = (ForeignKey) o;
+        final ForeignKey that = (ForeignKey) other;
         return Objects.equals(tableName, that.tableName) &&
                 Objects.equals(constraintName, that.constraintName) &&
                 Objects.equals(columnsInConstraint, that.columnsInConstraint);
@@ -107,31 +107,31 @@ public class ForeignKey implements TableNameAware {
     }
 
     @Nonnull
-    public static ForeignKey of(@Nonnull String tableName,
-                                @Nonnull String constraintName,
-                                @Nonnull List<Column> columnsInConstraint) {
+    public static ForeignKey of(@Nonnull final String tableName,
+                                @Nonnull final String constraintName,
+                                @Nonnull final List<Column> columnsInConstraint) {
         return new ForeignKey(tableName, constraintName, columnsInConstraint);
     }
 
     @Nonnull
-    public static ForeignKey ofColumn(@Nonnull String tableName,
-                                      @Nonnull String constraintName,
-                                      @Nonnull Column column) {
+    public static ForeignKey ofColumn(@Nonnull final String tableName,
+                                      @Nonnull final String constraintName,
+                                      @Nonnull final Column column) {
         return new ForeignKey(tableName, constraintName,
                 Collections.singletonList(Objects.requireNonNull(column, "column")));
     }
 
     @Nonnull
-    public static ForeignKey ofNotNullColumn(@Nonnull String tableName,
-                                             @Nonnull String constraintName,
-                                             @Nonnull String columnName) {
+    public static ForeignKey ofNotNullColumn(@Nonnull final String tableName,
+                                             @Nonnull final String constraintName,
+                                             @Nonnull final String columnName) {
         return ofColumn(tableName, constraintName, Column.ofNotNull(tableName, columnName));
     }
 
     @Nonnull
-    public static ForeignKey ofNullableColumn(@Nonnull String tableName,
-                                              @Nonnull String constraintName,
-                                              @Nonnull String columnName) {
+    public static ForeignKey ofNullableColumn(@Nonnull final String tableName,
+                                              @Nonnull final String constraintName,
+                                              @Nonnull final String columnName) {
         return ofColumn(tableName, constraintName, Column.ofNullable(tableName, columnName));
     }
 }

@@ -32,14 +32,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 class HealthLoggerTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     private final HealthLogger logger;
 
     HealthLoggerTest() {
-        super(embeddedPostgres.getTestDatabase());
+        super(POSTGRES.getTestDatabase());
         final ConnectionCredentials credentials = ConnectionCredentials.ofUrl(
-                embeddedPostgres.getUrl(), embeddedPostgres.getUsername(), embeddedPostgres.getPassword());
+                POSTGRES.getUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
         this.logger = new KeyValueFileHealthLogger(
                 credentials,
                 new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
@@ -72,7 +72,7 @@ class HealthLoggerTest extends DatabaseAwareTestBase {
         assertThat(logs)
                 .isNotNull()
                 .hasSize(10);
-        for (SimpleLoggingKey key : SimpleLoggingKey.values()) {
+        for (final SimpleLoggingKey key : SimpleLoggingKey.values()) {
             assertContainsKey(logs, key, key.getSubKeyName() + "\t0");
         }
     }

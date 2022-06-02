@@ -49,7 +49,7 @@ public interface IndexesHealthAware {
      * @see Index
      */
     @Nonnull
-    default List<Index> getInvalidIndexes(@Nonnull Collection<PgContext> pgContexts) {
+    default List<Index> getInvalidIndexes(@Nonnull final Collection<PgContext> pgContexts) {
         return pgContexts.stream()
                 .map(this::getInvalidIndexes)
                 .flatMap(List::stream)
@@ -83,7 +83,7 @@ public interface IndexesHealthAware {
      * @return list of duplicated indexes
      */
     @Nonnull
-    default List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull Collection<PgContext> pgContexts) {
+    default List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull final Collection<PgContext> pgContexts) {
         return pgContexts.stream()
                 .map(this::getDuplicatedIndexes)
                 .flatMap(List::stream)
@@ -116,7 +116,7 @@ public interface IndexesHealthAware {
      * @return list of intersected indexes
      */
     @Nonnull
-    default List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull Collection<PgContext> pgContexts) {
+    default List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull final Collection<PgContext> pgContexts) {
         return pgContexts.stream()
                 .map(this::getIntersectedIndexes)
                 .flatMap(List::stream)
@@ -149,7 +149,7 @@ public interface IndexesHealthAware {
      * @return list of unused indexes
      */
     @Nonnull
-    default List<UnusedIndex> getUnusedIndexes(@Nonnull Collection<PgContext> pgContexts) {
+    default List<UnusedIndex> getUnusedIndexes(@Nonnull final Collection<PgContext> pgContexts) {
         return pgContexts.stream()
                 .map(this::getUnusedIndexes)
                 .flatMap(List::stream)
@@ -182,7 +182,7 @@ public interface IndexesHealthAware {
      * @return list of foreign keys without associated indexes
      */
     @Nonnull
-    default List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull Collection<PgContext> pgContexts) {
+    default List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull final Collection<PgContext> pgContexts) {
         return pgContexts.stream()
                 .map(this::getForeignKeysNotCoveredWithIndex)
                 .flatMap(List::stream)
@@ -215,7 +215,7 @@ public interface IndexesHealthAware {
      * @return list of indexes with null values
      */
     @Nonnull
-    default List<IndexWithNulls> getIndexesWithNullValues(@Nonnull Collection<PgContext> pgContexts) {
+    default List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final Collection<PgContext> pgContexts) {
         return pgContexts.stream()
                 .map(this::getIndexesWithNullValues)
                 .flatMap(List::stream)
@@ -256,7 +256,7 @@ public interface IndexesHealthAware {
      * @return list of bloated indexes
      */
     @Nonnull
-    default List<IndexWithBloat> getIndexesWithBloat(@Nonnull Collection<PgContext> pgContexts) {
+    default List<IndexWithBloat> getIndexesWithBloat(@Nonnull final Collection<PgContext> pgContexts) {
         return pgContexts.stream()
                 .map(this::getIndexesWithBloat)
                 .flatMap(List::stream)

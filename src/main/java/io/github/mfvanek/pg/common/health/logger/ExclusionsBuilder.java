@@ -34,12 +34,12 @@ public class ExclusionsBuilder {
     private String tablesWithMissingIndexesExclusions = EMPTY;
     private String tablesWithoutPrimaryKeyExclusions = EMPTY;
     private String indexesWithNullValuesExclusions = EMPTY;
-    private long indexSizeThresholdInBytes = 0L;
-    private long tableSizeThresholdInBytes = 0L;
-    private long indexBloatSizeThresholdInBytes = 0L;
-    private int indexBloatPercentageThreshold = 0;
-    private long tableBloatSizeThresholdInBytes = 0L;
-    private int tableBloatPercentageThreshold = 0;
+    private long indexSizeThresholdInBytes;
+    private long tableSizeThresholdInBytes;
+    private long indexBloatSizeThresholdInBytes;
+    private int indexBloatPercentageThreshold;
+    private long tableBloatSizeThresholdInBytes;
+    private int tableBloatPercentageThreshold;
 
     ExclusionsBuilder() {
     }

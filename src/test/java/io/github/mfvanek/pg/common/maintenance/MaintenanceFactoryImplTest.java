@@ -25,21 +25,22 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.Collections;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     private final MaintenanceFactory factory;
     private final PgConnection pgConnection;
 
     MaintenanceFactoryImplTest() {
-        super(embeddedPostgres.getTestDatabase());
+        super(POSTGRES.getTestDatabase());
         this.factory = new MaintenanceFactoryImpl();
-        this.pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
+        this.pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
     }
 
     @Test
@@ -114,14 +115,16 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
         checkThatEmpty(maintenanceOnHosts);
     }
 
-    private <T> void checkThatContainsOneItem(Map<PgHost, T> maintenanceOnHosts) {
-        assertThat(maintenanceOnHosts).isNotNull();
-        assertThat(maintenanceOnHosts).hasSize(1);
+    private <T> void checkThatContainsOneItem(@Nonnull final Map<PgHost, T> maintenanceOnHosts) {
+        assertThat(maintenanceOnHosts)
+                .isNotNull()
+                .hasSize(1);
         assertThat(maintenanceOnHosts.keySet().iterator().next()).isEqualTo(pgConnection.getHost());
     }
 
-    private <T> void checkThatEmpty(Map<PgHost, T> maintenanceOnHosts) {
-        assertThat(maintenanceOnHosts).isNotNull();
-        assertThat(maintenanceOnHosts).isEmpty();
+    private <T> void checkThatEmpty(@Nonnull final Map<PgHost, T> maintenanceOnHosts) {
+        assertThat(maintenanceOnHosts)
+                .isNotNull()
+                .isEmpty();
     }
 }

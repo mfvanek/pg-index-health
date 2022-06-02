@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
+import io.github.mfvanek.pg.utils.Locales;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -22,7 +23,7 @@ class DiagnosticsTest {
     @Test
     void sqlQueryFileNameShouldBeUnique() {
         final Set<String> fileNames = new HashSet<>();
-        for (Diagnostics diagnostics : Diagnostics.values()) {
+        for (final Diagnostics diagnostics : Diagnostics.values()) {
             fileNames.add(diagnostics.getSqlQueryFileName());
         }
         assertThat(fileNames).hasSize(Diagnostics.values().length);
@@ -30,15 +31,15 @@ class DiagnosticsTest {
 
     @Test
     void sqlQueryFileNameShouldBeInLowerCase() {
-        for (Diagnostics diagnostics : Diagnostics.values()) {
-            final String lower = diagnostics.getSqlQueryFileName().toLowerCase();
+        for (final Diagnostics diagnostics : Diagnostics.values()) {
+            final String lower = diagnostics.getSqlQueryFileName().toLowerCase(Locales.DEFAULT);
             assertThat(diagnostics.getSqlQueryFileName()).isEqualTo(lower);
         }
     }
 
     @Test
     void sqlQueryFileNameShouldHaveSqlExtension() {
-        for (Diagnostics diagnostics : Diagnostics.values()) {
+        for (final Diagnostics diagnostics : Diagnostics.values()) {
             assertThat(diagnostics.getSqlQueryFileName()).endsWith(".sql");
         }
     }

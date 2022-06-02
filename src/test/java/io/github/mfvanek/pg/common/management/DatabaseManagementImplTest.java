@@ -35,14 +35,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DatabaseManagementImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     private final DatabaseManagement databaseManagement;
 
     DatabaseManagementImplTest() {
-        super(embeddedPostgres.getTestDatabase());
+        super(POSTGRES.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(
-                PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase()));
+                PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
         this.databaseManagement = new DatabaseManagementImpl(haPgConnection, new MaintenanceFactoryImpl());
     }
 

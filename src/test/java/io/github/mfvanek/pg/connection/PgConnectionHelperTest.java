@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class PgConnectionHelperTest {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     @Test
     void privateConstructor() {
@@ -41,7 +41,7 @@ class PgConnectionHelperTest {
 
     @Nonnull
     private String getWriteUrl() {
-        final int port = embeddedPostgres.getPort();
+        final int port = POSTGRES.getPort();
         return String.format("jdbc:postgresql://localhost:%d/postgres?prepareThreshold=0&preparedStatementCacheQueries=0", port);
     }
 }

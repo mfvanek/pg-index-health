@@ -25,7 +25,7 @@ public class ColumnsInForeignKeyParser {
     }
 
     @Nonnull
-    public static List<Column> parseRawColumnData(@Nonnull final String tableName, @Nonnull final String[] rawColumns) {
+    public static List<Column> parseRawColumnData(@Nonnull final String tableName, @Nonnull final String... rawColumns) {
         Validators.tableNameNotBlank(tableName);
         Objects.requireNonNull(rawColumns, "rawColumns cannot be null");
         if (rawColumns.length == 0) {

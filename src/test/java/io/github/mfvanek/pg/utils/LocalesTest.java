@@ -10,11 +10,15 @@
 
 package io.github.mfvanek.pg.utils;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.junit.jupiter.api.Test;
 
-@FunctionalInterface
-public interface ResultSetExtractor<T> {
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-    T extractData(ResultSet resultSet) throws SQLException;
+class LocalesTest {
+
+    @Test
+    void privateConstructor() {
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(Locales.class))
+                .isInstanceOf(UnsupportedOperationException.class);
+    }
 }

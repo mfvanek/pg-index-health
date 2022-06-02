@@ -52,8 +52,13 @@ public class GeneratingOptions {
      */
     private final IdxPosition idxPosition;
 
-    private GeneratingOptions(boolean concurrently, boolean excludeNulls, boolean breakLines, int indentation,
-                              boolean uppercaseForKeywords, boolean nameWithoutNulls, @Nonnull IdxPosition idxPosition) {
+    private GeneratingOptions(final boolean concurrently,
+                              final boolean excludeNulls,
+                              final boolean breakLines,
+                              final int indentation,
+                              final boolean uppercaseForKeywords,
+                              final boolean nameWithoutNulls,
+                              @Nonnull final IdxPosition idxPosition) {
         this.concurrently = concurrently;
         this.excludeNulls = excludeNulls;
         this.breakLines = breakLines;
@@ -115,7 +120,7 @@ public class GeneratingOptions {
         private boolean excludeNulls = true;
         private boolean breakLines = true;
         private int indentation = 4;
-        private boolean uppercaseForKeywords = false;
+        private boolean uppercaseForKeywords;
         private boolean nameWithoutNulls = true;
         private IdxPosition idxPosition = IdxPosition.SUFFIX;
 
@@ -203,7 +208,7 @@ public class GeneratingOptions {
         }
 
         @Nonnull
-        public Builder withIdxPosition(@Nonnull IdxPosition idxPosition) {
+        public Builder withIdxPosition(@Nonnull final IdxPosition idxPosition) {
             this.idxPosition = Objects.requireNonNull(idxPosition, "idxPosition cannot be null");
             return this;
         }

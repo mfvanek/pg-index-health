@@ -32,11 +32,11 @@ public class ConfigurationMaintenanceOnHostImpl extends AbstractMaintenance impl
 
     @Nonnull
     @Override
-    public Set<PgParam> getParamsWithDefaultValues(@Nonnull ServerSpecification specification) {
+    public Set<PgParam> getParamsWithDefaultValues(@Nonnull final ServerSpecification specification) {
         // TODO get max_connections and calculate recommended values
         final Set<PgParam> params = new HashSet<>();
-        for (ImportantParam importantParam : ImportantParam.values()) {
-            PgParam currentValue = getParamCurrentValue(importantParam);
+        for (final ImportantParam importantParam : ImportantParam.values()) {
+            final PgParam currentValue = getParamCurrentValue(importantParam);
             if (currentValue.getValue().equals(importantParam.getDefaultValue())) {
                 params.add(currentValue);
             }

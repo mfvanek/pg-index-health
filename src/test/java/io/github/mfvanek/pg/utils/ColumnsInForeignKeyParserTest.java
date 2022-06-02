@@ -29,26 +29,23 @@ class ColumnsInForeignKeyParserTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void shouldThrowExceptionWhenPassedInvalidData() {
-        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData(null, null))
+        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("tableName cannot be null");
-        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t", null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("rawColumns cannot be null");
-        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t", new String[]{}))
+        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Columns array cannot be empty");
-        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t", new String[]{"abracadabra"}))
+        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t", "abracadabra"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Cannot parse column info from abracadabra");
-        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t", new String[]{"a, b, c"}))
+        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t", "a, b, c"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Cannot parse column info from a, b, c");
     }
 
     @Test
     void shouldWorkWhenValidDataPassed() {
-        final List<Column> columns = ColumnsInForeignKeyParser.parseRawColumnData("t", new String[]{"c1, true", "c2, false", "c3, abracadabra"});
+        final List<Column> columns = ColumnsInForeignKeyParser.parseRawColumnData("t", "c1, true", "c2, false", "c3, abracadabra");
         assertThat(columns)
                 .isNotNull()
                 .hasSize(3)

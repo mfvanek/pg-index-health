@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.connection;
 
+import io.github.mfvanek.pg.utils.PgSqlException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,7 @@ public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
                 return executionResult;
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Query failed", e); //NOSONAR
+            throw new PgSqlException(e);
         }
     }
 }

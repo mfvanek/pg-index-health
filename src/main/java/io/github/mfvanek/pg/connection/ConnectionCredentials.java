@@ -74,16 +74,16 @@ public class ConnectionCredentials {
     }
 
     @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
+    public final boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
 
-        if (!(o instanceof ConnectionCredentials)) {
+        if (!(other instanceof ConnectionCredentials)) {
             return false;
         }
 
-        final ConnectionCredentials that = (ConnectionCredentials) o;
+        final ConnectionCredentials that = (ConnectionCredentials) other;
         return Objects.equals(connectionUrls, that.connectionUrls) &&
                 Objects.equals(userName, that.userName) &&
                 Objects.equals(password, that.password);

@@ -44,7 +44,7 @@ final class ReplicasHelper {
             @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts) {
         LOGGER.debug("potentiallyUnusedIndexesFromAllHosts = {}", potentiallyUnusedIndexesFromAllHosts);
         Collection<UnusedIndex> unusedIndexes = null;
-        for (List<UnusedIndex> unusedIndexesFromHost : potentiallyUnusedIndexesFromAllHosts) {
+        for (final List<UnusedIndex> unusedIndexesFromHost : potentiallyUnusedIndexesFromAllHosts) {
             if (unusedIndexes == null) {
                 unusedIndexes = unusedIndexesFromHost;
             }

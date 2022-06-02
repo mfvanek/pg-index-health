@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
+import io.github.mfvanek.pg.utils.Locales;
 import io.github.mfvanek.pg.utils.Validators;
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,12 +41,13 @@ public class Exclusions {
     private final long tableBloatSizeThresholdInBytes;
     private final int tableBloatPercentageThreshold;
 
-    Exclusions(@Nonnull String duplicatedIndexesExclusions,
-               @Nonnull String intersectedIndexesExclusions,
-               @Nonnull String unusedIndexesExclusions,
-               @Nonnull String tablesWithMissingIndexesExclusions,
-               @Nonnull String tablesWithoutPrimaryKeyExclusions,
-               @Nonnull String indexesWithNullValuesExclusions,
+    @SuppressWarnings("PMD.ExcessiveParameterList")
+    Exclusions(@Nonnull final String duplicatedIndexesExclusions,
+               @Nonnull final String intersectedIndexesExclusions,
+               @Nonnull final String unusedIndexesExclusions,
+               @Nonnull final String tablesWithMissingIndexesExclusions,
+               @Nonnull final String tablesWithoutPrimaryKeyExclusions,
+               @Nonnull final String indexesWithNullValuesExclusions,
                final long indexSizeThresholdInBytes,
                final long tableSizeThresholdInBytes,
                final long indexBloatSizeThresholdInBytes,
@@ -76,8 +78,8 @@ public class Exclusions {
         Objects.requireNonNull(rawExclusions);
         final Set<String> exclusions = new HashSet<>();
         if (StringUtils.isNotBlank(rawExclusions)) {
-            final String[] tables = rawExclusions.toLowerCase().split(",");
-            for (String tableName : tables) {
+            final String[] tables = rawExclusions.toLowerCase(Locales.DEFAULT).split(",");
+            for (final String tableName : tables) {
                 if (StringUtils.isNotBlank(tableName)) {
                     exclusions.add(tableName.trim());
                 }

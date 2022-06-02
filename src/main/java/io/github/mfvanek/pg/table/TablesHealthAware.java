@@ -44,7 +44,7 @@ public interface TablesHealthAware {
      * @return list of tables with potentially missing indexes
      */
     @Nonnull
-    default List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull Collection<PgContext> pgContexts) {
+    default List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final Collection<PgContext> pgContexts) {
         return pgContexts.stream()
                 .map(this::getTablesWithMissingIndexes)
                 .flatMap(List::stream)
@@ -77,7 +77,7 @@ public interface TablesHealthAware {
      * @return list of tables without primary key
      */
     @Nonnull
-    default List<Table> getTablesWithoutPrimaryKey(@Nonnull Collection<PgContext> pgContexts) {
+    default List<Table> getTablesWithoutPrimaryKey(@Nonnull final Collection<PgContext> pgContexts) {
         return pgContexts.stream()
                 .map(this::getTablesWithoutPrimaryKey)
                 .flatMap(List::stream)
@@ -118,7 +118,7 @@ public interface TablesHealthAware {
      * @return list of bloated tables
      */
     @Nonnull
-    default List<TableWithBloat> getTablesWithBloat(@Nonnull Collection<PgContext> pgContexts) {
+    default List<TableWithBloat> getTablesWithBloat(@Nonnull final Collection<PgContext> pgContexts) {
         return pgContexts.stream()
                 .map(this::getTablesWithBloat)
                 .flatMap(List::stream)

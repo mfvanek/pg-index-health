@@ -26,7 +26,7 @@ public class DatabaseHealthFactoryImpl implements DatabaseHealthFactory {
 
     @Nonnull
     @Override
-    public DatabaseHealth of(@Nonnull HighAvailabilityPgConnection haPgConnection) {
+    public DatabaseHealth of(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         return new DatabaseHealthImpl(haPgConnection, maintenanceFactory);
     }
 }

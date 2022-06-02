@@ -31,13 +31,13 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension embeddedPostgres = PostgresExtensionFactory.database();
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     private final StatisticsMaintenanceOnHost statisticsMaintenance;
 
     StatisticsMaintenanceOnHostImplTest() {
-        super(embeddedPostgres.getTestDatabase());
-        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(embeddedPostgres.getTestDatabase());
+        super(POSTGRES.getTestDatabase());
+        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
         this.statisticsMaintenance = new StatisticsMaintenanceOnHostImpl(pgConnection);
     }
 

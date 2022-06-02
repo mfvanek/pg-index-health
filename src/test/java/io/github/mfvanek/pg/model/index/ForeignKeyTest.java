@@ -54,7 +54,7 @@ class ForeignKeyTest {
 
     @Test
     void getColumnsInConstraint() {
-        ForeignKey key = ForeignKey.of("t", "c_t_order_id",
+        final ForeignKey key = ForeignKey.of("t", "c_t_order_id",
                 Arrays.asList(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id")));
         assertThat(key.getColumnsInConstraint())
                 .isNotNull()

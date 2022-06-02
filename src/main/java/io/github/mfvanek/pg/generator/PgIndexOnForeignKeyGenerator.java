@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.index.ForeignKey;
 import io.github.mfvanek.pg.model.table.Column;
+import io.github.mfvanek.pg.utils.Locales;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
@@ -60,7 +61,7 @@ public class PgIndexOnForeignKeyGenerator {
                 .append(foreignKey.getTableName())
                 .append(" (")
                 .append(foreignKey.getColumnsInConstraint().stream().map(Column::getColumnName).collect(Collectors.joining(", ")))
-                .append(")");
+                .append(')');
         final boolean hasToExcludeNulls = options.isExcludeNulls() &&
                 foreignKey.getColumnsInConstraint().stream().anyMatch(Column::isNullable);
         if (hasToExcludeNulls) {
@@ -72,13 +73,13 @@ public class PgIndexOnForeignKeyGenerator {
                     .collect(Collectors.joining(" and "));
             queryBuilder.append(columnsList);
         }
-        return queryBuilder.append(";").toString();
+        return queryBuilder.append(';').toString();
     }
 
     @Nonnull
     private String keyword(@Nonnull final String keyword) {
         if (options.isUppercaseForKeywords()) {
-            return keyword.toUpperCase();
+            return keyword.toUpperCase(Locales.DEFAULT);
         }
         return keyword;
     }

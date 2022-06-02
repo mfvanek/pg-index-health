@@ -199,10 +199,19 @@ class DuplicatedIndexesTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void newFactoryConstructor() {
-        assertThatThrownBy(() -> DuplicatedIndexes.of(null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> DuplicatedIndexes.of(IndexWithSize.of("t", "i1", 1L), null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> DuplicatedIndexes.of(IndexWithSize.of("t", "i1", 1L), IndexWithSize.of("t", "i2", 2L), null, IndexWithSize.of("t", "i4", 4L))).isInstanceOf(
-                NullPointerException.class);
+        assertThatThrownBy(() -> DuplicatedIndexes.of(null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("tableName cannot be null");
+        assertThatThrownBy(() -> DuplicatedIndexes.of(IndexWithSize.of("t", "i1", 1L), null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("secondIndex cannot be null");
+        assertThatThrownBy(() -> DuplicatedIndexes.of(
+                IndexWithSize.of("t", "i1", 1L),
+                IndexWithSize.of("t", "i2", 2L),
+                null,
+                IndexWithSize.of("t", "i4", 4L)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("otherIndexes cannot contain nulls");
         final DuplicatedIndexes indexes = DuplicatedIndexes.of(
                 IndexWithSize.of("t", "i3", 3L),
                 IndexWithSize.of("t", "i1", 1L),
