@@ -10,7 +10,7 @@ plugins {
 }
 
 group 'io.github.mfvanek'
-version '0.5.0'
+version '0.5.1-SNAPSHOT'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
