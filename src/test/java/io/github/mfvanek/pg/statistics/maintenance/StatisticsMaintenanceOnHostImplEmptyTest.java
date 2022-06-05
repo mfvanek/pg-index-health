@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.utils.ClockHolder;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.utils.DatabasePopulator;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,6 @@ class StatisticsMaintenanceOnHostImplEmptyTest extends DatabaseAwareTestBase {
         assertThat(statsResetTimestamp)
                 .isNotNull()
                 .isPresent();
-        assertThat(statsResetTimestamp.get()).isBeforeOrEqualTo(OffsetDateTime.now());
+        assertThat(statsResetTimestamp.get()).isBeforeOrEqualTo(OffsetDateTime.now(ClockHolder.clock()));
     }
 }
