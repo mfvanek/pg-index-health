@@ -14,8 +14,7 @@ import io.github.mfvanek.pg.connection.HostAware;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.utils.QueryExecutor;
-import io.github.mfvanek.pg.utils.ResultSetExtractor;
+import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.SqlQueryReader;
 
 import java.util.List;
@@ -41,7 +40,7 @@ public abstract class AbstractMaintenance implements HostAware {
     protected final PgConnection pgConnection;
 
     protected AbstractMaintenance(@Nonnull final PgConnection pgConnection) {
-        this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection");
+        this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
     }
 
     /**
@@ -53,17 +52,10 @@ public abstract class AbstractMaintenance implements HostAware {
         return pgConnection.getHost();
     }
 
-    protected <T> List<T> executeQuery(@Nonnull final Diagnostics diagnostics,
-                                       @Nonnull final PgContext pgContext,
-                                       @Nonnull final ResultSetExtractor<T> rse) {
-        final String sqlQuery = SqlQueryReader.getQueryFromFile(diagnostics.getSqlQueryFileName());
-        return QueryExecutor.executeQueryWithSchema(pgConnection, pgContext, sqlQuery, rse);
-    }
-
-    protected <T> List<T> executeQueryWithBloatThreshold(@Nonnull final Diagnostics diagnostics,
-                                                         @Nonnull final PgContext pgContext,
-                                                         @Nonnull final ResultSetExtractor<T> rse) {
-        final String sqlQuery = SqlQueryReader.getQueryFromFile(diagnostics.getSqlQueryFileName());
-        return QueryExecutor.executeQueryWithBloatThreshold(pgConnection, pgContext, sqlQuery, rse);
+    protected <T extends TableNameAware> List<T> executeQuery(@Nonnull final Diagnostics diagnostic,
+                                                              @Nonnull final PgContext pgContext,
+                                                              @Nonnull final ResultSetExtractor<T> rse) {
+        final String sqlQuery = SqlQueryReader.getQueryFromFile(diagnostic.getSqlQueryFileName());
+        return diagnostic.getQueryExecutor().executeQuery(pgConnection, pgContext, sqlQuery, rse);
     }
 }

@@ -141,7 +141,7 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Nonnull
     @Override
     public List<IndexWithBloat> getIndexesWithBloat(@Nonnull final PgContext pgContext) {
-        return executeQueryWithBloatThreshold(Diagnostics.BLOATED_INDEXES, pgContext, rs -> {
+        return executeQuery(Diagnostics.BLOATED_INDEXES, pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);
             final long indexSize = rs.getLong(INDEX_SIZE);

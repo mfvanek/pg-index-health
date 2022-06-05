@@ -10,35 +10,46 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
+import io.github.mfvanek.pg.utils.QueryExecutors;
+
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
 /**
- * A list of all supported diagnostics with corresponding sql queries.
+ * A list of all supported diagnostics with corresponding sql queries and query executors.
  *
  * @author Ivan Vakhrushev
+ * @see QueryExecutor
+ * @see QueryExecutors
  */
 public enum Diagnostics {
 
-    BLOATED_INDEXES("bloated_indexes.sql"),
-    BLOATED_TABLES("bloated_tables.sql"),
-    DUPLICATED_INDEXES("duplicated_indexes.sql"),
-    FOREIGN_KEYS_WITHOUT_INDEX("foreign_keys_without_index.sql"),
-    INDEXES_WITH_NULL_VALUES("indexes_with_null_values.sql"),
-    INTERSECTED_INDEXES("intersected_indexes.sql"),
-    INVALID_INDEXES("invalid_indexes.sql"),
-    TABLES_WITH_MISSING_INDEXES("tables_with_missing_indexes.sql"),
-    TABLES_WITHOUT_PRIMARY_KEY("tables_without_primary_key.sql"),
-    UNUSED_INDEXES("unused_indexes.sql");
+    BLOATED_INDEXES("bloated_indexes.sql", QueryExecutors::executeQueryWithBloatThreshold),
+    BLOATED_TABLES("bloated_tables.sql", QueryExecutors::executeQueryWithBloatThreshold),
+    DUPLICATED_INDEXES("duplicated_indexes.sql", QueryExecutors::executeQueryWithSchema),
+    FOREIGN_KEYS_WITHOUT_INDEX("foreign_keys_without_index.sql", QueryExecutors::executeQueryWithSchema),
+    INDEXES_WITH_NULL_VALUES("indexes_with_null_values.sql", QueryExecutors::executeQueryWithSchema),
+    INTERSECTED_INDEXES("intersected_indexes.sql", QueryExecutors::executeQueryWithSchema),
+    INVALID_INDEXES("invalid_indexes.sql", QueryExecutors::executeQueryWithSchema),
+    TABLES_WITH_MISSING_INDEXES("tables_with_missing_indexes.sql", QueryExecutors::executeQueryWithSchema),
+    TABLES_WITHOUT_PRIMARY_KEY("tables_without_primary_key.sql", QueryExecutors::executeQueryWithSchema),
+    UNUSED_INDEXES("unused_indexes.sql", QueryExecutors::executeQueryWithSchema);
 
     private final String sqlQueryFileName;
+    private final QueryExecutor queryExecutor;
 
-    Diagnostics(@Nonnull final String sqlQueryFileName) {
-        this.sqlQueryFileName = Objects.requireNonNull(sqlQueryFileName, "sqlQueryFileName");
+    Diagnostics(@Nonnull final String sqlQueryFileName, @Nonnull final QueryExecutor queryExecutor) {
+        this.sqlQueryFileName = Objects.requireNonNull(sqlQueryFileName, "sqlQueryFileName cannot be null");
+        this.queryExecutor = Objects.requireNonNull(queryExecutor, "queryExecutor cannot be null");
     }
 
     @Nonnull
     public String getSqlQueryFileName() {
         return sqlQueryFileName;
+    }
+
+    @Nonnull
+    public QueryExecutor getQueryExecutor() {
+        return queryExecutor;
     }
 }

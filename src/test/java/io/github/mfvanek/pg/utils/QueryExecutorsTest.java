@@ -28,28 +28,28 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 
-class QueryExecutorTest extends DatabaseAwareTestBase {
+class QueryExecutorsTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
     static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     private final PgConnection pgConnection;
 
-    QueryExecutorTest() {
+    QueryExecutorsTest() {
         super(POSTGRES.getTestDatabase());
         this.pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
     }
 
     @Test
     void privateConstructor() {
-        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(QueryExecutor.class))
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(QueryExecutors.class))
                 .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void executeInvalidQuery() {
         final String invalidSql = "select unknown_field from unknown_table";
-        assertThatThrownBy(() -> QueryExecutor.executeQuery(pgConnection, invalidSql, (rs) -> null))
+        assertThatThrownBy(() -> QueryExecutors.executeQuery(pgConnection, invalidSql, (rs) -> null))
                 .isInstanceOf(PgSqlException.class)
                 .hasCauseInstanceOf(SQLException.class);
     }
@@ -57,7 +57,8 @@ class QueryExecutorTest extends DatabaseAwareTestBase {
     @Test
     void executeInvalidQueryWithSchema() {
         final String invalidSqlWithParam = "select unknown_field from unknown_table where schema = ?::text";
-        assertThatThrownBy(() -> QueryExecutor.executeQueryWithSchema(pgConnection, PgContext.of("s"), invalidSqlWithParam, (rs) -> null))
+        final PgContext context = PgContext.of("s");
+        assertThatThrownBy(() -> QueryExecutors.executeQueryWithSchema(pgConnection, context, invalidSqlWithParam, (rs) -> null))
                 .isInstanceOf(PgSqlException.class)
                 .hasCauseInstanceOf(SQLException.class);
     }
@@ -65,7 +66,7 @@ class QueryExecutorTest extends DatabaseAwareTestBase {
     @SuppressWarnings("ConstantConditions")
     @Test
     void executeNullQuery() {
-        assertThatThrownBy(() -> QueryExecutor.executeQuery(pgConnection, null, (rs) -> null))
+        assertThatThrownBy(() -> QueryExecutors.executeQuery(pgConnection, null, (rs) -> null))
                 .isInstanceOf(NullPointerException.class);
     }
 
@@ -79,7 +80,9 @@ class QueryExecutorTest extends DatabaseAwareTestBase {
             Mockito.doAnswer(invocation -> {
                 throw new SQLException("bad parameter");
             }).when(statement).setString(anyInt(), anyString());
-            assertThatThrownBy(() -> QueryExecutor.executeQueryWithSchema(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(), "select version()", (rs) -> rs.getString(1)))
+            final PgConnection pgConnection = PgConnectionImpl.ofPrimary(dataSource);
+            final PgContext context = PgContext.ofPublic();
+            assertThatThrownBy(() -> QueryExecutors.executeQueryWithSchema(pgConnection, context, "select version()", (rs) -> rs.getString(1)))
                     .isInstanceOf(PgSqlException.class)
                     .hasMessage("bad parameter")
                     .hasCauseInstanceOf(SQLException.class)
@@ -97,7 +100,9 @@ class QueryExecutorTest extends DatabaseAwareTestBase {
             Mockito.doAnswer(invocation -> {
                 throw new SQLException("bad parameter");
             }).when(statement).setString(anyInt(), anyString());
-            assertThatThrownBy(() -> QueryExecutor.executeQueryWithBloatThreshold(PgConnectionImpl.ofPrimary(dataSource), PgContext.ofPublic(), "select version()", (rs) -> rs.getString(1)))
+            final PgConnection pgConnection = PgConnectionImpl.ofPrimary(dataSource);
+            final PgContext context = PgContext.ofPublic();
+            assertThatThrownBy(() -> QueryExecutors.executeQueryWithBloatThreshold(pgConnection, context, "select version()", (rs) -> rs.getString(1)))
                     .isInstanceOf(PgSqlException.class)
                     .hasMessage("bad parameter")
                     .hasCauseInstanceOf(SQLException.class)
