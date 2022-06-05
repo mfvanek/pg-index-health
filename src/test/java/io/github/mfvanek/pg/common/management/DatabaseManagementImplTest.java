@@ -20,6 +20,7 @@ import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.ServerSpecification;
+import io.github.mfvanek.pg.utils.ClockHolder;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,7 +51,7 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {"public", "custom"})
     void shouldResetCounters(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
-            final OffsetDateTime testStartTime = OffsetDateTime.now();
+            final OffsetDateTime testStartTime = OffsetDateTime.now(ClockHolder.clock());
             tryToFindAccountByClientId(schemaName);
             assertThat(getSeqScansForAccounts(ctx)).isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             databaseManagement.resetStatistics();

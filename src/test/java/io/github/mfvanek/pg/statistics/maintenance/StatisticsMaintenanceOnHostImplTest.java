@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.utils.ClockHolder;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -51,7 +52,7 @@ class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {"public", "custom"})
     void shouldResetCounters(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
-            final OffsetDateTime testStartTime = OffsetDateTime.now();
+            final OffsetDateTime testStartTime = OffsetDateTime.now(ClockHolder.clock());
             tryToFindAccountByClientId(schemaName);
             final PgContext pgContext = PgContext.of(schemaName);
             assertThat(getSeqScansForAccounts(pgContext)).isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);

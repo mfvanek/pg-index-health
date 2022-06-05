@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.common.health.logger;
 import io.github.mfvanek.pg.common.health.DatabaseHealthFactory;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
+import io.github.mfvanek.pg.utils.ClockHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +60,6 @@ public class KeyValueFileHealthLogger extends AbstractHealthLogger {
     @Nonnull
     private String format(@Nonnull final String keyName, @Nonnull final String subKeyName, final int value) {
         return DateTimeFormatter.ISO_INSTANT.format(
-                ZonedDateTime.now()) + "\t" + keyName + "\t" + subKeyName + "\t" + value;
+                ZonedDateTime.now(ClockHolder.clock())) + "\t" + keyName + "\t" + subKeyName + "\t" + value;
     }
 }

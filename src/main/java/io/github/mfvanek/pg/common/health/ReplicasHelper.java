@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
+import io.github.mfvanek.pg.utils.ClockHolder;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +81,7 @@ final class ReplicasHelper {
 
         final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
         if (statsResetTimestamp.isPresent()) {
-            final long daysBetween = ChronoUnit.DAYS.between(statsResetTimestamp.get(), OffsetDateTime.now());
+            final long daysBetween = ChronoUnit.DAYS.between(statsResetTimestamp.get(), OffsetDateTime.now(ClockHolder.clock()));
             return String.format("Last statistics reset on this host was %d days ago (%s)",
                     daysBetween, statsResetTimestamp.get());
         }

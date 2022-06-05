@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
+import io.github.mfvanek.pg.utils.ClockHolder;
 import io.github.mfvanek.pg.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -110,7 +111,7 @@ class ReplicasHelperTest {
     @Test
     void getLastStatsResetDateLogMessageWithResetTimestamp() {
         final PgHost host = PgHostImpl.ofPrimary();
-        final OffsetDateTime resetDate = OffsetDateTime.now();
+        final OffsetDateTime resetDate = OffsetDateTime.now(ClockHolder.clock());
         final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
         Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.of(resetDate.minusDays(123L)));
         final String logMessage = ReplicasHelper.getLastStatsResetDateLogMessage(host, Collections.singletonMap(host, statisticsMaintenance));
