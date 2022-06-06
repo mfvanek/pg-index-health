@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.statistics.maintenance;
 
 import io.github.mfvanek.pg.common.maintenance.AbstractMaintenance;
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.utils.QueryExecutor;
+import io.github.mfvanek.pg.utils.QueryExecutors;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -30,7 +30,7 @@ public class StatisticsMaintenanceOnHostImpl extends AbstractMaintenance impleme
      */
     @Override
     public void resetStatistics() {
-        QueryExecutor.executeQuery(pgConnection, "select pg_stat_reset()", rs -> true);
+        QueryExecutors.executeQuery(pgConnection, "select pg_stat_reset()", rs -> true);
     }
 
     /**
@@ -40,7 +40,7 @@ public class StatisticsMaintenanceOnHostImpl extends AbstractMaintenance impleme
     @Nonnull
     public Optional<OffsetDateTime> getLastStatsResetTimestamp() {
         final String query = "select stats_reset from pg_stat_database where datname = current_database()";
-        final List<OffsetDateTime> statsResetTimes = QueryExecutor.executeQuery(pgConnection, query,
+        final List<OffsetDateTime> statsResetTimes = QueryExecutors.executeQuery(pgConnection, query,
                 rs -> rs.getObject(1, OffsetDateTime.class));
         return Optional.ofNullable(statsResetTimes.get(0));
     }

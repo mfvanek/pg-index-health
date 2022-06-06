@@ -17,7 +17,7 @@ import io.github.mfvanek.pg.settings.ParamNameAware;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.PgParamImpl;
 import io.github.mfvanek.pg.settings.ServerSpecification;
-import io.github.mfvanek.pg.utils.QueryExecutor;
+import io.github.mfvanek.pg.utils.QueryExecutors;
 
 import java.util.HashSet;
 import java.util.List;
@@ -47,7 +47,7 @@ public class ConfigurationMaintenanceOnHostImpl extends AbstractMaintenance impl
     @Override
     @Nonnull
     public Set<PgParam> getParamsCurrentValues() {
-        final List<PgParam> params = QueryExecutor.executeQuery(pgConnection, "show all", rs -> {
+        final List<PgParam> params = QueryExecutors.executeQuery(pgConnection, "show all", rs -> {
             final String paramName = rs.getString("name");
             final String currentValue = rs.getString("setting");
             return PgParamImpl.of(paramName, currentValue);
@@ -64,7 +64,7 @@ public class ConfigurationMaintenanceOnHostImpl extends AbstractMaintenance impl
     @Nonnull
     private PgParam getCurrentValue(@Nonnull final String paramName) {
         final String sqlQuery = String.format("show %s;", paramName);
-        final List<PgParam> params = QueryExecutor.executeQuery(pgConnection, sqlQuery, rs -> {
+        final List<PgParam> params = QueryExecutors.executeQuery(pgConnection, sqlQuery, rs -> {
             final String currentValue = rs.getString(paramName);
             return PgParamImpl.of(paramName, currentValue);
         });

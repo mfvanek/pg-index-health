@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
+import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.model.PgContext;
 import org.slf4j.Logger;
@@ -27,11 +28,11 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-public final class QueryExecutor {
+public final class QueryExecutors {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(QueryExecutor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueryExecutors.class);
 
-    private QueryExecutor() {
+    private QueryExecutors() {
         throw new UnsupportedOperationException();
     }
 

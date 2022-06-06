@@ -8,13 +8,20 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.utils;
+package io.github.mfvanek.pg.common.maintenance;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.annotation.Nonnull;
 
+/**
+ * A mapper from raw data to domain model.
+ *
+ * @author Ivan Vahrushev
+ */
 @FunctionalInterface
 public interface ResultSetExtractor<T> {
 
-    T extractData(ResultSet resultSet) throws SQLException;
+    @Nonnull
+    T extractData(@Nonnull ResultSet resultSet) throws SQLException;
 }

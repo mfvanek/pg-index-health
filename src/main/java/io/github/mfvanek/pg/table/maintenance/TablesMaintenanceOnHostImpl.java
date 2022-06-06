@@ -72,7 +72,7 @@ public class TablesMaintenanceOnHostImpl extends AbstractMaintenance implements 
     @Override
     @Nonnull
     public List<TableWithBloat> getTablesWithBloat(@Nonnull final PgContext pgContext) {
-        return executeQueryWithBloatThreshold(Diagnostics.BLOATED_TABLES, pgContext, rs -> {
+        return executeQuery(Diagnostics.BLOATED_TABLES, pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final long tableSize = rs.getLong(TABLE_SIZE);
             final long bloatSize = rs.getLong(BLOAT_SIZE);
