@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.table.maintenance;
 
 import io.github.mfvanek.pg.common.maintenance.AbstractMaintenance;
-import io.github.mfvanek.pg.common.maintenance.Diagnostics;
+import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.HostAware;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
@@ -44,7 +44,7 @@ public class TablesMaintenanceOnHostImpl extends AbstractMaintenance implements 
     @Nonnull
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
-        return executeQuery(Diagnostics.TABLES_WITH_MISSING_INDEXES, pgContext, rs -> {
+        return executeQuery(Diagnostic.TABLES_WITH_MISSING_INDEXES, pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final long tableSize = rs.getLong(TABLE_SIZE);
             final long seqScans = rs.getLong("seq_scan");
@@ -59,7 +59,7 @@ public class TablesMaintenanceOnHostImpl extends AbstractMaintenance implements 
     @Nonnull
     @Override
     public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
-        return executeQuery(Diagnostics.TABLES_WITHOUT_PRIMARY_KEY, pgContext, rs -> {
+        return executeQuery(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final long tableSize = rs.getLong(TABLE_SIZE);
             return Table.of(tableName, tableSize);
@@ -72,7 +72,7 @@ public class TablesMaintenanceOnHostImpl extends AbstractMaintenance implements 
     @Override
     @Nonnull
     public List<TableWithBloat> getTablesWithBloat(@Nonnull final PgContext pgContext) {
-        return executeQuery(Diagnostics.BLOATED_TABLES, pgContext, rs -> {
+        return executeQuery(Diagnostic.BLOATED_TABLES, pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final long tableSize = rs.getLong(TABLE_SIZE);
             final long bloatSize = rs.getLong(BLOAT_SIZE);

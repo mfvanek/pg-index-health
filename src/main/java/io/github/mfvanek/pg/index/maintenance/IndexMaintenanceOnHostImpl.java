@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.index.maintenance;
 
 import io.github.mfvanek.pg.common.maintenance.AbstractMaintenance;
-import io.github.mfvanek.pg.common.maintenance.Diagnostics;
+import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.HostAware;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
@@ -51,7 +51,7 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Nonnull
     @Override
     public List<Index> getInvalidIndexes(@Nonnull final PgContext pgContext) {
-        return executeQuery(Diagnostics.INVALID_INDEXES, pgContext, rs -> {
+        return executeQuery(Diagnostic.INVALID_INDEXES, pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);
             return Index.of(tableName, indexName);
@@ -65,7 +65,7 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Override
     public List<DuplicatedIndexes> getDuplicatedIndexes(@Nonnull final PgContext pgContext) {
         return getDuplicatedOrIntersectedIndexes(
-                Diagnostics.DUPLICATED_INDEXES, pgContext, "duplicated_indexes");
+                Diagnostic.DUPLICATED_INDEXES, pgContext, "duplicated_indexes");
     }
 
     /**
@@ -75,7 +75,7 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Override
     public List<DuplicatedIndexes> getIntersectedIndexes(@Nonnull final PgContext pgContext) {
         return getDuplicatedOrIntersectedIndexes(
-                Diagnostics.INTERSECTED_INDEXES, pgContext, "intersected_indexes");
+                Diagnostic.INTERSECTED_INDEXES, pgContext, "intersected_indexes");
     }
 
     /**
@@ -84,7 +84,7 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Nonnull
     @Override
     public List<UnusedIndex> getUnusedIndexes(@Nonnull final PgContext pgContext) {
-        return executeQuery(Diagnostics.UNUSED_INDEXES, pgContext, rs -> {
+        return executeQuery(Diagnostic.UNUSED_INDEXES, pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);
             final long indexSize = rs.getLong(INDEX_SIZE);
@@ -99,7 +99,7 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Nonnull
     @Override
     public List<ForeignKey> getForeignKeysNotCoveredWithIndex(@Nonnull final PgContext pgContext) {
-        return executeQuery(Diagnostics.FOREIGN_KEYS_WITHOUT_INDEX, pgContext, rs -> {
+        return executeQuery(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX, pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String constraintName = rs.getString("constraint_name");
             final Array columnsArray = rs.getArray("columns");
@@ -115,7 +115,7 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Nonnull
     @Override
     public List<IndexWithNulls> getIndexesWithNullValues(@Nonnull final PgContext pgContext) {
-        return executeQuery(Diagnostics.INDEXES_WITH_NULL_VALUES, pgContext, rs -> {
+        return executeQuery(Diagnostic.INDEXES_WITH_NULL_VALUES, pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);
             final long indexSize = rs.getLong(INDEX_SIZE);
@@ -125,10 +125,10 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     }
 
     @Nonnull
-    private List<DuplicatedIndexes> getDuplicatedOrIntersectedIndexes(@Nonnull final Diagnostics diagnostics,
+    private List<DuplicatedIndexes> getDuplicatedOrIntersectedIndexes(@Nonnull final Diagnostic diagnostic,
                                                                       @Nonnull final PgContext pgContext,
                                                                       @Nonnull final String columnName) {
-        return executeQuery(diagnostics, pgContext, rs -> {
+        return executeQuery(diagnostic, pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String duplicatedAsString = rs.getString(columnName);
             return DuplicatedIndexes.of(tableName, duplicatedAsString);
@@ -141,7 +141,7 @@ public class IndexMaintenanceOnHostImpl extends AbstractMaintenance implements I
     @Nonnull
     @Override
     public List<IndexWithBloat> getIndexesWithBloat(@Nonnull final PgContext pgContext) {
-        return executeQuery(Diagnostics.BLOATED_INDEXES, pgContext, rs -> {
+        return executeQuery(Diagnostic.BLOATED_INDEXES, pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);
             final long indexSize = rs.getLong(INDEX_SIZE);

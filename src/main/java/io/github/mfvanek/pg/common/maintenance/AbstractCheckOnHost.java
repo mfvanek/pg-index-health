@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
-import io.github.mfvanek.pg.connection.HostAware;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.PgContext;
@@ -22,15 +21,16 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 /**
- * Abstract helper class for implementing statistics collection on a specific host in the cluster.
+ * An abstract class for all database checks performed on a specific host.
  *
- * @author Ivan Vakhrushev
- * @see HostAware
+ * @author Ivan Vahrushev
+ * @since 0.5.1
  */
-public abstract class AbstractMaintenance implements HostAware {
+public abstract class AbstractCheckOnHost<T extends TableNameAware> implements DatabaseCheckOnHost<T> {
 
     protected static final String TABLE_NAME = "table_name";
     protected static final String INDEX_NAME = "index_name";
+    protected static final String INDEX_SIZE = "index_size";
     protected static final String BLOAT_SIZE = "bloat_size";
     protected static final String BLOAT_PERCENTAGE = "bloat_percentage";
 
@@ -38,9 +38,23 @@ public abstract class AbstractMaintenance implements HostAware {
      * A connection to a specific host in the cluster.
      */
     protected final PgConnection pgConnection;
+    /**
+     * A rule related to the check.
+     */
+    protected final Diagnostic diagnostic;
 
-    protected AbstractMaintenance(@Nonnull final PgConnection pgConnection) {
+    protected AbstractCheckOnHost(@Nonnull final PgConnection pgConnection, @Nonnull final Diagnostic diagnostic) {
         this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
+        this.diagnostic = Objects.requireNonNull(diagnostic, "diagnostic cannot be null");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public Diagnostic getDiagnostic() {
+        return diagnostic;
     }
 
     /**
@@ -52,9 +66,9 @@ public abstract class AbstractMaintenance implements HostAware {
         return pgConnection.getHost();
     }
 
-    protected <T extends TableNameAware> List<T> executeQuery(@Nonnull final Diagnostic diagnostic,
-                                                              @Nonnull final PgContext pgContext,
-                                                              @Nonnull final ResultSetExtractor<T> rse) {
+    @Nonnull
+    protected List<T> executeQuery(@Nonnull final PgContext pgContext,
+                                   @Nonnull final ResultSetExtractor<T> rse) {
         final String sqlQuery = SqlQueryReader.getQueryFromFile(diagnostic.getSqlQueryFileName());
         return diagnostic.getQueryExecutor().executeQuery(pgConnection, pgContext, sqlQuery, rse);
     }

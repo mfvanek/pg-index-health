@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * @see QueryExecutor
  * @see QueryExecutors
  */
-public enum Diagnostics {
+public enum Diagnostic {
 
     BLOATED_INDEXES("bloated_indexes.sql", QueryExecutors::executeQueryWithBloatThreshold),
     BLOATED_TABLES("bloated_tables.sql", QueryExecutors::executeQueryWithBloatThreshold),
@@ -38,7 +38,7 @@ public enum Diagnostics {
     private final String sqlQueryFileName;
     private final QueryExecutor queryExecutor;
 
-    Diagnostics(@Nonnull final String sqlQueryFileName, @Nonnull final QueryExecutor queryExecutor) {
+    Diagnostic(@Nonnull final String sqlQueryFileName, @Nonnull final QueryExecutor queryExecutor) {
         this.sqlQueryFileName = Objects.requireNonNull(sqlQueryFileName, "sqlQueryFileName cannot be null");
         this.queryExecutor = Objects.requireNonNull(queryExecutor, "queryExecutor cannot be null");
     }

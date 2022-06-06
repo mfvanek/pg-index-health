@@ -18,29 +18,29 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DiagnosticsTest {
+class DiagnosticTest {
 
     @Test
     void sqlQueryFileNameShouldBeUnique() {
         final Set<String> fileNames = new HashSet<>();
-        for (final Diagnostics diagnostics : Diagnostics.values()) {
-            fileNames.add(diagnostics.getSqlQueryFileName());
+        for (final Diagnostic diagnostic : Diagnostic.values()) {
+            fileNames.add(diagnostic.getSqlQueryFileName());
         }
-        assertThat(fileNames).hasSize(Diagnostics.values().length);
+        assertThat(fileNames).hasSize(Diagnostic.values().length);
     }
 
     @Test
     void sqlQueryFileNameShouldBeInLowerCase() {
-        for (final Diagnostics diagnostics : Diagnostics.values()) {
-            final String lower = diagnostics.getSqlQueryFileName().toLowerCase(Locales.DEFAULT);
-            assertThat(diagnostics.getSqlQueryFileName()).isEqualTo(lower);
+        for (final Diagnostic diagnostic : Diagnostic.values()) {
+            final String lower = diagnostic.getSqlQueryFileName().toLowerCase(Locales.DEFAULT);
+            assertThat(diagnostic.getSqlQueryFileName()).isEqualTo(lower);
         }
     }
 
     @Test
     void sqlQueryFileNameShouldHaveSqlExtension() {
-        for (final Diagnostics diagnostics : Diagnostics.values()) {
-            assertThat(diagnostics.getSqlQueryFileName()).endsWith(".sql");
+        for (final Diagnostic diagnostic : Diagnostic.values()) {
+            assertThat(diagnostic.getSqlQueryFileName()).endsWith(".sql");
         }
     }
 }

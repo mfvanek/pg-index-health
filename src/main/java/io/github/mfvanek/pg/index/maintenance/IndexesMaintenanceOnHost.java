@@ -45,7 +45,7 @@ public interface IndexesMaintenanceOnHost extends IndexesHealthAware, HostAware 
     List<Index> getInvalidIndexes(@Nonnull PgContext pgContext);
 
     /**
-     * Returns duplicated (completely identical) indexes on the current host in the specified schema.
+     * Returns duplicated (completely identical) indexes in the specified schema.
      *
      * @param pgContext {@code PgContext} with the specified schema
      * @return list of duplicated indexes
