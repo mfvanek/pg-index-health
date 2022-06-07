@@ -30,6 +30,7 @@ public abstract class AbstractCheckOnHost<T extends TableNameAware> implements D
 
     protected static final String TABLE_NAME = "table_name";
     protected static final String INDEX_NAME = "index_name";
+    protected static final String TABLE_SIZE = "table_size";
     protected static final String INDEX_SIZE = "index_size";
     protected static final String BLOAT_SIZE = "bloat_size";
     protected static final String BLOAT_PERCENTAGE = "bloat_percentage";
