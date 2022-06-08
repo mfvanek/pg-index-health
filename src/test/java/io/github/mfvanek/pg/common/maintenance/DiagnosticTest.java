@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.common.maintenance;
 import io.github.mfvanek.pg.utils.Locales;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,5 +43,23 @@ class DiagnosticTest {
         for (final Diagnostic diagnostic : Diagnostic.values()) {
             assertThat(diagnostic.getSqlQueryFileName()).endsWith(".sql");
         }
+    }
+
+    @Test
+    void shouldBeAtLeastTwoChecksAcrossTheCluster() {
+        final long countOfChecksAcrossTheCluster = Arrays.stream(Diagnostic.values())
+                .peek(d -> {
+                    assertThat(d.getQueryExecutor()).isNotNull();
+                    assertThat(d.getExecutionTopology()).isNotNull();
+                })
+                .filter(d -> d.getExecutionTopology() == Diagnostic.ExecutionTopology.ACROSS_CLUSTER)
+                .peek(d -> assertThat(d.isAcrossCluster()).isTrue())
+                .count();
+        assertThat(countOfChecksAcrossTheCluster).isEqualTo(2);
+    }
+
+    @Test
+    void toStringTest() {
+        assertThat(Diagnostic.UNUSED_INDEXES).hasToString("UNUSED_INDEXES");
     }
 }

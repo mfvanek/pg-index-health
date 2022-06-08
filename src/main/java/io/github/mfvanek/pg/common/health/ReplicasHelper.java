@@ -56,6 +56,7 @@ final class ReplicasHelper {
         return result;
     }
 
+    // TODO to remove
     @Nonnull
     static List<TableWithMissingIndex> getTablesWithMissingIndexesAsUnionResult(
             @Nonnull final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts) {
