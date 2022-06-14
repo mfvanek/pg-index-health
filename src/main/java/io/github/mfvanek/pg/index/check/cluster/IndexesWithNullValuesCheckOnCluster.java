@@ -8,23 +8,24 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.table;
+package io.github.mfvanek.pg.index.check.cluster;
 
 import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.model.table.Table;
+import io.github.mfvanek.pg.index.check.host.IndexesWithNullValuesCheckOnHost;
+import io.github.mfvanek.pg.model.index.IndexWithNulls;
 
 import javax.annotation.Nonnull;
 
 /**
- * Check for tables without primary key on all hosts in the cluster.
+ * Check for indexes with null values on all hosts in the cluster.
  *
  * @author Ivan Vahrushev
  * @since 0.5.1
  */
-public class TablesWithoutPrimaryKeyCheckOnCluster extends AbstractCheckOnCluster<Table> {
+public class IndexesWithNullValuesCheckOnCluster extends AbstractCheckOnCluster<IndexWithNulls> {
 
-    public TablesWithoutPrimaryKeyCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
-        super(haPgConnection, TablesWithoutPrimaryKeyCheckOnHost::new);
+    public IndexesWithNullValuesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+        super(haPgConnection, IndexesWithNullValuesCheckOnHost::new);
     }
 }

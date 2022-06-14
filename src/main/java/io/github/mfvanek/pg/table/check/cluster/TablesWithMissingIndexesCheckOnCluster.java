@@ -8,11 +8,12 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.table;
+package io.github.mfvanek.pg.table.check.cluster;
 
 import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
+import io.github.mfvanek.pg.table.check.host.TablesWithMissingIndexesCheckOnHost;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -8,23 +8,24 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.table;
+package io.github.mfvanek.pg.index.check.cluster;
 
 import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.model.table.TableWithBloat;
+import io.github.mfvanek.pg.index.check.host.InvalidIndexesCheckOnHost;
+import io.github.mfvanek.pg.model.index.Index;
 
 import javax.annotation.Nonnull;
 
 /**
- * Check for tables bloat on all hosts in the cluster.
+ * Check for invalid (broken) indexes on all hosts in the cluster.
  *
  * @author Ivan Vahrushev
  * @since 0.5.1
  */
-public class TablesWithBloatCheckOnCluster extends AbstractCheckOnCluster<TableWithBloat> {
+public class InvalidIndexesCheckOnCluster extends AbstractCheckOnCluster<Index> {
 
-    public TablesWithBloatCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
-        super(haPgConnection, TablesWithBloatCheckOnHost::new);
+    public InvalidIndexesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+        super(haPgConnection, InvalidIndexesCheckOnHost::new);
     }
 }

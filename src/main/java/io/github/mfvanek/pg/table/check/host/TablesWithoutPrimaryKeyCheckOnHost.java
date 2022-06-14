@@ -8,44 +8,42 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index;
+package io.github.mfvanek.pg.table.check.host;
 
 import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.table.Table;
 
 import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Check for unused indexes on a specific host.
+ * Check for tables without primary key on a specific host.
  *
  * @author Ivan Vahrushev
  * @since 0.5.1
  */
-public class UnusedIndexesCheckOnHost extends AbstractCheckOnHost<UnusedIndex> {
+public class TablesWithoutPrimaryKeyCheckOnHost extends AbstractCheckOnHost<Table> {
 
-    public UnusedIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.UNUSED_INDEXES);
+    public TablesWithoutPrimaryKeyCheckOnHost(@Nonnull final PgConnection pgConnection) {
+        super(pgConnection, Diagnostic.TABLES_WITHOUT_PRIMARY_KEY);
     }
 
     /**
-     * Returns unused indexes in the specified schema.
+     * Returns tables without primary key in the specified schema.
      *
      * @param pgContext check's context with the specified schema
-     * @return list of unused indexes
+     * @return list of tables without primary key
      */
     @Nonnull
     @Override
-    public List<UnusedIndex> check(@Nonnull final PgContext pgContext) {
+    public List<Table> check(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
-            final String indexName = rs.getString(INDEX_NAME);
-            final long indexSize = rs.getLong(INDEX_SIZE);
-            final long indexScans = rs.getLong("index_scans");
-            return UnusedIndex.of(tableName, indexName, indexSize, indexScans);
+            final long tableSize = rs.getLong(TABLE_SIZE);
+            return Table.of(tableName, tableSize);
         });
     }
 }

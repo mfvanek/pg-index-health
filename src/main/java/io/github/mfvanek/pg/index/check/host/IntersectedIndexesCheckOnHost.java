@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index;
+package io.github.mfvanek.pg.index.check.host;
 
 import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
@@ -20,29 +20,29 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Check for duplicated (completely identical) indexes on a specific host.
+ * Check for intersected (partially identical) indexes on a specific host.
  *
  * @author Ivan Vahrushev
  * @since 0.5.1
  */
-public class DuplicatedIndexesCheckOnHost extends AbstractCheckOnHost<DuplicatedIndexes> {
+public class IntersectedIndexesCheckOnHost extends AbstractCheckOnHost<DuplicatedIndexes> {
 
-    public DuplicatedIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.DUPLICATED_INDEXES);
+    public IntersectedIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
+        super(pgConnection, Diagnostic.INTERSECTED_INDEXES);
     }
 
     /**
-     * Returns duplicated (completely identical) indexes in the specified schema.
+     * Returns intersected (partially identical) indexes in the specified schema.
      *
      * @param pgContext check's context with the specified schema
-     * @return list of duplicated indexes
+     * @return list of intersected indexes
      */
     @Nonnull
     @Override
     public List<DuplicatedIndexes> check(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
-            final String duplicatedAsString = rs.getString("duplicated_indexes");
+            final String duplicatedAsString = rs.getString("intersected_indexes");
             return DuplicatedIndexes.of(tableName, duplicatedAsString);
         });
     }

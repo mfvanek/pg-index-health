@@ -8,11 +8,15 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.common.health;
+package io.github.mfvanek.pg.index.check.cluster;
 
+import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnCluster;
+import io.github.mfvanek.pg.common.maintenance.MaintenanceFactoryImpl;
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
+import io.github.mfvanek.pg.index.check.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
-import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.apache.commons.collections4.CollectionUtils;
@@ -29,18 +33,36 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
-final class ReplicasHelper {
+/**
+ * Check for unused indexes on all hosts in the cluster.
+ *
+ * @author Ivan Vahrushev
+ * @since 0.5.1
+ */
+public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIndex> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReplicasHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UnusedIndexesCheckOnCluster.class);
 
-    private ReplicasHelper() {
-        throw new UnsupportedOperationException();
+    private final Map<PgHost, StatisticsMaintenanceOnHost> statisticsMaintenanceForAllHostsInCluster;
+
+    public UnusedIndexesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+        super(haPgConnection, UnusedIndexesCheckOnHost::new, UnusedIndexesCheckOnCluster::getUnusedIndexesAsIntersectionResult);
+        // TODO refactor this
+        this.statisticsMaintenanceForAllHostsInCluster = new MaintenanceFactoryImpl().forStatistics(haPgConnection.getConnectionsToAllHostsInCluster());
     }
 
-    // TODO to remove
+    @Override
+    protected void doBeforeExecuteOnHost(@Nonnull final PgConnection connectionToHost) {
+        logLastStatsResetDate(connectionToHost);
+        super.doBeforeExecuteOnHost(connectionToHost);
+    }
+
+    private void logLastStatsResetDate(@Nonnull final PgConnection connectionToHost) {
+        LOGGER.info(getLastStatsResetDateLogMessage(connectionToHost, statisticsMaintenanceForAllHostsInCluster));
+    }
+
     @Nonnull
     static List<UnusedIndex> getUnusedIndexesAsIntersectionResult(
             @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts) {
@@ -57,29 +79,14 @@ final class ReplicasHelper {
         return result;
     }
 
-    // TODO to remove
-    @Nonnull
-    static List<TableWithMissingIndex> getTablesWithMissingIndexesAsUnionResult(
-            @Nonnull final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts) {
-        LOGGER.debug("tablesWithMissingIndexesFromAllHosts = {}", tablesWithMissingIndexesFromAllHosts);
-        final List<TableWithMissingIndex> result = tablesWithMissingIndexesFromAllHosts.stream()
-                .flatMap(Collection::stream)
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
-        LOGGER.debug("Union result {}", result);
-        return result;
-    }
-
-    // TODO to remove
     @Nonnull
     static String getLastStatsResetDateLogMessage(
-            @Nonnull final PgHost host,
+            @Nonnull final PgConnection connectionToHost,
             @Nonnull final Map<PgHost, StatisticsMaintenanceOnHost> statisticsMaintenanceForAllHosts) {
         Objects.requireNonNull(statisticsMaintenanceForAllHosts, "statisticsMaintenanceForAllHosts cannot be null");
-        final StatisticsMaintenanceOnHost statisticsMaintenance = statisticsMaintenanceForAllHosts.get(host);
+        final StatisticsMaintenanceOnHost statisticsMaintenance = statisticsMaintenanceForAllHosts.get(connectionToHost.getHost());
         if (statisticsMaintenance == null) {
-            throw new NoSuchElementException("StatisticsMaintenanceOnHost object wasn't found for host " + host);
+            throw new NoSuchElementException("StatisticsMaintenanceOnHost object wasn't found for host " + connectionToHost.getHost());
         }
 
         final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();

@@ -8,42 +8,43 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.table;
+package io.github.mfvanek.pg.index.check.host;
 
 import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.table.Table;
+import io.github.mfvanek.pg.model.index.Index;
 
 import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Check for tables without primary key on a specific host.
+ * Check for invalid (broken) indexes on a specific host.
  *
  * @author Ivan Vahrushev
  * @since 0.5.1
  */
-public class TablesWithoutPrimaryKeyCheckOnHost extends AbstractCheckOnHost<Table> {
+public class InvalidIndexesCheckOnHost extends AbstractCheckOnHost<Index> {
 
-    public TablesWithoutPrimaryKeyCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.TABLES_WITHOUT_PRIMARY_KEY);
+    public InvalidIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
+        super(pgConnection, Diagnostic.INVALID_INDEXES);
     }
 
     /**
-     * Returns tables without primary key in the specified schema.
+     * Returns invalid (broken) indexes in the specified schema.
      *
      * @param pgContext check's context with the specified schema
-     * @return list of tables without primary key
+     * @return list of invalid indexes
+     * @see Index
      */
     @Nonnull
     @Override
-    public List<Table> check(@Nonnull final PgContext pgContext) {
+    public List<Index> check(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
-            final long tableSize = rs.getLong(TABLE_SIZE);
-            return Table.of(tableName, tableSize);
+            final String indexName = rs.getString(INDEX_NAME);
+            return Index.of(tableName, indexName);
         });
     }
 }

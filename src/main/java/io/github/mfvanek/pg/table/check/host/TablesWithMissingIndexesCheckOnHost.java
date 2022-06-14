@@ -8,48 +8,44 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.table;
+package io.github.mfvanek.pg.table.check.host;
 
 import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.table.TableWithBloat;
+import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 
 import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Check for tables bloat on a specific host.
+ * Check for tables with missing indexes on a specific host.
  *
  * @author Ivan Vahrushev
  * @since 0.5.1
  */
-public class TablesWithBloatCheckOnHost extends AbstractCheckOnHost<TableWithBloat> {
+public class TablesWithMissingIndexesCheckOnHost extends AbstractCheckOnHost<TableWithMissingIndex> {
 
-    public TablesWithBloatCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.BLOATED_TABLES);
+    public TablesWithMissingIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
+        super(pgConnection, Diagnostic.TABLES_WITH_MISSING_INDEXES);
     }
 
     /**
-     * Returns tables that are bloated in the specified schema.
-     * <p>
-     * Note: The database user on whose behalf this method will be executed
-     * have to have read permissions for the corresponding tables.
-     * </p>
+     * Returns tables with potentially missing indexes in the specified schema.
      *
      * @param pgContext check's context with the specified schema
-     * @return list of bloated tables
+     * @return list of tables with potentially missing indexes
      */
     @Nonnull
     @Override
-    public List<TableWithBloat> check(@Nonnull final PgContext pgContext) {
+    public List<TableWithMissingIndex> check(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final long tableSize = rs.getLong(TABLE_SIZE);
-            final long bloatSize = rs.getLong(BLOAT_SIZE);
-            final int bloatPercentage = rs.getInt(BLOAT_PERCENTAGE);
-            return TableWithBloat.of(tableName, tableSize, bloatSize, bloatPercentage);
+            final long seqScans = rs.getLong("seq_scan");
+            final long indexScans = rs.getLong("idx_scan");
+            return TableWithMissingIndex.of(tableName, tableSize, seqScans, indexScans);
         });
     }
 }

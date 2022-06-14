@@ -8,43 +8,44 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.index;
+package io.github.mfvanek.pg.index.check.host;
 
 import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.index.IndexWithNulls;
 
 import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Check for invalid (broken) indexes on a specific host.
+ * Check for indexes with null values on a specific host.
  *
  * @author Ivan Vahrushev
  * @since 0.5.1
  */
-public class InvalidIndexesCheckOnHost extends AbstractCheckOnHost<Index> {
+public class IndexesWithNullValuesCheckOnHost extends AbstractCheckOnHost<IndexWithNulls> {
 
-    public InvalidIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.INVALID_INDEXES);
+    public IndexesWithNullValuesCheckOnHost(@Nonnull final PgConnection pgConnection) {
+        super(pgConnection, Diagnostic.INDEXES_WITH_NULL_VALUES);
     }
 
     /**
-     * Returns invalid (broken) indexes in the specified schema.
+     * Returns indexes that contain null values in the specified schema.
      *
      * @param pgContext check's context with the specified schema
-     * @return list of invalid indexes
-     * @see Index
+     * @return list of indexes with null values
      */
     @Nonnull
     @Override
-    public List<Index> check(@Nonnull final PgContext pgContext) {
+    public List<IndexWithNulls> check(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);
-            return Index.of(tableName, indexName);
+            final long indexSize = rs.getLong(INDEX_SIZE);
+            final String nullableField = rs.getString("nullable_fields");
+            return IndexWithNulls.of(tableName, indexName, indexSize, nullableField);
         });
     }
 }
