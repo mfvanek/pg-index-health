@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 public class TablesWithBloatCheckOnHost extends AbstractCheckOnHost<TableWithBloat> {
 
     public TablesWithBloatCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.BLOATED_TABLES);
+        super(TableWithBloat.class, pgConnection, Diagnostic.BLOATED_TABLES);
     }
 
     /**

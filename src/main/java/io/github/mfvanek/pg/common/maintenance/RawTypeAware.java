@@ -8,29 +8,25 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.index;
+package io.github.mfvanek.pg.common.maintenance;
 
-import io.github.mfvanek.pg.common.health.logger.AbstractHealthLogger;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import javax.annotation.Nonnull;
 
 /**
- * Allows getting index name.
- * Used as a marker interface for filtering exclusions in
- * {@link AbstractHealthLogger}
+ * Allows getting information about original generic type.
  *
  * @author Ivan Vakhrushev
- * @see TableNameAware
- * @see io.github.mfvanek.pg.common.health.logger.Exclusions
+ * @since 0.5.1
  */
-public interface IndexNameAware {
+public interface RawTypeAware<T extends TableNameAware> {
 
     /**
-     * Gets index name.
+     * Gets original java type.
      *
-     * @return index name
+     * @return java type representing database object
      */
     @Nonnull
-    String getIndexName();
+    Class<T> getType();
 }

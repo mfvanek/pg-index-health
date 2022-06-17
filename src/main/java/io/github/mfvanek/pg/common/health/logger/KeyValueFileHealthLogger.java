@@ -10,8 +10,9 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.common.health.DatabaseHealthFactory;
+import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.function.Function;
 import javax.annotation.Nonnull;
 
 /**
@@ -46,8 +48,8 @@ public class KeyValueFileHealthLogger extends AbstractHealthLogger {
 
     public KeyValueFileHealthLogger(@Nonnull final ConnectionCredentials credentials,
                                     @Nonnull final HighAvailabilityPgConnectionFactory connectionFactory,
-                                    @Nonnull final DatabaseHealthFactory databaseHealthFactory) {
-        super(credentials, connectionFactory, databaseHealthFactory);
+                                    @Nonnull final Function<HighAvailabilityPgConnection, DatabaseChecks> databaseChecksFactory) {
+        super(credentials, connectionFactory, databaseChecksFactory);
     }
 
     @Override

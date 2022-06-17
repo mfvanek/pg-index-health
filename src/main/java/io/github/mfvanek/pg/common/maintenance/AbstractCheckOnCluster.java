@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -65,6 +67,15 @@ public abstract class AbstractCheckOnCluster<T extends TableNameAware> implement
      */
     @Nonnull
     @Override
+    public Class<T> getType() {
+        return computeCheckForPrimaryIfNeed().getType();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
     public final Diagnostic getDiagnostic() {
         return computeCheckForPrimaryIfNeed().getDiagnostic();
     }
@@ -74,17 +85,11 @@ public abstract class AbstractCheckOnCluster<T extends TableNameAware> implement
      */
     @Nonnull
     @Override
-    public final List<T> check(@Nonnull final PgContext pgContext) {
+    public final List<T> check(@Nonnull final PgContext pgContext, @Nonnull final Predicate<? super T> exclusionsFilter) {
         if (getDiagnostic().isAcrossCluster()) {
-            final List<List<T>> acrossClusterResults = new ArrayList<>();
-            for (final PgConnection pgConnection : haPgConnection.getConnectionsToAllHostsInCluster()) {
-                doBeforeExecuteOnHost(pgConnection);
-                final List<T> resultsFromHost = executeOnHost(pgConnection, pgContext);
-                acrossClusterResults.add(resultsFromHost);
-            }
-            return acrossClusterResultsMapper.apply(acrossClusterResults);
+            return executeOnCluster(pgContext, exclusionsFilter);
         }
-        return executeOnPrimary(pgContext);
+        return executeOnPrimary(pgContext, exclusionsFilter);
     }
 
     protected void doBeforeExecuteOnHost(@Nonnull final PgConnection connectionToHost) {
@@ -98,10 +103,25 @@ public abstract class AbstractCheckOnCluster<T extends TableNameAware> implement
     }
 
     @Nonnull
-    private List<T> executeOnPrimary(@Nonnull final PgContext pgContext) {
+    private List<T> executeOnPrimary(@Nonnull final PgContext pgContext, @Nonnull final Predicate<? super T> exclusionsFilter) {
         final DatabaseCheckOnHost<T> checkOnPrimary = computeCheckForPrimaryIfNeed();
         LOGGER.debug("Going to execute on primary host {}", checkOnPrimary.getHost().getName());
-        return checkOnPrimary.check(pgContext);
+        return checkOnPrimary.check(pgContext).stream()
+                .filter(exclusionsFilter)
+                .collect(Collectors.toList());
+    }
+
+    @Nonnull
+    private List<T> executeOnCluster(@Nonnull final PgContext pgContext, @Nonnull final Predicate<? super T> exclusionsFilter) {
+        final List<List<T>> acrossClusterResults = new ArrayList<>();
+        for (final PgConnection pgConnection : haPgConnection.getConnectionsToAllHostsInCluster()) {
+            doBeforeExecuteOnHost(pgConnection);
+            final List<T> resultsFromHost = executeOnHost(pgConnection, pgContext);
+            acrossClusterResults.add(resultsFromHost);
+        }
+        return acrossClusterResultsMapper.apply(acrossClusterResults).stream()
+                .filter(exclusionsFilter)
+                .collect(Collectors.toList());
     }
 
     @Nonnull

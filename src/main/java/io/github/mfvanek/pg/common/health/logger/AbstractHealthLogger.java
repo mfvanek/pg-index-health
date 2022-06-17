@@ -10,27 +10,22 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.common.health.DatabaseHealth;
-import io.github.mfvanek.pg.common.health.DatabaseHealthFactory;
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheck;
+import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
+import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
-import io.github.mfvanek.pg.model.BloatAware;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.ForeignKey;
 import io.github.mfvanek.pg.model.index.Index;
-import io.github.mfvanek.pg.model.index.IndexNameAware;
-import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.model.table.TableNameAware;
-import io.github.mfvanek.pg.model.table.TableSizeAware;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
-import io.github.mfvanek.pg.utils.Locales;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,26 +33,24 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 import javax.annotation.Nonnull;
 
-@SuppressWarnings({"PMD.ExcessiveImports", "PMD.UselessParentheses"})
 public abstract class AbstractHealthLogger implements HealthLogger {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHealthLogger.class);
 
     private final ConnectionCredentials credentials;
     private final HighAvailabilityPgConnectionFactory connectionFactory;
-    private final DatabaseHealthFactory databaseHealthFactory;
+    private final Function<HighAvailabilityPgConnection, DatabaseChecks> databaseChecksFactory;
 
     @SuppressWarnings("WeakerAccess")
     protected AbstractHealthLogger(@Nonnull final ConnectionCredentials credentials,
                                    @Nonnull final HighAvailabilityPgConnectionFactory connectionFactory,
-                                   @Nonnull final DatabaseHealthFactory databaseHealthFactory) {
-        this.credentials = Objects.requireNonNull(credentials);
-        this.connectionFactory = Objects.requireNonNull(connectionFactory);
-        this.databaseHealthFactory = Objects.requireNonNull(databaseHealthFactory);
+                                   @Nonnull final Function<HighAvailabilityPgConnection, DatabaseChecks> databaseChecksFactory) {
+        this.credentials = Objects.requireNonNull(credentials, "credentials cannot be null");
+        this.connectionFactory = Objects.requireNonNull(connectionFactory, "connectionFactory cannot be null");
+        this.databaseChecksFactory = Objects.requireNonNull(databaseChecksFactory, "databaseChecksFactory cannot be null");
     }
 
     /**
@@ -72,18 +65,18 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         // The main idea here is to create haPgConnection for a short period of time.
         // This helps to avoid dealing with failover/switch-over situations that occur in real clusters.
         final HighAvailabilityPgConnection haPgConnection = connectionFactory.of(credentials);
-        final DatabaseHealth databaseHealth = databaseHealthFactory.of(haPgConnection);
+        final DatabaseChecks databaseChecks = databaseChecksFactory.apply(haPgConnection);
         final List<String> logResult = new ArrayList<>();
-        logResult.add(logInvalidIndexes(databaseHealth, pgContext));
-        logResult.add(logDuplicatedIndexes(databaseHealth, exclusions, pgContext));
-        logResult.add(logIntersectedIndexes(databaseHealth, exclusions, pgContext));
-        logResult.add(logUnusedIndexes(databaseHealth, exclusions, pgContext));
-        logResult.add(logForeignKeysNotCoveredWithIndex(databaseHealth, pgContext));
-        logResult.add(logTablesWithMissingIndexes(databaseHealth, exclusions, pgContext));
-        logResult.add(logTablesWithoutPrimaryKey(databaseHealth, exclusions, pgContext));
-        logResult.add(logIndexesWithNullValues(databaseHealth, exclusions, pgContext));
-        logResult.add(logIndexesBloat(databaseHealth, exclusions, pgContext));
-        logResult.add(logTablesBloat(databaseHealth, exclusions, pgContext));
+        logResult.add(logInvalidIndexes(databaseChecks, pgContext));
+        logResult.add(logDuplicatedIndexes(databaseChecks, exclusions, pgContext));
+        logResult.add(logIntersectedIndexes(databaseChecks, exclusions, pgContext));
+        logResult.add(logUnusedIndexes(databaseChecks, exclusions, pgContext));
+        logResult.add(logForeignKeysNotCoveredWithIndex(databaseChecks, pgContext));
+        logResult.add(logTablesWithMissingIndexes(databaseChecks, exclusions, pgContext));
+        logResult.add(logTablesWithoutPrimaryKey(databaseChecks, exclusions, pgContext));
+        logResult.add(logIndexesWithNullValues(databaseChecks, exclusions, pgContext));
+        logResult.add(logIndexesBloat(databaseChecks, exclusions, pgContext));
+        logResult.add(logTablesBloat(databaseChecks, exclusions, pgContext));
         return logResult;
     }
 
@@ -95,9 +88,10 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private String logInvalidIndexes(@Nonnull final DatabaseHealth databaseHealth,
+    private String logInvalidIndexes(@Nonnull final DatabaseChecks databaseChecks,
                                      @Nonnull final PgContext pgContext) {
-        final List<Index> invalidIndexes = databaseHealth.getInvalidIndexes(pgContext);
+        final DatabaseCheck<Index> check = databaseChecks.getCheck(Diagnostic.INVALID_INDEXES, Index.class);
+        final List<Index> invalidIndexes = check.check(pgContext);
         final LoggingKey key = SimpleLoggingKey.INVALID_INDEXES;
         if (CollectionUtils.isNotEmpty(invalidIndexes)) {
             LOGGER.error("There are invalid indexes in the database {}", invalidIndexes);
@@ -107,12 +101,11 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private String logDuplicatedIndexes(@Nonnull final DatabaseHealth databaseHealth,
+    private String logDuplicatedIndexes(@Nonnull final DatabaseChecks databaseChecks,
                                         @Nonnull final Exclusions exclusions,
                                         @Nonnull final PgContext pgContext) {
-        final List<DuplicatedIndexes> rawDuplicatedIndexes = databaseHealth.getDuplicatedIndexes(pgContext);
-        final List<DuplicatedIndexes> duplicatedIndexes = applyExclusions(rawDuplicatedIndexes,
-                exclusions.getDuplicatedIndexesExclusions());
+        final DatabaseCheck<DuplicatedIndexes> check = databaseChecks.getCheck(Diagnostic.DUPLICATED_INDEXES, DuplicatedIndexes.class);
+        final List<DuplicatedIndexes> duplicatedIndexes = check.check(pgContext, new FilterDuplicatedIndexesByNamePredicate(exclusions.getDuplicatedIndexesExclusions()));
         final LoggingKey key = SimpleLoggingKey.DUPLICATED_INDEXES;
         if (CollectionUtils.isNotEmpty(duplicatedIndexes)) {
             LOGGER.warn("There are duplicated indexes in the database {}", duplicatedIndexes);
@@ -122,12 +115,11 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private String logIntersectedIndexes(@Nonnull final DatabaseHealth databaseHealth,
+    private String logIntersectedIndexes(@Nonnull final DatabaseChecks databaseChecks,
                                          @Nonnull final Exclusions exclusions,
                                          @Nonnull final PgContext pgContext) {
-        final List<DuplicatedIndexes> rawIntersectedIndexes = databaseHealth.getIntersectedIndexes(pgContext);
-        final List<DuplicatedIndexes> intersectedIndexes = applyExclusions(rawIntersectedIndexes,
-                exclusions.getIntersectedIndexesExclusions());
+        final DatabaseCheck<DuplicatedIndexes> check = databaseChecks.getCheck(Diagnostic.INTERSECTED_INDEXES, DuplicatedIndexes.class);
+        final List<DuplicatedIndexes> intersectedIndexes = check.check(pgContext, new FilterDuplicatedIndexesByNamePredicate(exclusions.getIntersectedIndexesExclusions()));
         final LoggingKey key = SimpleLoggingKey.INTERSECTED_INDEXES;
         if (CollectionUtils.isNotEmpty(intersectedIndexes)) {
             LOGGER.warn("There are intersected indexes in the database {}", intersectedIndexes);
@@ -137,14 +129,12 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private String logUnusedIndexes(@Nonnull final DatabaseHealth databaseHealth,
+    private String logUnusedIndexes(@Nonnull final DatabaseChecks databaseChecks,
                                     @Nonnull final Exclusions exclusions,
                                     @Nonnull final PgContext pgContext) {
-        final List<UnusedIndex> rawUnusedIndexes = databaseHealth.getUnusedIndexes(pgContext);
-        final List<UnusedIndex> filteredUnusedIndexes = applyIndexesExclusions(
-                rawUnusedIndexes, exclusions.getUnusedIndexesExclusions());
-        final List<UnusedIndex> unusedIndexes = applyIndexSizeExclusions(
-                filteredUnusedIndexes, exclusions.getIndexSizeThresholdInBytes());
+        final DatabaseCheck<UnusedIndex> check = databaseChecks.getCheck(Diagnostic.UNUSED_INDEXES, UnusedIndex.class);
+        final List<UnusedIndex> unusedIndexes = check.check(pgContext, new FilterIndexesBySizePredicate(exclusions.getIndexSizeThresholdInBytes())
+                .and(new FilterIndexesByNamePredicate(exclusions.getUnusedIndexesExclusions())));
         final LoggingKey key = SimpleLoggingKey.UNUSED_INDEXES;
         if (CollectionUtils.isNotEmpty(unusedIndexes)) {
             LOGGER.warn("There are unused indexes in the database {}", unusedIndexes);
@@ -154,9 +144,10 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private String logForeignKeysNotCoveredWithIndex(@Nonnull final DatabaseHealth databaseHealth,
+    private String logForeignKeysNotCoveredWithIndex(@Nonnull final DatabaseChecks databaseChecks,
                                                      @Nonnull final PgContext pgContext) {
-        final List<ForeignKey> foreignKeys = databaseHealth.getForeignKeysNotCoveredWithIndex(pgContext);
+        final DatabaseCheck<ForeignKey> check = databaseChecks.getCheck(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX, ForeignKey.class);
+        final List<ForeignKey> foreignKeys = check.check(pgContext);
         final LoggingKey key = SimpleLoggingKey.FOREIGN_KEYS;
         if (CollectionUtils.isNotEmpty(foreignKeys)) {
             LOGGER.warn("There are foreign keys without index in the database {}", foreignKeys);
@@ -166,15 +157,12 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private String logTablesWithMissingIndexes(@Nonnull final DatabaseHealth databaseHealth,
+    private String logTablesWithMissingIndexes(@Nonnull final DatabaseChecks databaseChecks,
                                                @Nonnull final Exclusions exclusions,
                                                @Nonnull final PgContext pgContext) {
-        final List<TableWithMissingIndex> rawTablesWithMissingIndexes =
-                databaseHealth.getTablesWithMissingIndexes(pgContext);
-        final List<TableWithMissingIndex> tablesFilteredBySize = applyTableSizeExclusions(
-                rawTablesWithMissingIndexes, exclusions.getTableSizeThresholdInBytes());
-        final List<TableWithMissingIndex> tablesWithMissingIndexes = applyTablesExclusions(
-                tablesFilteredBySize, exclusions.getTablesWithMissingIndexesExclusions());
+        final DatabaseCheck<TableWithMissingIndex> check = databaseChecks.getCheck(Diagnostic.TABLES_WITH_MISSING_INDEXES, TableWithMissingIndex.class);
+        final List<TableWithMissingIndex> tablesWithMissingIndexes = check.check(pgContext, new FilterTablesBySizePredicate(exclusions.getTableSizeThresholdInBytes())
+                .and(new FilterTablesByNamePredicate(exclusions.getTablesWithMissingIndexesExclusions())));
         final LoggingKey key = SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES;
         if (CollectionUtils.isNotEmpty(tablesWithMissingIndexes)) {
             LOGGER.warn("There are tables with missing indexes in the database {}", tablesWithMissingIndexes);
@@ -184,14 +172,12 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private String logTablesWithoutPrimaryKey(@Nonnull final DatabaseHealth databaseHealth,
+    private String logTablesWithoutPrimaryKey(@Nonnull final DatabaseChecks databaseChecks,
                                               @Nonnull final Exclusions exclusions,
                                               @Nonnull final PgContext pgContext) {
-        final List<Table> rawTablesWithoutPrimaryKey = databaseHealth.getTablesWithoutPrimaryKey(pgContext);
-        final List<Table> tablesFilteredBySize = applyTableSizeExclusions(
-                rawTablesWithoutPrimaryKey, exclusions.getTableSizeThresholdInBytes());
-        final List<Table> tablesWithoutPrimaryKey = applyTablesExclusions(
-                tablesFilteredBySize, exclusions.getTablesWithoutPrimaryKeyExclusions());
+        final DatabaseCheck<Table> check = databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, Table.class);
+        final List<Table> tablesWithoutPrimaryKey = check.check(pgContext, new FilterTablesBySizePredicate(exclusions.getTableSizeThresholdInBytes())
+                .and(new FilterTablesByNamePredicate(exclusions.getTablesWithoutPrimaryKeyExclusions())));
         final LoggingKey key = SimpleLoggingKey.TABLES_WITHOUT_PK;
         if (CollectionUtils.isNotEmpty(tablesWithoutPrimaryKey)) {
             LOGGER.warn("There are tables without primary key in the database {}", tablesWithoutPrimaryKey);
@@ -201,12 +187,11 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private String logIndexesWithNullValues(@Nonnull final DatabaseHealth databaseHealth,
+    private String logIndexesWithNullValues(@Nonnull final DatabaseChecks databaseChecks,
                                             @Nonnull final Exclusions exclusions,
                                             @Nonnull final PgContext pgContext) {
-        final List<IndexWithNulls> rawIndexesWithNullValues = databaseHealth.getIndexesWithNullValues(pgContext);
-        final List<IndexWithNulls> indexesWithNullValues = applyIndexesExclusions(rawIndexesWithNullValues,
-                exclusions.getIndexesWithNullValuesExclusions());
+        final DatabaseCheck<IndexWithNulls> check = databaseChecks.getCheck(Diagnostic.INDEXES_WITH_NULL_VALUES, IndexWithNulls.class);
+        final List<IndexWithNulls> indexesWithNullValues = check.check(pgContext, new FilterIndexesByNamePredicate(exclusions.getIndexesWithNullValuesExclusions()));
         final LoggingKey key = SimpleLoggingKey.INDEXES_WITH_NULLS;
         if (CollectionUtils.isNotEmpty(indexesWithNullValues)) {
             LOGGER.warn("There are indexes with null values in the database {}", indexesWithNullValues);
@@ -216,14 +201,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private String logIndexesBloat(@Nonnull final DatabaseHealth databaseHealth,
+    private String logIndexesBloat(@Nonnull final DatabaseChecks databaseChecks,
                                    @Nonnull final Exclusions exclusions,
                                    @Nonnull final PgContext pgContext) {
-        final List<IndexWithBloat> rawIndexesWithBloat = databaseHealth.getIndexesWithBloat(pgContext);
-        final List<IndexWithBloat> filteredIndexesWithBloat = applyIndexSizeExclusions(
-                rawIndexesWithBloat, exclusions.getIndexSizeThresholdInBytes());
-        final List<IndexWithBloat> indexesWithBloat = applyBloatExclusions(filteredIndexesWithBloat,
-                exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold());
+        final DatabaseCheck<IndexWithBloat> check = databaseChecks.getCheck(Diagnostic.BLOATED_INDEXES, IndexWithBloat.class);
+        final List<IndexWithBloat> indexesWithBloat = check.check(pgContext,
+                new FilterIndexesByBloatPredicate(exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold())
+                        .and(new FilterIndexesBySizePredicate(exclusions.getIndexSizeThresholdInBytes())));
         final LoggingKey key = SimpleLoggingKey.INDEXES_BLOAT;
         if (CollectionUtils.isNotEmpty(indexesWithBloat)) {
             LOGGER.warn("There are indexes with bloat in the database {}", indexesWithBloat);
@@ -233,96 +217,18 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private String logTablesBloat(@Nonnull final DatabaseHealth databaseHealth,
+    private String logTablesBloat(@Nonnull final DatabaseChecks databaseChecks,
                                   @Nonnull final Exclusions exclusions,
                                   @Nonnull final PgContext pgContext) {
-        final List<TableWithBloat> rawTablesWithBloat = databaseHealth.getTablesWithBloat(pgContext);
-        final List<TableWithBloat> filteredTablesWithBloat = applyTableSizeExclusions(
-                rawTablesWithBloat, exclusions.getTableSizeThresholdInBytes());
-        final List<TableWithBloat> tablesWithBloat = applyBloatExclusions(filteredTablesWithBloat,
-                exclusions.getTableBloatSizeThresholdInBytes(), exclusions.getTableBloatPercentageThreshold());
+        final DatabaseCheck<TableWithBloat> check = databaseChecks.getCheck(Diagnostic.BLOATED_TABLES, TableWithBloat.class);
+        final List<TableWithBloat> tablesWithBloat = check.check(pgContext,
+                new FilterTablesByBloatPredicate(exclusions.getTableBloatSizeThresholdInBytes(), exclusions.getTableBloatPercentageThreshold())
+                        .and(new FilterTablesBySizePredicate(exclusions.getTableSizeThresholdInBytes())));
         final LoggingKey key = SimpleLoggingKey.TABLES_BLOAT;
         if (CollectionUtils.isNotEmpty(tablesWithBloat)) {
             LOGGER.warn("There are tables with bloat in the database {}", tablesWithBloat);
             return writeToLog(key, tablesWithBloat.size());
         }
         return writeZeroToLog(key);
-    }
-
-    @Nonnull
-    private List<DuplicatedIndexes> applyExclusions(@Nonnull final List<DuplicatedIndexes> rawIndexes,
-                                                    @Nonnull final Set<String> indexesExclusions) {
-        if (CollectionUtils.isEmpty(rawIndexes) ||
-                CollectionUtils.isEmpty(indexesExclusions)) {
-            return rawIndexes;
-        }
-
-        return rawIndexes.stream()
-                .filter(i -> i.getIndexNames().stream()
-                        .map(n -> n.toLowerCase(Locales.DEFAULT))
-                        .noneMatch(indexesExclusions::contains))
-                .collect(Collectors.toList());
-    }
-
-    @Nonnull
-    private static <T extends IndexNameAware> List<T> applyIndexesExclusions(@Nonnull final List<T> rawRecords,
-                                                                             @Nonnull final Set<String> exclusions) {
-        if (CollectionUtils.isEmpty(rawRecords) || CollectionUtils.isEmpty(exclusions)) {
-            return rawRecords;
-        }
-
-        return rawRecords.stream()
-                .filter(i -> !exclusions.contains(i.getIndexName().toLowerCase(Locales.DEFAULT)))
-                .collect(Collectors.toList());
-    }
-
-    @Nonnull
-    private static <T extends IndexSizeAware> List<T> applyIndexSizeExclusions(@Nonnull final List<T> rawRecords,
-                                                                               final long threshold) {
-        if (CollectionUtils.isEmpty(rawRecords) || threshold <= 0L) {
-            return rawRecords;
-        }
-
-        return rawRecords.stream()
-                .filter(i -> i.getIndexSizeInBytes() >= threshold)
-                .collect(Collectors.toList());
-    }
-
-    @Nonnull
-    private static <T extends TableNameAware> List<T> applyTablesExclusions(@Nonnull final List<T> rawRecords,
-                                                                            @Nonnull final Set<String> exclusions) {
-        if (CollectionUtils.isEmpty(rawRecords) || CollectionUtils.isEmpty(exclusions)) {
-            return rawRecords;
-        }
-
-        return rawRecords.stream()
-                .filter(t -> !exclusions.contains(t.getTableName().toLowerCase(Locales.DEFAULT)))
-                .collect(Collectors.toList());
-    }
-
-    @Nonnull
-    private static <T extends TableSizeAware> List<T> applyTableSizeExclusions(@Nonnull final List<T> rawRecords,
-                                                                               final long threshold) {
-        if (CollectionUtils.isEmpty(rawRecords) || threshold <= 0L) {
-            return rawRecords;
-        }
-
-        return rawRecords.stream()
-                .filter(i -> i.getTableSizeInBytes() >= threshold)
-                .collect(Collectors.toList());
-    }
-
-    @Nonnull
-    private static <T extends BloatAware> List<T> applyBloatExclusions(@Nonnull final List<T> rawRecords,
-                                                                       final long sizeThreshold,
-                                                                       final int percentageThreshold) {
-        if (CollectionUtils.isEmpty(rawRecords) || (sizeThreshold <= 0L && percentageThreshold <= 0)) {
-            return rawRecords;
-        }
-
-        return rawRecords.stream()
-                .filter(r -> r.getBloatSizeInBytes() >= sizeThreshold)
-                .filter(r -> r.getBloatPercentage() >= percentageThreshold)
-                .collect(Collectors.toList());
     }
 }

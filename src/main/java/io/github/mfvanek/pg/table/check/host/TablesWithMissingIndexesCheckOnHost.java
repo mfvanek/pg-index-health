@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 public class TablesWithMissingIndexesCheckOnHost extends AbstractCheckOnHost<TableWithMissingIndex> {
 
     public TablesWithMissingIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.TABLES_WITH_MISSING_INDEXES);
+        super(TableWithMissingIndex.class, pgConnection, Diagnostic.TABLES_WITH_MISSING_INDEXES);
     }
 
     /**

@@ -36,17 +36,33 @@ public abstract class AbstractCheckOnHost<T extends TableNameAware> implements D
     protected static final String BLOAT_PERCENTAGE = "bloat_percentage";
 
     /**
+     * An original java type representing database object.
+     */
+    private final Class<T> type;
+    /**
      * A connection to a specific host in the cluster.
      */
-    protected final PgConnection pgConnection;
+    private final PgConnection pgConnection;
     /**
      * A rule related to the check.
      */
-    protected final Diagnostic diagnostic;
+    private final Diagnostic diagnostic;
 
-    protected AbstractCheckOnHost(@Nonnull final PgConnection pgConnection, @Nonnull final Diagnostic diagnostic) {
+    protected AbstractCheckOnHost(@Nonnull final Class<T> type,
+                                  @Nonnull final PgConnection pgConnection,
+                                  @Nonnull final Diagnostic diagnostic) {
+        this.type = Objects.requireNonNull(type, "type cannot be null");
         this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
         this.diagnostic = Objects.requireNonNull(diagnostic, "diagnostic cannot be null");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public Class<T> getType() {
+        return type;
     }
 
     /**

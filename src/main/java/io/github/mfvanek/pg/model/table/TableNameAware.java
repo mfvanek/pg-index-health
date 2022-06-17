@@ -16,7 +16,7 @@ import io.github.mfvanek.pg.model.index.IndexNameAware;
 import javax.annotation.Nonnull;
 
 /**
- * Allows to get table name.
+ * Allows getting table name.
  * Used as a marker interface for filtering exclusions in
  * {@link AbstractHealthLogger}
  *

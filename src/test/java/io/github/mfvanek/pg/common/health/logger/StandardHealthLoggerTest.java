@@ -10,8 +10,9 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.common.health.DatabaseHealth;
-import io.github.mfvanek.pg.common.health.DatabaseHealthFactory;
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheck;
+import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
+import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
 import io.github.mfvanek.pg.model.PgContext;
@@ -29,19 +30,20 @@ import static org.mockito.ArgumentMatchers.any;
 class StandardHealthLoggerTest {
 
     private final ConnectionCredentials credentials = Mockito.mock(ConnectionCredentials.class);
-    private final DatabaseHealth databaseHealth = Mockito.mock(DatabaseHealth.class);
-    private final DatabaseHealthFactory databaseHealthFactory = Mockito.mock(DatabaseHealthFactory.class);
     private final HighAvailabilityPgConnectionFactory connectionFactory = Mockito.mock(HighAvailabilityPgConnectionFactory.class);
-    private final HealthLogger logger = new StandardHealthLogger(credentials, connectionFactory, databaseHealthFactory);
+    private final DatabaseChecks databaseChecks = Mockito.mock(DatabaseChecks.class);
+    @SuppressWarnings("unchecked")
+    private final DatabaseCheck<Index> check = (DatabaseCheck<Index>) Mockito.mock(DatabaseCheck.class);
+    private final HealthLogger logger = new StandardHealthLogger(credentials, connectionFactory, haPgConnection -> databaseChecks);
 
     @BeforeEach
     void setUp() {
-        Mockito.when(databaseHealthFactory.of(any())).thenReturn(databaseHealth);
+        Mockito.when(databaseChecks.getCheck(Diagnostic.INVALID_INDEXES, Index.class)).thenReturn(check);
     }
 
     @Test
     void logInvalidIndexes() {
-        Mockito.when(databaseHealth.getInvalidIndexes(any(PgContext.class)))
+        Mockito.when(check.check(any(PgContext.class), any()))
                 .thenReturn(Arrays.asList(
                         Index.of("t1", "i1"),
                         Index.of("t1", "i2"),

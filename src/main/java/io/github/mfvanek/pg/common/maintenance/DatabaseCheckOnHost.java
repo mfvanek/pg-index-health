@@ -11,7 +11,11 @@
 package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.connection.HostAware;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableNameAware;
+
+import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * A check on database structure on a specific host.
@@ -19,5 +23,15 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
  * @author Ivan Vahrushev
  * @since 0.5.1
  */
-public interface DatabaseCheckOnHost<T extends TableNameAware> extends DatabaseCheck<T>, HostAware {
+public interface DatabaseCheckOnHost<T extends TableNameAware> extends DiagnosticAware, RawTypeAware<T>, HostAware {
+
+    /**
+     * Executes the check in the specified schema.
+     *
+     * @param pgContext check's context with the specified schema
+     * @return list of deviations from the specified rule
+     * @see PgContext
+     */
+    @Nonnull
+    List<T> check(@Nonnull PgContext pgContext);
 }

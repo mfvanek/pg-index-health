@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 public class IndexesWithNullValuesCheckOnHost extends AbstractCheckOnHost<IndexWithNulls> {
 
     public IndexesWithNullValuesCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.INDEXES_WITH_NULL_VALUES);
+        super(IndexWithNulls.class, pgConnection, Diagnostic.INDEXES_WITH_NULL_VALUES);
     }
 
     /**

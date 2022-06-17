@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 public class DuplicatedIndexesCheckOnHost extends AbstractCheckOnHost<DuplicatedIndexes> {
 
     public DuplicatedIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.DUPLICATED_INDEXES);
+        super(DuplicatedIndexes.class, pgConnection, Diagnostic.DUPLICATED_INDEXES);
     }
 
     /**

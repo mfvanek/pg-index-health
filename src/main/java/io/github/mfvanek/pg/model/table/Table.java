@@ -22,7 +22,7 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class Table implements TableNameAware, TableSizeAware, Comparable<Table> {
+public class Table implements TableSizeAware, Comparable<Table> {
 
     private final String tableName;
     private final long tableSizeInBytes;

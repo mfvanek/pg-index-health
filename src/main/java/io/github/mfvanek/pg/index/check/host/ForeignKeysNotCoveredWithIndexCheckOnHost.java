@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 public class ForeignKeysNotCoveredWithIndexCheckOnHost extends AbstractCheckOnHost<ForeignKey> {
 
     public ForeignKeysNotCoveredWithIndexCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX);
+        super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX);
     }
 
     /**

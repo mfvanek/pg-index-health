@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 public class IndexesWithBloatCheckOnHost extends AbstractCheckOnHost<IndexWithBloat> {
 
     public IndexesWithBloatCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.BLOATED_INDEXES);
+        super(IndexWithBloat.class, pgConnection, Diagnostic.BLOATED_INDEXES);
     }
 
     /**

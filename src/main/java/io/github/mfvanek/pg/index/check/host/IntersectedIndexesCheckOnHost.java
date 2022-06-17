@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 public class IntersectedIndexesCheckOnHost extends AbstractCheckOnHost<DuplicatedIndexes> {
 
     public IntersectedIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.INTERSECTED_INDEXES);
+        super(DuplicatedIndexes.class, pgConnection, Diagnostic.INTERSECTED_INDEXES);
     }
 
     /**

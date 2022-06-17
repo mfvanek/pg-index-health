@@ -10,8 +10,7 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.common.health.DatabaseHealthFactoryImpl;
-import io.github.mfvanek.pg.common.maintenance.MaintenanceFactoryImpl;
+import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
@@ -43,7 +42,7 @@ class HealthLoggerTest extends DatabaseAwareTestBase {
         this.logger = new KeyValueFileHealthLogger(
                 credentials,
                 new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
-                new DatabaseHealthFactoryImpl(new MaintenanceFactoryImpl()));
+                DatabaseChecks::new);
     }
 
     @ParameterizedTest

@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 public class TablesWithoutPrimaryKeyCheckOnHost extends AbstractCheckOnHost<Table> {
 
     public TablesWithoutPrimaryKeyCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.TABLES_WITHOUT_PRIMARY_KEY);
+        super(Table.class, pgConnection, Diagnostic.TABLES_WITHOUT_PRIMARY_KEY);
     }
 
     /**

@@ -14,7 +14,7 @@ import io.github.mfvanek.pg.common.health.logger.AbstractHealthLogger;
 import io.github.mfvanek.pg.model.index.IndexSizeAware;
 
 /**
- * Allows to get table size in bytes.
+ * Allows getting table size in bytes.
  * Used as a marker interface for filtering exclusions in
  * {@link AbstractHealthLogger}
  *
@@ -22,7 +22,7 @@ import io.github.mfvanek.pg.model.index.IndexSizeAware;
  * @see IndexSizeAware
  * @see io.github.mfvanek.pg.common.health.logger.Exclusions
  */
-public interface TableSizeAware {
+public interface TableSizeAware extends TableNameAware {
 
     /**
      * Gets table size in bytes.

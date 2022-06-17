@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.model.table;
 
-import io.github.mfvanek.pg.model.BloatAware;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
@@ -22,7 +21,7 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class TableWithBloat extends Table implements BloatAware {
+public class TableWithBloat extends Table implements TableBloatAware {
 
     private final long bloatSizeInBytes;
     private final int bloatPercentage;

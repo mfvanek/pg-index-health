@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
@@ -26,37 +27,42 @@ import javax.annotation.Nonnull;
  * @since 0.5.1
  * @see TableNameAware
  */
-public interface DatabaseCheck<T extends TableNameAware> {
-
-    /**
-     * Gets the diagnostic - a rule related to the check.
-     *
-     * @return diagnostic
-     * @see Diagnostic
-     */
-    @Nonnull
-    Diagnostic getDiagnostic();
+public interface DatabaseCheck<T extends TableNameAware> extends DiagnosticAware, RawTypeAware<T> {
 
     /**
      * Executes the check in the specified schema.
+     *
+     * @param pgContext check's context with the specified schema
+     * @param exclusionsFilter predicate to filter out unnecessary results
+     * @return list of deviations from the specified rule
+     * @see PgContext
+     */
+    @Nonnull
+    List<T> check(@Nonnull PgContext pgContext, @Nonnull Predicate<? super T> exclusionsFilter);
+
+    /**
+     * Executes the check in the specified schema without filtering results.
      *
      * @param pgContext check's context with the specified schema
      * @return list of deviations from the specified rule
      * @see PgContext
      */
     @Nonnull
-    List<T> check(@Nonnull PgContext pgContext);
+    default List<T> check(@Nonnull final PgContext pgContext) {
+        return check(pgContext, item -> true);
+    }
 
     /**
      * Executes the check in the specified schemas.
      *
      * @param pgContexts a set of contexts specifying schemas
+     * @param exclusionsFilter predicate to filter out unnecessary results
      * @return list of deviations from the specified rule
      */
     @Nonnull
-    default List<T> check(@Nonnull final Collection<? extends PgContext> pgContexts) {
+    default List<T> check(@Nonnull final Collection<? extends PgContext> pgContexts, @Nonnull final Predicate<? super T> exclusionsFilter) {
         return pgContexts.stream()
-                .map(this::check)
+                .map(ctx -> check(ctx, exclusionsFilter))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
     }
@@ -64,10 +70,11 @@ public interface DatabaseCheck<T extends TableNameAware> {
     /**
      * Executes the check in the public schema.
      *
+     * @param exclusionsFilter predicate to filter out unnecessary results
      * @return list of deviations from the specified rule
      */
     @Nonnull
-    default List<T> check() {
-        return check(PgContext.ofPublic());
+    default List<T> check(@Nonnull final Predicate<? super T> exclusionsFilter) {
+        return check(PgContext.ofPublic(), exclusionsFilter);
     }
 }

@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 public class InvalidIndexesCheckOnHost extends AbstractCheckOnHost<Index> {
 
     public InvalidIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.INVALID_INDEXES);
+        super(Index.class, pgConnection, Diagnostic.INVALID_INDEXES);
     }
 
     /**

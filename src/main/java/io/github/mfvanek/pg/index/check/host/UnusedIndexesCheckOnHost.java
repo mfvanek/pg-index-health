@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 public class UnusedIndexesCheckOnHost extends AbstractCheckOnHost<UnusedIndex> {
 
     public UnusedIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection, Diagnostic.UNUSED_INDEXES);
+        super(UnusedIndex.class, pgConnection, Diagnostic.UNUSED_INDEXES);
     }
 
     /**
