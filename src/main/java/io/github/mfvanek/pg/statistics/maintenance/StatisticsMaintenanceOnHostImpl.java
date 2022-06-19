@@ -10,19 +10,34 @@
 
 package io.github.mfvanek.pg.statistics.maintenance;
 
-import io.github.mfvanek.pg.common.maintenance.AbstractMaintenance;
 import io.github.mfvanek.pg.connection.PgConnection;
+import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.utils.QueryExecutors;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public class StatisticsMaintenanceOnHostImpl extends AbstractMaintenance implements StatisticsMaintenanceOnHost {
+public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnHost {
+
+    /**
+     * A connection to a specific host in the cluster.
+     */
+    private final PgConnection pgConnection;
 
     public StatisticsMaintenanceOnHostImpl(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection);
+        this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Nonnull
+    public PgHost getHost() {
+        return pgConnection.getHost();
     }
 
     /**

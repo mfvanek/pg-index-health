@@ -29,7 +29,6 @@ class DatabaseCheckTest {
     private static final Collection<PgContext> CONTEXTS = Arrays.asList(
             PgContext.of("demo"), PgContext.of("test"), PgContext.ofPublic());
 
-
     @SuppressWarnings("unchecked")
     @Test
     void check() {

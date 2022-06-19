@@ -77,15 +77,4 @@ public interface DatabaseCheck<T extends TableNameAware> extends DiagnosticAware
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
     }
-
-    /**
-     * Executes the check in the public schema.
-     *
-     * @param exclusionsFilter predicate to filter out unnecessary results
-     * @return list of deviations from the specified rule
-     */
-    @Nonnull
-    default List<T> check(@Nonnull final Predicate<? super T> exclusionsFilter) {
-        return check(PgContext.ofPublic(), exclusionsFilter);
-    }
 }

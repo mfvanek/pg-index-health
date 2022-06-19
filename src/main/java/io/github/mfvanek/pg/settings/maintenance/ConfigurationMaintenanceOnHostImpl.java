@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.settings.maintenance;
 
-import io.github.mfvanek.pg.common.maintenance.AbstractMaintenance;
 import io.github.mfvanek.pg.connection.PgConnection;
+import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.ParamNameAware;
 import io.github.mfvanek.pg.settings.PgParam;
@@ -21,13 +21,28 @@ import io.github.mfvanek.pg.utils.QueryExecutors;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
 
-public class ConfigurationMaintenanceOnHostImpl extends AbstractMaintenance implements ConfigurationMaintenanceOnHost {
+public class ConfigurationMaintenanceOnHostImpl implements ConfigurationMaintenanceOnHost {
+
+    /**
+     * A connection to a specific host in the cluster.
+     */
+    private final PgConnection pgConnection;
 
     public ConfigurationMaintenanceOnHostImpl(@Nonnull final PgConnection pgConnection) {
-        super(pgConnection);
+        this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Nonnull
+    public PgHost getHost() {
+        return pgConnection.getHost();
     }
 
     @Nonnull

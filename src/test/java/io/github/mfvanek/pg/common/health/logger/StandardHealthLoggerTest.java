@@ -10,46 +10,69 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.common.maintenance.DatabaseCheck;
 import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
-import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
-import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.index.Index;
-import org.junit.jupiter.api.BeforeEach;
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
+import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
+import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
+import io.github.mfvanek.pg.embedded.PostgresDbExtension;
+import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static io.github.mfvanek.pg.utils.HealthLoggerAssertions.assertContainsKey;
-import static org.mockito.ArgumentMatchers.any;
+import static org.assertj.core.api.Assertions.assertThat;
 
-class StandardHealthLoggerTest {
+class StandardHealthLoggerTest extends DatabaseAwareTestBase {
 
-    private final ConnectionCredentials credentials = Mockito.mock(ConnectionCredentials.class);
-    private final HighAvailabilityPgConnectionFactory connectionFactory = Mockito.mock(HighAvailabilityPgConnectionFactory.class);
-    private final DatabaseChecks databaseChecks = Mockito.mock(DatabaseChecks.class);
-    @SuppressWarnings("unchecked")
-    private final DatabaseCheck<Index> check = (DatabaseCheck<Index>) Mockito.mock(DatabaseCheck.class);
-    private final HealthLogger logger = new StandardHealthLogger(credentials, connectionFactory, haPgConnection -> databaseChecks);
+    @RegisterExtension
+    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
-    @BeforeEach
-    void setUp() {
-        Mockito.when(databaseChecks.getCheck(Diagnostic.INVALID_INDEXES, Index.class)).thenReturn(check);
+    private final HealthLogger logger;
+
+    StandardHealthLoggerTest() {
+        super(POSTGRES.getTestDatabase());
+        final ConnectionCredentials credentials = ConnectionCredentials.ofUrl(
+                POSTGRES.getUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
+        this.logger = new StandardHealthLogger(
+                credentials,
+                new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
+                DatabaseChecks::new);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void logAll(final String schemaName) {
+        executeTestOnDatabase(schemaName,
+                dbp -> dbp.withReferences().withData().withInvalidIndex().withNullValuesInIndex().withTableWithoutPrimaryKey().withDuplicatedIndex().withNonSuitableIndex().withStatistics(), ctx -> {
+                    waitForStatisticsCollector();
+                    final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
+                    assertThat(logs)
+                            .isNotNull()
+                            .hasSize(10);
+                    assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes:1");
+                    assertContainsKey(logs, SimpleLoggingKey.DUPLICATED_INDEXES, "duplicated_indexes:2");
+                    assertContainsKey(logs, SimpleLoggingKey.FOREIGN_KEYS, "foreign_keys_without_index:1");
+                    assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key:1");
+                    assertContainsKey(logs, SimpleLoggingKey.INDEXES_WITH_NULLS, "indexes_with_null_values:1");
+                    assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat:11");
+                    assertContainsKey(logs, SimpleLoggingKey.TABLES_BLOAT, "tables_bloat:2");
+                });
     }
 
     @Test
-    void logInvalidIndexes() {
-        Mockito.when(check.check(any(PgContext.class), any()))
-                .thenReturn(Arrays.asList(
-                        Index.of("t1", "i1"),
-                        Index.of("t1", "i2"),
-                        Index.of("t2", "i3")
-                ));
+    void logAllWithDefaultSchema() {
         final List<String> logs = logger.logAll(Exclusions.empty());
-        assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes:3");
+        assertThat(logs)
+                .isNotNull()
+                .hasSize(10);
+        for (final SimpleLoggingKey key : SimpleLoggingKey.values()) {
+            assertContainsKey(logs, key, key.getSubKeyName() + ":0");
+        }
     }
 }
