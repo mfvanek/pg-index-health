@@ -113,7 +113,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                         @Nonnull final Exclusions exclusions,
                                         @Nonnull final PgContext pgContext) {
         final DatabaseCheck<DuplicatedIndexes> check = databaseChecks.getCheck(Diagnostic.DUPLICATED_INDEXES, DuplicatedIndexes.class);
-        final List<DuplicatedIndexes> duplicatedIndexes = check.check(pgContext, new FilterDuplicatedIndexesByNamePredicate(exclusions.getDuplicatedIndexesExclusions()));
+        final List<DuplicatedIndexes> duplicatedIndexes = check.check(pgContext, FilterDuplicatedIndexesByNamePredicate.of(exclusions.getDuplicatedIndexesExclusions()));
         final LoggingKey key = SimpleLoggingKey.DUPLICATED_INDEXES;
         if (CollectionUtils.isNotEmpty(duplicatedIndexes)) {
             LOGGER.warn("There are duplicated indexes in the database {}", duplicatedIndexes);
@@ -127,7 +127,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                          @Nonnull final Exclusions exclusions,
                                          @Nonnull final PgContext pgContext) {
         final DatabaseCheck<DuplicatedIndexes> check = databaseChecks.getCheck(Diagnostic.INTERSECTED_INDEXES, DuplicatedIndexes.class);
-        final List<DuplicatedIndexes> intersectedIndexes = check.check(pgContext, new FilterDuplicatedIndexesByNamePredicate(exclusions.getIntersectedIndexesExclusions()));
+        final List<DuplicatedIndexes> intersectedIndexes = check.check(pgContext, FilterDuplicatedIndexesByNamePredicate.of(exclusions.getIntersectedIndexesExclusions()));
         final LoggingKey key = SimpleLoggingKey.INTERSECTED_INDEXES;
         if (CollectionUtils.isNotEmpty(intersectedIndexes)) {
             LOGGER.warn("There are intersected indexes in the database {}", intersectedIndexes);
@@ -141,7 +141,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                     @Nonnull final Exclusions exclusions,
                                     @Nonnull final PgContext pgContext) {
         final DatabaseCheck<UnusedIndex> check = databaseChecks.getCheck(Diagnostic.UNUSED_INDEXES, UnusedIndex.class);
-        final List<UnusedIndex> unusedIndexes = check.check(pgContext, new FilterIndexesBySizePredicate(exclusions.getIndexSizeThresholdInBytes())
+        final List<UnusedIndex> unusedIndexes = check.check(pgContext, FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())
                 .and(FilterIndexesByNamePredicate.of(exclusions.getUnusedIndexesExclusions())));
         final LoggingKey key = SimpleLoggingKey.UNUSED_INDEXES;
         if (CollectionUtils.isNotEmpty(unusedIndexes)) {
@@ -169,7 +169,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                                @Nonnull final Exclusions exclusions,
                                                @Nonnull final PgContext pgContext) {
         final DatabaseCheck<TableWithMissingIndex> check = databaseChecks.getCheck(Diagnostic.TABLES_WITH_MISSING_INDEXES, TableWithMissingIndex.class);
-        final List<TableWithMissingIndex> tablesWithMissingIndexes = check.check(pgContext, new FilterTablesBySizePredicate(exclusions.getTableSizeThresholdInBytes())
+        final List<TableWithMissingIndex> tablesWithMissingIndexes = check.check(pgContext, FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
                 .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithMissingIndexesExclusions())));
         final LoggingKey key = SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES;
         if (CollectionUtils.isNotEmpty(tablesWithMissingIndexes)) {
@@ -184,7 +184,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                               @Nonnull final Exclusions exclusions,
                                               @Nonnull final PgContext pgContext) {
         final DatabaseCheck<Table> check = databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, Table.class);
-        final List<Table> tablesWithoutPrimaryKey = check.check(pgContext, new FilterTablesBySizePredicate(exclusions.getTableSizeThresholdInBytes())
+        final List<Table> tablesWithoutPrimaryKey = check.check(pgContext, FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
                 .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithoutPrimaryKeyExclusions())));
         final LoggingKey key = SimpleLoggingKey.TABLES_WITHOUT_PK;
         if (CollectionUtils.isNotEmpty(tablesWithoutPrimaryKey)) {
@@ -214,8 +214,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                    @Nonnull final PgContext pgContext) {
         final DatabaseCheck<IndexWithBloat> check = databaseChecks.getCheck(Diagnostic.BLOATED_INDEXES, IndexWithBloat.class);
         final List<IndexWithBloat> indexesWithBloat = check.check(pgContext,
-                new FilterIndexesByBloatPredicate(exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold())
-                        .and(new FilterIndexesBySizePredicate(exclusions.getIndexSizeThresholdInBytes())));
+                FilterIndexesByBloatPredicate.of(exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold())
+                        .and(FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())));
         final LoggingKey key = SimpleLoggingKey.INDEXES_BLOAT;
         if (CollectionUtils.isNotEmpty(indexesWithBloat)) {
             LOGGER.warn("There are indexes with bloat in the database {}", indexesWithBloat);
@@ -230,8 +230,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                   @Nonnull final PgContext pgContext) {
         final DatabaseCheck<TableWithBloat> check = databaseChecks.getCheck(Diagnostic.BLOATED_TABLES, TableWithBloat.class);
         final List<TableWithBloat> tablesWithBloat = check.check(pgContext,
-                new FilterTablesByBloatPredicate(exclusions.getTableBloatSizeThresholdInBytes(), exclusions.getTableBloatPercentageThreshold())
-                        .and(new FilterTablesBySizePredicate(exclusions.getTableSizeThresholdInBytes())));
+                FilterTablesByBloatPredicate.of(exclusions.getTableBloatSizeThresholdInBytes(), exclusions.getTableBloatPercentageThreshold())
+                        .and(FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())));
         final LoggingKey key = SimpleLoggingKey.TABLES_BLOAT;
         if (CollectionUtils.isNotEmpty(tablesWithBloat)) {
             LOGGER.warn("There are tables with bloat in the database {}", tablesWithBloat);

@@ -19,6 +19,12 @@ import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
 
+/**
+ * Base class for filters by name.
+ *
+ * @author Ivan Vakhrushev
+ * @since 0.5.1
+ */
 abstract class AbstractFilterByName {
 
     protected final Set<String> exclusions;

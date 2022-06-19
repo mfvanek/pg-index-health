@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.common.maintenance.predicates;
 
 import io.github.mfvanek.pg.model.table.TableBloatAware;
-import io.github.mfvanek.pg.utils.Validators;
 
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
@@ -22,22 +21,19 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @since 0.5.1
  */
-public class FilterTablesByBloatPredicate implements Predicate<TableBloatAware> {
+public class FilterTablesByBloatPredicate extends AbstractFilterByBloat implements Predicate<TableBloatAware> {
 
-    private final long sizeThreshold;
-    private final int percentageThreshold;
-
-    public FilterTablesByBloatPredicate(final long sizeThreshold, final int percentageThreshold) {
-        this.sizeThreshold = Validators.sizeNotNegative(sizeThreshold, "sizeThreshold");
-        this.percentageThreshold = Validators.validPercent(percentageThreshold, "percentageThreshold");
+    private FilterTablesByBloatPredicate(final long sizeThresholdInBytes, final int percentageThreshold) {
+        super(sizeThresholdInBytes, percentageThreshold);
     }
 
     @Override
     public boolean test(@Nonnull final TableBloatAware tableBloatAware) {
-        if (sizeThreshold == 0L && percentageThreshold == 0) {
-            return true;
-        }
-        return tableBloatAware.getBloatSizeInBytes() >= sizeThreshold &&
-                tableBloatAware.getBloatPercentage() >= percentageThreshold;
+        return isOk(tableBloatAware);
+    }
+
+    @Nonnull
+    public static Predicate<TableBloatAware> of(final long sizeThresholdInBytes, final int percentageThreshold) {
+        return new FilterTablesByBloatPredicate(sizeThresholdInBytes, percentageThreshold);
     }
 }

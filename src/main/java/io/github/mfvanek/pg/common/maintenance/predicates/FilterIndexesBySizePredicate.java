@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.common.maintenance.predicates;
 
 import io.github.mfvanek.pg.model.index.IndexSizeAware;
-import io.github.mfvanek.pg.utils.Validators;
 
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
@@ -22,19 +21,22 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @since 0.5.1
  */
-public class FilterIndexesBySizePredicate implements Predicate<IndexSizeAware> {
+public class FilterIndexesBySizePredicate extends AbstractFilterBySize implements Predicate<IndexSizeAware> {
 
-    final long threshold;
-
-    public FilterIndexesBySizePredicate(final long threshold) {
-        this.threshold = Validators.sizeNotNegative(threshold, "threshold");
+    private FilterIndexesBySizePredicate(final long thresholdInBytes) {
+        super(thresholdInBytes);
     }
 
     @Override
     public boolean test(@Nonnull final IndexSizeAware indexSizeAware) {
-        if (threshold == 0) {
+        if (thresholdInBytes == 0) {
             return true;
         }
-        return indexSizeAware.getIndexSizeInBytes() >= threshold;
+        return indexSizeAware.getIndexSizeInBytes() >= thresholdInBytes;
+    }
+
+    @Nonnull
+    public static Predicate<IndexSizeAware> of(final long thresholdInBytes) {
+        return new FilterIndexesBySizePredicate(thresholdInBytes);
     }
 }

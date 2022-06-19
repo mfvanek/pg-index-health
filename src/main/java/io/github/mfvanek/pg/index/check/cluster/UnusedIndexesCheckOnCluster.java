@@ -48,7 +48,7 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
     private final Map<PgHost, StatisticsMaintenanceOnHost> statisticsMaintenanceForAllHostsInCluster;
 
     public UnusedIndexesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
-        super(haPgConnection, UnusedIndexesCheckOnHost::new, UnusedIndexesCheckOnCluster::getUnusedIndexesAsIntersectionResult);
+        super(haPgConnection, UnusedIndexesCheckOnHost::new, UnusedIndexesCheckOnCluster::getResultAsIntersection);
         // TODO refactor this
         this.statisticsMaintenanceForAllHostsInCluster = new MaintenanceFactoryImpl().forStatistics(haPgConnection.getConnectionsToAllHostsInCluster());
     }
@@ -60,11 +60,11 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
     }
 
     private void logLastStatsResetDate(@Nonnull final PgConnection connectionToHost) {
-        LOGGER.info(getLastStatsResetDateLogMessage(connectionToHost, statisticsMaintenanceForAllHostsInCluster));
+        LOGGER.info(getLastStatsResetDateLogMessage(connectionToHost.getHost(), statisticsMaintenanceForAllHostsInCluster));
     }
 
     @Nonnull
-    static List<UnusedIndex> getUnusedIndexesAsIntersectionResult(
+    static List<UnusedIndex> getResultAsIntersection(
             @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts) {
         LOGGER.debug("potentiallyUnusedIndexesFromAllHosts = {}", potentiallyUnusedIndexesFromAllHosts);
         Collection<UnusedIndex> unusedIndexes = null;
@@ -81,12 +81,12 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
 
     @Nonnull
     static String getLastStatsResetDateLogMessage(
-            @Nonnull final PgConnection connectionToHost,
+            @Nonnull final PgHost pgHost,
             @Nonnull final Map<PgHost, StatisticsMaintenanceOnHost> statisticsMaintenanceForAllHosts) {
         Objects.requireNonNull(statisticsMaintenanceForAllHosts, "statisticsMaintenanceForAllHosts cannot be null");
-        final StatisticsMaintenanceOnHost statisticsMaintenance = statisticsMaintenanceForAllHosts.get(connectionToHost.getHost());
+        final StatisticsMaintenanceOnHost statisticsMaintenance = statisticsMaintenanceForAllHosts.get(pgHost);
         if (statisticsMaintenance == null) {
-            throw new NoSuchElementException("StatisticsMaintenanceOnHost object wasn't found for host " + connectionToHost.getHost());
+            throw new NoSuchElementException("StatisticsMaintenanceOnHost object wasn't found for host " + pgHost);
         }
 
         final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();

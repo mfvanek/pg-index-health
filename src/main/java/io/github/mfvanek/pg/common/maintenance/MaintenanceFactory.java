@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.common.maintenance;
 import io.github.mfvanek.pg.connection.HostAware;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
-import io.github.mfvanek.pg.index.maintenance.IndexesMaintenanceOnHost;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 
@@ -28,24 +27,11 @@ import javax.annotation.Nonnull;
  * Factory for creating maintenance objects with a given {@link PgConnection}.
  *
  * @author Ivan Vakhrushev
- * @see IndexesMaintenanceOnHost
  * @see StatisticsMaintenanceOnHost
  * @see ConfigurationMaintenanceOnHost
  * @see PgConnection
  */
 public interface MaintenanceFactory {
-
-    @Nonnull
-    IndexesMaintenanceOnHost forIndexes(@Nonnull PgConnection pgConnection);
-
-    @Nonnull
-    default Map<PgHost, IndexesMaintenanceOnHost> forIndexes(@Nonnull final Collection<PgConnection> pgConnections) {
-        return Collections.unmodifiableMap(
-                pgConnections.stream()
-                        .map(this::forIndexes)
-                        .collect(Collectors.toMap(HostAware::getHost, Function.identity()))
-        );
-    }
 
     /**
      * Creates statistics maintenance object.

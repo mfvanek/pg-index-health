@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.common.maintenance.predicates;
 
 import io.github.mfvanek.pg.model.index.IndexBloatAware;
-import io.github.mfvanek.pg.utils.Validators;
 
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
@@ -22,22 +21,19 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @since 0.5.1
  */
-public class FilterIndexesByBloatPredicate implements Predicate<IndexBloatAware> {
+public class FilterIndexesByBloatPredicate extends AbstractFilterByBloat implements Predicate<IndexBloatAware> {
 
-    private final long sizeThreshold;
-    private final int percentageThreshold;
-
-    public FilterIndexesByBloatPredicate(final long sizeThreshold, final int percentageThreshold) {
-        this.sizeThreshold = Validators.sizeNotNegative(sizeThreshold, "sizeThreshold");
-        this.percentageThreshold = Validators.validPercent(percentageThreshold, "percentageThreshold");
+    private FilterIndexesByBloatPredicate(final long sizeThresholdInBytes, final int percentageThreshold) {
+        super(sizeThresholdInBytes, percentageThreshold);
     }
 
     @Override
     public boolean test(@Nonnull final IndexBloatAware indexBloatAware) {
-        if (sizeThreshold == 0L && percentageThreshold == 0) {
-            return true;
-        }
-        return indexBloatAware.getBloatSizeInBytes() >= sizeThreshold &&
-                indexBloatAware.getBloatPercentage() >= percentageThreshold;
+        return isOk(indexBloatAware);
+    }
+
+    @Nonnull
+    public static Predicate<IndexBloatAware> of(final long sizeThresholdInBytes, final int percentageThreshold) {
+        return new FilterIndexesByBloatPredicate(sizeThresholdInBytes, percentageThreshold);
     }
 }

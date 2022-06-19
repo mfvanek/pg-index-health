@@ -13,8 +13,7 @@ package io.github.mfvanek.pg.common.maintenance.predicates;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.utils.Locales;
 
-import java.util.Objects;
-import java.util.Set;
+import java.util.Collection;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
@@ -24,21 +23,33 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @since 0.5.1
  */
-public class FilterDuplicatedIndexesByNamePredicate implements Predicate<DuplicatedIndexes> {
+public class FilterDuplicatedIndexesByNamePredicate extends AbstractFilterByName implements Predicate<DuplicatedIndexes> {
 
-    private final Set<String> indexesExclusions;
+    private FilterDuplicatedIndexesByNamePredicate(@Nonnull final Collection<String> exclusions) {
+        super(exclusions);
+    }
 
-    public FilterDuplicatedIndexesByNamePredicate(@Nonnull final Set<String> indexesExclusions) {
-        this.indexesExclusions = Objects.requireNonNull(indexesExclusions, "indexesExclusions cannot be null");
+    private FilterDuplicatedIndexesByNamePredicate(@Nonnull final String indexName) {
+        super(indexName);
     }
 
     @Override
     public boolean test(@Nonnull final DuplicatedIndexes duplicatedIndexes) {
-        if (indexesExclusions.isEmpty()) {
+        if (exclusions.isEmpty()) {
             return true;
         }
         return duplicatedIndexes.getIndexNames().stream()
                 .map(n -> n.toLowerCase(Locales.DEFAULT))
-                .noneMatch(indexesExclusions::contains);
+                .noneMatch(exclusions::contains);
+    }
+
+    @Nonnull
+    public static Predicate<DuplicatedIndexes> of(@Nonnull final Collection<String> exclusions) {
+        return new FilterDuplicatedIndexesByNamePredicate(exclusions);
+    }
+
+    @Nonnull
+    public static Predicate<DuplicatedIndexes> of(@Nonnull final String indexName) {
+        return new FilterDuplicatedIndexesByNamePredicate(indexName);
     }
 }

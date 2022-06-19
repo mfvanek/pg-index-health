@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.common.maintenance.predicates;
 
 import io.github.mfvanek.pg.model.table.TableSizeAware;
-import io.github.mfvanek.pg.utils.Validators;
 
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
@@ -23,19 +22,22 @@ import javax.annotation.Nonnull;
  * @since 0.5.1
  * @see TableSizeAware
  */
-public class FilterTablesBySizePredicate implements Predicate<TableSizeAware> {
+public class FilterTablesBySizePredicate extends AbstractFilterBySize implements Predicate<TableSizeAware> {
 
-    private final long threshold;
-
-    public FilterTablesBySizePredicate(final long threshold) {
-        this.threshold = Validators.sizeNotNegative(threshold, "threshold");
+    private FilterTablesBySizePredicate(final long thresholdInBytes) {
+        super(thresholdInBytes);
     }
 
     @Override
     public boolean test(@Nonnull final TableSizeAware tableSizeAware) {
-        if (threshold == 0) {
+        if (thresholdInBytes == 0) {
             return true;
         }
-        return tableSizeAware.getTableSizeInBytes() >= threshold;
+        return tableSizeAware.getTableSizeInBytes() >= thresholdInBytes;
+    }
+
+    @Nonnull
+    public static Predicate<TableSizeAware> of(final long thresholdInBytes) {
+        return new FilterTablesBySizePredicate(thresholdInBytes);
     }
 }

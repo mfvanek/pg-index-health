@@ -84,7 +84,7 @@ class TablesWithMissingIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                     .isNotNull()
                     .isEmpty();
 
-            assertThat(check.check(ctx, new FilterTablesBySizePredicate(1L)))
+            assertThat(check.check(ctx, FilterTablesBySizePredicate.of(1L)))
                     .isNotNull()
                     .hasSize(1)
                     .containsExactly(
@@ -93,7 +93,7 @@ class TablesWithMissingIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                     .allMatch(t -> t.getIndexScans() == 0)
                     .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
-            assertThat(check.check(ctx, new FilterTablesBySizePredicate(1_000_000L)))
+            assertThat(check.check(ctx, FilterTablesBySizePredicate.of(1_000_000L)))
                     .isNotNull()
                     .isEmpty();
         });
