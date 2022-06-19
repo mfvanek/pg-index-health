@@ -18,7 +18,6 @@ import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.index.maintenance.IndexesMaintenanceOnHost;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
-import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHost;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -58,24 +57,6 @@ class MaintenanceFactoryImplTest extends DatabaseAwareTestBase {
     @Test
     void forIndexesByHostEmpty() {
         final Map<PgHost, IndexesMaintenanceOnHost> maintenanceOnHosts = factory.forIndexes(Collections.emptyList());
-        checkThatEmpty(maintenanceOnHosts);
-    }
-
-    @Test
-    void forTables() {
-        final TablesMaintenanceOnHost maintenance = factory.forTables(pgConnection);
-        assertThat(maintenance).isNotNull();
-    }
-
-    @Test
-    void forTablesByHost() {
-        final Map<PgHost, TablesMaintenanceOnHost> maintenanceOnHosts = factory.forTables(Collections.singletonList(pgConnection));
-        checkThatContainsOneItem(maintenanceOnHosts);
-    }
-
-    @Test
-    void forTablesByHostEmpty() {
-        final Map<PgHost, TablesMaintenanceOnHost> maintenanceOnHosts = factory.forTables(Collections.emptyList());
         checkThatEmpty(maintenanceOnHosts);
     }
 

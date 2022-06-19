@@ -53,6 +53,17 @@ public interface DatabaseCheck<T extends TableNameAware> extends DiagnosticAware
     }
 
     /**
+     * Executes the check in the public schema without filtering results.
+     *
+     * @return list of deviations from the specified rule
+     * @see PgContext#ofPublic()
+     */
+    @Nonnull
+    default List<T> check() {
+        return check(PgContext.ofPublic(), item -> true);
+    }
+
+    /**
      * Executes the check in the specified schemas.
      *
      * @param pgContexts a set of contexts specifying schemas

@@ -34,4 +34,15 @@ public interface DatabaseCheckOnHost<T extends TableNameAware> extends Diagnosti
      */
     @Nonnull
     List<T> check(@Nonnull PgContext pgContext);
+
+    /**
+     * Executes the check in the public schema.
+     *
+     * @return list of deviations from the specified rule
+     * @see PgContext#ofPublic()
+     */
+    @Nonnull
+    default List<T> check() {
+        return check(PgContext.ofPublic());
+    }
 }

@@ -17,8 +17,6 @@ import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostImpl;
-import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHost;
-import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHostImpl;
 
 import javax.annotation.Nonnull;
 
@@ -31,15 +29,6 @@ public class MaintenanceFactoryImpl implements MaintenanceFactory {
     @Nonnull
     public IndexesMaintenanceOnHost forIndexes(@Nonnull final PgConnection pgConnection) {
         return new IndexMaintenanceOnHostImpl(pgConnection);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Nonnull
-    public TablesMaintenanceOnHost forTables(@Nonnull final PgConnection pgConnection) {
-        return new TablesMaintenanceOnHostImpl(pgConnection);
     }
 
     /**

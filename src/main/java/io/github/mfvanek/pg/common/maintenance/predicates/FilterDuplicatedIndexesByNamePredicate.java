@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.common.health.logger;
+package io.github.mfvanek.pg.common.maintenance.predicates;
 
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.utils.Locales;
@@ -19,6 +19,8 @@ import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
 /**
+ * Allows filter duplicated indexes by their name.
+ *
  * @author Ivan Vakhrushev
  * @since 0.5.1
  */

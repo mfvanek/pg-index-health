@@ -20,7 +20,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Check for tables with missing indexes on a specific host.
+ * Check for tables with potentially missing indexes on a specific host.
  *
  * @author Ivan Vahrushev
  * @since 0.5.1

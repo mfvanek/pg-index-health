@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.utils;
 
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ValidatorsTest {
@@ -20,5 +21,25 @@ class ValidatorsTest {
     void privateConstructor() {
         assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(Validators.class))
                 .isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    void valueIsPositive() {
+        assertThat(Validators.valueIsPositive(1L, "arg")).isEqualTo(1L);
+        assertThatThrownBy(() -> Validators.valueIsPositive(0, "arg"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("arg should be greater than zero");
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void indexNameNotBlank() {
+        assertThat(Validators.indexNameNotBlank("idx")).isEqualTo("idx");
+        assertThatThrownBy(() -> Validators.indexNameNotBlank(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("indexName cannot be null");
+        assertThatThrownBy(() -> Validators.indexNameNotBlank(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("indexName cannot be blank");
     }
 }

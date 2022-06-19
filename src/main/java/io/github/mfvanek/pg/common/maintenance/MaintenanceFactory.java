@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.index.maintenance.IndexesMaintenanceOnHost;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
-import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHost;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -30,7 +29,6 @@ import javax.annotation.Nonnull;
  *
  * @author Ivan Vakhrushev
  * @see IndexesMaintenanceOnHost
- * @see TablesMaintenanceOnHost
  * @see StatisticsMaintenanceOnHost
  * @see ConfigurationMaintenanceOnHost
  * @see PgConnection
@@ -45,18 +43,6 @@ public interface MaintenanceFactory {
         return Collections.unmodifiableMap(
                 pgConnections.stream()
                         .map(this::forIndexes)
-                        .collect(Collectors.toMap(HostAware::getHost, Function.identity()))
-        );
-    }
-
-    @Nonnull
-    TablesMaintenanceOnHost forTables(@Nonnull PgConnection pgConnection);
-
-    @Nonnull
-    default Map<PgHost, TablesMaintenanceOnHost> forTables(@Nonnull final Collection<PgConnection> pgConnections) {
-        return Collections.unmodifiableMap(
-                pgConnections.stream()
-                        .map(this::forTables)
                         .collect(Collectors.toMap(HostAware::getHost, Function.identity()))
         );
     }

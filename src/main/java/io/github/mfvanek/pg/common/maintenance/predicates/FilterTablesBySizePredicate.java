@@ -8,31 +8,34 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.common.health.logger;
+package io.github.mfvanek.pg.common.maintenance.predicates;
 
-import io.github.mfvanek.pg.model.index.IndexSizeAware;
+import io.github.mfvanek.pg.model.table.TableSizeAware;
 import io.github.mfvanek.pg.utils.Validators;
 
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
 /**
+ * Allows filter tables by their size.
+ *
  * @author Ivan Vakhrushev
  * @since 0.5.1
+ * @see TableSizeAware
  */
-public class FilterIndexesBySizePredicate implements Predicate<IndexSizeAware> {
+public class FilterTablesBySizePredicate implements Predicate<TableSizeAware> {
 
-    final long threshold;
+    private final long threshold;
 
-    public FilterIndexesBySizePredicate(final long threshold) {
+    public FilterTablesBySizePredicate(final long threshold) {
         this.threshold = Validators.sizeNotNegative(threshold, "threshold");
     }
 
     @Override
-    public boolean test(@Nonnull final IndexSizeAware indexSizeAware) {
+    public boolean test(@Nonnull final TableSizeAware tableSizeAware) {
         if (threshold == 0) {
             return true;
         }
-        return indexSizeAware.getIndexSizeInBytes() >= threshold;
+        return tableSizeAware.getTableSizeInBytes() >= threshold;
     }
 }

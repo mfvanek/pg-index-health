@@ -27,7 +27,6 @@ import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
-import io.github.mfvanek.pg.table.maintenance.TablesMaintenanceOnHost;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +48,6 @@ public class DatabaseHealthImpl extends AbstractManagement implements DatabaseHe
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHealthImpl.class);
 
     private final Map<PgHost, IndexesMaintenanceOnHost> indexesMaintenanceForAllHostsInCluster;
-    private final Map<PgHost, TablesMaintenanceOnHost> tablesMaintenanceForAllHostsInCluster;
     private final Map<PgHost, StatisticsMaintenanceOnHost> statisticsMaintenanceForAllHostsInCluster;
 
     public DatabaseHealthImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
@@ -58,7 +56,6 @@ public class DatabaseHealthImpl extends AbstractManagement implements DatabaseHe
         Objects.requireNonNull(maintenanceFactory);
         final Set<PgConnection> pgConnections = haPgConnection.getConnectionsToAllHostsInCluster();
         this.indexesMaintenanceForAllHostsInCluster = maintenanceFactory.forIndexes(pgConnections);
-        this.tablesMaintenanceForAllHostsInCluster = maintenanceFactory.forTables(pgConnections);
         this.statisticsMaintenanceForAllHostsInCluster = maintenanceFactory.forStatistics(pgConnections);
     }
 
@@ -123,13 +120,7 @@ public class DatabaseHealthImpl extends AbstractManagement implements DatabaseHe
     @Nonnull
     @Override
     public List<TableWithMissingIndex> getTablesWithMissingIndexes(@Nonnull final PgContext pgContext) {
-        final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = new ArrayList<>();
-        for (final TablesMaintenanceOnHost maintenanceForHost : tablesMaintenanceForAllHostsInCluster.values()) {
-            tablesWithMissingIndexesFromAllHosts.add(
-                    doOnHost(maintenanceForHost.getHost(),
-                            () -> maintenanceForHost.getTablesWithMissingIndexes(pgContext)));
-        }
-        return ReplicasHelper.getTablesWithMissingIndexesAsUnionResult(tablesWithMissingIndexesFromAllHosts);
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -138,7 +129,7 @@ public class DatabaseHealthImpl extends AbstractManagement implements DatabaseHe
     @Nonnull
     @Override
     public List<Table> getTablesWithoutPrimaryKey(@Nonnull final PgContext pgContext) {
-        return doOnPrimary(tablesMaintenanceForAllHostsInCluster, TablesMaintenanceOnHost::getTablesWithoutPrimaryKey, pgContext);
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -165,7 +156,7 @@ public class DatabaseHealthImpl extends AbstractManagement implements DatabaseHe
     @Override
     @Nonnull
     public List<TableWithBloat> getTablesWithBloat(@Nonnull final PgContext pgContext) {
-        return doOnPrimary(tablesMaintenanceForAllHostsInCluster, TablesMaintenanceOnHost::getTablesWithBloat, pgContext);
+        throw new UnsupportedOperationException();
     }
 
     private void logLastStatsResetDate(@Nonnull final PgHost host) {

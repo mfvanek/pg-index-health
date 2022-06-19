@@ -33,12 +33,11 @@ public class TablesWithMissingIndexesCheckOnCluster extends AbstractCheckOnClust
     private static final Logger LOGGER = LoggerFactory.getLogger(TablesWithMissingIndexesCheckOnCluster.class);
 
     public TablesWithMissingIndexesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
-        super(haPgConnection, TablesWithMissingIndexesCheckOnHost::new, TablesWithMissingIndexesCheckOnCluster::getTablesWithMissingIndexesAsUnionResult);
+        super(haPgConnection, TablesWithMissingIndexesCheckOnHost::new, TablesWithMissingIndexesCheckOnCluster::getResultAsUnion);
     }
 
     @Nonnull
-    static List<TableWithMissingIndex> getTablesWithMissingIndexesAsUnionResult(
-            @Nonnull final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts) {
+    static List<TableWithMissingIndex> getResultAsUnion(@Nonnull final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts) {
         LOGGER.debug("tablesWithMissingIndexesFromAllHosts = {}", tablesWithMissingIndexesFromAllHosts);
         final List<TableWithMissingIndex> result = tablesWithMissingIndexesFromAllHosts.stream()
                 .flatMap(Collection::stream)

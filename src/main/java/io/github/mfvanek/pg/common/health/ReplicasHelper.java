@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.common.health;
 
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
-import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.apache.commons.collections4.CollectionUtils;
@@ -29,7 +28,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 final class ReplicasHelper {
@@ -54,20 +52,6 @@ final class ReplicasHelper {
         }
         final List<UnusedIndex> result = unusedIndexes == null ? Collections.emptyList() : new ArrayList<>(unusedIndexes);
         LOGGER.debug("Intersection result {}", result);
-        return result;
-    }
-
-    // TODO to remove
-    @Nonnull
-    static List<TableWithMissingIndex> getTablesWithMissingIndexesAsUnionResult(
-            @Nonnull final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts) {
-        LOGGER.debug("tablesWithMissingIndexesFromAllHosts = {}", tablesWithMissingIndexesFromAllHosts);
-        final List<TableWithMissingIndex> result = tablesWithMissingIndexesFromAllHosts.stream()
-                .flatMap(Collection::stream)
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
-        LOGGER.debug("Union result {}", result);
         return result;
     }
 

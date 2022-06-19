@@ -13,6 +13,13 @@ package io.github.mfvanek.pg.common.health.logger;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheck;
 import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.common.maintenance.predicates.FilterDuplicatedIndexesByNamePredicate;
+import io.github.mfvanek.pg.common.maintenance.predicates.FilterIndexesByBloatPredicate;
+import io.github.mfvanek.pg.common.maintenance.predicates.FilterIndexesByNamePredicate;
+import io.github.mfvanek.pg.common.maintenance.predicates.FilterIndexesBySizePredicate;
+import io.github.mfvanek.pg.common.maintenance.predicates.FilterTablesByBloatPredicate;
+import io.github.mfvanek.pg.common.maintenance.predicates.FilterTablesByNamePredicate;
+import io.github.mfvanek.pg.common.maintenance.predicates.FilterTablesBySizePredicate;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
@@ -36,6 +43,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("PMD.ExcessiveImports")
 public abstract class AbstractHealthLogger implements HealthLogger {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHealthLogger.class);
@@ -134,7 +142,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                     @Nonnull final PgContext pgContext) {
         final DatabaseCheck<UnusedIndex> check = databaseChecks.getCheck(Diagnostic.UNUSED_INDEXES, UnusedIndex.class);
         final List<UnusedIndex> unusedIndexes = check.check(pgContext, new FilterIndexesBySizePredicate(exclusions.getIndexSizeThresholdInBytes())
-                .and(new FilterIndexesByNamePredicate(exclusions.getUnusedIndexesExclusions())));
+                .and(FilterIndexesByNamePredicate.of(exclusions.getUnusedIndexesExclusions())));
         final LoggingKey key = SimpleLoggingKey.UNUSED_INDEXES;
         if (CollectionUtils.isNotEmpty(unusedIndexes)) {
             LOGGER.warn("There are unused indexes in the database {}", unusedIndexes);
@@ -162,7 +170,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                                @Nonnull final PgContext pgContext) {
         final DatabaseCheck<TableWithMissingIndex> check = databaseChecks.getCheck(Diagnostic.TABLES_WITH_MISSING_INDEXES, TableWithMissingIndex.class);
         final List<TableWithMissingIndex> tablesWithMissingIndexes = check.check(pgContext, new FilterTablesBySizePredicate(exclusions.getTableSizeThresholdInBytes())
-                .and(new FilterTablesByNamePredicate(exclusions.getTablesWithMissingIndexesExclusions())));
+                .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithMissingIndexesExclusions())));
         final LoggingKey key = SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES;
         if (CollectionUtils.isNotEmpty(tablesWithMissingIndexes)) {
             LOGGER.warn("There are tables with missing indexes in the database {}", tablesWithMissingIndexes);
@@ -177,7 +185,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                               @Nonnull final PgContext pgContext) {
         final DatabaseCheck<Table> check = databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, Table.class);
         final List<Table> tablesWithoutPrimaryKey = check.check(pgContext, new FilterTablesBySizePredicate(exclusions.getTableSizeThresholdInBytes())
-                .and(new FilterTablesByNamePredicate(exclusions.getTablesWithoutPrimaryKeyExclusions())));
+                .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithoutPrimaryKeyExclusions())));
         final LoggingKey key = SimpleLoggingKey.TABLES_WITHOUT_PK;
         if (CollectionUtils.isNotEmpty(tablesWithoutPrimaryKey)) {
             LOGGER.warn("There are tables without primary key in the database {}", tablesWithoutPrimaryKey);
@@ -191,7 +199,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                             @Nonnull final Exclusions exclusions,
                                             @Nonnull final PgContext pgContext) {
         final DatabaseCheck<IndexWithNulls> check = databaseChecks.getCheck(Diagnostic.INDEXES_WITH_NULL_VALUES, IndexWithNulls.class);
-        final List<IndexWithNulls> indexesWithNullValues = check.check(pgContext, new FilterIndexesByNamePredicate(exclusions.getIndexesWithNullValuesExclusions()));
+        final List<IndexWithNulls> indexesWithNullValues = check.check(pgContext, FilterIndexesByNamePredicate.of(exclusions.getIndexesWithNullValuesExclusions()));
         final LoggingKey key = SimpleLoggingKey.INDEXES_WITH_NULLS;
         if (CollectionUtils.isNotEmpty(indexesWithNullValues)) {
             LOGGER.warn("There are indexes with null values in the database {}", indexesWithNullValues);

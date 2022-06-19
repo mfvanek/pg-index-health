@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.common.health;
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
-import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import io.github.mfvanek.pg.utils.TestUtils;
@@ -65,24 +64,6 @@ class ReplicasHelperTest {
         assertThat(unusedIndexes)
                 .isNotNull()
                 .isEmpty();
-    }
-
-    @Test
-    void getTablesWithMissingIndexesAsUnionResult() {
-        final TableWithMissingIndex t1 = TableWithMissingIndex.of("t1", 1L, 10L, 1L);
-        final TableWithMissingIndex t2 = TableWithMissingIndex.of("t2", 2L, 30L, 3L);
-        final TableWithMissingIndex t3 = TableWithMissingIndex.of("t3", 3L, 40L, 4L);
-        final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = Arrays.asList(
-                Collections.emptyList(),
-                Arrays.asList(t1, t3),
-                Collections.singletonList(t2),
-                Arrays.asList(t2, t3)
-        );
-        final List<TableWithMissingIndex> tablesWithMissingIndexes = ReplicasHelper.getTablesWithMissingIndexesAsUnionResult(
-                tablesWithMissingIndexesFromAllHosts);
-        assertThat(tablesWithMissingIndexes)
-                .hasSize(3)
-                .containsExactlyInAnyOrder(t1, t2, t3);
     }
 
     @SuppressWarnings("ConstantConditions")

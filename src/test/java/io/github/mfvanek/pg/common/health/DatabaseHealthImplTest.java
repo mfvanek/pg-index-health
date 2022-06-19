@@ -23,9 +23,6 @@ import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.table.Column;
-import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.model.table.TableWithBloat;
-import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.utils.DatabasePopulator;
 import org.junit.jupiter.api.Test;
@@ -336,84 +333,6 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void getTablesWithMissingIndexesOnEmptyDatabase() {
-        final List<TableWithMissingIndex> tables = databaseHealth.getTablesWithMissingIndexes();
-        assertThat(tables)
-                .isNotNull()
-                .isEmpty();
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithMissingIndexesOnDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
-            final List<TableWithMissingIndex> tables = databaseHealth.getTablesWithMissingIndexes(ctx);
-            assertThat(tables)
-                    .isNotNull()
-                    .isEmpty();
-        });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithMissingIndexesOnDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
-            tryToFindAccountByClientId(schemaName);
-            final List<TableWithMissingIndex> tables = databaseHealth.getTablesWithMissingIndexes(ctx);
-            assertThat(tables)
-                    .isNotNull()
-                    .hasSize(1);
-            final TableWithMissingIndex table = tables.get(0);
-            assertThat(table.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
-            assertThat(table.getSeqScans()).isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
-            assertThat(table.getIndexScans()).isZero();
-        });
-    }
-
-    @Test
-    void getTablesWithoutPrimaryKeyOnEmptyDatabase() {
-        final List<Table> tables = databaseHealth.getTablesWithoutPrimaryKey();
-        assertThat(tables)
-                .isNotNull()
-                .isEmpty();
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithoutPrimaryKeyOnDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
-            final List<Table> tables = databaseHealth.getTablesWithoutPrimaryKey(ctx);
-            assertThat(tables)
-                    .isNotNull()
-                    .isEmpty();
-        });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithoutPrimaryKeyOnDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withTableWithoutPrimaryKey(), ctx -> {
-            final List<Table> tables = databaseHealth.getTablesWithoutPrimaryKey(ctx);
-            assertThat(tables)
-                    .isNotNull()
-                    .hasSize(1);
-            final Table table = tables.get(0);
-            assertThat(table.getTableName()).isEqualTo(ctx.enrichWithSchema("bad_clients"));
-        });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithoutPrimaryKeyShouldReturnNothingForMaterializedViews(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withMaterializedView(), ctx -> {
-            final List<Table> tables = databaseHealth.getTablesWithoutPrimaryKey(ctx);
-            assertThat(tables)
-                    .isNotNull()
-                    .isEmpty();
-        });
-    }
-
-    @Test
     void getIndexesWithNullValuesOnEmptyDatabase() {
         final List<IndexWithNulls> indexes = databaseHealth.getIndexesWithNullValues();
         assertThat(indexes)
@@ -483,44 +402,6 @@ class DatabaseHealthImplTest extends DatabaseAwareTestBase {
             assertThat(index.getIndexSizeInBytes()).isEqualTo(57_344L);
             assertThat(index.getBloatSizeInBytes()).isEqualTo(8_192L);
             assertThat(index.getBloatPercentage()).isEqualTo(14);
-        });
-    }
-
-    @Test
-    void getTablesWithBloatOnEmptyDataBase() {
-        final List<TableWithBloat> tables = databaseHealth.getTablesWithBloat();
-        assertThat(tables)
-                .isNotNull()
-                .isEmpty();
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithBloatOnDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withStatistics(), ctx -> {
-            waitForStatisticsCollector();
-            final List<TableWithBloat> tables = databaseHealth.getTablesWithBloat(ctx);
-            assertThat(tables)
-                    .isNotNull()
-                    .isEmpty();
-        });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void getTablesWithBloatOnDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withStatistics(), ctx -> {
-            waitForStatisticsCollector();
-            assertThat(existsStatisticsForTable(ctx, "accounts")).isTrue();
-            final List<TableWithBloat> tables = databaseHealth.getTablesWithBloat(ctx);
-            assertThat(tables)
-                    .isNotNull()
-                    .hasSize(2);
-            final TableWithBloat table = tables.get(0);
-            assertThat(table.getTableName()).isEqualTo(ctx.enrichWithSchema("accounts"));
-            assertThat(table.getTableSizeInBytes()).isEqualTo(114_688L);
-            assertThat(table.getBloatSizeInBytes()).isZero();
-            assertThat(table.getBloatPercentage()).isZero();
         });
     }
 }
