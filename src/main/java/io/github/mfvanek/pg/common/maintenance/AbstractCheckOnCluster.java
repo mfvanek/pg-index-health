@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
  * @author Ivan Vakhrushev
  * @since 0.5.1
  */
-public abstract class AbstractCheckOnCluster<T extends TableNameAware> implements DatabaseCheck<T> {
+public abstract class AbstractCheckOnCluster<T extends TableNameAware> implements DatabaseCheckOnCluster<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCheckOnCluster.class);
 

@@ -10,18 +10,18 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
+import io.github.mfvanek.pg.checks.cluster.DuplicatedIndexesCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.ForeignKeysNotCoveredWithIndexCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.IndexesWithBloatCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.IndexesWithNullValuesCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.IntersectedIndexesCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.InvalidIndexesCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.TablesWithBloatCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.TablesWithMissingIndexesCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.TablesWithoutPrimaryKeyCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.index.check.cluster.DuplicatedIndexesCheckOnCluster;
-import io.github.mfvanek.pg.index.check.cluster.ForeignKeysNotCoveredWithIndexCheckOnCluster;
-import io.github.mfvanek.pg.index.check.cluster.IndexesWithBloatCheckOnCluster;
-import io.github.mfvanek.pg.index.check.cluster.IndexesWithNullValuesCheckOnCluster;
-import io.github.mfvanek.pg.index.check.cluster.IntersectedIndexesCheckOnCluster;
-import io.github.mfvanek.pg.index.check.cluster.InvalidIndexesCheckOnCluster;
-import io.github.mfvanek.pg.index.check.cluster.UnusedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.model.table.TableNameAware;
-import io.github.mfvanek.pg.table.check.cluster.TablesWithBloatCheckOnCluster;
-import io.github.mfvanek.pg.table.check.cluster.TablesWithMissingIndexesCheckOnCluster;
-import io.github.mfvanek.pg.table.check.cluster.TablesWithoutPrimaryKeyCheckOnCluster;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -32,7 +32,7 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 public class DatabaseChecks {
 
-    private final ConcurrentMap<Diagnostic, DatabaseCheck<?>> checks = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Diagnostic, DatabaseCheckOnCluster<?>> checks = new ConcurrentHashMap<>();
 
     public DatabaseChecks(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         Stream.of(
@@ -51,14 +51,14 @@ public class DatabaseChecks {
 
     @SuppressWarnings("unchecked")
     @Nonnull
-    public <T extends TableNameAware> DatabaseCheck<T> getCheck(@Nonnull final Diagnostic diagnostic, @Nonnull final Class<T> type) {
-        final DatabaseCheck<?> check = checks.get(diagnostic);
+    public <T extends TableNameAware> DatabaseCheckOnCluster<T> getCheck(@Nonnull final Diagnostic diagnostic, @Nonnull final Class<T> type) {
+        final DatabaseCheckOnCluster<?> check = checks.get(diagnostic);
         if (check == null) {
             throw new IllegalStateException(String.format("Check for diagnostic %s not found", diagnostic));
         }
         if (!check.getType().isAssignableFrom(type)) {
             throw new IllegalStateException("Illegal type " + type);
         }
-        return (DatabaseCheck<T>) check;
+        return (DatabaseCheckOnCluster<T>) check;
     }
 }
