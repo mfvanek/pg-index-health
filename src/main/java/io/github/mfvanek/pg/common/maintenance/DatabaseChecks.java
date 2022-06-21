@@ -56,8 +56,8 @@ public class DatabaseChecks {
         if (check == null) {
             throw new IllegalStateException(String.format("Check for diagnostic %s not found", diagnostic));
         }
-        if (!check.getType().isAssignableFrom(type)) {
-            throw new IllegalStateException("Illegal type " + type);
+        if (!type.isAssignableFrom(check.getType())) {
+            throw new IllegalArgumentException("Illegal type: " + type);
         }
         return (DatabaseCheckOnCluster<T>) check;
     }

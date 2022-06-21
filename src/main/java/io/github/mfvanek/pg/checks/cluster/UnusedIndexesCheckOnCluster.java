@@ -60,7 +60,8 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
     }
 
     private void logLastStatsResetDate(@Nonnull final PgConnection connectionToHost) {
-        LOGGER.info(getLastStatsResetDateLogMessage(connectionToHost.getHost(), statisticsMaintenanceForAllHostsInCluster));
+        final String resetDateLogMessage = getLastStatsResetDateLogMessage(connectionToHost.getHost(), statisticsMaintenanceForAllHostsInCluster);
+        LOGGER.info(resetDateLogMessage);
     }
 
     @Nonnull

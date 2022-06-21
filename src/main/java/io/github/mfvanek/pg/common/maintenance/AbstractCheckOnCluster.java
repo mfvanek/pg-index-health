@@ -98,8 +98,12 @@ public abstract class AbstractCheckOnCluster<T extends TableNameAware> implement
 
     @Nonnull
     private DatabaseCheckOnHost<T> computeCheckForPrimaryIfNeed() {
-        final PgConnection primary = haPgConnection.getConnectionToPrimary();
-        return checksOnHosts.computeIfAbsent(primary.getHost(), (h) -> checkOnHostFactory.apply(primary));
+        return computeCheckForHostIfNeed(haPgConnection.getConnectionToPrimary());
+    }
+
+    @Nonnull
+    private DatabaseCheckOnHost<T> computeCheckForHostIfNeed(@Nonnull final PgConnection connectionToHost) {
+        return checksOnHosts.computeIfAbsent(connectionToHost.getHost(), (h) -> checkOnHostFactory.apply(connectionToHost));
     }
 
     @Nonnull
@@ -126,8 +130,7 @@ public abstract class AbstractCheckOnCluster<T extends TableNameAware> implement
 
     @Nonnull
     private List<T> executeOnHost(@Nonnull final PgConnection connectionToHost, @Nonnull final PgContext pgContext) {
-        final PgHost host = connectionToHost.getHost();
-        final DatabaseCheckOnHost<T> checkOnHost = checksOnHosts.computeIfAbsent(host, (h) -> checkOnHostFactory.apply(connectionToHost));
+        final DatabaseCheckOnHost<T> checkOnHost = computeCheckForHostIfNeed(connectionToHost);
         return checkOnHost.check(pgContext);
     }
 }

@@ -48,9 +48,11 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
                     .isNotNull()
                     .isEmpty();
 
-            assertThat(check.check(ctx))
+            assertThat(check.check()) // executing on public schema by default
                     .isNotNull()
-                    .hasSize(1);
+                    .hasSize(1)
+                    .containsExactly(
+                            IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name"));
         });
     }
 }
