@@ -12,12 +12,12 @@ package io.github.mfvanek.pg.checks.cluster;
 
 import io.github.mfvanek.pg.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnCluster;
-import io.github.mfvanek.pg.common.maintenance.MaintenanceFactoryImpl;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
+import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -28,11 +28,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import javax.annotation.Nonnull;
 
 /**
@@ -45,12 +46,13 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UnusedIndexesCheckOnCluster.class);
 
-    private final Map<PgHost, StatisticsMaintenanceOnHost> statisticsMaintenanceForAllHostsInCluster;
+    private final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory;
+    private final Map<PgHost, StatisticsMaintenanceOnHost> statistics;
 
     public UnusedIndexesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, UnusedIndexesCheckOnHost::new, UnusedIndexesCheckOnCluster::getResultAsIntersection);
-        // TODO refactor this
-        this.statisticsMaintenanceForAllHostsInCluster = new MaintenanceFactoryImpl().forStatistics(haPgConnection.getConnectionsToAllHostsInCluster());
+        this.statisticsOnHostFactory = StatisticsMaintenanceOnHostImpl::new;
+        this.statistics = new HashMap<>();
     }
 
     @Override
@@ -60,7 +62,7 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
     }
 
     private void logLastStatsResetDate(@Nonnull final PgConnection connectionToHost) {
-        final String resetDateLogMessage = getLastStatsResetDateLogMessage(connectionToHost.getHost(), statisticsMaintenanceForAllHostsInCluster);
+        final String resetDateLogMessage = getLastStatsResetDateLogMessage(computeStatisticsForHostIfNeed(connectionToHost));
         LOGGER.info(resetDateLogMessage);
     }
 
@@ -81,15 +83,8 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
     }
 
     @Nonnull
-    static String getLastStatsResetDateLogMessage(
-            @Nonnull final PgHost pgHost,
-            @Nonnull final Map<PgHost, StatisticsMaintenanceOnHost> statisticsMaintenanceForAllHosts) {
-        Objects.requireNonNull(statisticsMaintenanceForAllHosts, "statisticsMaintenanceForAllHosts cannot be null");
-        final StatisticsMaintenanceOnHost statisticsMaintenance = statisticsMaintenanceForAllHosts.get(pgHost);
-        if (statisticsMaintenance == null) {
-            throw new NoSuchElementException("StatisticsMaintenanceOnHost object wasn't found for host " + pgHost);
-        }
-
+    static String getLastStatsResetDateLogMessage(@Nonnull final StatisticsMaintenanceOnHost statisticsMaintenance) {
+        Objects.requireNonNull(statisticsMaintenance, "statisticsMaintenance cannot be null");
         final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
         if (statsResetTimestamp.isPresent()) {
             final long daysBetween = ChronoUnit.DAYS.between(statsResetTimestamp.get(), OffsetDateTime.now(ClockHolder.clock()));
@@ -97,5 +92,10 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
                     daysBetween, statsResetTimestamp.get());
         }
         return "Statistics have never been reset on this host";
+    }
+
+    @Nonnull
+    private StatisticsMaintenanceOnHost computeStatisticsForHostIfNeed(@Nonnull final PgConnection connectionToHost) {
+        return statistics.computeIfAbsent(connectionToHost.getHost(), h -> statisticsOnHostFactory.apply(connectionToHost));
     }
 }

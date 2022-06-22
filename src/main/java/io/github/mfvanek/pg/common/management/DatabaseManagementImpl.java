@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.common.management;
 
-import io.github.mfvanek.pg.common.maintenance.MaintenanceFactory;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
@@ -18,12 +17,16 @@ import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.ServerSpecification;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import javax.annotation.Nonnull;
 
 /**
@@ -33,18 +36,24 @@ import javax.annotation.Nonnull;
  * @see StatisticsMaintenanceOnHost
  * @see ConfigurationMaintenanceOnHost
  */
-public class DatabaseManagementImpl extends AbstractManagement implements DatabaseManagement {
+public class DatabaseManagementImpl implements DatabaseManagement {
 
-    private final Map<PgHost, StatisticsMaintenanceOnHost> statisticsMaintenanceForAllHostsInCluster;
-    private final Map<PgHost, ConfigurationMaintenanceOnHost> configurationMaintenanceForAllHostsInCluster;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseManagementImpl.class);
+
+    private final HighAvailabilityPgConnection haPgConnection;
+    private final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory;
+    private final Function<PgConnection, ConfigurationMaintenanceOnHost> configurationOnHostFactory;
+    private final Map<PgHost, StatisticsMaintenanceOnHost> statistics;
+    private final Map<PgHost, ConfigurationMaintenanceOnHost> configuration;
 
     public DatabaseManagementImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
-                                  @Nonnull final MaintenanceFactory maintenanceFactory) {
-        super(haPgConnection);
-        Objects.requireNonNull(maintenanceFactory);
-        final Set<PgConnection> pgConnections = haPgConnection.getConnectionsToAllHostsInCluster();
-        this.statisticsMaintenanceForAllHostsInCluster = maintenanceFactory.forStatistics(pgConnections);
-        this.configurationMaintenanceForAllHostsInCluster = maintenanceFactory.forConfiguration(pgConnections);
+                                  @Nonnull final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory,
+                                  @Nonnull final Function<PgConnection, ConfigurationMaintenanceOnHost> configurationOnHostFactory) {
+        this.haPgConnection = Objects.requireNonNull(haPgConnection, "haPgConnection cannot be null");
+        this.statisticsOnHostFactory = Objects.requireNonNull(statisticsOnHostFactory, "statisticsOnHostFactory cannot be null");
+        this.configurationOnHostFactory = Objects.requireNonNull(configurationOnHostFactory, "configurationOnHostFactory cannot be null");
+        this.statistics = new HashMap<>();
+        this.configuration = new HashMap<>();
     }
 
     /**
@@ -52,11 +61,10 @@ public class DatabaseManagementImpl extends AbstractManagement implements Databa
      */
     @Override
     public void resetStatistics() {
-        for (final StatisticsMaintenanceOnHost statisticsMaintenance : statisticsMaintenanceForAllHostsInCluster.values()) {
-            doOnHost(statisticsMaintenance.getHost(), () -> {
-                statisticsMaintenance.resetStatistics();
-                return true;
-            });
+        for (final PgConnection pgConnection : haPgConnection.getConnectionsToAllHostsInCluster()) {
+            LOGGER.debug("Going to execute on host {}", pgConnection.getHost().getName());
+            computeStatisticsForHostIfNeed(pgConnection)
+                    .resetStatistics();
         }
     }
 
@@ -66,18 +74,38 @@ public class DatabaseManagementImpl extends AbstractManagement implements Databa
     @Override
     @Nonnull
     public Optional<OffsetDateTime> getLastStatsResetTimestamp() {
-        return doOnPrimary(statisticsMaintenanceForAllHostsInCluster, StatisticsMaintenanceOnHost::getLastStatsResetTimestamp);
+        return computeStatisticsForHostIfNeed(getPrimaryAngLog())
+                .getLastStatsResetTimestamp();
     }
 
     @Override
     @Nonnull
     public Set<PgParam> getParamsWithDefaultValues(@Nonnull final ServerSpecification specification) {
-        return doOnPrimary(configurationMaintenanceForAllHostsInCluster, ConfigurationMaintenanceOnHost::getParamsWithDefaultValues, specification);
+        return computeConfigurationForHostIfNeed(getPrimaryAngLog())
+                .getParamsWithDefaultValues(specification);
     }
 
     @Override
     @Nonnull
     public Set<PgParam> getParamsCurrentValues() {
-        return doOnPrimary(configurationMaintenanceForAllHostsInCluster, ConfigurationMaintenanceOnHost::getParamsCurrentValues);
+        return computeConfigurationForHostIfNeed(getPrimaryAngLog())
+                .getParamsCurrentValues();
+    }
+
+    @Nonnull
+    private PgConnection getPrimaryAngLog() {
+        final PgConnection connectionToPrimary = haPgConnection.getConnectionToPrimary();
+        LOGGER.debug("Going to execute on primary host {}", connectionToPrimary.getHost().getName());
+        return connectionToPrimary;
+    }
+
+    @Nonnull
+    private StatisticsMaintenanceOnHost computeStatisticsForHostIfNeed(@Nonnull final PgConnection connectionToHost) {
+        return statistics.computeIfAbsent(connectionToHost.getHost(), h -> statisticsOnHostFactory.apply(connectionToHost));
+    }
+
+    @Nonnull
+    private ConfigurationMaintenanceOnHost computeConfigurationForHostIfNeed(@Nonnull final PgConnection connectionToHost) {
+        return configuration.computeIfAbsent(connectionToHost.getHost(), h -> configurationOnHostFactory.apply(connectionToHost));
     }
 }

@@ -20,8 +20,6 @@ import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.connection.PgHost;
-import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.index.IndexNameAware;
@@ -43,8 +41,6 @@ import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -175,35 +171,25 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @SuppressWarnings("ConstantConditions")
     @Test
     void getLastStatsResetDateLogMessageWithWrongArguments() {
-        final Map<PgHost, StatisticsMaintenanceOnHost> emptyMap = Collections.emptyMap();
-        assertThatThrownBy(() -> getLastStatsResetDateLogMessage(null, null))
+        assertThatThrownBy(() -> getLastStatsResetDateLogMessage(null))
                 .isInstanceOf(NullPointerException.class)
-                .hasMessage("statisticsMaintenanceForAllHosts cannot be null");
-        assertThatThrownBy(() -> getLastStatsResetDateLogMessage(null, emptyMap))
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("StatisticsMaintenanceOnHost object wasn't found for host null");
-        final PgHost host = PgHostImpl.ofPrimary();
-        assertThatThrownBy(() -> getLastStatsResetDateLogMessage(host, emptyMap))
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("StatisticsMaintenanceOnHost object wasn't found for host PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}");
+                .hasMessage("statisticsMaintenance cannot be null");
     }
 
     @Test
     void getLastStatsResetDateLogMessageWithoutResetTimestamp() {
-        final PgHost host = PgHostImpl.ofPrimary();
         final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
         Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.empty());
-        final String logMessage = getLastStatsResetDateLogMessage(host, Collections.singletonMap(host, statisticsMaintenance));
+        final String logMessage = getLastStatsResetDateLogMessage(statisticsMaintenance);
         assertThat(logMessage).isEqualTo("Statistics have never been reset on this host");
     }
 
     @Test
     void getLastStatsResetDateLogMessageWithResetTimestamp() {
-        final PgHost host = PgHostImpl.ofPrimary();
         final OffsetDateTime resetDate = OffsetDateTime.now(ClockHolder.clock());
         final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
         Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.of(resetDate.minusDays(123L)));
-        final String logMessage = getLastStatsResetDateLogMessage(host, Collections.singletonMap(host, statisticsMaintenance));
+        final String logMessage = getLastStatsResetDateLogMessage(statisticsMaintenance);
         assertThat(logMessage).startsWith("Last statistics reset on this host was 123 days ago (");
     }
 }
