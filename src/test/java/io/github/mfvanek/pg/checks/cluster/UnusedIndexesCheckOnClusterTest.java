@@ -43,6 +43,7 @@ import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -174,13 +175,15 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @SuppressWarnings("ConstantConditions")
     @Test
     void getLastStatsResetDateLogMessageWithWrongArguments() {
+        final Map<PgHost, StatisticsMaintenanceOnHost> emptyMap = Collections.emptyMap();
         assertThatThrownBy(() -> getLastStatsResetDateLogMessage(null, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("statisticsMaintenanceForAllHosts cannot be null");
-        assertThatThrownBy(() -> getLastStatsResetDateLogMessage(null, Collections.emptyMap()))
+        assertThatThrownBy(() -> getLastStatsResetDateLogMessage(null, emptyMap))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("StatisticsMaintenanceOnHost object wasn't found for host null");
-        assertThatThrownBy(() -> getLastStatsResetDateLogMessage(PgHostImpl.ofPrimary(), Collections.emptyMap()))
+        final PgHost host = PgHostImpl.ofPrimary();
+        assertThatThrownBy(() -> getLastStatsResetDateLogMessage(host, emptyMap))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("StatisticsMaintenanceOnHost object wasn't found for host PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}");
     }

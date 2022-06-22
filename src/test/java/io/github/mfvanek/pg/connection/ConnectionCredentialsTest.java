@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -108,30 +109,61 @@ class ConnectionCredentialsTest {
     @Test
     void testToString() {
         ConnectionCredentials credentials = ConnectionCredentials.ofUrl(DEFAULT_URL, "user", "pswrd");
-        assertThat(credentials).hasToString("ConnectionCredentials{connectionUrls=[jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}");
+        assertThat(credentials)
+                .hasToString("ConnectionCredentials{connectionUrls=[jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}");
 
         credentials = ConnectionCredentials.of(Arrays.asList(DEFAULT_URL, "jdbc:postgresql://host1:5432/postgres"), "user", "pswrd");
-        assertThat(credentials).hasToString(
-                "ConnectionCredentials{connectionUrls=[jdbc:postgresql://host1:5432/postgres, jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}");
+        assertThat(credentials)
+                .hasToString("ConnectionCredentials{connectionUrls=[jdbc:postgresql://host1:5432/postgres, jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(null, null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ConnectionCredentials.ofUrl("", "u", "p")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> ConnectionCredentials.ofUrl("  ", "u", "p")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> ConnectionCredentials.ofUrl("url", "u", "p")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "", "p")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "  ", "p")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "  ")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(null, null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("writeUrl cannot be null");
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("userName cannot be null");
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("password cannot be null");
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl("", "u", "p"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("writeUrl cannot be blank or empty");
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl("  ", "u", "p"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("writeUrl cannot be blank or empty");
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl("url", "u", "p"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("writeUrl has invalid format");
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "", "p"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("userName cannot be blank or empty");
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "  ", "p"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("userName cannot be blank or empty");
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", ""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("password cannot be blank or empty");
+        assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "  "))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("password cannot be blank or empty");
 
-        assertThatThrownBy(() -> ConnectionCredentials.of(null, null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ConnectionCredentials.of(Collections.singleton(DEFAULT_URL), null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ConnectionCredentials.of(Collections.singleton(DEFAULT_URL), "u", null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ConnectionCredentials.of(Collections.emptyList(), "u", "p")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> ConnectionCredentials.of(null, null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("connectionUrls cannot be null");
+        final Set<String> defaultUrls = Collections.singleton(DEFAULT_URL);
+        assertThatThrownBy(() -> ConnectionCredentials.of(defaultUrls, null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("userName cannot be null");
+        assertThatThrownBy(() -> ConnectionCredentials.of(defaultUrls, "u", null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("password cannot be null");
+        final List<String> emptyList = Collections.emptyList();
+        assertThatThrownBy(() -> ConnectionCredentials.of(emptyList, "u", "p"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("connectionUrls have to contain at least one url");
     }
 }

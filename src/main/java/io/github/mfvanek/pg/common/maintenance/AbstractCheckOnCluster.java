@@ -103,7 +103,7 @@ public abstract class AbstractCheckOnCluster<T extends TableNameAware> implement
 
     @Nonnull
     private DatabaseCheckOnHost<T> computeCheckForHostIfNeed(@Nonnull final PgConnection connectionToHost) {
-        return checksOnHosts.computeIfAbsent(connectionToHost.getHost(), (h) -> checkOnHostFactory.apply(connectionToHost));
+        return checksOnHosts.computeIfAbsent(connectionToHost.getHost(), h -> checkOnHostFactory.apply(connectionToHost));
     }
 
     @Nonnull
