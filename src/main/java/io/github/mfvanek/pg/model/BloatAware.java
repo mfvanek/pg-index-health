@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.model;
 
 /**
- * Allows to get information about bloat in database.
+ * Allows getting information about bloat in database.
  *
  * @author Ivan Vakhrushev
  */

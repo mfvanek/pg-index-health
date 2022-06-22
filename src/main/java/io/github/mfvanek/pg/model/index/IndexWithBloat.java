@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.model.index;
 
-import io.github.mfvanek.pg.model.BloatAware;
 import io.github.mfvanek.pg.utils.Validators;
 
 import javax.annotation.Nonnull;
@@ -22,7 +21,7 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class IndexWithBloat extends IndexWithSize implements BloatAware {
+public class IndexWithBloat extends IndexWithSize implements IndexBloatAware {
 
     private final long bloatSizeInBytes;
     private final int bloatPercentage;

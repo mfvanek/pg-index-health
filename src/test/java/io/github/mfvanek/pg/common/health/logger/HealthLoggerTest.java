@@ -10,14 +10,17 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.common.health.DatabaseHealthFactoryImpl;
-import io.github.mfvanek.pg.common.maintenance.MaintenanceFactoryImpl;
+import io.github.mfvanek.pg.checks.host.TablesWithMissingIndexesCheckOnHost;
+import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
+import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
+import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -43,7 +46,7 @@ class HealthLoggerTest extends DatabaseAwareTestBase {
         this.logger = new KeyValueFileHealthLogger(
                 credentials,
                 new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
-                new DatabaseHealthFactoryImpl(new MaintenanceFactoryImpl()));
+                DatabaseChecks::new);
     }
 
     @ParameterizedTest
@@ -64,6 +67,25 @@ class HealthLoggerTest extends DatabaseAwareTestBase {
                     assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat\t11");
                     assertContainsKey(logs, SimpleLoggingKey.TABLES_BLOAT, "tables_bloat\t2");
                 });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"public", "custom"})
+    void logTablesWithMissingIndexes(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
+            tryToFindAccountByClientId(schemaName);
+
+            // I don't know why this side effect helps test to pass
+            final AbstractCheckOnHost<TableWithMissingIndex> checkOnHost = new TablesWithMissingIndexesCheckOnHost(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
+            assertThat(checkOnHost.check(ctx))
+                    .hasSize(1);
+
+            final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
+            assertThat(logs)
+                    .isNotNull()
+                    .hasSize(10);
+            assertContainsKey(logs, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES, "tables_with_missing_indexes\t1");
+        });
     }
 
     @Test

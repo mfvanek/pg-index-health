@@ -171,19 +171,20 @@ class ExclusionsTest {
 
     @Test
     void builderWithInvalidSize() {
-        assertThatThrownBy(() -> Exclusions.builder().withIndexSizeThreshold(-1L))
+        final ExclusionsBuilder builder = Exclusions.builder();
+        assertThatThrownBy(() -> builder.withIndexSizeThreshold(-1L))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> Exclusions.builder().withTableSizeThreshold(-1L))
+        assertThatThrownBy(() -> builder.withTableSizeThreshold(-1L))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> Exclusions.builder().withIndexBloatSizeThreshold(-1L))
+        assertThatThrownBy(() -> builder.withIndexBloatSizeThreshold(-1L))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> Exclusions.builder().withIndexSizeThreshold(-1, MemoryUnit.KB))
+        assertThatThrownBy(() -> builder.withIndexSizeThreshold(-1, MemoryUnit.KB))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> Exclusions.builder().withTableSizeThreshold(-1, MemoryUnit.KB))
+        assertThatThrownBy(() -> builder.withTableSizeThreshold(-1, MemoryUnit.KB))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> Exclusions.builder().withIndexBloatSizeThreshold(-1, MemoryUnit.KB))
+        assertThatThrownBy(() -> builder.withIndexBloatSizeThreshold(-1, MemoryUnit.KB))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> Exclusions.builder().withTableBloatSizeThreshold(-1, MemoryUnit.MB))
+        assertThatThrownBy(() -> builder.withTableBloatSizeThreshold(-1, MemoryUnit.MB))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

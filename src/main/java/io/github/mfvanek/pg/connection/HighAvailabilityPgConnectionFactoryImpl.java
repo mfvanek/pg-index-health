@@ -36,6 +36,7 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
     @Nonnull
     @Override
     public HighAvailabilityPgConnection of(@Nonnull final ConnectionCredentials credentials) {
+        Objects.requireNonNull(credentials, "credentials cannot be null");
         final Map<String, PgConnection> connectionsToAllHostsInCluster = new LinkedHashMap<>();
         credentials.getConnectionUrls().forEach(
                 url -> addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, url, credentials));

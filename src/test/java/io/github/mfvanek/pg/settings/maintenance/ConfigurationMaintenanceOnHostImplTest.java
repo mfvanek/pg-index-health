@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.settings.maintenance;
 
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.MemoryUnit;
@@ -43,6 +44,13 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
         super(POSTGRES.getTestDatabase());
         this.configurationMaintenance = new ConfigurationMaintenanceOnHostImpl(
                 PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
+    }
+
+    @Test
+    void getHostShouldReturnPrimary() {
+        assertThat(configurationMaintenance.getHost())
+                .isNotNull()
+                .isEqualTo(PgHostImpl.ofPrimary());
     }
 
     @Test

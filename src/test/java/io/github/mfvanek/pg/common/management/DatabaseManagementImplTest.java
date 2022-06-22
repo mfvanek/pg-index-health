@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.common.management;
 
-import io.github.mfvanek.pg.common.maintenance.MaintenanceFactoryImpl;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
@@ -20,6 +19,8 @@ import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.ServerSpecification;
+import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl;
+import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -44,7 +45,7 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
         super(POSTGRES.getTestDatabase());
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(
                 PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
-        this.databaseManagement = new DatabaseManagementImpl(haPgConnection, new MaintenanceFactoryImpl());
+        this.databaseManagement = new DatabaseManagementImpl(haPgConnection, StatisticsMaintenanceOnHostImpl::new, ConfigurationMaintenanceOnHostImpl::new);
     }
 
     @ParameterizedTest

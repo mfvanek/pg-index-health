@@ -90,7 +90,6 @@ public final class Validators {
         }
     }
 
-
     @Nonnull
     private static <T> List<T> validateThatContainsAtLeastTwoRows(@Nonnull final List<T> duplicatedIndexes) {
         final int size = Objects.requireNonNull(duplicatedIndexes).size();

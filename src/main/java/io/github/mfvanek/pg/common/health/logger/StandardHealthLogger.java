@@ -10,10 +10,12 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.common.health.DatabaseHealthFactory;
+import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
 
+import java.util.function.Function;
 import javax.annotation.Nonnull;
 
 /**
@@ -25,8 +27,8 @@ public class StandardHealthLogger extends AbstractHealthLogger {
 
     public StandardHealthLogger(@Nonnull final ConnectionCredentials credentials,
                                 @Nonnull final HighAvailabilityPgConnectionFactory connectionFactory,
-                                @Nonnull final DatabaseHealthFactory databaseHealthFactory) {
-        super(credentials, connectionFactory, databaseHealthFactory);
+                                @Nonnull final Function<HighAvailabilityPgConnection, DatabaseChecks> databaseChecksFactory) {
+        super(credentials, connectionFactory, databaseChecksFactory);
     }
 
     @Override

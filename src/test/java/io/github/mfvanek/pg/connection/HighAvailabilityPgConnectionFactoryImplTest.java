@@ -14,10 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import javax.annotation.Nonnull;
 
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -75,15 +76,30 @@ class HighAvailabilityPgConnectionFactoryImplTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThatThrownBy(() -> connectionFactory.of(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> connectionFactory.of(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("credentials cannot be null");
 
-        assertThatThrownBy(() -> connectionFactory.ofUrl(null, null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> connectionFactory.ofUrl("jdbc:postgresql://host-1:6432/db_name", null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> connectionFactory.ofUrl("jdbc:postgresql://host-1:6432/db_name", "u", null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> connectionFactory.ofUrl(null, null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("writeUrl cannot be null");
+        assertThatThrownBy(() -> connectionFactory.ofUrl("jdbc:postgresql://host-1:6432/db_name", null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("userName cannot be null");
+        assertThatThrownBy(() -> connectionFactory.ofUrl("jdbc:postgresql://host-1:6432/db_name", "u", null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("password cannot be null");
 
-        assertThatThrownBy(() -> connectionFactory.ofUrls(null, null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> connectionFactory.ofUrls(singleton("jdbc:postgresql://host-1:6432/db_name"), null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> connectionFactory.ofUrls(singleton("jdbc:postgresql://host-1:6432/db_name"), "u", null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> connectionFactory.ofUrls(null, null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("connectionUrls cannot be null");
+        final Set<String> urls = Collections.singleton("jdbc:postgresql://host-1:6432/db_name");
+        assertThatThrownBy(() -> connectionFactory.ofUrls(urls, null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("userName cannot be null");
+        assertThatThrownBy(() -> connectionFactory.ofUrls(urls, "u", null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("password cannot be null");
     }
 
     @Test
