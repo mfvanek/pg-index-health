@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,10 +24,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
-import static io.github.mfvanek.pg.utils.HealthLoggerAssertions.assertContainsKey;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class StandardHealthLoggerTest extends DatabaseAwareTestBase {
+class StandardHealthLoggerTest extends HealthLoggerTestBase {
 
     @RegisterExtension
     static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
@@ -54,14 +52,18 @@ class StandardHealthLoggerTest extends DatabaseAwareTestBase {
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
                     assertThat(logs)
                             .isNotNull()
-                            .hasSize(10);
-                    assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes:1");
-                    assertContainsKey(logs, SimpleLoggingKey.DUPLICATED_INDEXES, "duplicated_indexes:2");
-                    assertContainsKey(logs, SimpleLoggingKey.FOREIGN_KEYS, "foreign_keys_without_index:1");
-                    assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key:1");
-                    assertContainsKey(logs, SimpleLoggingKey.INDEXES_WITH_NULLS, "indexes_with_null_values:1");
-                    assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat:11");
-                    assertContainsKey(logs, SimpleLoggingKey.TABLES_BLOAT, "tables_bloat:2");
+                            .hasSize(10)
+                            .containsExactlyInAnyOrder(
+                                    "invalid_indexes:1",
+                                    "duplicated_indexes:2",
+                                    "foreign_keys_without_index:1",
+                                    "tables_without_primary_key:1",
+                                    "indexes_with_null_values:1",
+                                    "indexes_bloat:11",
+                                    "tables_bloat:2",
+                                    "intersected_indexes:5",
+                                    "unused_indexes:7",
+                                    "tables_with_missing_indexes:0");
                 });
     }
 
@@ -72,7 +74,10 @@ class StandardHealthLoggerTest extends DatabaseAwareTestBase {
                 .isNotNull()
                 .hasSize(10);
         for (final SimpleLoggingKey key : SimpleLoggingKey.values()) {
-            assertContainsKey(logs, key, key.getSubKeyName() + ":0");
+            assertThat(logs)
+                    .filteredOn(ofKey(key))
+                    .hasSize(1)
+                    .containsExactly(key.getSubKeyName() + ":0");
         }
     }
 }

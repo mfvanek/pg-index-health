@@ -21,21 +21,30 @@ import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.utils.ClockHolder;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
 import java.util.List;
 
-import static io.github.mfvanek.pg.utils.HealthLoggerAssertions.assertContainsKey;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HealthLoggerTest extends DatabaseAwareTestBase {
+class HealthLoggerTest extends HealthLoggerTestBase {
 
     @RegisterExtension
     static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
+
+    private static final LocalDateTime BEFORE_MILLENNIUM = LocalDateTime.of(1999, Month.DECEMBER, 31, 23, 59, 59);
+    private static final Clock FIXED_CLOCK = Clock.fixed(BEFORE_MILLENNIUM.toInstant(ZoneOffset.UTC), ZoneOffset.UTC);
+    private static Clock originalClock;
 
     private final HealthLogger logger;
 
@@ -49,6 +58,18 @@ class HealthLoggerTest extends DatabaseAwareTestBase {
                 DatabaseChecks::new);
     }
 
+    @BeforeAll
+    static void setUp() {
+        originalClock = ClockHolder.setClock(FIXED_CLOCK);
+    }
+
+    @AfterAll
+    static void tearDown() {
+        if (originalClock != null) {
+            ClockHolder.setClock(originalClock);
+        }
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void logAll(final String schemaName) {
@@ -58,14 +79,18 @@ class HealthLoggerTest extends DatabaseAwareTestBase {
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
                     assertThat(logs)
                             .isNotNull()
-                            .hasSize(10);
-                    assertContainsKey(logs, SimpleLoggingKey.INVALID_INDEXES, "invalid_indexes\t1");
-                    assertContainsKey(logs, SimpleLoggingKey.DUPLICATED_INDEXES, "duplicated_indexes\t2");
-                    assertContainsKey(logs, SimpleLoggingKey.FOREIGN_KEYS, "foreign_keys_without_index\t1");
-                    assertContainsKey(logs, SimpleLoggingKey.TABLES_WITHOUT_PK, "tables_without_primary_key\t1");
-                    assertContainsKey(logs, SimpleLoggingKey.INDEXES_WITH_NULLS, "indexes_with_null_values\t1");
-                    assertContainsKey(logs, SimpleLoggingKey.INDEXES_BLOAT, "indexes_bloat\t11");
-                    assertContainsKey(logs, SimpleLoggingKey.TABLES_BLOAT, "tables_bloat\t2");
+                            .hasSize(10)
+                            .containsExactlyInAnyOrder(
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tinvalid_indexes\t1",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tduplicated_indexes\t2",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t1",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_primary_key\t1",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_null_values\t1",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_bloat\t11",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_bloat\t2",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tintersected_indexes\t5",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tunused_indexes\t7",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t0");
                 });
     }
 
@@ -83,8 +108,10 @@ class HealthLoggerTest extends DatabaseAwareTestBase {
             final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
             assertThat(logs)
                     .isNotNull()
-                    .hasSize(10);
-            assertContainsKey(logs, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES, "tables_with_missing_indexes\t1");
+                    .hasSize(10)
+                    .filteredOn(ofKey(SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES))
+                    .hasSize(1)
+                    .containsExactly("1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t1");
         });
     }
 
@@ -95,7 +122,10 @@ class HealthLoggerTest extends DatabaseAwareTestBase {
                 .isNotNull()
                 .hasSize(10);
         for (final SimpleLoggingKey key : SimpleLoggingKey.values()) {
-            assertContainsKey(logs, key, key.getSubKeyName() + "\t0");
+            assertThat(logs)
+                    .filteredOn(ofKey(key))
+                    .hasSize(1)
+                    .containsExactly("1999-12-31T23:59:59Z\tdb_indexes_health\t" + key.getSubKeyName() + "\t0");
         }
     }
 }
