@@ -31,7 +31,6 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DatabaseManagementImplTest extends DatabaseAwareTestBase {
@@ -61,8 +60,9 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
             final Optional<OffsetDateTime> statsResetTimestamp = databaseManagement.getLastStatsResetTimestamp();
             assertThat(statsResetTimestamp)
                     .isNotNull()
-                    .isPresent();
-            assertThat(statsResetTimestamp.get()).isAfter(testStartTime);
+                    .isPresent()
+                    .get()
+                    .satisfies(t -> assertThat(t).isAfter(testStartTime));
         });
     }
 
@@ -74,8 +74,8 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
             final Set<PgParam> paramsWithDefaultValues = databaseManagement.getParamsWithDefaultValues(specification);
             assertThat(paramsWithDefaultValues)
                     .isNotNull()
-                    .hasSize(10);
-            assertThat(paramsWithDefaultValues.stream().map(PgParam::getName).collect(toList()))
+                    .hasSize(10)
+                    .extracting(PgParam::getName)
                     .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement", "idle_in_transaction_session_timeout",
                             "statement_timeout", "effective_cache_size", "lock_timeout", "temp_file_limit");
         });

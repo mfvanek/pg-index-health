@@ -46,7 +46,8 @@ class StatisticsMaintenanceOnHostImplEmptyTest extends DatabaseAwareTestBase {
         final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
         assertThat(statsResetTimestamp)
                 .isNotNull()
-                .isPresent();
-        assertThat(statsResetTimestamp.get()).isBeforeOrEqualTo(OffsetDateTime.now(ClockHolder.clock()));
+                .isPresent()
+                .get()
+                .satisfies(t -> assertThat(t).isBeforeOrEqualTo(OffsetDateTime.now(ClockHolder.clock())));
     }
 }

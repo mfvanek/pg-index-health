@@ -12,14 +12,12 @@ package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.model.table.TableNameAware;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,8 +41,8 @@ class DatabaseCheckOnClusterTest {
         final List<Table> tables = check.check(CONTEXTS, item -> true);
         assertThat(tables)
                 .isNotNull()
-                .hasSize(6);
-        assertThat(tables.stream().map(TableNameAware::getTableName).collect(Collectors.toSet()))
+                .hasSize(6)
+                .extracting(Table::getTableName)
                 .containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
     }
 }

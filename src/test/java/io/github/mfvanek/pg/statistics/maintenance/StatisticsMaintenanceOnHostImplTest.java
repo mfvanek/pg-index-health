@@ -62,8 +62,9 @@ class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
             final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
             assertThat(statsResetTimestamp)
                     .isNotNull()
-                    .isPresent();
-            assertThat(statsResetTimestamp.get()).isAfter(testStartTime);
+                    .isPresent()
+                    .get()
+                    .satisfies(t -> assertThat(t).isAfter(testStartTime));
         });
     }
 
