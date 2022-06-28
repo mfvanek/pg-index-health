@@ -25,7 +25,8 @@ class ValidatorsTest {
 
     @Test
     void valueIsPositive() {
-        assertThat(Validators.valueIsPositive(1L, "arg")).isEqualTo(1L);
+        assertThat(Validators.valueIsPositive(1L, "arg"))
+                .isEqualTo(1L);
         assertThatThrownBy(() -> Validators.valueIsPositive(0, "arg"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("arg should be greater than zero");
@@ -34,7 +35,8 @@ class ValidatorsTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void indexNameNotBlank() {
-        assertThat(Validators.indexNameNotBlank("idx")).isEqualTo("idx");
+        assertThat(Validators.indexNameNotBlank("idx"))
+                .isEqualTo("idx");
         assertThatThrownBy(() -> Validators.indexNameNotBlank(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("indexName cannot be null");

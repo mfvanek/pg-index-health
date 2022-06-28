@@ -41,7 +41,7 @@ public final class QueryExecutors {
                                            @Nonnull final String sqlQuery,
                                            @Nonnull final ResultSetExtractor<T> rse) {
         LOGGER.debug("Executing query: {}", sqlQuery);
-        Objects.requireNonNull(sqlQuery, "sqlQuery");
+        Objects.requireNonNull(sqlQuery, "sqlQuery cannot be null");
         final DataSource dataSource = pgConnection.getDataSource();
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {

@@ -71,7 +71,9 @@ class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
     @Test
     void getHost() {
         final PgHost host = statisticsMaintenance.getHost();
-        assertThat(host).isNotNull();
-        assertThat(host.getName()).isEqualTo("primary");
+        assertThat(host)
+                .isNotNull()
+                .extracting(PgHost::getName)
+                .isEqualTo("primary");
     }
 }

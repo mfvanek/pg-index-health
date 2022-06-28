@@ -32,10 +32,18 @@ class PgParamImplTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThatThrownBy(() -> PgParamImpl.of(null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> PgParamImpl.of("", null)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> PgParamImpl.of("  ", null)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> PgParamImpl.of("param_name", null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> PgParamImpl.of(null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("name cannot be null");
+        assertThatThrownBy(() -> PgParamImpl.of("", null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("name cannot be blank");
+        assertThatThrownBy(() -> PgParamImpl.of("  ", null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("name cannot be blank");
+        assertThatThrownBy(() -> PgParamImpl.of("param_name", null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("value for 'param_name' cannot be null");
     }
 
     @Test

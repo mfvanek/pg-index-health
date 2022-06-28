@@ -27,7 +27,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.sql.SQLException;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -63,8 +62,8 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
         final Set<PgParam> paramsWithDefaultValues = configurationMaintenance.getParamsWithDefaultValues(specification);
         assertThat(paramsWithDefaultValues)
                 .isNotNull()
-                .hasSize(9);
-        assertThat(paramsWithDefaultValues.stream().map(PgParam::getName).collect(toList()))
+                .hasSize(9)
+                .extracting(PgParam::getName)
                 .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement", "idle_in_transaction_session_timeout",
                         "statement_timeout", "effective_cache_size", "temp_file_limit");
     }
@@ -86,8 +85,10 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
     @Test
     void getParamCurrentValue() {
         final PgParam currentValue = configurationMaintenance.getParamCurrentValue(ImportantParam.LOG_MIN_DURATION_STATEMENT);
-        assertThat(currentValue).isNotNull();
-        assertThat(currentValue.getValue()).isEqualTo(ImportantParam.LOG_MIN_DURATION_STATEMENT.getDefaultValue());
+        assertThat(currentValue)
+                .isNotNull()
+                .extracting(PgParam::getValue)
+                .isEqualTo(ImportantParam.LOG_MIN_DURATION_STATEMENT.getDefaultValue());
     }
 
     @Test
