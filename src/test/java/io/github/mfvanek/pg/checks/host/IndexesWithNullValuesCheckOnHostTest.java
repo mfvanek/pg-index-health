@@ -23,7 +23,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.utils.AbstractCheckOnHostAssert.assertThat;
 
 class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
 
@@ -39,15 +39,16 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(IndexWithNulls.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.INDEXES_WITH_NULL_VALUES);
-        assertThat(check.getHost()).isEqualTo(PgHostImpl.ofPrimary());
+        assertThat(check)
+                .hasType(IndexWithNulls.class)
+                .hasDiagnostic(Diagnostic.INDEXES_WITH_NULL_VALUES)
+                .hasHost(PgHostImpl.ofPrimary());
     }
 
     @Test
     void onEmptyDatabase() {
-        assertThat(check.check())
-                .isNotNull()
+        assertThat(check)
+                .executing()
                 .isEmpty();
     }
 
@@ -55,8 +56,8 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
-                assertThat(check.check(ctx))
-                        .isNotNull()
+                assertThat(check)
+                        .executing(ctx)
                         .isEmpty());
     }
 
@@ -64,8 +65,8 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx ->
-                assertThat(check.check(ctx))
-                        .isNotNull()
+                assertThat(check)
+                        .executing(ctx)
                         .hasSize(1)
                         .containsExactly(
                                 IndexWithNulls.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_middle_name"), 0L, "middle_name"))

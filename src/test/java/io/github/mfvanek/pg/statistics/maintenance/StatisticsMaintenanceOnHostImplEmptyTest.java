@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.time.OffsetDateTime;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,9 +42,8 @@ class StatisticsMaintenanceOnHostImplEmptyTest extends DatabaseAwareTestBase {
         // Time of the last statistics reset is initialized to the system time during the first connection to the database.
         DatabasePopulator.collectStatistics(POSTGRES.getTestDatabase());
         waitForStatisticsCollector();
-        final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
-        assertThat(statsResetTimestamp)
-                .isNotNull()
+
+        assertThat(statisticsMaintenance.getLastStatsResetTimestamp())
                 .isPresent()
                 .get()
                 .satisfies(t -> assertThat(t).isBeforeOrEqualTo(OffsetDateTime.now(ClockHolder.clock())));

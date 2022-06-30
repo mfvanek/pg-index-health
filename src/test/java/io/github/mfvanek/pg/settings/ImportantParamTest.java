@@ -38,7 +38,7 @@ class ImportantParamTest {
 
     @Test
     void testToString() {
-        final String result = ImportantParam.MAINTENANCE_WORK_MEM.toString();
-        assertThat(result).isEqualTo("ImportantParam{name='maintenance_work_mem', defaultValue='64MB'}");
+        assertThat(ImportantParam.MAINTENANCE_WORK_MEM)
+                .hasToString("ImportantParam{name='maintenance_work_mem', defaultValue='64MB'}");
     }
 }

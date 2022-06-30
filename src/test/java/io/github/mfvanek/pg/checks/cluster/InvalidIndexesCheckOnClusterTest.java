@@ -49,7 +49,6 @@ class InvalidIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @Test
     void onEmptyDatabase() {
         assertThat(check.check())
-                .isNotNull()
                 .isEmpty();
     }
 
@@ -58,7 +57,6 @@ class InvalidIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx ->
                 assertThat(check.check(ctx))
-                        .isNotNull()
                         .isEmpty());
     }
 
@@ -67,13 +65,11 @@ class InvalidIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withInvalidIndex(), ctx -> {
             assertThat(check.check(ctx))
-                    .isNotNull()
                     .hasSize(1)
                     .containsExactly(
                             Index.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name_first_name")));
 
             assertThat(check.check(ctx, FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_name_first_name"))))
-                    .isNotNull()
                     .isEmpty();
         });
     }

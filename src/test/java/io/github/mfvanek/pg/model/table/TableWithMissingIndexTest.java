@@ -42,8 +42,8 @@ class TableWithMissingIndexTest {
 
     @Test
     void testToString() {
-        final TableWithMissingIndex table = TableWithMissingIndex.of("t", 11L, 33L, 22L);
-        assertThat(table).hasToString("TableWithMissingIndex{tableName='t', tableSizeInBytes=11, seqScans=33, indexScans=22}");
+        assertThat(TableWithMissingIndex.of("t", 11L, 33L, 22L))
+                .hasToString("TableWithMissingIndex{tableName='t', tableSizeInBytes=11, seqScans=33, indexScans=22}");
     }
 
     @SuppressWarnings("ConstantConditions")

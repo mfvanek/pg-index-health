@@ -23,7 +23,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.utils.AbstractCheckOnHostAssert.assertThat;
 
 class TablesWithMissingIndexesCheckOnHostTest extends DatabaseAwareTestBase {
 
@@ -39,15 +39,16 @@ class TablesWithMissingIndexesCheckOnHostTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(TableWithMissingIndex.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.TABLES_WITH_MISSING_INDEXES);
-        assertThat(check.getHost()).isEqualTo(PgHostImpl.ofPrimary());
+        assertThat(check)
+                .hasType(TableWithMissingIndex.class)
+                .hasDiagnostic(Diagnostic.TABLES_WITH_MISSING_INDEXES)
+                .hasHost(PgHostImpl.ofPrimary());
     }
 
     @Test
     void onEmptyDatabase() {
-        assertThat(check.check())
-                .isNotNull()
+        assertThat(check)
+                .executing()
                 .isEmpty();
     }
 
@@ -55,8 +56,8 @@ class TablesWithMissingIndexesCheckOnHostTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
-                assertThat(check.check(ctx))
-                        .isNotNull()
+                assertThat(check)
+                        .executing(ctx)
                         .isEmpty());
     }
 
@@ -65,8 +66,8 @@ class TablesWithMissingIndexesCheckOnHostTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             tryToFindAccountByClientId(schemaName);
-            assertThat(check.check(ctx))
-                    .isNotNull()
+            assertThat(check)
+                    .executing(ctx)
                     .hasSize(1)
                     .containsExactly(
                             TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))

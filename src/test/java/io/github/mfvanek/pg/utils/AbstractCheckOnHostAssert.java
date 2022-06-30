@@ -16,7 +16,7 @@ import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import org.assertj.core.api.AbstractAssert;
-import org.assertj.core.api.AssertionsForInterfaceTypes;
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ListAssert;
 
 import javax.annotation.Nonnull;
@@ -54,12 +54,12 @@ public class AbstractCheckOnHostAssert<E extends TableNameAware> extends Abstrac
 
     public ListAssert<E> executing() {
         isNotNull();
-        return AssertionsForInterfaceTypes.assertThat(actual.check());
+        return Assertions.assertThat(actual.check());
     }
 
     public ListAssert<E> executing(@Nonnull final PgContext pgContext) {
         isNotNull();
-        return AssertionsForInterfaceTypes.assertThat(actual.check(pgContext));
+        return Assertions.assertThat(actual.check(pgContext));
     }
 
     public static <T extends TableNameAware> AbstractCheckOnHostAssert<T> assertThat(@Nonnull final AbstractCheckOnHost<T> actual) {

@@ -92,6 +92,7 @@ class PgConnectionImplTest {
     @Test
     void toStringTest() {
         final PgConnection connection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
-        assertThat(connection).hasToString("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}}");
+        assertThat(connection)
+                .hasToString("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}}");
     }
 }

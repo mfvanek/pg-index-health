@@ -18,12 +18,13 @@ import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.utils.AbstractCheckOnHostAssert.assertThat;
 
 class TablesWithBloatCheckOnHostTest extends DatabaseAwareTestBase {
 
@@ -39,15 +40,16 @@ class TablesWithBloatCheckOnHostTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(TableWithBloat.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.BLOATED_TABLES);
-        assertThat(check.getHost()).isEqualTo(PgHostImpl.ofPrimary());
+        assertThat(check)
+                .hasType(TableWithBloat.class)
+                .hasDiagnostic(Diagnostic.BLOATED_TABLES)
+                .hasHost(PgHostImpl.ofPrimary());
     }
 
     @Test
     void onEmptyDatabase() {
-        assertThat(check.check())
-                .isNotNull()
+        assertThat(check)
+                .executing()
                 .isEmpty();
     }
 
@@ -56,8 +58,8 @@ class TablesWithBloatCheckOnHostTest extends DatabaseAwareTestBase {
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withStatistics(), ctx -> {
             waitForStatisticsCollector();
-            assertThat(check.check(ctx))
-                    .isNotNull()
+            assertThat(check)
+                    .executing(ctx)
                     .isEmpty();
         });
     }
@@ -67,11 +69,11 @@ class TablesWithBloatCheckOnHostTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withStatistics(), ctx -> {
             waitForStatisticsCollector();
-            assertThat(existsStatisticsForTable(ctx, "accounts"))
+            Assertions.assertThat(existsStatisticsForTable(ctx, "accounts"))
                     .isTrue();
 
-            assertThat(check.check(ctx))
-                    .isNotNull()
+            assertThat(check)
+                    .executing(ctx)
                     .hasSize(2)
                     .containsExactlyInAnyOrder(
                             TableWithBloat.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0),

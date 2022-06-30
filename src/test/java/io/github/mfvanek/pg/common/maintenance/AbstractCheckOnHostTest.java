@@ -40,16 +40,13 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
             final long before = getRowsCount(ctx.getSchemaName(), "clients");
             assertThat(before).isEqualTo(1001L);
             assertThat(check.check(PgContext.of("; truncate table clients;")))
-                    .isNotNull()
                     .isEmpty();
             assertThat(getRowsCount(ctx.getSchemaName(), "clients")).isEqualTo(before);
 
             assertThat(check.check(PgContext.of("; select pg_sleep(100000000);")))
-                    .isNotNull()
                     .isEmpty();
 
             assertThat(check.check()) // executing on public schema by default
-                    .isNotNull()
                     .hasSize(1)
                     .containsExactly(
                             IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name"));

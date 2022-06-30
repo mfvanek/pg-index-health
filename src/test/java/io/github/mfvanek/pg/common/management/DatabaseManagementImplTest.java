@@ -28,8 +28,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.OffsetDateTime;
-import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,9 +55,8 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
             databaseManagement.resetStatistics();
             waitForStatisticsCollector();
             assertThat(getSeqScansForAccounts(ctx)).isZero();
-            final Optional<OffsetDateTime> statsResetTimestamp = databaseManagement.getLastStatsResetTimestamp();
-            assertThat(statsResetTimestamp)
-                    .isNotNull()
+
+            assertThat(databaseManagement.getLastStatsResetTimestamp())
                     .isPresent()
                     .get()
                     .satisfies(t -> assertThat(t).isAfter(testStartTime));
@@ -71,9 +68,7 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
     void shouldReturnParamsWithDefaultValues(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final ServerSpecification specification = ServerSpecification.builder().withCpuCores(2).withMemoryAmount(2, MemoryUnit.GB).withSSD().build();
-            final Set<PgParam> paramsWithDefaultValues = databaseManagement.getParamsWithDefaultValues(specification);
-            assertThat(paramsWithDefaultValues)
-                    .isNotNull()
+            assertThat(databaseManagement.getParamsWithDefaultValues(specification))
                     .hasSize(10)
                     .extracting(PgParam::getName)
                     .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement", "idle_in_transaction_session_timeout",
@@ -84,11 +79,8 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void shouldReturnParamsCurrentValues(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
-            final Set<PgParam> paramsCurrentValues = databaseManagement.getParamsCurrentValues();
-            assertThat(paramsCurrentValues)
-                    .isNotNull()
-                    .hasSizeGreaterThan(ImportantParam.values().length);
-        });
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
+                assertThat(databaseManagement.getParamsCurrentValues())
+                        .hasSizeGreaterThan(ImportantParam.values().length));
     }
 }

@@ -48,7 +48,6 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
     @Test
     void getHostShouldReturnPrimary() {
         assertThat(configurationMaintenance.getHost())
-                .isNotNull()
                 .isEqualTo(PgHostImpl.ofPrimary());
     }
 
@@ -61,7 +60,6 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
                 .build();
         final Set<PgParam> paramsWithDefaultValues = configurationMaintenance.getParamsWithDefaultValues(specification);
         assertThat(paramsWithDefaultValues)
-                .isNotNull()
                 .hasSize(9)
                 .extracting(PgParam::getName)
                 .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement", "idle_in_transaction_session_timeout",
@@ -72,7 +70,6 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
     void getParamsCurrentValues() {
         final Set<PgParam> currentValues = configurationMaintenance.getParamsCurrentValues();
         assertThat(currentValues)
-                .isNotNull()
                 .hasSizeGreaterThan(200);
         final Set<String> allParamNames = currentValues.stream()
                 .map(PgParam::getName)

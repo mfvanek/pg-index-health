@@ -48,7 +48,6 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
     @Test
     void onEmptyDatabase() {
         assertThat(check.check())
-                .isNotNull()
                 .isEmpty();
     }
 
@@ -57,7 +56,6 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
                 assertThat(check.check(ctx))
-                        .isNotNull()
                         .isEmpty());
     }
 
@@ -66,13 +64,11 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withTableWithoutPrimaryKey(), ctx -> {
             assertThat(check.check(ctx))
-                    .isNotNull()
                     .hasSize(1)
                     .containsExactly(Table.of(ctx.enrichWithSchema("bad_clients"), 0L))
                     .allMatch(t -> t.getTableSizeInBytes() == 0L);
 
             assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients"))))
-                    .isNotNull()
                     .isEmpty();
         });
     }
@@ -82,7 +78,6 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
     void shouldReturnNothingForMaterializedViews(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withMaterializedView(), ctx ->
                 assertThat(check.check())
-                        .isNotNull()
                         .isEmpty());
     }
 }

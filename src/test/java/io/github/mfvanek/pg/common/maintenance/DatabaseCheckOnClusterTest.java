@@ -40,7 +40,6 @@ class DatabaseCheckOnClusterTest {
                 });
         final List<Table> tables = check.check(CONTEXTS, item -> true);
         assertThat(tables)
-                .isNotNull()
                 .hasSize(6)
                 .extracting(Table::getTableName)
                 .containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");

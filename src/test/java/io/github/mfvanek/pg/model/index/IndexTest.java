@@ -41,9 +41,7 @@ class IndexTest {
 
     @Test
     void testToString() {
-        final Index index = Index.of("t", "i");
-        assertThat(index)
-                .isNotNull()
+        assertThat(Index.of("t", "i"))
                 .hasToString("Index{tableName='t', indexName='i'}");
     }
 

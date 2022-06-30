@@ -80,9 +80,7 @@ class PgHostImplTest {
 
     @Test
     void toStringTest() {
-        final PgHost host = PgHostImpl.ofPrimary();
-        assertThat(host)
-                .isNotNull()
+        assertThat(PgHostImpl.ofPrimary())
                 .hasToString("PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}");
     }
 

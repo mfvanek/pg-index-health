@@ -50,7 +50,6 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @Test
     void onEmptyDatabase() {
         assertThat(check.check())
-                .isNotNull()
                 .isEmpty();
     }
 
@@ -59,7 +58,6 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx ->
                 assertThat(check.check(ctx))
-                        .isNotNull()
                         .isEmpty());
     }
 
@@ -68,7 +66,6 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDuplicatedIndex(), ctx -> {
             assertThat(check.check(ctx))
-                    .isNotNull()
                     .hasSize(1)
                     .containsExactly(
                             DuplicatedIndexes.of(
@@ -77,11 +74,9 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                     .allMatch(d -> d.getTotalSize() >= 16_384L);
 
             assertThat(check.check(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("accounts_account_number_key"))))
-                    .isNotNull()
                     .isEmpty();
 
             assertThat(check.check(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("i_accounts_account_number"))))
-                    .isNotNull()
                     .isEmpty();
         });
     }
@@ -91,7 +86,6 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void withHashIndexShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDuplicatedHashIndex(), ctx ->
                 assertThat(check.check(ctx))
-                        .isNotNull()
                         .isEmpty());
     }
 
@@ -100,7 +94,6 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void withDifferentOpclassShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDifferentOpclassIndexes(), ctx ->
                 assertThat(check.check(ctx))
-                        .isNotNull()
                         .isEmpty());
     }
 
@@ -109,7 +102,6 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void withDifferentCollationShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withCustomCollation().withDuplicatedCustomCollationIndex(), ctx ->
                 assertThat(check.check(ctx))
-                        .isNotNull()
                         .isEmpty());
     }
 }

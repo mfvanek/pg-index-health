@@ -33,7 +33,6 @@ class DuplicatedIndexesTest {
         assertThat(index.getTableName()).isEqualTo("t");
         assertThat(index.getTotalSize()).isEqualTo(303L);
         assertThat(index.getIndexNames())
-                .isNotNull()
                 .hasSize(2)
                 .containsExactly("i1", "i2")
                 .isUnmodifiable();
@@ -46,10 +45,9 @@ class DuplicatedIndexesTest {
                 IndexWithSize.of("t1", "i1", 101L),
                 IndexWithSize.of("t1", "i2", 202L)));
         assertThat(indexes).isNotNull();
-
         assertThat(indexes.getTotalSize()).isEqualTo(606L);
+
         assertThat(indexes.getDuplicatedIndexes())
-                .isNotNull()
                 .hasSize(3)
                 .containsExactly(
                         IndexWithSize.of("t1", "i1", 101L),
@@ -57,7 +55,6 @@ class DuplicatedIndexesTest {
                         IndexWithSize.of("t1", "i3", 303L))
                 .isUnmodifiable();
         assertThat(indexes.getIndexNames())
-                .isNotNull()
                 .hasSize(3)
                 .containsExactly("i1", "i2", "i3")
                 .isUnmodifiable();
@@ -75,13 +72,11 @@ class DuplicatedIndexesTest {
         sourceIndexes.add(fourth);
 
         assertThat(indexes.getDuplicatedIndexes())
-                .isNotNull()
                 .hasSize(3)
                 .doesNotContain(fourth)
                 .isUnmodifiable();
 
         assertThat(indexes.getIndexNames())
-                .isNotNull()
                 .hasSize(3)
                 .doesNotContain("i4")
                 .isUnmodifiable();
@@ -94,7 +89,6 @@ class DuplicatedIndexesTest {
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
         assertThat(indexes)
-                .isNotNull()
                 .hasToString("DuplicatedIndexes{tableName='t', totalSize=606, indexes=[" + "IndexWithSize{tableName='t', indexName='i1', indexSizeInBytes=101}, " +
                         "IndexWithSize{tableName='t', indexName='i2', indexSizeInBytes=202}, " + "IndexWithSize{tableName='t', indexName='i3', indexSizeInBytes=303}]}");
     }

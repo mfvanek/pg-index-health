@@ -67,9 +67,7 @@ class ServerSpecificationTest {
 
     @Test
     void toStringTest() {
-        final ServerSpecification specification = ServerSpecification.builder().build();
-        assertThat(specification)
-                .isNotNull()
+        assertThat(ServerSpecification.builder().build())
                 .hasToString("ServerSpecification{cpuCoresAmount=1, memoryAmountInBytes=1073741824, hasSSD=false}");
     }
 }

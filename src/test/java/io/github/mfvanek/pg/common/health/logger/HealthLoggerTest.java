@@ -76,9 +76,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences().withData().withInvalidIndex().withNullValuesInIndex().withTableWithoutPrimaryKey().withDuplicatedIndex().withNonSuitableIndex().withStatistics(), ctx -> {
                     waitForStatisticsCollector();
-                    final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
-                    assertThat(logs)
-                            .isNotNull()
+                    assertThat(logger.logAll(Exclusions.empty(), ctx))
                             .hasSize(10)
                             .containsExactlyInAnyOrder(
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tinvalid_indexes\t1",
@@ -105,9 +103,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
             assertThat(checkOnHost.check(ctx))
                     .hasSize(1);
 
-            final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
-            assertThat(logs)
-                    .isNotNull()
+            assertThat(logger.logAll(Exclusions.empty(), ctx))
                     .hasSize(10)
                     .filteredOn(ofKey(SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES))
                     .hasSize(1)
@@ -119,7 +115,6 @@ class HealthLoggerTest extends HealthLoggerTestBase {
     void logAllWithDefaultSchema() {
         final List<String> logs = logger.logAll(Exclusions.empty());
         assertThat(logs)
-                .isNotNull()
                 .hasSize(10);
         for (final SimpleLoggingKey key : SimpleLoggingKey.values()) {
             assertThat(logs)
