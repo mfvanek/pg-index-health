@@ -21,11 +21,11 @@ class ServerSpecificationBuilderTest {
     void toStringTest() {
         final ServerSpecificationBuilder builder = ServerSpecification.builder();
         assertThat(builder)
-                .isNotNull()
                 .hasToString("ServerSpecificationBuilder{cpuCoresAmount=1, memoryAmountInBytes=1073741824, hasSSD=false}");
         builder.withCpuCores(2)
                 .withMemoryAmount(512, MemoryUnit.MB)
                 .withSSD();
-        assertThat(builder).hasToString("ServerSpecificationBuilder{cpuCoresAmount=2, memoryAmountInBytes=536870912, hasSSD=true}");
+        assertThat(builder)
+                .hasToString("ServerSpecificationBuilder{cpuCoresAmount=2, memoryAmountInBytes=536870912, hasSSD=true}");
     }
 }

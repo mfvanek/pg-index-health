@@ -53,7 +53,6 @@ class TablesWithMissingIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @Test
     void onEmptyDatabase() {
         assertThat(check.check())
-                .isNotNull()
                 .isEmpty();
     }
 
@@ -62,7 +61,6 @@ class TablesWithMissingIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
                 assertThat(check.check(ctx))
-                        .isNotNull()
                         .isEmpty());
     }
 
@@ -72,7 +70,6 @@ class TablesWithMissingIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             tryToFindAccountByClientId(schemaName);
             assertThat(check.check(ctx))
-                    .isNotNull()
                     .hasSize(1)
                     .containsExactly(
                             TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))
@@ -81,11 +78,9 @@ class TablesWithMissingIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                     .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
             assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
-                    .isNotNull()
                     .isEmpty();
 
             assertThat(check.check(ctx, FilterTablesBySizePredicate.of(1L)))
-                    .isNotNull()
                     .hasSize(1)
                     .containsExactly(
                             TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))
@@ -94,7 +89,6 @@ class TablesWithMissingIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                     .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
             assertThat(check.check(ctx, FilterTablesBySizePredicate.of(1_000_000L)))
-                    .isNotNull()
                     .isEmpty();
         });
     }

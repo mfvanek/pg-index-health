@@ -132,7 +132,6 @@ class ExclusionsTest {
     void toStringTest() {
         final Exclusions e = Exclusions.empty();
         assertThat(e)
-                .isNotNull()
                 .hasToString("Exclusions{duplicatedIndexesExclusions=[], " + "intersectedIndexesExclusions=[], unusedIndexesExclusions=[], " +
                         "tablesWithMissingIndexesExclusions=[], tablesWithoutPrimaryKeyExclusions=[], " + "indexesWithNullValuesExclusions=[], " +
                         "indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " +

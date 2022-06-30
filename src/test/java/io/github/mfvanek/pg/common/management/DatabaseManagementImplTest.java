@@ -28,10 +28,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.OffsetDateTime;
-import java.util.Optional;
-import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DatabaseManagementImplTest extends DatabaseAwareTestBase {
@@ -58,11 +55,11 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
             databaseManagement.resetStatistics();
             waitForStatisticsCollector();
             assertThat(getSeqScansForAccounts(ctx)).isZero();
-            final Optional<OffsetDateTime> statsResetTimestamp = databaseManagement.getLastStatsResetTimestamp();
-            assertThat(statsResetTimestamp)
-                    .isNotNull()
-                    .isPresent();
-            assertThat(statsResetTimestamp.get()).isAfter(testStartTime);
+
+            assertThat(databaseManagement.getLastStatsResetTimestamp())
+                    .isPresent()
+                    .get()
+                    .satisfies(t -> assertThat(t).isAfter(testStartTime));
         });
     }
 
@@ -71,11 +68,9 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
     void shouldReturnParamsWithDefaultValues(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final ServerSpecification specification = ServerSpecification.builder().withCpuCores(2).withMemoryAmount(2, MemoryUnit.GB).withSSD().build();
-            final Set<PgParam> paramsWithDefaultValues = databaseManagement.getParamsWithDefaultValues(specification);
-            assertThat(paramsWithDefaultValues)
-                    .isNotNull()
-                    .hasSize(10);
-            assertThat(paramsWithDefaultValues.stream().map(PgParam::getName).collect(toList()))
+            assertThat(databaseManagement.getParamsWithDefaultValues(specification))
+                    .hasSize(10)
+                    .extracting(PgParam::getName)
                     .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement", "idle_in_transaction_session_timeout",
                             "statement_timeout", "effective_cache_size", "lock_timeout", "temp_file_limit");
         });
@@ -84,11 +79,8 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void shouldReturnParamsCurrentValues(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
-            final Set<PgParam> paramsCurrentValues = databaseManagement.getParamsCurrentValues();
-            assertThat(paramsCurrentValues)
-                    .isNotNull()
-                    .hasSizeGreaterThan(ImportantParam.values().length);
-        });
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
+                assertThat(databaseManagement.getParamsCurrentValues())
+                        .hasSizeGreaterThan(ImportantParam.values().length));
     }
 }

@@ -39,8 +39,8 @@ class IndexWithSizeTest {
 
     @Test
     void testToString() {
-        final IndexWithSize index = IndexWithSize.of("t", "i", 33L);
-        assertThat(index).hasToString("IndexWithSize{tableName='t', indexName='i', indexSizeInBytes=33}");
+        assertThat(IndexWithSize.of("t", "i", 33L))
+                .hasToString("IndexWithSize{tableName='t', indexName='i', indexSizeInBytes=33}");
     }
 
     @SuppressWarnings("ConstantConditions")

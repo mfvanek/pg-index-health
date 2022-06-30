@@ -18,9 +18,7 @@ class ExclusionsBuilderTest {
 
     @Test
     void toStringBuilderTest() {
-        final ExclusionsBuilder builder = Exclusions.builder();
-        assertThat(builder)
-                .isNotNull()
+        assertThat(Exclusions.builder())
                 .hasToString("ExclusionsBuilder{duplicatedIndexesExclusions='', intersectedIndexesExclusions='', " +
                         "unusedIndexesExclusions='', tablesWithMissingIndexesExclusions='', tablesWithoutPrimaryKeyExclusions='', " +
                         "indexesWithNullValuesExclusions='', indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " + "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0, " +

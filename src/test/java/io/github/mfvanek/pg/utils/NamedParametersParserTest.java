@@ -21,9 +21,15 @@ class NamedParametersParserTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThatThrownBy(() -> parse(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> parse("")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> parse("   ")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> parse(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("originalSqlQuery cannot be null");
+        assertThatThrownBy(() -> parse(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("originalSqlQuery cannot be blank");
+        assertThatThrownBy(() -> parse("   "))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("originalSqlQuery cannot be blank");
     }
 
     @Test

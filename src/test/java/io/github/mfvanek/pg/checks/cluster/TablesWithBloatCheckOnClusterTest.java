@@ -52,7 +52,6 @@ class TablesWithBloatCheckOnClusterTest extends DatabaseAwareTestBase {
     @Test
     void onEmptyDataBase() {
         assertThat(check.check())
-                .isNotNull()
                 .isEmpty();
     }
 
@@ -62,7 +61,6 @@ class TablesWithBloatCheckOnClusterTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withStatistics(), ctx -> {
             waitForStatisticsCollector();
             assertThat(check.check(ctx))
-                    .isNotNull()
                     .isEmpty();
         });
     }
@@ -76,7 +74,6 @@ class TablesWithBloatCheckOnClusterTest extends DatabaseAwareTestBase {
                     .isTrue();
 
             assertThat(check.check(ctx))
-                    .isNotNull()
                     .hasSize(2)
                     .containsExactlyInAnyOrder(
                             TableWithBloat.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0),
@@ -85,7 +82,6 @@ class TablesWithBloatCheckOnClusterTest extends DatabaseAwareTestBase {
                     .allMatch(t -> t.getBloatPercentage() == 0 && t.getBloatSizeInBytes() == 0L);
 
             assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("clients"))))
-                    .isNotNull()
                     .hasSize(1)
                     .containsExactly(
                             TableWithBloat.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0))
@@ -95,7 +91,6 @@ class TablesWithBloatCheckOnClusterTest extends DatabaseAwareTestBase {
             final Predicate<TableBloatAware> predicate = FilterTablesByBloatPredicate.of(0L, 10)
                     .and(FilterTablesByNamePredicate.of(ctx.enrichWithSchema("clients")));
             assertThat(check.check(ctx, predicate))
-                    .isNotNull()
                     .isEmpty();
         });
     }

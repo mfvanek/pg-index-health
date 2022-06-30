@@ -52,7 +52,6 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
         final AbstractCheckOnCluster<IndexWithNulls> check = new IndexesWithNullValuesCheckOnCluster(haPgConnection);
         executeTestOnDatabase("public", dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx ->
                 assertThat(check.check()) // executing on public schema by default
-                        .isNotNull()
                         .hasSize(1)
                         .containsExactly(
                                 IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name")));

@@ -24,7 +24,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.OffsetDateTime;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -59,18 +58,20 @@ class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
             statisticsMaintenance.resetStatistics();
             waitForStatisticsCollector();
             assertThat(getSeqScansForAccounts(pgContext)).isZero();
-            final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
-            assertThat(statsResetTimestamp)
-                    .isNotNull()
-                    .isPresent();
-            assertThat(statsResetTimestamp.get()).isAfter(testStartTime);
+
+            assertThat(statisticsMaintenance.getLastStatsResetTimestamp())
+                    .isPresent()
+                    .get()
+                    .satisfies(t -> assertThat(t).isAfter(testStartTime));
         });
     }
 
     @Test
     void getHost() {
         final PgHost host = statisticsMaintenance.getHost();
-        assertThat(host).isNotNull();
-        assertThat(host.getName()).isEqualTo("primary");
+        assertThat(host)
+                .isNotNull()
+                .extracting(PgHost::getName)
+                .isEqualTo("primary");
     }
 }

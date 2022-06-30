@@ -48,7 +48,6 @@ class IndexesWithNullValuesCheckOnClusterTest extends DatabaseAwareTestBase {
     @Test
     void onEmptyDatabase() {
         assertThat(check.check())
-                .isNotNull()
                 .isEmpty();
     }
 
@@ -57,7 +56,6 @@ class IndexesWithNullValuesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
                 assertThat(check.check(ctx))
-                        .isNotNull()
                         .isEmpty());
     }
 
@@ -66,14 +64,12 @@ class IndexesWithNullValuesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx -> {
             assertThat(check.check(ctx))
-                    .isNotNull()
                     .hasSize(1)
                     .containsExactly(
                             IndexWithNulls.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_middle_name"), 0L, "middle_name"))
                     .allMatch(i -> i.getNullableColumn().isNullable());
 
             assertThat(check.check(ctx, FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_middle_name"))))
-                    .isNotNull()
                     .isEmpty();
         });
     }

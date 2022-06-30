@@ -22,7 +22,9 @@ class PgConnectionFactoryImplTest {
     void forUrlTest() {
         final PgConnection pgConnection = pgConnectionFactory.forUrl(
                 "jdbc:postgresql://localhost:5432/postgres?prepareThreshold=0&preparedStatementCacheQueries=0", "postgres", "postgres");
-        assertThat(pgConnection).isNotNull();
-        assertThat(pgConnection.getHost().getPgUrl()).isEqualTo("jdbc:postgresql://localhost:5432/postgres?prepareThreshold=0&preparedStatementCacheQueries=0");
+        assertThat(pgConnection)
+                .isNotNull()
+                .extracting(c -> c.getHost().getPgUrl())
+                .isEqualTo("jdbc:postgresql://localhost:5432/postgres?prepareThreshold=0&preparedStatementCacheQueries=0");
     }
 }

@@ -26,7 +26,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +52,6 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     @Test
     void onEmptyDatabase() {
         assertThat(check.check())
-                .isNotNull()
                 .isEmpty();
     }
 
@@ -62,7 +60,6 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp, ctx ->
                 assertThat(check.check(ctx))
-                        .isNotNull()
                         .isEmpty());
     }
 
@@ -70,17 +67,15 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn(), ctx -> {
-            final List<ForeignKey> foreignKeys = check.check(ctx);
-            assertThat(foreignKeys)
-                    .isNotNull()
+            assertThat(check.check(ctx))
                     .hasSize(2)
                     .containsExactlyInAnyOrder(
                             ForeignKey.ofColumn(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id",
                                     Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id")),
                             ForeignKey.ofColumn(ctx.enrichWithSchema("bad_clients"), "c_bad_clients_fk_real_client_id",
-                                    Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id")));
-            // additional check on column nullability
-            assertThat(foreignKeys.stream().flatMap(f -> f.getColumnsInConstraint().stream()))
+                                    Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id")))
+                    .flatExtracting(ForeignKey::getColumnsInConstraint)
+                    .hasSize(2)
                     .containsExactlyInAnyOrder(
                             Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"),
                             Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id"));
@@ -88,7 +83,6 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
             final Predicate<TableNameAware> predicate = FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))
                     .and(FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients")));
             assertThat(check.check(ctx, predicate))
-                    .isNotNull()
                     .isEmpty();
         });
     }
@@ -97,17 +91,15 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithNotSuitableIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withNonSuitableIndex(), ctx -> {
-            final List<ForeignKey> foreignKeys = check.check(ctx);
-            assertThat(foreignKeys)
-                    .isNotNull()
+            assertThat(check.check(ctx))
                     .hasSize(2)
                     .containsExactlyInAnyOrder(
                             ForeignKey.ofColumn(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id",
                                     Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id")),
                             ForeignKey.ofColumn(ctx.enrichWithSchema("bad_clients"), "c_bad_clients_fk_real_client_id",
-                                    Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id")));
-            // additional check on column nullability
-            assertThat(foreignKeys.stream().flatMap(f -> f.getColumnsInConstraint().stream()))
+                                    Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id")))
+                    .flatExtracting(ForeignKey::getColumnsInConstraint)
+                    .hasSize(2)
                     .containsExactlyInAnyOrder(
                             Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"),
                             Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id"));
@@ -115,7 +107,6 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
             final Predicate<TableNameAware> predicate = FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))
                     .and(FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients")));
             assertThat(check.check(ctx, predicate))
-                    .isNotNull()
                     .isEmpty();
         });
     }
@@ -125,7 +116,6 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     void onDatabaseWithSuitableIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withSuitableIndex(), ctx ->
                 assertThat(check.check(ctx))
-                        .isNotNull()
                         .isEmpty());
     }
 }

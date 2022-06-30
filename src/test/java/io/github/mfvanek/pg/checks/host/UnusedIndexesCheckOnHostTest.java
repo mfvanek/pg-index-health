@@ -24,7 +24,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.utils.AbstractCheckOnHostAssert.assertThat;
 
 class UnusedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
 
@@ -40,15 +40,16 @@ class UnusedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(UnusedIndex.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.UNUSED_INDEXES);
-        assertThat(check.getHost()).isEqualTo(PgHostImpl.ofPrimary());
+        assertThat(check)
+                .hasType(UnusedIndex.class)
+                .hasDiagnostic(Diagnostic.UNUSED_INDEXES)
+                .hasHost(PgHostImpl.ofPrimary());
     }
 
     @Test
     void onEmptyDatabase() {
-        assertThat(check.check())
-                .isNotNull()
+        assertThat(check)
+                .executing()
                 .isEmpty();
     }
 
@@ -56,8 +57,8 @@ class UnusedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx ->
-                assertThat(check.check(ctx))
-                        .isNotNull()
+                assertThat(check)
+                        .executing(ctx)
                         .isEmpty());
     }
 
@@ -65,8 +66,8 @@ class UnusedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx ->
-                assertThat(check.check(ctx))
-                        .isNotNull()
+                assertThat(check)
+                        .executing(ctx)
                         .hasSize(6)
                         .containsExactlyInAnyOrder(
                                 UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L, 0),

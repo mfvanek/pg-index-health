@@ -46,6 +46,7 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
                 .isInstanceOf(UnsupportedOperationException.class);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void executeInvalidQuery() {
         final String invalidSql = "select unknown_field from unknown_table";
@@ -54,6 +55,7 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
                 .hasCauseInstanceOf(SQLException.class);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void executeInvalidQueryWithSchema() {
         final String invalidSqlWithParam = "select unknown_field from unknown_table where schema = ?::text";
@@ -67,7 +69,8 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
     @Test
     void executeNullQuery() {
         assertThatThrownBy(() -> QueryExecutors.executeQuery(pgConnection, null, (rs) -> null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("sqlQuery cannot be null");
     }
 
     @Test

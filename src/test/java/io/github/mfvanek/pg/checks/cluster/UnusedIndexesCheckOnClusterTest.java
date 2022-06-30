@@ -90,7 +90,6 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @Test
     void onEmptyDatabase() {
         assertThat(check.check())
-                .isNotNull()
                 .isEmpty();
 
         assertThat(logAppender.list)
@@ -103,7 +102,6 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
             assertThat(check.check(ctx))
-                    .isNotNull()
                     .isEmpty();
 
             assertThat(logAppender.list)
@@ -117,7 +115,6 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx -> {
             assertThat(check.check(ctx))
-                    .isNotNull()
                     .hasSize(6)
                     .containsExactlyInAnyOrder(
                             UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L, 0),
@@ -132,7 +129,6 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
             final Predicate<IndexNameAware> predicate = FilterIndexesByNamePredicate.of(
                     Arrays.asList(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_accounts_account_number")));
             assertThat(check.check(ctx, predicate))
-                    .isNotNull()
                     .hasSize(4)
                     .containsExactlyInAnyOrder(
                             UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L, 0),
@@ -156,7 +152,6 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                 Arrays.asList(i2, i1, i5),
                 Arrays.asList(i2, i5, i1, i4));
         assertThat(getResultAsIntersection(potentiallyUnusedIndexesFromAllHosts))
-                .isNotNull()
                 .hasSize(2)
                 .containsExactlyInAnyOrder(i1, i5);
     }
@@ -164,7 +159,6 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @Test
     void getResultAsIntersectionWithEmptyInput() {
         assertThat(getResultAsIntersection(Collections.emptyList()))
-                .isNotNull()
                 .isEmpty();
     }
 
@@ -181,7 +175,8 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
         final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
         Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.empty());
         final String logMessage = getLastStatsResetDateLogMessage(statisticsMaintenance);
-        assertThat(logMessage).isEqualTo("Statistics have never been reset on this host");
+        assertThat(logMessage)
+                .isEqualTo("Statistics have never been reset on this host");
     }
 
     @Test
@@ -190,6 +185,7 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
         final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
         Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.of(resetDate.minusDays(123L)));
         final String logMessage = getLastStatsResetDateLogMessage(statisticsMaintenance);
-        assertThat(logMessage).startsWith("Last statistics reset on this host was 123 days ago (");
+        assertThat(logMessage)
+                .startsWith("Last statistics reset on this host was 123 days ago (");
     }
 }

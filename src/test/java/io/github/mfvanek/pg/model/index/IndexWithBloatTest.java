@@ -34,9 +34,7 @@ class IndexWithBloatTest {
 
     @Test
     void testToString() {
-        final IndexWithBloat bloat = IndexWithBloat.of("t", "i", 2L, 1L, 50);
-        assertThat(bloat)
-                .isNotNull()
+        assertThat(IndexWithBloat.of("t", "i", 2L, 1L, 50))
                 .hasToString("IndexWithBloat{tableName='t', indexName='i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}");
     }
 

@@ -46,7 +46,6 @@ class ForeignKeyTest {
                 .isNotBlank()
                 .isEqualTo("c_t_order_id");
         assertThat(foreignKey.getColumnsInConstraint())
-                .isNotNull()
                 .hasSize(1)
                 .containsExactly(Column.ofNotNull("t", "order_id"))
                 .isUnmodifiable();
@@ -57,7 +56,6 @@ class ForeignKeyTest {
         final ForeignKey key = ForeignKey.of("t", "c_t_order_id",
                 Arrays.asList(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id")));
         assertThat(key.getColumnsInConstraint())
-                .isNotNull()
                 .hasSize(2)
                 .containsExactly(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id"))
                 .isUnmodifiable();
@@ -74,7 +72,6 @@ class ForeignKeyTest {
         columns.add(Column.ofNotNull("t", "fourth"));
 
         assertThat(key.getColumnsInConstraint())
-                .isNotNull()
                 .hasSize(3)
                 .doesNotContain(Column.ofNotNull("t", "fourth"))
                 .isUnmodifiable();

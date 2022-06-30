@@ -69,11 +69,11 @@ class ColumnTest {
 
     @Test
     void testToString() {
-        final Column column = Column.ofNotNull("t1", "c1");
-        assertThat(column).hasToString("Column{tableName='t1', columnName='c1', notNull=true}");
+        assertThat(Column.ofNotNull("t1", "c1"))
+                .hasToString("Column{tableName='t1', columnName='c1', notNull=true}");
 
-        final Column nullableColumn = Column.ofNullable("t2", "c2");
-        assertThat(nullableColumn).hasToString("Column{tableName='t2', columnName='c2', notNull=false}");
+        assertThat(Column.ofNullable("t2", "c2"))
+                .hasToString("Column{tableName='t2', columnName='c2', notNull=false}");
     }
 
     @SuppressWarnings("ConstantConditions")

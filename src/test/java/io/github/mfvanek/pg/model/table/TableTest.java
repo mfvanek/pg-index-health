@@ -46,8 +46,8 @@ class TableTest {
 
     @Test
     void testToString() {
-        final Table table = Table.of("t", 2L);
-        assertThat(table).hasToString("Table{tableName='t', tableSizeInBytes=2}");
+        assertThat(Table.of("t", 2L))
+                .hasToString("Table{tableName='t', tableSizeInBytes=2}");
     }
 
     @SuppressWarnings("ConstantConditions")

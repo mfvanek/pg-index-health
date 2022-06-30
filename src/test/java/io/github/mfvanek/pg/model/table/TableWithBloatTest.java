@@ -34,9 +34,7 @@ class TableWithBloatTest {
 
     @Test
     void testToString() {
-        final TableWithBloat bloat = TableWithBloat.of("t", 2L, 1L, 50);
-        assertThat(bloat)
-                .isNotNull()
+        assertThat(TableWithBloat.of("t", 2L, 1L, 50))
                 .hasToString("TableWithBloat{tableName='t', tableSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}");
     }
 

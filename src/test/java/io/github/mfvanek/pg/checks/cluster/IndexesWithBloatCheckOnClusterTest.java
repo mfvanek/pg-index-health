@@ -53,7 +53,6 @@ class IndexesWithBloatCheckOnClusterTest extends DatabaseAwareTestBase {
     @Test
     void onEmptyDatabase() {
         assertThat(check.check())
-                .isNotNull()
                 .isEmpty();
     }
 
@@ -63,7 +62,6 @@ class IndexesWithBloatCheckOnClusterTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withStatistics(), ctx -> {
             waitForStatisticsCollector();
             assertThat(check.check(ctx))
-                    .isNotNull()
                     .isEmpty();
         });
     }
@@ -77,7 +75,6 @@ class IndexesWithBloatCheckOnClusterTest extends DatabaseAwareTestBase {
                     .isTrue();
 
             assertThat(check.check(ctx))
-                    .isNotNull()
                     .hasSize(3)
                     .containsExactlyInAnyOrder(
                             IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
@@ -89,7 +86,6 @@ class IndexesWithBloatCheckOnClusterTest extends DatabaseAwareTestBase {
             final Predicate<IndexSizeAware> predicate = FilterIndexesBySizePredicate.of(1L)
                     .and(FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("accounts_pkey")));
             assertThat(check.check(ctx, predicate))
-                    .isNotNull()
                     .hasSize(2)
                     .containsExactlyInAnyOrder(
                             IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
@@ -98,7 +94,6 @@ class IndexesWithBloatCheckOnClusterTest extends DatabaseAwareTestBase {
                     .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
 
             assertThat(check.check(ctx, FilterIndexesByBloatPredicate.of(1_000_000L, 50)))
-                    .isNotNull()
                     .isEmpty();
         });
     }

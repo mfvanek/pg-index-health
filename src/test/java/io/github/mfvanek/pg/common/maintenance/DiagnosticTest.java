@@ -60,6 +60,7 @@ class DiagnosticTest {
 
     @Test
     void toStringTest() {
-        assertThat(Diagnostic.UNUSED_INDEXES).hasToString("UNUSED_INDEXES");
+        assertThat(Diagnostic.UNUSED_INDEXES)
+                .hasToString("UNUSED_INDEXES");
     }
 }
