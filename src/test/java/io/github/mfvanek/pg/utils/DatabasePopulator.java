@@ -145,6 +145,18 @@ public final class DatabasePopulator implements AutoCloseable {
         return this;
     }
 
+    @Nonnull
+    public DatabasePopulator withCommentOnTables() {
+        this.actions.putIfAbsent(240, this::addCommentOnTables);
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withBlankCommentOnTables() {
+        this.actions.putIfAbsent(250, this::addBlankCommentOnTables);
+        return this;
+    }
+
     public void populate() {
         actions.forEach((k, v) -> v.run());
     }
@@ -428,6 +440,20 @@ public final class DatabasePopulator implements AutoCloseable {
         executeOnDatabase(dataSource, statement ->
                 statement.execute(String.format("alter table if exists %s.bad_clients " +
                                 "add constraint c_bad_clients_fk_real_client_id foreign key (real_client_id) references %s.clients (id);",
+                        schemaName, schemaName)));
+    }
+
+    private void addCommentOnTables() {
+        executeOnDatabase(dataSource, statement ->
+                statement.execute(String.format("comment on table %s.clients is 'Сведения о клиентах';" +
+                                "comment on table %s.accounts is 'Сведения о счетах клиентов';",
+                        schemaName, schemaName)));
+    }
+
+    private void addBlankCommentOnTables() {
+        executeOnDatabase(dataSource, statement ->
+                statement.execute(String.format("comment on table %s.clients is '   ';" +
+                                "comment on table %s.accounts is '';",
                         schemaName, schemaName)));
     }
 }

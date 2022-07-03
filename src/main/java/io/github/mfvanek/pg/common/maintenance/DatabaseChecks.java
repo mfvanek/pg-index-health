@@ -18,6 +18,7 @@ import io.github.mfvanek.pg.checks.cluster.IntersectedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.InvalidIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.TablesWithBloatCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.TablesWithMissingIndexesCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.TablesWithoutDescriptionCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.TablesWithoutPrimaryKeyCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
@@ -45,7 +46,8 @@ public class DatabaseChecks {
                         new IndexesWithNullValuesCheckOnCluster(haPgConnection),
                         new IntersectedIndexesCheckOnCluster(haPgConnection),
                         new InvalidIndexesCheckOnCluster(haPgConnection),
-                        new UnusedIndexesCheckOnCluster(haPgConnection))
+                        new UnusedIndexesCheckOnCluster(haPgConnection),
+                        new TablesWithoutDescriptionCheckOnCluster(haPgConnection))
                 .forEach(check -> checks.putIfAbsent(check.getDiagnostic(), check));
     }
 
