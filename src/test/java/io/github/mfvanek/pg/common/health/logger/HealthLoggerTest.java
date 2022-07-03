@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.common.health.logger;
 import io.github.mfvanek.pg.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
+import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
@@ -122,5 +123,12 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                     .hasSize(1)
                     .containsExactly("1999-12-31T23:59:59Z\tdb_indexes_health\t" + key.getSubKeyName() + "\t0");
         }
+    }
+
+    @Test
+    void completenessTest() {
+        assertThat(logger.logAll(Exclusions.empty()))
+                .as("All diagnostics must be logged")
+                .hasSameSizeAs(Diagnostic.values());
     }
 }

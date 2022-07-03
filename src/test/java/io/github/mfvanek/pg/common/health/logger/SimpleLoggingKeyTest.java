@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
+import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -37,5 +38,12 @@ class SimpleLoggingKeyTest {
             subKeyNames.add(key.getSubKeyName());
         }
         assertThat(subKeyNames).hasSize(SimpleLoggingKey.values().length);
+    }
+
+    @Test
+    void completenessTest() {
+        assertThat(SimpleLoggingKey.values())
+                .as("There must be logging key for each diagnostic")
+                .hasSameSizeAs(Diagnostic.values());
     }
 }
