@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class TablesWithoutDescriptionCheckOnCluster extends AbstractCheckOnCluster<Table> {
 
-    public TablesWithoutDescriptionCheckOnCluster(@Nonnull HighAvailabilityPgConnection haPgConnection) {
+    public TablesWithoutDescriptionCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesWithoutDescriptionCheckOnHost::new);
     }
 }

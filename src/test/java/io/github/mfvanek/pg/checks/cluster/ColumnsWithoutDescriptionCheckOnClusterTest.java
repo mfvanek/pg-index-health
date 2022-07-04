@@ -93,7 +93,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnColumns(), ctx ->
                 assertThat(check.check(ctx))
                         .hasSize(9)
-                        .filteredOn(c -> c.getColumnName().equalsIgnoreCase("id"))
+                        .filteredOn(c -> "id".equalsIgnoreCase(c.getColumnName()))
                         .hasSize(2)
                         .containsExactly(
                                 Column.ofNotNull(ctx.enrichWithSchema("accounts"), "id"),

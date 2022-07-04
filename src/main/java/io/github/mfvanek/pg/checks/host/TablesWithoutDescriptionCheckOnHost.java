@@ -16,8 +16,8 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
 
-import javax.annotation.Nonnull;
 import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * Check for tables without description on a specific host.
@@ -33,6 +33,7 @@ public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Tab
 
     /**
      * Returns tables without description (comment) in the specified schema.
+     *
      * @see <a href="https://www.postgresql.org/docs/current/sql-comment.html">SQL Commands - COMMENT</a>
      *
      * @param pgContext check's context with the specified schema
@@ -40,7 +41,7 @@ public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Tab
      */
     @Nonnull
     @Override
-    public List<Table> check(@Nonnull PgContext pgContext) {
+    public List<Table> check(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final long tableSize = rs.getLong(TABLE_SIZE);

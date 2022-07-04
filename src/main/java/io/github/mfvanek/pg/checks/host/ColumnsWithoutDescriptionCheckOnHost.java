@@ -33,6 +33,7 @@ public class ColumnsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Co
 
     /**
      * Returns columns without description (comment) in the specified schema.
+     *
      * @see <a href="https://www.postgresql.org/docs/current/sql-comment.html">SQL Commands - COMMENT</a>
      *
      * @param pgContext check's context with the specified schema
