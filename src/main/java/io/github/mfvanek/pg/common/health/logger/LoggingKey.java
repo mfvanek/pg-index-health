@@ -20,4 +20,7 @@ public interface LoggingKey {
 
     @Nonnull
     String getSubKeyName();
+
+    @Nonnull
+    String getDescription();
 }

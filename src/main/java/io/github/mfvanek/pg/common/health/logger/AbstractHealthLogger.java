@@ -31,6 +31,7 @@ import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.table.Table;
+import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import org.apache.commons.collections4.CollectionUtils;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
 @SuppressWarnings("PMD.ExcessiveImports")
@@ -85,6 +87,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         logResult.add(logIndexesWithNullValues(databaseChecks, exclusions, pgContext));
         logResult.add(logIndexesBloat(databaseChecks, exclusions, pgContext));
         logResult.add(logTablesBloat(databaseChecks, exclusions, pgContext));
+        logResult.add(logTablesWithoutDescription(databaseChecks, exclusions, pgContext));
+        logResult.add(logColumnsWithoutDescription(databaseChecks, exclusions, pgContext));
         return logResult;
     }
 
@@ -236,6 +240,35 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         if (CollectionUtils.isNotEmpty(tablesWithBloat)) {
             LOGGER.warn("There are tables with bloat in the database {}", tablesWithBloat);
             return writeToLog(key, tablesWithBloat.size());
+        }
+        return writeZeroToLog(key);
+    }
+
+    @Nonnull
+    private String logTablesWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
+                                               @Nonnull final Exclusions exclusions,
+                                               @Nonnull final PgContext pgContext) {
+        // TODO
+        return null;
+    }
+
+    @Nonnull
+    private String logColumnsWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
+                                                @Nonnull final Exclusions exclusions,
+                                                @Nonnull final PgContext pgContext) {
+        // TODO
+        return null;
+    }
+
+    @Nonnull
+    private <T extends TableNameAware> String logCheckResult(@Nonnull final DatabaseCheckOnCluster<T> check,
+                                                             @Nonnull final Predicate<? super T> exclusionsFilter,
+                                                             @Nonnull final PgContext pgContext,
+                                                             @Nonnull final LoggingKey key) {
+        final List<T> checkResult = check.check(pgContext, exclusionsFilter);
+        if (CollectionUtils.isNotEmpty(checkResult)) {
+            LOGGER.warn("There are {} in the database {}", key.getDescription(), checkResult);
+            return writeToLog(key, checkResult.size());
         }
         return writeZeroToLog(key);
     }

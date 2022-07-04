@@ -157,6 +157,18 @@ public final class DatabasePopulator implements AutoCloseable {
         return this;
     }
 
+    @Nonnull
+    public DatabasePopulator withCommentOnColumns() {
+        this.actions.putIfAbsent(260, this::addCommentOnColumns);
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withBlankCommentOnColumns() {
+        this.actions.putIfAbsent(270, this::addBlankCommentOnColumns);
+        return this;
+    }
+
     public void populate() {
         actions.forEach((k, v) -> v.run());
     }
@@ -438,22 +450,43 @@ public final class DatabasePopulator implements AutoCloseable {
 
     private void createForeignKeyOnNullableColumn() {
         executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("alter table if exists %s.bad_clients " +
-                                "add constraint c_bad_clients_fk_real_client_id foreign key (real_client_id) references %s.clients (id);",
-                        schemaName, schemaName)));
+                statement.execute(String.format("alter table if exists %1$s.bad_clients " +
+                                "add constraint c_bad_clients_fk_real_client_id foreign key (real_client_id) references %1$s.clients (id);",
+                        schemaName)));
     }
 
     private void addCommentOnTables() {
         executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("comment on table %s.clients is 'Сведения о клиентах';" +
-                                "comment on table %s.accounts is 'Сведения о счетах клиентов';",
-                        schemaName, schemaName)));
+                statement.execute(String.format("comment on table %1$s.clients is 'Customer Information';" +
+                                "comment on table %1$s.accounts is 'Information about customer accounts';",
+                        schemaName)));
     }
 
     private void addBlankCommentOnTables() {
         executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("comment on table %s.clients is '   ';" +
-                                "comment on table %s.accounts is '';",
-                        schemaName, schemaName)));
+                statement.execute(String.format("comment on table %1$s.clients is '   ';" +
+                                "comment on table %1$s.accounts is '';",
+                        schemaName)));
+    }
+
+    private void addCommentOnColumns() {
+        executeOnDatabase(dataSource, statement ->
+                statement.execute(String.format("comment on column %1$s.clients.id is 'Unique record ID';" +
+                                "comment on column %1$s.clients.last_name is 'Customer''s last name';" +
+                                "comment on column %1$s.clients.first_name is 'Customer''s given name';" +
+                                "comment on column %1$s.clients.middle_name is 'Patronymic of the customer';" +
+                                "comment on column %1$s.accounts.id is 'Unique record ID';" +
+                                "comment on column %1$s.accounts.client_id is 'Customer record ID';" +
+                                "comment on column %1$s.accounts.account_number is 'Customer''s account number';" +
+                                "comment on column %1$s.accounts.account_balance is 'The balance on the customer''s account';" +
+                                "comment on column %1$s.accounts.deleted is 'Indicates that the account has been deleted';",
+                        schemaName)));
+    }
+
+    private void addBlankCommentOnColumns() {
+        executeOnDatabase(dataSource, statement ->
+                statement.execute(String.format("comment on column %1$s.clients.id is '';" +
+                        "comment on column %1$s.accounts.id is '   ';",
+                        schemaName)));
     }
 }

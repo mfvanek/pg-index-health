@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
+import io.github.mfvanek.pg.checks.cluster.ColumnsWithoutDescriptionCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.DuplicatedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ForeignKeysNotCoveredWithIndexCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.IndexesWithBloatCheckOnCluster;
@@ -47,7 +48,8 @@ public class DatabaseChecks {
                         new IntersectedIndexesCheckOnCluster(haPgConnection),
                         new InvalidIndexesCheckOnCluster(haPgConnection),
                         new UnusedIndexesCheckOnCluster(haPgConnection),
-                        new TablesWithoutDescriptionCheckOnCluster(haPgConnection))
+                        new TablesWithoutDescriptionCheckOnCluster(haPgConnection),
+                        new ColumnsWithoutDescriptionCheckOnCluster(haPgConnection))
                 .forEach(check -> checks.putIfAbsent(check.getDiagnostic(), check));
     }
 
