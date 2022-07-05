@@ -96,6 +96,7 @@ class PgParamImplTest {
     }
 
     @Test
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(PgParamImpl.class)
                 .withIgnoredFields("value")

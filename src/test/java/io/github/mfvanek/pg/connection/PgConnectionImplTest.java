@@ -83,6 +83,7 @@ class PgConnectionImplTest {
     }
 
     @Test
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(PgConnectionImpl.class)
                 .withIgnoredFields("dataSource")

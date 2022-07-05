@@ -90,6 +90,7 @@ class TableWithBloatTest {
     }
 
     @Test
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(TableWithBloat.class)
                 .withIgnoredFields("tableSizeInBytes", "bloatSizeInBytes", "bloatPercentage")

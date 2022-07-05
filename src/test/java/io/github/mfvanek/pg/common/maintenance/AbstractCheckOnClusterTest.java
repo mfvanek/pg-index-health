@@ -22,6 +22,8 @@ import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.annotation.Nonnull;
 
@@ -34,10 +36,12 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
     static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     private final HighAvailabilityPgConnection haPgConnection;
+    private final AbstractCheckOnCluster<IndexWithNulls> check;
 
     AbstractCheckOnClusterTest() {
         super(POSTGRES.getTestDatabase());
         this.haPgConnection = HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
+        this.check = new IndexesWithNullValuesCheckOnCluster(haPgConnection);
     }
 
     @Test
@@ -47,14 +51,15 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasMessage("acrossClusterResultsMapper cannot be null for diagnostic UNUSED_INDEXES");
     }
 
-    @Test
-    void forPublicSchema() {
-        final AbstractCheckOnCluster<IndexWithNulls> check = new IndexesWithNullValuesCheckOnCluster(haPgConnection);
-        executeTestOnDatabase("public", dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx ->
+    @ParameterizedTest
+    @ValueSource(strings = {"public"})
+    void forPublicSchema(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx ->
                 assertThat(check.check()) // executing on public schema by default
                         .hasSize(1)
                         .containsExactly(
-                                IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name")));
+                                IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name"))
+        );
     }
 
     static class WrongCheck extends AbstractCheckOnCluster<UnusedIndex> {

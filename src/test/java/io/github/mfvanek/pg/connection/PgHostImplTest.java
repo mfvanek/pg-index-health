@@ -124,6 +124,7 @@ class PgHostImplTest {
     }
 
     @Test
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(PgHostImpl.class)
                 .withIgnoredFields("pgUrl", "maybePrimary")

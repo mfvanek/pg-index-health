@@ -82,6 +82,7 @@ class UnusedIndexTest {
     }
 
     @Test
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(UnusedIndex.class)
                 .withIgnoredFields("indexSizeInBytes", "indexScans")

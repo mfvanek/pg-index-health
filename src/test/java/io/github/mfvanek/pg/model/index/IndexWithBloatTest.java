@@ -88,6 +88,7 @@ class IndexWithBloatTest {
     }
 
     @Test
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(IndexWithBloat.class)
                 .withIgnoredFields("indexSizeInBytes", "bloatSizeInBytes", "bloatPercentage")

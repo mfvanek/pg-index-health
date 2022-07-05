@@ -115,6 +115,7 @@ class IndexWithNullsTest {
     }
 
     @Test
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(IndexWithNulls.class)
                 .withIgnoredFields("indexSizeInBytes", "nullableColumn")

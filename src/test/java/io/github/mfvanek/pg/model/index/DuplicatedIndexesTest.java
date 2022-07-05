@@ -123,7 +123,6 @@ class DuplicatedIndexesTest {
         assertThat(index.getTableName()).isEqualTo("t");
         assertThat(index.getTotalSize()).isEqualTo(178L);
         assertThat(index.getIndexNames())
-                .isNotNull()
                 .hasSize(2)
                 .containsExactly("i3", "i4")
                 .isUnmodifiable();
@@ -184,6 +183,7 @@ class DuplicatedIndexesTest {
     }
 
     @Test
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(DuplicatedIndexes.class)
                 .withIgnoredFields("totalSize", "indexesNames")
@@ -213,7 +213,6 @@ class DuplicatedIndexesTest {
                 IndexWithSize.of("t", "i4", 4L));
         assertThat(indexes).isNotNull();
         assertThat(indexes.getDuplicatedIndexes())
-                .isNotNull()
                 .hasSize(4)
                 .containsExactly(
                         IndexWithSize.of("t", "i1", 1L),
