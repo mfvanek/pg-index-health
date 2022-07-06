@@ -18,6 +18,7 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ListAssert;
+import org.assertj.core.util.CheckReturnValue;
 
 import javax.annotation.Nonnull;
 
@@ -52,16 +53,19 @@ public class AbstractCheckOnHostAssert<E extends TableNameAware> extends Abstrac
         return this;
     }
 
+    @CheckReturnValue
     public ListAssert<E> executing() {
         isNotNull();
         return Assertions.assertThat(actual.check());
     }
 
+    @CheckReturnValue
     public ListAssert<E> executing(@Nonnull final PgContext pgContext) {
         isNotNull();
         return Assertions.assertThat(actual.check(pgContext));
     }
 
+    @CheckReturnValue
     public static <T extends TableNameAware> AbstractCheckOnHostAssert<T> assertThat(@Nonnull final AbstractCheckOnHost<T> actual) {
         return new AbstractCheckOnHostAssert<>(actual);
     }

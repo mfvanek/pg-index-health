@@ -139,6 +139,8 @@ spotbugsTest {
 }
 spotbugs {
     showProgress = true
+    effort = 'max'
+    reportLevel = 'low'
     excludeFilter = file("config/spotbugs/exclude.xml")
 }
 
