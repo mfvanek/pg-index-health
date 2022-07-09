@@ -104,7 +104,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     private String logInvalidIndexes(@Nonnull final DatabaseChecks databaseChecks,
                                      @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.INVALID_INDEXES, Index.class),
-                (c) -> true, pgContext, SimpleLoggingKey.INVALID_INDEXES);
+                c -> true, pgContext, SimpleLoggingKey.INVALID_INDEXES);
     }
 
     @Nonnull
@@ -136,7 +136,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     private String logForeignKeysNotCoveredWithIndex(@Nonnull final DatabaseChecks databaseChecks,
                                                      @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX, ForeignKey.class),
-                (c) -> true, pgContext, SimpleLoggingKey.FOREIGN_KEYS_WITHOUT_INDEX);
+                c -> true, pgContext, SimpleLoggingKey.FOREIGN_KEYS_WITHOUT_INDEX);
     }
 
     @Nonnull
@@ -187,14 +187,14 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     private String logTablesWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
                                                @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_DESCRIPTION, Table.class),
-                (c) -> true, pgContext, SimpleLoggingKey.TABLES_WITHOUT_DESCRIPTION);
+                c -> true, pgContext, SimpleLoggingKey.TABLES_WITHOUT_DESCRIPTION);
     }
 
     @Nonnull
     private String logColumnsWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
                                                 @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.COLUMNS_WITHOUT_DESCRIPTION, Column.class),
-                (c) -> true, pgContext, SimpleLoggingKey.COLUMNS_WITHOUT_DESCRIPTION);
+                c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITHOUT_DESCRIPTION);
     }
 
     @Nonnull
