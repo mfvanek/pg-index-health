@@ -78,18 +78,20 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                 dbp -> dbp.withReferences().withData().withInvalidIndex().withNullValuesInIndex().withTableWithoutPrimaryKey().withDuplicatedIndex().withNonSuitableIndex().withStatistics(), ctx -> {
                     waitForStatisticsCollector();
                     assertThat(logger.logAll(Exclusions.empty(), ctx))
-                            .hasSize(10)
+                            .hasSameSizeAs(Diagnostic.values())
                             .containsExactlyInAnyOrder(
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tinvalid_indexes\t1",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tduplicated_indexes\t2",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t1",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_primary_key\t1",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_null_values\t1",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_bloat\t11",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_bloat\t2",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_bloat\t11",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_bloat\t2",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tintersected_indexes\t5",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tunused_indexes\t7",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t0");
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t0",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_description\t3",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_without_description\t12");
                 });
     }
 
@@ -105,7 +107,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                     .hasSize(1);
 
             assertThat(logger.logAll(Exclusions.empty(), ctx))
-                    .hasSize(10)
+                    .hasSameSizeAs(Diagnostic.values())
                     .filteredOn(ofKey(SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES))
                     .hasSize(1)
                     .containsExactly("1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t1");
@@ -116,7 +118,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
     void logAllWithDefaultSchema() {
         final List<String> logs = logger.logAll(Exclusions.empty());
         assertThat(logs)
-                .hasSize(10);
+                .hasSameSizeAs(Diagnostic.values());
         for (final SimpleLoggingKey key : SimpleLoggingKey.values()) {
             assertThat(logs)
                     .filteredOn(ofKey(key))

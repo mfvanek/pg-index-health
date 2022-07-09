@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
+import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
@@ -51,19 +52,20 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                     waitForStatisticsCollector();
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
                     assertThat(logs)
-                            .isNotNull()
-                            .hasSize(10)
+                            .hasSameSizeAs(Diagnostic.values())
                             .containsExactlyInAnyOrder(
                                     "invalid_indexes:1",
                                     "duplicated_indexes:2",
                                     "foreign_keys_without_index:1",
                                     "tables_without_primary_key:1",
                                     "indexes_with_null_values:1",
-                                    "indexes_bloat:11",
-                                    "tables_bloat:2",
+                                    "indexes_with_bloat:11",
+                                    "tables_with_bloat:2",
                                     "intersected_indexes:5",
                                     "unused_indexes:7",
-                                    "tables_with_missing_indexes:0");
+                                    "tables_with_missing_indexes:0",
+                                    "tables_without_description:3",
+                                    "columns_without_description:12");
                 });
     }
 
@@ -71,8 +73,7 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
     void logAllWithDefaultSchema() {
         final List<String> logs = logger.logAll(Exclusions.empty());
         assertThat(logs)
-                .isNotNull()
-                .hasSize(10);
+                .hasSameSizeAs(Diagnostic.values());
         for (final SimpleLoggingKey key : SimpleLoggingKey.values()) {
             assertThat(logs)
                     .filteredOn(ofKey(key))

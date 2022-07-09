@@ -136,7 +136,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     private String logForeignKeysNotCoveredWithIndex(@Nonnull final DatabaseChecks databaseChecks,
                                                      @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX, ForeignKey.class),
-                (c) -> true, pgContext, SimpleLoggingKey.FOREIGN_KEYS);
+                (c) -> true, pgContext, SimpleLoggingKey.FOREIGN_KEYS_WITHOUT_INDEX);
     }
 
     @Nonnull
@@ -154,7 +154,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                               @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, Table.class),
                 FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
-                        .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithoutPrimaryKeyExclusions())), pgContext, SimpleLoggingKey.TABLES_WITHOUT_PK);
+                        .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithoutPrimaryKeyExclusions())), pgContext, SimpleLoggingKey.TABLES_WITHOUT_PRIMARY_KEY);
     }
 
     @Nonnull
@@ -162,7 +162,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                             @Nonnull final Exclusions exclusions,
                                             @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.INDEXES_WITH_NULL_VALUES, IndexWithNulls.class),
-                FilterIndexesByNamePredicate.of(exclusions.getIndexesWithNullValuesExclusions()), pgContext, SimpleLoggingKey.INDEXES_WITH_NULLS);
+                FilterIndexesByNamePredicate.of(exclusions.getIndexesWithNullValuesExclusions()), pgContext, SimpleLoggingKey.INDEXES_WITH_NULL_VALUES);
     }
 
     @Nonnull
@@ -171,7 +171,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                    @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.BLOATED_INDEXES, IndexWithBloat.class),
                 FilterIndexesByBloatPredicate.of(exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold())
-                        .and(FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())), pgContext, SimpleLoggingKey.INDEXES_BLOAT);
+                        .and(FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())), pgContext, SimpleLoggingKey.BLOATED_INDEXES);
     }
 
     @Nonnull
@@ -180,14 +180,14 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                   @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.BLOATED_TABLES, TableWithBloat.class),
                 FilterTablesByBloatPredicate.of(exclusions.getTableBloatSizeThresholdInBytes(), exclusions.getTableBloatPercentageThreshold())
-                        .and(FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())), pgContext, SimpleLoggingKey.TABLES_BLOAT);
+                        .and(FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())), pgContext, SimpleLoggingKey.BLOATED_TABLES);
     }
 
     @Nonnull
     private String logTablesWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
                                                @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_DESCRIPTION, Table.class),
-                (c) -> true, pgContext, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES);
+                (c) -> true, pgContext, SimpleLoggingKey.TABLES_WITHOUT_DESCRIPTION);
     }
 
     @Nonnull

@@ -72,5 +72,10 @@ class SimpleLoggingKeyTest {
         assertThat(SimpleLoggingKey.values())
                 .as("There must be logging key for each diagnostic")
                 .hasSameSizeAs(Diagnostic.values());
+        for (final SimpleLoggingKey key : SimpleLoggingKey.values()) {
+            assertThat(Diagnostic.valueOf(key.toString()))
+                    .as("Name of SimpleLoggingKey have to correspond to Diagnostic name")
+                    .isNotNull();
+        }
     }
 }
