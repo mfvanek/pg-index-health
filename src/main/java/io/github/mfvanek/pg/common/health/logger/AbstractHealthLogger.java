@@ -30,7 +30,9 @@ import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.table.Column;
 import io.github.mfvanek.pg.model.table.Table;
+import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import org.apache.commons.collections4.CollectionUtils;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
 @SuppressWarnings("PMD.ExcessiveImports")
@@ -85,6 +88,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         logResult.add(logIndexesWithNullValues(databaseChecks, exclusions, pgContext));
         logResult.add(logIndexesBloat(databaseChecks, exclusions, pgContext));
         logResult.add(logTablesBloat(databaseChecks, exclusions, pgContext));
+        logResult.add(logTablesWithoutDescription(databaseChecks, pgContext));
+        logResult.add(logColumnsWithoutDescription(databaseChecks, pgContext));
         return logResult;
     }
 
@@ -98,144 +103,109 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     @Nonnull
     private String logInvalidIndexes(@Nonnull final DatabaseChecks databaseChecks,
                                      @Nonnull final PgContext pgContext) {
-        final DatabaseCheckOnCluster<Index> check = databaseChecks.getCheck(Diagnostic.INVALID_INDEXES, Index.class);
-        final List<Index> invalidIndexes = check.check(pgContext);
-        final LoggingKey key = SimpleLoggingKey.INVALID_INDEXES;
-        if (CollectionUtils.isNotEmpty(invalidIndexes)) {
-            LOGGER.error("There are invalid indexes in the database {}", invalidIndexes);
-            return writeToLog(key, invalidIndexes.size());
-        }
-        return writeZeroToLog(key);
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.INVALID_INDEXES, Index.class),
+                c -> true, pgContext, SimpleLoggingKey.INVALID_INDEXES);
     }
 
     @Nonnull
     private String logDuplicatedIndexes(@Nonnull final DatabaseChecks databaseChecks,
                                         @Nonnull final Exclusions exclusions,
                                         @Nonnull final PgContext pgContext) {
-        final DatabaseCheckOnCluster<DuplicatedIndexes> check = databaseChecks.getCheck(Diagnostic.DUPLICATED_INDEXES, DuplicatedIndexes.class);
-        final List<DuplicatedIndexes> duplicatedIndexes = check.check(pgContext, FilterDuplicatedIndexesByNamePredicate.of(exclusions.getDuplicatedIndexesExclusions()));
-        final LoggingKey key = SimpleLoggingKey.DUPLICATED_INDEXES;
-        if (CollectionUtils.isNotEmpty(duplicatedIndexes)) {
-            LOGGER.warn("There are duplicated indexes in the database {}", duplicatedIndexes);
-            return writeToLog(key, duplicatedIndexes.size());
-        }
-        return writeZeroToLog(key);
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.DUPLICATED_INDEXES, DuplicatedIndexes.class),
+                FilterDuplicatedIndexesByNamePredicate.of(exclusions.getDuplicatedIndexesExclusions()), pgContext, SimpleLoggingKey.DUPLICATED_INDEXES);
     }
 
     @Nonnull
     private String logIntersectedIndexes(@Nonnull final DatabaseChecks databaseChecks,
                                          @Nonnull final Exclusions exclusions,
                                          @Nonnull final PgContext pgContext) {
-        final DatabaseCheckOnCluster<DuplicatedIndexes> check = databaseChecks.getCheck(Diagnostic.INTERSECTED_INDEXES, DuplicatedIndexes.class);
-        final List<DuplicatedIndexes> intersectedIndexes = check.check(pgContext, FilterDuplicatedIndexesByNamePredicate.of(exclusions.getIntersectedIndexesExclusions()));
-        final LoggingKey key = SimpleLoggingKey.INTERSECTED_INDEXES;
-        if (CollectionUtils.isNotEmpty(intersectedIndexes)) {
-            LOGGER.warn("There are intersected indexes in the database {}", intersectedIndexes);
-            return writeToLog(key, intersectedIndexes.size());
-        }
-        return writeZeroToLog(key);
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.INTERSECTED_INDEXES, DuplicatedIndexes.class),
+                FilterDuplicatedIndexesByNamePredicate.of(exclusions.getIntersectedIndexesExclusions()), pgContext, SimpleLoggingKey.INTERSECTED_INDEXES);
     }
 
     @Nonnull
     private String logUnusedIndexes(@Nonnull final DatabaseChecks databaseChecks,
                                     @Nonnull final Exclusions exclusions,
                                     @Nonnull final PgContext pgContext) {
-        final DatabaseCheckOnCluster<UnusedIndex> check = databaseChecks.getCheck(Diagnostic.UNUSED_INDEXES, UnusedIndex.class);
-        final List<UnusedIndex> unusedIndexes = check.check(pgContext, FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())
-                .and(FilterIndexesByNamePredicate.of(exclusions.getUnusedIndexesExclusions())));
-        final LoggingKey key = SimpleLoggingKey.UNUSED_INDEXES;
-        if (CollectionUtils.isNotEmpty(unusedIndexes)) {
-            LOGGER.warn("There are unused indexes in the database {}", unusedIndexes);
-            return writeToLog(key, unusedIndexes.size());
-        }
-        return writeZeroToLog(key);
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.UNUSED_INDEXES, UnusedIndex.class),
+                FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())
+                        .and(FilterIndexesByNamePredicate.of(exclusions.getUnusedIndexesExclusions())), pgContext, SimpleLoggingKey.UNUSED_INDEXES);
     }
 
     @Nonnull
     private String logForeignKeysNotCoveredWithIndex(@Nonnull final DatabaseChecks databaseChecks,
                                                      @Nonnull final PgContext pgContext) {
-        final DatabaseCheckOnCluster<ForeignKey> check = databaseChecks.getCheck(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX, ForeignKey.class);
-        final List<ForeignKey> foreignKeys = check.check(pgContext);
-        final LoggingKey key = SimpleLoggingKey.FOREIGN_KEYS;
-        if (CollectionUtils.isNotEmpty(foreignKeys)) {
-            LOGGER.warn("There are foreign keys without index in the database {}", foreignKeys);
-            return writeToLog(key, foreignKeys.size());
-        }
-        return writeZeroToLog(key);
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX, ForeignKey.class),
+                c -> true, pgContext, SimpleLoggingKey.FOREIGN_KEYS_WITHOUT_INDEX);
     }
 
     @Nonnull
     private String logTablesWithMissingIndexes(@Nonnull final DatabaseChecks databaseChecks,
                                                @Nonnull final Exclusions exclusions,
                                                @Nonnull final PgContext pgContext) {
-        final DatabaseCheckOnCluster<TableWithMissingIndex> check = databaseChecks.getCheck(Diagnostic.TABLES_WITH_MISSING_INDEXES, TableWithMissingIndex.class);
-        final List<TableWithMissingIndex> tablesWithMissingIndexes = check.check(pgContext, FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
-                .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithMissingIndexesExclusions())));
-        final LoggingKey key = SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES;
-        if (CollectionUtils.isNotEmpty(tablesWithMissingIndexes)) {
-            LOGGER.warn("There are tables with missing indexes in the database {}", tablesWithMissingIndexes);
-            return writeToLog(key, tablesWithMissingIndexes.size());
-        }
-        return writeZeroToLog(key);
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.TABLES_WITH_MISSING_INDEXES, TableWithMissingIndex.class),
+                FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
+                        .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithMissingIndexesExclusions())), pgContext, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES);
     }
 
     @Nonnull
     private String logTablesWithoutPrimaryKey(@Nonnull final DatabaseChecks databaseChecks,
                                               @Nonnull final Exclusions exclusions,
                                               @Nonnull final PgContext pgContext) {
-        final DatabaseCheckOnCluster<Table> check = databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, Table.class);
-        final List<Table> tablesWithoutPrimaryKey = check.check(pgContext, FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
-                .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithoutPrimaryKeyExclusions())));
-        final LoggingKey key = SimpleLoggingKey.TABLES_WITHOUT_PK;
-        if (CollectionUtils.isNotEmpty(tablesWithoutPrimaryKey)) {
-            LOGGER.warn("There are tables without primary key in the database {}", tablesWithoutPrimaryKey);
-            return writeToLog(key, tablesWithoutPrimaryKey.size());
-        }
-        return writeZeroToLog(key);
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, Table.class),
+                FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
+                        .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithoutPrimaryKeyExclusions())), pgContext, SimpleLoggingKey.TABLES_WITHOUT_PRIMARY_KEY);
     }
 
     @Nonnull
     private String logIndexesWithNullValues(@Nonnull final DatabaseChecks databaseChecks,
                                             @Nonnull final Exclusions exclusions,
                                             @Nonnull final PgContext pgContext) {
-        final DatabaseCheckOnCluster<IndexWithNulls> check = databaseChecks.getCheck(Diagnostic.INDEXES_WITH_NULL_VALUES, IndexWithNulls.class);
-        final List<IndexWithNulls> indexesWithNullValues = check.check(pgContext, FilterIndexesByNamePredicate.of(exclusions.getIndexesWithNullValuesExclusions()));
-        final LoggingKey key = SimpleLoggingKey.INDEXES_WITH_NULLS;
-        if (CollectionUtils.isNotEmpty(indexesWithNullValues)) {
-            LOGGER.warn("There are indexes with null values in the database {}", indexesWithNullValues);
-            return writeToLog(key, indexesWithNullValues.size());
-        }
-        return writeZeroToLog(key);
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.INDEXES_WITH_NULL_VALUES, IndexWithNulls.class),
+                FilterIndexesByNamePredicate.of(exclusions.getIndexesWithNullValuesExclusions()), pgContext, SimpleLoggingKey.INDEXES_WITH_NULL_VALUES);
     }
 
     @Nonnull
     private String logIndexesBloat(@Nonnull final DatabaseChecks databaseChecks,
                                    @Nonnull final Exclusions exclusions,
                                    @Nonnull final PgContext pgContext) {
-        final DatabaseCheckOnCluster<IndexWithBloat> check = databaseChecks.getCheck(Diagnostic.BLOATED_INDEXES, IndexWithBloat.class);
-        final List<IndexWithBloat> indexesWithBloat = check.check(pgContext,
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.BLOATED_INDEXES, IndexWithBloat.class),
                 FilterIndexesByBloatPredicate.of(exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold())
-                        .and(FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())));
-        final LoggingKey key = SimpleLoggingKey.INDEXES_BLOAT;
-        if (CollectionUtils.isNotEmpty(indexesWithBloat)) {
-            LOGGER.warn("There are indexes with bloat in the database {}", indexesWithBloat);
-            return writeToLog(key, indexesWithBloat.size());
-        }
-        return writeZeroToLog(key);
+                        .and(FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())), pgContext, SimpleLoggingKey.BLOATED_INDEXES);
     }
 
     @Nonnull
     private String logTablesBloat(@Nonnull final DatabaseChecks databaseChecks,
                                   @Nonnull final Exclusions exclusions,
                                   @Nonnull final PgContext pgContext) {
-        final DatabaseCheckOnCluster<TableWithBloat> check = databaseChecks.getCheck(Diagnostic.BLOATED_TABLES, TableWithBloat.class);
-        final List<TableWithBloat> tablesWithBloat = check.check(pgContext,
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.BLOATED_TABLES, TableWithBloat.class),
                 FilterTablesByBloatPredicate.of(exclusions.getTableBloatSizeThresholdInBytes(), exclusions.getTableBloatPercentageThreshold())
-                        .and(FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())));
-        final LoggingKey key = SimpleLoggingKey.TABLES_BLOAT;
-        if (CollectionUtils.isNotEmpty(tablesWithBloat)) {
-            LOGGER.warn("There are tables with bloat in the database {}", tablesWithBloat);
-            return writeToLog(key, tablesWithBloat.size());
+                        .and(FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())), pgContext, SimpleLoggingKey.BLOATED_TABLES);
+    }
+
+    @Nonnull
+    private String logTablesWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
+                                               @Nonnull final PgContext pgContext) {
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_DESCRIPTION, Table.class),
+                c -> true, pgContext, SimpleLoggingKey.TABLES_WITHOUT_DESCRIPTION);
+    }
+
+    @Nonnull
+    private String logColumnsWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
+                                                @Nonnull final PgContext pgContext) {
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.COLUMNS_WITHOUT_DESCRIPTION, Column.class),
+                c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITHOUT_DESCRIPTION);
+    }
+
+    @Nonnull
+    private <T extends TableNameAware> String logCheckResult(@Nonnull final DatabaseCheckOnCluster<T> check,
+                                                             @Nonnull final Predicate<? super T> exclusionsFilter,
+                                                             @Nonnull final PgContext pgContext,
+                                                             @Nonnull final LoggingKey key) {
+        final List<T> checkResult = check.check(pgContext, exclusionsFilter);
+        if (CollectionUtils.isNotEmpty(checkResult)) {
+            LOGGER.warn("There are {} in the database {}", key.getDescription(), checkResult);
+            return writeToLog(key, checkResult.size());
         }
         return writeZeroToLog(key);
     }

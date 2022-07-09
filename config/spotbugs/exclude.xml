@@ -7,18 +7,26 @@
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
     </Match>
     <Match>
-        <Bug pattern="OBL_UNSATISFIED_OBLIGATION"/>
-    </Match>
-    <Match>
         <Bug pattern="EI_EXPOSE_REP"/>
     </Match>
     <Match>
-        <Bug pattern="EC_NULL_ARG"/>
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
+        <Or>
+            <Class name="io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl"/>
+            <Class name="io.github.mfvanek.pg.utils.DatabaseAwareTestBase"/>
+            <Class name="io.github.mfvanek.pg.utils.DatabasePopulator"/>
+            <Class name="~.*Test"/>
+        </Or>
     </Match>
     <Match>
-        <Bug pattern="EC_UNRELATED_TYPES"/>
+        <Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
+        <Or>
+            <Class name="io.github.mfvanek.pg.utils.DatabasePopulator"/>
+            <Class name="io.github.mfvanek.pg.utils.QueryExecutorsTest"/>
+        </Or>
     </Match>
     <Match>
-        <Bug pattern="EC_UNRELATED_CLASS_AND_INTERFACE"/>
+        <Bug pattern="EC_NULL_ARG,EC_UNRELATED_TYPES,EC_UNRELATED_CLASS_AND_INTERFACE,NM_CONFUSING,NP_NONNULL_PARAM_VIOLATION,DP_DO_INSIDE_DO_PRIVILEGED"/>
+        <Class name="~.*Test"/>
     </Match>
 </FindBugsFilter>

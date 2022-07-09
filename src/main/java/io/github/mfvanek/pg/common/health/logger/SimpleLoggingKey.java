@@ -19,12 +19,14 @@ public enum SimpleLoggingKey implements LoggingKey {
     DUPLICATED_INDEXES("duplicated_indexes"),
     INTERSECTED_INDEXES("intersected_indexes"),
     UNUSED_INDEXES("unused_indexes"),
-    FOREIGN_KEYS("foreign_keys_without_index"),
+    FOREIGN_KEYS_WITHOUT_INDEX("foreign_keys_without_index"),
     TABLES_WITH_MISSING_INDEXES("tables_with_missing_indexes"),
-    TABLES_WITHOUT_PK("tables_without_primary_key"),
-    INDEXES_WITH_NULLS("indexes_with_null_values"),
-    INDEXES_BLOAT("indexes_bloat"),
-    TABLES_BLOAT("tables_bloat");
+    TABLES_WITHOUT_PRIMARY_KEY("tables_without_primary_key"),
+    INDEXES_WITH_NULL_VALUES("indexes_with_null_values"),
+    BLOATED_INDEXES("indexes_with_bloat"),
+    BLOATED_TABLES("tables_with_bloat"),
+    TABLES_WITHOUT_DESCRIPTION("tables_without_description"),
+    COLUMNS_WITHOUT_DESCRIPTION("columns_without_description");
 
     private final String subKeyName;
 
@@ -43,5 +45,10 @@ public enum SimpleLoggingKey implements LoggingKey {
     public String getSubKeyName() {
         return subKeyName;
     }
-}
 
+    @Nonnull
+    @Override
+    public String getDescription() {
+        return subKeyName.replace('_', ' ');
+    }
+}

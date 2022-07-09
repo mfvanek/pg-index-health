@@ -84,6 +84,7 @@ class IndexWithSizeTest {
     }
 
     @Test
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(IndexWithSize.class)
                 .withIgnoredFields("indexSizeInBytes")

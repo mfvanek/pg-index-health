@@ -17,8 +17,9 @@ import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,9 +35,10 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
         this.check = new IndexesWithNullValuesCheckOnHost(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
     }
 
-    @Test
-    void securityTest() {
-        executeTestOnDatabase("public", dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx -> {
+    @ParameterizedTest
+    @ValueSource(strings = {"public"})
+    void securityTest(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx -> {
             final long before = getRowsCount(ctx.getSchemaName(), "clients");
             assertThat(before).isEqualTo(1001L);
             assertThat(check.check(PgContext.of("; truncate table clients;")))

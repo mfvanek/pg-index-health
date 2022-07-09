@@ -19,6 +19,7 @@ import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -51,7 +52,8 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void forEachDiagnosticShouldExistCheck() {
+    @DisplayName("For each diagnostic should exist check")
+    void completenessTest() {
         for (final Diagnostic diagnostic : Diagnostic.values()) {
             assertThat(checks.getCheck(diagnostic, TableNameAware.class))
                     .isNotNull()

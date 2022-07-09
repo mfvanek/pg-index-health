@@ -101,6 +101,7 @@ class ConnectionCredentialsTest {
     }
 
     @Test
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(ConnectionCredentials.class)
                 .verify();
