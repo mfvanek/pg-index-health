@@ -44,7 +44,7 @@ For raw sql queries see [pg-index-health-sql](https://github.com/mfvanek/pg-inde
 ## How does it work?
 **pg_index_health** utilizes the [PostgreSQL's statistics collector](https://www.postgresql.org/docs/10/monitoring-stats.html).  
 You can call `pg_stat_reset()` on each host to reset all statistics counters for the current database to zero
-but the best way to do it is to use [IndexesHealth::resetStatistics()](https://github.com/mfvanek/pg-index-health/blob/9251f99e2952bc7490137f40c83873ff54ac1ffa/src/main/java/io/github/mfvanek/pg/index/health/IndexesHealth.java#L168) method.
+but the best way to do it is to use [DatabaseManagement::resetStatistics()](https://github.com/mfvanek/pg-index-health/blob/1b999374ebc4850ac60e70712399336175348f81/src/main/java/io/github/mfvanek/pg/common/management/DatabaseManagement.java#L32) method.
 
 ## Installation
 Using Gradle:
@@ -71,7 +71,8 @@ All these cases are covered with examples in the [pg-index-health-demo](https://
 
 ## Integration with Spring Boot
 There is a Spring Boot starter [pg-index-health-test-starter](https://github.com/mfvanek/pg-index-health-test-starter) 
-for unit/integration testing as well.
+for unit/integration testing as well.  
+More examples you can find in [pg-index-health-spring-boot-demo](https://github.com/mfvanek/pg-index-health-spring-boot-demo) project.
 
 ## Questions, issues, feature requests and contributions
 * If you have any question or a problem with the library, please [file an issue](https://github.com/mfvanek/pg-index-health/issues).
