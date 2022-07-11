@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  * An abstraction of sql query executor.
  *
  * @author Ivan Vahrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 @FunctionalInterface
 public interface QueryExecutor {

@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> any database object associated with a table (table itself, index, column, constraint)
  * @author Ivan Vahrushev
- * @since 0.5.1
+ * @since 0.6.0
  * @see TableNameAware
  */
 public interface DatabaseCheckOnCluster<T extends TableNameAware> extends DiagnosticAware, RawTypeAware<T> {

@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * An abstract class for all database checks performed on entire cluster.
  *
  * @author Ivan Vakhrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 public abstract class AbstractCheckOnCluster<T extends TableNameAware> implements DatabaseCheckOnCluster<T> {
 

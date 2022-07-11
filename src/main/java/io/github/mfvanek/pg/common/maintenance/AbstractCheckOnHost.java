@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * An abstract class for all database checks performed on a specific host.
  *
  * @author Ivan Vahrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 public abstract class AbstractCheckOnHost<T extends TableNameAware> implements DatabaseCheckOnHost<T> {
 

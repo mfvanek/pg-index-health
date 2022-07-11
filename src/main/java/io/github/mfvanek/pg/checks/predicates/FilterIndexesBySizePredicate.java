@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  * Allows filter indexes by their size.
  *
  * @author Ivan Vakhrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 public class FilterIndexesBySizePredicate extends AbstractFilterBySize implements Predicate<IndexSizeAware> {
 

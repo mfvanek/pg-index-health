@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  * Allows filter tables by their bloat.
  *
  * @author Ivan Vakhrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 public class FilterTablesByBloatPredicate extends AbstractFilterByBloat implements Predicate<TableBloatAware> {
 

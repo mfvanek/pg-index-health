@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
  * Allows getting information about original generic type.
  *
  * @author Ivan Vakhrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 public interface RawTypeAware<T extends TableNameAware> {
 

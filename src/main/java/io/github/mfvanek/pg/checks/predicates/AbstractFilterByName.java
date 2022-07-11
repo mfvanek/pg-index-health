@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * Base class for filters by name.
  *
  * @author Ivan Vakhrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 abstract class AbstractFilterByName {
 

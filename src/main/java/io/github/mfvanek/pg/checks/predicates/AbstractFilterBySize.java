@@ -16,7 +16,7 @@ import io.github.mfvanek.pg.utils.Validators;
  * Base class for filters by size.
  *
  * @author Ivan Vakhrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 abstract class AbstractFilterBySize {
 

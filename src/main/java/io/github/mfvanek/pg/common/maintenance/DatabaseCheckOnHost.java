@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  * A check on database structure on a specific host.
  *
  * @author Ivan Vahrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 public interface DatabaseCheckOnHost<T extends TableNameAware> extends DiagnosticAware, RawTypeAware<T>, HostAware {
 

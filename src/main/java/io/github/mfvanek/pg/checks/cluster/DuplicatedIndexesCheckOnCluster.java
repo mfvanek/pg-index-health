@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  * Check for duplicated (completely identical) indexes on all hosts in the cluster.
  *
  * @author Ivan Vahrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 public class DuplicatedIndexesCheckOnCluster extends AbstractCheckOnCluster<DuplicatedIndexes> {
 
