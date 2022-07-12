@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * Check for tables bloat on a specific host.
  *
  * @author Ivan Vahrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 public class TablesWithBloatCheckOnHost extends AbstractCheckOnHost<TableWithBloat> {
 

@@ -16,7 +16,7 @@ import io.github.mfvanek.pg.model.BloatAware;
  * Allows getting information about index bloat.
  *
  * @author Ivan Vakhrushev
- * @since 0.5.1
+ * @since 0.6.0
  * @see BloatAware
  */
 public interface IndexBloatAware extends BloatAware, IndexSizeAware {

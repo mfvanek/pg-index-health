@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  * Allows filter tables by their size.
  *
  * @author Ivan Vakhrushev
- * @since 0.5.1
+ * @since 0.6.0
  * @see TableSizeAware
  */
 public class FilterTablesBySizePredicate extends AbstractFilterBySize implements Predicate<TableSizeAware> {

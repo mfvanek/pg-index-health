@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  * Allows filter duplicated indexes by their name.
  *
  * @author Ivan Vakhrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 public class FilterDuplicatedIndexesByNamePredicate extends AbstractFilterByName implements Predicate<DuplicatedIndexes> {
 

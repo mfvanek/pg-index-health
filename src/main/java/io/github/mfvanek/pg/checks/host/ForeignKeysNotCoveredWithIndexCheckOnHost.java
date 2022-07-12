@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * Check for foreign keys without associated indexes on a specific host.
  *
  * @author Ivan Vahrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 public class ForeignKeysNotCoveredWithIndexCheckOnHost extends AbstractCheckOnHost<ForeignKey> {
 

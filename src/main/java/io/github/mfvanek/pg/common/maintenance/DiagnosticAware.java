@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
  * Allows getting information about rule related to the check.
  *
  * @author Ivan Vahrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 public interface DiagnosticAware {
 

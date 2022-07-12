@@ -16,7 +16,7 @@ import io.github.mfvanek.pg.model.BloatAware;
  * Allows getting information about table bloat.
  *
  * @author Ivan Vakhrushev
- * @since 0.5.1
+ * @since 0.6.0
  * @see BloatAware
  */
 public interface TableBloatAware extends BloatAware, TableSizeAware {

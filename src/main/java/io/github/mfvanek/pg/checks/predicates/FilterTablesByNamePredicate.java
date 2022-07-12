@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  * Allows filter tables by their name.
  *
  * @author Ivan Vakhrushev
- * @since 0.5.1
+ * @since 0.6.0
  */
 public class FilterTablesByNamePredicate extends AbstractFilterByName implements Predicate<TableNameAware> {
 

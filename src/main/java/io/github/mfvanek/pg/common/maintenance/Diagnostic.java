@@ -72,7 +72,7 @@ public enum Diagnostic {
      * Defines the place where the diagnostic should be executed.
      *
      * @author Ivan Vakhrushev
-     * @since 0.5.1
+     * @since 0.6.0
      */
     public enum ExecutionTopology {
         /**
