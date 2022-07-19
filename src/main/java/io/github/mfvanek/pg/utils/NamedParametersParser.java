@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.utils;
 
 import javax.annotation.Nonnull;
 
-@SuppressWarnings({"PMD.ShortVariable", "PMD.AvoidReassigningLoopVariables", "PMD.CognitiveComplexity", "PMD.CyclomaticComplexity"})
+@SuppressWarnings({"PMD.ShortVariable", "PMD.AvoidReassigningLoopVariables", "PMD.CognitiveComplexity", "PMD.CyclomaticComplexity", "checkstyle:CyclomaticComplexity"})
 public final class NamedParametersParser {
 
     private final String originalSqlQuery;

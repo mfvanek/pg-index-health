@@ -4,44 +4,50 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 <module name="Checker">
     <property name="charset" value="UTF-8"/>
-
     <property name="severity" value="warning"/>
-
     <property name="fileExtensions" value="java"/>
-    <!-- Excludes all 'module-info.java' files              -->
-    <!-- See https://checkstyle.org/config_filefilters.html -->
     <module name="BeforeExecutionExclusionFileFilter">
         <property name="fileNamePattern" value="module\-info\.java$"/>
     </module>
-    <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
-    <module name="SuppressionFilter">
-        <property name="file" value="${org.checkstyle.google.suppressionfilter.config}"
-                  default="checkstyle-suppressions.xml"/>
-        <property name="optional" value="true"/>
-    </module>
-
-    <!-- Checks for whitespace                               -->
-    <!-- See http://checkstyle.org/config_whitespace.html -->
+    <module name="SuppressWarningsFilter"/>
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
     </module>
-
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
         <property name="max" value="199"/>
         <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
     </module>
-
-    <!-- Headers -->
     <module name="Header">
         <property name="header"
                   value="/*\n * Copyright (c) 2019-2022. Ivan Vakhrushev and others.\n * https://github.com/mfvanek/pg-index-health\n *\n * This file is a part of &quot;pg-index-health&quot; - a Java library for\n * analyzing and maintaining indexes health in PostgreSQL databases.\n *\n * Licensed under the Apache License 2.0\n */"/>
         <property name="fileExtensions" value="java"/>
     </module>
-
     <module name="NewlineAtEndOfFile"/>
-
     <module name="TreeWalker">
+        <module name="SuppressWarningsHolder"/>
+        <module name="AbstractClassName">
+            <property name="ignoreName" value="true"/>
+        </module>
+        <module name="AnonInnerLength"/>
+        <!--<module name="AvoidInlineConditionals"/> invalid -->
+        <module name="AvoidNestedBlocks"/>
+        <module name="BooleanExpressionComplexity"/>
+        <module name="ClassDataAbstractionCoupling"/>
+        <module name="ClassFanOutComplexity"/>
+        <!-- <module name="ClassMemberImpliedModifier"/> invalid -->
+        <module name="RedundantModifier"/>
+        <module name="CovariantEquals"/>
+        <module name="CyclomaticComplexity"/>
+        <module name="DeclarationOrder"/>
+        <module name="DescendantToken"/>
+        <!-- <module name="DesignForExtension"/> invalid -->
+        <module name="EmptyForInitializerPad"/>
+        <module name="EmptyForIteratorPad"/>
+        <module name="EqualsAvoidNull"/>
+        <module name="EqualsHashCode"/>
+        <module name="ExecutableStatementCount"/>
+        <module name="ExplicitInitialization"/>
         <module name="MissingOverride"/>
         <module name="OuterTypeFilename"/>
         <module name="IllegalTokenText">
@@ -55,19 +61,18 @@
             <property name="allowNonPrintableEscapes" value="true"/>
         </module>
         <module name="AvoidStarImport"/>
+        <!-- <module name="AvoidStaticImport"/> invalid -->
         <module name="OneTopLevelClass"/>
         <module name="NoLineWrap">
             <property name="tokens" value="PACKAGE_DEF, IMPORT, STATIC_IMPORT"/>
         </module>
-        <module name="EmptyBlock">
-            <property name="option" value="TEXT"/>
-            <property name="tokens" value="LITERAL_TRY, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_SWITCH"/>
-        </module>
+        <module name="EmptyBlock"/>
         <module name="NeedBraces">
             <property name="tokens" value="LITERAL_DO, LITERAL_ELSE, LITERAL_FOR, LITERAL_IF, LITERAL_WHILE"/>
         </module>
         <module name="LeftCurly">
-            <property name="tokens" value="ANNOTATION_DEF, CLASS_DEF, CTOR_DEF, ENUM_CONSTANT_DEF, ENUM_DEF, INTERFACE_DEF, LAMBDA, LITERAL_CASE, LITERAL_CATCH, LITERAL_DEFAULT, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, METHOD_DEF, OBJBLOCK, STATIC_INIT, RECORD_DEF, COMPACT_CTOR_DEF"/>
+            <property name="tokens"
+                      value="ANNOTATION_DEF, CLASS_DEF, CTOR_DEF, ENUM_CONSTANT_DEF, ENUM_DEF, INTERFACE_DEF, LAMBDA, LITERAL_CASE, LITERAL_CATCH, LITERAL_DEFAULT, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, METHOD_DEF, OBJBLOCK, STATIC_INIT, RECORD_DEF, COMPACT_CTOR_DEF"/>
         </module>
         <module name="RightCurly">
             <property name="id" value="RightCurlySame"/>
@@ -76,7 +81,8 @@
         <module name="RightCurly">
             <property name="id" value="RightCurlyAlone"/>
             <property name="option" value="alone"/>
-            <property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT, ANNOTATION_DEF, ENUM_DEF, INTERFACE_DEF, RECORD_DEF, COMPACT_CTOR_DEF"/>
+            <property name="tokens"
+                      value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT, ANNOTATION_DEF, ENUM_DEF, INTERFACE_DEF, RECORD_DEF, COMPACT_CTOR_DEF"/>
         </module>
         <module name="SuppressionXpathSingleFilter">
             <!-- suppresion is required till https://github.com/checkstyle/checkstyle/issues/7541 -->
@@ -103,6 +109,7 @@
                     NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION, RCURLY, SL, SLIST, SL_ASSIGN, SR,
                     SR_ASSIGN, STAR, STAR_ASSIGN, LITERAL_ASSERT, TYPE_EXTENSION_AND"/>
         </module>
+        <module name="ArrayTrailingComma"/>
         <module name="NoArrayTrailingComma"/>
         <module name="NoEnumTrailingComma"/>
         <module name="AvoidDoubleBraceInitialization"/>
@@ -119,8 +126,9 @@
         <module name="NoClone"/>
         <module name="NoFinalizer"/>
         <module name="EmptyLineSeparator">
-            <property name="tokens" value="PACKAGE_DEF, IMPORT, STATIC_IMPORT, CLASS_DEF, INTERFACE_DEF, ENUM_DEF, STATIC_INIT, INSTANCE_INIT, METHOD_DEF, CTOR_DEF, VARIABLE_DEF, RECORD_DEF, COMPACT_CTOR_DEF"/>
             <property name="allowNoEmptyLineBetweenFields" value="true"/>
+            <property name="allowMultipleEmptyLines" value="false"/>
+            <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
         </module>
         <module name="SeparatorWrap">
             <property name="id" value="SeparatorWrapDot"/>
@@ -164,18 +172,14 @@
         <module name="LambdaParameterName">
             <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
         </module>
-        <module name="CatchParameterName">
-            <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
-        </module>
+        <module name="CatchParameterName"/>
         <module name="LocalVariableName">
             <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
         </module>
         <module name="PatternVariableName">
             <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
         </module>
-        <module name="ClassTypeParameterName">
-            <property name="format" value="^[A-Z][A-Z0-9]*$"/>
-        </module>
+        <module name="ClassTypeParameterName"/>
         <module name="RecordComponentName">
             <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
         </module>
@@ -202,7 +206,8 @@
             <property name="ignoreFinal" value="false"/>
             <property name="allowedAbbreviationLength" value="0"/>
             <property name="allowedAbbreviations" value="SSD"/>
-            <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, ANNOTATION_DEF, ANNOTATION_FIELD_DEF, PARAMETER_DEF, VARIABLE_DEF, METHOD_DEF, PATTERN_VARIABLE_DEF, RECORD_DEF, RECORD_COMPONENT_DEF"/>
+            <property name="tokens"
+                      value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, ANNOTATION_DEF, ANNOTATION_FIELD_DEF, PARAMETER_DEF, VARIABLE_DEF, METHOD_DEF, PATTERN_VARIABLE_DEF, RECORD_DEF, RECORD_COMPONENT_DEF"/>
         </module>
         <!--<module name="OverloadMethodsDeclarationOrder"/>-->
         <module name="VariableDeclarationUsageDistance"/>
@@ -240,7 +245,8 @@
         </module>
         <module name="OperatorWrap">
             <property name="option" value="EOL"/>
-            <property name="tokens" value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR, LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR, METHOD_REF, TYPE_EXTENSION_AND "/>
+            <property name="tokens"
+                      value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR, LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR, METHOD_REF, TYPE_EXTENSION_AND "/>
         </module>
         <module name="AnnotationLocation">
             <property name="id" value="AnnotationLocationMostCases"/>
@@ -253,6 +259,8 @@
             <property name="tokens" value="VARIABLE_DEF"/>
             <property name="allowSamelineMultipleAnnotations" value="true"/>
         </module>
+        <!--<module name="AnnotationOnSameLine"/> invalid -->
+        <module name="AnnotationUseStyle"/>
         <module name="NonEmptyAtclauseDescription"/>
         <module name="InvalidJavadocPosition"/>
         <module name="JavadocTagContinuationIndentation"/>
@@ -286,6 +294,7 @@
         <module name="MethodName">
             <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9_]*$"/>
         </module>
+        <module name="ConstantName"/>
         <module name="SingleLineJavadoc"/>
         <module name="EmptyCatchBlock">
             <property name="exceptionVariableName" value="expected"/>

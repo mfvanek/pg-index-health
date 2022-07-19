@@ -15,11 +15,8 @@ import io.github.mfvanek.pg.model.table.Column;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
-
-import static io.github.mfvanek.pg.generator.DbMigrationGeneratorImpl.DELIMITER;
-import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGenerator.MAX_IDENTIFIER_LENGTH;
-import static java.util.stream.Collectors.joining;
 
 /**
  * Index name generator.
@@ -43,7 +40,7 @@ class PgIdentifierNameGenerator {
         this.tableNameWithoutSchema = getTableNameWithoutSchema(foreignKey);
         this.columnsInIndex = foreignKey.getColumnsInConstraint().stream()
                 .map(Column::getColumnName)
-                .collect(joining(DELIMITER));
+                .collect(Collectors.joining(DbMigrationGeneratorImpl.DELIMITER));
         this.hasToAddWithoutNullsSuffix = options.isNameWithoutNulls() && options.isExcludeNulls() &&
                 foreignKey.getColumnsInConstraint().stream().anyMatch(Column::isNullable);
     }
@@ -59,9 +56,11 @@ class PgIdentifierNameGenerator {
 
     @Nonnull
     public String generateTruncatedIndexName() {
-        int remainingLength = options.isNeedToAddIdx() ? MAX_IDENTIFIER_LENGTH - IDX.length() - DELIMITER.length() : MAX_IDENTIFIER_LENGTH;
+        int remainingLength = options.isNeedToAddIdx() ?
+                PgIndexOnForeignKeyGenerator.MAX_IDENTIFIER_LENGTH - IDX.length() - DbMigrationGeneratorImpl.DELIMITER.length() :
+                PgIndexOnForeignKeyGenerator.MAX_IDENTIFIER_LENGTH;
         final StringBuilder truncatedNameBuilder = new StringBuilder();
-        if (tableNameWithoutSchema.length() + DELIMITER.length() + columnsInIndex.length() > remainingLength) {
+        if (tableNameWithoutSchema.length() + DbMigrationGeneratorImpl.DELIMITER.length() + columnsInIndex.length() > remainingLength) {
             final int hash = columnsInIndex.hashCode(); // to make unique name
             final String columnsPart;
             if (hash < 0) {
@@ -69,9 +68,9 @@ class PgIdentifierNameGenerator {
             } else {
                 columnsPart = String.valueOf(hash);
             }
-            remainingLength = remainingLength - DELIMITER.length() - columnsPart.length();
+            remainingLength = remainingLength - DbMigrationGeneratorImpl.DELIMITER.length() - columnsPart.length();
             truncatedNameBuilder.append(StringUtils.truncate(tableNameWithoutSchema, remainingLength))
-                    .append(DELIMITER)
+                    .append(DbMigrationGeneratorImpl.DELIMITER)
                     .append(columnsPart);
             remainingLength -= tableNameWithoutSchema.length();
         } else {
@@ -86,13 +85,13 @@ class PgIdentifierNameGenerator {
 
     private void addMainPart(@Nonnull final StringBuilder nameBuilder) {
         nameBuilder.append(tableNameWithoutSchema)
-                .append(DELIMITER)
+                .append(DbMigrationGeneratorImpl.DELIMITER)
                 .append(columnsInIndex);
     }
 
     private void addWithoutNullsIfNeed(@Nonnull final StringBuilder nameBuilder) {
         if (hasToAddWithoutNullsSuffix) {
-            nameBuilder.append(DELIMITER)
+            nameBuilder.append(DbMigrationGeneratorImpl.DELIMITER)
                     .append(WITHOUT_NULLS);
         }
     }
@@ -101,10 +100,10 @@ class PgIdentifierNameGenerator {
     private StringBuilder addIdxIfNeed(@Nonnull final StringBuilder nameBuilder) {
         if (options.isNeedToAddIdx()) {
             if (options.getIdxPosition() == IdxPosition.SUFFIX) {
-                nameBuilder.append(DELIMITER)
+                nameBuilder.append(DbMigrationGeneratorImpl.DELIMITER)
                         .append(IDX);
             } else {
-                nameBuilder.insert(0, IDX + DELIMITER);
+                nameBuilder.insert(0, IDX + DbMigrationGeneratorImpl.DELIMITER);
             }
         }
         return nameBuilder;

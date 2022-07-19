@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SuppressWarnings("checkstyle:AbstractClassName")
 class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
@@ -52,7 +53,7 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public"})
+    @ValueSource(strings = "public")
     void forPublicSchema(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx ->
                 assertThat(check.check()) // executing on public schema by default
@@ -64,7 +65,7 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
 
     static class WrongCheck extends AbstractCheckOnCluster<UnusedIndex> {
 
-        public WrongCheck(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+        WrongCheck(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
             super(haPgConnection, UnusedIndexesCheckOnHost::new);
         }
     }

@@ -20,11 +20,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * A representation of duplicated indexes in a database.
@@ -51,14 +50,14 @@ public class DuplicatedIndexes implements TableNameAware {
         this.indexes = Collections.unmodifiableList(
                 defensiveCopy.stream()
                         .sorted(INDEX_WITH_SIZE_COMPARATOR)
-                        .collect(toList()));
+                        .collect(Collectors.toList()));
         this.totalSize = this.indexes.stream()
                 .mapToLong(IndexWithSize::getIndexSizeInBytes)
                 .sum();
         this.indexesNames = Collections.unmodifiableList(
                 this.indexes.stream()
                         .map(Index::getIndexName)
-                        .collect(toList()));
+                        .collect(Collectors.toList()));
     }
 
     /**
@@ -138,7 +137,7 @@ public class DuplicatedIndexes implements TableNameAware {
                 Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
         final List<IndexWithSize> duplicatedIndexes = indexesWithNameAndSize.stream()
                 .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
-                .collect(toList());
+                .collect(Collectors.toList());
         return new DuplicatedIndexes(duplicatedIndexes);
     }
 
@@ -153,6 +152,6 @@ public class DuplicatedIndexes implements TableNameAware {
         }
         final Stream<IndexWithSize> basePart = Stream.of(firstIndex, secondIndex);
         return new DuplicatedIndexes(Stream.concat(basePart, Stream.of(otherIndexes))
-                .collect(toList()));
+                .collect(Collectors.toList()));
     }
 }

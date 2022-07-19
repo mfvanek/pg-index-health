@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 @ThreadSafe
 public class DatabaseChecks {
 
