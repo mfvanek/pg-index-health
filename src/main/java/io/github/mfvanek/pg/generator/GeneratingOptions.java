@@ -114,6 +114,11 @@ public class GeneratingOptions {
                 '}';
     }
 
+    @Nonnull
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
 
         private boolean concurrently = true;
@@ -232,10 +237,5 @@ public class GeneratingOptions {
             }
             return indentation;
         }
-    }
-
-    @Nonnull
-    public static Builder builder() {
-        return new Builder();
     }
 }

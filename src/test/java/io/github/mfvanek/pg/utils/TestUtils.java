@@ -20,6 +20,11 @@ import javax.sql.DataSource;
 
 public final class TestUtils {
 
+    private TestUtils() {
+        throw new UnsupportedOperationException();
+    }
+
+    @SuppressWarnings("checkstyle:IllegalThrows")
     public static <T> void invokePrivateConstructor(@Nonnull final Class<T> type)
             throws Throwable {
         final Constructor<T> constructor = type.getDeclaredConstructor();

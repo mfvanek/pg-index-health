@@ -10,9 +10,9 @@
         <property name="fileNamePattern" value="module\-info\.java$"/>
     </module>
     <module name="SuppressWarningsFilter"/>
-    <module name="FileTabCharacter">
-        <property name="eachLine" value="true"/>
-    </module>
+    <!-- <module name="JavadocPackage"/> invalid -->
+    <module name="FileTabCharacter"/>
+    <module name="FileLength"/>
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
         <property name="max" value="199"/>
@@ -48,8 +48,24 @@
         <module name="EqualsHashCode"/>
         <module name="ExecutableStatementCount"/>
         <module name="ExplicitInitialization"/>
+        <!-- <module name="FinalClass"/> invalid -->
+        <module name="FinalLocalVariable"/>
+        <module name="FinalParameters"/>
+        <!-- <module name="HiddenField"/> invalid -->
+        <module name="HideUtilityClassConstructor"/>
+        <module name="IllegalCatch"/>
+        <module name="IllegalIdentifierName"/>
+        <module name="IllegalInstantiation"/>
+        <module name="IllegalThrows"/>
+        <module name="IllegalType"/>
+        <module name="InnerAssignment"/>
+        <module name="InnerTypeLast"/>
+        <module name="InterfaceIsType"/>
+        <!-- <module name="InterfaceMemberImpliedModifier"/> invalid -->
+        <module name="JavaNCSS"/>
         <module name="MissingOverride"/>
         <module name="OuterTypeFilename"/>
+        <module name="IllegalToken"/>
         <module name="IllegalTokenText">
             <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/>
             <property name="format" value="\\u00(09|0(a|A)|0(c|C)|0(d|D)|22|27|5(C|c))|\\(0(10|11|12|14|15|42|47)|134)"/>
@@ -189,9 +205,7 @@
         <module name="MethodTypeParameterName">
             <property name="format" value="^[A-Z][A-Z0-9]*$"/>
         </module>
-        <module name="InterfaceTypeParameterName">
-            <property name="format" value="^[A-Z][A-Z0-9]*$"/>
-        </module>
+        <module name="InterfaceTypeParameterName"/>
         <module name="NoFinalizer"/>
         <module name="GenericWhitespace"/>
         <module name="Indentation">
@@ -211,6 +225,7 @@
         </module>
         <!--<module name="OverloadMethodsDeclarationOrder"/>-->
         <module name="VariableDeclarationUsageDistance"/>
+        <!-- <module name="ImportOrder"/> invalid -->
         <module name="CustomImportOrder">
             <property name="sortImportsInGroupAlphabetically" value="true"/>
             <property name="separateLineBetweenGroups" value="true"/>
@@ -263,7 +278,13 @@
         <module name="AnnotationUseStyle"/>
         <module name="NonEmptyAtclauseDescription"/>
         <module name="InvalidJavadocPosition"/>
+        <module name="JavadocBlockTagLocation"/>
+        <module name="JavadocContentLocationCheck"/>
+        <module name="JavadocMissingLeadingAsterisk"/>
+        <module name="JavadocMissingWhitespaceAfterAsterisk"/>
         <module name="JavadocTagContinuationIndentation"/>
+        <!-- <module name="JavadocParagraph"/> invalid -->
+        <module name="JavadocStyle"/>
         <module name="SummaryJavadoc">
             <property name="forbiddenSummaryFragments"
                       value="^@return the *|^This method returns |^A [{]@code [a-zA-Z0-9]+[}]( is a )"/>
@@ -286,6 +307,8 @@
             <property name="allowedAnnotations" value="Override, Test"/>
             <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF"/>
         </module>
+        <module name="JavadocType"/>
+       <!-- <module name="JavadocVariable"/> invalid -->
         <module name="MissingJavadocType">
             <property name="scope" value="nothing"/>
             <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, RECORD_DEF, ANNOTATION_DEF"/>

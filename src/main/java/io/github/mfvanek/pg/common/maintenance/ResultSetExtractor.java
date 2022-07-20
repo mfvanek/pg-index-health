@@ -17,6 +17,8 @@ import javax.annotation.Nonnull;
 /**
  * A mapper from raw data to domain model.
  *
+ * @param <T> any type represents an object in a database
+ *
  * @author Ivan Vahrushev
  */
 @FunctionalInterface
