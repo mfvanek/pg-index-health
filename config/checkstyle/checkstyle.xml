@@ -63,7 +63,20 @@
         <module name="InterfaceIsType"/>
         <!-- <module name="InterfaceMemberImpliedModifier"/> invalid -->
         <module name="JavaNCSS"/>
+        <module name="LambdaBodyLength">
+            <property name="max" value="30"/>
+        </module>
+        <module name="LocalFinalVariableName"/>
+        <!-- <module name="MagicNumber"/> invalid -->
+        <!-- <module name="MatchXpath"/> not applicable -->
+        <module name="MethodCount"/>
+        <module name="MethodLength"/>
+        <!-- <module name="MissingCtor"/> invalid -->
+        <module name="MissingDeprecated"/>
         <module name="MissingOverride"/>
+        <module name="ModifiedControlVariable"/>
+        <!-- <module name="MultipleStringLiterals"/> invalid -->
+        <module name="MutableException"/>
         <module name="OuterTypeFilename"/>
         <module name="IllegalToken"/>
         <module name="IllegalTokenText">
@@ -86,10 +99,7 @@
         <module name="NeedBraces">
             <property name="tokens" value="LITERAL_DO, LITERAL_ELSE, LITERAL_FOR, LITERAL_IF, LITERAL_WHILE"/>
         </module>
-        <module name="LeftCurly">
-            <property name="tokens"
-                      value="ANNOTATION_DEF, CLASS_DEF, CTOR_DEF, ENUM_CONSTANT_DEF, ENUM_DEF, INTERFACE_DEF, LAMBDA, LITERAL_CASE, LITERAL_CATCH, LITERAL_DEFAULT, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, METHOD_DEF, OBJBLOCK, STATIC_INIT, RECORD_DEF, COMPACT_CTOR_DEF"/>
-        </module>
+        <module name="LeftCurly"/>
         <module name="RightCurly">
             <property name="id" value="RightCurlySame"/>
             <property name="tokens" value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_DO"/>
@@ -179,32 +189,18 @@
         <module name="TypeName">
             <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, ANNOTATION_DEF, RECORD_DEF"/>
         </module>
-        <module name="MemberName">
-            <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/>
-        </module>
+        <module name="MemberName"/>
         <module name="ParameterName">
             <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
         </module>
-        <module name="LambdaParameterName">
-            <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
-        </module>
+        <module name="LambdaParameterName"/>
         <module name="CatchParameterName"/>
-        <module name="LocalVariableName">
-            <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
-        </module>
-        <module name="PatternVariableName">
-            <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
-        </module>
+        <module name="LocalVariableName"/>
+        <module name="PatternVariableName"/>
         <module name="ClassTypeParameterName"/>
-        <module name="RecordComponentName">
-            <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
-        </module>
-        <module name="RecordTypeParameterName">
-            <property name="format" value="^[A-Z][A-Z0-9]*$"/>
-        </module>
-        <module name="MethodTypeParameterName">
-            <property name="format" value="^[A-Z][A-Z0-9]*$"/>
-        </module>
+        <module name="RecordComponentName"/>
+        <module name="RecordTypeParameterName"/>
+        <module name="MethodTypeParameterName"/>
         <module name="InterfaceTypeParameterName"/>
         <module name="NoFinalizer"/>
         <module name="GenericWhitespace"/>
@@ -243,9 +239,7 @@
                 ^org\.junit\.Test, ^org\.junit\.jupiter\.api\.Assertions, ^org\.junit\.Test, ^org\.junit\.jupiter\.api\.Assertions\..*"/>
             <property name="illegalPkgs" value="^org\.hamcrest"/>
         </module>
-        <module name="MethodParamPad">
-            <property name="tokens" value="CTOR_DEF, LITERAL_NEW, METHOD_CALL, METHOD_DEF, SUPER_CTOR_CALL, ENUM_CONSTANT_DEF, RECORD_DEF"/>
-        </module>
+        <module name="MethodParamPad"/>
         <module name="NoWhitespaceBefore">
             <property name="tokens" value="COMMA, SEMI, POST_INC, POST_DEC, DOT, LABELED_STAT, METHOD_REF"/>
             <property name="allowLineBreaks" value="true"/>
@@ -301,22 +295,12 @@
             <property name="allowedAnnotations" value="Override, Test"/>
             <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF"/>
         </module>
-        <module name="MissingJavadocMethod">
-            <property name="scope" value="nothing"/>
-            <property name="minLineCount" value="2"/>
-            <property name="allowedAnnotations" value="Override, Test"/>
-            <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF"/>
-        </module>
+        <!-- <module name="MissingJavadocMethod"/> invalid -->
+        <module name="MissingJavadocPackage"/>
         <module name="JavadocType"/>
-       <!-- <module name="JavadocVariable"/> invalid -->
-        <module name="MissingJavadocType">
-            <property name="scope" value="nothing"/>
-            <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, RECORD_DEF, ANNOTATION_DEF"/>
-            <property name="excludeScope" value="nothing"/>
-        </module>
-        <module name="MethodName">
-            <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9_]*$"/>
-        </module>
+        <!-- <module name="JavadocVariable"/> invalid -->
+        <!-- <module name="MissingJavadocType"/> invalid -->
+        <module name="MethodName"/>
         <module name="ConstantName"/>
         <module name="SingleLineJavadoc"/>
         <module name="EmptyCatchBlock">
