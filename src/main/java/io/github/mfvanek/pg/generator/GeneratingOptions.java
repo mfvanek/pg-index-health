@@ -129,7 +129,8 @@ public class GeneratingOptions {
         private boolean nameWithoutNulls = true;
         private IdxPosition idxPosition = IdxPosition.SUFFIX;
 
-        private Builder() {}
+        private Builder() {
+        }
 
         @Nonnull
         public GeneratingOptions build() {

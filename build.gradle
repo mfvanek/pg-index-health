@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'jacoco'
-    id 'com.github.spotbugs' version '5.0.6'
+    id 'com.github.spotbugs' version '5.0.9'
     id 'checkstyle'
     id 'org.sonarqube' version '3.3'
     id 'pmd'
@@ -186,7 +186,7 @@ jacocoTestCoverageVerification {
 }
 
 checkstyle {
-    toolVersion '8.45'
+    toolVersion '10.3.1'
     configFile file("config/checkstyle/checkstyle.xml")
     ignoreFailures = false
     maxWarnings = 0
@@ -212,7 +212,7 @@ sonarqube {
 
 pmd {
     consoleOutput = true
-    toolVersion = "6.42.0"
+    toolVersion = "6.47.0"
     ruleSetFiles = files("config/pmd/pmd.xml")
     ruleSets = []
 }
