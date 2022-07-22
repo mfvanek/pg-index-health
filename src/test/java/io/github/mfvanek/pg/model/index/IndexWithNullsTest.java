@@ -122,8 +122,8 @@ class IndexWithNullsTest {
                 .verify();
     }
 
-    @SuppressWarnings("unchecked")
-    private static void invokePrivateConstructor(final Object ... initargs) throws Throwable {
+    @SuppressWarnings({"unchecked", "checkstyle:IllegalThrows"})
+    private static void invokePrivateConstructor(final Object... initargs) throws Throwable {
         final Constructor<IndexWithNulls> constructor = (Constructor<IndexWithNulls>) IndexWithNulls.class.getDeclaredConstructors()[0];
         constructor.setAccessible(true);
 

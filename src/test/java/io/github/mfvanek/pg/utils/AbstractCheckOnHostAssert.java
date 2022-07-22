@@ -22,7 +22,7 @@ import org.assertj.core.util.CheckReturnValue;
 
 import javax.annotation.Nonnull;
 
-@SuppressWarnings(("PMD.LinguisticNaming"))
+@SuppressWarnings({"PMD.LinguisticNaming", "checkstyle:AbstractClassName"})
 public class AbstractCheckOnHostAssert<E extends TableNameAware> extends AbstractAssert<AbstractCheckOnHostAssert<E>, AbstractCheckOnHost<E>> {
 
     protected AbstractCheckOnHostAssert(@Nonnull final AbstractCheckOnHost<E> abstractCheckOnHost) {

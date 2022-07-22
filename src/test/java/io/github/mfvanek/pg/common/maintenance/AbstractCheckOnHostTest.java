@@ -23,6 +23,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("checkstyle:AbstractClassName")
 class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
 
     @RegisterExtension
@@ -36,7 +37,7 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public"})
+    @ValueSource(strings = "public")
     void securityTest(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx -> {
             final long before = getRowsCount(ctx.getSchemaName(), "clients");

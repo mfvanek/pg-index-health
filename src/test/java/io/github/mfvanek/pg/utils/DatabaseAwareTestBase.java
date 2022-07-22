@@ -57,7 +57,7 @@ public abstract class DatabaseAwareTestBase {
     }
 
     protected void waitForStatisticsCollector() {
-        IntStream.of(1, 2, 3, 4, 5, 6).forEach((i) -> {
+        IntStream.of(1, 2, 3, 4, 5, 6).forEach(i -> {
             try {
                 // see PGSTAT_STAT_INTERVAL at https://github.com/postgres/postgres/blob/master/src/backend/postmaster/pgstat.c
                 Thread.sleep(500L); //NOSONAR

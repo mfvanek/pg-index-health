@@ -32,7 +32,7 @@ abstract class HealthLoggerTestBase extends DatabaseAwareTestBase {
 
         private final SimpleLoggingKey key;
 
-        public SimpleLoggingKeyPredicate(@Nonnull final SimpleLoggingKey key) {
+        SimpleLoggingKeyPredicate(@Nonnull final SimpleLoggingKey key) {
             this.key = Objects.requireNonNull(key);
         }
 

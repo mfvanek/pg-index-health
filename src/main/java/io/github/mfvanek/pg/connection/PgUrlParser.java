@@ -21,8 +21,8 @@ import javax.annotation.Nonnull;
 
 final class PgUrlParser {
 
-    private static final String PG_URL = "pgUrl";
     static final String URL_HEADER = "jdbc:postgresql://";
+    private static final String PG_URL = "pgUrl";
 
     private PgUrlParser() {
         throw new UnsupportedOperationException();

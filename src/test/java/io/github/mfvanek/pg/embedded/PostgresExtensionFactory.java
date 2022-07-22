@@ -17,7 +17,8 @@ package io.github.mfvanek.pg.embedded;
  */
 public final class PostgresExtensionFactory {
 
-    private PostgresExtensionFactory() {}
+    private PostgresExtensionFactory() {
+    }
 
     public static PostgresDbExtension database() {
         return new PostgresDbExtension();

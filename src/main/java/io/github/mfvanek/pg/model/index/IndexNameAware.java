@@ -10,18 +10,15 @@
 
 package io.github.mfvanek.pg.model.index;
 
-import io.github.mfvanek.pg.common.health.logger.AbstractHealthLogger;
-import io.github.mfvanek.pg.model.table.TableNameAware;
-
 import javax.annotation.Nonnull;
 
 /**
  * Allows getting index name.
  * Used as a marker interface for filtering exclusions in
- * {@link AbstractHealthLogger}
+ * {@link io.github.mfvanek.pg.common.health.logger.AbstractHealthLogger}
  *
  * @author Ivan Vakhrushev
- * @see TableNameAware
+ * @see io.github.mfvanek.pg.model.table.TableNameAware
  * @see io.github.mfvanek.pg.common.health.logger.Exclusions
  */
 public interface IndexNameAware {

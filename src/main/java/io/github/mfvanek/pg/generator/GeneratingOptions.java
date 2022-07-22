@@ -114,6 +114,11 @@ public class GeneratingOptions {
                 '}';
     }
 
+    @Nonnull
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
 
         private boolean concurrently = true;
@@ -124,7 +129,8 @@ public class GeneratingOptions {
         private boolean nameWithoutNulls = true;
         private IdxPosition idxPosition = IdxPosition.SUFFIX;
 
-        private Builder() {}
+        private Builder() {
+        }
 
         @Nonnull
         public GeneratingOptions build() {
@@ -232,10 +238,5 @@ public class GeneratingOptions {
             }
             return indentation;
         }
-    }
-
-    @Nonnull
-    public static Builder builder() {
-        return new Builder();
     }
 }

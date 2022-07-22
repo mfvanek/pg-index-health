@@ -45,6 +45,7 @@ class GeneratingOptionsTest {
                 .hasToString("Builder{concurrently=true, excludeNulls=true, breakLines=true, indentation=4, uppercaseForKeywords=false, nameWithoutNulls=true, idxPosition=SUFFIX}");
     }
 
+    @SuppressWarnings("checkstyle:ExecutableStatementCount")
     @Test
     void gettersAndBuilderShouldWork() {
         final GeneratingOptions.Builder builder = GeneratingOptions.builder();
