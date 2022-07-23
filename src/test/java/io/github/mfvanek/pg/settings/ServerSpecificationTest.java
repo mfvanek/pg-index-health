@@ -11,11 +11,13 @@
 package io.github.mfvanek.pg.settings;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class ServerSpecificationTest {
 
     @Test

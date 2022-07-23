@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.connection;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class ConnectionCredentialsTest {
 
     private static final String DEFAULT_URL = "jdbc:postgresql://localhost/postgres";

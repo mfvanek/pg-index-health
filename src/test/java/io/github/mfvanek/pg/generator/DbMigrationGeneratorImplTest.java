@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.generator;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import static io.github.mfvanek.pg.generator.PgIdentifierNameGeneratorTest.nulla
 import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGeneratorTest.severalColumnsWithNulls;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("fast")
 class DbMigrationGeneratorImplTest {
 
     @Test

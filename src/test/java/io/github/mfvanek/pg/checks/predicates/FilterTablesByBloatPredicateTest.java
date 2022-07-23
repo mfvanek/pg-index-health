@@ -12,12 +12,14 @@ package io.github.mfvanek.pg.checks.predicates;
 
 import io.github.mfvanek.pg.model.table.TableBloatAware;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("fast")
 class FilterTablesByBloatPredicateTest {
 
     @Test

@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.connection;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mockito;
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class PgConnectionImplTest {
 
     @RegisterExtension

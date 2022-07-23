@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.checks.predicates;
 
 import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import io.github.mfvanek.pg.model.index.IndexWithSize;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Predicate;
@@ -19,6 +20,7 @@ import java.util.function.Predicate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class FilterIndexesBySizePredicateTest {
 
     private static final IndexWithSize FIRST = IndexWithSize.of("t", "idx1", 10L);

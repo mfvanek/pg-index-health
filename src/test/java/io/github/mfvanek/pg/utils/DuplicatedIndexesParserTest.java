@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import static io.github.mfvanek.pg.utils.DuplicatedIndexesParser.parseAsIndexNam
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class DuplicatedIndexesParserTest {
 
     @Test

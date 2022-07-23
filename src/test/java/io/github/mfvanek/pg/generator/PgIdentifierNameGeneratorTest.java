@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.index.ForeignKey;
 import io.github.mfvanek.pg.model.table.Column;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -21,6 +22,7 @@ import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGenerator.MAX_ID
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class PgIdentifierNameGeneratorTest {
 
     @SuppressWarnings("ConstantConditions")

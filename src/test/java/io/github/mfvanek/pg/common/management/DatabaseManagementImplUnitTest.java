@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.common.management;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -20,6 +21,7 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class DatabaseManagementImplUnitTest {
 
     @SuppressWarnings("ConstantConditions")

@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.utils.Locales;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("fast")
 class DiagnosticTest {
 
     @Test

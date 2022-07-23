@@ -10,11 +10,13 @@
 
 package io.github.mfvanek.pg.utils;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class ValidatorsTest {
 
     @Test
