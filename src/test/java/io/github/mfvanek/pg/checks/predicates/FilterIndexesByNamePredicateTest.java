@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.checks.predicates;
 
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexNameAware;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -19,6 +20,7 @@ import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("fast")
 class FilterIndexesByNamePredicateTest {
 
     private static final Index FIRST = Index.of("t", "IDX1");

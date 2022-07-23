@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
@@ -17,6 +18,7 @@ import java.io.FileNotFoundException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class SqlQueryReaderTest {
 
     @Test

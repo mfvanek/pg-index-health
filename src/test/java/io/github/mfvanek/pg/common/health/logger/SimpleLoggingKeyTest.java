@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -18,6 +19,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("fast")
 class SimpleLoggingKeyTest {
 
     @Test

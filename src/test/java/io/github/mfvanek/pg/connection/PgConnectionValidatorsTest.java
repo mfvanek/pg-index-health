@@ -11,10 +11,12 @@
 package io.github.mfvanek.pg.connection;
 
 import io.github.mfvanek.pg.utils.TestUtils;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class PgConnectionValidatorsTest {
 
     @Test

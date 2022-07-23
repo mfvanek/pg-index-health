@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.connection;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -23,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 
+@Tag("fast")
 class HighAvailabilityPgConnectionFactoryImplTest {
 
     private final PrimaryHostDeterminer primaryHostDeterminer = Mockito.mock(PrimaryHostDeterminer.class);

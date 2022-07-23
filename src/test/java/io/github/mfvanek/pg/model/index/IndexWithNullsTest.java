@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.table.Column;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class IndexWithNullsTest {
 
     @Test

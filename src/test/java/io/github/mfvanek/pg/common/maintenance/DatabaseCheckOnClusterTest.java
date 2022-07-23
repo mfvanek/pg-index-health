@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -22,6 +23,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
+@Tag("fast")
 class DatabaseCheckOnClusterTest {
 
     private static final Collection<PgContext> CONTEXTS = Arrays.asList(

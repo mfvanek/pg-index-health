@@ -10,10 +10,12 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("fast")
 class ExclusionsBuilderTest {
 
     @Test

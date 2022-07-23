@@ -11,11 +11,13 @@
 package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("fast")
 class ExclusionsTest {
 
     @Test
