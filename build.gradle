@@ -50,6 +50,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    dependsOn checkstyleMain, checkstyleTest, pmdMain, pmdTest, spotbugsMain, spotbugsTest
     finalizedBy jacocoTestReport
     finalizedBy jacocoTestCoverageVerification
 }
@@ -199,8 +200,7 @@ checkstyleTest {
     source ='src/test/java'
 }
 
-check.dependsOn jacocoTestReport
-check.dependsOn jacocoTestCoverageVerification
+check.dependsOn jacocoTestReport, jacocoTestCoverageVerification
 
 sonarqube {
     properties {
