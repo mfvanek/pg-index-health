@@ -51,6 +51,7 @@ dependencies {
 test {
     useJUnitPlatform()
     dependsOn checkstyleMain, checkstyleTest, pmdMain, pmdTest, spotbugsMain, spotbugsTest
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
     finalizedBy jacocoTestReport
     finalizedBy jacocoTestCoverageVerification
 }
