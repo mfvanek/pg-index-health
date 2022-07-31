@@ -27,9 +27,10 @@ public interface DatabaseManagement extends StatisticsAware, ConfigurationAware 
      * It just reset counters without any impact on performance.
      *
      * @see StatisticsMaintenanceOnHost
+     * @return true if the operation is successful
      */
     @Override
-    void resetStatistics();
+    boolean resetStatistics();
 
     /**
      * Gets time at which database statistics were last reset on the primary host.

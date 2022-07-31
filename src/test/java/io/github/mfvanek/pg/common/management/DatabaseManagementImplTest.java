@@ -51,10 +51,13 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final OffsetDateTime testStartTime = OffsetDateTime.now(ClockHolder.clock());
             tryToFindAccountByClientId(schemaName);
-            assertThat(getSeqScansForAccounts(ctx)).isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
-            databaseManagement.resetStatistics();
+            assertThat(getSeqScansForAccounts(ctx))
+                    .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
+            assertThat(databaseManagement.resetStatistics())
+                    .isTrue();
             waitForStatisticsCollector();
-            assertThat(getSeqScansForAccounts(ctx)).isZero();
+            assertThat(getSeqScansForAccounts(ctx))
+                    .isZero();
 
             assertThat(databaseManagement.getLastStatsResetTimestamp())
                     .isPresent()

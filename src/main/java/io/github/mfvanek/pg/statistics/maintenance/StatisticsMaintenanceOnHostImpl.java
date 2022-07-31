@@ -26,9 +26,16 @@ public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnH
      * A connection to a specific host in the cluster.
      */
     private final PgConnection pgConnection;
+    private final StatisticsQueryExecutor queryExecutor;
+
+    StatisticsMaintenanceOnHostImpl(@Nonnull final PgConnection pgConnection,
+                                    @Nonnull final StatisticsQueryExecutor queryExecutor) {
+        this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
+        this.queryExecutor = Objects.requireNonNull(queryExecutor, "queryExecutor cannot be null");
+    }
 
     public StatisticsMaintenanceOnHostImpl(@Nonnull final PgConnection pgConnection) {
-        this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
+        this(pgConnection, QueryExecutors::executeQuery);
     }
 
     /**
@@ -44,8 +51,9 @@ public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnH
      * {@inheritDoc}
      */
     @Override
-    public void resetStatistics() {
-        QueryExecutors.executeQuery(pgConnection, "select pg_stat_reset()", rs -> true);
+    public boolean resetStatistics() {
+        final List<Boolean> result = queryExecutor.executeQuery(pgConnection, "select pg_stat_reset()", rs -> true);
+        return !result.isEmpty() && result.get(0);
     }
 
     /**
@@ -55,7 +63,7 @@ public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnH
     @Nonnull
     public Optional<OffsetDateTime> getLastStatsResetTimestamp() {
         final String query = "select stats_reset from pg_stat_database where datname = current_database()";
-        final List<OffsetDateTime> statsResetTimes = QueryExecutors.executeQuery(pgConnection, query,
+        final List<OffsetDateTime> statsResetTimes = queryExecutor.executeQuery(pgConnection, query,
                 rs -> rs.getObject(1, OffsetDateTime.class));
         return Optional.ofNullable(statsResetTimes.get(0));
     }
