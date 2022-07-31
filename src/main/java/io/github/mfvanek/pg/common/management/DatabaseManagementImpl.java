@@ -60,12 +60,14 @@ public class DatabaseManagementImpl implements DatabaseManagement {
      * {@inheritDoc}
      */
     @Override
-    public void resetStatistics() {
+    public boolean resetStatistics() {
+        boolean result = true;
         for (final PgConnection pgConnection : haPgConnection.getConnectionsToAllHostsInCluster()) {
             LOGGER.debug("Going to execute on host {}", pgConnection.getHost().getName());
-            computeStatisticsForHostIfNeed(pgConnection)
-                    .resetStatistics();
+            final boolean resultOnHost = computeStatisticsForHostIfNeed(pgConnection).resetStatistics();
+            result = result && resultOnHost;
         }
+        return result;
     }
 
     /**

@@ -26,7 +26,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 
 class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
@@ -43,8 +42,8 @@ class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
     @Test
     void resetStatisticsOnEmptyDatabaseShouldExecuteCorrectly() {
-        assertThatCode(statisticsMaintenance::resetStatistics)
-                .doesNotThrowAnyException();
+        assertThat(statisticsMaintenance.resetStatistics())
+                .isTrue();
     }
 
     @ParameterizedTest
@@ -54,10 +53,13 @@ class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
             final OffsetDateTime testStartTime = OffsetDateTime.now(ClockHolder.clock());
             tryToFindAccountByClientId(schemaName);
             final PgContext pgContext = PgContext.of(schemaName);
-            assertThat(getSeqScansForAccounts(pgContext)).isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
-            statisticsMaintenance.resetStatistics();
+            assertThat(getSeqScansForAccounts(pgContext))
+                    .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
+            assertThat(statisticsMaintenance.resetStatistics())
+                    .isTrue();
             waitForStatisticsCollector();
-            assertThat(getSeqScansForAccounts(pgContext)).isZero();
+            assertThat(getSeqScansForAccounts(pgContext))
+                    .isZero();
 
             assertThat(statisticsMaintenance.getLastStatsResetTimestamp())
                     .isPresent()
