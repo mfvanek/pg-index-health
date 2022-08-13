@@ -30,12 +30,12 @@ import javax.annotation.Nonnull;
  */
 public abstract class AbstractCheckOnHost<T extends TableNameAware> implements DatabaseCheckOnHost<T> {
 
-    protected static final String TABLE_NAME = "table_name";
-    protected static final String INDEX_NAME = "index_name";
-    protected static final String TABLE_SIZE = "table_size";
-    protected static final String INDEX_SIZE = "index_size";
-    protected static final String BLOAT_SIZE = "bloat_size";
-    protected static final String BLOAT_PERCENTAGE = "bloat_percentage";
+    public static final String TABLE_NAME = "table_name";
+    public static final String INDEX_NAME = "index_name";
+    public static final String TABLE_SIZE = "table_size";
+    public static final String INDEX_SIZE = "index_size";
+    public static final String BLOAT_SIZE = "bloat_size";
+    public static final String BLOAT_PERCENTAGE = "bloat_percentage";
 
     /**
      * An original java type representing database object.
