@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.model.PgContext;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -169,6 +170,12 @@ public final class DatabasePopulator implements AutoCloseable {
         return this;
     }
 
+    @Nonnull
+    public DatabasePopulator withJsonType() {
+        this.actions.putIfAbsent(25, this::convertColumnToJsonType);
+        return this;
+    }
+
     public void populate() {
         actions.forEach((k, v) -> v.run());
     }
@@ -254,7 +261,8 @@ public final class DatabasePopulator implements AutoCloseable {
                     "id bigint not null primary key default nextval('%s.clients_seq')," +
                     "last_name varchar(255) not null," +
                     "first_name varchar(255) not null," +
-                    "middle_name varchar(255))", schemaName, schemaName));
+                    "middle_name varchar(255)," +
+                    "info jsonb)", schemaName, schemaName));
         });
     }
 
@@ -280,7 +288,7 @@ public final class DatabasePopulator implements AutoCloseable {
     private void insertDataIntoTables() {
         final int clientsCountToCreate = 1_000;
         final String insertClientSql = String.format(
-                "insert into %s.clients (id, first_name, last_name) values (?, ?, ?)", schemaName);
+                "insert into %s.clients (id, first_name, last_name, info) values (?, ?, ?, ?)", schemaName);
         final String insertAccountSql = String.format(
                 "insert into %s.accounts (client_id, account_number) values (?, ?)", schemaName);
         try (Connection connection = dataSource.getConnection();
@@ -294,6 +302,7 @@ public final class DatabasePopulator implements AutoCloseable {
                 insertClientStatement.setLong(1, clientId);
                 insertClientStatement.setString(2, firstName);
                 insertClientStatement.setString(3, lastName);
+                insertClientStatement.setObject(4, prepareClientInfo());
                 insertClientStatement.executeUpdate();
 
                 final String accountNumber = generateAccountNumber(clientId);
@@ -309,6 +318,14 @@ public final class DatabasePopulator implements AutoCloseable {
         } catch (SQLException e) {
             throw new PgSqlException(e);
         }
+    }
+
+    @Nonnull
+    private static PGobject prepareClientInfo() throws SQLException {
+        final PGobject clientInfo = new PGobject();
+        clientInfo.setType("jsonb");
+        clientInfo.setValue("{\"client\":{\"date\":\"2022-08-14T23:27:42\",\"result\":\"created\"}}");
+        return clientInfo;
     }
 
     private String generateAccountNumber(final long clientId) {
@@ -475,6 +492,7 @@ public final class DatabasePopulator implements AutoCloseable {
                                 "comment on column %1$s.clients.last_name is 'Customer''s last name';" +
                                 "comment on column %1$s.clients.first_name is 'Customer''s given name';" +
                                 "comment on column %1$s.clients.middle_name is 'Patronymic of the customer';" +
+                                "comment on column %1$s.clients.info is 'Raw client data';" +
                                 "comment on column %1$s.accounts.id is 'Unique record ID';" +
                                 "comment on column %1$s.accounts.client_id is 'Customer record ID';" +
                                 "comment on column %1$s.accounts.account_number is 'Customer''s account number';" +
@@ -488,5 +506,10 @@ public final class DatabasePopulator implements AutoCloseable {
                 statement.execute(String.format("comment on column %1$s.clients.id is '';" +
                         "comment on column %1$s.accounts.id is '   ';",
                         schemaName)));
+    }
+
+    private void convertColumnToJsonType() {
+        executeOnDatabase(dataSource, statement ->
+                statement.execute(String.format("alter table if exists %s.clients alter column info type json using info::json", schemaName)));
     }
 }

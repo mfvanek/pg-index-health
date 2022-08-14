@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.checks.host;
 
+import io.github.mfvanek.pg.checks.extractors.TableExtractor;
 import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
@@ -42,10 +43,6 @@ public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Tab
     @Nonnull
     @Override
     public List<Table> check(@Nonnull final PgContext pgContext) {
-        return executeQuery(pgContext, rs -> {
-            final String tableName = rs.getString(TABLE_NAME);
-            final long tableSize = rs.getLong(TABLE_SIZE);
-            return Table.of(tableName, tableSize);
-        });
+        return executeQuery(pgContext, TableExtractor.of());
     }
 }

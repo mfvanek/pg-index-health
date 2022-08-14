@@ -68,7 +68,7 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx ->
                 assertThat(check)
                         .executing(ctx)
-                        .hasSize(9)
+                        .hasSize(10)
                         .containsExactly(
                                 Column.ofNotNull(ctx.enrichWithSchema("accounts"), "account_balance"),
                                 Column.ofNotNull(ctx.enrichWithSchema("accounts"), "account_number"),
@@ -77,11 +77,13 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                                 Column.ofNotNull(ctx.enrichWithSchema("accounts"), "id"),
                                 Column.ofNotNull(ctx.enrichWithSchema("clients"), "first_name"),
                                 Column.ofNotNull(ctx.enrichWithSchema("clients"), "id"),
+                                Column.ofNullable(ctx.enrichWithSchema("clients"), "info"),
                                 Column.ofNotNull(ctx.enrichWithSchema("clients"), "last_name"),
                                 Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name"))
                         .filteredOn(Column::isNullable)
-                        .hasSize(1)
+                        .hasSize(2)
                         .containsExactly(
+                                Column.ofNullable(ctx.enrichWithSchema("clients"), "info"),
                                 Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name")));
     }
 
@@ -91,7 +93,7 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnColumns(), ctx ->
                 assertThat(check)
                         .executing(ctx)
-                        .hasSize(9)
+                        .hasSize(10)
                         .filteredOn(c -> "id".equalsIgnoreCase(c.getColumnName()))
                         .hasSize(2)
                         .containsExactly(

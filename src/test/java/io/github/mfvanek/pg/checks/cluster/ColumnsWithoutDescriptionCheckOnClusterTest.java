@@ -65,7 +65,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(9)
+                    .hasSize(10)
                     .containsExactly(
                             Column.ofNotNull(ctx.enrichWithSchema("accounts"), "account_balance"),
                             Column.ofNotNull(ctx.enrichWithSchema("accounts"), "account_number"),
@@ -74,15 +74,17 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
                             Column.ofNotNull(ctx.enrichWithSchema("accounts"), "id"),
                             Column.ofNotNull(ctx.enrichWithSchema("clients"), "first_name"),
                             Column.ofNotNull(ctx.enrichWithSchema("clients"), "id"),
+                            Column.ofNullable(ctx.enrichWithSchema("clients"), "info"),
                             Column.ofNotNull(ctx.enrichWithSchema("clients"), "last_name"),
                             Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name"))
                     .filteredOn(Column::isNullable)
-                    .hasSize(1)
+                    .hasSize(2)
                     .containsExactly(
+                            Column.ofNullable(ctx.enrichWithSchema("clients"), "info"),
                             Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name"));
 
             assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
-                    .hasSize(4)
+                    .hasSize(5)
                     .allMatch(c -> c.getTableName().equals(ctx.enrichWithSchema("clients")));
         });
     }
@@ -92,7 +94,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
     void shouldNotTakingIntoAccountBlankComments(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnColumns(), ctx ->
                 assertThat(check.check(ctx))
-                        .hasSize(9)
+                        .hasSize(10)
                         .filteredOn(c -> "id".equalsIgnoreCase(c.getColumnName()))
                         .hasSize(2)
                         .containsExactly(

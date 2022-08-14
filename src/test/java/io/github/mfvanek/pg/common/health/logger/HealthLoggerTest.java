@@ -75,7 +75,16 @@ class HealthLoggerTest extends HealthLoggerTestBase {
     @ValueSource(strings = {"public", "custom"})
     void logAll(final String schemaName) {
         executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData().withInvalidIndex().withNullValuesInIndex().withTableWithoutPrimaryKey().withDuplicatedIndex().withNonSuitableIndex().withStatistics(), ctx -> {
+                dbp -> dbp.withReferences()
+                        .withData()
+                        .withInvalidIndex()
+                        .withNullValuesInIndex()
+                        .withTableWithoutPrimaryKey()
+                        .withDuplicatedIndex()
+                        .withNonSuitableIndex()
+                        .withStatistics()
+                        .withJsonType(),
+                ctx -> {
                     waitForStatisticsCollector();
                     assertThat(logger.logAll(Exclusions.empty(), ctx))
                             .hasSameSizeAs(Diagnostic.values())
@@ -91,7 +100,8 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tunused_indexes\t7",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t0",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_description\t3",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_without_description\t12");
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_without_description\t13",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_json_type\t1");
                 });
     }
 

@@ -48,7 +48,16 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
     @ValueSource(strings = {"public", "custom"})
     void logAll(final String schemaName) {
         executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData().withInvalidIndex().withNullValuesInIndex().withTableWithoutPrimaryKey().withDuplicatedIndex().withNonSuitableIndex().withStatistics(), ctx -> {
+                dbp -> dbp.withReferences()
+                        .withData()
+                        .withInvalidIndex()
+                        .withNullValuesInIndex()
+                        .withTableWithoutPrimaryKey()
+                        .withDuplicatedIndex()
+                        .withNonSuitableIndex()
+                        .withStatistics()
+                        .withJsonType(),
+                ctx -> {
                     waitForStatisticsCollector();
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
                     assertThat(logs)
@@ -65,7 +74,8 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                                     "unused_indexes:7",
                                     "tables_with_missing_indexes:0",
                                     "tables_without_description:3",
-                                    "columns_without_description:12");
+                                    "columns_without_description:13",
+                                    "columns_with_json_type:1");
                 });
     }
 

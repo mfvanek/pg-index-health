@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
+import io.github.mfvanek.pg.checks.cluster.ColumnsWithJsonTypeCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ColumnsWithoutDescriptionCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.DuplicatedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ForeignKeysNotCoveredWithIndexCheckOnCluster;
@@ -39,18 +40,19 @@ public class DatabaseChecks {
 
     public DatabaseChecks(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         Stream.of(
-                new TablesWithBloatCheckOnCluster(haPgConnection),
-                        new TablesWithMissingIndexesCheckOnCluster(haPgConnection),
-                        new TablesWithoutPrimaryKeyCheckOnCluster(haPgConnection),
-                        new DuplicatedIndexesCheckOnCluster(haPgConnection),
-                        new ForeignKeysNotCoveredWithIndexCheckOnCluster(haPgConnection),
-                        new IndexesWithBloatCheckOnCluster(haPgConnection),
-                        new IndexesWithNullValuesCheckOnCluster(haPgConnection),
-                        new IntersectedIndexesCheckOnCluster(haPgConnection),
-                        new InvalidIndexesCheckOnCluster(haPgConnection),
-                        new UnusedIndexesCheckOnCluster(haPgConnection),
-                        new TablesWithoutDescriptionCheckOnCluster(haPgConnection),
-                        new ColumnsWithoutDescriptionCheckOnCluster(haPgConnection))
+                    new TablesWithBloatCheckOnCluster(haPgConnection),
+                    new TablesWithMissingIndexesCheckOnCluster(haPgConnection),
+                    new TablesWithoutPrimaryKeyCheckOnCluster(haPgConnection),
+                    new DuplicatedIndexesCheckOnCluster(haPgConnection),
+                    new ForeignKeysNotCoveredWithIndexCheckOnCluster(haPgConnection),
+                    new IndexesWithBloatCheckOnCluster(haPgConnection),
+                    new IndexesWithNullValuesCheckOnCluster(haPgConnection),
+                    new IntersectedIndexesCheckOnCluster(haPgConnection),
+                    new InvalidIndexesCheckOnCluster(haPgConnection),
+                    new UnusedIndexesCheckOnCluster(haPgConnection),
+                    new TablesWithoutDescriptionCheckOnCluster(haPgConnection),
+                    new ColumnsWithoutDescriptionCheckOnCluster(haPgConnection),
+                    new ColumnsWithJsonTypeCheckOnCluster(haPgConnection))
                 .forEach(check -> checks.putIfAbsent(check.getDiagnostic(), check));
     }
 
