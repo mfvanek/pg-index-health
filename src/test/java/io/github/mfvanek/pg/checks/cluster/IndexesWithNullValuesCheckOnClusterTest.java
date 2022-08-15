@@ -45,12 +45,6 @@ class IndexesWithNullValuesCheckOnClusterTest extends DatabaseAwareTestBase {
         assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.INDEXES_WITH_NULL_VALUES);
     }
 
-    @Test
-    void onEmptyDatabase() {
-        assertThat(check.check())
-                .isEmpty();
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithoutThem(final String schemaName) {

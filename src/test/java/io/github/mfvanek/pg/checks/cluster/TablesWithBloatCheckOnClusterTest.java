@@ -49,22 +49,6 @@ class TablesWithBloatCheckOnClusterTest extends DatabaseAwareTestBase {
         assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.BLOATED_TABLES);
     }
 
-    @Test
-    void onEmptyDataBase() {
-        assertThat(check.check())
-                .isEmpty();
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withStatistics(), ctx -> {
-            waitForStatisticsCollector();
-            assertThat(check.check(ctx))
-                    .isEmpty();
-        });
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithThem(final String schemaName) {

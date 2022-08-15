@@ -46,24 +46,6 @@ class IndexesWithBloatCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasHost(PgHostImpl.ofPrimary());
     }
 
-    @Test
-    void onEmptyDatabase() {
-        assertThat(check)
-                .executing()
-                .isEmpty();
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withStatistics(), ctx -> {
-            waitForStatisticsCollector();
-            assertThat(check)
-                    .executing(ctx)
-                    .isEmpty();
-        });
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithThem(final String schemaName) {

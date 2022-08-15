@@ -49,12 +49,6 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
         assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX);
     }
 
-    @Test
-    void onEmptyDatabase() {
-        assertThat(check.check())
-                .isEmpty();
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithoutThem(final String schemaName) {

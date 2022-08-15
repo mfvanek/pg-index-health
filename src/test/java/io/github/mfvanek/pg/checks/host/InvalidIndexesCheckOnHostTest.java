@@ -18,7 +18,6 @@ import io.github.mfvanek.pg.embedded.PostgresDbExtension;
 import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.utils.DatabasePopulator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -44,22 +43,6 @@ class InvalidIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasType(Index.class)
                 .hasDiagnostic(Diagnostic.INVALID_INDEXES)
                 .hasHost(PgHostImpl.ofPrimary());
-    }
-
-    @Test
-    void onEmptyDatabase() {
-        assertThat(check)
-                .executing()
-                .isEmpty();
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .isEmpty());
     }
 
     @ParameterizedTest

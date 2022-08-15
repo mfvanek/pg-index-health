@@ -50,12 +50,6 @@ class IndexesWithBloatCheckOnClusterTest extends DatabaseAwareTestBase {
         assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.BLOATED_INDEXES);
     }
 
-    @Test
-    void onEmptyDatabase() {
-        assertThat(check.check())
-                .isEmpty();
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithoutThem(final String schemaName) {

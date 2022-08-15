@@ -27,7 +27,6 @@ import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.utils.DatabasePopulator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -88,26 +87,13 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void onEmptyDatabase() {
+    void checkOnClusterShouldLogResetStatisticsData() {
         assertThat(check.check())
                 .isEmpty();
 
         assertThat(logAppender.list)
                 .hasSize(1)
                 .allMatch(l -> l.getMessage().contains("reset"));
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
-            assertThat(check.check(ctx))
-                    .isEmpty();
-
-            assertThat(logAppender.list)
-                    .hasSize(1)
-                    .allMatch(l -> l.getMessage().contains("reset"));
-        });
     }
 
     @ParameterizedTest

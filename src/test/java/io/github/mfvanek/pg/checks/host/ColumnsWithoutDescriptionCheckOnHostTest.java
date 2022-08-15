@@ -46,22 +46,6 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasHost(PgHostImpl.ofPrimary());
     }
 
-    @Test
-    void onEmptyDatabase() {
-        assertThat(check)
-                .executing()
-                .isEmpty();
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withCommentOnColumns(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .isEmpty());
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithThem(final String schemaName) {
