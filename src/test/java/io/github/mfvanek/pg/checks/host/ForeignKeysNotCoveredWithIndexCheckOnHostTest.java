@@ -10,33 +10,21 @@
 
 package io.github.mfvanek.pg.checks.host;
 
-import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgHostImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.index.ForeignKey;
 import io.github.mfvanek.pg.model.table.Column;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.github.mfvanek.pg.utils.AbstractCheckOnHostAssert.assertThat;
 
-class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBase {
+class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final AbstractCheckOnHost<ForeignKey> check;
-
-    ForeignKeysNotCoveredWithIndexCheckOnHostTest() {
-        super(POSTGRES.getTestDatabase());
-        this.check = new ForeignKeysNotCoveredWithIndexCheckOnHost(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
-    }
+    private final DatabaseCheckOnHost<ForeignKey> check = new ForeignKeysNotCoveredWithIndexCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {

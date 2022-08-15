@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
-import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.PgContext;
@@ -23,9 +23,9 @@ import org.assertj.core.util.CheckReturnValue;
 import javax.annotation.Nonnull;
 
 @SuppressWarnings({"PMD.LinguisticNaming", "checkstyle:AbstractClassName"})
-public class AbstractCheckOnHostAssert<E extends TableNameAware> extends AbstractAssert<AbstractCheckOnHostAssert<E>, AbstractCheckOnHost<E>> {
+public class AbstractCheckOnHostAssert<E extends TableNameAware> extends AbstractAssert<AbstractCheckOnHostAssert<E>, DatabaseCheckOnHost<E>> {
 
-    protected AbstractCheckOnHostAssert(@Nonnull final AbstractCheckOnHost<E> abstractCheckOnHost) {
+    protected AbstractCheckOnHostAssert(@Nonnull final DatabaseCheckOnHost<E> abstractCheckOnHost) {
         super(abstractCheckOnHost, AbstractCheckOnHostAssert.class);
     }
 
@@ -66,7 +66,7 @@ public class AbstractCheckOnHostAssert<E extends TableNameAware> extends Abstrac
     }
 
     @CheckReturnValue
-    public static <T extends TableNameAware> AbstractCheckOnHostAssert<T> assertThat(@Nonnull final AbstractCheckOnHost<T> actual) {
+    public static <T extends TableNameAware> AbstractCheckOnHostAssert<T> assertThat(@Nonnull final DatabaseCheckOnHost<T> actual) {
         return new AbstractCheckOnHostAssert<>(actual);
     }
 }

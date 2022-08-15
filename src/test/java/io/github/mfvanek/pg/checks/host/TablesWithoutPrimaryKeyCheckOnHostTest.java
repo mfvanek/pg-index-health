@@ -10,32 +10,20 @@
 
 package io.github.mfvanek.pg.checks.host;
 
-import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgHostImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.github.mfvanek.pg.utils.AbstractCheckOnHostAssert.assertThat;
 
-class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
+class TablesWithoutPrimaryKeyCheckOnHostTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final AbstractCheckOnHost<Table> check;
-
-    TablesWithoutPrimaryKeyCheckOnHostTest() {
-        super(POSTGRES.getTestDatabase());
-        this.check = new TablesWithoutPrimaryKeyCheckOnHost(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
-    }
+    private final DatabaseCheckOnHost<Table> check = new TablesWithoutPrimaryKeyCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {

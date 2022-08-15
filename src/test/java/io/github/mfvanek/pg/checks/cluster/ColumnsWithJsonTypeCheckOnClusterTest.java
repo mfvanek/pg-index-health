@@ -11,33 +11,19 @@
 package io.github.mfvanek.pg.checks.cluster;
 
 import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
-import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnCluster;
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.table.Column;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
+class ColumnsWithJsonTypeCheckOnClusterTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final AbstractCheckOnCluster<Column> check;
-
-    ColumnsWithJsonTypeCheckOnClusterTest() {
-        super(POSTGRES.getTestDatabase());
-        this.check = new ColumnsWithJsonTypeCheckOnCluster(
-                HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase())));
-    }
+    private final DatabaseCheckOnCluster<Column> check = new ColumnsWithJsonTypeCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
