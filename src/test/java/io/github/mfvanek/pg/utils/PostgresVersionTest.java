@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

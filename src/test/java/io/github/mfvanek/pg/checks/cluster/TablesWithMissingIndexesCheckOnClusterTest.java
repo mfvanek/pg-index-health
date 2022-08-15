@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.checks.predicates.FilterTablesBySizePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
-import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

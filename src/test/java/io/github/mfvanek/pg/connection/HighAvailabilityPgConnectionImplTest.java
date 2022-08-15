@@ -10,11 +10,8 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
-import org.junit.jupiter.api.Tag;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,41 +19,35 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Tag("fast")
-class HighAvailabilityPgConnectionImplTest {
-
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
+class HighAvailabilityPgConnectionImplTest extends SharedDatabaseTestBase {
 
     @Test
     void ofPrimary() {
-        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(getPgConnection());
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
                 .isNotNull()
                 .hasSize(1)
-                .containsExactly(pgConnection)
+                .containsExactly(getPgConnection())
                 .isUnmodifiable();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster().iterator().next()).isEqualTo(haPgConnection.getConnectionToPrimary());
     }
 
     @Test
     void shouldBeUnmodifiable() {
-        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnection);
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(getPgConnection());
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
                 .isNotNull()
                 .hasSize(1)
-                .containsExactly(pgConnection)
+                .containsExactly(getPgConnection())
                 .isUnmodifiable();
     }
 
     @Test
     void withReplicas() {
-        final PgConnection primary = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
-        final PgConnection replica = PgConnectionImpl.of(POSTGRES.getTestDatabase(), PgHostImpl.ofName("replica"));
+        final PgConnection primary = getPgConnection();
+        final PgConnection replica = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofName("replica"));
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary, Arrays.asList(primary, replica));
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
@@ -68,8 +59,8 @@ class HighAvailabilityPgConnectionImplTest {
 
     @Test
     void shouldContainsConnectionToPrimary() {
-        final PgConnection primary = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
-        final PgConnection replica = PgConnectionImpl.of(POSTGRES.getTestDatabase(), PgHostImpl.ofName("replica"));
+        final PgConnection primary = getPgConnection();
+        final PgConnection replica = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofName("replica"));
         assertThatThrownBy(() -> HighAvailabilityPgConnectionImpl.of(primary, Collections.singletonList(replica)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("connectionsToAllHostsInCluster have to contain a connection to the primary");

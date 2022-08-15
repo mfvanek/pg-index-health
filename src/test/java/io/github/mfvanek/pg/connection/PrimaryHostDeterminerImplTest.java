@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.connection;
 
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import io.github.mfvanek.pg.utils.PgSqlException;
-import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

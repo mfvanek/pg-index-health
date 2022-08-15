@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.common.maintenance;
 import io.github.mfvanek.pg.checks.host.IndexesWithNullValuesCheckOnHost;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
-import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 

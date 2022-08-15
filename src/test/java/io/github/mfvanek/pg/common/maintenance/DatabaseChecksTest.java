@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.common.maintenance;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableNameAware;
-import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

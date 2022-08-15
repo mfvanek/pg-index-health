@@ -12,8 +12,8 @@ package io.github.mfvanek.pg.statistics.maintenance;
 
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import io.github.mfvanek.pg.utils.ClockHolder;
-import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

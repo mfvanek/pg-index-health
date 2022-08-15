@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.statistics.maintenance;
 
+import io.github.mfvanek.pg.support.DatabasePopulator;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import io.github.mfvanek.pg.utils.ClockHolder;
-import io.github.mfvanek.pg.utils.DatabasePopulator;
-import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;

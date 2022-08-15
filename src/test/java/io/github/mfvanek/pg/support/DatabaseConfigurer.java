@@ -8,14 +8,13 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.utils;
+package io.github.mfvanek.pg.support;
 
-import java.sql.SQLException;
-import java.sql.Statement;
 import javax.annotation.Nonnull;
 
 @FunctionalInterface
-interface DbCallback {
+public interface DatabaseConfigurer {
 
-    void execute(@Nonnull Statement statement) throws SQLException;
+    @Nonnull
+    DatabasePopulator configure(@Nonnull DatabasePopulator databasePopulator);
 }

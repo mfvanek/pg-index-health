@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.utils;
+package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
@@ -16,16 +16,19 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.settings.ImportantParam;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.util.Collections;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public abstract class SharedDatabaseTestBase extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    private static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
+    private static final PostgresDbExtension POSTGRES = new PostgresDbExtension(
+            Collections.singletonList(Pair.of(ImportantParam.LOCK_TIMEOUT.getName(), "1000")));
 
     protected SharedDatabaseTestBase() {
         super(POSTGRES.getTestDatabase());

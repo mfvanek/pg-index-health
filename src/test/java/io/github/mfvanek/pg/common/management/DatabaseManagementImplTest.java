@@ -10,20 +10,14 @@
 
 package io.github.mfvanek.pg.common.management;
 
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.ServerSpecification;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostImpl;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import io.github.mfvanek.pg.utils.ClockHolder;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -31,19 +25,10 @@ import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DatabaseManagementImplTest extends DatabaseAwareTestBase {
+class DatabaseManagementImplTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final DatabaseManagement databaseManagement;
-
-    DatabaseManagementImplTest() {
-        super(POSTGRES.getTestDatabase());
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(
-                PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
-        this.databaseManagement = new DatabaseManagementImpl(haPgConnection, StatisticsMaintenanceOnHostImpl::new, ConfigurationMaintenanceOnHostImpl::new);
-    }
+    private final DatabaseManagement databaseManagement = new DatabaseManagementImpl(getHaPgConnection(),
+            StatisticsMaintenanceOnHostImpl::new, ConfigurationMaintenanceOnHostImpl::new);
 
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
@@ -72,10 +57,10 @@ class DatabaseManagementImplTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final ServerSpecification specification = ServerSpecification.builder().withCpuCores(2).withMemoryAmount(2, MemoryUnit.GB).withSSD().build();
             assertThat(databaseManagement.getParamsWithDefaultValues(specification))
-                    .hasSize(10)
+                    .hasSize(9)
                     .extracting(PgParam::getName)
-                    .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement", "idle_in_transaction_session_timeout",
-                            "statement_timeout", "effective_cache_size", "lock_timeout", "temp_file_limit");
+                    .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement",
+                            "idle_in_transaction_session_timeout", "statement_timeout", "effective_cache_size", "temp_file_limit");
         });
     }
 

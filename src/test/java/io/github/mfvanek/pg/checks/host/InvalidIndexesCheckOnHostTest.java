@@ -14,12 +14,12 @@ import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.model.index.Index;
-import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static io.github.mfvanek.pg.utils.AbstractCheckOnHostAssert.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
 class InvalidIndexesCheckOnHostTest extends SharedDatabaseTestBase {
 

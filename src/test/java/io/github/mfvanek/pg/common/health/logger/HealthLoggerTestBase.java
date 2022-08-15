@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 
 import java.util.Objects;
 import java.util.function.Predicate;

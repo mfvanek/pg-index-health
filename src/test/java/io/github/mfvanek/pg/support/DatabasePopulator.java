@@ -8,9 +8,11 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.utils;
+package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.utils.PgSqlException;
+import io.github.mfvanek.pg.utils.Validators;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -27,8 +29,8 @@ import java.util.TreeMap;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-import static io.github.mfvanek.pg.utils.TestUtils.executeInTransaction;
-import static io.github.mfvanek.pg.utils.TestUtils.executeOnDatabase;
+import static io.github.mfvanek.pg.support.TestUtils.executeInTransaction;
+import static io.github.mfvanek.pg.support.TestUtils.executeOnDatabase;
 
 public final class DatabasePopulator implements AutoCloseable {
 
