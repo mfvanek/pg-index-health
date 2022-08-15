@@ -14,19 +14,14 @@ import io.github.mfvanek.pg.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -40,24 +35,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class HealthLoggerTest extends HealthLoggerTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
     private static final LocalDateTime BEFORE_MILLENNIUM = LocalDateTime.of(1999, Month.DECEMBER, 31, 23, 59, 59);
     private static final Clock FIXED_CLOCK = Clock.fixed(BEFORE_MILLENNIUM.toInstant(ZoneOffset.UTC), ZoneOffset.UTC);
     private static Clock originalClock;
 
-    private final HealthLogger logger;
-
-    HealthLoggerTest() {
-        super(POSTGRES.getTestDatabase());
-        final ConnectionCredentials credentials = ConnectionCredentials.ofUrl(
-                POSTGRES.getUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
-        this.logger = new KeyValueFileHealthLogger(
-                credentials,
-                new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
-                DatabaseChecks::new);
-    }
+    private final HealthLogger logger = new KeyValueFileHealthLogger(
+            getConnectionCredentials(),
+            new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
+            DatabaseChecks::new);
 
     @BeforeAll
     static void setUp() {
@@ -112,7 +97,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
             tryToFindAccountByClientId(schemaName);
 
             // I don't know why this side effect helps test to pass
-            final AbstractCheckOnHost<TableWithMissingIndex> checkOnHost = new TablesWithMissingIndexesCheckOnHost(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
+            final AbstractCheckOnHost<TableWithMissingIndex> checkOnHost = new TablesWithMissingIndexesCheckOnHost(getPgConnection());
             assertThat(checkOnHost.check(ctx))
                     .hasSize(1);
 

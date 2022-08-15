@@ -10,18 +10,12 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableNameAware;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -33,21 +27,11 @@ import javax.annotation.Nonnull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class DatabaseChecksTest extends DatabaseAwareTestBase {
-
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
+class DatabaseChecksTest extends SharedDatabaseTestBase {
 
     private static final String[] SCHEMAS = {"public", "custom"};
 
-    private final DatabaseChecks checks;
-    private final HighAvailabilityPgConnection haPgConnection;
-
-    DatabaseChecksTest() {
-        super(POSTGRES.getTestDatabase());
-        this.haPgConnection = HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
-        this.checks = new DatabaseChecks(this.haPgConnection);
-    }
+    private final DatabaseChecks checks = new DatabaseChecks(getHaPgConnection());
 
     @Test
     void shouldThrowExceptionForInvalidType() {
@@ -68,7 +52,7 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldThrowExceptionIfCheckNotFound() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        final DatabaseChecks databaseChecks = new DatabaseChecks(haPgConnection);
+        final DatabaseChecks databaseChecks = new DatabaseChecks(getHaPgConnection());
         final Field field = databaseChecks.getClass().getDeclaredField("checks");
         field.setAccessible(true);
         final Object fieldValue = field.get(databaseChecks);

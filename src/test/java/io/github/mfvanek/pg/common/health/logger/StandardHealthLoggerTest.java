@@ -12,14 +12,10 @@ package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -29,20 +25,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class StandardHealthLoggerTest extends HealthLoggerTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final HealthLogger logger;
-
-    StandardHealthLoggerTest() {
-        super(POSTGRES.getTestDatabase());
-        final ConnectionCredentials credentials = ConnectionCredentials.ofUrl(
-                POSTGRES.getUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
-        this.logger = new StandardHealthLogger(
-                credentials,
-                new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
-                DatabaseChecks::new);
-    }
+    private final HealthLogger logger = new StandardHealthLogger(
+            getConnectionCredentials(),
+            new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
+            DatabaseChecks::new);
 
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})

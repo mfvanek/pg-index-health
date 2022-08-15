@@ -11,30 +11,18 @@
 package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.checks.host.IndexesWithNullValuesCheckOnHost;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("checkstyle:AbstractClassName")
-class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
+class AbstractCheckOnHostTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final AbstractCheckOnHost<IndexWithNulls> check;
-
-    AbstractCheckOnHostTest() {
-        super(POSTGRES.getTestDatabase());
-        this.check = new IndexesWithNullValuesCheckOnHost(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
-    }
+    private final AbstractCheckOnHost<IndexWithNulls> check = new IndexesWithNullValuesCheckOnHost(getPgConnection());
 
     @ParameterizedTest
     @ValueSource(strings = "public")

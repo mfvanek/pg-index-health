@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
+import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnection;
@@ -19,11 +20,12 @@ import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import javax.annotation.Nonnull;
+import javax.sql.DataSource;
 
 public abstract class SharedDatabaseTestBase extends DatabaseAwareTestBase {
 
     @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
+    private static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     protected SharedDatabaseTestBase() {
         super(POSTGRES.getTestDatabase());
@@ -37,5 +39,19 @@ public abstract class SharedDatabaseTestBase extends DatabaseAwareTestBase {
     @Nonnull
     protected static HighAvailabilityPgConnection getHaPgConnection() {
         return HighAvailabilityPgConnectionImpl.of(getPgConnection());
+    }
+
+    @Nonnull
+    protected static ConnectionCredentials getConnectionCredentials() {
+        return ConnectionCredentials.ofUrl(POSTGRES.getUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
+    }
+
+    @Nonnull
+    protected static DataSource getDataSource() {
+        return POSTGRES.getTestDatabase();
+    }
+
+    protected static int getPort() {
+        return POSTGRES.getPort();
     }
 }

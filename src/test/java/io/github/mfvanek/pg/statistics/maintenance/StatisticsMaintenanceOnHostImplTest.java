@@ -10,16 +10,11 @@
 
 package io.github.mfvanek.pg.statistics.maintenance;
 
-import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgHost;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.utils.ClockHolder;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -27,18 +22,9 @@ import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class StatisticsMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
+class StatisticsMaintenanceOnHostImplTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final StatisticsMaintenanceOnHost statisticsMaintenance;
-
-    StatisticsMaintenanceOnHostImplTest() {
-        super(POSTGRES.getTestDatabase());
-        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
-        this.statisticsMaintenance = new StatisticsMaintenanceOnHostImpl(pgConnection);
-    }
+    private final StatisticsMaintenanceOnHost statisticsMaintenance = new StatisticsMaintenanceOnHostImpl(getPgConnection());
 
     @Test
     void resetStatisticsOnEmptyDatabaseShouldExecuteCorrectly() {

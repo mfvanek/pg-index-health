@@ -12,11 +12,8 @@ package io.github.mfvanek.pg.utils;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.PgContext;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mockito;
 
 import java.sql.Connection;
@@ -28,17 +25,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 
-class QueryExecutorsTest extends DatabaseAwareTestBase {
-
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final PgConnection pgConnection;
-
-    QueryExecutorsTest() {
-        super(POSTGRES.getTestDatabase());
-        this.pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
-    }
+class QueryExecutorsTest extends SharedDatabaseTestBase {
 
     @Test
     void privateConstructor() {
@@ -50,7 +37,7 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
     @Test
     void executeInvalidQuery() {
         final String invalidSql = "select unknown_field from unknown_table";
-        assertThatThrownBy(() -> QueryExecutors.executeQuery(pgConnection, invalidSql, rs -> null))
+        assertThatThrownBy(() -> QueryExecutors.executeQuery(getPgConnection(), invalidSql, rs -> null))
                 .isInstanceOf(PgSqlException.class)
                 .hasCauseInstanceOf(SQLException.class);
     }
@@ -60,7 +47,7 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
     void executeInvalidQueryWithSchema() {
         final String invalidSqlWithParam = "select unknown_field from unknown_table where schema = ?::text";
         final PgContext context = PgContext.of("s");
-        assertThatThrownBy(() -> QueryExecutors.executeQueryWithSchema(pgConnection, context, invalidSqlWithParam, rs -> null))
+        assertThatThrownBy(() -> QueryExecutors.executeQueryWithSchema(getPgConnection(), context, invalidSqlWithParam, rs -> null))
                 .isInstanceOf(PgSqlException.class)
                 .hasCauseInstanceOf(SQLException.class);
     }
@@ -68,7 +55,7 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
     @SuppressWarnings("ConstantConditions")
     @Test
     void executeNullQuery() {
-        assertThatThrownBy(() -> QueryExecutors.executeQuery(pgConnection, null, rs -> null))
+        assertThatThrownBy(() -> QueryExecutors.executeQuery(getPgConnection(), null, rs -> null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("sqlQuery cannot be null");
     }

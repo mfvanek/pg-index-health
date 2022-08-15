@@ -10,37 +10,23 @@
 
 package io.github.mfvanek.pg.statistics.maintenance;
 
-import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.utils.ClockHolder;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.utils.DatabasePopulator;
+import io.github.mfvanek.pg.utils.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class StatisticsMaintenanceOnHostImplEmptyTest extends DatabaseAwareTestBase {
+class StatisticsMaintenanceOnHostImplEmptyTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final StatisticsMaintenanceOnHost statisticsMaintenance;
-
-    StatisticsMaintenanceOnHostImplEmptyTest() {
-        super(POSTGRES.getTestDatabase());
-        final PgConnection pgConnection = PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase());
-        this.statisticsMaintenance = new StatisticsMaintenanceOnHostImpl(pgConnection);
-    }
+    private final StatisticsMaintenanceOnHost statisticsMaintenance = new StatisticsMaintenanceOnHostImpl(getPgConnection());
 
     @Test
     void getLastStatsResetTimestamp() {
         // Time of the last statistics reset is initialized to the system time during the first connection to the database.
-        DatabasePopulator.collectStatistics(POSTGRES.getTestDatabase());
+        DatabasePopulator.collectStatistics(getDataSource());
         waitForStatisticsCollector();
 
         assertThat(statisticsMaintenance.getLastStatsResetTimestamp())
