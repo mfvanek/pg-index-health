@@ -13,16 +13,17 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgHostImpl;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.Column;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.DatabasePopulator;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
-class ColumnsWithoutDescriptionCheckOnHostTest extends SharedDatabaseTestBase {
+class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
 
     private final DatabaseCheckOnHost<Column> check = new ColumnsWithoutDescriptionCheckOnHost(getPgConnection());
 
@@ -35,7 +36,7 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx ->
                 assertThat(check)
@@ -60,7 +61,7 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldNotTakingIntoAccountBlankComments(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnColumns(), ctx ->
                 assertThat(check)

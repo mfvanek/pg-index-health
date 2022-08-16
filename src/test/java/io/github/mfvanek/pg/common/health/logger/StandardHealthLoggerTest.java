@@ -15,6 +15,8 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
+import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -31,7 +33,7 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
             DatabaseChecks::new);
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void logAll(final String schemaName) {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences()
@@ -44,7 +46,7 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                         .withStatistics()
                         .withJsonType(),
                 ctx -> {
-                    waitForStatisticsCollector();
+                    TestUtils.waitForStatisticsCollector();
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
                     assertThat(logs)
                             .hasSameSizeAs(Diagnostic.values())

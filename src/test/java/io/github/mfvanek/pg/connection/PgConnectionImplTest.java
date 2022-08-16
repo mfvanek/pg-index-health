@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class PgConnectionImplTest extends SharedDatabaseTestBase {
+class PgConnectionImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getPrimaryDataSource() {

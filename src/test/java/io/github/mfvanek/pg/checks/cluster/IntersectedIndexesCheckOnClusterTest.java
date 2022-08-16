@@ -13,9 +13,10 @@ package io.github.mfvanek.pg.checks.cluster;
 import io.github.mfvanek.pg.checks.predicates.FilterDuplicatedIndexesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.IndexWithSize;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -25,7 +26,7 @@ import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class IntersectedIndexesCheckOnClusterTest extends SharedDatabaseTestBase {
+class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     private final DatabaseCheckOnCluster<DuplicatedIndexes> check = new IntersectedIndexesCheckOnCluster(getHaPgConnection());
 
@@ -36,7 +37,7 @@ class IntersectedIndexesCheckOnClusterTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx -> {
             assertThat(check.check(ctx))
@@ -59,7 +60,7 @@ class IntersectedIndexesCheckOnClusterTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldFindHashIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedHashIndex(), ctx -> {
             assertThat(check.check(ctx))
@@ -79,7 +80,7 @@ class IntersectedIndexesCheckOnClusterTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void withDifferentOpclassShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDifferentOpclassIndexes(), ctx ->
                 assertThat(check.check(ctx))

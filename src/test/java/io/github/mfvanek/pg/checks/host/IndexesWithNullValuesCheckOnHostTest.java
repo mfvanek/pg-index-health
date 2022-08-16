@@ -13,15 +13,16 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgHostImpl;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
-class IndexesWithNullValuesCheckOnHostTest extends SharedDatabaseTestBase {
+class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
 
     private final DatabaseCheckOnHost<IndexWithNulls> check = new IndexesWithNullValuesCheckOnHost(getPgConnection());
 
@@ -34,7 +35,7 @@ class IndexesWithNullValuesCheckOnHostTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx ->
                 assertThat(check)

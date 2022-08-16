@@ -14,9 +14,11 @@ import io.github.mfvanek.pg.checks.predicates.FilterTablesByBloatPredicate;
 import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableBloatAware;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
+import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -25,7 +27,7 @@ import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TablesWithBloatCheckOnClusterTest extends SharedDatabaseTestBase {
+class TablesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
 
     private final DatabaseCheckOnCluster<TableWithBloat> check = new TablesWithBloatCheckOnCluster(getHaPgConnection());
 
@@ -36,10 +38,10 @@ class TablesWithBloatCheckOnClusterTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withStatistics(), ctx -> {
-            waitForStatisticsCollector();
+            TestUtils.waitForStatisticsCollector();
             assertThat(existsStatisticsForTable(ctx, "accounts"))
                     .isTrue();
 

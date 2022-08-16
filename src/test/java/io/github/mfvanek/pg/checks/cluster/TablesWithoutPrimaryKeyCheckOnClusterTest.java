@@ -13,15 +13,16 @@ package io.github.mfvanek.pg.checks.cluster;
 import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TablesWithoutPrimaryKeyCheckOnClusterTest extends SharedDatabaseTestBase {
+class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
 
     private final DatabaseCheckOnCluster<Table> check = new TablesWithoutPrimaryKeyCheckOnCluster(getHaPgConnection());
 
@@ -32,7 +33,7 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withTableWithoutPrimaryKey(), ctx -> {
             assertThat(check.check(ctx))
@@ -46,7 +47,7 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldReturnNothingForMaterializedViews(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withMaterializedView(), ctx ->
                 assertThat(check.check())

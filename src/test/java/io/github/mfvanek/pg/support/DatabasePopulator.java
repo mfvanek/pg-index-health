@@ -143,9 +143,8 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Nonnull
     public DatabasePopulator withForeignKeyOnNullableColumn() {
-        withTableWithoutPrimaryKey();
         this.actions.putIfAbsent(230, this::createForeignKeyOnNullableColumn);
-        return this;
+        return withTableWithoutPrimaryKey();
     }
 
     @Nonnull
@@ -199,13 +198,12 @@ public final class DatabasePopulator implements AutoCloseable {
         });
     }
 
-    @SuppressWarnings("PMD.EmptyCatchBlock")
     private void createInvalidIndex() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute(String.format("create unique index concurrently if not exists " +
                     "i_clients_last_name_first_name on %s.clients (last_name, first_name)", schemaName));
-        } catch (SQLException e) {
+        } catch (SQLException ignored) {
             // do nothing, just skip error
         }
     }
@@ -351,13 +349,7 @@ public final class DatabasePopulator implements AutoCloseable {
     @Override
     public void close() {
         executeOnDatabase(dataSource, statement -> {
-            statement.execute(String.format("drop table if exists %s.accounts cascade", schemaName));
-            statement.execute(String.format("drop sequence if exists %s.accounts_seq", schemaName));
-
-            statement.execute(String.format("drop table if exists %s.bad_clients", schemaName));
-
-            statement.execute(String.format("drop table if exists %s.clients", schemaName));
-            statement.execute(String.format("drop sequence if exists %s.clients_seq", schemaName));
+            statement.execute(String.format("drop schema if exists %s cascade", schemaName));
         });
     }
 

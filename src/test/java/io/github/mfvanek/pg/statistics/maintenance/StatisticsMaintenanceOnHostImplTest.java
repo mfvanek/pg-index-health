@@ -12,7 +12,8 @@ package io.github.mfvanek.pg.statistics.maintenance;
 
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
+import io.github.mfvanek.pg.support.TestUtils;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,7 +23,7 @@ import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class StatisticsMaintenanceOnHostImplTest extends SharedDatabaseTestBase {
+class StatisticsMaintenanceOnHostImplTest extends StatisticsAwareTestBase {
 
     private final StatisticsMaintenanceOnHost statisticsMaintenance = new StatisticsMaintenanceOnHostImpl(getPgConnection());
 
@@ -33,7 +34,7 @@ class StatisticsMaintenanceOnHostImplTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldResetCounters(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final OffsetDateTime testStartTime = OffsetDateTime.now(ClockHolder.clock());
@@ -43,7 +44,7 @@ class StatisticsMaintenanceOnHostImplTest extends SharedDatabaseTestBase {
                     .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             assertThat(statisticsMaintenance.resetStatistics())
                     .isTrue();
-            waitForStatisticsCollector();
+            TestUtils.waitForStatisticsCollector();
             assertThat(getSeqScansForAccounts(pgContext))
                     .isZero();
 

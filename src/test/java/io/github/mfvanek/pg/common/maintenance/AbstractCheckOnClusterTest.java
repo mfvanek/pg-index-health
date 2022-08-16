@@ -13,9 +13,10 @@ package io.github.mfvanek.pg.common.maintenance;
 import io.github.mfvanek.pg.checks.cluster.IndexesWithNullValuesCheckOnCluster;
 import io.github.mfvanek.pg.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -26,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("checkstyle:AbstractClassName")
-class AbstractCheckOnClusterTest extends SharedDatabaseTestBase {
+class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
 
     private final AbstractCheckOnCluster<IndexWithNulls> check = new IndexesWithNullValuesCheckOnCluster(getHaPgConnection());
 
@@ -39,7 +40,7 @@ class AbstractCheckOnClusterTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "public")
+    @ValueSource(strings = PgContext.DEFAULT_SCHEMA_NAME)
     void forPublicSchema(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx ->
                 assertThat(check.check()) // executing on public schema by default

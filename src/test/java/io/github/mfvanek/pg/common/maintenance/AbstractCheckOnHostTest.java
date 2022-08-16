@@ -13,19 +13,26 @@ package io.github.mfvanek.pg.common.maintenance;
 import io.github.mfvanek.pg.checks.host.IndexesWithNullValuesCheckOnHost;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.utils.PgSqlException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("checkstyle:AbstractClassName")
-class AbstractCheckOnHostTest extends SharedDatabaseTestBase {
+class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
 
     private final AbstractCheckOnHost<IndexWithNulls> check = new IndexesWithNullValuesCheckOnHost(getPgConnection());
 
     @ParameterizedTest
-    @ValueSource(strings = "public")
+    @ValueSource(strings = PgContext.DEFAULT_SCHEMA_NAME)
     void securityTest(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx -> {
             final long before = getRowsCount(ctx.getSchemaName(), "clients");
@@ -42,5 +49,19 @@ class AbstractCheckOnHostTest extends SharedDatabaseTestBase {
                     .containsExactly(
                             IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name"));
         });
+    }
+
+    private long getRowsCount(@Nonnull final String schemaName,
+                              @Nonnull final String tableName) {
+        try (Connection connection = getDataSource().getConnection();
+             Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(
+                    "select count(*) from " + schemaName + '.' + tableName)) {
+                resultSet.next();
+                return resultSet.getLong(1);
+            }
+        } catch (SQLException e) {
+            throw new PgSqlException(e);
+        }
     }
 }

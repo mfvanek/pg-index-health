@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-final class PostgresVersionTest extends SharedDatabaseTestBase {
+final class PostgresVersionTest extends DatabaseAwareTestBase {
 
     private static final String PG_VERSION_ENVIRONMENT_VARIABLE = "TEST_PG_VERSION";
 
@@ -31,7 +31,7 @@ final class PostgresVersionTest extends SharedDatabaseTestBase {
     void checkPgVersion() {
         String requiredPgVersionString = System.getenv(PG_VERSION_ENVIRONMENT_VARIABLE);
         if (requiredPgVersionString == null) {
-            requiredPgVersionString = "14.0 (Debian 14.0-";
+            requiredPgVersionString = "14.5 (Debian 14.5-";
         }
         final String actualPgVersionString = readPgVersion();
         assertThat(actualPgVersionString).startsWith(requiredPgVersionString);

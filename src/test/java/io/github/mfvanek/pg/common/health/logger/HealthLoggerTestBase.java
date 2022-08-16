@@ -10,13 +10,13 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
 
 import java.util.Objects;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
-abstract class HealthLoggerTestBase extends SharedDatabaseTestBase {
+abstract class HealthLoggerTestBase extends StatisticsAwareTestBase {
 
     @Nonnull
     protected static Predicate<String> ofKey(@Nonnull final SimpleLoggingKey key) {

@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -20,7 +20,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class HighAvailabilityPgConnectionImplTest extends SharedDatabaseTestBase {
+class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
 
     @Test
     void ofPrimary() {

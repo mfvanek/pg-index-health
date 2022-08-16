@@ -16,7 +16,7 @@ import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.PgParamImpl;
 import io.github.mfvanek.pg.settings.ServerSpecification;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.utils.PgSqlException;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class ConfigurationMaintenanceOnHostImplTest extends SharedDatabaseTestBase {
+class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
     private final ConfigurationMaintenanceOnHost configurationMaintenance = new ConfigurationMaintenanceOnHostImpl(getPgConnection());
 
@@ -46,10 +46,9 @@ class ConfigurationMaintenanceOnHostImplTest extends SharedDatabaseTestBase {
                 .build();
         final Set<PgParam> paramsWithDefaultValues = configurationMaintenance.getParamsWithDefaultValues(specification);
         assertThat(paramsWithDefaultValues)
-                .hasSize(9)
+                .hasSize(5)
                 .extracting(PgParam::getName)
-                .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement", "idle_in_transaction_session_timeout",
-                        "statement_timeout", "effective_cache_size", "temp_file_limit");
+                .containsExactlyInAnyOrder("log_min_duration_statement", "idle_in_transaction_session_timeout", "statement_timeout", "effective_cache_size", "temp_file_limit");
     }
 
     @Test

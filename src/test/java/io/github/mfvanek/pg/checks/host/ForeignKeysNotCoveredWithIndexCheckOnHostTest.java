@@ -13,16 +13,17 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgHostImpl;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.ForeignKey;
 import io.github.mfvanek.pg.model.table.Column;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
-class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends SharedDatabaseTestBase {
+class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBase {
 
     private final DatabaseCheckOnHost<ForeignKey> check = new ForeignKeysNotCoveredWithIndexCheckOnHost(getPgConnection());
 
@@ -35,7 +36,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends SharedDatabaseTestBa
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn(), ctx ->
                 assertThat(check)
@@ -54,7 +55,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends SharedDatabaseTestBa
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithNotSuitableIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withNonSuitableIndex(), ctx ->
                 assertThat(check)
@@ -73,7 +74,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends SharedDatabaseTestBa
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithSuitableIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withSuitableIndex(), ctx ->
                 assertThat(check)
