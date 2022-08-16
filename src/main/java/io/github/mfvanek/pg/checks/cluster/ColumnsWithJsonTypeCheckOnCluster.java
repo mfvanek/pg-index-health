@@ -17,6 +17,12 @@ import io.github.mfvanek.pg.model.table.Column;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Check for columns with {@code json} type on all hosts in the cluster.
+ *
+ * @author Ivan Vahrushev
+ * @since 0.6.1
+ */
 public class ColumnsWithJsonTypeCheckOnCluster extends AbstractCheckOnCluster<Column> {
 
     public ColumnsWithJsonTypeCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {

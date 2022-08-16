@@ -29,6 +29,9 @@ public class ColumnExtractor implements ResultSetExtractor<Column> {
     private ColumnExtractor() {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public Column extractData(@Nonnull final ResultSet resultSet) throws SQLException {

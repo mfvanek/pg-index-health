@@ -18,11 +18,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.annotation.Nonnull;
 
+/**
+ * A mapper from raw data to {@link Table} model.
+ *
+ * @author Ivan Vahrushev
+ * @since 0.6.1
+ */
 public class TableExtractor implements ResultSetExtractor<Table> {
 
     private TableExtractor() {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public Table extractData(@Nonnull final ResultSet resultSet) throws SQLException {
