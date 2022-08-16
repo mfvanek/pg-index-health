@@ -11,12 +11,14 @@
 package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.utils.PgSqlException;
+import org.assertj.core.api.Assertions;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
@@ -59,5 +61,16 @@ public final class TestUtils {
         } catch (SQLException e) {
             throw new PgSqlException(e);
         }
+    }
+
+    public static void waitForStatisticsCollector() {
+        IntStream.of(1, 2, 3, 4, 5, 6).forEach(i -> {
+            try {
+                // see PGSTAT_STAT_INTERVAL at https://github.com/postgres/postgres/blob/master/src/backend/postmaster/pgstat.c
+                Thread.sleep(500L); //NOSONAR
+            } catch (InterruptedException e) {
+                Assertions.fail("unknown failure", e);
+            }
+        });
     }
 }

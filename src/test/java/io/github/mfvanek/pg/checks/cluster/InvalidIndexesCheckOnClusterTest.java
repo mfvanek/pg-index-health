@@ -13,15 +13,16 @@ package io.github.mfvanek.pg.checks.cluster;
 import io.github.mfvanek.pg.checks.predicates.FilterIndexesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class InvalidIndexesCheckOnClusterTest extends SharedDatabaseTestBase {
+class InvalidIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     private final DatabaseCheckOnCluster<Index> check = new InvalidIndexesCheckOnCluster(getHaPgConnection());
 
@@ -32,7 +33,7 @@ class InvalidIndexesCheckOnClusterTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withInvalidIndex(), ctx -> {
             assertThat(check.check(ctx))

@@ -17,7 +17,9 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
+import io.github.mfvanek.pg.support.TestUtils;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -57,7 +59,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void logAll(final String schemaName) {
         executeTestOnDatabase(schemaName,
                 dbp -> dbp.withReferences()
@@ -70,7 +72,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                         .withStatistics()
                         .withJsonType(),
                 ctx -> {
-                    waitForStatisticsCollector();
+                    TestUtils.waitForStatisticsCollector();
                     assertThat(logger.logAll(Exclusions.empty(), ctx))
                             .hasSameSizeAs(Diagnostic.values())
                             .containsExactlyInAnyOrder(
@@ -91,7 +93,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void logTablesWithMissingIndexes(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             tryToFindAccountByClientId(schemaName);

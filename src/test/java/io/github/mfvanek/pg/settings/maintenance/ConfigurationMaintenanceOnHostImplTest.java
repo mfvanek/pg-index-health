@@ -16,7 +16,7 @@ import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.PgParamImpl;
 import io.github.mfvanek.pg.settings.ServerSpecification;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.utils.PgSqlException;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class ConfigurationMaintenanceOnHostImplTest extends SharedDatabaseTestBase {
+class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
 
     private final ConfigurationMaintenanceOnHost configurationMaintenance = new ConfigurationMaintenanceOnHostImpl(getPgConnection());
 

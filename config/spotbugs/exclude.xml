@@ -13,7 +13,7 @@
         <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
         <Or>
             <Class name="io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl"/>
-            <Class name="io.github.mfvanek.pg.support.DatabaseAwareTestBase"/>
+            <Class name="~.*TestBase"/>
             <Class name="io.github.mfvanek.pg.support.DatabasePopulator"/>
             <Class name="~.*Test"/>
         </Or>
@@ -31,6 +31,6 @@
     </Match>
     <Match>
         <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
-        <Class name="io.github.mfvanek.pg.embedded.PostgresDbExtension"/>
+        <Class name="io.github.mfvanek.pg.support.PostgreSqlContainerWrapper"/>
     </Match>
 </FindBugsFilter>

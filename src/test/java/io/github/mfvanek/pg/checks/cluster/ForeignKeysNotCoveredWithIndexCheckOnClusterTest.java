@@ -13,10 +13,11 @@ package io.github.mfvanek.pg.checks.cluster;
 import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.ForeignKey;
 import io.github.mfvanek.pg.model.table.Column;
 import io.github.mfvanek.pg.model.table.TableNameAware;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -25,7 +26,7 @@ import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends SharedDatabaseTestBase {
+class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTestBase {
 
     private final DatabaseCheckOnCluster<ForeignKey> check = new ForeignKeysNotCoveredWithIndexCheckOnCluster(getHaPgConnection());
 
@@ -36,7 +37,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends SharedDatabaseTes
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp, ctx ->
                 assertThat(check.check(ctx))
@@ -44,7 +45,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends SharedDatabaseTes
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn(), ctx -> {
             assertThat(check.check(ctx))
@@ -68,7 +69,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends SharedDatabaseTes
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithNotSuitableIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withNonSuitableIndex(), ctx -> {
             assertThat(check.check(ctx))
@@ -92,7 +93,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends SharedDatabaseTes
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithSuitableIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withSuitableIndex(), ctx ->
                 assertThat(check.check(ctx))

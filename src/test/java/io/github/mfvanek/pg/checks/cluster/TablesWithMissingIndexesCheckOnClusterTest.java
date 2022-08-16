@@ -14,8 +14,9 @@ import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.checks.predicates.FilterTablesBySizePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -26,7 +27,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TablesWithMissingIndexesCheckOnClusterTest extends SharedDatabaseTestBase {
+class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase {
 
     private final DatabaseCheckOnCluster<TableWithMissingIndex> check = new TablesWithMissingIndexesCheckOnCluster(getHaPgConnection());
 
@@ -37,7 +38,7 @@ class TablesWithMissingIndexesCheckOnClusterTest extends SharedDatabaseTestBase 
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             tryToFindAccountByClientId(schemaName);

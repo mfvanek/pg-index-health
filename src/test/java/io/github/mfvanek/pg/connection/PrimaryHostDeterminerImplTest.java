@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.utils.PgSqlException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 
-class PrimaryHostDeterminerImplTest extends SharedDatabaseTestBase {
+class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
 
     private final PrimaryHostDeterminer primaryHostDeterminer = new PrimaryHostDeterminerImpl();
     private final PgHost localhost = PgHostImpl.ofName("localhost");

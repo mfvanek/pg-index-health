@@ -29,14 +29,14 @@ class PgContextTest {
     @Test
     void getSchemaNameForPublicSchema() {
         final PgContext pgContext = PgContext.ofPublic();
-        assertThat(pgContext.getSchemaName()).isEqualTo("public");
+        assertThat(pgContext.getSchemaName()).isEqualTo(PgContext.DEFAULT_SCHEMA_NAME);
         assertThat(pgContext.isDefaultSchema()).isTrue();
     }
 
     @Test
     void getSchemaNameForPublicSchemaWithUpperCase() {
         final PgContext pgContext = PgContext.of("PUBLIC");
-        assertThat(pgContext.getSchemaName()).isEqualTo("public");
+        assertThat(pgContext.getSchemaName()).isEqualTo(PgContext.DEFAULT_SCHEMA_NAME);
         assertThat(pgContext.isDefaultSchema()).isTrue();
     }
 

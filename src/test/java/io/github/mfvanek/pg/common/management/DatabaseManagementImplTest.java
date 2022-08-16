@@ -11,12 +11,14 @@
 package io.github.mfvanek.pg.common.management;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.ServerSpecification;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostImpl;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
+import io.github.mfvanek.pg.support.TestUtils;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -25,13 +27,13 @@ import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DatabaseManagementImplTest extends SharedDatabaseTestBase {
+class DatabaseManagementImplTest extends StatisticsAwareTestBase {
 
     private final DatabaseManagement databaseManagement = new DatabaseManagementImpl(getHaPgConnection(),
             StatisticsMaintenanceOnHostImpl::new, ConfigurationMaintenanceOnHostImpl::new);
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldResetCounters(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final OffsetDateTime testStartTime = OffsetDateTime.now(ClockHolder.clock());
@@ -40,7 +42,7 @@ class DatabaseManagementImplTest extends SharedDatabaseTestBase {
                     .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             assertThat(databaseManagement.resetStatistics())
                     .isTrue();
-            waitForStatisticsCollector();
+            TestUtils.waitForStatisticsCollector();
             assertThat(getSeqScansForAccounts(ctx))
                     .isZero();
 
@@ -52,7 +54,7 @@ class DatabaseManagementImplTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldReturnParamsWithDefaultValues(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final ServerSpecification specification = ServerSpecification.builder().withCpuCores(2).withMemoryAmount(2, MemoryUnit.GB).withSSD().build();
@@ -65,7 +67,7 @@ class DatabaseManagementImplTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldReturnParamsCurrentValues(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
                 assertThat(databaseManagement.getParamsCurrentValues())

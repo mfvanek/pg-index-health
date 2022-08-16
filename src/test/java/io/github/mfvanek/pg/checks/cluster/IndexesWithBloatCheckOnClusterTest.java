@@ -15,9 +15,11 @@ import io.github.mfvanek.pg.checks.predicates.FilterIndexesByNamePredicate;
 import io.github.mfvanek.pg.checks.predicates.FilterIndexesBySizePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
+import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -26,7 +28,7 @@ import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class IndexesWithBloatCheckOnClusterTest extends SharedDatabaseTestBase {
+class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
 
     private final DatabaseCheckOnCluster<IndexWithBloat> check = new IndexesWithBloatCheckOnCluster(getHaPgConnection());
 
@@ -37,20 +39,20 @@ class IndexesWithBloatCheckOnClusterTest extends SharedDatabaseTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withStatistics(), ctx -> {
-            waitForStatisticsCollector();
+            TestUtils.waitForStatisticsCollector();
             assertThat(check.check(ctx))
                     .isEmpty();
         });
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withStatistics(), ctx -> {
-            waitForStatisticsCollector();
+            TestUtils.waitForStatisticsCollector();
             assertThat(existsStatisticsForTable(ctx, "accounts"))
                     .isTrue();
 

@@ -10,10 +10,11 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
+import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableNameAware;
-import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,9 +28,9 @@ import javax.annotation.Nonnull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class DatabaseChecksTest extends SharedDatabaseTestBase {
+class DatabaseChecksTest extends DatabaseAwareTestBase {
 
-    private static final String[] SCHEMAS = {"public", "custom"};
+    private static final String[] SCHEMAS = {PgContext.DEFAULT_SCHEMA_NAME, "custom"};
 
     private final DatabaseChecks checks = new DatabaseChecks(getHaPgConnection());
 
