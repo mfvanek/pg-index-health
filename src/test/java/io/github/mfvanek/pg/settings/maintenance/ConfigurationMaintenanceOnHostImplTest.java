@@ -46,10 +46,9 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
                 .build();
         final Set<PgParam> paramsWithDefaultValues = configurationMaintenance.getParamsWithDefaultValues(specification);
         assertThat(paramsWithDefaultValues)
-                .hasSize(9)
+                .hasSize(5)
                 .extracting(PgParam::getName)
-                .containsExactlyInAnyOrder("shared_buffers", "work_mem", "maintenance_work_mem", "random_page_cost", "log_min_duration_statement", "idle_in_transaction_session_timeout",
-                        "statement_timeout", "effective_cache_size", "temp_file_limit");
+                .containsExactlyInAnyOrder("log_min_duration_statement", "idle_in_transaction_session_timeout", "statement_timeout", "effective_cache_size", "temp_file_limit");
     }
 
     @Test

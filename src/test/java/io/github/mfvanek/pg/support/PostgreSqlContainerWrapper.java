@@ -10,11 +10,13 @@
 
 package io.github.mfvanek.pg.support;
 
+import io.github.mfvanek.pg.model.MemoryUnit;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -29,6 +31,8 @@ final class PostgreSqlContainerWrapper {
     PostgreSqlContainerWrapper(@Nonnull final List<Pair<String, String>> additionalParameters) {
         final String pgVersion = preparePostgresVersion();
         this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres").withTag(pgVersion))
+                .withSharedMemorySize(MemoryUnit.GB.convertToBytes(2))
+                .withTmpFs(Collections.singletonMap("/var/lib/postgresql/data", "rw"))
                 .withCommand(prepareCommandParts(additionalParameters));
         this.container.start();
         this.dataSource = buildDataSource();
@@ -37,7 +41,7 @@ final class PostgreSqlContainerWrapper {
     @Nonnull
     private static String preparePostgresVersion() {
         return Optional.ofNullable(System.getenv("TEST_PG_VERSION"))
-                .orElse("14.0");
+                .orElse("14.5");
     }
 
     @Nonnull
