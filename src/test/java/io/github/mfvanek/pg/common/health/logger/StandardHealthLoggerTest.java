@@ -44,8 +44,7 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                         .withNonSuitableIndex()
                         .withJsonType(),
                 ctx -> {
-                    collectStatistics();
-                    waitForStatisticsCollector();
+                    collectStatistics(schemaName);
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
                     assertThat(logs)
                             .hasSameSizeAs(Diagnostic.values())

@@ -40,9 +40,8 @@ class TablesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
-            collectStatistics();
-            waitForStatisticsCollector();
-            assertThat(existsStatisticsForTable(ctx, "accounts"))
+            collectStatistics(schemaName);
+            assertThat(existsStatisticsForTable(schemaName, "accounts"))
                     .isTrue();
 
             assertThat(check.check(ctx))

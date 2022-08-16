@@ -43,7 +43,7 @@ class StatisticsMaintenanceOnHostImplTest extends StatisticsAwareTestBase {
                     .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             assertThat(statisticsMaintenance.resetStatistics())
                     .isTrue();
-            waitForStatisticsCollector();
+            collectStatistics(schemaName);
             assertThat(getSeqScansForAccounts(pgContext))
                     .isZero();
 

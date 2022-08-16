@@ -70,8 +70,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                         .withNonSuitableIndex()
                         .withJsonType(),
                 ctx -> {
-                    collectStatistics();
-                    waitForStatisticsCollector();
+                    collectStatistics(schemaName);
                     assertThat(logger.logAll(Exclusions.empty(), ctx))
                             .hasSameSizeAs(Diagnostic.values())
                             .containsExactlyInAnyOrder(

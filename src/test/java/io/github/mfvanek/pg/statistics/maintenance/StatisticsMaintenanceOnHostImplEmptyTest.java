@@ -26,7 +26,6 @@ class StatisticsMaintenanceOnHostImplEmptyTest extends StatisticsAwareTestBase {
     void getLastStatsResetTimestamp() {
         // Time of the last statistics reset is initialized to the system time during the first connection to the database.
         collectStatistics();
-        waitForStatisticsCollector();
 
         assertThat(statisticsMaintenance.getLastStatsResetTimestamp())
                 .isPresent()

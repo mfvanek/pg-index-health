@@ -41,7 +41,7 @@ class DatabaseManagementImplTest extends StatisticsAwareTestBase {
                     .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             assertThat(databaseManagement.resetStatistics())
                     .isTrue();
-            waitForStatisticsCollector();
+            collectStatistics(schemaName);
             assertThat(getSeqScansForAccounts(ctx))
                     .isZero();
 
