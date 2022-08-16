@@ -7,21 +7,21 @@
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
     </Match>
     <Match>
-        <Bug pattern="EI_EXPOSE_REP"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
     </Match>
     <Match>
         <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
         <Or>
             <Class name="io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl"/>
             <Class name="~.*TestBase"/>
-            <Class name="io.github.mfvanek.pg.support.DatabasePopulator"/>
+            <Class name="~io.github.mfvanek.pg.support.*"/>
             <Class name="~.*Test"/>
         </Or>
     </Match>
     <Match>
         <Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
         <Or>
-            <Class name="io.github.mfvanek.pg.support.DatabasePopulator"/>
+            <Class name="~io.github.mfvanek.pg.support.*"/>
             <Class name="io.github.mfvanek.pg.utils.QueryExecutorsTest"/>
         </Or>
     </Match>

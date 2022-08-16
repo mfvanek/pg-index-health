@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
 
@@ -42,13 +43,13 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         }
     }
 
-    protected boolean existsStatisticsForTable(@Nonnull final PgContext pgContext, @Nonnull final String tableName) {
+    protected boolean existsStatisticsForTable(@Nonnull final String schemaName, @Nonnull final String tableName) {
         final String sqlQuery =
                 "select exists (select 1 from pg_catalog.pg_stats ps " +
                         "where ps.schemaname = ?::text and ps.tablename = ?::text);";
         try (Connection connection = getDataSource().getConnection();
              PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            statement.setString(1, pgContext.getSchemaName());
+            statement.setString(1, schemaName);
             statement.setString(2, Objects.requireNonNull(tableName));
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
@@ -63,13 +64,40 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         try (Connection connection = getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
             for (int counter = 0; counter < AMOUNT_OF_TRIES; ++counter) {
-                statement.execute(String.format(
-                        "select count(*) from %s.accounts where client_id = 1::bigint", schemaName));
+                statement.execute(String.format("select count(*) from %s.accounts where client_id = 1::bigint", schemaName));
             }
         } catch (SQLException e) {
             throw new PgSqlException(e);
         }
-        DatabasePopulator.collectStatistics(getDataSource(), schemaName);
-        TestUtils.waitForStatisticsCollector();
+        collectStatistics(schemaName);
+    }
+
+    private void waitForStatisticsCollector(@Nullable final String schemaName) {
+        for (int i = 1; i <= 4; ++i) {
+            sleep();
+            if (schemaName != null && existsStatisticsForTable(schemaName, "clients") && existsStatisticsForTable(schemaName, "accounts")) {
+                return;
+            }
+        }
+    }
+
+    private static void sleep() {
+        try {
+            // see PGSTAT_STAT_INTERVAL at https://github.com/postgres/postgres/blob/6b9501660c9384476ca9a04918f5cf94379e419e/src/backend/postmaster/pgstat.c#L78
+            // see also https://github.com/postgres/postgres/blob/6cbed0ec791f3829d0e2092fd4c36d493ae75a50/src/backend/utils/activity/pgstat.c#L2
+            Thread.sleep(500L); //NOSONAR
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    protected void collectStatistics(@Nonnull final String schemaName) {
+        collectStatistics();
+        waitForStatisticsCollector(schemaName);
+    }
+
+    protected void collectStatistics() {
+        TestUtils.executeOnDatabase(getDataSource(), statement -> statement.execute("vacuum analyze"));
+        waitForStatisticsCollector(null);
     }
 }

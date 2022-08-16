@@ -18,7 +18,6 @@ import io.github.mfvanek.pg.settings.ServerSpecification;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
-import io.github.mfvanek.pg.support.TestUtils;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -42,7 +41,7 @@ class DatabaseManagementImplTest extends StatisticsAwareTestBase {
                     .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             assertThat(databaseManagement.resetStatistics())
                     .isTrue();
-            TestUtils.waitForStatisticsCollector();
+            collectStatistics(schemaName);
             assertThat(getSeqScansForAccounts(ctx))
                     .isZero();
 

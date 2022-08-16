@@ -18,7 +18,6 @@ import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableBloatAware;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
-import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -40,9 +39,9 @@ class TablesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withStatistics(), ctx -> {
-            TestUtils.waitForStatisticsCollector();
-            assertThat(existsStatisticsForTable(ctx, "accounts"))
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
+            collectStatistics(schemaName);
+            assertThat(existsStatisticsForTable(schemaName, "accounts"))
                     .isTrue();
 
             assertThat(check.check(ctx))

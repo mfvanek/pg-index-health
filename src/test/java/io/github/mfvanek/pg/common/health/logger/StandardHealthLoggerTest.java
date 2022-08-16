@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -43,10 +42,9 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                         .withTableWithoutPrimaryKey()
                         .withDuplicatedIndex()
                         .withNonSuitableIndex()
-                        .withStatistics()
                         .withJsonType(),
                 ctx -> {
-                    TestUtils.waitForStatisticsCollector();
+                    collectStatistics(schemaName);
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
                     assertThat(logs)
                             .hasSameSizeAs(Diagnostic.values())

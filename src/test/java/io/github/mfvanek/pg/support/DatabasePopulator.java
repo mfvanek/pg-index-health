@@ -10,17 +10,31 @@
 
 package io.github.mfvanek.pg.support;
 
-import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.utils.PgSqlException;
+import io.github.mfvanek.pg.support.statements.AddBlankCommentOnColumnsStatement;
+import io.github.mfvanek.pg.support.statements.AddBlankCommentOnTablesStatement;
+import io.github.mfvanek.pg.support.statements.AddCommentOnColumnsStatement;
+import io.github.mfvanek.pg.support.statements.AddCommentOnTablesStatement;
+import io.github.mfvanek.pg.support.statements.AddLinksBetweenAccountsAndClientsStatement;
+import io.github.mfvanek.pg.support.statements.ConvertColumnToJsonTypeStatement;
+import io.github.mfvanek.pg.support.statements.CreateAccountsTableStatement;
+import io.github.mfvanek.pg.support.statements.CreateClientsTableStatement;
+import io.github.mfvanek.pg.support.statements.CreateCustomCollationStatement;
+import io.github.mfvanek.pg.support.statements.CreateDuplicatedCustomCollationIndexStatement;
+import io.github.mfvanek.pg.support.statements.CreateDuplicatedHashIndexStatement;
+import io.github.mfvanek.pg.support.statements.CreateDuplicatedIndexStatement;
+import io.github.mfvanek.pg.support.statements.CreateForeignKeyOnNullableColumnStatement;
+import io.github.mfvanek.pg.support.statements.CreateIndexWithNullValues;
+import io.github.mfvanek.pg.support.statements.CreateIndexesWithDifferentOpclassStatement;
+import io.github.mfvanek.pg.support.statements.CreateMaterializedViewStatement;
+import io.github.mfvanek.pg.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.support.statements.CreateSchemaStatement;
+import io.github.mfvanek.pg.support.statements.CreateSuitableIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.support.statements.CreateTableWithoutPrimaryKeyStatement;
+import io.github.mfvanek.pg.support.statements.DbStatement;
+import io.github.mfvanek.pg.support.statements.InsertDataIntoTablesAction;
 import io.github.mfvanek.pg.utils.Validators;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
-import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
@@ -29,173 +43,143 @@ import java.util.TreeMap;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-import static io.github.mfvanek.pg.support.TestUtils.executeInTransaction;
-import static io.github.mfvanek.pg.support.TestUtils.executeOnDatabase;
-
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessiveImports"})
 public final class DatabasePopulator implements AutoCloseable {
 
     private final DataSource dataSource;
-    private String schemaName = PgContext.DEFAULT_SCHEMA_NAME;
-    private final Map<Integer, Runnable> actions;
+    private final String schemaName;
+    private final Map<Integer, Runnable> actionsToExecuteOutsideTransaction = new TreeMap<>();
+    private final Map<Integer, DbStatement> statementsToExecuteInSameTransaction = new TreeMap<>();
 
-    private DatabasePopulator(@Nonnull final DataSource dataSource) {
+    private DatabasePopulator(@Nonnull final DataSource dataSource, @Nonnull final String schemaName) {
         this.dataSource = Objects.requireNonNull(dataSource);
-        this.actions = new TreeMap<>();
-        this.actions.putIfAbsent(1, this::createSchema);
-        this.actions.putIfAbsent(2, this::createTableClients);
-        this.actions.putIfAbsent(3, this::createTableAccounts);
+        this.schemaName = Validators.notBlank(schemaName, "schemaName");
+        this.statementsToExecuteInSameTransaction.putIfAbsent(1, new CreateSchemaStatement(schemaName));
+        this.statementsToExecuteInSameTransaction.putIfAbsent(2, new CreateClientsTableStatement(schemaName));
+        this.statementsToExecuteInSameTransaction.putIfAbsent(3, new CreateAccountsTableStatement(schemaName));
     }
 
-    static DatabasePopulator builder(@Nonnull final DataSource dataSource) {
-        return new DatabasePopulator(dataSource);
+    static DatabasePopulator builder(@Nonnull final DataSource dataSource, @Nonnull final String schemaName) {
+        return new DatabasePopulator(dataSource, schemaName);
+    }
+
+    @Nonnull
+    public DatabasePopulator withCustomCollation() {
+        statementsToExecuteInSameTransaction.putIfAbsent(4, new CreateCustomCollationStatement(schemaName));
+        return this;
     }
 
     @Nonnull
     public DatabasePopulator withReferences() {
-        actions.putIfAbsent(10, this::addLinksBetweenAccountsAndClients);
+        statementsToExecuteInSameTransaction.putIfAbsent(5, new AddLinksBetweenAccountsAndClientsStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withData() {
-        actions.putIfAbsent(20, this::insertDataIntoTables);
+        actionsToExecuteOutsideTransaction.putIfAbsent(20, new InsertDataIntoTablesAction(dataSource, schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withInvalidIndex() {
-        actions.putIfAbsent(30, this::createInvalidIndex);
+        actionsToExecuteOutsideTransaction.putIfAbsent(30, this::createInvalidIndex);
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withDuplicatedIndex() {
-        actions.putIfAbsent(40, this::createDuplicatedIndex);
+        statementsToExecuteInSameTransaction.putIfAbsent(40, new CreateDuplicatedIndexStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withDuplicatedHashIndex() {
-        this.actions.putIfAbsent(50, this::createDuplicatedHashIndex);
+        statementsToExecuteInSameTransaction.putIfAbsent(41, new CreateDuplicatedHashIndexStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withNonSuitableIndex() {
-        actions.putIfAbsent(100, this::createNotSuitableIndexForForeignKey);
+        statementsToExecuteInSameTransaction.putIfAbsent(43, new CreateNotSuitableIndexForForeignKeyStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withSuitableIndex() {
-        actions.putIfAbsent(110, this::createSuitableIndexForForeignKey);
+        statementsToExecuteInSameTransaction.putIfAbsent(44, new CreateSuitableIndexForForeignKeyStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withTableWithoutPrimaryKey() {
-        actions.putIfAbsent(150, this::createTableWithoutPrimaryKey);
+        statementsToExecuteInSameTransaction.putIfAbsent(47, new CreateTableWithoutPrimaryKeyStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withNullValuesInIndex() {
-        actions.putIfAbsent(160, this::createIndexWithNulls);
-        return this;
-    }
-
-    @Nonnull
-    DatabasePopulator withSchema(@Nonnull final String schemaName) {
-        this.schemaName = Validators.notBlank(schemaName, "schemaName");
-        return this;
-    }
-
-    @Nonnull
-    public DatabasePopulator withStatistics() {
-        // should be the last step in pipeline
-        actions.putIfAbsent(Integer.MAX_VALUE, this::collectStatistics);
+        statementsToExecuteInSameTransaction.putIfAbsent(48, new CreateIndexWithNullValues(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withDifferentOpclassIndexes() {
-        actions.putIfAbsent(200, this::createIndexesWithDifferentOpclass);
+        statementsToExecuteInSameTransaction.putIfAbsent(50, new CreateIndexesWithDifferentOpclassStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withMaterializedView() {
-        actions.putIfAbsent(210, this::createMaterializedView);
-        return this;
-    }
-
-    @Nonnull
-    public DatabasePopulator withCustomCollation() {
-        actions.putIfAbsent(4, this::createCustomCollation);
+        statementsToExecuteInSameTransaction.putIfAbsent(55, new CreateMaterializedViewStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withDuplicatedCustomCollationIndex() {
-        this.actions.putIfAbsent(220, this::createDuplicatedCustomCollationIndex);
+        statementsToExecuteInSameTransaction.putIfAbsent(58, new CreateDuplicatedCustomCollationIndexStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withForeignKeyOnNullableColumn() {
-        this.actions.putIfAbsent(230, this::createForeignKeyOnNullableColumn);
+        statementsToExecuteInSameTransaction.putIfAbsent(60, new CreateForeignKeyOnNullableColumnStatement(schemaName));
         return withTableWithoutPrimaryKey();
     }
 
     @Nonnull
     public DatabasePopulator withCommentOnTables() {
-        this.actions.putIfAbsent(240, this::addCommentOnTables);
+        statementsToExecuteInSameTransaction.putIfAbsent(64, new AddCommentOnTablesStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withBlankCommentOnTables() {
-        this.actions.putIfAbsent(250, this::addBlankCommentOnTables);
+        statementsToExecuteInSameTransaction.putIfAbsent(65, new AddBlankCommentOnTablesStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withCommentOnColumns() {
-        this.actions.putIfAbsent(260, this::addCommentOnColumns);
+        statementsToExecuteInSameTransaction.putIfAbsent(66, new AddCommentOnColumnsStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withBlankCommentOnColumns() {
-        this.actions.putIfAbsent(270, this::addBlankCommentOnColumns);
+        statementsToExecuteInSameTransaction.putIfAbsent(67, new AddBlankCommentOnColumnsStatement(schemaName));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withJsonType() {
-        this.actions.putIfAbsent(25, this::convertColumnToJsonType);
+        statementsToExecuteInSameTransaction.putIfAbsent(25, new ConvertColumnToJsonTypeStatement(schemaName));
         return this;
     }
 
     public void populate() {
-        actions.forEach((k, v) -> v.run());
-    }
-
-    private void createSchema() {
-        executeOnDatabase(dataSource, statement -> {
-            statement.execute("create schema if not exists " + schemaName);
-            final String checkQuery = String.format(
-                    "select exists(select 1 from information_schema.schemata where schema_name = '%s')", schemaName);
-            try (ResultSet rs = statement.executeQuery(checkQuery)) {
-                if (rs.next()) {
-                    final boolean schemaExists = rs.getBoolean(1);
-                    if (schemaExists) {
-                        return;
-                    }
-                }
-                throw new IllegalStateException("Schema with name " + schemaName + " wasn't created");
-            }
-        });
+        TestUtils.executeInTransaction(dataSource, statementsToExecuteInSameTransaction.values());
+        actionsToExecuteOutsideTransaction.forEach((k, v) -> v.run());
     }
 
     private void createInvalidIndex() {
@@ -208,302 +192,10 @@ public final class DatabasePopulator implements AutoCloseable {
         }
     }
 
-    private void createDuplicatedIndex() {
-        executeOnDatabase(dataSource, statement -> {
-            statement.execute(String.format("create index concurrently if not exists i_accounts_account_number " +
-                    "on %s.accounts (account_number)", schemaName));
-            statement.execute(String.format("create index concurrently if not exists i_accounts_account_number_not_deleted " +
-                    "on %s.accounts (account_number) where not deleted", schemaName));
-            statement.execute(String.format("create index concurrently if not exists i_accounts_number_balance_not_deleted " +
-                    "on %s.accounts (account_number, account_balance) where not deleted", schemaName));
-            statement.execute(String.format("create index concurrently if not exists i_clients_last_first " +
-                    "on %s.clients (last_name, first_name)", schemaName));
-            statement.execute(String.format("create index concurrently if not exists i_clients_last_name " +
-                    "on %s.clients (last_name)", schemaName));
-            statement.execute(String.format("create index concurrently if not exists i_accounts_id_account_number_not_deleted " +
-                    "on %s.accounts (id, account_number) where not deleted", schemaName));
-        });
-    }
-
-    private void createDuplicatedHashIndex() {
-        executeOnDatabase(dataSource, statement -> {
-            statement.execute(String.format("create index concurrently if not exists i_accounts_account_number " +
-                    "on %s.accounts using hash(account_number)", schemaName));
-            statement.execute(String.format("create index concurrently if not exists i_clients_last_first " +
-                    "on %s.clients (last_name, first_name)", schemaName));
-            statement.execute(String.format("create index concurrently if not exists i_clients_last_name " +
-                    "on %s.clients using hash(last_name)", schemaName));
-        });
-    }
-
-    private void createIndexWithNulls() {
-        executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("create index concurrently if not exists i_clients_middle_name " +
-                        "on %s.clients (middle_name)", schemaName)));
-    }
-
-    private void createNotSuitableIndexForForeignKey() {
-        executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("create index concurrently if not exists " +
-                        "i_accounts_account_number_client_id on %s.accounts (account_number, client_id)", schemaName)));
-    }
-
-    private void createSuitableIndexForForeignKey() {
-        executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("create index concurrently if not exists " +
-                        "i_accounts_client_id_account_number on %s.accounts (client_id, account_number)", schemaName)));
-    }
-
-    private void createTableClients() {
-        executeInTransaction(dataSource, statement -> {
-            statement.execute(String.format("create sequence if not exists %s.clients_seq", schemaName));
-            statement.execute(String.format("create table if not exists %s.clients (" +
-                    "id bigint not null primary key default nextval('%s.clients_seq')," +
-                    "last_name varchar(255) not null," +
-                    "first_name varchar(255) not null," +
-                    "middle_name varchar(255)," +
-                    "info jsonb)", schemaName, schemaName));
-        });
-    }
-
-    private void createTableAccounts() {
-        executeInTransaction(dataSource, statement -> {
-            statement.execute(String.format("create sequence if not exists %s.accounts_seq", schemaName));
-            statement.execute(String.format("create table if not exists %s.accounts (" +
-                    "id bigint not null primary key default nextval('%s.accounts_seq')," +
-                    "client_id bigint not null," +
-                    "account_number varchar(50) not null unique," +
-                    "account_balance numeric(22,2) not null default 0," +
-                    "deleted boolean not null default false)", schemaName, schemaName));
-        });
-    }
-
-    private void addLinksBetweenAccountsAndClients() {
-        executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("alter table if exists %s.accounts " +
-                                "add constraint c_accounts_fk_client_id foreign key (client_id) references %s.clients (id);",
-                        schemaName, schemaName)));
-    }
-
-    private void insertDataIntoTables() {
-        final int clientsCountToCreate = 1_000;
-        final String insertClientSql = String.format(
-                "insert into %s.clients (id, first_name, last_name, info) values (?, ?, ?, ?)", schemaName);
-        final String insertAccountSql = String.format(
-                "insert into %s.accounts (client_id, account_number) values (?, ?)", schemaName);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement insertClientStatement = connection.prepareStatement(insertClientSql);
-             PreparedStatement insertAccountStatement = connection.prepareStatement(insertAccountSql)) {
-            connection.setAutoCommit(false);
-            for (int counter = 0; counter < clientsCountToCreate; ++counter) {
-                final long clientId = getNextClientIdFromSequence(connection);
-                final String lastName = RandomStringUtils.randomAlphabetic(10);
-                final String firstName = RandomStringUtils.randomAlphabetic(10);
-                insertClientStatement.setLong(1, clientId);
-                insertClientStatement.setString(2, firstName);
-                insertClientStatement.setString(3, lastName);
-                insertClientStatement.setObject(4, prepareClientInfo());
-                insertClientStatement.executeUpdate();
-
-                final String accountNumber = generateAccountNumber(clientId);
-                insertAccountStatement.setLong(1, clientId);
-                insertAccountStatement.setString(2, accountNumber);
-                insertAccountStatement.executeUpdate();
-            }
-            // Insert at least one duplicated client row
-            final long clientId = getNextClientIdFromSequence(connection);
-            insertClientStatement.setLong(1, clientId);
-            insertClientStatement.executeUpdate();
-            connection.commit();
-        } catch (SQLException e) {
-            throw new PgSqlException(e);
-        }
-    }
-
-    @Nonnull
-    private static PGobject prepareClientInfo() throws SQLException {
-        final PGobject clientInfo = new PGobject();
-        clientInfo.setType("jsonb");
-        clientInfo.setValue("{\"client\":{\"date\":\"2022-08-14T23:27:42\",\"result\":\"created\"}}");
-        return clientInfo;
-    }
-
-    private String generateAccountNumber(final long clientId) {
-        return "407028101" + StringUtils.leftPad(String.valueOf(clientId), 11, '0');
-    }
-
-    private long getNextClientIdFromSequence(@Nonnull final Connection connection) {
-        final String selectClientIdSql = String.format("select nextval('%s.clients_seq')", schemaName);
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(selectClientIdSql)) {
-            if (resultSet.next()) {
-                return resultSet.getLong(1);
-            } else {
-                throw new IllegalStateException("An error occurred while retrieving a value from the sequence");
-            }
-        } catch (SQLException e) {
-            throw new PgSqlException(e);
-        }
-    }
-
     @Override
     public void close() {
-        executeOnDatabase(dataSource, statement -> {
+        TestUtils.executeOnDatabase(dataSource, statement -> {
             statement.execute(String.format("drop schema if exists %s cascade", schemaName));
         });
-    }
-
-    private void createTableWithoutPrimaryKey() {
-        executeOnDatabase(dataSource, statement -> {
-            statement.execute(String.format("create table if not exists %s.bad_clients (" +
-                    "id bigint not null, " +
-                    "name varchar(255) not null," +
-                    "real_client_id bigint)", schemaName));
-            final String checkQuery = String.format("select exists (%n" +
-                    "   select 1 %n" +
-                    "   from pg_catalog.pg_class c%n" +
-                    "   join pg_catalog.pg_namespace n on n.oid = c.relnamespace%n" +
-                    "   where n.nspname = '%s'%n" +
-                    "   and c.relname = '%s'%n" +
-                    "   and c.relkind = 'r'%n" +
-                    "   );", schemaName, "bad_clients");
-            try (ResultSet rs = statement.executeQuery(checkQuery)) {
-                if (rs.next()) {
-                    final boolean schemaExists = rs.getBoolean(1);
-                    if (schemaExists) {
-                        return;
-                    }
-                }
-                throw new IllegalStateException("Table with name 'bad_clients' in schema " + schemaName + " wasn't created");
-            }
-        });
-    }
-
-    private void collectStatistics() {
-        collectStatistics(dataSource, schemaName);
-    }
-
-    static void collectStatistics(@Nonnull final DataSource dataSource, @Nonnull final String schemaName) {
-        executeOnDatabase(dataSource, statement -> {
-            final String query = String.format("vacuum analyze %s.", schemaName);
-            statement.execute(query + "accounts");
-            statement.execute(query + "clients");
-        });
-    }
-
-    public static void collectStatistics(@Nonnull final DataSource dataSource) {
-        executeOnDatabase(dataSource, statement -> statement.execute("vacuum analyze"));
-    }
-
-    private void createIndexesWithDifferentOpclass() {
-        executeOnDatabase(dataSource, statement -> {
-            statement.execute(String.format("create index concurrently if not exists i_clients_last_name " +
-                    "on %s.clients using btree(lower(last_name))", schemaName));
-            statement.execute(String.format("create index concurrently if not exists i_clients_last_name_ops " +
-                    "on %s.clients using btree(lower(last_name) text_pattern_ops)", schemaName));
-        });
-    }
-
-    private void createMaterializedView() {
-        executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("create materialized view if not exists %s.accounts_mat_view as (" +
-                        "select client_id, account_number from %s.accounts);", schemaName, schemaName)));
-    }
-
-    private void createCustomCollation() {
-        executeOnDatabase(dataSource, statement -> {
-            final String customCollation = "C.UTF-8";
-            if (isCollationExist(statement, customCollation)) {
-                return;
-            }
-            createCustomCollation(statement, customCollation);
-        });
-    }
-
-    private boolean isCollationExist(@Nonnull final Statement statement, @Nonnull final String collation) {
-        final String sqlQuery = "select exists(select 1 from pg_catalog.pg_collation as pgc where pgc.collname = '%s'::text)";
-        try (ResultSet rs = statement.executeQuery(String.format(sqlQuery, collation))) {
-            rs.next();
-            return rs.getBoolean(1);
-        } catch (SQLException e) {
-            throw new PgSqlException(e);
-        }
-    }
-
-    private void createCustomCollation(@Nonnull final Statement statement,
-                                       @Nonnull final String customCollation) throws SQLException {
-        final String systemLocale;
-        if (SystemUtils.IS_OS_WINDOWS) {
-            final String icuCollation = "en-US-x-icu";
-            if (isCollationExist(statement, icuCollation)) {
-                systemLocale = icuCollation; // for Pg 10+
-            } else {
-                systemLocale = "C"; // for Pg 9.6
-            }
-        } else {
-            if (SystemUtils.IS_OS_LINUX) {
-                systemLocale = "en_US.utf8";
-            } else if (SystemUtils.IS_OS_MAC) {
-                systemLocale = "en_US.UTF-8";
-            } else {
-                throw new IllegalStateException("Unsupported operation system");
-            }
-        }
-        final String query = "create collation \"%s\" from \"%s\";";
-        statement.execute(String.format(query, customCollation, systemLocale));
-    }
-
-    private void createDuplicatedCustomCollationIndex() {
-        executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("create index concurrently if not exists i_accounts_account_number " +
-                "on %s.accounts (account_number collate \"C.UTF-8\")", schemaName)));
-    }
-
-    private void createForeignKeyOnNullableColumn() {
-        executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("alter table if exists %1$s.bad_clients " +
-                                "add constraint c_bad_clients_fk_real_client_id foreign key (real_client_id) references %1$s.clients (id);",
-                        schemaName)));
-    }
-
-    private void addCommentOnTables() {
-        executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("comment on table %1$s.clients is 'Customer Information';" +
-                                "comment on table %1$s.accounts is 'Information about customer accounts';",
-                        schemaName)));
-    }
-
-    private void addBlankCommentOnTables() {
-        executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("comment on table %1$s.clients is '   ';" +
-                                "comment on table %1$s.accounts is '';",
-                        schemaName)));
-    }
-
-    private void addCommentOnColumns() {
-        executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("comment on column %1$s.clients.id is 'Unique record ID';" +
-                                "comment on column %1$s.clients.last_name is 'Customer''s last name';" +
-                                "comment on column %1$s.clients.first_name is 'Customer''s given name';" +
-                                "comment on column %1$s.clients.middle_name is 'Patronymic of the customer';" +
-                                "comment on column %1$s.clients.info is 'Raw client data';" +
-                                "comment on column %1$s.accounts.id is 'Unique record ID';" +
-                                "comment on column %1$s.accounts.client_id is 'Customer record ID';" +
-                                "comment on column %1$s.accounts.account_number is 'Customer''s account number';" +
-                                "comment on column %1$s.accounts.account_balance is 'The balance on the customer''s account';" +
-                                "comment on column %1$s.accounts.deleted is 'Indicates that the account has been deleted';",
-                        schemaName)));
-    }
-
-    private void addBlankCommentOnColumns() {
-        executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("comment on column %1$s.clients.id is '';" +
-                        "comment on column %1$s.accounts.id is '   ';",
-                        schemaName)));
-    }
-
-    private void convertColumnToJsonType() {
-        executeOnDatabase(dataSource, statement ->
-                statement.execute(String.format("alter table if exists %s.clients alter column info type json using info::json", schemaName)));
     }
 }

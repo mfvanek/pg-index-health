@@ -10,9 +10,7 @@
 
 package io.github.mfvanek.pg.statistics.maintenance;
 
-import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.support.DatabasePopulator;
-import io.github.mfvanek.pg.support.TestUtils;
+import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.api.Test;
 
@@ -20,15 +18,14 @@ import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class StatisticsMaintenanceOnHostImplEmptyTest extends DatabaseAwareTestBase {
+class StatisticsMaintenanceOnHostImplEmptyTest extends StatisticsAwareTestBase {
 
     private final StatisticsMaintenanceOnHost statisticsMaintenance = new StatisticsMaintenanceOnHostImpl(getPgConnection());
 
     @Test
     void getLastStatsResetTimestamp() {
         // Time of the last statistics reset is initialized to the system time during the first connection to the database.
-        DatabasePopulator.collectStatistics(getDataSource());
-        TestUtils.waitForStatisticsCollector();
+        collectStatistics();
 
         assertThat(statisticsMaintenance.getLastStatsResetTimestamp())
                 .isPresent()
