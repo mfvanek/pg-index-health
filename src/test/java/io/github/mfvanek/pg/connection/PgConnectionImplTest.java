@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
+import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -44,7 +45,8 @@ class PgConnectionImplTest extends SharedDatabaseTestBase {
         assertThatThrownBy(() -> PgConnectionImpl.ofPrimary(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("dataSource cannot be null");
-        assertThatThrownBy(() -> PgConnectionImpl.of(getDataSource(), null))
+        final DataSource dataSource = getDataSource();
+        assertThatThrownBy(() -> PgConnectionImpl.of(dataSource, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("host cannot be null");
     }

@@ -39,7 +39,8 @@ class QueryExecutorsTest extends SharedDatabaseTestBase {
     @Test
     void executeInvalidQuery() {
         final String invalidSql = "select unknown_field from unknown_table";
-        assertThatThrownBy(() -> QueryExecutors.executeQuery(getPgConnection(), invalidSql, rs -> null))
+        final PgConnection pgConnection = getPgConnection();
+        assertThatThrownBy(() -> QueryExecutors.executeQuery(pgConnection, invalidSql, rs -> null))
                 .isInstanceOf(PgSqlException.class)
                 .hasCauseInstanceOf(SQLException.class);
     }
@@ -49,7 +50,8 @@ class QueryExecutorsTest extends SharedDatabaseTestBase {
     void executeInvalidQueryWithSchema() {
         final String invalidSqlWithParam = "select unknown_field from unknown_table where schema = ?::text";
         final PgContext context = PgContext.of("s");
-        assertThatThrownBy(() -> QueryExecutors.executeQueryWithSchema(getPgConnection(), context, invalidSqlWithParam, rs -> null))
+        final PgConnection pgConnection = getPgConnection();
+        assertThatThrownBy(() -> QueryExecutors.executeQueryWithSchema(pgConnection, context, invalidSqlWithParam, rs -> null))
                 .isInstanceOf(PgSqlException.class)
                 .hasCauseInstanceOf(SQLException.class);
     }
@@ -57,7 +59,8 @@ class QueryExecutorsTest extends SharedDatabaseTestBase {
     @SuppressWarnings("ConstantConditions")
     @Test
     void executeNullQuery() {
-        assertThatThrownBy(() -> QueryExecutors.executeQuery(getPgConnection(), null, rs -> null))
+        final PgConnection pgConnection = getPgConnection();
+        assertThatThrownBy(() -> QueryExecutors.executeQuery(pgConnection, null, rs -> null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("sqlQuery cannot be null");
     }

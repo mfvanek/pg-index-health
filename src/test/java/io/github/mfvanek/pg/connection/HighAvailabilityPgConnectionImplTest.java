@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -61,7 +62,8 @@ class HighAvailabilityPgConnectionImplTest extends SharedDatabaseTestBase {
     void shouldContainsConnectionToPrimary() {
         final PgConnection primary = getPgConnection();
         final PgConnection replica = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofName("replica"));
-        assertThatThrownBy(() -> HighAvailabilityPgConnectionImpl.of(primary, Collections.singletonList(replica)))
+        final List<PgConnection> connectionsOnlyToReplicas = Collections.singletonList(replica);
+        assertThatThrownBy(() -> HighAvailabilityPgConnectionImpl.of(primary, connectionsOnlyToReplicas))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("connectionsToAllHostsInCluster have to contain a connection to the primary");
     }
