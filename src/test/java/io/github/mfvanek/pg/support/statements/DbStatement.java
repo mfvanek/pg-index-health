@@ -8,14 +8,14 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.support;
+package io.github.mfvanek.pg.support.statements;
 
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.annotation.Nonnull;
 
 @FunctionalInterface
-interface DbCallback {
+public interface DbStatement {
 
     void execute(@Nonnull Statement statement) throws SQLException;
 }

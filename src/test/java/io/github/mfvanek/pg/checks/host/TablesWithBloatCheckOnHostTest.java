@@ -13,18 +13,13 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgHostImpl;
-import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
-import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
-import io.github.mfvanek.pg.support.TestUtils;
-import org.assertj.core.api.Assertions;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
-class TablesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
+class TablesWithBloatCheckOnHostTest extends DatabaseAwareTestBase {
 
     private final DatabaseCheckOnHost<TableWithBloat> check = new TablesWithBloatCheckOnHost(getPgConnection());
 
@@ -34,24 +29,5 @@ class TablesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
                 .hasType(TableWithBloat.class)
                 .hasDiagnostic(Diagnostic.BLOATED_TABLES)
                 .hasHost(PgHostImpl.ofPrimary());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withStatistics(), ctx -> {
-            TestUtils.waitForStatisticsCollector();
-            Assertions.assertThat(existsStatisticsForTable(ctx, "accounts"))
-                    .isTrue();
-
-            assertThat(check)
-                    .executing(ctx)
-                    .hasSize(2)
-                    .containsExactlyInAnyOrder(
-                            TableWithBloat.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0),
-                            TableWithBloat.of(ctx.enrichWithSchema("clients"), 0L, 0L, 0))
-                    .allMatch(t -> t.getTableSizeInBytes() > 0L) // real size doesn't matter
-                    .allMatch(t -> t.getBloatPercentage() == 0 && t.getBloatSizeInBytes() == 0L);
-        });
     }
 }

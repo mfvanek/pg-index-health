@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.statistics.maintenance;
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
-import io.github.mfvanek.pg.support.TestUtils;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -44,7 +43,7 @@ class StatisticsMaintenanceOnHostImplTest extends StatisticsAwareTestBase {
                     .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             assertThat(statisticsMaintenance.resetStatistics())
                     .isTrue();
-            TestUtils.waitForStatisticsCollector();
+            waitForStatisticsCollector();
             assertThat(getSeqScansForAccounts(pgContext))
                     .isZero();
 

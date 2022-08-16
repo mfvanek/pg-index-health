@@ -10,15 +10,15 @@
 
 package io.github.mfvanek.pg.support;
 
+import io.github.mfvanek.pg.support.statements.DbStatement;
 import io.github.mfvanek.pg.utils.PgSqlException;
-import org.assertj.core.api.Assertions;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.stream.IntStream;
+import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
@@ -42,7 +42,7 @@ public final class TestUtils {
     }
 
     public static void executeOnDatabase(@Nonnull final DataSource dataSource,
-                                         @Nonnull final DbCallback callback) {
+                                         @Nonnull final DbStatement callback) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             callback.execute(statement);
@@ -52,25 +52,16 @@ public final class TestUtils {
     }
 
     public static void executeInTransaction(@Nonnull final DataSource dataSource,
-                                            @Nonnull final DbCallback callback) {
+                                            @Nonnull final Collection<? extends DbStatement> dbStatements) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             connection.setAutoCommit(false);
-            callback.execute(statement);
+            for (final DbStatement dbStatement : dbStatements) {
+                dbStatement.execute(statement);
+            }
             connection.commit();
         } catch (SQLException e) {
             throw new PgSqlException(e);
         }
-    }
-
-    public static void waitForStatisticsCollector() {
-        IntStream.of(1, 2, 3, 4, 5, 6).forEach(i -> {
-            try {
-                // see PGSTAT_STAT_INTERVAL at https://github.com/postgres/postgres/blob/master/src/backend/postmaster/pgstat.c
-                Thread.sleep(500L); //NOSONAR
-            } catch (InterruptedException e) {
-                Assertions.fail("unknown failure", e);
-            }
-        });
     }
 }

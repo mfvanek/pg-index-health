@@ -13,18 +13,13 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgHostImpl;
-import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
-import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
-import io.github.mfvanek.pg.support.TestUtils;
-import org.assertj.core.api.Assertions;
+import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
-class IndexesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
+class IndexesWithBloatCheckOnHostTest extends DatabaseAwareTestBase {
 
     private final DatabaseCheckOnHost<IndexWithBloat> check = new IndexesWithBloatCheckOnHost(getPgConnection());
 
@@ -34,25 +29,5 @@ class IndexesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
                 .hasType(IndexWithBloat.class)
                 .hasDiagnostic(Diagnostic.BLOATED_INDEXES)
                 .hasHost(PgHostImpl.ofPrimary());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withStatistics(), ctx -> {
-            TestUtils.waitForStatisticsCollector();
-            Assertions.assertThat(existsStatisticsForTable(ctx, "accounts"))
-                    .isTrue();
-
-            assertThat(check)
-                    .executing(ctx)
-                    .hasSize(3)
-                    .containsExactlyInAnyOrder(
-                            IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
-                            IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_pkey"), 0L, 0L, 0),
-                            IndexWithBloat.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("clients_pkey"), 0L, 0L, 0))
-                    .allMatch(i -> i.getIndexSizeInBytes() > 1L)
-                    .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
-        });
     }
 }

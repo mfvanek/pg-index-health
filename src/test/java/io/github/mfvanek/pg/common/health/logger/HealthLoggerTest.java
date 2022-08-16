@@ -19,7 +19,6 @@ import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
-import io.github.mfvanek.pg.support.TestUtils;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -72,7 +71,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                         .withStatistics()
                         .withJsonType(),
                 ctx -> {
-                    TestUtils.waitForStatisticsCollector();
+                    waitForStatisticsCollector();
                     assertThat(logger.logAll(Exclusions.empty(), ctx))
                             .hasSameSizeAs(Diagnostic.values())
                             .containsExactlyInAnyOrder(

@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.utils.PgSqlException;
+import org.assertj.core.api.Assertions;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
+import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
 
 public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
@@ -70,6 +72,18 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
             throw new PgSqlException(e);
         }
         DatabasePopulator.collectStatistics(getDataSource(), schemaName);
-        TestUtils.waitForStatisticsCollector();
+        waitForStatisticsCollector();
+    }
+
+    protected static void waitForStatisticsCollector() {
+        IntStream.of(1, 2, 3, 4, 5, 6).forEach(i -> {
+            try {
+                // see PGSTAT_STAT_INTERVAL at https://github.com/postgres/postgres/blob/6b9501660c9384476ca9a04918f5cf94379e419e/src/backend/postmaster/pgstat.c#L78
+                // see also https://github.com/postgres/postgres/blob/6cbed0ec791f3829d0e2092fd4c36d493ae75a50/src/backend/utils/activity/pgstat.c#L2
+                Thread.sleep(500L); //NOSONAR
+            } catch (InterruptedException e) {
+                Assertions.fail("unknown failure", e);
+            }
+        });
     }
 }
