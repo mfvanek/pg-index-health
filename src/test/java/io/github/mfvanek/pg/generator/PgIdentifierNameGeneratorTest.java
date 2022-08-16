@@ -31,7 +31,8 @@ class PgIdentifierNameGeneratorTest {
         assertThatThrownBy(() -> PgIdentifierNameGenerator.of(null, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("foreignKey cannot be null");
-        assertThatThrownBy(() -> PgIdentifierNameGenerator.of(ForeignKey.ofNullableColumn("t", "cn", "c"), null))
+        final ForeignKey foreignKey = ForeignKey.ofNullableColumn("t", "cn", "c");
+        assertThatThrownBy(() -> PgIdentifierNameGenerator.of(foreignKey, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("options cannot be null");
     }

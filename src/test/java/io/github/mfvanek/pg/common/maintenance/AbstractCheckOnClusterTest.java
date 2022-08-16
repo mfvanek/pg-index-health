@@ -13,15 +13,10 @@ package io.github.mfvanek.pg.common.maintenance;
 import io.github.mfvanek.pg.checks.cluster.IndexesWithNullValuesCheckOnCluster;
 import io.github.mfvanek.pg.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -31,22 +26,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("checkstyle:AbstractClassName")
-class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
+class AbstractCheckOnClusterTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final HighAvailabilityPgConnection haPgConnection;
-    private final AbstractCheckOnCluster<IndexWithNulls> check;
-
-    AbstractCheckOnClusterTest() {
-        super(POSTGRES.getTestDatabase());
-        this.haPgConnection = HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
-        this.check = new IndexesWithNullValuesCheckOnCluster(haPgConnection);
-    }
+    private final AbstractCheckOnCluster<IndexWithNulls> check = new IndexesWithNullValuesCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldThrowExceptionIfMapperNotPassedForCrossClusterCheck() {
+        final HighAvailabilityPgConnection haPgConnection = getHaPgConnection();
         assertThatThrownBy(() -> new WrongCheck(haPgConnection))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("acrossClusterResultsMapper cannot be null for diagnostic UNUSED_INDEXES");

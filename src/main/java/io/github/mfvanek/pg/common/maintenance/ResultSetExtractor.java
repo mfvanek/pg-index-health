@@ -24,6 +24,13 @@ import javax.annotation.Nonnull;
 @FunctionalInterface
 public interface ResultSetExtractor<T> {
 
+    /**
+     * Converts a row from database to an arbitrary domain model.
+     *
+     * @param resultSet the ResultSet to extract data from
+     * @return an arbitrary result object
+     * @throws SQLException if an SQLException is encountered getting column values or navigating
+     */
     @Nonnull
     T extractData(@Nonnull ResultSet resultSet) throws SQLException;
 }

@@ -13,50 +13,22 @@ package io.github.mfvanek.pg.checks.cluster;
 import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
+class TablesWithoutPrimaryKeyCheckOnClusterTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final DatabaseCheckOnCluster<Table> check;
-
-    TablesWithoutPrimaryKeyCheckOnClusterTest() {
-        super(POSTGRES.getTestDatabase());
-        this.check = new TablesWithoutPrimaryKeyCheckOnCluster(
-                HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase())));
-    }
+    private final DatabaseCheckOnCluster<Table> check = new TablesWithoutPrimaryKeyCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check.getType()).isEqualTo(Table.class);
         assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY);
-    }
-
-    @Test
-    void onEmptyDatabase() {
-        assertThat(check.check())
-                .isEmpty();
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
-                assertThat(check.check(ctx))
-                        .isEmpty());
     }
 
     @ParameterizedTest

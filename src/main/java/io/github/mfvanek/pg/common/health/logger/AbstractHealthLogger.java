@@ -90,6 +90,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         logResult.add(logTablesBloat(databaseChecks, exclusions, pgContext));
         logResult.add(logTablesWithoutDescription(databaseChecks, pgContext));
         logResult.add(logColumnsWithoutDescription(databaseChecks, pgContext));
+        logResult.add(logColumnsWithJsonType(databaseChecks, pgContext));
         return logResult;
     }
 
@@ -195,6 +196,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                                 @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.COLUMNS_WITHOUT_DESCRIPTION, Column.class),
                 c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITHOUT_DESCRIPTION);
+    }
+
+    @Nonnull
+    private String logColumnsWithJsonType(@Nonnull final DatabaseChecks databaseChecks,
+                                          @Nonnull final PgContext pgContext) {
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.COLUMNS_WITH_JSON_TYPE, Column.class),
+                c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITH_JSON_TYPE);
     }
 
     @Nonnull

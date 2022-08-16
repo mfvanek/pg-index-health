@@ -10,33 +10,21 @@
 
 package io.github.mfvanek.pg.checks.host;
 
-import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgHostImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static io.github.mfvanek.pg.utils.AbstractCheckOnHostAssert.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
-class IndexesWithBloatCheckOnHostTest extends DatabaseAwareTestBase {
+class IndexesWithBloatCheckOnHostTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final AbstractCheckOnHost<IndexWithBloat> check;
-
-    IndexesWithBloatCheckOnHostTest() {
-        super(POSTGRES.getTestDatabase());
-        this.check = new IndexesWithBloatCheckOnHost(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
-    }
+    private final DatabaseCheckOnHost<IndexWithBloat> check = new IndexesWithBloatCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
@@ -44,24 +32,6 @@ class IndexesWithBloatCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasType(IndexWithBloat.class)
                 .hasDiagnostic(Diagnostic.BLOATED_INDEXES)
                 .hasHost(PgHostImpl.ofPrimary());
-    }
-
-    @Test
-    void onEmptyDatabase() {
-        assertThat(check)
-                .executing()
-                .isEmpty();
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withStatistics(), ctx -> {
-            waitForStatisticsCollector();
-            assertThat(check)
-                    .executing(ctx)
-                    .isEmpty();
-        });
     }
 
     @ParameterizedTest

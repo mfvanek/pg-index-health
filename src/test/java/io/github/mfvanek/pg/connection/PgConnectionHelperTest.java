@@ -10,12 +10,9 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
-import io.github.mfvanek.pg.utils.TestUtils;
+import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -25,9 +22,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("fast")
 class PgConnectionHelperTest {
-
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
 
     @Test
     void privateConstructor() {
@@ -43,7 +37,6 @@ class PgConnectionHelperTest {
 
     @Nonnull
     private String getWriteUrl() {
-        final int port = POSTGRES.getPort();
-        return String.format("jdbc:postgresql://localhost:%d/postgres?prepareThreshold=0&preparedStatementCacheQueries=0", port);
+        return String.format("jdbc:postgresql://localhost:%d/postgres?prepareThreshold=0&preparedStatementCacheQueries=0", 6432);
     }
 }

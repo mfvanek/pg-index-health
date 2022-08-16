@@ -12,14 +12,10 @@ package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -29,26 +25,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class StandardHealthLoggerTest extends HealthLoggerTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final HealthLogger logger;
-
-    StandardHealthLoggerTest() {
-        super(POSTGRES.getTestDatabase());
-        final ConnectionCredentials credentials = ConnectionCredentials.ofUrl(
-                POSTGRES.getUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
-        this.logger = new StandardHealthLogger(
-                credentials,
-                new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
-                DatabaseChecks::new);
-    }
+    private final HealthLogger logger = new StandardHealthLogger(
+            getConnectionCredentials(),
+            new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
+            DatabaseChecks::new);
 
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void logAll(final String schemaName) {
         executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences().withData().withInvalidIndex().withNullValuesInIndex().withTableWithoutPrimaryKey().withDuplicatedIndex().withNonSuitableIndex().withStatistics(), ctx -> {
+                dbp -> dbp.withReferences()
+                        .withData()
+                        .withInvalidIndex()
+                        .withNullValuesInIndex()
+                        .withTableWithoutPrimaryKey()
+                        .withDuplicatedIndex()
+                        .withNonSuitableIndex()
+                        .withStatistics()
+                        .withJsonType(),
+                ctx -> {
                     waitForStatisticsCollector();
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
                     assertThat(logs)
@@ -65,7 +60,8 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                                     "unused_indexes:7",
                                     "tables_with_missing_indexes:0",
                                     "tables_without_description:3",
-                                    "columns_without_description:12");
+                                    "columns_without_description:13",
+                                    "columns_with_json_type:1");
                 });
     }
 

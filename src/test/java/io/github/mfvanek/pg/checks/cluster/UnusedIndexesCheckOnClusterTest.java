@@ -18,20 +18,14 @@ import ch.qos.logback.core.read.ListAppender;
 import io.github.mfvanek.pg.checks.predicates.FilterIndexesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.index.IndexNameAware;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import io.github.mfvanek.pg.utils.ClockHolder;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.utils.DatabasePopulator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
@@ -50,20 +44,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("PMD.ExcessiveImports")
-class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
+class UnusedIndexesCheckOnClusterTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
     private static Logger logger;
     private static ListAppender<ILoggingEvent> logAppender;
 
-    private final DatabaseCheckOnCluster<UnusedIndex> check;
-
-    UnusedIndexesCheckOnClusterTest() {
-        super(POSTGRES.getTestDatabase());
-        this.check = new UnusedIndexesCheckOnCluster(
-                HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase())));
-    }
+    private final DatabaseCheckOnCluster<UnusedIndex> check = new UnusedIndexesCheckOnCluster(getHaPgConnection());
 
     @BeforeAll
     static void init() {
@@ -88,26 +74,13 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void onEmptyDatabase() {
+    void checkOnClusterShouldLogResetStatisticsData() {
         assertThat(check.check())
                 .isEmpty();
 
         assertThat(logAppender.list)
                 .hasSize(1)
                 .allMatch(l -> l.getMessage().contains("reset"));
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
-            assertThat(check.check(ctx))
-                    .isEmpty();
-
-            assertThat(logAppender.list)
-                    .hasSize(1)
-                    .allMatch(l -> l.getMessage().contains("reset"));
-        });
     }
 
     @ParameterizedTest

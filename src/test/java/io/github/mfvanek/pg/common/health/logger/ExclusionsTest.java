@@ -213,16 +213,17 @@ class ExclusionsTest {
 
     @Test
     void invalidPercentageThreshold() {
-        assertThatThrownBy(() -> Exclusions.builder().withIndexBloatPercentageThreshold(-1))
+        final ExclusionsBuilder builder = Exclusions.builder();
+        assertThatThrownBy(() -> builder.withIndexBloatPercentageThreshold(-1))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("indexBloatPercentageThreshold should be in the range from 0 to 100 inclusive");
-        assertThatThrownBy(() -> Exclusions.builder().withIndexBloatPercentageThreshold(101))
+        assertThatThrownBy(() -> builder.withIndexBloatPercentageThreshold(101))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("indexBloatPercentageThreshold should be in the range from 0 to 100 inclusive");
-        assertThatThrownBy(() -> Exclusions.builder().withTableBloatPercentageThreshold(-1))
+        assertThatThrownBy(() -> builder.withTableBloatPercentageThreshold(-1))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("tableBloatPercentageThreshold should be in the range from 0 to 100 inclusive");
-        assertThatThrownBy(() -> Exclusions.builder().withTableBloatPercentageThreshold(101))
+        assertThatThrownBy(() -> builder.withTableBloatPercentageThreshold(101))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("tableBloatPercentageThreshold should be in the range from 0 to 100 inclusive");
     }

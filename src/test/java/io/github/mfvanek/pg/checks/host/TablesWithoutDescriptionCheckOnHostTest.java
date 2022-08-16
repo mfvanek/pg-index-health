@@ -10,33 +10,21 @@
 
 package io.github.mfvanek.pg.checks.host;
 
-import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgHostImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.utils.DatabasePopulator;
+import io.github.mfvanek.pg.support.DatabasePopulator;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static io.github.mfvanek.pg.utils.AbstractCheckOnHostAssert.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
-class TablesWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
+class TablesWithoutDescriptionCheckOnHostTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final AbstractCheckOnHost<Table> check;
-
-    TablesWithoutDescriptionCheckOnHostTest() {
-        super(POSTGRES.getTestDatabase());
-        this.check = new TablesWithoutDescriptionCheckOnHost(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
-    }
+    private final DatabaseCheckOnHost<Table> check = new TablesWithoutDescriptionCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
@@ -44,22 +32,6 @@ class TablesWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasType(Table.class)
                 .hasDiagnostic(Diagnostic.TABLES_WITHOUT_DESCRIPTION)
                 .hasHost(PgHostImpl.ofPrimary());
-    }
-
-    @Test
-    void onEmptyDatabase() {
-        assertThat(check)
-                .executing()
-                .isEmpty();
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withCommentOnTables(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .isEmpty());
     }
 
     @ParameterizedTest

@@ -10,11 +10,9 @@
 
 package io.github.mfvanek.pg.utils;
 
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -24,16 +22,9 @@ import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-final class PostgresVersionTest extends DatabaseAwareTestBase {
-
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
+final class PostgresVersionTest extends SharedDatabaseTestBase {
 
     private static final String PG_VERSION_ENVIRONMENT_VARIABLE = "TEST_PG_VERSION";
-
-    PostgresVersionTest() {
-        super(POSTGRES.getTestDatabase());
-    }
 
     @DisplayName("PostgreSQL version is the same as specified in environment variable " + PG_VERSION_ENVIRONMENT_VARIABLE)
     @Test
@@ -48,7 +39,7 @@ final class PostgresVersionTest extends DatabaseAwareTestBase {
 
     @Nonnull
     private String readPgVersion() {
-        try (Connection connection = POSTGRES.getTestDatabase().getConnection();
+        try (Connection connection = getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet resultSet = statement.executeQuery("show server_version")) {
                 resultSet.next();

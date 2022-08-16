@@ -10,19 +10,15 @@
 
 package io.github.mfvanek.pg.settings.maintenance;
 
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgHostImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.PgParamImpl;
 import io.github.mfvanek.pg.settings.ServerSpecification;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import io.github.mfvanek.pg.utils.PgSqlException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.sql.SQLException;
 import java.util.Set;
@@ -31,19 +27,9 @@ import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
+class ConfigurationMaintenanceOnHostImplTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database()
-            .withAdditionalStartupParameter(ImportantParam.LOCK_TIMEOUT.getName(), "1000");
-
-    private final ConfigurationMaintenanceOnHost configurationMaintenance;
-
-    ConfigurationMaintenanceOnHostImplTest() {
-        super(POSTGRES.getTestDatabase());
-        this.configurationMaintenance = new ConfigurationMaintenanceOnHostImpl(
-                PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase()));
-    }
+    private final ConfigurationMaintenanceOnHost configurationMaintenance = new ConfigurationMaintenanceOnHostImpl(getPgConnection());
 
     @Test
     void getHostShouldReturnPrimary() {

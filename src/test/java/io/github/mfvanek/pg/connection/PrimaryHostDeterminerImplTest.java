@@ -10,12 +10,9 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import io.github.mfvanek.pg.utils.PgSqlException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mockito;
 
 import java.sql.Connection;
@@ -27,21 +24,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 
-class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
-
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
+class PrimaryHostDeterminerImplTest extends SharedDatabaseTestBase {
 
     private final PrimaryHostDeterminer primaryHostDeterminer = new PrimaryHostDeterminerImpl();
     private final PgHost localhost = PgHostImpl.ofName("localhost");
 
-    PrimaryHostDeterminerImplTest() {
-        super(POSTGRES.getTestDatabase());
-    }
-
     @Test
     void isPrimary() {
-        final PgConnection pgConnection = PgConnectionImpl.of(POSTGRES.getTestDatabase(), localhost);
+        final PgConnection pgConnection = PgConnectionImpl.of(getDataSource(), localhost);
         assertThat(primaryHostDeterminer.isPrimary(pgConnection)).isTrue();
     }
 
@@ -72,10 +62,9 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
 
     @Test
     void isPrimaryForSecondaryHost() {
-        final int port = POSTGRES.getPort();
         final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
-                "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=secondary", port);
-        final PgConnection secondary = PgConnectionImpl.of(POSTGRES.getTestDatabase(), PgHostImpl.ofUrl(readUrl));
+                "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=secondary", getPort());
+        final PgConnection secondary = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl(readUrl));
         assertThat(secondary).isNotNull();
         assertThat(primaryHostDeterminer.isPrimary(secondary)).isFalse();
     }

@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterIndexesByNamePredicate;
+import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.table.Column;
 import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,26 +21,26 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class InvalidIndexesCheckOnClusterTest extends SharedDatabaseTestBase {
+class ColumnsWithJsonTypeCheckOnClusterTest extends SharedDatabaseTestBase {
 
-    private final DatabaseCheckOnCluster<Index> check = new InvalidIndexesCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<Column> check = new ColumnsWithJsonTypeCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(Index.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.INVALID_INDEXES);
+        assertThat(check.getType()).isEqualTo(Column.class);
+        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.COLUMNS_WITH_JSON_TYPE);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withInvalidIndex(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withJsonType(), ctx -> {
             assertThat(check.check(ctx))
                     .hasSize(1)
                     .containsExactly(
-                            Index.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name_first_name")));
+                            Column.ofNullable(ctx.enrichWithSchema("clients"), "info"));
 
-            assertThat(check.check(ctx, FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_name_first_name"))))
+            assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("clients"))))
                     .isEmpty();
         });
     }

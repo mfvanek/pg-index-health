@@ -8,9 +8,10 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.utils;
+package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.utils.PgSqlException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,7 +26,7 @@ import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.fail;
 
-public abstract class DatabaseAwareTestBase {
+abstract class DatabaseAwareTestBase {
 
     protected static final long AMOUNT_OF_TRIES = 101L;
 

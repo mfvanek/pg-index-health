@@ -21,24 +21,25 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Check for columns without description on a specific host.
+ * Check for columns with {@code json} type on a specific host.
  *
  * @author Ivan Vahrushev
- * @since 0.6.0
+ * @since 0.6.1
  */
-public class ColumnsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Column> {
+public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<Column> {
 
-    public ColumnsWithoutDescriptionCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(Column.class, pgConnection, Diagnostic.COLUMNS_WITHOUT_DESCRIPTION);
+    public ColumnsWithJsonTypeCheckOnHost(@Nonnull final PgConnection pgConnection) {
+        super(Column.class, pgConnection, Diagnostic.COLUMNS_WITH_JSON_TYPE);
     }
 
     /**
-     * Returns columns without description (comment) in the specified schema.
+     * Returns columns with json type in the specified schema.
+     * These are candidates for conversion to the {@code jsonb} type.
      *
-     * @see <a href="https://www.postgresql.org/docs/current/sql-comment.html">SQL Commands - COMMENT</a>
+     * @see <a href="https://www.postgresql.org/docs/current/datatype-json.html">JSON Types</a>
      *
      * @param pgContext check's context with the specified schema
-     * @return list of columns without description
+     * @return list of columns with json type
      */
     @Nonnull
     @Override

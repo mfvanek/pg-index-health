@@ -11,34 +11,20 @@
 package io.github.mfvanek.pg.checks.cluster;
 
 import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
-import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnCluster;
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
-import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.embedded.PostgresDbExtension;
-import io.github.mfvanek.pg.embedded.PostgresExtensionFactory;
 import io.github.mfvanek.pg.model.table.Column;
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.utils.DatabasePopulator;
+import io.github.mfvanek.pg.support.DatabasePopulator;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
+class ColumnsWithoutDescriptionCheckOnClusterTest extends SharedDatabaseTestBase {
 
-    @RegisterExtension
-    static final PostgresDbExtension POSTGRES = PostgresExtensionFactory.database();
-
-    private final AbstractCheckOnCluster<Column> check;
-
-    ColumnsWithoutDescriptionCheckOnClusterTest() {
-        super(POSTGRES.getTestDatabase());
-        this.check = new ColumnsWithoutDescriptionCheckOnCluster(
-                HighAvailabilityPgConnectionImpl.of(PgConnectionImpl.ofPrimary(POSTGRES.getTestDatabase())));
-    }
+    private final DatabaseCheckOnCluster<Column> check = new ColumnsWithoutDescriptionCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
@@ -46,26 +32,12 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
         assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.COLUMNS_WITHOUT_DESCRIPTION);
     }
 
-    @Test
-    void onEmptyDatabase() {
-        assertThat(check.check())
-                .isEmpty();
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"public", "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withCommentOnColumns(), ctx ->
-                assertThat(check.check(ctx))
-                        .isEmpty());
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"public", "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(9)
+                    .hasSize(10)
                     .containsExactly(
                             Column.ofNotNull(ctx.enrichWithSchema("accounts"), "account_balance"),
                             Column.ofNotNull(ctx.enrichWithSchema("accounts"), "account_number"),
@@ -74,15 +46,17 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
                             Column.ofNotNull(ctx.enrichWithSchema("accounts"), "id"),
                             Column.ofNotNull(ctx.enrichWithSchema("clients"), "first_name"),
                             Column.ofNotNull(ctx.enrichWithSchema("clients"), "id"),
+                            Column.ofNullable(ctx.enrichWithSchema("clients"), "info"),
                             Column.ofNotNull(ctx.enrichWithSchema("clients"), "last_name"),
                             Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name"))
                     .filteredOn(Column::isNullable)
-                    .hasSize(1)
+                    .hasSize(2)
                     .containsExactly(
+                            Column.ofNullable(ctx.enrichWithSchema("clients"), "info"),
                             Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name"));
 
             assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
-                    .hasSize(4)
+                    .hasSize(5)
                     .allMatch(c -> c.getTableName().equals(ctx.enrichWithSchema("clients")));
         });
     }
@@ -92,7 +66,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
     void shouldNotTakingIntoAccountBlankComments(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnColumns(), ctx ->
                 assertThat(check.check(ctx))
-                        .hasSize(9)
+                        .hasSize(10)
                         .filteredOn(c -> "id".equalsIgnoreCase(c.getColumnName()))
                         .hasSize(2)
                         .containsExactly(

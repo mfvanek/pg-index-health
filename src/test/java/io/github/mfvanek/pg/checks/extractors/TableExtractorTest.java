@@ -8,20 +8,20 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.utils;
+package io.github.mfvanek.pg.checks.extractors;
 
-import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("fast")
-class LocalesTest {
+class TableExtractorTest {
 
     @Test
-    void privateConstructor() {
-        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(Locales.class))
-                .isInstanceOf(UnsupportedOperationException.class);
+    void shouldCreateInstance() {
+        assertThat(TableExtractor.of())
+                .isNotNull()
+                .isInstanceOf(TableExtractor.class);
     }
 }

@@ -10,18 +10,13 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.utils.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.support.SharedDatabaseTestBase;
 
 import java.util.Objects;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 
-abstract class HealthLoggerTestBase extends DatabaseAwareTestBase {
-
-    protected HealthLoggerTestBase(@Nonnull final DataSource dataSource) {
-        super(dataSource);
-    }
+abstract class HealthLoggerTestBase extends SharedDatabaseTestBase {
 
     @Nonnull
     protected static Predicate<String> ofKey(@Nonnull final SimpleLoggingKey key) {

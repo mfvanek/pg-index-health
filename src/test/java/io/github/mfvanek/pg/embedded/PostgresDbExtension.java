@@ -16,12 +16,12 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.PostgreSQLContainerProvider;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.utility.DockerImageName;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -36,19 +36,22 @@ import javax.sql.DataSource;
 @SuppressWarnings("PMD.AvoidUsingVolatile")
 public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback {
 
-    private volatile JdbcDatabaseContainer<?> container;
-    private volatile DataSource dataSource;
-    private final List<Pair<String, String>> additionalParameters = new ArrayList<>();
+    private final JdbcDatabaseContainer<?> container;
+    private final AtomicReference<DataSource> dataSourceRef = new AtomicReference<>();
+
+    public PostgresDbExtension(@Nonnull final List<Pair<String, String>> additionalParameters) {
+        final String pgVersion = preparePostgresVersion();
+        final String[] commandParts = additionalParameters.stream()
+                .flatMap(kv -> Stream.of("-c", kv.getKey() + "=" + kv.getValue()))
+                .toArray(String[]::new);
+        this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres").withTag(pgVersion))
+                .withCommand(commandParts);
+    }
 
     @Override
     public void beforeAll(final ExtensionContext extensionContext) {
-        final String pgVersion = preparePostgresVersion();
-        container = new PostgreSQLContainerProvider().newInstance(pgVersion);
-        final String[] startupCommand = prepareStartupCommand(container, additionalParameters);
-        container.setCommand(startupCommand);
         container.start();
-
-        dataSource = getDataSource();
+        dataSourceRef.set(getDataSource());
     }
 
     @Nonnull
@@ -56,28 +59,16 @@ public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback 
         return Optional.ofNullable(System.getenv("TEST_PG_VERSION")).orElse("14.0");
     }
 
-    @Nonnull
-    private static String[] prepareStartupCommand(@Nonnull final JdbcDatabaseContainer<?> container,
-                                                  @Nonnull final List<Pair<String, String>> additionalParameters) {
-        return Stream.concat(
-                Arrays.stream(container.getCommandParts()),
-                additionalParameters.stream()
-                        .flatMap(kv -> Stream.of("-c", kv.getKey() + "=" + kv.getValue()))
-        ).toArray(String[]::new);
-    }
-
     @Override
     public void afterAll(final ExtensionContext extensionContext) {
-        additionalParameters.clear();
+        dataSourceRef.set(null);
         container.close();
-        dataSource = null;
-        container = null;
     }
 
     @Nonnull
     public DataSource getTestDatabase() {
         throwErrorIfNotInitialized();
-        return dataSource;
+        return dataSourceRef.get();
     }
 
     public int getPort() {
@@ -103,13 +94,8 @@ public class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback 
         return container.getPassword();
     }
 
-    public PostgresDbExtension withAdditionalStartupParameter(final String key, final String value) {
-        additionalParameters.add(Pair.of(key, value));
-        return this;
-    }
-
     private void throwErrorIfNotInitialized() {
-        if (container == null || dataSource == null) {
+        if (dataSourceRef.get() == null) {
             throw new AssertionError("not initialized");
         }
     }
