@@ -18,6 +18,7 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
+import io.github.mfvanek.pg.support.DatabasePopulator;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -40,7 +41,8 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withStatistics(), ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
+            collectStatistics();
             waitForStatisticsCollector();
             assertThat(check.check(ctx))
                     .isEmpty();
@@ -50,7 +52,8 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withStatistics(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
+            collectStatistics();
             waitForStatisticsCollector();
             assertThat(existsStatisticsForTable(ctx, "accounts"))
                     .isTrue();

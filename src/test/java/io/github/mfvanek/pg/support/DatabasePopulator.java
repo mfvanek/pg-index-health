@@ -124,13 +124,6 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     @Nonnull
-    public DatabasePopulator withStatistics() {
-        // should be the last step in pipeline
-        actionsToExecuteOutsideTransaction.putIfAbsent(Integer.MAX_VALUE, this::collectStatistics);
-        return this;
-    }
-
-    @Nonnull
     public DatabasePopulator withDifferentOpclassIndexes() {
         statementsToExecuteInSameTransaction.putIfAbsent(50, new CreateIndexesWithDifferentOpclassStatement(schemaName));
         return this;
@@ -204,21 +197,5 @@ public final class DatabasePopulator implements AutoCloseable {
         TestUtils.executeOnDatabase(dataSource, statement -> {
             statement.execute(String.format("drop schema if exists %s cascade", schemaName));
         });
-    }
-
-    private void collectStatistics() {
-        collectStatistics(dataSource, schemaName);
-    }
-
-    static void collectStatistics(@Nonnull final DataSource dataSource, @Nonnull final String schemaName) {
-        TestUtils.executeOnDatabase(dataSource, statement -> {
-            final String query = String.format("vacuum analyze %s.", schemaName);
-            statement.execute(query + "accounts");
-            statement.execute(query + "clients");
-        });
-    }
-
-    public static void collectStatistics(@Nonnull final DataSource dataSource) {
-        TestUtils.executeOnDatabase(dataSource, statement -> statement.execute("vacuum analyze"));
     }
 }

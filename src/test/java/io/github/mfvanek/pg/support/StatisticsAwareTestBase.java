@@ -71,7 +71,7 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         } catch (SQLException e) {
             throw new PgSqlException(e);
         }
-        DatabasePopulator.collectStatistics(getDataSource(), schemaName);
+        collectStatistics();
         waitForStatisticsCollector();
     }
 
@@ -85,5 +85,9 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
                 Assertions.fail("unknown failure", e);
             }
         });
+    }
+
+    protected static void collectStatistics() {
+        TestUtils.executeOnDatabase(getDataSource(), statement -> statement.execute("vacuum analyze"));
     }
 }

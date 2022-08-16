@@ -68,9 +68,9 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                         .withTableWithoutPrimaryKey()
                         .withDuplicatedIndex()
                         .withNonSuitableIndex()
-                        .withStatistics()
                         .withJsonType(),
                 ctx -> {
+                    collectStatistics();
                     waitForStatisticsCollector();
                     assertThat(logger.logAll(Exclusions.empty(), ctx))
                             .hasSameSizeAs(Diagnostic.values())

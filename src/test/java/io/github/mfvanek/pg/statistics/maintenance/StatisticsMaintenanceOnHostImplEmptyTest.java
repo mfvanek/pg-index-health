@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.statistics.maintenance;
 
-import io.github.mfvanek.pg.support.DatabasePopulator;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,7 @@ class StatisticsMaintenanceOnHostImplEmptyTest extends StatisticsAwareTestBase {
     @Test
     void getLastStatsResetTimestamp() {
         // Time of the last statistics reset is initialized to the system time during the first connection to the database.
-        DatabasePopulator.collectStatistics(getDataSource());
+        collectStatistics();
         waitForStatisticsCollector();
 
         assertThat(statisticsMaintenance.getLastStatsResetTimestamp())

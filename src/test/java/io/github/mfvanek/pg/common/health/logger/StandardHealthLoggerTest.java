@@ -42,9 +42,9 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                         .withTableWithoutPrimaryKey()
                         .withDuplicatedIndex()
                         .withNonSuitableIndex()
-                        .withStatistics()
                         .withJsonType(),
                 ctx -> {
+                    collectStatistics();
                     waitForStatisticsCollector();
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
                     assertThat(logs)
