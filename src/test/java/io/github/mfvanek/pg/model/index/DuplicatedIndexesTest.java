@@ -102,13 +102,13 @@ class DuplicatedIndexesTest {
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("duplicatedIndexes cannot be null");
 
-        final List<IndexWithSize> emptyList = Collections.emptyList();
-        assertThatThrownBy(() -> DuplicatedIndexes.of(emptyList))
+        final List<IndexWithSize> firstIndexes = Collections.emptyList();
+        assertThatThrownBy(() -> DuplicatedIndexes.of(firstIndexes))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("duplicatedIndexes cannot be empty");
 
-        final List<IndexWithSize> singletonList = Collections.singletonList(IndexWithSize.of("t", "i", 1L));
-        assertThatThrownBy(() -> DuplicatedIndexes.of(singletonList))
+        final List<IndexWithSize> secondIndexes = Collections.singletonList(IndexWithSize.of("t", "i", 1L));
+        assertThatThrownBy(() -> DuplicatedIndexes.of(secondIndexes))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("duplicatedIndexes should contains at least two rows");
     }
@@ -211,9 +211,10 @@ class DuplicatedIndexesTest {
 
         final IndexWithSize firstIndex = IndexWithSize.of("t", "i1", 1L);
         final IndexWithSize secondIndex = IndexWithSize.of("t", "i2", 2L);
-        final IndexWithSize[] otherIndexes = {null, IndexWithSize.of("t", "i4", 4L)};
+        final IndexWithSize thirdIndex = null;
+        final IndexWithSize fourthIndex = IndexWithSize.of("t", "i4", 4L);
         assertThatThrownBy(() -> DuplicatedIndexes.of(
-                firstIndex, secondIndex, otherIndexes))
+                firstIndex, secondIndex, thirdIndex, fourthIndex))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("otherIndexes cannot contain nulls");
         final DuplicatedIndexes indexes = DuplicatedIndexes.of(
