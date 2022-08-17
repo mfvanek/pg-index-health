@@ -212,8 +212,7 @@ class DuplicatedIndexesTest {
         final IndexWithSize firstIndex = IndexWithSize.of("t", "i1", 1L);
         final IndexWithSize secondIndex = IndexWithSize.of("t", "i2", 2L);
         final IndexWithSize fourthIndex = IndexWithSize.of("t", "i4", 4L);
-        assertThatThrownBy(() -> DuplicatedIndexes.of(
-                firstIndex, secondIndex, null, fourthIndex))
+        assertThatThrownBy(() -> DuplicatedIndexes.of(firstIndex, secondIndex, null, fourthIndex))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("otherIndexes cannot contain nulls");
         final DuplicatedIndexes indexes = DuplicatedIndexes.of(
