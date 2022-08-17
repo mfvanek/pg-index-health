@@ -98,7 +98,8 @@ class ForeignKeyTest {
                 .isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", null))
                 .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", Collections.emptyList()))
+        final List<Column> columns = Collections.emptyList();
+        assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", columns))
                 .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> ForeignKey.ofColumn("t", "fk", null))
                 .isInstanceOf(NullPointerException.class);

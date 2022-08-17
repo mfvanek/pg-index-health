@@ -101,19 +101,24 @@ class DuplicatedIndexesTest {
         assertThatThrownBy(() -> DuplicatedIndexes.of(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("duplicatedIndexes cannot be null");
-        assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.emptyList()))
+
+        final List<IndexWithSize> firstIndexes = Collections.emptyList();
+        assertThatThrownBy(() -> DuplicatedIndexes.of(firstIndexes))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("duplicatedIndexes cannot be empty");
-        assertThatThrownBy(() -> DuplicatedIndexes.of(Collections.singletonList(IndexWithSize.of("t", "i", 1L))))
+
+        final List<IndexWithSize> secondIndexes = Collections.singletonList(IndexWithSize.of("t", "i", 1L));
+        assertThatThrownBy(() -> DuplicatedIndexes.of(secondIndexes))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("duplicatedIndexes should contains at least two rows");
     }
 
     @Test
     void withDifferentTables() {
-        assertThatThrownBy(() -> DuplicatedIndexes.of(Arrays.asList(
+        final List<IndexWithSize> indexWithSizeList = Arrays.asList(
                 IndexWithSize.of("t1", "i1", 1L),
-                IndexWithSize.of("t2", "i2", 2L))))
+                IndexWithSize.of("t2", "i2", 2L));
+        assertThatThrownBy(() -> DuplicatedIndexes.of(indexWithSizeList))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Table name is not the same within given rows");
     }
@@ -198,14 +203,17 @@ class DuplicatedIndexesTest {
         assertThatThrownBy(() -> DuplicatedIndexes.of(null, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("tableName cannot be null");
-        assertThatThrownBy(() -> DuplicatedIndexes.of(IndexWithSize.of("t", "i1", 1L), null))
+
+        final IndexWithSize indexWithSize = IndexWithSize.of("t", "i1", 1L);
+        assertThatThrownBy(() -> DuplicatedIndexes.of(indexWithSize, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("secondIndex cannot be null");
+
+        final IndexWithSize firstIndex = IndexWithSize.of("t", "i1", 1L);
+        final IndexWithSize secondIndex = IndexWithSize.of("t", "i2", 2L);
+        final IndexWithSize fourthIndex = IndexWithSize.of("t", "i4", 4L);
         assertThatThrownBy(() -> DuplicatedIndexes.of(
-                IndexWithSize.of("t", "i1", 1L),
-                IndexWithSize.of("t", "i2", 2L),
-                null,
-                IndexWithSize.of("t", "i4", 4L)))
+                firstIndex, secondIndex, null, fourthIndex))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("otherIndexes cannot contain nulls");
         final DuplicatedIndexes indexes = DuplicatedIndexes.of(

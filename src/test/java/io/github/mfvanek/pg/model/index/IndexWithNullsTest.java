@@ -65,7 +65,8 @@ class IndexWithNullsTest {
 
     @Test
     void tableShouldBeTheSame() {
-        assertThatThrownBy(() -> invokePrivateConstructor("t", "i", 1L, Column.ofNullable("t2", "f")))
+        final Column column = Column.ofNullable("t2", "f");
+        assertThatThrownBy(() -> invokePrivateConstructor("t", "i", 1L, column))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Table name is not the same within given rows");
     }
