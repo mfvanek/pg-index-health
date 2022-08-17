@@ -10,15 +10,12 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.checks.host.TablesWithMissingIndexesCheckOnHost;
-import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -95,11 +92,6 @@ class HealthLoggerTest extends HealthLoggerTestBase {
     void logTablesWithMissingIndexes(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             tryToFindAccountByClientId(schemaName);
-
-            // I don't know why this side effect helps test to pass
-            final AbstractCheckOnHost<TableWithMissingIndex> checkOnHost = new TablesWithMissingIndexesCheckOnHost(getPgConnection());
-            assertThat(checkOnHost.check(ctx))
-                    .hasSize(1);
 
             assertThat(logger.logAll(Exclusions.empty(), ctx))
                     .hasSameSizeAs(Diagnostic.values())
