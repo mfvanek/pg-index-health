@@ -28,8 +28,8 @@ public abstract class DatabaseAwareTestBase {
 
     private static final PostgreSqlContainerWrapper POSTGRES = new PostgreSqlContainerWrapper(Arrays.asList(
             Pair.of(ImportantParam.LOCK_TIMEOUT.getName(), "1000"),
-            Pair.of(ImportantParam.SHARED_BUFFERS.getName(), "512MB"),
-            Pair.of(ImportantParam.MAINTENANCE_WORK_MEM.getName(), "512MB"),
+            Pair.of(ImportantParam.SHARED_BUFFERS.getName(), "256MB"),
+            Pair.of(ImportantParam.MAINTENANCE_WORK_MEM.getName(), "128MB"),
             Pair.of(ImportantParam.WORK_MEM.getName(), "16MB"),
             Pair.of(ImportantParam.RANDOM_PAGE_COST.getName(), "1")
     ));

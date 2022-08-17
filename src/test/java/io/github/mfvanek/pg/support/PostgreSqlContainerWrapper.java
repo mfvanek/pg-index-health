@@ -31,7 +31,7 @@ final class PostgreSqlContainerWrapper {
     PostgreSqlContainerWrapper(@Nonnull final List<Pair<String, String>> additionalParameters) {
         final String pgVersion = preparePostgresVersion();
         this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres").withTag(pgVersion))
-                .withSharedMemorySize(MemoryUnit.GB.convertToBytes(2))
+                .withSharedMemorySize(MemoryUnit.MB.convertToBytes(512))
                 .withTmpFs(Collections.singletonMap("/var/lib/postgresql/data", "rw"))
                 .withCommand(prepareCommandParts(additionalParameters));
         this.container.start();
