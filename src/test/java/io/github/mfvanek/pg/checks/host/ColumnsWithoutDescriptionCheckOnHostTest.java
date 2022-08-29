@@ -73,4 +73,17 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                                 Column.ofNotNull(ctx.enrichWithSchema("accounts"), "id"),
                                 Column.ofNotNull(ctx.enrichWithSchema("clients"), "id")));
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldIgnoreDroppedColumns(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDroppedInfoColumn(), ctx ->
+                assertThat(check)
+                        .executing(ctx)
+                        .hasSize(9)
+                        .filteredOn(Column::isNullable)
+                        .hasSize(1)
+                        .containsExactly(
+                                Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name")));
+    }
 }

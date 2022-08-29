@@ -45,4 +45,13 @@ class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
                     .isEmpty();
         });
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldIgnoreDroppedColumns(final String schemaName) {
+        // withData - skipped here below
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withJsonType().withDroppedInfoColumn(), ctx ->
+                assertThat(check.check(ctx))
+                        .isEmpty());
+    }
 }
