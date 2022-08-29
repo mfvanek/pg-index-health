@@ -23,13 +23,15 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.5.0
  */
 @Immutable
-public class Column implements TableNameAware, Comparable<Column> {
+public class Column implements ColumnNameAware, Comparable<Column> {
 
     private final String tableName;
     private final String columnName;
     private final boolean notNull;
 
-    private Column(@Nonnull final String tableName, @Nonnull final String columnName, final boolean notNull) {
+    protected Column(@Nonnull final String tableName,
+                     @Nonnull final String columnName,
+                     final boolean notNull) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.columnName = Validators.notBlank(columnName, "columnName");
         this.notNull = notNull;
@@ -45,23 +47,25 @@ public class Column implements TableNameAware, Comparable<Column> {
     }
 
     /**
-     * Gets column name in the table.
-     *
-     * @return column name
+     * {@inheritDoc}
      */
     @Nonnull
+    @Override
     public String getColumnName() {
         return columnName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean isNotNull() {
         return notNull;
     }
 
-    public boolean isNullable() {
-        return !isNotNull();
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return Column.class.getSimpleName() + "{tableName='" + tableName + '\'' +
@@ -69,6 +73,9 @@ public class Column implements TableNameAware, Comparable<Column> {
                 ", notNull=" + notNull + '}';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final boolean equals(final Object other) {
         if (this == other) {
@@ -85,11 +92,17 @@ public class Column implements TableNameAware, Comparable<Column> {
                 notNull == that.notNull;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final int hashCode() {
         return Objects.hash(tableName, columnName, notNull);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int compareTo(@Nonnull final Column other) {
         Objects.requireNonNull(other, "other cannot be null");
