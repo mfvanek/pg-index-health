@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.support;
 
-import io.github.mfvanek.pg.model.MemoryUnit;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -23,15 +22,22 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-final class PostgreSqlContainerWrapper {
+public class PostgreSqlContainerWrapper {
 
     private final PostgreSQLContainer<?> container;
     private final DataSource dataSource;
 
-    PostgreSqlContainerWrapper(@Nonnull final List<Pair<String, String>> additionalParameters) {
-        final String pgVersion = preparePostgresVersion();
+    public PostgreSqlContainerWrapper(@Nonnull final String pgVersion) {
+        this(pgVersion, Collections.emptyList());
+    }
+
+    public PostgreSqlContainerWrapper(@Nonnull final List<Pair<String, String>> additionalParameters) {
+        this(preparePostgresVersion(), additionalParameters);
+    }
+
+    public PostgreSqlContainerWrapper(@Nonnull final String pgVersion, @Nonnull final List<Pair<String, String>> additionalParameters) {
         this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres").withTag(pgVersion))
-                .withSharedMemorySize(MemoryUnit.MB.convertToBytes(512))
+                .withSharedMemorySize(512L * 1024L * 1024L)
                 .withTmpFs(Collections.singletonMap("/var/lib/postgresql/data", "rw"))
                 .withCommand(prepareCommandParts(additionalParameters));
         this.container.start();
