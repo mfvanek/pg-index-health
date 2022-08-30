@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.checks.cluster.ColumnsWithJsonTypeCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.ColumnsWithSerialTypesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ColumnsWithoutDescriptionCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.DuplicatedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ForeignKeysNotCoveredWithIndexCheckOnCluster;
@@ -32,7 +33,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
-@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
 @ThreadSafe
 public class DatabaseChecks {
 
@@ -52,7 +53,8 @@ public class DatabaseChecks {
                     new UnusedIndexesCheckOnCluster(haPgConnection),
                     new TablesWithoutDescriptionCheckOnCluster(haPgConnection),
                     new ColumnsWithoutDescriptionCheckOnCluster(haPgConnection),
-                    new ColumnsWithJsonTypeCheckOnCluster(haPgConnection))
+                    new ColumnsWithJsonTypeCheckOnCluster(haPgConnection),
+                    new ColumnsWithSerialTypesCheckOnCluster(haPgConnection))
                 .forEach(check -> checks.putIfAbsent(check.getDiagnostic(), check));
     }
 

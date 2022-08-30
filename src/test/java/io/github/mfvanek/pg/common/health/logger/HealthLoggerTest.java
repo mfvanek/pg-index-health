@@ -65,7 +65,8 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                         .withTableWithoutPrimaryKey()
                         .withDuplicatedIndex()
                         .withNonSuitableIndex()
-                        .withJsonType(),
+                        .withJsonType()
+                        .withSerialType(),
                 ctx -> {
                     collectStatistics(schemaName);
                     assertThat(logger.logAll(Exclusions.empty(), ctx))
@@ -81,9 +82,10 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tintersected_indexes\t5",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tunused_indexes\t7",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t0",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_description\t3",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_without_description\t13",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_json_type\t1");
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_description\t4",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_without_description\t17",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_json_type\t1",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_serial_types\t2");
                 });
     }
 
