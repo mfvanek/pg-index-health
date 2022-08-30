@@ -68,7 +68,7 @@ class ColumnWithSerialTypeTest {
     @Test
     void toStringTest() {
         assertThat(prepare())
-                .hasToString("ColumnWithSerialType{column=Column{tableName='t1', columnName='c1', notNull=true}, serialType=SerialType{pgTypeName='serial'}, sequenceName='s1'}");
+                .hasToString("ColumnWithSerialType{column=Column{tableName='t1', columnName='c1', notNull=true}, serialType=SerialType{columnType='serial'}, sequenceName='s1'}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -76,10 +76,10 @@ class ColumnWithSerialTypeTest {
     void testEqualsAndHashCode() {
         final ColumnWithSerialType first = prepare();
         final ColumnWithSerialType theSame = prepare();
-        final ColumnWithSerialType theSameButNullable = ColumnWithSerialType.of(Column.ofNullable("t1", "c1"), SerialType.SERIAL, "s1");
-        final ColumnWithSerialType second = ColumnWithSerialType.of(Column.ofNotNull("t1", "c2"), SerialType.SERIAL, "s1");
-        final ColumnWithSerialType third = ColumnWithSerialType.of(Column.ofNotNull("t1", "c1"), SerialType.SMALL_SERIAL, "s1");
-        final ColumnWithSerialType forth = ColumnWithSerialType.of(Column.ofNotNull("t1", "c1"), SerialType.SERIAL, "s2");
+        final ColumnWithSerialType theSameButNullable = ColumnWithSerialType.ofSerial(Column.ofNullable("t1", "c1"), "s1");
+        final ColumnWithSerialType second = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c2"), "s1");
+        final ColumnWithSerialType third = ColumnWithSerialType.ofSmallSerial(Column.ofNotNull("t1", "c1"), "s1");
+        final ColumnWithSerialType forth = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c1"), "s2");
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -125,10 +125,10 @@ class ColumnWithSerialTypeTest {
     void compareToTest() {
         final ColumnWithSerialType first = prepare();
         final ColumnWithSerialType theSame = prepare();
-        final ColumnWithSerialType theSameButNullable = ColumnWithSerialType.of(Column.ofNullable("t1", "c1"), SerialType.SERIAL, "s1");
-        final ColumnWithSerialType second = ColumnWithSerialType.of(Column.ofNotNull("t1", "c1"), SerialType.SMALL_SERIAL, "s1");
-        final ColumnWithSerialType third = ColumnWithSerialType.of(Column.ofNotNull("t1", "c1"), SerialType.BIG_SERIAL, "s1");
-        final ColumnWithSerialType forth = ColumnWithSerialType.of(Column.ofNotNull("t1", "c2"), SerialType.SERIAL, "s2");
+        final ColumnWithSerialType theSameButNullable = ColumnWithSerialType.ofSerial(Column.ofNullable("t1", "c1"), "s1");
+        final ColumnWithSerialType second = ColumnWithSerialType.ofSmallSerial(Column.ofNotNull("t1", "c1"), "s1");
+        final ColumnWithSerialType third = ColumnWithSerialType.ofBigSerial(Column.ofNotNull("t1", "c1"), "s1");
+        final ColumnWithSerialType forth = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c2"), "s2");
 
         //noinspection ResultOfMethodCallIgnored,ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
@@ -159,6 +159,6 @@ class ColumnWithSerialTypeTest {
 
     @Nonnull
     private static ColumnWithSerialType prepare() {
-        return ColumnWithSerialType.of(Column.ofNotNull("t1", "c1"), SerialType.SERIAL, "s1");
+        return ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c1"), "s1");
     }
 }

@@ -20,8 +20,8 @@ import javax.annotation.concurrent.Immutable;
  * A representation of column with serial type in database table.
  *
  * @author Ivan Vakhrushev
- * @since 0.6.2
  * @see SerialType
+ * @since 0.6.2
  */
 @Immutable
 public class ColumnWithSerialType implements ColumnNameAware, Comparable<ColumnWithSerialType> {
@@ -142,5 +142,23 @@ public class ColumnWithSerialType implements ColumnNameAware, Comparable<ColumnW
                                           @Nonnull final SerialType serialType,
                                           @Nonnull final String sequenceName) {
         return new ColumnWithSerialType(column, serialType, sequenceName);
+    }
+
+    @Nonnull
+    public static ColumnWithSerialType ofBigSerial(@Nonnull final Column column,
+                                                   @Nonnull final String sequenceName) {
+        return of(column, SerialType.BIG_SERIAL, sequenceName);
+    }
+
+    @Nonnull
+    public static ColumnWithSerialType ofSerial(@Nonnull final Column column,
+                                                @Nonnull final String sequenceName) {
+        return of(column, SerialType.SERIAL, sequenceName);
+    }
+
+    @Nonnull
+    public static ColumnWithSerialType ofSmallSerial(@Nonnull final Column column,
+                                                     @Nonnull final String sequenceName) {
+        return of(column, SerialType.SMALL_SERIAL, sequenceName);
     }
 }

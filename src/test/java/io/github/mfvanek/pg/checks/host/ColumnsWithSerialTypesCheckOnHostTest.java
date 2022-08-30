@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.Column;
 import io.github.mfvanek.pg.model.table.ColumnWithSerialType;
-import io.github.mfvanek.pg.model.table.SerialType;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.DatabasePopulator;
 import org.junit.jupiter.api.Test;
@@ -45,20 +44,23 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                         .executing(ctx)
                         .hasSize(2)
                         .containsExactly(
-                                ColumnWithSerialType.of(
-                                        Column.ofNullable(ctx.enrichWithSchema("bad_accounts"), "real_account_id"), SerialType.BIG_SERIAL, ""),
-                                ColumnWithSerialType.of(
-                                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), SerialType.BIG_SERIAL, "")
+                                ColumnWithSerialType.ofBigSerial(
+                                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_account_id"), String.format("%s.bad_accounts_real_account_id_seq", schemaName)),
+                                ColumnWithSerialType.ofBigSerial(
+                                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), String.format("%s.bad_accounts_real_client_id_seq", schemaName))
                         ));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldIgnoreDroppedColumns(final String schemaName) {
-        // withData - skipped here below
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withSerialType().withDroppedInfoColumn(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withSerialType().withDroppedSerialColumn(), ctx ->
                 assertThat(check)
                         .executing(ctx)
-                        .isEmpty());
+                        .hasSize(1)
+                        .containsExactly(
+                                ColumnWithSerialType.ofBigSerial(
+                                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), String.format("%s.bad_accounts_real_client_id_seq", schemaName))
+                        ));
     }
 }

@@ -180,14 +180,20 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     @Nonnull
+    public DatabasePopulator withDroppedInfoColumn() {
+        statementsToExecuteInSameTransaction.putIfAbsent(70, new DropColumnStatement(schemaName, "clients", "info"));
+        return this;
+    }
+
+    @Nonnull
     public DatabasePopulator withSerialType() {
         statementsToExecuteInSameTransaction.putIfAbsent(75, new CreateTableWithColumnOfBigSerialTypeStatement(schemaName));
         return this;
     }
 
     @Nonnull
-    public DatabasePopulator withDroppedInfoColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(70, new DropColumnStatement(schemaName, "clients", "info"));
+    public DatabasePopulator withDroppedSerialColumn() {
+        statementsToExecuteInSameTransaction.putIfAbsent(76, new DropColumnStatement(schemaName, "bad_accounts", "real_account_id"));
         return this;
     }
 
