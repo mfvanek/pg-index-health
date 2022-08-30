@@ -27,7 +27,8 @@ public enum SimpleLoggingKey implements LoggingKey {
     BLOATED_TABLES("tables_with_bloat"),
     TABLES_WITHOUT_DESCRIPTION("tables_without_description"),
     COLUMNS_WITHOUT_DESCRIPTION("columns_without_description"),
-    COLUMNS_WITH_JSON_TYPE("columns_with_json_type");
+    COLUMNS_WITH_JSON_TYPE("columns_with_json_type"),
+    COLUMNS_WITH_SERIAL_TYPES("columns_with_serial_types");
 
     private final String subKeyName;
 

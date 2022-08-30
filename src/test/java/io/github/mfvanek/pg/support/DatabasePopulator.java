@@ -29,6 +29,7 @@ import io.github.mfvanek.pg.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.support.statements.CreateSuitableIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
 import io.github.mfvanek.pg.support.statements.CreateTableWithoutPrimaryKeyStatement;
 import io.github.mfvanek.pg.support.statements.DbStatement;
 import io.github.mfvanek.pg.support.statements.DropColumnStatement;
@@ -175,6 +176,12 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withJsonType() {
         statementsToExecuteInSameTransaction.putIfAbsent(25, new ConvertColumnToJsonTypeStatement(schemaName));
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withSerialType() {
+        statementsToExecuteInSameTransaction.putIfAbsent(75, new CreateTableWithColumnOfBigSerialTypeStatement(schemaName));
         return this;
     }
 

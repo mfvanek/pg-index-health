@@ -31,6 +31,7 @@ import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.table.Column;
+import io.github.mfvanek.pg.model.table.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
@@ -91,6 +92,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         logResult.add(logTablesWithoutDescription(databaseChecks, pgContext));
         logResult.add(logColumnsWithoutDescription(databaseChecks, pgContext));
         logResult.add(logColumnsWithJsonType(databaseChecks, pgContext));
+        logResult.add(logColumnsWithSerialTypes(databaseChecks, pgContext));
         return logResult;
     }
 
@@ -203,6 +205,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                           @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.COLUMNS_WITH_JSON_TYPE, Column.class),
                 c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITH_JSON_TYPE);
+    }
+
+    @Nonnull
+    private String logColumnsWithSerialTypes(@Nonnull final DatabaseChecks databaseChecks,
+                                             @Nonnull final PgContext pgContext) {
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.COLUMNS_WITH_SERIAL_TYPES, ColumnWithSerialType.class),
+                c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITH_SERIAL_TYPES);
     }
 
     @Nonnull

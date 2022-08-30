@@ -17,10 +17,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * A representation of column in database table.
+ * A representation of column with serial type in database table.
  *
  * @author Ivan Vakhrushev
  * @since 0.6.2
+ * @see SerialType
  */
 @Immutable
 public class ColumnWithSerialType implements ColumnNameAware, Comparable<ColumnWithSerialType> {
@@ -131,7 +132,7 @@ public class ColumnWithSerialType implements ColumnNameAware, Comparable<ColumnW
             return column.compareTo(other.column);
         }
         if (!serialType.equals(other.serialType)) {
-            return serialType.getPgTypeName().compareTo(other.serialType.getPgTypeName());
+            return serialType.compareTo(other.serialType);
         }
         return sequenceName.compareTo(other.sequenceName);
     }

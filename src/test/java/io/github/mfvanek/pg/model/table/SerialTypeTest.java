@@ -26,9 +26,9 @@ class SerialTypeTest {
     void allPgTypeNamesShouldBeUnique() {
         final Set<String> types = new HashSet<>();
         for (final SerialType serialType : SerialType.values()) {
-            assertThat(serialType.getPgTypeName())
+            assertThat(serialType.getColumnType())
                     .isNotBlank();
-            types.add(serialType.getPgTypeName());
+            types.add(serialType.getColumnType());
         }
         assertThat(types)
                 .hasSameSizeAs(SerialType.values());
@@ -37,11 +37,11 @@ class SerialTypeTest {
     @Test
     void toStringTest() {
         assertThat(SerialType.SMALL_SERIAL)
-                .hasToString("SerialType{pgTypeName='smallserial'}");
+                .hasToString("SerialType{columnType='smallserial'}");
         assertThat(SerialType.SERIAL)
-                .hasToString("SerialType{pgTypeName='serial'}");
+                .hasToString("SerialType{columnType='serial'}");
         assertThat(SerialType.BIG_SERIAL)
-                .hasToString("SerialType{pgTypeName='bigserial'}");
+                .hasToString("SerialType{columnType='bigserial'}");
     }
 
     @Test
@@ -57,10 +57,10 @@ class SerialTypeTest {
     void creationFromStringShouldThrowExceptionWhenNotFound() {
         assertThatThrownBy(() -> SerialType.valueFrom(null))
                 .isInstanceOf(NullPointerException.class)
-                .hasMessage("pgType cannot be null");
+                .hasMessage("pgColumnType cannot be null");
         assertThatThrownBy(() -> SerialType.valueFrom(""))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("pgType = ''");
+                .hasMessage("pgColumnType = ''");
 
         assertThatThrownBy(() -> SerialType.valueOf(null))
                 .isInstanceOf(NullPointerException.class)

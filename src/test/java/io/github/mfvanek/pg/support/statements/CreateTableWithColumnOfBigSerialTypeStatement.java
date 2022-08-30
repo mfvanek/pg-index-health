@@ -14,18 +14,19 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.annotation.Nonnull;
 
-public class CreateTableWithoutPrimaryKeyStatement extends AbstractDbStatement {
+public class CreateTableWithColumnOfBigSerialTypeStatement extends AbstractDbStatement {
 
-    public CreateTableWithoutPrimaryKeyStatement(@Nonnull final String schemaName) {
+    public CreateTableWithColumnOfBigSerialTypeStatement(@Nonnull final String schemaName) {
         super(schemaName);
     }
 
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("create table if not exists %s.bad_clients (" +
-                "id bigint not null, " +
+        statement.execute(String.format("create table if not exists %s.bad_accounts (" +
+                "id bigserial not null primary key, " +
                 "name varchar(255) not null," +
-                "real_client_id bigint)", schemaName));
-        throwExceptionIfTableDoesNotExist(statement, "bad_clients");
+                "real_client_id bigserial not null," +
+                "real_account_id bigserial)", schemaName));
+        throwExceptionIfTableDoesNotExist(statement, "bad_accounts");
     }
 }

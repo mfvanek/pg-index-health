@@ -33,34 +33,34 @@ public enum SerialType {
 
     static {
         for (final SerialType serialType : values()) {
-            VALUES.put(serialType.pgTypeName, serialType);
+            VALUES.put(serialType.columnType, serialType);
         }
     }
 
-    private final String pgTypeName;
+    private final String columnType;
 
-    SerialType(@Nonnull final String pgTypeName) {
-        this.pgTypeName = Objects.requireNonNull(pgTypeName);
+    SerialType(@Nonnull final String columnType) {
+        this.columnType = Objects.requireNonNull(columnType);
     }
 
     @Nonnull
-    public String getPgTypeName() {
-        return pgTypeName;
+    public String getColumnType() {
+        return columnType;
     }
 
     @Override
     public String toString() {
         return SerialType.class.getSimpleName() + '{' +
-                "pgTypeName='" + pgTypeName + '\'' +
+                "columnType='" + columnType + '\'' +
                 '}';
     }
 
     @Nonnull
-    public static SerialType valueFrom(@Nonnull final String pgType) {
-        Objects.requireNonNull(pgType, "pgType cannot be null");
-        final SerialType serialType = VALUES.get(pgType);
+    public static SerialType valueFrom(@Nonnull final String pgColumnType) {
+        Objects.requireNonNull(pgColumnType, "pgColumnType cannot be null");
+        final SerialType serialType = VALUES.get(pgColumnType);
         if (serialType == null) {
-            throw new IllegalArgumentException(String.format("pgType = '%s'", pgType));
+            throw new IllegalArgumentException(String.format("pgColumnType = '%s'", pgColumnType));
         }
         return serialType;
     }
