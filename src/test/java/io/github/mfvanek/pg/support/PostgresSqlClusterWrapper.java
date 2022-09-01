@@ -27,14 +27,13 @@ import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 /**
- * This wrapper provide two postgres containers as HA cluster with repmgr configured.
- * Primary and secondary nodes would be named pg-0, pg-1 correspondingly.
+ * This wrapper provides postgres containers as part of HA cluster with repmgr configured.
  * <p>
  * If master goes down, repmgr will ensure any of the standby nodes takes the primary role.
  *
  * @author Alexey Antipin
+ * @since 0.6.2
  */
-
 final class PostgresSqlClusterWrapper {
 
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
@@ -43,11 +42,11 @@ final class PostgresSqlClusterWrapper {
     private static final String STANDBY_ALIAS = "pg-1";
 
     private final Network network;
-    private final JdbcDatabaseContainer<?> containerOne;
-    private final JdbcDatabaseContainer<?> containerTwo;
+    private final JdbcDatabaseContainer<?> containerForPrimary;
+    private final JdbcDatabaseContainer<?> containerForStandBy;
 
-    private final DataSource dataSourceOne;
-    private final DataSource dataSourceTwo;
+    private final DataSource dataSourceForPrimary;
+    private final DataSource dataSourceForStandBy;
 
     PostgresSqlClusterWrapper() {
         this.network = Network.newNetwork();
@@ -56,43 +55,43 @@ final class PostgresSqlClusterWrapper {
                 .withStartupTimeout(Duration.ofSeconds(30));
 
         // Primary node
-        this.containerOne = createContainerAndInitWith(this::primaryEnvVarsMap, PRIMARY_ALIAS, waitStrategy);
+        this.containerForPrimary = createContainerAndInitWith(this::primaryEnvVarsMap, PRIMARY_ALIAS, waitStrategy);
         // Standby node
-        this.containerTwo = createContainerAndInitWith(this::standbyEnvVarsMap, STANDBY_ALIAS, waitStrategy);
+        this.containerForStandBy = createContainerAndInitWith(this::standbyEnvVarsMap, STANDBY_ALIAS, waitStrategy);
 
-        this.containerOne.start();
-        this.containerTwo.start();
+        this.containerForPrimary.start();
+        this.containerForStandBy.start();
 
-        this.dataSourceOne = buildPrimaryDatasource();
-        this.dataSourceTwo = buildStandByDatasource();
+        this.dataSourceForPrimary = buildPrimaryDatasource();
+        this.dataSourceForStandBy = buildStandByDatasource();
     }
 
     @Nonnull
-    public DataSource getDataSourceOne() {
+    public DataSource getDataSourceForPrimary() {
         throwErrorIfNotInitialized();
-        return dataSourceOne;
+        return dataSourceForPrimary;
     }
 
     @Nonnull
-    public DataSource getDataSourceTwo() {
+    public DataSource getDataSourceForStandBy() {
         throwErrorIfNotInitialized();
-        return dataSourceTwo;
+        return dataSourceForStandBy;
     }
 
     @Nonnull
     public String getFirstContainerJdbcUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://%s:%d/%s", PRIMARY_ALIAS, containerOne.getFirstMappedPort(), containerOne.getDatabaseName());
+        return String.format("jdbc:postgresql://%s:%d/%s", PRIMARY_ALIAS, containerForPrimary.getFirstMappedPort(), containerForPrimary.getDatabaseName());
     }
 
     @Nonnull
     public String getSecondContainerJdbcUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://%s:%d/%s", STANDBY_ALIAS, containerTwo.getFirstMappedPort(), containerTwo.getDatabaseName());
+        return String.format("jdbc:postgresql://%s:%d/%s", STANDBY_ALIAS, containerForStandBy.getFirstMappedPort(), containerForStandBy.getDatabaseName());
     }
 
     public void stopFirstContainer() {
-        containerOne.stop();
+        containerForPrimary.stop();
     }
 
     @Nonnull
@@ -132,20 +131,20 @@ final class PostgresSqlClusterWrapper {
     @Nonnull
     private BasicDataSource buildPrimaryDatasource() {
         final BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl(containerOne.getJdbcUrl());
-        basicDataSource.setUsername(containerOne.getUsername());
-        basicDataSource.setPassword(containerOne.getPassword());
-        basicDataSource.setDriverClassName(containerOne.getDriverClassName());
+        basicDataSource.setUrl(containerForPrimary.getJdbcUrl());
+        basicDataSource.setUsername(containerForPrimary.getUsername());
+        basicDataSource.setPassword(containerForPrimary.getPassword());
+        basicDataSource.setDriverClassName(containerForPrimary.getDriverClassName());
         return basicDataSource;
     }
 
     @Nonnull
     private BasicDataSource buildStandByDatasource() {
         final BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl(containerTwo.getJdbcUrl());
-        basicDataSource.setUsername(containerTwo.getUsername());
-        basicDataSource.setPassword(containerTwo.getPassword());
-        basicDataSource.setDriverClassName(containerTwo.getDriverClassName());
+        basicDataSource.setUrl(containerForStandBy.getJdbcUrl());
+        basicDataSource.setUsername(containerForStandBy.getUsername());
+        basicDataSource.setPassword(containerForStandBy.getPassword());
+        basicDataSource.setDriverClassName(containerForStandBy.getDriverClassName());
         return basicDataSource;
     }
 
@@ -167,10 +166,8 @@ final class PostgresSqlClusterWrapper {
     }
 
     private void throwErrorIfNotInitialized() {
-        if (containerOne == null || dataSourceOne == null || containerTwo == null || dataSourceTwo == null) {
+        if (containerForPrimary == null || dataSourceForPrimary == null || containerForStandBy == null || dataSourceForStandBy == null) {
             throw new AssertionError("not initialized");
         }
     }
-
 }
-

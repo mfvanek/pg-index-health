@@ -17,6 +17,13 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Bitnami container with repmgr. Should be configured via environment variables as said in bitnami image documentation
+ * <a href="https://github.com/bitnami/containers/tree/main/bitnami/postgresql-repmgr#setting-up-a-ha-postgresql-cluster-with-streaming-replication-and-repmgr">here</a>.
+ *
+ * @author Alexey Antipin
+ * @since 0.6.2
+ */
 public class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitnamiRepmgrContainer> {
 
     public static final Integer POSTGRESQL_PORT = 5432;
@@ -97,4 +104,3 @@ public class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<Postgr
         return Objects.hash(super.hashCode(), envVars);
     }
 }
-

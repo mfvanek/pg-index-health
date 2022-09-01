@@ -16,21 +16,27 @@ import io.github.mfvanek.pg.connection.PgHostImpl;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Provides access to HA postgresql cluster nodes.
+ *
+ * @author Alexey Antipin
+ * @since 0.6.2
+ */
 public abstract class ClusterAwareTestBase {
+
     private static final PostgresSqlClusterWrapper POSTGRES_CLUSTER = new PostgresSqlClusterWrapper();
 
     @Nonnull
     protected PgConnection getFirstPgConnection() {
-        return PgConnectionImpl.of(POSTGRES_CLUSTER.getDataSourceOne(), PgHostImpl.ofUrl(POSTGRES_CLUSTER.getFirstContainerJdbcUrl()));
+        return PgConnectionImpl.of(POSTGRES_CLUSTER.getDataSourceForPrimary(), PgHostImpl.ofUrl(POSTGRES_CLUSTER.getFirstContainerJdbcUrl()));
     }
 
     @Nonnull
     protected PgConnection getSecondPgConnection() {
-        return PgConnectionImpl.of(POSTGRES_CLUSTER.getDataSourceTwo(), PgHostImpl.ofUrl(POSTGRES_CLUSTER.getSecondContainerJdbcUrl()));
+        return PgConnectionImpl.of(POSTGRES_CLUSTER.getDataSourceForStandBy(), PgHostImpl.ofUrl(POSTGRES_CLUSTER.getSecondContainerJdbcUrl()));
     }
 
     protected void stopFirstContainer() {
         POSTGRES_CLUSTER.stopFirstContainer();
     }
-
 }

@@ -18,6 +18,12 @@ import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Primary host determiner tests on cluster.
+ *
+ * @author Alexey Antipin
+ * @since 0.6.2
+ */
 class PrimaryHostDeterminerClusterTest extends ClusterAwareTestBase {
 
     private final PrimaryHostDeterminer primaryHostDeterminer = new PrimaryHostDeterminerImpl();
@@ -49,5 +55,4 @@ class PrimaryHostDeterminerClusterTest extends ClusterAwareTestBase {
                 .as("Second connection is primary")
                 .isTrue();
     }
-
 }
