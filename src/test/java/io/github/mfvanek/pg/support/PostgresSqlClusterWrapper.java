@@ -36,7 +36,7 @@ import javax.sql.DataSource;
 final class PostgresSqlClusterWrapper {
 
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
-    private static final String IMAGE_TAG = "14";
+    private static final String IMAGE_TAG = preparePostgresBitnamiVersion();
     private static final String PRIMARY_ALIAS = "pg-0";
     private static final String STANDBY_ALIAS = "pg-1";
 
@@ -148,6 +148,16 @@ final class PostgresSqlClusterWrapper {
         container.withSharedMemorySize(MemoryUnit.MB.convertToBytes(512));
         container.withTmpFs(Collections.singletonMap("/var/lib/postgresql/data", "rw"));
         return container;
+    }
+
+    @Nonnull
+    private static String preparePostgresBitnamiVersion() {
+        // Bitnami images use semantic versioning with three digits
+        final String pgVersion = System.getenv("TEST_PG_VERSION");
+        if (pgVersion != null) {
+            return pgVersion + ".0";
+        }
+        return "14.5.0";
     }
 
     private void throwErrorIfNotInitialized() {
