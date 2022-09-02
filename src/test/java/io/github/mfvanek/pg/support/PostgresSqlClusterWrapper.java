@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
@@ -62,8 +61,8 @@ final class PostgresSqlClusterWrapper {
         this.containerForPrimary.start();
         this.containerForStandBy.start();
 
-        this.dataSourceForPrimary = buildPrimaryDatasource();
-        this.dataSourceForStandBy = buildStandByDatasource();
+        this.dataSourceForPrimary = PostgreSqlDataSourceHelper.buildDataSource(containerForPrimary);
+        this.dataSourceForStandBy = PostgreSqlDataSourceHelper.buildDataSource(containerForStandBy);
     }
 
     @Nonnull
@@ -126,26 +125,6 @@ final class PostgresSqlClusterWrapper {
         envVarsMap.put("REPMGR_NODE_NETWORK_NAME", STANDBY_ALIAS);
         envVarsMap.put("REPMGR_PORT_NUMBER", "5432");
         return envVarsMap;
-    }
-
-    @Nonnull
-    private BasicDataSource buildPrimaryDatasource() {
-        final BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl(containerForPrimary.getJdbcUrl());
-        basicDataSource.setUsername(containerForPrimary.getUsername());
-        basicDataSource.setPassword(containerForPrimary.getPassword());
-        basicDataSource.setDriverClassName(containerForPrimary.getDriverClassName());
-        return basicDataSource;
-    }
-
-    @Nonnull
-    private BasicDataSource buildStandByDatasource() {
-        final BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl(containerForStandBy.getJdbcUrl());
-        basicDataSource.setUsername(containerForStandBy.getUsername());
-        basicDataSource.setPassword(containerForStandBy.getPassword());
-        basicDataSource.setDriverClassName(containerForStandBy.getDriverClassName());
-        return basicDataSource;
     }
 
     @Nonnull
