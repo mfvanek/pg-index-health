@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -35,7 +34,7 @@ final class PostgreSqlContainerWrapper {
                 .withTmpFs(Collections.singletonMap("/var/lib/postgresql/data", "rw"))
                 .withCommand(prepareCommandParts(additionalParameters));
         this.container.start();
-        this.dataSource = buildDataSource();
+        this.dataSource = PostgreSqlDataSourceHelper.buildDataSource(container);
     }
 
     @Nonnull
@@ -73,15 +72,5 @@ final class PostgreSqlContainerWrapper {
     @Nonnull
     public String getPassword() {
         return container.getPassword();
-    }
-
-    @Nonnull
-    private DataSource buildDataSource() {
-        final BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl(container.getJdbcUrl());
-        basicDataSource.setUsername(container.getUsername());
-        basicDataSource.setPassword(container.getPassword());
-        basicDataSource.setDriverClassName(container.getDriverClassName());
-        return basicDataSource;
     }
 }
