@@ -107,6 +107,9 @@ final class PostgresSqlClusterWrapper {
         envVarsMap.put("REPMGR_NODE_NAME", PRIMARY_ALIAS);
         envVarsMap.put("REPMGR_NODE_NETWORK_NAME", PRIMARY_ALIAS);
         envVarsMap.put("REPMGR_PORT_NUMBER", "5432");
+        envVarsMap.put("REPMGR_CONNECT_TIMEOUT", "1");
+        envVarsMap.put("REPMGR_RECONNECT_ATTEMPTS", "1");
+        envVarsMap.put("REPMGR_RECONNECT_INTERVAL", "1");
         return envVarsMap;
     }
 
@@ -124,6 +127,9 @@ final class PostgresSqlClusterWrapper {
         envVarsMap.put("REPMGR_NODE_NAME", STANDBY_ALIAS);
         envVarsMap.put("REPMGR_NODE_NETWORK_NAME", STANDBY_ALIAS);
         envVarsMap.put("REPMGR_PORT_NUMBER", "5432");
+        envVarsMap.put("REPMGR_CONNECT_TIMEOUT", "1");
+        envVarsMap.put("REPMGR_RECONNECT_ATTEMPTS", "1");
+        envVarsMap.put("REPMGR_RECONNECT_INTERVAL", "1");
         return envVarsMap;
     }
 

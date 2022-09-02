@@ -45,8 +45,7 @@ class PrimaryHostDeterminerClusterTest extends ClusterAwareTestBase {
 
         Awaitility
                 .await()
-                .atLeast(Duration.ofSeconds(5))
-                .atMost(Duration.ofSeconds(25))
+                .atMost(Duration.ofSeconds(120)) // on some systems promoting to primary could take up to minute and even more
                 .with()
                 .pollInterval(Duration.ofSeconds(2))
                 .until(() -> primaryHostDeterminer.isPrimary(secondConnection));
