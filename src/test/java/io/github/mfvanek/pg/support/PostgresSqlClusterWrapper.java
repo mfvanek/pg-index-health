@@ -103,10 +103,12 @@ final class PostgresSqlClusterWrapper {
         containerForPrimary.stop();
         LOGGER.info("Waiting for standby will be promoted to primary");
         Awaitility.await("Promoting standby to primary")
-                .atMost(Duration.ofSeconds(10L))
+                .atMost(Duration.ofSeconds(100L))
+                .pollInterval(Duration.ofSeconds(1L))
                 .until(() -> containerForStandBy.getLogs().contains("promoting standby to primary"));
         Awaitility.await("Standby promoted to primary")
-                .atMost(Duration.ofSeconds(60L))
+                .atMost(Duration.ofSeconds(100L))
+                .pollInterval(Duration.ofSeconds(1L))
                 .until(() -> containerForStandBy.getLogs().contains("standby promoted to primary after"));
     }
 
