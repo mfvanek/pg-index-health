@@ -11,6 +11,9 @@
 package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
+import org.awaitility.Awaitility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
@@ -35,6 +38,7 @@ import javax.sql.DataSource;
  */
 final class PostgresSqlClusterWrapper {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PostgresSqlClusterWrapper.class);
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final String IMAGE_TAG = preparePostgresBitnamiVersion();
     private static final String PRIMARY_ALIAS = "pg-0";
@@ -50,7 +54,7 @@ final class PostgresSqlClusterWrapper {
     PostgresSqlClusterWrapper() {
         this.network = Network.newNetwork();
         final WaitStrategy waitStrategy = new LogMessageWaitStrategy()
-                .withRegEx(".*server started.*\\s")
+                .withRegEx(".*Starting repmgrd.*\\s")
                 .withStartupTimeout(Duration.ofSeconds(30));
 
         // Primary node
@@ -63,6 +67,12 @@ final class PostgresSqlClusterWrapper {
 
         this.dataSourceForPrimary = PostgreSqlDataSourceHelper.buildDataSource(containerForPrimary);
         this.dataSourceForStandBy = PostgreSqlDataSourceHelper.buildDataSource(containerForStandBy);
+
+        Awaitility.await("Waiting for standby starts replicating data from primary")
+                .pollDelay(Duration.ofMillis(500L))
+                .pollInterval(Duration.ofMillis(200L))
+                .atMost(Duration.ofSeconds(2L))
+                .until(() -> containerForStandBy.getLogs().contains("starting monitoring of node"));
     }
 
     @Nonnull
@@ -91,6 +101,13 @@ final class PostgresSqlClusterWrapper {
 
     public void stopFirstContainer() {
         containerForPrimary.stop();
+        LOGGER.info("Waiting for standby will be promoted to primary");
+        Awaitility.await("Promoting standby to primary")
+                .atMost(Duration.ofSeconds(10L))
+                .until(() -> containerForStandBy.getLogs().contains("promoting standby to primary"));
+        Awaitility.await("Standby promoted to primary")
+                .atMost(Duration.ofSeconds(60L))
+                .until(() -> containerForStandBy.getLogs().contains("standby promoted to primary after"));
     }
 
     @Nonnull

@@ -44,7 +44,7 @@ class PrimaryHostDeterminerClusterTest extends ClusterAwareTestBase {
         stopFirstContainer();
 
         Awaitility
-                .await()
+                .await("Second node becomes primary")
                 .atMost(Duration.ofSeconds(120)) // on some systems promoting to primary could take up to minute and even more
                 .with()
                 .pollInterval(Duration.ofSeconds(2))
