@@ -53,26 +53,22 @@ final class PostgresSqlClusterWrapper {
 
     PostgresSqlClusterWrapper() {
         this.network = Network.newNetwork();
-        final WaitStrategy waitStrategy = new LogMessageWaitStrategy()
+        // Primary node
+        final WaitStrategy waitStrategyForPrimary = new LogMessageWaitStrategy()
                 .withRegEx(".*Starting repmgrd.*\\s")
                 .withStartupTimeout(Duration.ofSeconds(30));
-
-        // Primary node
-        this.containerForPrimary = createContainerAndInitWith(this::primaryEnvVarsMap, PRIMARY_ALIAS, waitStrategy);
+        this.containerForPrimary = createContainerAndInitWith(this::primaryEnvVarsMap, PRIMARY_ALIAS, waitStrategyForPrimary);
         // Standby node
-        this.containerForStandBy = createContainerAndInitWith(this::standbyEnvVarsMap, STANDBY_ALIAS, waitStrategy);
+        final WaitStrategy waitStrategyForStandBy = new LogMessageWaitStrategy()
+                .withRegEx(".*starting monitoring of node.*\\s")
+                .withStartupTimeout(Duration.ofSeconds(30));
+        this.containerForStandBy = createContainerAndInitWith(this::standbyEnvVarsMap, STANDBY_ALIAS, waitStrategyForStandBy);
 
         this.containerForPrimary.start();
         this.containerForStandBy.start();
 
         this.dataSourceForPrimary = PostgreSqlDataSourceHelper.buildDataSource(containerForPrimary);
         this.dataSourceForStandBy = PostgreSqlDataSourceHelper.buildDataSource(containerForStandBy);
-
-        Awaitility.await("Waiting for standby starts replicating data from primary")
-                .pollDelay(Duration.ofMillis(500L))
-                .pollInterval(Duration.ofMillis(200L))
-                .atMost(Duration.ofSeconds(2L))
-                .until(() -> containerForStandBy.getLogs().contains("starting monitoring of node"));
     }
 
     @Nonnull
