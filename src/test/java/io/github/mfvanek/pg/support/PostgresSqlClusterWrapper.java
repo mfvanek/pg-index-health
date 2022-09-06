@@ -11,6 +11,9 @@
 package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
+import org.awaitility.Awaitility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
@@ -35,6 +38,7 @@ import javax.sql.DataSource;
  */
 final class PostgresSqlClusterWrapper {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PostgresSqlClusterWrapper.class);
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final String IMAGE_TAG = preparePostgresBitnamiVersion();
     private static final String PRIMARY_ALIAS = "pg-0";
@@ -49,14 +53,16 @@ final class PostgresSqlClusterWrapper {
 
     PostgresSqlClusterWrapper() {
         this.network = Network.newNetwork();
-        final WaitStrategy waitStrategy = new LogMessageWaitStrategy()
-                .withRegEx(".*server started.*\\s")
-                .withStartupTimeout(Duration.ofSeconds(30));
-
         // Primary node
-        this.containerForPrimary = createContainerAndInitWith(this::primaryEnvVarsMap, PRIMARY_ALIAS, waitStrategy);
+        final WaitStrategy waitStrategyForPrimary = new LogMessageWaitStrategy()
+                .withRegEx(".*Starting repmgrd.*\\s")
+                .withStartupTimeout(Duration.ofSeconds(30));
+        this.containerForPrimary = createContainerAndInitWith(this::primaryEnvVarsMap, PRIMARY_ALIAS, waitStrategyForPrimary);
         // Standby node
-        this.containerForStandBy = createContainerAndInitWith(this::standbyEnvVarsMap, STANDBY_ALIAS, waitStrategy);
+        final WaitStrategy waitStrategyForStandBy = new LogMessageWaitStrategy()
+                .withRegEx(".*starting monitoring of node.*\\s")
+                .withStartupTimeout(Duration.ofSeconds(30));
+        this.containerForStandBy = createContainerAndInitWith(this::standbyEnvVarsMap, STANDBY_ALIAS, waitStrategyForStandBy);
 
         this.containerForPrimary.start();
         this.containerForStandBy.start();
@@ -91,6 +97,15 @@ final class PostgresSqlClusterWrapper {
 
     public void stopFirstContainer() {
         containerForPrimary.stop();
+        LOGGER.info("Waiting for standby will be promoted to primary");
+        Awaitility.await("Promoting standby to primary")
+                .atMost(Duration.ofSeconds(100L))
+                .pollInterval(Duration.ofSeconds(1L))
+                .until(() -> containerForStandBy.getLogs().contains("promoting standby to primary"));
+        Awaitility.await("Standby promoted to primary")
+                .atMost(Duration.ofSeconds(100L))
+                .pollInterval(Duration.ofSeconds(1L))
+                .until(() -> containerForStandBy.getLogs().contains("standby promoted to primary after"));
     }
 
     @Nonnull
