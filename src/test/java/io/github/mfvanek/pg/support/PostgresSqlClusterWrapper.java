@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -41,8 +42,10 @@ final class PostgresSqlClusterWrapper {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostgresSqlClusterWrapper.class);
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final String IMAGE_TAG = preparePostgresBitnamiVersion();
-    private static final String PRIMARY_ALIAS = "pg-0";
-    private static final String STANDBY_ALIAS = "pg-1";
+    // REPMGR_NODE_NAME must end with a number, so aliases must also
+    // To avoid a ConflictException when starting the container, aliases must be unique if there is more than one instance of PostgresSqlClusterWrapper
+    private static final String PRIMARY_ALIAS = String.format("pg-%s-0", UUID.randomUUID());
+    private static final String STANDBY_ALIAS = String.format("pg-%s-1", UUID.randomUUID());
 
     private final Network network;
     private final JdbcDatabaseContainer<?> containerForPrimary;
