@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.generator;
 
+import io.github.mfvanek.pg.model.index.ForeignKey;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -21,11 +22,11 @@ import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGeneratorTest.se
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("fast")
-class DbMigrationGeneratorImplTest {
+class ForeignKeyMigrationGeneratorTest {
 
     @Test
     void generateForSingleForeignKey() {
-        final DbMigrationGenerator generator = new DbMigrationGeneratorImpl();
+        final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator();
         final String result = generator.generate(Collections.singletonList(nullableColumnWithSchema()), GeneratingOptions.builder().build());
         assertThat(result)
                 .isNotBlank()
@@ -37,7 +38,7 @@ class DbMigrationGeneratorImplTest {
 
     @Test
     void generateForSeveralForeignKeys() {
-        final DbMigrationGenerator generator = new DbMigrationGeneratorImpl();
+        final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator();
         final String result = generator.generate(
                 Arrays.asList(severalColumnsWithNulls(), severalColumnsWithNulls(), nullableColumnWithSchema()),
                 GeneratingOptions.builder().build());

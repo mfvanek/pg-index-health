@@ -17,12 +17,12 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 /**
- * Standard implementation of {@link DbMigrationGenerator}.
+ * Migration generator for creating indexes covering foreign keys.
  *
  * @author Ivan Vahrushev
  * @since 0.5.0
  */
-public class DbMigrationGeneratorImpl implements DbMigrationGenerator {
+public class ForeignKeyMigrationGenerator implements DbMigrationGenerator<ForeignKey> {
 
     static final String DELIMITER = "_";
 
