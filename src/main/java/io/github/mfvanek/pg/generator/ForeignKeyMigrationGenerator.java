@@ -12,8 +12,6 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.index.ForeignKey;
 
-import java.util.List;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 /**
@@ -22,32 +20,16 @@ import javax.annotation.Nonnull;
  * @author Ivan Vahrushev
  * @since 0.5.0
  */
-public class ForeignKeyMigrationGenerator implements DbMigrationGenerator<ForeignKey> {
+public class ForeignKeyMigrationGenerator extends AbstractDbMigrationGenerator<ForeignKey> {
 
-    static final String DELIMITER = "_";
+    private final PgIndexOnForeignKeyGenerator generator;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Nonnull
-    @Override
-    public String generate(@Nonnull final List<ForeignKey> foreignKeys, @Nonnull final GeneratingOptions options) {
-        Objects.requireNonNull(foreignKeys, "foreignKeys cannot be null");
-        Objects.requireNonNull(options, "options cannot be null");
-
-        final StringBuilder queryBuilder = new StringBuilder();
-        for (int i = 0; i < foreignKeys.size(); ++i) {
-            if (i != 0) {
-                queryBuilder.append(System.lineSeparator())
-                        .append(System.lineSeparator());
-            }
-            generate(queryBuilder, foreignKeys.get(i), options);
-        }
-        return queryBuilder.toString();
+    public ForeignKeyMigrationGenerator(@Nonnull final GeneratingOptions options) {
+        this.generator = new PgIndexOnForeignKeyGenerator(options);
     }
 
-    private void generate(@Nonnull final StringBuilder queryBuilder, @Nonnull final ForeignKey foreignKey, @Nonnull final GeneratingOptions options) {
-        final PgIndexOnForeignKeyGenerator generator = PgIndexOnForeignKeyGenerator.of(foreignKey, options);
-        queryBuilder.append(generator.generate());
+    @Override
+    protected void generate(@Nonnull final StringBuilder queryBuilder, @Nonnull final ForeignKey foreignKey) {
+        queryBuilder.append(generator.generate(foreignKey));
     }
 }

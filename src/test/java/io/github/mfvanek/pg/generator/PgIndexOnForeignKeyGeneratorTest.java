@@ -27,8 +27,8 @@ class PgIndexOnForeignKeyGeneratorTest {
 
     @Test
     void generateForSingleNotNullColumn() {
-        final PgIndexOnForeignKeyGenerator generator = PgIndexOnForeignKeyGenerator.of(notNullColumnWithSchema(), GeneratingOptions.builder().build());
-        assertThat(generator.generate())
+        final PgIndexOnForeignKeyGenerator generator = new PgIndexOnForeignKeyGenerator(GeneratingOptions.builder().build());
+        assertThat(generator.generate(notNullColumnWithSchema()))
                 .isEqualTo("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_idx */" + System.lineSeparator() +
                         "create index concurrently if not exists table_with_very_very_very_long_name_3202677_idx" + System.lineSeparator() +
                         "    on schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name);");
@@ -36,9 +36,8 @@ class PgIndexOnForeignKeyGeneratorTest {
 
     @Test
     void generateForSingleNotNullColumnNormallyAndInSingleLine() {
-        final PgIndexOnForeignKeyGenerator generator = PgIndexOnForeignKeyGenerator.of(notNullColumnWithSchema(),
-                GeneratingOptions.builder().normally().doNotBreakLines().build());
-        assertThat(generator.generate())
+        final PgIndexOnForeignKeyGenerator generator = new PgIndexOnForeignKeyGenerator(GeneratingOptions.builder().normally().doNotBreakLines().build());
+        assertThat(generator.generate(notNullColumnWithSchema()))
                 .isEqualTo("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_idx */ " +
                         "create index if not exists table_with_very_very_very_long_name_3202677_idx " +
                         "on schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name);");
@@ -46,9 +45,8 @@ class PgIndexOnForeignKeyGeneratorTest {
 
     @Test
     void generateForSingleNotNullColumnWithUppercase() {
-        final PgIndexOnForeignKeyGenerator generator = PgIndexOnForeignKeyGenerator.of(notNullColumnWithSchema(),
-                GeneratingOptions.builder().uppercaseForKeywords().build());
-        assertThat(generator.generate())
+        final PgIndexOnForeignKeyGenerator generator = new PgIndexOnForeignKeyGenerator(GeneratingOptions.builder().uppercaseForKeywords().build());
+        assertThat(generator.generate(notNullColumnWithSchema()))
                 .isEqualTo("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_idx */" + System.lineSeparator() +
                         "CREATE INDEX CONCURRENTLY IF NOT EXISTS table_with_very_very_very_long_name_3202677_idx" + System.lineSeparator() +
                         "    ON schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name);");
@@ -56,8 +54,8 @@ class PgIndexOnForeignKeyGeneratorTest {
 
     @Test
     void generateForSingleNullableColumn() {
-        final PgIndexOnForeignKeyGenerator generator = PgIndexOnForeignKeyGenerator.of(nullableColumnWithSchema(), GeneratingOptions.builder().build());
-        assertThat(generator.generate())
+        final PgIndexOnForeignKeyGenerator generator = new PgIndexOnForeignKeyGenerator(GeneratingOptions.builder().build());
+        assertThat(generator.generate(nullableColumnWithSchema()))
                 .isEqualTo("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
                         "create index concurrently if not exists table_with_very_very_very_long_name_3202677_without_nulls_idx" + System.lineSeparator() +
                         "    on schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name) " +
@@ -66,9 +64,8 @@ class PgIndexOnForeignKeyGeneratorTest {
 
     @Test
     void generateForSingleNullableColumnWithUppercase() {
-        final PgIndexOnForeignKeyGenerator generator = PgIndexOnForeignKeyGenerator.of(nullableColumnWithSchema(),
-                GeneratingOptions.builder().uppercaseForKeywords().build());
-        assertThat(generator.generate())
+        final PgIndexOnForeignKeyGenerator generator = new PgIndexOnForeignKeyGenerator(GeneratingOptions.builder().uppercaseForKeywords().build());
+        assertThat(generator.generate(nullableColumnWithSchema()))
                 .isEqualTo("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
                         "CREATE INDEX CONCURRENTLY IF NOT EXISTS table_with_very_very_very_long_name_3202677_without_nulls_idx" + System.lineSeparator() +
                         "    ON schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name) " +
@@ -77,9 +74,8 @@ class PgIndexOnForeignKeyGeneratorTest {
 
     @Test
     void generateForSingleNullableColumnWithNulls() {
-        final PgIndexOnForeignKeyGenerator generator = PgIndexOnForeignKeyGenerator.of(nullableColumnWithSchema(),
-                GeneratingOptions.builder().includeNulls().build());
-        assertThat(generator.generate())
+        final PgIndexOnForeignKeyGenerator generator = new PgIndexOnForeignKeyGenerator(GeneratingOptions.builder().includeNulls().build());
+        assertThat(generator.generate(nullableColumnWithSchema()))
                 .isEqualTo("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_idx */" + System.lineSeparator() +
                         "create index concurrently if not exists table_with_very_very_very_long_name_3202677_idx" + System.lineSeparator() +
                         "    on schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name);");
@@ -87,8 +83,8 @@ class PgIndexOnForeignKeyGeneratorTest {
 
     @Test
     void generateWithoutTruncation() {
-        final PgIndexOnForeignKeyGenerator generator = PgIndexOnForeignKeyGenerator.of(severalColumnsWithNulls(), GeneratingOptions.builder().build());
-        assertThat(generator.generate())
+        final PgIndexOnForeignKeyGenerator generator = new PgIndexOnForeignKeyGenerator(GeneratingOptions.builder().build());
+        assertThat(generator.generate(severalColumnsWithNulls()))
                 .isEqualTo("create index concurrently if not exists table_column_1_column_2_without_nulls_idx" + System.lineSeparator() +
                         "    on table (column_1, column_2) where column_2 is not null;");
     }

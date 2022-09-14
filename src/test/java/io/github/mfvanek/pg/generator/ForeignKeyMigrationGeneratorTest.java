@@ -26,8 +26,8 @@ class ForeignKeyMigrationGeneratorTest {
 
     @Test
     void generateForSingleForeignKey() {
-        final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator();
-        final String result = generator.generate(Collections.singletonList(nullableColumnWithSchema()), GeneratingOptions.builder().build());
+        final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator(GeneratingOptions.builder().build());
+        final String result = generator.generate(Collections.singletonList(nullableColumnWithSchema()));
         assertThat(result)
                 .isNotBlank()
                 .isEqualTo("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
@@ -38,10 +38,9 @@ class ForeignKeyMigrationGeneratorTest {
 
     @Test
     void generateForSeveralForeignKeys() {
-        final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator();
+        final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator(GeneratingOptions.builder().build());
         final String result = generator.generate(
-                Arrays.asList(severalColumnsWithNulls(), severalColumnsWithNulls(), nullableColumnWithSchema()),
-                GeneratingOptions.builder().build());
+                Arrays.asList(severalColumnsWithNulls(), severalColumnsWithNulls(), nullableColumnWithSchema()));
         assertThat(result)
                 .isNotBlank()
                 .isEqualTo("create index concurrently if not exists table_column_1_column_2_without_nulls_idx" + System.lineSeparator() +

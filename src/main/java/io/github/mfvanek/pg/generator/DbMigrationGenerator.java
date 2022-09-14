@@ -29,9 +29,8 @@ public interface DbMigrationGenerator<T extends TableNameAware> {
      * Generates sql migration based on the specified rows.
      *
      * @param rows a set of data on the basis of which the sql migration will be generated
-     * @param options parameters that allow to configure the resulting sql migration
      * @return generated sql migration
      */
     @Nonnull
-    String generate(@Nonnull List<T> rows, @Nonnull GeneratingOptions options);
+    String generate(@Nonnull List<T> rows);
 }
