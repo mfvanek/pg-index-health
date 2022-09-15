@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.generator;
 
-import io.github.mfvanek.pg.model.index.ForeignKey;
+import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -18,11 +18,19 @@ import javax.annotation.Nonnull;
 /**
  * Database migrations generator.
  *
+ * @param <T> represents an object in a database associated with a table
+ *
  * @author Ivan Vahrushev
  * @since 0.5.0
  */
-public interface DbMigrationGenerator {
+public interface DbMigrationGenerator<T extends TableNameAware> {
 
+    /**
+     * Generates sql migration based on the specified rows.
+     *
+     * @param rows a set of data on the basis of which the sql migration will be generated
+     * @return generated sql migration
+     */
     @Nonnull
-    String generate(@Nonnull List<ForeignKey> foreignKeys, @Nonnull GeneratingOptions options);
+    String generate(@Nonnull List<T> rows);
 }
