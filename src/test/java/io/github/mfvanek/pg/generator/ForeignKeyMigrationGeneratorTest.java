@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.generator;
 
+import io.github.mfvanek.pg.model.index.ForeignKey;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -21,12 +22,12 @@ import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGeneratorTest.se
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("fast")
-class DbMigrationGeneratorImplTest {
+class ForeignKeyMigrationGeneratorTest {
 
     @Test
     void generateForSingleForeignKey() {
-        final DbMigrationGenerator generator = new DbMigrationGeneratorImpl();
-        final String result = generator.generate(Collections.singletonList(nullableColumnWithSchema()), GeneratingOptions.builder().build());
+        final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator(GeneratingOptions.builder().build());
+        final String result = generator.generate(Collections.singletonList(nullableColumnWithSchema()));
         assertThat(result)
                 .isNotBlank()
                 .isEqualTo("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
@@ -37,10 +38,9 @@ class DbMigrationGeneratorImplTest {
 
     @Test
     void generateForSeveralForeignKeys() {
-        final DbMigrationGenerator generator = new DbMigrationGeneratorImpl();
+        final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator(GeneratingOptions.builder().build());
         final String result = generator.generate(
-                Arrays.asList(severalColumnsWithNulls(), severalColumnsWithNulls(), nullableColumnWithSchema()),
-                GeneratingOptions.builder().build());
+                Arrays.asList(severalColumnsWithNulls(), severalColumnsWithNulls(), nullableColumnWithSchema()));
         assertThat(result)
                 .isNotBlank()
                 .isEqualTo("create index concurrently if not exists table_column_1_column_2_without_nulls_idx" + System.lineSeparator() +

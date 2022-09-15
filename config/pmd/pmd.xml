@@ -23,6 +23,7 @@
         <exclude name="CommentDefaultAccessModifier"/>
         <exclude name="LongVariable"/>
         <exclude name="ShortVariable"/>
+        <exclude name="CallSuperInConstructor"/>
     </rule>
 
     <rule ref="category/java/codestyle.xml/ClassNamingConventions">
