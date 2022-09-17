@@ -8,8 +8,11 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.common.maintenance;
+package io.github.mfvanek.pg.checks.cluster;
 
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
+import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
@@ -37,7 +40,7 @@ import javax.annotation.Nullable;
  * @author Ivan Vakhrushev
  * @since 0.6.0
  */
-public abstract class AbstractCheckOnCluster<T extends TableNameAware> implements DatabaseCheckOnCluster<T> {
+abstract class AbstractCheckOnCluster<T extends TableNameAware> implements DatabaseCheckOnCluster<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCheckOnCluster.class);
 

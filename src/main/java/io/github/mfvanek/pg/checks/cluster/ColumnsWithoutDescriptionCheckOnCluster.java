@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.checks.cluster;
 
 import io.github.mfvanek.pg.checks.host.ColumnsWithoutDescriptionCheckOnHost;
-import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.model.table.Column;
 

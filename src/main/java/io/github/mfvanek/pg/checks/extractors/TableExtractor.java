@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.checks.extractors;
 
-import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
 import io.github.mfvanek.pg.model.table.Table;
 
@@ -35,8 +34,8 @@ public class TableExtractor implements ResultSetExtractor<Table> {
     @Nonnull
     @Override
     public Table extractData(@Nonnull final ResultSet resultSet) throws SQLException {
-        final String tableName = resultSet.getString(AbstractCheckOnHost.TABLE_NAME);
-        final long tableSize = resultSet.getLong(AbstractCheckOnHost.TABLE_SIZE);
+        final String tableName = resultSet.getString("table_name");
+        final long tableSize = resultSet.getLong("table_size");
         return Table.of(tableName, tableSize);
     }
 

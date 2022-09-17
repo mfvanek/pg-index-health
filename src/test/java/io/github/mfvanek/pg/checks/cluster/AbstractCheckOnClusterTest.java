@@ -8,9 +8,8 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.common.maintenance;
+package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.cluster.IndexesWithNullValuesCheckOnCluster;
 import io.github.mfvanek.pg.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.model.PgContext;
