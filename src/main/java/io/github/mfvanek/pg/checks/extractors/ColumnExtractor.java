@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.checks.extractors;
 
-import io.github.mfvanek.pg.common.maintenance.AbstractCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
 import io.github.mfvanek.pg.model.table.Column;
 
@@ -35,7 +34,7 @@ public class ColumnExtractor implements ResultSetExtractor<Column> {
     @Nonnull
     @Override
     public Column extractData(@Nonnull final ResultSet resultSet) throws SQLException {
-        final String tableName = resultSet.getString(AbstractCheckOnHost.TABLE_NAME);
+        final String tableName = resultSet.getString("table_name");
         final String columnName = resultSet.getString("column_name");
         final boolean columnNotNull = resultSet.getBoolean("column_not_null");
         if (columnNotNull) {

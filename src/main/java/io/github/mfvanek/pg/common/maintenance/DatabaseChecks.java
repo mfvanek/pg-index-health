@@ -37,25 +37,25 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 public class DatabaseChecks {
 
-    private final ConcurrentMap<Diagnostic, DatabaseCheckOnCluster<?>> checks = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Diagnostic, DatabaseCheckOnCluster<? extends TableNameAware>> checks = new ConcurrentHashMap<>();
 
     public DatabaseChecks(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
-        Stream.of(
-                    new TablesWithBloatCheckOnCluster(haPgConnection),
-                    new TablesWithMissingIndexesCheckOnCluster(haPgConnection),
-                    new TablesWithoutPrimaryKeyCheckOnCluster(haPgConnection),
-                    new DuplicatedIndexesCheckOnCluster(haPgConnection),
-                    new ForeignKeysNotCoveredWithIndexCheckOnCluster(haPgConnection),
-                    new IndexesWithBloatCheckOnCluster(haPgConnection),
-                    new IndexesWithNullValuesCheckOnCluster(haPgConnection),
-                    new IntersectedIndexesCheckOnCluster(haPgConnection),
-                    new InvalidIndexesCheckOnCluster(haPgConnection),
-                    new UnusedIndexesCheckOnCluster(haPgConnection),
-                    new TablesWithoutDescriptionCheckOnCluster(haPgConnection),
-                    new ColumnsWithoutDescriptionCheckOnCluster(haPgConnection),
-                    new ColumnsWithJsonTypeCheckOnCluster(haPgConnection),
-                    new ColumnsWithSerialTypesCheckOnCluster(haPgConnection))
-                .forEach(check -> checks.putIfAbsent(check.getDiagnostic(), check));
+        final Stream<DatabaseCheckOnCluster<? extends TableNameAware>> allChecks = Stream.of(
+                new TablesWithBloatCheckOnCluster(haPgConnection),
+                new TablesWithMissingIndexesCheckOnCluster(haPgConnection),
+                new TablesWithoutPrimaryKeyCheckOnCluster(haPgConnection),
+                new DuplicatedIndexesCheckOnCluster(haPgConnection),
+                new ForeignKeysNotCoveredWithIndexCheckOnCluster(haPgConnection),
+                new IndexesWithBloatCheckOnCluster(haPgConnection),
+                new IndexesWithNullValuesCheckOnCluster(haPgConnection),
+                new IntersectedIndexesCheckOnCluster(haPgConnection),
+                new InvalidIndexesCheckOnCluster(haPgConnection),
+                new UnusedIndexesCheckOnCluster(haPgConnection),
+                new TablesWithoutDescriptionCheckOnCluster(haPgConnection),
+                new ColumnsWithoutDescriptionCheckOnCluster(haPgConnection),
+                new ColumnsWithJsonTypeCheckOnCluster(haPgConnection),
+                new ColumnsWithSerialTypesCheckOnCluster(haPgConnection));
+        allChecks.forEach(check -> this.checks.putIfAbsent(check.getDiagnostic(), check));
     }
 
     @SuppressWarnings("unchecked")

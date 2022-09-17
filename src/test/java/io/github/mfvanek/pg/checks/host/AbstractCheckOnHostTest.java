@@ -8,9 +8,8 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.common.maintenance;
+package io.github.mfvanek.pg.checks.host;
 
-import io.github.mfvanek.pg.checks.host.IndexesWithNullValuesCheckOnHost;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
