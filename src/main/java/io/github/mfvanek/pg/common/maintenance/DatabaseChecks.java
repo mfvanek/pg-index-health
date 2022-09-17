@@ -40,7 +40,7 @@ public class DatabaseChecks {
     private final ConcurrentMap<Diagnostic, DatabaseCheckOnCluster<? extends TableNameAware>> checks = new ConcurrentHashMap<>();
 
     public DatabaseChecks(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
-        final Stream<DatabaseCheckOnCluster<? extends TableNameAware>> checks = Stream.of(
+        final Stream<DatabaseCheckOnCluster<? extends TableNameAware>> allChecks = Stream.of(
                 new TablesWithBloatCheckOnCluster(haPgConnection),
                 new TablesWithMissingIndexesCheckOnCluster(haPgConnection),
                 new TablesWithoutPrimaryKeyCheckOnCluster(haPgConnection),
@@ -55,7 +55,7 @@ public class DatabaseChecks {
                 new ColumnsWithoutDescriptionCheckOnCluster(haPgConnection),
                 new ColumnsWithJsonTypeCheckOnCluster(haPgConnection),
                 new ColumnsWithSerialTypesCheckOnCluster(haPgConnection));
-        checks.forEach(check -> this.checks.putIfAbsent(check.getDiagnostic(), check));
+        allChecks.forEach(check -> this.checks.putIfAbsent(check.getDiagnostic(), check));
     }
 
     @SuppressWarnings("unchecked")
