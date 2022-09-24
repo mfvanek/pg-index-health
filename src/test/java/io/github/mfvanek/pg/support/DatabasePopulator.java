@@ -29,7 +29,10 @@ import io.github.mfvanek.pg.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.support.statements.CreateSuitableIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKey;
 import io.github.mfvanek.pg.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
+import io.github.mfvanek.pg.support.statements.CreateTableWithSerialPrimaryKeyReferencesToAnotherTable;
+import io.github.mfvanek.pg.support.statements.CreateTableWithUniqueSerialColumn;
 import io.github.mfvanek.pg.support.statements.CreateTableWithoutPrimaryKeyStatement;
 import io.github.mfvanek.pg.support.statements.DbStatement;
 import io.github.mfvanek.pg.support.statements.DropColumnStatement;
@@ -195,6 +198,25 @@ public final class DatabasePopulator implements AutoCloseable {
     public DatabasePopulator withDroppedSerialColumn() {
         statementsToExecuteInSameTransaction.putIfAbsent(76, new DropColumnStatement(schemaName, "bad_accounts", "real_account_id"));
         return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withCheckConstraintOnSerialPrimaryKey() {
+        statementsToExecuteInSameTransaction.putIfAbsent(80, new CreateTableWithCheckConstraintOnSerialPrimaryKey(schemaName));
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withUniqueConstraintOnSerialColumn() {
+        statementsToExecuteInSameTransaction.putIfAbsent(81, new CreateTableWithUniqueSerialColumn(schemaName));
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withSerialPrimaryKeyReferencesToAnotherTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(82, new CreateTableWithSerialPrimaryKeyReferencesToAnotherTable(schemaName));
+        return withCheckConstraintOnSerialPrimaryKey()
+                .withUniqueConstraintOnSerialColumn();
     }
 
     public void populate() {
