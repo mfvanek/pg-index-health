@@ -63,4 +63,43 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                                         Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), String.format("%s.bad_accounts_real_client_id_seq", schemaName))
                         ));
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldIgnoreCheckConstraintsOnSerialPrimaryKey(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withCheckConstraintOnSerialPrimaryKey, ctx ->
+                assertThat(check)
+                        .executing(ctx)
+                        .isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldDetectSerialColumnsWithUniqueConstraints(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withUniqueConstraintOnSerialColumn, ctx ->
+                assertThat(check)
+                        .executing(ctx)
+                        .hasSize(1)
+                        .containsExactly(
+                                ColumnWithSerialType.ofBigSerial(
+                                        Column.ofNotNull(ctx.enrichWithSchema("one_more_table"), "id"), String.format("%s.one_more_table_id_seq", schemaName))
+                        ));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldDetectPrimaryKeysThatAreForeignKeysAsWell(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialPrimaryKeyReferencesToAnotherTable, ctx ->
+                assertThat(check)
+                        .executing(ctx)
+                        .hasSize(3)
+                        .containsExactly(
+                                ColumnWithSerialType.ofBigSerial(
+                                        Column.ofNotNull(ctx.enrichWithSchema("one_more_table"), "id"), String.format("%s.one_more_table_id_seq", schemaName)),
+                                ColumnWithSerialType.ofBigSerial(
+                                        Column.ofNotNull(ctx.enrichWithSchema("test_table"), "id"), String.format("%s.test_table_id_seq", schemaName)),
+                                ColumnWithSerialType.ofBigSerial(
+                                        Column.ofNotNull(ctx.enrichWithSchema("test_table"), "num"), String.format("%s.test_table_num_seq", schemaName))
+                        ));
+    }
 }
