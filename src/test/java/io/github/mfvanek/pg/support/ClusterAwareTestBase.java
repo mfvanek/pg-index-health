@@ -39,4 +39,8 @@ public abstract class ClusterAwareTestBase {
     protected void stopFirstContainer() {
         POSTGRES_CLUSTER.stopFirstContainer();
     }
+
+    protected void startFirstContainer() {
+        POSTGRES_CLUSTER.startFirstContainer();
+    }
 }

@@ -24,15 +24,15 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+@SuppressWarnings("PMD.DoNotUseThreads")
 public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConnection {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HighAvailabilityPgConnectionImpl.class);
+    private static final Integer DEFAULT_DELAY_SECONDS = 30;
 
     private final AtomicReference<PgConnection> cachedConnectionToPrimary = new AtomicReference<>();
     private final Set<PgConnection> connectionsToAllHostsInCluster;
-    @SuppressWarnings("PMD.DoNotUseThreads")
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private final PrimaryHostDeterminer primaryHostDeterminer;
 
@@ -43,7 +43,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
         final Set<PgConnection> defensiveCopy = new HashSet<>(
                 Objects.requireNonNull(connectionsToAllHostsInCluster, "connectionsToAllHostsInCluster"));
         PgConnectionValidators.shouldContainsConnectionToPrimary(connectionToPrimary, defensiveCopy);
-        this.cachedConnectionToPrimary.set(connectionToPrimary);
+        this.cachedConnectionToPrimary.set(Objects.requireNonNull(connectionToPrimary, "connectionToPrimary"));
         this.connectionsToAllHostsInCluster = Collections.unmodifiableSet(defensiveCopy);
     }
 
@@ -75,25 +75,28 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
     public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToPrimary,
                                                   @Nonnull final Collection<PgConnection> connectionsToAllHostsInCluster) {
         final PrimaryHostDeterminer primaryHostDeterminer = new PrimaryHostDeterminerImpl();
-        return new HighAvailabilityPgConnectionImpl(connectionToPrimary, connectionsToAllHostsInCluster, primaryHostDeterminer);
+        final HighAvailabilityPgConnectionImpl highAvailabilityPgConnection = new HighAvailabilityPgConnectionImpl(connectionToPrimary, connectionsToAllHostsInCluster, primaryHostDeterminer);
+        highAvailabilityPgConnection.startPrimaryUpdater(DEFAULT_DELAY_SECONDS);
+        return highAvailabilityPgConnection;
     }
 
     @Nonnull
     public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToPrimary,
                                                   @Nonnull final Collection<PgConnection> connectionsToAllHostsInCluster,
-                                                  @Nullable final Integer delaySeconds) {
+                                                  @Nonnull final Integer delaySeconds) {
         final PrimaryHostDeterminer primaryHostDeterminer = new PrimaryHostDeterminerImpl();
         final HighAvailabilityPgConnectionImpl highAvailabilityPgConnection = new HighAvailabilityPgConnectionImpl(connectionToPrimary, connectionsToAllHostsInCluster, primaryHostDeterminer);
-        if (highAvailabilityPgConnection.connectionsToAllHostsInCluster.size() > 1 && delaySeconds != null) {
-            highAvailabilityPgConnection.startPrimaryUpdater(delaySeconds);
-        }
+        highAvailabilityPgConnection.startPrimaryUpdater(delaySeconds);
         return highAvailabilityPgConnection;
     }
 
-    @SuppressWarnings("PMD.DoNotUseThreads")
     private void startPrimaryUpdater(@Nonnull final Integer delaySeconds) {
-        Objects.requireNonNull(delaySeconds);
-        executorService.scheduleWithFixedDelay(this::updateConnectionToPrimary, delaySeconds, delaySeconds, TimeUnit.SECONDS);
+        Objects.requireNonNull(delaySeconds, "delaySeconds");
+        if (this.getConnectionsToAllHostsInCluster().size() > 1) {
+            executorService.scheduleWithFixedDelay(this::updateConnectionToPrimary, delaySeconds, delaySeconds, TimeUnit.SECONDS);
+        } else {
+            LOGGER.debug("Single node. There's no point to monitor primary node.");
+        }
     }
 
     private void updateConnectionToPrimary() {
@@ -104,7 +107,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
                     LOGGER.debug("Current primary is {}", pgConnection.getHost().getPgUrl());
                 }
             } catch (PgSqlException e) {
-                LOGGER.debug("Exception during primary detection for host {} with message {}", pgConnection.getHost(), e.getMessage());
+                LOGGER.error("Exception during primary detection for host {} with message {}", pgConnection.getHost(), e.getMessage());
             }
         });
     }

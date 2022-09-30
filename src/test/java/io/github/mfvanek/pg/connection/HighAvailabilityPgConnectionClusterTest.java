@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class HighAvailabilityPgConnectionClusterTest extends ClusterAwareTestBase {
 
     @Test
-    void standbyBecomesPrimaryOnPrimaryDown() {
+    void standbyBecomesPrimaryOnPrimaryDownWithPredefinedDelay() {
         final PgConnection firstConnection = getFirstPgConnection();
         final PgConnection secondConnection = getSecondPgConnection();
 
@@ -40,8 +40,7 @@ class HighAvailabilityPgConnectionClusterTest extends ClusterAwareTestBase {
 
         assertThat(haPgConnection.getConnectionToPrimary())
                 .as("First connection is primary")
-                .isEqualTo(firstConnection);
-        assertThat(haPgConnection.getConnectionToPrimary())
+                .isEqualTo(firstConnection)
                 .as("Second connection is not primary")
                 .isNotEqualTo(secondConnection);
 
@@ -56,12 +55,42 @@ class HighAvailabilityPgConnectionClusterTest extends ClusterAwareTestBase {
 
         assertThat(haPgConnection.getConnectionToPrimary())
                 .as("Second connection is primary")
-                .isEqualTo(secondConnection);
-        assertThat(haPgConnection.getConnectionToPrimary())
+                .isEqualTo(secondConnection)
                 .as("First connection is not primary")
                 .isNotEqualTo(firstConnection);
+    }
 
-        // TODO backward switch is not testable as on start container will get new port that is different from used in PgHostImpl.
-        //  Probably caching and reusing firstMapped port in cluster extension is the solution.
+    @Test
+    void standbyBecomesPrimaryOnPrimaryDownWithDefaultDelay() {
+        startFirstContainer();
+        final PgConnection firstConnection = getFirstPgConnection();
+        final PgConnection secondConnection = getSecondPgConnection();
+
+        final ArrayList<PgConnection> pgConnections = new ArrayList<>();
+        pgConnections.add(firstConnection);
+        pgConnections.add(secondConnection);
+
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(firstConnection, pgConnections);
+
+        assertThat(haPgConnection.getConnectionToPrimary())
+                .as("First connection is primary")
+                .isEqualTo(firstConnection)
+                .as("Second connection is not primary")
+                .isNotEqualTo(secondConnection);
+
+        stopFirstContainer();
+
+        Awaitility
+                .await()
+                .atMost(Duration.ofSeconds(120))
+                .with()
+                .pollInterval(Duration.ofSeconds(2))
+                .until(() -> haPgConnection.getConnectionToPrimary().equals(secondConnection));
+
+        assertThat(haPgConnection.getConnectionToPrimary())
+                .as("Second connection is primary")
+                .isEqualTo(secondConnection)
+                .as("First connection is not primary")
+                .isNotEqualTo(firstConnection);
     }
 }

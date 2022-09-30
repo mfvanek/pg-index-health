@@ -42,10 +42,16 @@ final class PostgresSqlClusterWrapper {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostgresSqlClusterWrapper.class);
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final String IMAGE_TAG = preparePostgresBitnamiVersion();
-    // REPMGR_NODE_NAME must end with a number, so aliases must also
-    // To avoid a ConflictException when starting the container, aliases must be unique if there is more than one instance of PostgresSqlClusterWrapper
-    private static final String PRIMARY_ALIAS = String.format("pg-%s-0", UUID.randomUUID());
-    private static final String STANDBY_ALIAS = String.format("pg-%s-1", UUID.randomUUID());
+    private static final String PRIMARY_ALIAS;
+    private static final String STANDBY_ALIAS;
+
+    static {
+        // REPMGR_NODE_NAME must end with a number, so aliases must also
+        // To avoid a ConflictException when starting the container, aliases must be unique if there is more than one instance of PostgresSqlClusterWrapper
+        final UUID uuid = UUID.randomUUID();
+        PRIMARY_ALIAS = String.format("pg-%s-0", uuid);
+        STANDBY_ALIAS = String.format("pg-%s-1", uuid);
+    }
 
     private final Network network;
     private final JdbcDatabaseContainer<?> containerForPrimary;
@@ -109,6 +115,11 @@ final class PostgresSqlClusterWrapper {
                 .atMost(Duration.ofSeconds(100L))
                 .pollInterval(Duration.ofSeconds(1L))
                 .until(() -> containerForStandBy.getLogs().contains("standby promoted to primary after"));
+    }
+
+    public void startFirstContainer() {
+        LOGGER.info("Starting first container");
+        containerForPrimary.start();
     }
 
     @Nonnull
