@@ -57,6 +57,10 @@ public class TableWithBloat extends Table implements TableBloatAware {
                 ", bloatPercentage=" + bloatPercentage;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return TableWithBloat.class.getSimpleName() + '{' + innerToString() + '}';

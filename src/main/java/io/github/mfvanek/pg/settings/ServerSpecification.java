@@ -41,6 +41,10 @@ public class ServerSpecification {
         return hasSSD;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return ServerSpecification.class.getSimpleName() + '{' +

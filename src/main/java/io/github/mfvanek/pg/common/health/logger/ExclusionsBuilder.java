@@ -172,6 +172,10 @@ public class ExclusionsBuilder {
                 tableBloatPercentageThreshold);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return ExclusionsBuilder.class.getSimpleName() + '{' +

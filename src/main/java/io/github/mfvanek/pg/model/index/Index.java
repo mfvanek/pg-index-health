@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.Validators;
 
@@ -25,7 +26,7 @@ import javax.annotation.concurrent.Immutable;
  * @see IndexNameAware
  */
 @Immutable
-public class Index implements TableNameAware, IndexNameAware, Comparable<Index> {
+public class Index extends DbObject implements TableNameAware, IndexNameAware, Comparable<Index> {
 
     private final String tableName;
     private final String indexName;
@@ -34,6 +35,15 @@ public class Index implements TableNameAware, IndexNameAware, Comparable<Index> 
     protected Index(@Nonnull final String tableName, @Nonnull final String indexName) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.indexName = Validators.indexNameNotBlank(indexName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public final String getName() {
+        return indexName;
     }
 
     /**
@@ -54,6 +64,10 @@ public class Index implements TableNameAware, IndexNameAware, Comparable<Index> 
         return indexName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return Index.class.getSimpleName() + '{' + innerToString() + '}';
@@ -65,6 +79,9 @@ public class Index implements TableNameAware, IndexNameAware, Comparable<Index> 
                 ", indexName='" + indexName + '\'';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final boolean equals(final Object other) {
         if (this == other) {
@@ -80,11 +97,17 @@ public class Index implements TableNameAware, IndexNameAware, Comparable<Index> 
                 Objects.equals(indexName, that.indexName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final int hashCode() {
         return Objects.hash(tableName, indexName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int compareTo(@Nonnull final Index other) {
         Objects.requireNonNull(other, "other cannot be null");

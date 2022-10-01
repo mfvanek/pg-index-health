@@ -29,7 +29,9 @@ class IndexWithNullsTest {
     void gettersShouldWork() {
         final IndexWithNulls index = IndexWithNulls.of("t", "i", 11L, "f");
         assertThat(index.getTableName()).isEqualTo("t");
-        assertThat(index.getIndexName()).isEqualTo("i");
+        assertThat(index.getIndexName())
+                .isEqualTo("i")
+                .isEqualTo(index.getName());
         assertThat(index.getIndexSizeInBytes()).isEqualTo(11L);
         assertThat(index.getNullableColumn()).isEqualTo(Column.ofNullable("t", "f"));
     }

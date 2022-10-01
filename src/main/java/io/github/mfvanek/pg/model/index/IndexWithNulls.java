@@ -38,6 +38,10 @@ public final class IndexWithNulls extends IndexWithSize {
         return nullableColumn;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return IndexWithNulls.class.getSimpleName() + '{' +

@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ import javax.annotation.Nullable;
  * @author Ivan Vakhrushev
  * @since 0.6.0
  */
-abstract class AbstractCheckOnCluster<T extends TableNameAware> implements DatabaseCheckOnCluster<T> {
+abstract class AbstractCheckOnCluster<T extends DbObject & TableNameAware> implements DatabaseCheckOnCluster<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCheckOnCluster.class);
 

@@ -24,8 +24,12 @@ class TableWithBloatTest {
 
     @Test
     void getBloatSizeInBytes() {
-        final TableWithBloat bloat = TableWithBloat.of("t", 10L, 2L, 20);
-        assertThat(bloat.getBloatSizeInBytes()).isEqualTo(2L);
+        final TableWithBloat bloat = TableWithBloat.of("t1", 10L, 2L, 20);
+        assertThat(bloat.getTableName())
+                .isEqualTo("t1")
+                .isEqualTo(bloat.getName());
+        assertThat(bloat.getBloatSizeInBytes())
+                .isEqualTo(2L);
     }
 
     @Test

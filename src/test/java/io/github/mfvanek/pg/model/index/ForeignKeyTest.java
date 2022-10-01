@@ -46,7 +46,8 @@ class ForeignKeyTest {
                 .isEqualTo("t");
         assertThat(foreignKey.getConstraintName())
                 .isNotBlank()
-                .isEqualTo("c_t_order_id");
+                .isEqualTo("c_t_order_id")
+                .isEqualTo(foreignKey.getName());
         assertThat(foreignKey.getColumnsInConstraint())
                 .hasSize(1)
                 .containsExactly(Column.ofNotNull("t", "order_id"))

@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.SqlQueryReader;
@@ -31,7 +32,7 @@ import javax.annotation.Nonnull;
  * @author Ivan Vahrushev
  * @since 0.6.0
  */
-abstract class AbstractCheckOnHost<T extends TableNameAware> implements DatabaseCheckOnHost<T> {
+abstract class AbstractCheckOnHost<T extends DbObject & TableNameAware> implements DatabaseCheckOnHost<T> {
 
     protected static final String TABLE_NAME = "table_name";
     protected static final String INDEX_NAME = "index_name";

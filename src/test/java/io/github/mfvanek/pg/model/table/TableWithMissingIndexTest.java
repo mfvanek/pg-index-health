@@ -25,7 +25,9 @@ class TableWithMissingIndexTest {
     @Test
     void getters() {
         final TableWithMissingIndex table = TableWithMissingIndex.of("t", 1L, 2L, 3L);
-        assertThat(table.getTableName()).isEqualTo("t");
+        assertThat(table.getTableName())
+                .isEqualTo("t")
+                .isEqualTo(table.getName());
         assertThat(table.getTableSizeInBytes()).isEqualTo(1L);
         assertThat(table.getSeqScans()).isEqualTo(2L);
         assertThat(table.getIndexScans()).isEqualTo(3L);

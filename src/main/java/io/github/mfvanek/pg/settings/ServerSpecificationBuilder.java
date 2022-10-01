@@ -52,6 +52,10 @@ public class ServerSpecificationBuilder {
         return new ServerSpecification(cpuCoresAmount, memoryAmountInBytes, hasSSD);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return ServerSpecificationBuilder.class.getSimpleName() + '{' +

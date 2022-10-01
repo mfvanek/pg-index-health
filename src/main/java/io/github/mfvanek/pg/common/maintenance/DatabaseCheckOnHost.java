@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.connection.HostAware;
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
@@ -25,7 +26,7 @@ import javax.annotation.Nonnull;
  * @author Ivan Vahrushev
  * @since 0.6.0
  */
-public interface DatabaseCheckOnHost<T extends TableNameAware> extends DiagnosticAware, RawTypeAware<T>, HostAware {
+public interface DatabaseCheckOnHost<T extends DbObject & TableNameAware> extends DiagnosticAware, RawTypeAware<T>, HostAware {
 
     /**
      * Executes the check in the specified schema.

@@ -23,6 +23,7 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.ForeignKey;
@@ -215,10 +216,10 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private <T extends TableNameAware> String logCheckResult(@Nonnull final DatabaseCheckOnCluster<T> check,
-                                                             @Nonnull final Predicate<? super T> exclusionsFilter,
-                                                             @Nonnull final PgContext pgContext,
-                                                             @Nonnull final LoggingKey key) {
+    private <T extends DbObject & TableNameAware> String logCheckResult(@Nonnull final DatabaseCheckOnCluster<T> check,
+                                                                        @Nonnull final Predicate<? super T> exclusionsFilter,
+                                                                        @Nonnull final PgContext pgContext,
+                                                                        @Nonnull final LoggingKey key) {
         final List<T> checkResult = check.check(pgContext, exclusionsFilter);
         if (CollectionUtils.isNotEmpty(checkResult)) {
             LOGGER.warn("There are {} in the database {}", key.getDescription(), checkResult);

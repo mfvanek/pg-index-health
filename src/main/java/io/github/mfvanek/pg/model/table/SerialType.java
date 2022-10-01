@@ -48,6 +48,10 @@ public enum SerialType {
         return columnType;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return SerialType.class.getSimpleName() + '{' +

@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.table.Column;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.Validators;
@@ -28,7 +29,7 @@ import javax.annotation.concurrent.Immutable;
  * @see TableNameAware
  */
 @Immutable
-public class ForeignKey implements TableNameAware {
+public class ForeignKey extends DbObject implements TableNameAware {
 
     private final String tableName;
     private final String constraintName;
@@ -44,6 +45,15 @@ public class ForeignKey implements TableNameAware {
         Validators.validateThatNotEmpty(defensiveCopy);
         Validators.validateThatTableIsTheSame(tableName, defensiveCopy);
         this.columnsInConstraint = Collections.unmodifiableList(defensiveCopy);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public final String getName() {
+        return constraintName;
     }
 
     /**
@@ -76,6 +86,9 @@ public class ForeignKey implements TableNameAware {
         return columnsInConstraint;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final boolean equals(final Object other) {
         if (this == other) {
@@ -92,11 +105,18 @@ public class ForeignKey implements TableNameAware {
                 Objects.equals(columnsInConstraint, that.columnsInConstraint);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final int hashCode() {
         return Objects.hash(tableName, constraintName, columnsInConstraint);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return ForeignKey.class.getSimpleName() + '{' +

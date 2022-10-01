@@ -31,7 +31,8 @@ class ColumnWithSerialTypeTest {
         assertThat(column.getTableName())
                 .isEqualTo("t1");
         assertThat(column.getColumnName())
-                .isEqualTo("c1");
+                .isEqualTo("c1")
+                .isEqualTo(column.getName());
         assertThat(column.isNullable())
                 .isFalse();
         assertThat(column.getSerialType())

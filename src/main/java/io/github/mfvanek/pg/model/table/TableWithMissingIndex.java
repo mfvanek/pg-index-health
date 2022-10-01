@@ -45,6 +45,10 @@ public class TableWithMissingIndex extends Table {
         return indexScans;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return TableWithMissingIndex.class.getSimpleName() + '{' +

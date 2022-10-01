@@ -47,6 +47,10 @@ public enum ImportantParam implements ParamNameAware {
         return name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return ImportantParam.class.getSimpleName() + '{' +
