@@ -34,7 +34,6 @@ import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.table.Column;
 import io.github.mfvanek.pg.model.table.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import org.apache.commons.collections4.CollectionUtils;
@@ -216,7 +215,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private <T extends DbObject & TableNameAware> String logCheckResult(@Nonnull final DatabaseCheckOnCluster<T> check,
+    private <T extends DbObject> String logCheckResult(@Nonnull final DatabaseCheckOnCluster<T> check,
                                                                         @Nonnull final Predicate<? super T> exclusionsFilter,
                                                                         @Nonnull final PgContext pgContext,
                                                                         @Nonnull final LoggingKey key) {

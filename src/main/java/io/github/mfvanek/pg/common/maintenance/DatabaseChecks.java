@@ -26,7 +26,6 @@ import io.github.mfvanek.pg.checks.cluster.TablesWithoutPrimaryKeyCheckOnCluster
 import io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.model.DbObject;
-import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -61,7 +60,7 @@ public class DatabaseChecks {
 
     @SuppressWarnings("unchecked")
     @Nonnull
-    public <T extends DbObject & TableNameAware> DatabaseCheckOnCluster<T> getCheck(@Nonnull final Diagnostic diagnostic, @Nonnull final Class<T> type) {
+    public <T extends DbObject> DatabaseCheckOnCluster<T> getCheck(@Nonnull final Diagnostic diagnostic, @Nonnull final Class<T> type) {
         final DatabaseCheckOnCluster<?> check = checks.get(diagnostic);
         if (check == null) {
             throw new IllegalStateException(String.format("Check for diagnostic %s not found", diagnostic));
