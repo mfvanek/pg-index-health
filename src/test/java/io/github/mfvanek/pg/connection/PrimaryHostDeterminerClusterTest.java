@@ -12,6 +12,8 @@ package io.github.mfvanek.pg.connection;
 
 import io.github.mfvanek.pg.support.ClusterAwareTestBase;
 import org.awaitility.Awaitility;
+import org.graalvm.compiler.core.common.SuppressFBWarnings;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -24,14 +26,23 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Alexey Antipin
  * @since 0.6.2
  */
-class PrimaryHostDeterminerClusterTest extends ClusterAwareTestBase {
-
+class PrimaryHostDeterminerClusterTest {
     private final PrimaryHostDeterminer primaryHostDeterminer = new PrimaryHostDeterminerImpl();
+    private ClusterAwareTestBase postgresCluster;
+
+    @BeforeEach
+    protected void initCluster() {
+        this.postgresCluster = new ClusterAwareTestBase();
+    }
 
     @Test
+    @SuppressFBWarnings(
+            value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR",
+            justification = "False positive"
+    )
     void correctPrimaryDetection() {
-        final PgConnection firstConnection = getFirstPgConnection();
-        final PgConnection secondConnection = getSecondPgConnection();
+        final PgConnection firstConnection = postgresCluster.getFirstPgConnection();
+        final PgConnection secondConnection = postgresCluster.getSecondPgConnection();
 
         assertThat(primaryHostDeterminer.isPrimary(firstConnection))
                 .as("First connection is primary")
@@ -41,7 +52,7 @@ class PrimaryHostDeterminerClusterTest extends ClusterAwareTestBase {
                 .as("Second connection is not primary")
                 .isFalse();
 
-        stopFirstContainer();
+        postgresCluster.stopFirstContainer();
 
         Awaitility
                 .await("Second node becomes primary")

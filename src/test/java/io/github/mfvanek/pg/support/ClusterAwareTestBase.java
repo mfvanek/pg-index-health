@@ -22,25 +22,21 @@ import javax.annotation.Nonnull;
  * @author Alexey Antipin
  * @since 0.6.2
  */
-public abstract class ClusterAwareTestBase {
+public class ClusterAwareTestBase {
 
-    private static final PostgresSqlClusterWrapper POSTGRES_CLUSTER = new PostgresSqlClusterWrapper();
-
-    @Nonnull
-    protected PgConnection getFirstPgConnection() {
-        return PgConnectionImpl.of(POSTGRES_CLUSTER.getDataSourceForPrimary(), PgHostImpl.ofUrl(POSTGRES_CLUSTER.getFirstContainerJdbcUrl()));
-    }
+    private final PostgresSqlClusterWrapper postgresCluster = new PostgresSqlClusterWrapper();
 
     @Nonnull
-    protected PgConnection getSecondPgConnection() {
-        return PgConnectionImpl.of(POSTGRES_CLUSTER.getDataSourceForStandBy(), PgHostImpl.ofUrl(POSTGRES_CLUSTER.getSecondContainerJdbcUrl()));
+    public PgConnection getFirstPgConnection() {
+        return PgConnectionImpl.of(postgresCluster.getDataSourceForPrimary(), PgHostImpl.ofUrl(postgresCluster.getFirstContainerJdbcUrl()));
     }
 
-    protected void stopFirstContainer() {
-        POSTGRES_CLUSTER.stopFirstContainer();
+    @Nonnull
+    public PgConnection getSecondPgConnection() {
+        return PgConnectionImpl.of(postgresCluster.getDataSourceForStandBy(), PgHostImpl.ofUrl(postgresCluster.getSecondContainerJdbcUrl()));
     }
 
-    protected void startFirstContainer() {
-        POSTGRES_CLUSTER.startFirstContainer();
+    public void stopFirstContainer() {
+        postgresCluster.stopFirstContainer();
     }
 }

@@ -39,39 +39,35 @@ import javax.sql.DataSource;
  */
 final class PostgresSqlClusterWrapper {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PostgresSqlClusterWrapper.class);
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final String IMAGE_TAG = preparePostgresBitnamiVersion();
-    private static final String PRIMARY_ALIAS;
-    private static final String STANDBY_ALIAS;
 
-    static {
-        // REPMGR_NODE_NAME must end with a number, so aliases must also
-        // To avoid a ConflictException when starting the container, aliases must be unique if there is more than one instance of PostgresSqlClusterWrapper
-        final UUID uuid = UUID.randomUUID();
-        PRIMARY_ALIAS = String.format("pg-%s-0", uuid);
-        STANDBY_ALIAS = String.format("pg-%s-1", uuid);
-    }
-
+    private final Logger logger = LoggerFactory.getLogger(PostgresSqlClusterWrapper.class);
+    private final String primaryAlias;
+    private final String standbyAlias;
     private final Network network;
     private final JdbcDatabaseContainer<?> containerForPrimary;
     private final JdbcDatabaseContainer<?> containerForStandBy;
-
     private final DataSource dataSourceForPrimary;
     private final DataSource dataSourceForStandBy;
 
     PostgresSqlClusterWrapper() {
+        // REPMGR_NODE_NAME must end with a number, so aliases must also
+        // To avoid a ConflictException when starting the container, aliases must be unique if there is more than one instance of PostgresSqlClusterWrapper
+        final UUID uuid = UUID.randomUUID();
+        this.primaryAlias = String.format("pg-%s-0", uuid);
+        this.standbyAlias = String.format("pg-%s-1", uuid);
         this.network = Network.newNetwork();
         // Primary node
         final WaitStrategy waitStrategyForPrimary = new LogMessageWaitStrategy()
                 .withRegEx(".*Starting repmgrd.*\\s")
                 .withStartupTimeout(Duration.ofSeconds(30));
-        this.containerForPrimary = createContainerAndInitWith(this::primaryEnvVarsMap, PRIMARY_ALIAS, waitStrategyForPrimary);
+        this.containerForPrimary = createContainerAndInitWith(this::primaryEnvVarsMap, primaryAlias, waitStrategyForPrimary);
         // Standby node
         final WaitStrategy waitStrategyForStandBy = new LogMessageWaitStrategy()
                 .withRegEx(".*starting monitoring of node.*\\s")
                 .withStartupTimeout(Duration.ofSeconds(30));
-        this.containerForStandBy = createContainerAndInitWith(this::standbyEnvVarsMap, STANDBY_ALIAS, waitStrategyForStandBy);
+        this.containerForStandBy = createContainerAndInitWith(this::standbyEnvVarsMap, standbyAlias, waitStrategyForStandBy);
 
         this.containerForPrimary.start();
         this.containerForStandBy.start();
@@ -95,18 +91,18 @@ final class PostgresSqlClusterWrapper {
     @Nonnull
     public String getFirstContainerJdbcUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://%s:%d/%s", PRIMARY_ALIAS, containerForPrimary.getFirstMappedPort(), containerForPrimary.getDatabaseName());
+        return String.format("jdbc:postgresql://%s:%d/%s", primaryAlias, containerForPrimary.getFirstMappedPort(), containerForPrimary.getDatabaseName());
     }
 
     @Nonnull
     public String getSecondContainerJdbcUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://%s:%d/%s", STANDBY_ALIAS, containerForStandBy.getFirstMappedPort(), containerForStandBy.getDatabaseName());
+        return String.format("jdbc:postgresql://%s:%d/%s", standbyAlias, containerForStandBy.getFirstMappedPort(), containerForStandBy.getDatabaseName());
     }
 
     public void stopFirstContainer() {
         containerForPrimary.stop();
-        LOGGER.info("Waiting for standby will be promoted to primary");
+        logger.info("Waiting for standby will be promoted to primary");
         Awaitility.await("Promoting standby to primary")
                 .atMost(Duration.ofSeconds(100L))
                 .pollInterval(Duration.ofSeconds(1L))
@@ -117,11 +113,6 @@ final class PostgresSqlClusterWrapper {
                 .until(() -> containerForStandBy.getLogs().contains("standby promoted to primary after"));
     }
 
-    public void startFirstContainer() {
-        LOGGER.info("Starting first container");
-        containerForPrimary.start();
-    }
-
     @Nonnull
     private Map<String, String> primaryEnvVarsMap() {
         final Map<String, String> envVarsMap = new HashMap<>();
@@ -130,11 +121,11 @@ final class PostgresSqlClusterWrapper {
         envVarsMap.put("POSTGRESQL_PASSWORD", "custompassword");
         envVarsMap.put("POSTGRESQL_DATABASE", "customdatabase");
         envVarsMap.put("REPMGR_PASSWORD", "repmgrpassword");
-        envVarsMap.put("REPMGR_PRIMARY_HOST", PRIMARY_ALIAS);
+        envVarsMap.put("REPMGR_PRIMARY_HOST", primaryAlias);
         envVarsMap.put("REPMGR_PRIMARY_PORT", "5432");
-        envVarsMap.put("REPMGR_PARTNER_NODES", String.format("%s,%s:5432", PRIMARY_ALIAS, STANDBY_ALIAS));
-        envVarsMap.put("REPMGR_NODE_NAME", PRIMARY_ALIAS);
-        envVarsMap.put("REPMGR_NODE_NETWORK_NAME", PRIMARY_ALIAS);
+        envVarsMap.put("REPMGR_PARTNER_NODES", String.format("%s,%s:5432", primaryAlias, standbyAlias));
+        envVarsMap.put("REPMGR_NODE_NAME", primaryAlias);
+        envVarsMap.put("REPMGR_NODE_NETWORK_NAME", primaryAlias);
         envVarsMap.put("REPMGR_PORT_NUMBER", "5432");
         envVarsMap.put("REPMGR_CONNECT_TIMEOUT", "1");
         envVarsMap.put("REPMGR_RECONNECT_ATTEMPTS", "1");
@@ -150,11 +141,11 @@ final class PostgresSqlClusterWrapper {
         envVarsMap.put("POSTGRESQL_PASSWORD", "custompassword");
         envVarsMap.put("POSTGRESQL_DATABASE", "customdatabase");
         envVarsMap.put("REPMGR_PASSWORD", "repmgrpassword");
-        envVarsMap.put("REPMGR_PRIMARY_HOST", PRIMARY_ALIAS);
+        envVarsMap.put("REPMGR_PRIMARY_HOST", primaryAlias);
         envVarsMap.put("REPMGR_PRIMARY_PORT", "5432");
-        envVarsMap.put("REPMGR_PARTNER_NODES", String.format("%s,%s:5432", PRIMARY_ALIAS, STANDBY_ALIAS));
-        envVarsMap.put("REPMGR_NODE_NAME", STANDBY_ALIAS);
-        envVarsMap.put("REPMGR_NODE_NETWORK_NAME", STANDBY_ALIAS);
+        envVarsMap.put("REPMGR_PARTNER_NODES", String.format("%s,%s:5432", primaryAlias, standbyAlias));
+        envVarsMap.put("REPMGR_NODE_NAME", standbyAlias);
+        envVarsMap.put("REPMGR_NODE_NETWORK_NAME", standbyAlias);
         envVarsMap.put("REPMGR_PORT_NUMBER", "5432");
         envVarsMap.put("REPMGR_CONNECT_TIMEOUT", "1");
         envVarsMap.put("REPMGR_RECONNECT_ATTEMPTS", "1");

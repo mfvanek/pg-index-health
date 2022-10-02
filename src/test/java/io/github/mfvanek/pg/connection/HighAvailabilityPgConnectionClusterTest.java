@@ -12,10 +12,15 @@ package io.github.mfvanek.pg.connection;
 
 import io.github.mfvanek.pg.support.ClusterAwareTestBase;
 import org.awaitility.Awaitility;
+import org.graalvm.compiler.core.common.SuppressFBWarnings;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.time.Duration;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,18 +30,26 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Alexey Antipin
  * @since 0.6.2
  */
-class HighAvailabilityPgConnectionClusterTest extends ClusterAwareTestBase {
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class HighAvailabilityPgConnectionClusterTest {
+
+    private ClusterAwareTestBase postgresCluster;
+
+    @BeforeEach
+    protected void initCluster() {
+        this.postgresCluster = new ClusterAwareTestBase();
+    }
 
     @Test
+    @SuppressFBWarnings(
+            value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR",
+            justification = "False positive"
+    )
     void standbyBecomesPrimaryOnPrimaryDownWithPredefinedDelay() {
-        final PgConnection firstConnection = getFirstPgConnection();
-        final PgConnection secondConnection = getSecondPgConnection();
-
-        final ArrayList<PgConnection> pgConnections = new ArrayList<>();
-        pgConnections.add(firstConnection);
-        pgConnections.add(secondConnection);
-
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(firstConnection, pgConnections, 5);
+        final PgConnection firstConnection = postgresCluster.getFirstPgConnection();
+        final PgConnection secondConnection = postgresCluster.getSecondPgConnection();
+        final List<PgConnection> pgConnections = Arrays.asList(firstConnection, secondConnection);
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(firstConnection, pgConnections, 5_000L);
 
         assertThat(haPgConnection.getConnectionToPrimary())
                 .as("First connection is primary")
@@ -44,7 +57,7 @@ class HighAvailabilityPgConnectionClusterTest extends ClusterAwareTestBase {
                 .as("Second connection is not primary")
                 .isNotEqualTo(secondConnection);
 
-        stopFirstContainer();
+        postgresCluster.stopFirstContainer();
 
         Awaitility
                 .await()
@@ -61,15 +74,14 @@ class HighAvailabilityPgConnectionClusterTest extends ClusterAwareTestBase {
     }
 
     @Test
+    @SuppressFBWarnings(
+            value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR",
+            justification = "False positive"
+    )
     void standbyBecomesPrimaryOnPrimaryDownWithDefaultDelay() {
-        startFirstContainer();
-        final PgConnection firstConnection = getFirstPgConnection();
-        final PgConnection secondConnection = getSecondPgConnection();
-
-        final ArrayList<PgConnection> pgConnections = new ArrayList<>();
-        pgConnections.add(firstConnection);
-        pgConnections.add(secondConnection);
-
+        final PgConnection firstConnection = postgresCluster.getFirstPgConnection();
+        final PgConnection secondConnection = postgresCluster.getSecondPgConnection();
+        final List<PgConnection> pgConnections = Arrays.asList(firstConnection, secondConnection);
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(firstConnection, pgConnections);
 
         assertThat(haPgConnection.getConnectionToPrimary())
@@ -78,7 +90,7 @@ class HighAvailabilityPgConnectionClusterTest extends ClusterAwareTestBase {
                 .as("Second connection is not primary")
                 .isNotEqualTo(secondConnection);
 
-        stopFirstContainer();
+        postgresCluster.stopFirstContainer();
 
         Awaitility
                 .await()
