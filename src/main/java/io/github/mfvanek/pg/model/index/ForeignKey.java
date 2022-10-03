@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.DbObject;
-import io.github.mfvanek.pg.model.table.Column;
+import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.Validators;
 
@@ -29,7 +29,7 @@ import javax.annotation.concurrent.Immutable;
  * @see TableNameAware
  */
 @Immutable
-public class ForeignKey extends DbObject implements TableNameAware {
+public class ForeignKey implements DbObject, TableNameAware {
 
     private final String tableName;
     private final String constraintName;
@@ -53,7 +53,7 @@ public class ForeignKey extends DbObject implements TableNameAware {
     @Nonnull
     @Override
     public final String getName() {
-        return constraintName;
+        return getConstraintName();
     }
 
     /**

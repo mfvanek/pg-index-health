@@ -23,7 +23,7 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class TableWithBloat extends DbObject implements TableBloatAware, Comparable<TableWithBloat> {
+public class TableWithBloat implements DbObject, TableBloatAware, Comparable<TableWithBloat> {
 
     private final Table table;
     private final long bloatSizeInBytes;
@@ -32,7 +32,7 @@ public class TableWithBloat extends DbObject implements TableBloatAware, Compara
     private TableWithBloat(@Nonnull final Table table,
                            final long bloatSizeInBytes,
                            final int bloatPercentage) {
-        this.table = Objects.requireNonNull(table, "table cannot be null");
+        this.table = Validators.tableNonNull(table);
         this.bloatSizeInBytes = Validators.sizeNotNegative(bloatSizeInBytes, "bloatSizeInBytes");
         this.bloatPercentage = Validators.argumentNotNegative(bloatPercentage, "bloatPercentage");
     }
@@ -42,7 +42,7 @@ public class TableWithBloat extends DbObject implements TableBloatAware, Compara
      */
     @Nonnull
     @Override
-    public String getName() {
+    public final String getName() {
         return table.getName();
     }
 

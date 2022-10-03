@@ -33,7 +33,7 @@ import javax.annotation.concurrent.Immutable;
  * @see TableNameAware
  */
 @Immutable
-public class DuplicatedIndexes extends DbObject implements TableNameAware {
+public class DuplicatedIndexes implements DbObject, TableNameAware {
 
     private static final Comparator<IndexWithSize> INDEX_WITH_SIZE_COMPARATOR =
             Comparator.comparing(IndexWithSize::getTableName)

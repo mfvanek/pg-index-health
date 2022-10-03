@@ -24,25 +24,16 @@ class TableWithBloatTest {
 
     @Test
     void gettersShouldWork() {
-        final TableWithBloat bloat = TableWithBloat.of("t1", 10L, 2L, 20);
+        final TableWithBloat bloat = TableWithBloat.of("t1", 10L, 2L, 25);
         assertThat(bloat.getTableName())
                 .isEqualTo("t1")
                 .isEqualTo(bloat.getName());
         assertThat(bloat.getTableSizeInBytes())
                 .isEqualTo(10L);
-    }
-
-    @Test
-    void getBloatSizeInBytes() {
-        final TableWithBloat bloat = TableWithBloat.of("t1", 10L, 2L, 20);
         assertThat(bloat.getBloatSizeInBytes())
                 .isEqualTo(2L);
-    }
-
-    @Test
-    void getBloatPercentage() {
-        final TableWithBloat bloat = TableWithBloat.of("t", 5L, 1L, 25);
-        assertThat(bloat.getBloatPercentage()).isEqualTo(25);
+        assertThat(bloat.getBloatPercentage())
+                .isEqualTo(25);
     }
 
     @Test
@@ -109,10 +100,10 @@ class TableWithBloatTest {
                 .doesNotHaveSameHashCodeAs(second);
 
         // another Table
-        final Table anotherType = Table.of("t1", 1L);
+        final Table anotherType = Table.of("t1", tableSize);
         //noinspection AssertBetweenInconvertibleTypes
         assertThat(anotherType)
-                .isNotEqualTo(first) //NOSONAR
+                .isNotEqualTo(first)
                 .doesNotHaveSameHashCodeAs(first);
     }
 

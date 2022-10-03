@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.generator;
 
-import io.github.mfvanek.pg.model.table.ColumnNameAware;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;

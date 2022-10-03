@@ -11,16 +11,15 @@
 package io.github.mfvanek.pg.model;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * A generalized representation of a database object.
+ * Mostly used as a marker interface.
  *
  * @author Ivan Vahrushev
  * @since 0.7.0
  */
-@Immutable
-public abstract class DbObject {
+public interface DbObject {
 
     /**
      * Gets database object name.
@@ -28,5 +27,5 @@ public abstract class DbObject {
      * @return database object name
      */
     @Nonnull
-    public abstract String getName();
+    String getName();
 }

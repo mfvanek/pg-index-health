@@ -24,7 +24,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.7.0
  */
 @Immutable
-public class StoredFunction extends DbObject implements Comparable<StoredFunction> {
+public class StoredFunction implements DbObject, Comparable<StoredFunction> {
 
     private final String functionName;
     private final String functionSignature;

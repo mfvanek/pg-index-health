@@ -23,25 +23,43 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class TableWithMissingIndexTest {
 
     @Test
-    void getters() {
+    void gettersShouldWork() {
         final TableWithMissingIndex table = TableWithMissingIndex.of("t", 1L, 2L, 3L);
         assertThat(table.getTableName())
                 .isEqualTo("t")
                 .isEqualTo(table.getName());
-        assertThat(table.getTableSizeInBytes()).isEqualTo(1L);
-        assertThat(table.getSeqScans()).isEqualTo(2L);
-        assertThat(table.getIndexScans()).isEqualTo(3L);
+        assertThat(table.getTableSizeInBytes())
+                .isEqualTo(1L);
+        assertThat(table.getSeqScans())
+                .isEqualTo(2L);
+        assertThat(table.getIndexScans())
+                .isEqualTo(3L);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void invalidArguments() {
-        assertThatThrownBy(() -> TableWithMissingIndex.of(null, 0, 0, 0)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> TableWithMissingIndex.of("", 0, 0, 0)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> TableWithMissingIndex.of(" ", 0, 0, 0)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> TableWithMissingIndex.of("t", -1, 0, 0)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> TableWithMissingIndex.of("t", 0, -1, 0)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> TableWithMissingIndex.of("t", 0, 0, -1)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> TableWithMissingIndex.of(null, 0, 0, 0))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("tableName cannot be null");
+        assertThatThrownBy(() -> TableWithMissingIndex.of("", 0, 0, 0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("tableName cannot be blank");
+        assertThatThrownBy(() -> TableWithMissingIndex.of(" ", 0, 0, 0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("tableName cannot be blank");
+        assertThatThrownBy(() -> TableWithMissingIndex.of("t", -1, 0, 0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("tableSizeInBytes cannot be less than zero");
+        assertThatThrownBy(() -> TableWithMissingIndex.of("t", 0, -1, 0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("seqScans cannot be less than zero");
+        assertThatThrownBy(() -> TableWithMissingIndex.of("t", 0, 0, -1))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("indexScans cannot be less than zero");
+        assertThatThrownBy(() -> TableWithMissingIndex.of(null, 0L, 0L))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("table cannot be null");
     }
 
     @Test
@@ -82,15 +100,15 @@ class TableWithMissingIndexTest {
         final TableWithBloat anotherType = TableWithBloat.of("t1", 4L, 11L, 50);
         //noinspection AssertBetweenInconvertibleTypes
         assertThat(anotherType)
-                .isNotEqualTo(first) //NOSONAR
-                .doesNotHaveSameHashCodeAs(first);
+                .isNotEqualTo(first)
+                .hasSameHashCodeAs(first);
     }
 
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(TableWithMissingIndex.class)
-                .withIgnoredFields("tableSizeInBytes", "seqScans", "indexScans")
+                .withIgnoredFields("seqScans", "indexScans")
                 .verify();
     }
 

@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.table;
+package io.github.mfvanek.pg.model.column;
 
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.utils.Validators;
@@ -25,7 +25,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.6.2
  */
 @Immutable
-public class ColumnWithSerialType extends DbObject implements ColumnNameAware, Comparable<ColumnWithSerialType> {
+public class ColumnWithSerialType implements DbObject, ColumnNameAware, Comparable<ColumnWithSerialType> {
 
     private final Column column;
     private final SerialType serialType;

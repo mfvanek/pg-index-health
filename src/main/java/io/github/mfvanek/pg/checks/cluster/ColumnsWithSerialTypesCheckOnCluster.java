@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.checks.cluster;
 
 import io.github.mfvanek.pg.checks.host.ColumnsWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.model.table.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 
 import javax.annotation.Nonnull;
 

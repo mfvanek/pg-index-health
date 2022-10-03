@@ -14,7 +14,7 @@ import io.github.mfvanek.pg.checks.extractors.ColumnWithSerialTypeExtractor;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.table.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 
 import java.util.List;
 import javax.annotation.Nonnull;

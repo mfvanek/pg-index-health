@@ -26,7 +26,7 @@ import javax.annotation.concurrent.Immutable;
  * @see IndexNameAware
  */
 @Immutable
-public class Index extends DbObject implements TableNameAware, IndexNameAware, Comparable<Index> {
+public class Index implements DbObject, TableNameAware, IndexNameAware, Comparable<Index> {
 
     private final String tableName;
     private final String indexName;
@@ -43,7 +43,7 @@ public class Index extends DbObject implements TableNameAware, IndexNameAware, C
     @Nonnull
     @Override
     public final String getName() {
-        return indexName;
+        return getIndexName();
     }
 
     /**
@@ -120,8 +120,8 @@ public class Index extends DbObject implements TableNameAware, IndexNameAware, C
     /**
      * Constructs an {@code Index} object.
      *
-     * @param tableName table name; should be non blank.
-     * @param indexName index name; should be non blank.
+     * @param tableName table name; should be non-blank.
+     * @param indexName index name; should be non-blank.
      * @return {@code Index}
      */
     public static Index of(@Nonnull final String tableName, @Nonnull final String indexName) {

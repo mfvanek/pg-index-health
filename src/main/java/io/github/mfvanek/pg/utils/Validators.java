@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
+import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +23,11 @@ public final class Validators {
 
     private Validators() {
         throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    public static Table tableNonNull(@Nonnull final Table table) {
+        return Objects.requireNonNull(table, "table cannot be null");
     }
 
     public static long valueIsPositive(final long argumentValue, @Nonnull final String argumentName) {

@@ -23,13 +23,12 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class Table extends DbObject implements TableSizeAware, Comparable<Table> {
+public class Table implements DbObject, TableSizeAware, Comparable<Table> {
 
     private final String tableName;
     private final long tableSizeInBytes;
 
-    @SuppressWarnings("WeakerAccess")
-    protected Table(@Nonnull final String tableName, final long tableSizeInBytes) {
+    private Table(@Nonnull final String tableName, final long tableSizeInBytes) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.tableSizeInBytes = Validators.sizeNotNegative(tableSizeInBytes, "tableSizeInBytes");
     }
@@ -40,7 +39,7 @@ public class Table extends DbObject implements TableSizeAware, Comparable<Table>
     @Nonnull
     @Override
     public final String getName() {
-        return tableName;
+        return getTableName();
     }
 
     /**
@@ -60,8 +59,7 @@ public class Table extends DbObject implements TableSizeAware, Comparable<Table>
         return tableSizeInBytes;
     }
 
-    @SuppressWarnings("WeakerAccess")
-    protected String innerToString() {
+    final String innerToString() {
         return "tableName='" + tableName + '\'' +
                 ", tableSizeInBytes=" + tableSizeInBytes;
     }
