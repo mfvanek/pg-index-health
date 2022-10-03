@@ -90,7 +90,10 @@ class TableTest {
 
         // another implementation of Table
         final TableWithBloat another = TableWithBloat.of("t1", 23L, 11L, 50);
-        assertThat(another).isEqualTo(first);
+        //noinspection AssertBetweenInconvertibleTypes
+        assertThat(another)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
     }
 
     @Test

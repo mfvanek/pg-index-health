@@ -23,11 +23,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class TableWithBloatTest {
 
     @Test
-    void getBloatSizeInBytes() {
+    void gettersShouldWork() {
         final TableWithBloat bloat = TableWithBloat.of("t1", 10L, 2L, 20);
         assertThat(bloat.getTableName())
                 .isEqualTo("t1")
                 .isEqualTo(bloat.getName());
+        assertThat(bloat.getTableSizeInBytes())
+                .isEqualTo(10L);
+    }
+
+    @Test
+    void getBloatSizeInBytes() {
+        final TableWithBloat bloat = TableWithBloat.of("t1", 10L, 2L, 20);
         assertThat(bloat.getBloatSizeInBytes())
                 .isEqualTo(2L);
     }
@@ -44,13 +51,27 @@ class TableWithBloatTest {
                 .hasToString("TableWithBloat{tableName='t', tableSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}");
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThatThrownBy(() -> TableWithBloat.of("t", 0L, -1L, 0)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> TableWithBloat.of("t", 0L, 0L, -1)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> TableWithBloat.of("t", -1L, 0L, 0)).isInstanceOf(IllegalArgumentException.class);
-        final TableWithBloat bloat = TableWithBloat.of("t", 0L, 0L, 0);
-        assertThat(bloat).isNotNull();
+        assertThatThrownBy(() -> TableWithBloat.of(null, 0L, 0L, 0))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("tableName cannot be null");
+        assertThatThrownBy(() -> TableWithBloat.of(null, 0L, 0))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("table cannot be null");
+        assertThatThrownBy(() -> TableWithBloat.of("t", 0L, -1L, 0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("bloatSizeInBytes cannot be less than zero");
+        assertThatThrownBy(() -> TableWithBloat.of("t", 0L, 0L, -1))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("bloatPercentage cannot be less than zero");
+        assertThatThrownBy(() -> TableWithBloat.of("t", -1L, 0L, 0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("tableSizeInBytes cannot be less than zero");
+
+        assertThat(TableWithBloat.of("t", 0L, 0L, 0))
+                .isNotNull();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -88,18 +109,46 @@ class TableWithBloatTest {
                 .doesNotHaveSameHashCodeAs(second);
 
         // another Table
-        final TableWithMissingIndex anotherType = TableWithMissingIndex.of("t1", 1L, 0, 1);
+        final Table anotherType = Table.of("t1", 1L);
         //noinspection AssertBetweenInconvertibleTypes
         assertThat(anotherType)
-                .isEqualTo(first) //NOSONAR
-                .hasSameHashCodeAs(first);
+                .isNotEqualTo(first) //NOSONAR
+                .doesNotHaveSameHashCodeAs(first);
     }
 
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(TableWithBloat.class)
-                .withIgnoredFields("tableSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
+                .withIgnoredFields("bloatSizeInBytes", "bloatPercentage")
                 .verify();
+    }
+
+    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+    @Test
+    void compareToTest() {
+        final long tableSize = 22L;
+        final TableWithBloat first = TableWithBloat.of("t1", tableSize, 11L, 50);
+        final TableWithBloat theSame = TableWithBloat.of("t1", 44L, 11L, 50); // different size!
+        final TableWithBloat second = TableWithBloat.of("t2", 30L, 3L, 10);
+        final TableWithBloat third = TableWithBloat.of("t3", tableSize, 11L, 50);
+
+        assertThatThrownBy(() -> first.compareTo(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("other cannot be null");
+
+        assertThat(first)
+                .isEqualByComparingTo(first) // self
+                .isEqualByComparingTo(theSame) // the same
+                .isLessThan(second)
+                .isLessThan(third);
+
+        assertThat(second)
+                .isGreaterThan(first)
+                .isLessThan(third);
+
+        assertThat(third)
+                .isGreaterThan(first)
+                .isGreaterThan(second);
     }
 }

@@ -82,8 +82,8 @@ class TableWithMissingIndexTest {
         final TableWithBloat anotherType = TableWithBloat.of("t1", 4L, 11L, 50);
         //noinspection AssertBetweenInconvertibleTypes
         assertThat(anotherType)
-                .isEqualTo(first) //NOSONAR
-                .hasSameHashCodeAs(first);
+                .isNotEqualTo(first) //NOSONAR
+                .doesNotHaveSameHashCodeAs(first);
     }
 
     @Test

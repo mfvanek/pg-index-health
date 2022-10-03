@@ -112,7 +112,7 @@ public class Table extends DbObject implements TableSizeAware, Comparable<Table>
     /**
      * Constructs a {@code Table} object.
      *
-     * @param tableName        table name; should be non blank.
+     * @param tableName        table name; should be non-blank.
      * @param tableSizeInBytes table size in bytes; should be positive or zero.
      * @return {@code Table}
      */
