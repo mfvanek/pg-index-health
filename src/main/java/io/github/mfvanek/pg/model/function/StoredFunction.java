@@ -41,7 +41,7 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
     @Nonnull
     @Override
     public final String getName() {
-        return functionName;
+        return getFunctionName();
     }
 
     /**
@@ -112,10 +112,23 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
         return functionSignature.compareTo(other.functionSignature);
     }
 
+    /**
+     * Constructs a {@code StoredFunction} object without arguments/signature.
+     *
+     * @param functionName procedure/function name.
+     * @return {@code StoredFunction}
+     */
     public static StoredFunction ofNoArgs(@Nonnull final String functionName) {
         return new StoredFunction(functionName, "");
     }
 
+    /**
+     * Constructs a {@code StoredFunction} object.
+     *
+     * @param functionName      procedure/function name.
+     * @param functionSignature procedure/function signature (arguments).
+     * @return {@code StoredFunction}
+     */
     public static StoredFunction of(@Nonnull final String functionName, @Nonnull final String functionSignature) {
         return new StoredFunction(functionName, functionSignature);
     }

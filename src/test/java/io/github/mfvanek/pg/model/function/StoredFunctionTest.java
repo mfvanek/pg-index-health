@@ -31,8 +31,7 @@ class StoredFunctionTest {
                 .isEqualTo("f1")
                 .isEqualTo(noArgsFunction.getName());
         assertThat(noArgsFunction.getFunctionSignature())
-                .isBlank()
-                .isEqualTo("");
+                .isEmpty();
 
         final StoredFunction function = StoredFunction.of("f2", "IN a integer, IN b integer, IN c integer");
         assertThat(function)
@@ -50,7 +49,7 @@ class StoredFunctionTest {
         assertThat(function)
                 .isNotNull();
         assertThat(function.getFunctionSignature())
-                .isEqualTo("");
+                .isEmpty();
     }
 
     @SuppressWarnings("ConstantConditions")
