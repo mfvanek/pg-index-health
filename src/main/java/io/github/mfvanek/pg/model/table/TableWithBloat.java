@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.model.table;
 
-import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.utils.Validators;
 
 import java.util.Objects;
@@ -23,44 +22,17 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class TableWithBloat implements DbObject, TableBloatAware, Comparable<TableWithBloat> {
+public class TableWithBloat extends AbstractTableAware implements TableBloatAware, Comparable<TableWithBloat> {
 
-    private final Table table;
     private final long bloatSizeInBytes;
     private final int bloatPercentage;
 
     private TableWithBloat(@Nonnull final Table table,
                            final long bloatSizeInBytes,
                            final int bloatPercentage) {
-        this.table = Validators.tableNonNull(table);
+        super(table);
         this.bloatSizeInBytes = Validators.sizeNotNegative(bloatSizeInBytes, "bloatSizeInBytes");
         this.bloatPercentage = Validators.argumentNotNegative(bloatPercentage, "bloatPercentage");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Nonnull
-    @Override
-    public final String getName() {
-        return table.getName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Nonnull
-    @Override
-    public String getTableName() {
-        return table.getTableName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public long getTableSizeInBytes() {
-        return table.getTableSizeInBytes();
     }
 
     /**

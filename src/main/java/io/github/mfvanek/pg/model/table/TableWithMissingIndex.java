@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.model.table;
 
-import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.utils.Validators;
 
 import java.util.Objects;
@@ -23,9 +22,8 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class TableWithMissingIndex implements DbObject, TableSizeAware, Comparable<TableWithMissingIndex> {
+public class TableWithMissingIndex extends AbstractTableAware implements Comparable<TableWithMissingIndex> {
 
-    private final Table table;
     // Normally, indexes should be used primarily when accessing a table.
     // If there are few or no indexes in the table, then seqScans will be larger than indexScans.
     private final long seqScans;
@@ -34,35 +32,9 @@ public class TableWithMissingIndex implements DbObject, TableSizeAware, Comparab
     private TableWithMissingIndex(@Nonnull final Table table,
                                   final long seqScans,
                                   final long indexScans) {
-        this.table = Validators.tableNonNull(table);
+        super(table);
         this.seqScans = Validators.countNotNegative(seqScans, "seqScans");
         this.indexScans = Validators.countNotNegative(indexScans, "indexScans");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Nonnull
-    @Override
-    public final String getName() {
-        return table.getName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Nonnull
-    @Override
-    public String getTableName() {
-        return table.getTableName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public long getTableSizeInBytes() {
-        return table.getTableSizeInBytes();
     }
 
     public long getSeqScans() {
