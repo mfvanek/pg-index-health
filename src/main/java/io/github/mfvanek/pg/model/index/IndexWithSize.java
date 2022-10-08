@@ -41,6 +41,10 @@ public class IndexWithSize extends Index implements IndexSizeAware {
         return super.innerToString() + ", indexSizeInBytes=" + indexSizeInBytes;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return IndexWithSize.class.getSimpleName() + '{' + innerToString() + '}';

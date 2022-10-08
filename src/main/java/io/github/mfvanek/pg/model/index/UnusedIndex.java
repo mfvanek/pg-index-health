@@ -32,6 +32,10 @@ public final class UnusedIndex extends IndexWithSize {
         return indexScans;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return UnusedIndex.class.getSimpleName() + '{' +

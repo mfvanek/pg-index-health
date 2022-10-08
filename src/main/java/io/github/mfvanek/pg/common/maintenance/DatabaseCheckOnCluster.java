@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,9 +25,9 @@ import javax.annotation.Nonnull;
  * @param <T> any database object associated with a table (table itself, index, column, constraint)
  * @author Ivan Vahrushev
  * @since 0.6.0
- * @see TableNameAware
+ * @see DbObject
  */
-public interface DatabaseCheckOnCluster<T extends TableNameAware> extends DiagnosticAware, RawTypeAware<T> {
+public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAware, RawTypeAware<T> {
 
     /**
      * Executes the check in the specified schema.

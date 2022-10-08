@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.generator;
 
-import io.github.mfvanek.pg.model.table.Column;
-import io.github.mfvanek.pg.model.table.ColumnNameAware;
+import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 

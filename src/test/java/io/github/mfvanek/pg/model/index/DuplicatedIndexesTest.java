@@ -38,6 +38,8 @@ class DuplicatedIndexesTest {
                 .hasSize(2)
                 .containsExactly("i1", "i2")
                 .isUnmodifiable();
+        assertThat(index.getName())
+                .isEqualTo("i1,i2");
     }
 
     @Test

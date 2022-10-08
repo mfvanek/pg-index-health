@@ -42,6 +42,10 @@ public enum MemoryUnit {
         return unitsCount * dimension;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return MemoryUnit.class.getSimpleName() + '{' +

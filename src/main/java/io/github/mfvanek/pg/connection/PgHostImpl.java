@@ -81,6 +81,9 @@ public class PgHostImpl implements PgHost {
         return new PgHostImpl(hostName, true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final boolean equals(final Object other) {
         if (this == other) {
@@ -96,11 +99,18 @@ public class PgHostImpl implements PgHost {
         return Objects.equals(hostNames, pgHost.hostNames);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final int hashCode() {
         return Objects.hash(hostNames);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return PgHostImpl.class.getSimpleName() + '{' +

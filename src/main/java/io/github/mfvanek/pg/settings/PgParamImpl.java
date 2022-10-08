@@ -37,8 +37,11 @@ public class PgParamImpl implements PgParam {
         return value;
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
+    @Override
     public String toString() {
         return PgParamImpl.class.getSimpleName() + '{' +
                 "name='" + name + '\'' +
@@ -46,6 +49,9 @@ public class PgParamImpl implements PgParam {
                 '}';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final boolean equals(final Object other) {
         if (this == other) {
@@ -60,6 +66,9 @@ public class PgParamImpl implements PgParam {
         return Objects.equals(name, that.getName());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final int hashCode() {
         return Objects.hash(name);

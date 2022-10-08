@@ -25,7 +25,11 @@ class IndexWithBloatTest {
     @Test
     void getBloatSizeInBytes() {
         final IndexWithBloat bloat = IndexWithBloat.of("t", "i", 10L, 2L, 20);
-        assertThat(bloat.getBloatSizeInBytes()).isEqualTo(2L);
+        assertThat(bloat.getIndexName())
+                .isEqualTo("i")
+                .isEqualTo(bloat.getName());
+        assertThat(bloat.getBloatSizeInBytes())
+                .isEqualTo(2L);
     }
 
     @Test

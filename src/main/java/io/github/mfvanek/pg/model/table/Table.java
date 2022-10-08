@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.utils.Validators;
 
 import java.util.Objects;
@@ -22,15 +23,23 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class Table implements TableSizeAware, Comparable<Table> {
+public class Table implements DbObject, TableSizeAware, Comparable<Table> {
 
     private final String tableName;
     private final long tableSizeInBytes;
 
-    @SuppressWarnings("WeakerAccess")
-    protected Table(@Nonnull final String tableName, final long tableSizeInBytes) {
+    private Table(@Nonnull final String tableName, final long tableSizeInBytes) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.tableSizeInBytes = Validators.sizeNotNegative(tableSizeInBytes, "tableSizeInBytes");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public final String getName() {
+        return getTableName();
     }
 
     /**
@@ -50,17 +59,23 @@ public class Table implements TableSizeAware, Comparable<Table> {
         return tableSizeInBytes;
     }
 
-    @SuppressWarnings("WeakerAccess")
-    protected String innerToString() {
+    final String innerToString() {
         return "tableName='" + tableName + '\'' +
                 ", tableSizeInBytes=" + tableSizeInBytes;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return Table.class.getSimpleName() + '{' + innerToString() + '}';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final boolean equals(final Object other) {
         if (this == other) {
@@ -75,11 +90,17 @@ public class Table implements TableSizeAware, Comparable<Table> {
         return Objects.equals(tableName, that.tableName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final int hashCode() {
         return Objects.hash(tableName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int compareTo(@Nonnull final Table other) {
         Objects.requireNonNull(other, "other cannot be null");
@@ -89,7 +110,7 @@ public class Table implements TableSizeAware, Comparable<Table> {
     /**
      * Constructs a {@code Table} object.
      *
-     * @param tableName        table name; should be non blank.
+     * @param tableName        table name; should be non-blank.
      * @param tableSizeInBytes table size in bytes; should be positive or zero.
      * @return {@code Table}
      */

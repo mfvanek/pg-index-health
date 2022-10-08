@@ -73,6 +73,9 @@ public class ConnectionCredentials {
         return password;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final boolean equals(final Object other) {
         if (this == other) {
@@ -89,11 +92,18 @@ public class ConnectionCredentials {
                 Objects.equals(password, that.password);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final int hashCode() {
         return Objects.hash(connectionUrls, userName, password);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return ConnectionCredentials.class.getSimpleName() + '{' +

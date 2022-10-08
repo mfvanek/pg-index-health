@@ -14,7 +14,7 @@ import io.github.mfvanek.pg.checks.extractors.ColumnExtractor;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.table.Column;
+import io.github.mfvanek.pg.model.column.Column;
 
 import java.util.List;
 import javax.annotation.Nonnull;

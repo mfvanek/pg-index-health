@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import io.github.mfvanek.pg.model.column.SerialType;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -67,6 +68,6 @@ class SerialTypeTest {
                 .hasMessage("Name is null");
         assertThatThrownBy(() -> SerialType.valueOf(""))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("No enum constant io.github.mfvanek.pg.model.table.SerialType.");
+                .hasMessage("No enum constant io.github.mfvanek.pg.model.column.SerialType.");
     }
 }

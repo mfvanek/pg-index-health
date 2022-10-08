@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import io.github.mfvanek.pg.model.column.Column;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,8 @@ class ColumnTest {
                 .isEqualTo("t1");
         assertThat(column.getColumnName())
                 .isNotBlank()
-                .isEqualTo("c1");
+                .isEqualTo("c1")
+                .isEqualTo(column.getName());
         assertThat(column.isNotNull()).isTrue();
         assertThat(column.isNullable()).isFalse();
 
@@ -40,7 +42,8 @@ class ColumnTest {
                 .isEqualTo("t2");
         assertThat(nullableColumn.getColumnName())
                 .isNotBlank()
-                .isEqualTo("c2");
+                .isEqualTo("c2")
+                .isEqualTo(nullableColumn.getName());
         assertThat(nullableColumn.isNotNull()).isFalse();
         assertThat(nullableColumn.isNullable()).isTrue();
     }

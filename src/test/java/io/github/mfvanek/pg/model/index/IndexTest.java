@@ -36,9 +36,13 @@ class IndexTest {
     @Test
     void getTableAndIndexName() {
         final Index index = Index.of("t", "i");
-        assertThat(index).isNotNull();
-        assertThat(index.getTableName()).isEqualTo("t");
-        assertThat(index.getIndexName()).isEqualTo("i");
+        assertThat(index)
+                .isNotNull();
+        assertThat(index.getTableName())
+                .isEqualTo("t");
+        assertThat(index.getIndexName())
+                .isEqualTo("i")
+                .isEqualTo(index.getName());
     }
 
     @Test
