@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
-import io.github.mfvanek.pg.model.table.TableNameAware;
+import io.github.mfvanek.pg.model.DbObject;
 
 import javax.annotation.Nonnull;
 
@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @since 0.6.0
  */
-public interface RawTypeAware<T extends TableNameAware> {
+public interface RawTypeAware<T extends DbObject> {
 
     /**
      * Gets original java type.

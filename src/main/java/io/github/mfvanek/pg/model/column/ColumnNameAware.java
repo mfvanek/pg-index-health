@@ -8,7 +8,9 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.table;
+package io.github.mfvanek.pg.model.column;
+
+import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import javax.annotation.Nonnull;
 

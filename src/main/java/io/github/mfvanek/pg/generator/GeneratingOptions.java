@@ -101,6 +101,10 @@ public class GeneratingOptions {
         return idxPosition != IdxPosition.NONE;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return GeneratingOptions.class.getSimpleName() + '{' +
@@ -219,6 +223,10 @@ public class GeneratingOptions {
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
+        @Nonnull
         @Override
         public String toString() {
             return Builder.class.getSimpleName() + '{' +

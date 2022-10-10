@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.DuplicatedIndexesParser;
 import io.github.mfvanek.pg.utils.Validators;
@@ -32,7 +33,7 @@ import javax.annotation.concurrent.Immutable;
  * @see TableNameAware
  */
 @Immutable
-public class DuplicatedIndexes implements TableNameAware {
+public class DuplicatedIndexes implements DbObject, TableNameAware {
 
     private static final Comparator<IndexWithSize> INDEX_WITH_SIZE_COMPARATOR =
             Comparator.comparing(IndexWithSize::getTableName)
@@ -58,6 +59,15 @@ public class DuplicatedIndexes implements TableNameAware {
                 this.indexes.stream()
                         .map(Index::getIndexName)
                         .collect(Collectors.toList()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public final String getName() {
+        return String.join(",", indexesNames);
     }
 
     /**
@@ -97,6 +107,9 @@ public class DuplicatedIndexes implements TableNameAware {
         return indexesNames;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final boolean equals(final Object other) {
         if (this == other) {
@@ -111,11 +124,18 @@ public class DuplicatedIndexes implements TableNameAware {
         return Objects.equals(indexes, that.indexes);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final int hashCode() {
         return Objects.hash(indexes);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return DuplicatedIndexes.class.getSimpleName() + '{' +

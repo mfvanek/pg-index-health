@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,7 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     @EnumSource(Diagnostic.class)
     @DisplayName("For each diagnostic should exist check")
     void completenessTest(@Nonnull final Diagnostic diagnostic) {
-        assertThat(checks.getCheck(diagnostic, TableNameAware.class))
+        assertThat(checks.getCheck(diagnostic, DbObject.class))
                 .isNotNull()
                 .satisfies(c -> assertThat(c.getDiagnostic())
                         .isEqualTo(diagnostic));
@@ -69,7 +69,7 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     @EnumSource(Diagnostic.class)
     @DisplayName("Each check should return nothing on empty database")
     void onEmptyDatabaseCheckShouldReturnNothing(@Nonnull final Diagnostic diagnostic) {
-        assertThat(checks.getCheck(diagnostic, TableNameAware.class).check())
+        assertThat(checks.getCheck(diagnostic, DbObject.class).check())
                 .isEmpty();
     }
 
@@ -78,7 +78,7 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     void onDatabaseWithoutThemCheckShouldReturnNothing(@Nonnull final Diagnostic diagnostic) {
         for (final String schemaName : SCHEMAS) {
             executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(), ctx ->
-                    assertThat(checks.getCheck(diagnostic, TableNameAware.class).check(ctx))
+                    assertThat(checks.getCheck(diagnostic, DbObject.class).check(ctx))
                             .isEmpty());
         }
     }

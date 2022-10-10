@@ -65,6 +65,10 @@ public class PgContext {
         return bloatPercentageThreshold;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return PgContext.class.getSimpleName() + '{' +

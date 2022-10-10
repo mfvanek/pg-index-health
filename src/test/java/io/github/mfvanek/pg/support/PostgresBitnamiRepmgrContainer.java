@@ -83,6 +83,9 @@ public class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<Postgr
         getWaitStrategy().waitUntilReady(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -99,6 +102,9 @@ public class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<Postgr
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), envVars);

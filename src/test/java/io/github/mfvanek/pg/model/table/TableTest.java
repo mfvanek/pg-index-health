@@ -25,8 +25,11 @@ class TableTest {
     @Test
     void getTableName() {
         final Table table = Table.of("t", 1L);
-        assertThat(table.getTableName()).isEqualTo("t");
-        assertThat(table.getTableSizeInBytes()).isEqualTo(1L);
+        assertThat(table.getTableName())
+                .isEqualTo("t")
+                .isEqualTo(table.getName());
+        assertThat(table.getTableSizeInBytes())
+                .isEqualTo(1L);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -87,7 +90,10 @@ class TableTest {
 
         // another implementation of Table
         final TableWithBloat another = TableWithBloat.of("t1", 23L, 11L, 50);
-        assertThat(another).isEqualTo(first);
+        //noinspection AssertBetweenInconvertibleTypes
+        assertThat(another)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first);
     }
 
     @Test

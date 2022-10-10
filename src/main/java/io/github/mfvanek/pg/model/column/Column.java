@@ -8,8 +8,9 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.table;
+package io.github.mfvanek.pg.model.column;
 
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.utils.Validators;
 
 import java.util.Objects;
@@ -23,7 +24,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.5.0
  */
 @Immutable
-public class Column implements ColumnNameAware, Comparable<Column> {
+public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
 
     private final String tableName;
     private final String columnName;
@@ -35,6 +36,15 @@ public class Column implements ColumnNameAware, Comparable<Column> {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.columnName = Validators.notBlank(columnName, "columnName");
         this.notNull = notNull;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public final String getName() {
+        return getColumnName();
     }
 
     /**
@@ -66,6 +76,7 @@ public class Column implements ColumnNameAware, Comparable<Column> {
     /**
      * {@inheritDoc}
      */
+    @Nonnull
     @Override
     public String toString() {
         return Column.class.getSimpleName() + "{tableName='" + tableName + '\'' +

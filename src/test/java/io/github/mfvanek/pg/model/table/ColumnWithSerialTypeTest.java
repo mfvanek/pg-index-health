@@ -10,6 +10,9 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.column.SerialType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -31,7 +34,8 @@ class ColumnWithSerialTypeTest {
         assertThat(column.getTableName())
                 .isEqualTo("t1");
         assertThat(column.getColumnName())
-                .isEqualTo("c1");
+                .isEqualTo("c1")
+                .isEqualTo(column.getName());
         assertThat(column.isNullable())
                 .isFalse();
         assertThat(column.getSerialType())

@@ -11,9 +11,9 @@
 package io.github.mfvanek.pg.checks.extractors;
 
 import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
-import io.github.mfvanek.pg.model.table.Column;
-import io.github.mfvanek.pg.model.table.ColumnWithSerialType;
-import io.github.mfvanek.pg.model.table.SerialType;
+import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.column.SerialType;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,7 +21,10 @@ import javax.annotation.Nonnull;
 
 public class ColumnWithSerialTypeExtractor implements ResultSetExtractor<ColumnWithSerialType> {
 
+    private final ResultSetExtractor<Column> columnExtractor;
+
     private ColumnWithSerialTypeExtractor() {
+        this.columnExtractor = ColumnExtractor.of();
     }
 
     /**
@@ -30,7 +33,6 @@ public class ColumnWithSerialTypeExtractor implements ResultSetExtractor<ColumnW
     @Nonnull
     @Override
     public ColumnWithSerialType extractData(@Nonnull final ResultSet resultSet) throws SQLException {
-        final ResultSetExtractor<Column> columnExtractor = ColumnExtractor.of();
         final Column column = columnExtractor.extractData(resultSet);
         final String columnType = resultSet.getString("column_type");
         final String sequenceName = resultSet.getString("sequence_name");

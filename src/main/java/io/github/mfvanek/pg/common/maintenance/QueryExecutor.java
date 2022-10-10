@@ -11,8 +11,8 @@
 package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.connection.PgConnection;
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -22,13 +22,14 @@ import javax.annotation.Nonnull;
  *
  * @author Ivan Vahrushev
  * @since 0.6.0
+ * @see DbObject
  */
 @FunctionalInterface
 public interface QueryExecutor {
 
     @Nonnull
-    <T extends TableNameAware> List<T> executeQuery(@Nonnull PgConnection pgConnection,
-                                                    @Nonnull PgContext pgContext,
-                                                    @Nonnull String sqlQuery,
-                                                    @Nonnull ResultSetExtractor<T> rse);
+    <T extends DbObject> List<T> executeQuery(@Nonnull PgConnection pgConnection,
+                                              @Nonnull PgContext pgContext,
+                                              @Nonnull String sqlQuery,
+                                              @Nonnull ResultSetExtractor<T> rse);
 }

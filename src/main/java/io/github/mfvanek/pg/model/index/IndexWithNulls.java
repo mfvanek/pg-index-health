@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
-import io.github.mfvanek.pg.model.table.Column;
+import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.utils.Validators;
 
 import java.util.Collections;
@@ -38,6 +38,10 @@ public final class IndexWithNulls extends IndexWithSize {
         return nullableColumn;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return IndexWithNulls.class.getSimpleName() + '{' +

@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
-import io.github.mfvanek.pg.model.table.Column;
+import io.github.mfvanek.pg.model.column.Column;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,8 @@ class ForeignKeyTest {
                 .isEqualTo("t");
         assertThat(foreignKey.getConstraintName())
                 .isNotBlank()
-                .isEqualTo("c_t_order_id");
+                .isEqualTo("c_t_order_id")
+                .isEqualTo(foreignKey.getName());
         assertThat(foreignKey.getColumnsInConstraint())
                 .hasSize(1)
                 .containsExactly(Column.ofNotNull("t", "order_id"))

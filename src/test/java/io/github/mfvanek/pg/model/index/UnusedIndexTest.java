@@ -26,7 +26,9 @@ class UnusedIndexTest {
     void getIndexScans() {
         final UnusedIndex index = UnusedIndex.of("t", "i", 1L, 2L);
         assertThat(index.getTableName()).isEqualTo("t");
-        assertThat(index.getIndexName()).isEqualTo("i");
+        assertThat(index.getIndexName())
+                .isEqualTo("i")
+                .isEqualTo(index.getName());
         assertThat(index.getIndexSizeInBytes()).isEqualTo(1L);
         assertThat(index.getIndexScans()).isEqualTo(2L);
     }

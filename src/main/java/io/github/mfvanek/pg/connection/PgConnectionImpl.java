@@ -52,6 +52,9 @@ public class PgConnectionImpl implements PgConnection {
         return new PgConnectionImpl(dataSource, host);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final boolean equals(final Object other) {
         if (this == other) {
@@ -66,11 +69,18 @@ public class PgConnectionImpl implements PgConnection {
         return Objects.equals(host, that.getHost());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final int hashCode() {
         return Objects.hash(host);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     public String toString() {
         return PgConnectionImpl.class.getSimpleName() + '{' +

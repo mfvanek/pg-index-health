@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.checks.extractors;
 
 import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
-import io.github.mfvanek.pg.model.table.Column;
+import io.github.mfvanek.pg.model.column.Column;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

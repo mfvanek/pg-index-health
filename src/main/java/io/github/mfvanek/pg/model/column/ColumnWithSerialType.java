@@ -8,8 +8,9 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.table;
+package io.github.mfvanek.pg.model.column;
 
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.utils.Validators;
 
 import java.util.Objects;
@@ -24,7 +25,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.6.2
  */
 @Immutable
-public class ColumnWithSerialType implements ColumnNameAware, Comparable<ColumnWithSerialType> {
+public class ColumnWithSerialType implements DbObject, ColumnNameAware, Comparable<ColumnWithSerialType> {
 
     private final Column column;
     private final SerialType serialType;
@@ -36,6 +37,15 @@ public class ColumnWithSerialType implements ColumnNameAware, Comparable<ColumnW
         this.column = Objects.requireNonNull(column, "column cannot be null");
         this.serialType = Objects.requireNonNull(serialType, "serialType cannot be null");
         this.sequenceName = Validators.notBlank(sequenceName, "sequenceName");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public final String getName() {
+        return column.getName();
     }
 
     /**
@@ -87,6 +97,7 @@ public class ColumnWithSerialType implements ColumnNameAware, Comparable<ColumnW
     /**
      * {@inheritDoc}
      */
+    @Nonnull
     @Override
     public String toString() {
         return ColumnWithSerialType.class.getSimpleName() + "{column=" + column +

@@ -25,7 +25,7 @@ import io.github.mfvanek.pg.checks.cluster.TablesWithoutDescriptionCheckOnCluste
 import io.github.mfvanek.pg.checks.cluster.TablesWithoutPrimaryKeyCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.model.table.TableNameAware;
+import io.github.mfvanek.pg.model.DbObject;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -37,10 +37,10 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 public class DatabaseChecks {
 
-    private final ConcurrentMap<Diagnostic, DatabaseCheckOnCluster<? extends TableNameAware>> checks = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Diagnostic, DatabaseCheckOnCluster<? extends DbObject>> checks = new ConcurrentHashMap<>();
 
     public DatabaseChecks(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
-        final Stream<DatabaseCheckOnCluster<? extends TableNameAware>> allChecks = Stream.of(
+        final Stream<DatabaseCheckOnCluster<? extends DbObject>> allChecks = Stream.of(
                 new TablesWithBloatCheckOnCluster(haPgConnection),
                 new TablesWithMissingIndexesCheckOnCluster(haPgConnection),
                 new TablesWithoutPrimaryKeyCheckOnCluster(haPgConnection),
@@ -60,7 +60,7 @@ public class DatabaseChecks {
 
     @SuppressWarnings("unchecked")
     @Nonnull
-    public <T extends TableNameAware> DatabaseCheckOnCluster<T> getCheck(@Nonnull final Diagnostic diagnostic, @Nonnull final Class<T> type) {
+    public <T extends DbObject> DatabaseCheckOnCluster<T> getCheck(@Nonnull final Diagnostic diagnostic, @Nonnull final Class<T> type) {
         final DatabaseCheckOnCluster<?> check = checks.get(diagnostic);
         if (check == null) {
             throw new IllegalStateException(String.format("Check for diagnostic %s not found", diagnostic));

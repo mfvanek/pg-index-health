@@ -23,17 +23,17 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.ForeignKey;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
-import io.github.mfvanek.pg.model.table.Column;
-import io.github.mfvanek.pg.model.table.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import org.apache.commons.collections4.CollectionUtils;
@@ -215,10 +215,10 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private <T extends TableNameAware> String logCheckResult(@Nonnull final DatabaseCheckOnCluster<T> check,
-                                                             @Nonnull final Predicate<? super T> exclusionsFilter,
-                                                             @Nonnull final PgContext pgContext,
-                                                             @Nonnull final LoggingKey key) {
+    private <T extends DbObject> String logCheckResult(@Nonnull final DatabaseCheckOnCluster<T> check,
+                                                                        @Nonnull final Predicate<? super T> exclusionsFilter,
+                                                                        @Nonnull final PgContext pgContext,
+                                                                        @Nonnull final LoggingKey key) {
         final List<T> checkResult = check.check(pgContext, exclusionsFilter);
         if (CollectionUtils.isNotEmpty(checkResult)) {
             LOGGER.warn("There are {} in the database {}", key.getDescription(), checkResult);

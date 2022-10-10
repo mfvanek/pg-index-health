@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.generator;
 
-import io.github.mfvanek.pg.model.table.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 
 import javax.annotation.Nonnull;
 
