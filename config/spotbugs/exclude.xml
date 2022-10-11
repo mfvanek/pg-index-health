@@ -33,4 +33,8 @@
         <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
         <Class name="io.github.mfvanek.pg.support.PostgreSqlContainerWrapper"/>
     </Match>
+    <Match>
+        <Bug pattern="OBL_UNSATISFIED_OBLIGATION,ODR_OPEN_DATABASE_RESOURCE"/>
+        <Class name="io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionUnitTest"/>
+    </Match>
 </FindBugsFilter>

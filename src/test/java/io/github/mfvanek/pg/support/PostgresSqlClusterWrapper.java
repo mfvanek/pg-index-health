@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.awaitility.Awaitility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import org.testcontainers.utility.DockerImageName;
 
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,19 +39,20 @@ import javax.sql.DataSource;
  * @author Alexey Antipin
  * @since 0.6.2
  */
-final class PostgresSqlClusterWrapper {
+final class PostgresSqlClusterWrapper implements AutoCloseable {
 
+    static final Duration WAIT_INTERVAL_SECONDS = Duration.ofSeconds(100L);
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final String IMAGE_TAG = preparePostgresBitnamiVersion();
+    private static final Logger LOGGER = LoggerFactory.getLogger(PostgresSqlClusterWrapper.class);
 
-    private final Logger logger = LoggerFactory.getLogger(PostgresSqlClusterWrapper.class);
     private final String primaryAlias;
     private final String standbyAlias;
     private final Network network;
     private final JdbcDatabaseContainer<?> containerForPrimary;
     private final JdbcDatabaseContainer<?> containerForStandBy;
-    private final DataSource dataSourceForPrimary;
-    private final DataSource dataSourceForStandBy;
+    private final BasicDataSource dataSourceForPrimary;
+    private final BasicDataSource dataSourceForStandBy;
 
     PostgresSqlClusterWrapper() {
         // REPMGR_NODE_NAME must end with a number, so aliases must also
@@ -74,6 +77,25 @@ final class PostgresSqlClusterWrapper {
 
         this.dataSourceForPrimary = PostgreSqlDataSourceHelper.buildDataSource(containerForPrimary);
         this.dataSourceForStandBy = PostgreSqlDataSourceHelper.buildDataSource(containerForStandBy);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        try {
+            dataSourceForStandBy.close();
+        } catch (SQLException ex) {
+            LOGGER.warn(ex.getMessage(), ex);
+        }
+        try {
+            dataSourceForPrimary.close();
+        } catch (SQLException ex) {
+            LOGGER.warn(ex.getMessage(), ex);
+        }
+        containerForStandBy.close();
+        containerForPrimary.close();
     }
 
     @Nonnull
@@ -102,13 +124,13 @@ final class PostgresSqlClusterWrapper {
 
     public void stopFirstContainer() {
         containerForPrimary.stop();
-        logger.info("Waiting for standby will be promoted to primary");
+        LOGGER.info("Waiting for standby will be promoted to primary");
         Awaitility.await("Promoting standby to primary")
-                .atMost(Duration.ofSeconds(100L))
+                .atMost(WAIT_INTERVAL_SECONDS)
                 .pollInterval(Duration.ofSeconds(1L))
                 .until(() -> containerForStandBy.getLogs().contains("promoting standby to primary"));
         Awaitility.await("Standby promoted to primary")
-                .atMost(Duration.ofSeconds(100L))
+                .atMost(WAIT_INTERVAL_SECONDS)
                 .pollInterval(Duration.ofSeconds(1L))
                 .until(() -> containerForStandBy.getLogs().contains("standby promoted to primary after"));
     }

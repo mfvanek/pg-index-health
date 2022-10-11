@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgHostImpl;
 
+import java.time.Duration;
 import javax.annotation.Nonnull;
 
 /**
@@ -22,9 +23,19 @@ import javax.annotation.Nonnull;
  * @author Alexey Antipin
  * @since 0.6.2
  */
-public class ClusterAwareTestBase {
+public final class PgConnectionAwareCluster implements AutoCloseable {
 
+    // on some systems promoting to primary could take up to minute and even more
+    public static final Duration MAX_WAIT_INTERVAL_SECONDS = PostgresSqlClusterWrapper.WAIT_INTERVAL_SECONDS.multipliedBy(2L);
     private final PostgresSqlClusterWrapper postgresCluster = new PostgresSqlClusterWrapper();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        postgresCluster.close();
+    }
 
     @Nonnull
     public PgConnection getFirstPgConnection() {

@@ -25,10 +25,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nonnull;
 
+/**
+ * Implementation of a connection to a high availability cluster (with set of primary host and replicas).
+ *
+ * @author Ivan Vakhrushev
+ * @author Alexey Antipin
+ * @see HighAvailabilityPgConnection
+ */
 public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConnection {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HighAvailabilityPgConnectionImpl.class);
-    private static final Long DEFAULT_DELAY_MILLISECONDS = 30_000L;
+    private static final long DEFAULT_PRIMARY_REFRESH_INTERVAL_MILLISECONDS = 30_000L;
 
     private final AtomicReference<PgConnection> cachedConnectionToPrimary = new AtomicReference<>();
     private final Set<PgConnection> connectionsToAllHostsInCluster;
@@ -65,35 +72,51 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
         return connectionsToAllHostsInCluster;
     }
 
+    /**
+     * Constructs a {@code HighAvailabilityPgConnection} object with the given {@code PgConnection}.
+     *
+     * @param connectionToPrimary connection to the primary host in the single-node cluster.
+     * @return {@code HighAvailabilityPgConnection}
+     */
     @Nonnull
     public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToPrimary) {
-        final PrimaryHostDeterminer primaryHostDeterminer = new PrimaryHostDeterminerImpl();
-        return new HighAvailabilityPgConnectionImpl(connectionToPrimary, Collections.singleton(connectionToPrimary), primaryHostDeterminer);
+        return of(connectionToPrimary, Collections.singleton(connectionToPrimary));
     }
 
+    /**
+     * Constructs a {@code HighAvailabilityPgConnection} object with the given connections to primary and replicas.
+     *
+     * @param connectionToPrimary            connection to the primary host in the cluster.
+     * @param connectionsToAllHostsInCluster connections to all replicas in the cluster.
+     * @return {@code HighAvailabilityPgConnection}
+     */
     @Nonnull
     public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToPrimary,
                                                   @Nonnull final Collection<PgConnection> connectionsToAllHostsInCluster) {
-        final PrimaryHostDeterminer primaryHostDeterminer = new PrimaryHostDeterminerImpl();
-        final HighAvailabilityPgConnectionImpl highAvailabilityPgConnection = new HighAvailabilityPgConnectionImpl(connectionToPrimary, connectionsToAllHostsInCluster, primaryHostDeterminer);
-        highAvailabilityPgConnection.startPrimaryUpdater(DEFAULT_DELAY_MILLISECONDS);
-        return highAvailabilityPgConnection;
+        return of(connectionToPrimary, connectionsToAllHostsInCluster, DEFAULT_PRIMARY_REFRESH_INTERVAL_MILLISECONDS);
     }
 
+    /**
+     * Constructs a {@code HighAvailabilityPgConnection} object with the given connections to primary and replicas and a refresh interval.
+     *
+     * @param connectionToPrimary                connection to the primary host in the cluster.
+     * @param connectionsToAllHostsInCluster     connections to all replicas in the cluster.
+     * @param primaryRefreshIntervalMilliseconds time interval in milliseconds to refresh connection to the primary host.
+     * @return {@code HighAvailabilityPgConnection}
+     */
     @Nonnull
     public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToPrimary,
                                                   @Nonnull final Collection<PgConnection> connectionsToAllHostsInCluster,
-                                                  @Nonnull final Long delayMilliseconds) {
+                                                  final long primaryRefreshIntervalMilliseconds) {
         final PrimaryHostDeterminer primaryHostDeterminer = new PrimaryHostDeterminerImpl();
         final HighAvailabilityPgConnectionImpl highAvailabilityPgConnection = new HighAvailabilityPgConnectionImpl(connectionToPrimary, connectionsToAllHostsInCluster, primaryHostDeterminer);
-        highAvailabilityPgConnection.startPrimaryUpdater(delayMilliseconds);
+        highAvailabilityPgConnection.startPrimaryUpdater(primaryRefreshIntervalMilliseconds);
         return highAvailabilityPgConnection;
     }
 
-    private void startPrimaryUpdater(@Nonnull final Long delayMilliseconds) {
-        Objects.requireNonNull(delayMilliseconds, "delayMilliseconds");
+    private void startPrimaryUpdater(final long primaryRefreshIntervalMilliseconds) {
         if (this.getConnectionsToAllHostsInCluster().size() > 1) {
-            executorService.scheduleWithFixedDelay(this::updateConnectionToPrimary, delayMilliseconds, delayMilliseconds, TimeUnit.MILLISECONDS);
+            executorService.scheduleWithFixedDelay(this::updateConnectionToPrimary, primaryRefreshIntervalMilliseconds, primaryRefreshIntervalMilliseconds, TimeUnit.MILLISECONDS);
         } else {
             LOGGER.debug("Single node. There's no point to monitor primary node.");
         }
