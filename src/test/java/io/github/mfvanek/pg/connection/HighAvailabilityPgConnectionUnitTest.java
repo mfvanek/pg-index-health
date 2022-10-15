@@ -10,6 +10,8 @@
 
 package io.github.mfvanek.pg.connection;
 
+import ch.qos.logback.classic.Level;
+import io.github.mfvanek.pg.support.LogsCaptor;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ import java.sql.Statement;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,18 +41,14 @@ class HighAvailabilityPgConnectionUnitTest {
         initMocks(firstConnectionMocks, true);
         initMocks(secondConnectionMocks, false);
 
-        final PgHost localhostOne = PgHostImpl.ofName("localhost-1");
-        final PgHost localhostTwo = PgHostImpl.ofName("localhost-2");
-        final PgConnection firstConnection = PgConnectionImpl.of(firstConnectionMocks.dataSource, localhostOne);
-        final PgConnection secondConnection = PgConnectionImpl.of(secondConnectionMocks.dataSource, localhostTwo);
-        final List<PgConnection> pgConnections = Arrays.asList(firstConnection, secondConnection);
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(firstConnection, pgConnections, 400L);
+        final List<PgConnection> pgConnections = prepareConnections();
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnections.get(0), pgConnections, 400L);
 
         assertThat(haPgConnection.getConnectionToPrimary())
                 .as("First connection is primary")
-                .isEqualTo(firstConnection)
+                .isEqualTo(pgConnections.get(0))
                 .as("Second connection is not primary")
-                .isNotEqualTo(secondConnection);
+                .isNotEqualTo(pgConnections.get(1));
         Awaitility
                 .await()
                 .atMost(Duration.ofMillis(1000L))
@@ -64,7 +63,7 @@ class HighAvailabilityPgConnectionUnitTest {
                 .until(() -> true);
         assertThat(haPgConnection.getConnectionToPrimary())
                 .as("Without new primary first connection considered as primary")
-                .isEqualTo(firstConnection);
+                .isEqualTo(pgConnections.get(0));
 
         Mockito.when(secondConnectionMocks.resultSet.getBoolean(1)).thenReturn(true);
         Awaitility
@@ -74,7 +73,7 @@ class HighAvailabilityPgConnectionUnitTest {
                 .until(() -> true);
         assertThat(haPgConnection.getConnectionToPrimary())
                 .as("Second connection become new primary")
-                .isEqualTo(secondConnection);
+                .isEqualTo(pgConnections.get(1));
     }
 
     @Test
@@ -82,32 +81,62 @@ class HighAvailabilityPgConnectionUnitTest {
         initMocks(firstConnectionMocks, false);
         initMocks(secondConnectionMocks, false);
 
-        final PgHost localhostOne = PgHostImpl.ofName("localhost-1");
-        final PgHost localhostTwo = PgHostImpl.ofName("localhost-2");
-        final PgConnection firstConnection = PgConnectionImpl.of(firstConnectionMocks.dataSource, localhostOne);
-        final PgConnection secondConnection = PgConnectionImpl.of(secondConnectionMocks.dataSource, localhostTwo);
-        final List<PgConnection> pgConnections = Arrays.asList(firstConnection, secondConnection);
-        HighAvailabilityPgConnectionImpl.of(firstConnection, pgConnections, 100L);
+        final List<PgConnection> pgConnections = prepareConnections();
+        HighAvailabilityPgConnectionImpl.of(pgConnections.get(0), pgConnections, 50L);
 
         Awaitility
                 .await()
-                .pollDelay(Duration.ofMillis(1100)) // 100ms start delay compensation
+                .pollDelay(Duration.ofMillis(560)) // + start delay compensation
                 .until(() -> true);
 
         // Due to interleaving method may be called more than 10 times but not less than 10
         Mockito.verify(firstConnectionMocks.dataSource, Mockito.atLeast(10)).getConnection();
+    }
 
+    @Test
+    void updateConnectionToPrimaryShouldCatchAndLogExceptions() throws SQLException {
+        try (LogsCaptor logsCaptor = new LogsCaptor(HighAvailabilityPgConnectionImpl.class, Level.WARN)) {
+            initMocksCommon(firstConnectionMocks);
+            Mockito.when(firstConnectionMocks.resultSet.getBoolean(1)).thenThrow(RuntimeException.class);
+            initMocksCommon(secondConnectionMocks);
+            Mockito.when(secondConnectionMocks.resultSet.getBoolean(1)).thenThrow(RuntimeException.class);
+
+            final List<PgConnection> pgConnections = prepareConnections();
+            HighAvailabilityPgConnectionImpl.of(pgConnections.get(0), pgConnections, 10L);
+
+            Awaitility
+                    .await()
+                    .pollDelay(Duration.ofMillis(100))
+                    .until(() -> true);
+
+            assertThat(logsCaptor.getLogs())
+                    .hasSizeGreaterThanOrEqualTo(10)
+                    .allMatch(l -> l.getMessage().contains("Exception during primary detection for host"));
+        }
     }
 
     private void initMocks(final ConnectionMocks connectionMocks, final boolean resultSetBooleanValue) throws SQLException {
+        initMocksCommon(connectionMocks);
+        Mockito.when(connectionMocks.resultSet.getBoolean(1)).thenReturn(resultSetBooleanValue);
+    }
+
+    private void initMocksCommon(final ConnectionMocks connectionMocks) throws SQLException {
         Mockito.when(connectionMocks.dataSource.getConnection()).thenReturn(connectionMocks.connection);
         Mockito.when(connectionMocks.connection.createStatement()).thenReturn(connectionMocks.statement);
         Mockito.when(connectionMocks.resultSet.next()).thenReturn(true);
-        Mockito.when(connectionMocks.resultSet.getBoolean(1)).thenReturn(resultSetBooleanValue);
         Mockito.when(connectionMocks.statement.executeQuery(anyString())).thenReturn(connectionMocks.resultSet);
     }
 
-    private static class ConnectionMocks {
+    @Nonnull
+    private List<PgConnection> prepareConnections() {
+        final PgHost localhostOne = PgHostImpl.ofName("localhost-1");
+        final PgHost localhostTwo = PgHostImpl.ofName("localhost-2");
+        final PgConnection firstConnection = PgConnectionImpl.of(firstConnectionMocks.dataSource, localhostOne);
+        final PgConnection secondConnection = PgConnectionImpl.of(secondConnectionMocks.dataSource, localhostTwo);
+        return Arrays.asList(firstConnection, secondConnection);
+    }
+
+    private static final class ConnectionMocks {
 
         private final Connection connection = Mockito.mock(Connection.class);
         private final Statement statement = Mockito.mock(Statement.class);

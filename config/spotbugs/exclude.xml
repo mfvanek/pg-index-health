@@ -31,7 +31,10 @@
     </Match>
     <Match>
         <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
-        <Class name="io.github.mfvanek.pg.support.PostgreSqlContainerWrapper"/>
+        <Or>
+            <Class name="io.github.mfvanek.pg.support.PostgreSqlContainerWrapper"/>
+            <Class name="io.github.mfvanek.pg.e2e.PostgresSqlClusterWrapper"/>
+        </Or>
     </Match>
     <Match>
         <Bug pattern="OBL_UNSATISFIED_OBLIGATION,ODR_OPEN_DATABASE_RESOURCE"/>

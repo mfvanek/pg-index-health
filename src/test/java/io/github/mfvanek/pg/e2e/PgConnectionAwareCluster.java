@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.support;
+package io.github.mfvanek.pg.e2e;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * @author Alexey Antipin
  * @since 0.6.2
  */
-public final class PgConnectionAwareCluster implements AutoCloseable {
+final class PgConnectionAwareCluster implements AutoCloseable {
 
     // on some systems promoting to primary could take up to minute and even more
     public static final Duration MAX_WAIT_INTERVAL_SECONDS = PostgresSqlClusterWrapper.WAIT_INTERVAL_SECONDS.multipliedBy(2L);

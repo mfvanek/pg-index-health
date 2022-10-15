@@ -8,9 +8,10 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.support;
+package io.github.mfvanek.pg.e2e;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
+import io.github.mfvanek.pg.support.PostgreSqlDataSourceHelper;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.awaitility.Awaitility;
 import org.slf4j.Logger;
@@ -45,6 +46,7 @@ final class PostgresSqlClusterWrapper implements AutoCloseable {
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final String IMAGE_TAG = preparePostgresBitnamiVersion();
     private static final Logger LOGGER = LoggerFactory.getLogger(PostgresSqlClusterWrapper.class);
+    private static final Duration STARTUP_TIMEOUT = Duration.ofSeconds(40L);
 
     private final String primaryAlias;
     private final String standbyAlias;
@@ -64,16 +66,24 @@ final class PostgresSqlClusterWrapper implements AutoCloseable {
         // Primary node
         final WaitStrategy waitStrategyForPrimary = new LogMessageWaitStrategy()
                 .withRegEx(".*Starting repmgrd.*\\s")
-                .withStartupTimeout(Duration.ofSeconds(30));
+                .withStartupTimeout(STARTUP_TIMEOUT);
         this.containerForPrimary = createContainerAndInitWith(this::primaryEnvVarsMap, primaryAlias, waitStrategyForPrimary);
         // Standby node
         final WaitStrategy waitStrategyForStandBy = new LogMessageWaitStrategy()
                 .withRegEx(".*starting monitoring of node.*\\s")
-                .withStartupTimeout(Duration.ofSeconds(30));
+                .withStartupTimeout(STARTUP_TIMEOUT);
         this.containerForStandBy = createContainerAndInitWith(this::standbyEnvVarsMap, standbyAlias, waitStrategyForStandBy);
 
         this.containerForPrimary.start();
+        Awaitility.await("Ensure primary is ready")
+                .atMost(STARTUP_TIMEOUT)
+                .pollInterval(Duration.ofSeconds(1L))
+                .until(() -> containerForPrimary.getLogs().contains("database system is ready to accept connections"));
         this.containerForStandBy.start();
+        Awaitility.await("Ensure cluster is ready")
+                .atMost(STARTUP_TIMEOUT)
+                .pollInterval(Duration.ofSeconds(1L))
+                .until(() -> containerForStandBy.getLogs().contains("started streaming WAL from primary"));
 
         this.dataSourceForPrimary = PostgreSqlDataSourceHelper.buildDataSource(containerForPrimary);
         this.dataSourceForStandBy = PostgreSqlDataSourceHelper.buildDataSource(containerForStandBy);
@@ -181,15 +191,15 @@ final class PostgresSqlClusterWrapper implements AutoCloseable {
             final String alias,
             final WaitStrategy waitStrategy
     ) {
-        final PostgresBitnamiRepmgrContainer container = new PostgresBitnamiRepmgrContainer(DockerImageName.parse(IMAGE_NAME).withTag(IMAGE_TAG), envVarsProvider.get());
-        container.withCreateContainerCmdModifier(cmd -> cmd.withName(alias));
-        container.setNetwork(network);
-        container.setWaitStrategy(waitStrategy);
-        container.setExposedPorts(Collections.singletonList(5432));
-        container.setNetworkAliases(Collections.singletonList(alias));
-        container.withSharedMemorySize(MemoryUnit.MB.convertToBytes(512));
-        container.withTmpFs(Collections.singletonMap("/var/lib/postgresql/data", "rw"));
-        return container;
+        //noinspection resource
+        return new PostgresBitnamiRepmgrContainer(DockerImageName.parse(IMAGE_NAME).withTag(IMAGE_TAG), envVarsProvider.get())
+                .withCreateContainerCmdModifier(cmd -> cmd.withName(alias))
+                .withSharedMemorySize(MemoryUnit.MB.convertToBytes(768))
+                .withTmpFs(Collections.singletonMap("/var/lib/postgresql/data", "rw"))
+                .withNetwork(network)
+                .withNetworkAliases(alias)
+                .withExposedPorts(5432)
+                .waitingFor(waitStrategy);
     }
 
     @Nonnull

@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.utils.PgSqlException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,6 +121,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
         }
     }
 
+    @SuppressWarnings({"checkstyle:IllegalCatch", "PMD.AvoidCatchingThrowable"})
     private void updateConnectionToPrimary() {
         connectionsToAllHostsInCluster.forEach(pgConnection -> {
             try {
@@ -129,10 +129,9 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
                     cachedConnectionToPrimary.set(pgConnection);
                     LOGGER.debug("Current primary is {}", pgConnection.getHost().getPgUrl());
                 }
-            } catch (PgSqlException e) {
-                LOGGER.error("Exception during primary detection for host {}", pgConnection.getHost(), e);
+            } catch (Throwable e) {
+                LOGGER.warn("Exception during primary detection for host {}", pgConnection.getHost(), e);
             }
         });
     }
 }
-

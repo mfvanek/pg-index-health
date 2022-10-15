@@ -8,10 +8,13 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.connection;
+package io.github.mfvanek.pg.e2e;
 
-import io.github.mfvanek.pg.support.PgConnectionAwareCluster;
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
+import io.github.mfvanek.pg.connection.PgConnection;
 import org.awaitility.Awaitility;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -26,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Alexey Antipin
  * @since 0.7.0
  */
+@Tag("cluster")
 class HighAvailabilityPgConnectionClusterTest {
 
     @Test
