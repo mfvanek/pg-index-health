@@ -86,7 +86,7 @@ class HighAvailabilityPgConnectionUnitTest {
 
         Awaitility
                 .await()
-                .pollDelay(Duration.ofMillis(560)) // + start delay compensation
+                .pollDelay(Duration.ofMillis(650)) // start delay compensation + OS dependent behavior
                 .until(() -> true);
 
         // Due to interleaving method may be called more than 10 times but not less than 10
@@ -106,7 +106,7 @@ class HighAvailabilityPgConnectionUnitTest {
 
             Awaitility
                     .await()
-                    .pollDelay(Duration.ofMillis(100))
+                    .pollDelay(Duration.ofMillis(120)) // start delay compensation + OS dependent behavior
                     .until(() -> true);
 
             assertThat(logsCaptor.getLogs())
