@@ -121,7 +121,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
         }
     }
 
-    @SuppressWarnings({"checkstyle:IllegalCatch", "PMD.AvoidCatchingThrowable"})
+    @SuppressWarnings("checkstyle:IllegalCatch")
     private void updateConnectionToPrimary() {
         connectionsToAllHostsInCluster.forEach(pgConnection -> {
             try {
@@ -129,7 +129,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
                     cachedConnectionToPrimary.set(pgConnection);
                     LOGGER.debug("Current primary is {}", pgConnection.getHost().getPgUrl());
                 }
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 LOGGER.warn("Exception during primary detection for host {}", pgConnection.getHost(), e);
             }
         });
