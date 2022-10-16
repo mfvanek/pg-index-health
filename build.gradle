@@ -51,12 +51,26 @@ dependencies {
 
 test {
     testLogging.showStandardStreams = false // set to true for debug purposes
-    useJUnitPlatform()
+    useJUnitPlatform() {
+        excludeTags 'cluster'
+    }
     dependsOn checkstyleMain, checkstyleTest, pmdMain, pmdTest, spotbugsMain, spotbugsTest
     maxParallelForks = 2 // try to set a higher value to speed up the local build
     finalizedBy jacocoTestReport
     finalizedBy jacocoTestCoverageVerification
 }
+
+tasks.register('clusterTest', Test) {
+    description = 'Runs tests on PostgreSQL cluster.'
+    group = 'verification'
+    useJUnitPlatform() {
+        includeTags 'cluster'
+    }
+    maxParallelForks = 1 // important!
+    mustRunAfter test
+}
+
+build.dependsOn clusterTest
 
 jar {
     manifest {

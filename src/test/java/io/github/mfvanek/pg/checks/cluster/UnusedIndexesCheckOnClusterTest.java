@@ -10,11 +10,6 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
 import io.github.mfvanek.pg.checks.predicates.FilterIndexesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
@@ -23,14 +18,12 @@ import io.github.mfvanek.pg.model.index.IndexNameAware;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.support.LogsCaptor;
 import io.github.mfvanek.pg.utils.ClockHolder;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
-import org.slf4j.LoggerFactory;
 
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -44,29 +37,9 @@ import static io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster.ge
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SuppressWarnings("PMD.ExcessiveImports")
 class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private static Logger logger;
-    private static ListAppender<ILoggingEvent> logAppender;
-
     private final DatabaseCheckOnCluster<UnusedIndex> check = new UnusedIndexesCheckOnCluster(getHaPgConnection());
-
-    @BeforeAll
-    static void init() {
-        final LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-        logger = context.getLogger(UnusedIndexesCheckOnCluster.class);
-        logAppender = new ListAppender<>();
-        logAppender.start();
-        logger.addAppender(logAppender);
-    }
-
-    @BeforeEach
-    void setUp() {
-        logger.setLevel(Level.INFO);
-        logAppender.clearAllFilters();
-        logAppender.list.clear();
-    }
 
     @Test
     void shouldSatisfyContract() {
@@ -76,12 +49,14 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void checkOnClusterShouldLogResetStatisticsData() {
-        assertThat(check.check())
-                .isEmpty();
+        try (LogsCaptor logsCaptor = new LogsCaptor(UnusedIndexesCheckOnCluster.class)) {
+            assertThat(check.check())
+                    .isEmpty();
 
-        assertThat(logAppender.list)
-                .hasSize(1)
-                .allMatch(l -> l.getMessage().contains("reset"));
+            assertThat(logsCaptor.getLogs())
+                    .hasSize(1)
+                    .allMatch(l -> l.getMessage().contains("reset"));
+        }
     }
 
     @ParameterizedTest

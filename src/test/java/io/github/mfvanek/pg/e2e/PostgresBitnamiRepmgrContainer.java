@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.support;
+package io.github.mfvanek.pg.e2e;
 
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -24,12 +24,12 @@ import java.util.Objects;
  * @author Alexey Antipin
  * @since 0.6.2
  */
-public class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitnamiRepmgrContainer> {
+class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitnamiRepmgrContainer> {
 
     public static final Integer POSTGRESQL_PORT = 5432;
     private final Map<String, String> envVars;
 
-    public PostgresBitnamiRepmgrContainer(final DockerImageName dockerImageName, final Map<String, String> envVars) {
+    PostgresBitnamiRepmgrContainer(final DockerImageName dockerImageName, final Map<String, String> envVars) {
         super(dockerImageName);
         this.envVars = Collections.unmodifiableMap(envVars);
         addExposedPort(POSTGRESQL_PORT);

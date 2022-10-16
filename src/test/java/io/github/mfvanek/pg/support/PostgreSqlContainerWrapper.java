@@ -11,10 +11,12 @@
 package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,19 +24,33 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-final class PostgreSqlContainerWrapper {
+final class PostgreSqlContainerWrapper implements AutoCloseable {
 
     private final PostgreSQLContainer<?> container;
-    private final DataSource dataSource;
+    private final BasicDataSource dataSource;
 
     PostgreSqlContainerWrapper(@Nonnull final List<Pair<String, String>> additionalParameters) {
         final String pgVersion = preparePostgresVersion();
+        //noinspection resource
         this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres").withTag(pgVersion))
                 .withSharedMemorySize(MemoryUnit.MB.convertToBytes(512))
                 .withTmpFs(Collections.singletonMap("/var/lib/postgresql/data", "rw"))
                 .withCommand(prepareCommandParts(additionalParameters));
         this.container.start();
         this.dataSource = PostgreSqlDataSourceHelper.buildDataSource(container);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        try {
+            dataSource.close();
+        } catch (SQLException ignored) {
+            // ignore
+        }
+        container.close();
     }
 
     @Nonnull

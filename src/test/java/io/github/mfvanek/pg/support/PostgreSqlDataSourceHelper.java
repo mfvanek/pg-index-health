@@ -14,7 +14,6 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 
 import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 
 /**
  * Builder for DataSource.
@@ -29,7 +28,7 @@ public final class PostgreSqlDataSourceHelper {
     }
 
     @Nonnull
-    public static DataSource buildDataSource(@Nonnull final JdbcDatabaseContainer<?> container) {
+    public static BasicDataSource buildDataSource(@Nonnull final JdbcDatabaseContainer<?> container) {
         final BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setUrl(container.getJdbcUrl());
         basicDataSource.setUsername(container.getUsername());
