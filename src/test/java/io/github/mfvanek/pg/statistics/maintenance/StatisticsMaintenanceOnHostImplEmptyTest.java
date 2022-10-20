@@ -24,12 +24,17 @@ class StatisticsMaintenanceOnHostImplEmptyTest extends StatisticsAwareTestBase {
 
     @Test
     void getLastStatsResetTimestamp() {
-        // Time of the last statistics reset is initialized to the system time during the first connection to the database.
         collectStatistics();
 
-        assertThat(statisticsMaintenance.getLastStatsResetTimestamp())
-                .isPresent()
-                .get()
-                .satisfies(t -> assertThat(t).isBeforeOrEqualTo(OffsetDateTime.now(ClockHolder.clock())));
+        if (isCumulativeStatisticsSystemSupported()) {
+            assertThat(statisticsMaintenance.getLastStatsResetTimestamp())
+                    .isNotPresent();
+        } else {
+            // Time of the last statistics reset is initialized to the system time during the first connection to the database.
+            assertThat(statisticsMaintenance.getLastStatsResetTimestamp())
+                    .isPresent()
+                    .get()
+                    .satisfies(t -> assertThat(t).isBeforeOrEqualTo(OffsetDateTime.now(ClockHolder.clock())));
+        }
     }
 }
