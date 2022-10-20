@@ -19,18 +19,18 @@ import org.testcontainers.utility.DockerImageName;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 final class PostgreSqlContainerWrapper implements AutoCloseable {
 
+    private final String pgVersion;
     private final PostgreSQLContainer<?> container;
     private final BasicDataSource dataSource;
 
     PostgreSqlContainerWrapper(@Nonnull final List<Pair<String, String>> additionalParameters) {
-        final String pgVersion = preparePostgresVersion();
+        this.pgVersion = preparePostgresVersion();
         //noinspection resource
         this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres").withTag(pgVersion))
                 .withSharedMemorySize(MemoryUnit.MB.convertToBytes(512))
@@ -55,8 +55,11 @@ final class PostgreSqlContainerWrapper implements AutoCloseable {
 
     @Nonnull
     private static String preparePostgresVersion() {
-        return Optional.ofNullable(System.getenv("TEST_PG_VERSION"))
-                .orElse("14.5");
+        final String pgVersion = System.getenv("TEST_PG_VERSION");
+        if (pgVersion != null) {
+            return pgVersion;
+        }
+        return "15.0";
     }
 
     @Nonnull
@@ -88,5 +91,19 @@ final class PostgreSqlContainerWrapper implements AutoCloseable {
     @Nonnull
     public String getPassword() {
         return container.getPassword();
+    }
+
+    /**
+     * Checks whether <a href="https://www.postgresql.org/docs/current/monitoring-stats.html">The Cumulative Statistics System</a> is supported for given PostgreSQL container.
+     *
+     * @see <a href="https://www.percona.com/blog/postgresql-15-stats-collector-gone-whats-new/">PostgreSQL 15: Stats Collector Gone? What’s New?</a>
+     *
+     * @return true for version 15 and higher
+     * @since 0.7.0
+     */
+    public boolean isCumulativeStatisticsSystemSupported() {
+        final String[] parts = pgVersion.split("\\.");
+        final int majorVersion = Integer.parseInt(parts[0]);
+        return majorVersion >= 15;
     }
 }

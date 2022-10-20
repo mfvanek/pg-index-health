@@ -206,7 +206,8 @@ final class PostgresSqlClusterWrapper implements AutoCloseable {
     private static String preparePostgresBitnamiVersion() {
         // Bitnami images use semantic versioning with three digits
         final String pgVersion = System.getenv("TEST_PG_VERSION");
-        if (pgVersion != null) {
+        // Waiting for https://github.com/bitnami/containers/issues/10110
+        if (pgVersion != null && !pgVersion.startsWith("15.")) {
             return pgVersion + ".0";
         }
         return "14.5.0";

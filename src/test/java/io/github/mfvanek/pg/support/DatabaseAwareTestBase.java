@@ -67,4 +67,8 @@ public abstract class DatabaseAwareTestBase {
             testExecutor.accept(PgContext.of(schemaName, 0));
         }
     }
+
+    protected boolean isCumulativeStatisticsSystemSupported() {
+        return POSTGRES.isCumulativeStatisticsSystemSupported();
+    }
 }
