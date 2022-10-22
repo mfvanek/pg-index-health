@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.index;
+package io.github.mfvanek.pg.model.constraint;
 
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.column.Column;
@@ -126,6 +126,14 @@ public class ForeignKey implements DbObject, TableNameAware {
                 '}';
     }
 
+    /**
+     * Constructs a {@code ForeignKey} object with given columns.
+     *
+     * @param tableName table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param columnsInConstraint list of columns that are included in constraint; should be non-empty.
+     * @return {@code ForeignKey}
+     */
     @Nonnull
     public static ForeignKey of(@Nonnull final String tableName,
                                 @Nonnull final String constraintName,
@@ -133,6 +141,14 @@ public class ForeignKey implements DbObject, TableNameAware {
         return new ForeignKey(tableName, constraintName, columnsInConstraint);
     }
 
+    /**
+     * Constructs a {@code ForeignKey} object with given {@code Column}.
+     *
+     * @param tableName table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param column column that is included in constraint.
+     * @return {@code ForeignKey}
+     */
     @Nonnull
     public static ForeignKey ofColumn(@Nonnull final String tableName,
                                       @Nonnull final String constraintName,
@@ -141,6 +157,14 @@ public class ForeignKey implements DbObject, TableNameAware {
                 Collections.singletonList(Objects.requireNonNull(column, "column")));
     }
 
+    /**
+     * Constructs a {@code ForeignKey} object with not null column.
+     *
+     * @param tableName table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param columnName name of column that is included in constraint; should be non-blank.
+     * @return {@code ForeignKey}
+     */
     @Nonnull
     public static ForeignKey ofNotNullColumn(@Nonnull final String tableName,
                                              @Nonnull final String constraintName,
@@ -148,6 +172,14 @@ public class ForeignKey implements DbObject, TableNameAware {
         return ofColumn(tableName, constraintName, Column.ofNotNull(tableName, columnName));
     }
 
+    /**
+     * Constructs a {@code ForeignKey} object with nullable column.
+     *
+     * @param tableName table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param columnName name of column that is included in constraint; should be non-blank.
+     * @return {@code ForeignKey}
+     */
     @Nonnull
     public static ForeignKey ofNullableColumn(@Nonnull final String tableName,
                                               @Nonnull final String constraintName,

@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.generator;
 
-import io.github.mfvanek.pg.model.index.ForeignKey;
+import io.github.mfvanek.pg.model.constraint.ForeignKey;
 
 import javax.annotation.Nonnull;
 

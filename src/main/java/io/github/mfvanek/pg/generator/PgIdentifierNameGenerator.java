@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.index.ForeignKey;
+import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
