@@ -11,8 +11,10 @@
 package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnColumnsStatement;
+import io.github.mfvanek.pg.support.statements.AddBlankCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnTablesStatement;
 import io.github.mfvanek.pg.support.statements.AddCommentOnColumnsStatement;
+import io.github.mfvanek.pg.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.support.statements.AddCommentOnTablesStatement;
 import io.github.mfvanek.pg.support.statements.AddLinksBetweenAccountsAndClientsStatement;
 import io.github.mfvanek.pg.support.statements.ConvertColumnToJsonTypeStatement;
@@ -23,10 +25,12 @@ import io.github.mfvanek.pg.support.statements.CreateDuplicatedCustomCollationIn
 import io.github.mfvanek.pg.support.statements.CreateDuplicatedHashIndexStatement;
 import io.github.mfvanek.pg.support.statements.CreateDuplicatedIndexStatement;
 import io.github.mfvanek.pg.support.statements.CreateForeignKeyOnNullableColumnStatement;
+import io.github.mfvanek.pg.support.statements.CreateFunctionsStatement;
 import io.github.mfvanek.pg.support.statements.CreateIndexWithNullValues;
 import io.github.mfvanek.pg.support.statements.CreateIndexesWithDifferentOpclassStatement;
 import io.github.mfvanek.pg.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.support.statements.CreateProceduresStatement;
 import io.github.mfvanek.pg.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.support.statements.CreateSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKey;
@@ -217,6 +221,30 @@ public final class DatabasePopulator implements AutoCloseable {
         statementsToExecuteInSameTransaction.putIfAbsent(82, new CreateTableWithSerialPrimaryKeyReferencesToAnotherTable(schemaName));
         return withCheckConstraintOnSerialPrimaryKey()
                 .withUniqueConstraintOnSerialColumn();
+    }
+
+    @Nonnull
+    public DatabasePopulator withFunctions() {
+        statementsToExecuteInSameTransaction.putIfAbsent(85, new CreateFunctionsStatement(schemaName));
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withProcedures() {
+        statementsToExecuteInSameTransaction.putIfAbsent(86, new CreateProceduresStatement(schemaName));
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withBlankCommentOnFunctions() {
+        statementsToExecuteInSameTransaction.putIfAbsent(87, new AddBlankCommentOnFunctionsStatement(schemaName));
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withCommentOnProcedures() {
+        statementsToExecuteInSameTransaction.putIfAbsent(88, new AddCommentOnProceduresStatement(schemaName));
+        return this;
     }
 
     public void populate() {

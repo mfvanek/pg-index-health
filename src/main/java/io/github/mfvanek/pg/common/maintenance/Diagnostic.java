@@ -37,7 +37,8 @@ public enum Diagnostic {
     TABLES_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "tables_without_description.sql", QueryExecutors::executeQueryWithSchema),
     COLUMNS_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "columns_without_description.sql", QueryExecutors::executeQueryWithSchema),
     COLUMNS_WITH_JSON_TYPE(ExecutionTopology.ON_PRIMARY, "columns_with_json_type.sql", QueryExecutors::executeQueryWithSchema),
-    COLUMNS_WITH_SERIAL_TYPES(ExecutionTopology.ON_PRIMARY, "non_primary_key_columns_with_serial_types.sql", QueryExecutors::executeQueryWithSchema);
+    COLUMNS_WITH_SERIAL_TYPES(ExecutionTopology.ON_PRIMARY, "non_primary_key_columns_with_serial_types.sql", QueryExecutors::executeQueryWithSchema),
+    FUNCTIONS_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "functions_without_description.sql", QueryExecutors::executeQueryWithSchema);
 
     private final ExecutionTopology executionTopology;
     private final String sqlQueryFileName;
