@@ -61,14 +61,22 @@ public abstract class DatabaseAwareTestBase {
     protected void executeTestOnDatabase(@Nonnull final String schemaName,
                                          @Nonnull final DatabaseConfigurer databaseConfigurer,
                                          @Nonnull final Consumer<PgContext> testExecutor) {
-        try (DatabasePopulator databasePopulator = DatabasePopulator.builder(getDataSource(), schemaName)) {
+        try (DatabasePopulator databasePopulator = DatabasePopulator.builder(getDataSource(), schemaName, isProceduresSupported())) {
             databaseConfigurer.configure(databasePopulator)
                     .populate();
             testExecutor.accept(PgContext.of(schemaName, 0));
         }
     }
 
-    protected boolean isCumulativeStatisticsSystemSupported() {
+    protected static boolean isCumulativeStatisticsSystemSupported() {
         return POSTGRES.isCumulativeStatisticsSystemSupported();
+    }
+
+    protected static boolean isProceduresSupported() {
+        return POSTGRES.isProceduresSupported();
+    }
+
+    protected static boolean isProceduresNotSupported() {
+        return !isProceduresSupported();
     }
 }

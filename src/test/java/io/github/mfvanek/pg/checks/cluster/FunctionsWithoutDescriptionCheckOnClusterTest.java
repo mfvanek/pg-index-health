@@ -15,7 +15,9 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.function.StoredFunction;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.support.DatabasePopulator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -34,32 +36,64 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withFunctions().withProcedures(), ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withFunctions, ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(4)
+                    .hasSize(2)
                     .containsExactly(
                             StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer"),
-                            StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer, c integer"),
-                            StoredFunction.of(ctx.enrichWithSchema("insert_data"), "IN a integer, IN b integer"),
-                            StoredFunction.of(ctx.enrichWithSchema("insert_data"), "IN a integer, IN b integer, IN c integer"));
+                            StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer, c integer"));
 
             assertThat(check.check(ctx, f -> !f.getFunctionName().contains("add")))
+                    .isEmpty();
+        });
+    }
+
+    @DisabledIf("isProceduresNotSupported")
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void onDatabaseWithThemForProcedures(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withProcedures, ctx -> {
+            assertThat(check.check(ctx))
                     .hasSize(2)
                     .containsExactly(
                             StoredFunction.of(ctx.enrichWithSchema("insert_data"), "IN a integer, IN b integer"),
                             StoredFunction.of(ctx.enrichWithSchema("insert_data"), "IN a integer, IN b integer, IN c integer"));
+
+            assertThat(check.check(ctx, f -> !f.getFunctionSignature().contains("IN c integer")))
+                    .hasSize(1)
+                    .containsExactly(
+                            StoredFunction.of(ctx.enrichWithSchema("insert_data"), "IN a integer, IN b integer"));
         });
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldNotTakingIntoAccountBlankComments(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withFunctions().withProcedures().withBlankCommentOnFunctions().withCommentOnProcedures(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withFunctions().withBlankCommentOnFunctions(), ctx ->
                 assertThat(check.check(ctx))
                         .hasSize(2)
                         .containsExactly(
                                 StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer"),
                                 StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer, c integer")
                         ));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldTakingIntoAccountNonBlankComments(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withFunctions().withCommentOnFunctions(), ctx ->
+                assertThat(check.check(ctx))
+                        .isEmpty()
+        );
+    }
+
+    @DisabledIf("isProceduresNotSupported")
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldTakingIntoAccountNonBlankCommentsForProcedures(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withProcedures().withCommentOnProcedures(), ctx ->
+                assertThat(check.check(ctx))
+                        .isEmpty()
+        );
     }
 }

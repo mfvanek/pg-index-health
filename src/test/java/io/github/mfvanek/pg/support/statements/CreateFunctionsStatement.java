@@ -23,14 +23,14 @@ public class CreateFunctionsStatement extends AbstractDbStatement {
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create or replace function %s.add(a integer, b integer) returns integer " +
+                "as 'select $1 + $2;' " +
                 "language sql " +
                 "immutable " +
-                "returns null on null input " +
-                "return a + b;", schemaName));
+                "returns null on null input;", schemaName));
         statement.execute(String.format("create or replace function %s.add(a int, b int, c int) returns int " +
+                "as 'select $1 + $2 + $3;' " +
                 "language sql " +
                 "immutable " +
-                "returns null on null input " +
-                "return a + b + c;", schemaName));
+                "returns null on null input;", schemaName));
     }
 }

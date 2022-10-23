@@ -67,8 +67,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                         .withNonSuitableIndex()
                         .withJsonType()
                         .withSerialType()
-                        .withFunctions()
-                        .withProcedures(),
+                        .withFunctions(),
                 ctx -> {
                     collectStatistics(schemaName);
                     assertThat(logger.logAll(Exclusions.empty(), ctx))
@@ -88,7 +87,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_without_description\t17",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_json_type\t1",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_serial_types\t2",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tfunctions_without_description\t4");
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tfunctions_without_description\t2");
                 });
     }
 

@@ -44,8 +44,7 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                         .withNonSuitableIndex()
                         .withJsonType()
                         .withSerialType()
-                        .withFunctions()
-                        .withProcedures(),
+                        .withFunctions(),
                 ctx -> {
                     collectStatistics(schemaName);
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
@@ -66,7 +65,7 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                                     "columns_without_description:17",
                                     "columns_with_json_type:1",
                                     "columns_with_serial_types:2",
-                                    "functions_without_description:4");
+                                    "functions_without_description:2");
                 });
     }
 
