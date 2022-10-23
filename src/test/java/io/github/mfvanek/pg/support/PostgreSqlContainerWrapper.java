@@ -118,4 +118,14 @@ final class PostgreSqlContainerWrapper implements AutoCloseable {
         final String[] parts = pgVersion.split("\\.");
         return Integer.parseInt(parts[0]);
     }
+
+    /**
+     * Checks whether <a href="https://www.postgresql.org/docs/current/sql-createprocedure.html">CREATE PROCEDURE</a> command supports OUT parameters.
+     *
+     * @return true for version 14 and higher
+     * @since 0.7.0
+     */
+    public boolean isOutParametersInProcedureSupported() {
+        return isProceduresSupported() && getMajorVersion() >= 14;
+    }
 }
