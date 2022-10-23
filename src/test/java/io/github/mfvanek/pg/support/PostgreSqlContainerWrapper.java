@@ -96,14 +96,36 @@ final class PostgreSqlContainerWrapper implements AutoCloseable {
     /**
      * Checks whether <a href="https://www.postgresql.org/docs/current/monitoring-stats.html">The Cumulative Statistics System</a> is supported for given PostgreSQL container.
      *
-     * @see <a href="https://www.percona.com/blog/postgresql-15-stats-collector-gone-whats-new/">PostgreSQL 15: Stats Collector Gone? What’s New?</a>
-     *
      * @return true for version 15 and higher
+     * @see <a href="https://www.percona.com/blog/postgresql-15-stats-collector-gone-whats-new/">PostgreSQL 15: Stats Collector Gone? What’s New?</a>
      * @since 0.7.0
      */
     public boolean isCumulativeStatisticsSystemSupported() {
+        return getMajorVersion() >= 15;
+    }
+
+    /**
+     * Checks whether <a href="https://www.postgresql.org/docs/current/sql-createprocedure.html">CREATE PROCEDURE</a> command is supported for given PostgreSQL container.
+     *
+     * @return true for version 11 and higher
+     * @since 0.7.0
+     */
+    public boolean isProceduresSupported() {
+        return getMajorVersion() >= 11;
+    }
+
+    private int getMajorVersion() {
         final String[] parts = pgVersion.split("\\.");
-        final int majorVersion = Integer.parseInt(parts[0]);
-        return majorVersion >= 15;
+        return Integer.parseInt(parts[0]);
+    }
+
+    /**
+     * Checks whether <a href="https://www.postgresql.org/docs/current/sql-createprocedure.html">CREATE PROCEDURE</a> command supports OUT parameters.
+     *
+     * @return true for version 14 and higher
+     * @since 0.7.0
+     */
+    public boolean isOutParametersInProcedureSupported() {
+        return isProceduresSupported() && getMajorVersion() >= 14;
     }
 }

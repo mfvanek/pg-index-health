@@ -11,8 +11,11 @@
 package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnColumnsStatement;
+import io.github.mfvanek.pg.support.statements.AddBlankCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnTablesStatement;
 import io.github.mfvanek.pg.support.statements.AddCommentOnColumnsStatement;
+import io.github.mfvanek.pg.support.statements.AddCommentOnFunctionsStatement;
+import io.github.mfvanek.pg.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.support.statements.AddCommentOnTablesStatement;
 import io.github.mfvanek.pg.support.statements.AddLinksBetweenAccountsAndClientsStatement;
 import io.github.mfvanek.pg.support.statements.ConvertColumnToJsonTypeStatement;
@@ -23,10 +26,12 @@ import io.github.mfvanek.pg.support.statements.CreateDuplicatedCustomCollationIn
 import io.github.mfvanek.pg.support.statements.CreateDuplicatedHashIndexStatement;
 import io.github.mfvanek.pg.support.statements.CreateDuplicatedIndexStatement;
 import io.github.mfvanek.pg.support.statements.CreateForeignKeyOnNullableColumnStatement;
+import io.github.mfvanek.pg.support.statements.CreateFunctionsStatement;
 import io.github.mfvanek.pg.support.statements.CreateIndexWithNullValues;
 import io.github.mfvanek.pg.support.statements.CreateIndexesWithDifferentOpclassStatement;
 import io.github.mfvanek.pg.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.support.statements.CreateProceduresStatement;
 import io.github.mfvanek.pg.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.support.statements.CreateSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKey;
@@ -55,17 +60,19 @@ public final class DatabasePopulator implements AutoCloseable {
     private final String schemaName;
     private final Map<Integer, Runnable> actionsToExecuteOutsideTransaction = new TreeMap<>();
     private final Map<Integer, DbStatement> statementsToExecuteInSameTransaction = new TreeMap<>();
+    private final boolean supportsProcedures;
 
-    private DatabasePopulator(@Nonnull final DataSource dataSource, @Nonnull final String schemaName) {
+    private DatabasePopulator(@Nonnull final DataSource dataSource, @Nonnull final String schemaName, final boolean supportsProcedures) {
         this.dataSource = Objects.requireNonNull(dataSource);
         this.schemaName = Validators.notBlank(schemaName, "schemaName");
+        this.supportsProcedures = supportsProcedures;
         this.statementsToExecuteInSameTransaction.putIfAbsent(1, new CreateSchemaStatement(schemaName));
         this.statementsToExecuteInSameTransaction.putIfAbsent(2, new CreateClientsTableStatement(schemaName));
         this.statementsToExecuteInSameTransaction.putIfAbsent(3, new CreateAccountsTableStatement(schemaName));
     }
 
-    static DatabasePopulator builder(@Nonnull final DataSource dataSource, @Nonnull final String schemaName) {
-        return new DatabasePopulator(dataSource, schemaName);
+    static DatabasePopulator builder(@Nonnull final DataSource dataSource, @Nonnull final String schemaName, final boolean supportsProcedures) {
+        return new DatabasePopulator(dataSource, schemaName, supportsProcedures);
     }
 
     @Nonnull
@@ -217,6 +224,40 @@ public final class DatabasePopulator implements AutoCloseable {
         statementsToExecuteInSameTransaction.putIfAbsent(82, new CreateTableWithSerialPrimaryKeyReferencesToAnotherTable(schemaName));
         return withCheckConstraintOnSerialPrimaryKey()
                 .withUniqueConstraintOnSerialColumn();
+    }
+
+    @Nonnull
+    public DatabasePopulator withFunctions() {
+        statementsToExecuteInSameTransaction.putIfAbsent(90, new CreateFunctionsStatement(schemaName));
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withProcedures() {
+        if (supportsProcedures) {
+            statementsToExecuteInSameTransaction.putIfAbsent(91, new CreateProceduresStatement(schemaName));
+        }
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withBlankCommentOnFunctions() {
+        statementsToExecuteInSameTransaction.putIfAbsent(92, new AddBlankCommentOnFunctionsStatement(schemaName));
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withCommentOnFunctions() {
+        statementsToExecuteInSameTransaction.putIfAbsent(93, new AddCommentOnFunctionsStatement(schemaName));
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withCommentOnProcedures() {
+        if (supportsProcedures) {
+            statementsToExecuteInSameTransaction.putIfAbsent(94, new AddCommentOnProceduresStatement(schemaName));
+        }
+        return this;
     }
 
     public void populate() {
