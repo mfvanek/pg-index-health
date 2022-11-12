@@ -59,7 +59,7 @@ final class PostgreSqlContainerWrapper implements AutoCloseable {
         if (pgVersion != null) {
             return pgVersion;
         }
-        return "15.0";
+        return "15.1";
     }
 
     @Nonnull
