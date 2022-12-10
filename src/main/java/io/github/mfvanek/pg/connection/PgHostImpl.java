@@ -10,8 +10,11 @@
 
 package io.github.mfvanek.pg.connection;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
@@ -19,7 +22,7 @@ import javax.annotation.concurrent.Immutable;
 public class PgHostImpl implements PgHost {
 
     private final String pgUrl;
-    private final Set<String> hostNames;
+    private final SortedSet<String> hostNames;
     private final boolean maybePrimary;
 
     private PgHostImpl(@Nonnull final String pgUrl,
@@ -32,7 +35,7 @@ public class PgHostImpl implements PgHost {
 
     private PgHostImpl(@Nonnull final String hostName, final boolean maybePrimary) {
         Objects.requireNonNull(hostName, "hostName");
-        this.hostNames = Set.of(hostName);
+        this.hostNames = Collections.unmodifiableSortedSet(new TreeSet<>(List.of(hostName)));
         this.pgUrl = PgUrlParser.URL_HEADER + hostName;
         this.maybePrimary = maybePrimary;
     }

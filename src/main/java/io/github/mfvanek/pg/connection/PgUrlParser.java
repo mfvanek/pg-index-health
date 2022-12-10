@@ -14,8 +14,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
@@ -61,13 +63,14 @@ final class PgUrlParser {
     }
 
     @Nonnull
-    static Set<String> extractHostNames(@Nonnull final String pgUrl) {
+    static SortedSet<String> extractHostNames(@Nonnull final String pgUrl) {
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
         final String allHostsWithPort = extractAllHostsWithPort(pgUrl);
-        return Arrays.stream(allHostsWithPort.split(","))
+        return Collections.unmodifiableSortedSet(Arrays.stream(allHostsWithPort.split(","))
                 .filter(StringUtils::isNotBlank)
                 .map(h -> h.substring(0, h.lastIndexOf(':')))
-                .collect(Collectors.toUnmodifiableSet());
+                .sorted()
+                .collect(Collectors.toCollection(TreeSet::new)));
     }
 
     @Nonnull
@@ -76,7 +79,6 @@ final class PgUrlParser {
         if (lastIndex >= URL_HEADER.length()) {
             return pgUrl.substring(URL_HEADER.length(), lastIndex);
         }
-
         return pgUrl.substring(URL_HEADER.length());
     }
 }

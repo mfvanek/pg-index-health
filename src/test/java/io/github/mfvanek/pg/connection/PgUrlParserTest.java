@@ -89,7 +89,7 @@ class PgUrlParserTest {
     void extractHostNames() {
         assertThat(PgUrlParser.extractHostNames("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require"))
                 .hasSize(4)
-                .containsExactlyInAnyOrder("host-1", "host-2", "host-3", "host-4")
+                .containsExactly("host-1", "host-2", "host-3", "host-4")
                 .isUnmodifiable();
     }
 
@@ -97,7 +97,7 @@ class PgUrlParserTest {
     void extractHostNamesWithIncompleteUrl() {
         assertThat(PgUrlParser.extractHostNames("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432"))
                 .hasSize(4)
-                .containsExactlyInAnyOrder("host-1", "host-2", "host-3", "host-4")
+                .containsExactly("host-1", "host-2", "host-3", "host-4")
                 .isUnmodifiable();
     }
 
@@ -148,8 +148,14 @@ class PgUrlParserTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void isReplicaUrlWithInvalidUrl() {
-        assertThatThrownBy(() -> PgUrlParser.isReplicaUrl(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> PgUrlParser.isReplicaUrl("")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> PgUrlParser.isReplicaUrl("host-name:5432")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> PgUrlParser.isReplicaUrl(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("pgUrl cannot be null");
+        assertThatThrownBy(() -> PgUrlParser.isReplicaUrl(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("pgUrl cannot be blank or empty");
+        assertThatThrownBy(() -> PgUrlParser.isReplicaUrl("host-name:5432"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("pgUrl has invalid format");
     }
 }
