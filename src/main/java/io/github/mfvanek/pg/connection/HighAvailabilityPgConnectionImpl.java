@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -46,11 +44,10 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
                                              @Nonnull final PrimaryHostDeterminer primaryHostDeterminer) {
         this.primaryHostDeterminer = Objects.requireNonNull(primaryHostDeterminer);
         Objects.requireNonNull(connectionToPrimary, "connectionToPrimary");
-        final Set<PgConnection> defensiveCopy = new HashSet<>(
-                Objects.requireNonNull(connectionsToAllHostsInCluster, "connectionsToAllHostsInCluster"));
+        final Set<PgConnection> defensiveCopy = Set.copyOf(Objects.requireNonNull(connectionsToAllHostsInCluster, "connectionsToAllHostsInCluster"));
         PgConnectionValidators.shouldContainsConnectionToPrimary(connectionToPrimary, defensiveCopy);
         this.cachedConnectionToPrimary.set(connectionToPrimary);
-        this.connectionsToAllHostsInCluster = Collections.unmodifiableSet(defensiveCopy);
+        this.connectionsToAllHostsInCluster = defensiveCopy;
     }
 
     /**
@@ -79,7 +76,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
      */
     @Nonnull
     public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToPrimary) {
-        return of(connectionToPrimary, Collections.singleton(connectionToPrimary));
+        return of(connectionToPrimary, Set.of(connectionToPrimary));
     }
 
     /**

@@ -17,8 +17,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,7 +55,7 @@ class ForeignKeyTest {
     @Test
     void getColumnsInConstraint() {
         final ForeignKey key = ForeignKey.of("t", "c_t_order_id",
-                Arrays.asList(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id")));
+                List.of(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id")));
         assertThat(key.getColumnsInConstraint())
                 .hasSize(2)
                 .containsExactly(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id"))
@@ -66,7 +64,7 @@ class ForeignKeyTest {
 
     @Test
     void shouldCreateDefensiveCopyOfColumnsList() {
-        final List<Column> columns = new ArrayList<>(Arrays.asList(
+        final List<Column> columns = new ArrayList<>(List.of(
                 Column.ofNotNull("t", "first"),
                 Column.ofNotNull("t", "second"),
                 Column.ofNotNull("t", "third")));
@@ -82,7 +80,7 @@ class ForeignKeyTest {
 
     @Test
     void allColumnMustBelongToTheSameTable() {
-        final List<Column> columns = Arrays.asList(
+        final List<Column> columns = List.of(
                 Column.ofNotNull("t", "first"),
                 Column.ofNotNull("t1", "second"));
         assertThatThrownBy(() -> ForeignKey.of("t", "c_t_fk", columns))
@@ -99,7 +97,7 @@ class ForeignKeyTest {
                 .isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", null))
                 .isInstanceOf(NullPointerException.class);
-        final List<Column> columns = Collections.emptyList();
+        final List<Column> columns = List.of();
         assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", columns))
                 .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> ForeignKey.ofColumn("t", "fk", null))
@@ -124,11 +122,11 @@ class ForeignKeyTest {
     @Test
     void equalsAndHashCode() {
         final ForeignKey first = ForeignKey.of("t", "c_t_order_id",
-                Arrays.asList(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "limit")));
+                List.of(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "limit")));
         final ForeignKey theSame = ForeignKey.of("t", "c_t_order_id",
-                Arrays.asList(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "limit")));
+                List.of(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "limit")));
         final ForeignKey withDifferentOrderOfColumns = ForeignKey.of("t", "c_t_order_id",
-                Arrays.asList(Column.ofNotNull("t", "limit"), Column.ofNotNull("t", "order_id")));
+                List.of(Column.ofNotNull("t", "limit"), Column.ofNotNull("t", "order_id")));
         final ForeignKey second = ForeignKey.ofNullableColumn("t", "c_t_order_id", "no_matter_what");
 
         assertThat(first.equals(null)).isFalse();
@@ -155,13 +153,13 @@ class ForeignKeyTest {
                 .doesNotHaveSameHashCodeAs(first);
 
         final ForeignKey third = ForeignKey.of("table", "c_t_order_id",
-                Arrays.asList(Column.ofNotNull("table", "order_id"), Column.ofNotNull("table", "limit")));
+                List.of(Column.ofNotNull("table", "order_id"), Column.ofNotNull("table", "limit")));
         assertThat(third)
                 .isNotEqualTo(first)
                 .doesNotHaveSameHashCodeAs(first);
 
         final ForeignKey fourth = ForeignKey.of("t", "other_id",
-                Arrays.asList(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "limit")));
+                List.of(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "limit")));
         assertThat(fourth)
                 .isNotEqualTo(first)
                 .doesNotHaveSameHashCodeAs(first);

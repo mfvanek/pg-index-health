@@ -16,9 +16,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -70,7 +68,7 @@ class FilterDuplicatedIndexesByNamePredicateTest {
 
     @Test
     void forMultipleIndexNames() {
-        final Predicate<DuplicatedIndexes> predicate = FilterDuplicatedIndexesByNamePredicate.of(Arrays.asList("idx3", "idx4", "idx5"));
+        final Predicate<DuplicatedIndexes> predicate = FilterDuplicatedIndexesByNamePredicate.of(List.of("idx3", "idx4", "idx5"));
         assertThat(predicate)
                 .accepts(DuplicatedIndexes.of(FIRST, SECOND))
                 .rejects(DuplicatedIndexes.of(SECOND, THIRD))
@@ -79,7 +77,7 @@ class FilterDuplicatedIndexesByNamePredicateTest {
 
     @Test
     void forEmpty() {
-        final Predicate<DuplicatedIndexes> predicate = FilterDuplicatedIndexesByNamePredicate.of(Collections.emptyList());
+        final Predicate<DuplicatedIndexes> predicate = FilterDuplicatedIndexesByNamePredicate.of(List.of());
         assertThat(predicate)
                 .accepts(DuplicatedIndexes.of(FIRST, SECOND))
                 .accepts(DuplicatedIndexes.of(SECOND, THIRD))
@@ -88,7 +86,7 @@ class FilterDuplicatedIndexesByNamePredicateTest {
 
     @Test
     void shouldCreateDefensiveCopy() {
-        final List<String> exclusions = new ArrayList<>(Arrays.asList("idx3", "idx4", "idx5"));
+        final List<String> exclusions = new ArrayList<>(List.of("idx3", "idx4", "idx5"));
         final Predicate<DuplicatedIndexes> predicate = FilterDuplicatedIndexesByNamePredicate.of(exclusions);
 
         exclusions.clear();

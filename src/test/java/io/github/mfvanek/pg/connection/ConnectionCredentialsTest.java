@@ -16,8 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +40,7 @@ class ConnectionCredentialsTest {
 
     @Test
     void shouldDeduplicateUrls() {
-        final ConnectionCredentials credentials = ConnectionCredentials.of(Arrays.asList(DEFAULT_URL, DEFAULT_URL, DEFAULT_URL), "user", "pswrd");
+        final ConnectionCredentials credentials = ConnectionCredentials.of(List.of(DEFAULT_URL, DEFAULT_URL, DEFAULT_URL), "user", "pswrd");
         assertThat(credentials.getConnectionUrls())
                 .hasSize(1)
                 .contains(DEFAULT_URL)
@@ -51,7 +49,7 @@ class ConnectionCredentialsTest {
 
     @Test
     void shouldCreateDefensiveCopyOfUrlsList() {
-        final List<String> urls = new ArrayList<>(Arrays.asList(
+        final List<String> urls = new ArrayList<>(List.of(
                 "jdbc:postgresql://localhost/first",
                 "jdbc:postgresql://localhost/second",
                 "jdbc:postgresql://localhost/third"));
@@ -70,7 +68,7 @@ class ConnectionCredentialsTest {
     void testEqualsAndHashCode() {
         final ConnectionCredentials first = ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "p");
         final ConnectionCredentials second = ConnectionCredentials.ofUrl(DEFAULT_URL, "usr", "p");
-        final ConnectionCredentials third = ConnectionCredentials.of(Arrays.asList(DEFAULT_URL, "jdbc:postgresql://host1:5432/postgres"), "u", "p");
+        final ConnectionCredentials third = ConnectionCredentials.of(List.of(DEFAULT_URL, "jdbc:postgresql://host1:5432/postgres"), "u", "p");
         final ConnectionCredentials fourth = ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "pswd");
 
         assertThat(first.equals(null)).isFalse();
@@ -115,7 +113,7 @@ class ConnectionCredentialsTest {
         assertThat(credentials)
                 .hasToString("ConnectionCredentials{connectionUrls=[jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}");
 
-        credentials = ConnectionCredentials.of(Arrays.asList(DEFAULT_URL, "jdbc:postgresql://host1:5432/postgres"), "user", "pswrd");
+        credentials = ConnectionCredentials.of(List.of(DEFAULT_URL, "jdbc:postgresql://host1:5432/postgres"), "user", "pswrd");
         assertThat(credentials)
                 .hasToString("ConnectionCredentials{connectionUrls=[jdbc:postgresql://host1:5432/postgres, jdbc:postgresql://localhost/postgres], userName='user', password='pswrd'}");
     }
@@ -157,14 +155,14 @@ class ConnectionCredentialsTest {
         assertThatThrownBy(() -> ConnectionCredentials.of(null, null, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("connectionUrls cannot be null");
-        final Set<String> defaultUrls = Collections.singleton(DEFAULT_URL);
+        final Set<String> defaultUrls = Set.of(DEFAULT_URL);
         assertThatThrownBy(() -> ConnectionCredentials.of(defaultUrls, null, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("userName cannot be null");
         assertThatThrownBy(() -> ConnectionCredentials.of(defaultUrls, "u", null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("password cannot be null");
-        final List<String> emptyList = Collections.emptyList();
+        final List<String> emptyList = List.of();
         assertThatThrownBy(() -> ConnectionCredentials.of(emptyList, "u", "p"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("connectionUrls have to contain at least one url");

@@ -14,8 +14,7 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
 import static io.github.mfvanek.pg.generator.PgIdentifierNameGeneratorTest.nullableColumnWithSchema;
 import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGeneratorTest.severalColumnsWithNulls;
@@ -27,7 +26,7 @@ class ForeignKeyMigrationGeneratorTest {
     @Test
     void generateForSingleForeignKey() {
         final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator(GeneratingOptions.builder().build());
-        final String result = generator.generate(Collections.singletonList(nullableColumnWithSchema()));
+        final String result = generator.generate(List.of(nullableColumnWithSchema()));
         assertThat(result)
                 .isNotBlank()
                 .isEqualTo("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
@@ -40,7 +39,7 @@ class ForeignKeyMigrationGeneratorTest {
     void generateForSeveralForeignKeys() {
         final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator(GeneratingOptions.builder().build());
         final String result = generator.generate(
-                Arrays.asList(severalColumnsWithNulls(), severalColumnsWithNulls(), nullableColumnWithSchema()));
+                List.of(severalColumnsWithNulls(), severalColumnsWithNulls(), nullableColumnWithSchema()));
         assertThat(result)
                 .isNotBlank()
                 .isEqualTo("create index concurrently if not exists table_column_1_column_2_without_nulls_idx" + System.lineSeparator() +

@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.model.index.IndexNameAware;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +38,7 @@ class FilterIndexesByNamePredicateTest {
 
     @Test
     void forEmpty() {
-        final Predicate<IndexNameAware> predicate = FilterIndexesByNamePredicate.of(Collections.emptyList());
+        final Predicate<IndexNameAware> predicate = FilterIndexesByNamePredicate.of(List.of());
         assertThat(predicate)
                 .accepts(FIRST)
                 .accepts(SECOND)

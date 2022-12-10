@@ -20,8 +20,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Function;
 import javax.sql.DataSource;
 
@@ -65,7 +64,7 @@ class DatabaseManagementImplUnitTest {
         };
         final DatabaseManagement management = new DatabaseManagementImpl(haPgConnectionMock, statisticsOnHostFactory, ConfigurationMaintenanceOnHostImpl::new);
         Mockito.when(haPgConnectionMock.getConnectionsToAllHostsInCluster())
-                .thenReturn(new HashSet<>(Arrays.asList(firstConnection, secondConnection)));
+                .thenReturn(Set.of(firstConnection, secondConnection));
 
         // False on all hosts
         Mockito.when(firstStatisticsMock.resetStatistics()).thenReturn(false);

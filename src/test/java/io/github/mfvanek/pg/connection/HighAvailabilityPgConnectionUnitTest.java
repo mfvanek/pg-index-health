@@ -22,7 +22,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -133,7 +132,7 @@ class HighAvailabilityPgConnectionUnitTest {
         final PgHost localhostTwo = PgHostImpl.ofName("localhost-2");
         final PgConnection firstConnection = PgConnectionImpl.of(firstConnectionMocks.dataSource, localhostOne);
         final PgConnection secondConnection = PgConnectionImpl.of(secondConnectionMocks.dataSource, localhostTwo);
-        return Arrays.asList(firstConnection, secondConnection);
+        return List.of(firstConnection, secondConnection);
     }
 
     private static final class ConnectionMocks {

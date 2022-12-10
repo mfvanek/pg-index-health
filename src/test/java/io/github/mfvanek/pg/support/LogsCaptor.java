@@ -17,8 +17,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
 
@@ -55,6 +53,6 @@ public final class LogsCaptor implements AutoCloseable {
     }
 
     public List<ILoggingEvent> getLogs() {
-        return Collections.unmodifiableList(new ArrayList<>(logAppender.list));
+        return List.copyOf(logAppender.list);
     }
 }

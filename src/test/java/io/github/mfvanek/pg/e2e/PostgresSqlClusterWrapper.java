@@ -24,7 +24,6 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.sql.SQLException;
 import java.time.Duration;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -195,7 +194,7 @@ final class PostgresSqlClusterWrapper implements AutoCloseable {
         return new PostgresBitnamiRepmgrContainer(DockerImageName.parse(IMAGE_NAME).withTag(IMAGE_TAG), envVarsProvider.get())
                 .withCreateContainerCmdModifier(cmd -> cmd.withName(alias))
                 .withSharedMemorySize(MemoryUnit.MB.convertToBytes(768))
-                .withTmpFs(Collections.singletonMap("/var/lib/postgresql/data", "rw"))
+                .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
                 .withNetwork(network)
                 .withNetworkAliases(alias)
                 .withExposedPorts(5432)

@@ -19,14 +19,14 @@ import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.settings.ImportantParam;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public abstract class DatabaseAwareTestBase {
 
-    private static final PostgreSqlContainerWrapper POSTGRES = new PostgreSqlContainerWrapper(Arrays.asList(
+    private static final PostgreSqlContainerWrapper POSTGRES = new PostgreSqlContainerWrapper(List.of(
             Pair.of(ImportantParam.LOCK_TIMEOUT.getName(), "1000"),
             Pair.of(ImportantParam.SHARED_BUFFERS.getName(), "256MB"),
             Pair.of(ImportantParam.MAINTENANCE_WORK_MEM.getName(), "128MB"),

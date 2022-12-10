@@ -22,7 +22,8 @@
 [![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-green.svg)](https://www.postgresql.org/about/news/postgresql-15-released-2526/ "PostgreSQL 15")
 
 ### Supported Java versions
-Java 8 and above
+Supports [Java 11](https://www.java.com/en/) and above  
+For **Java 8** compatible version take a look at release [0.7.0](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.7.0) and lower
 
 ## Available checks
 **pg-index-health** allows you to detect the following problems:

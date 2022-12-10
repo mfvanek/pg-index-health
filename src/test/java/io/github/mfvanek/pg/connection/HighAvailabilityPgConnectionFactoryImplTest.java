@@ -14,8 +14,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -40,7 +39,9 @@ class HighAvailabilityPgConnectionFactoryImplTest {
         final HighAvailabilityPgConnection haPgConnection = connectionFactory.ofUrl(
                 "jdbc:postgresql://host-1:6432,host-2:6432/db_name?ssl=true&sslmode=require", "postgres", "postgres");
         assertThat(haPgConnection).isNotNull();
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster()).hasSize(2);
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
+                .hasSize(2)
+                .isUnmodifiable();
         checkPrimary(haPgConnection);
     }
 
@@ -51,11 +52,13 @@ class HighAvailabilityPgConnectionFactoryImplTest {
             return "host-2".equals(connection.getHost().getName());
         }).when(primaryHostDeterminer).isPrimary(any(PgConnection.class));
         final HighAvailabilityPgConnection haPgConnection = connectionFactory.ofUrls(
-                Arrays.asList("jdbc:postgresql://host-1:6432,host-2:6432/db_name?ssl=true&sslmode=require",
+                List.of("jdbc:postgresql://host-1:6432,host-2:6432/db_name?ssl=true&sslmode=require",
                         "jdbc:postgresql://host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require"),
                 "postgres", "postgres");
         assertThat(haPgConnection).isNotNull();
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster()).hasSize(4);
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
+                .hasSize(4)
+                .isUnmodifiable();
         checkPrimary(haPgConnection);
     }
 
@@ -65,13 +68,15 @@ class HighAvailabilityPgConnectionFactoryImplTest {
             final PgConnection connection = invocation.getArgument(0, PgConnection.class);
             return "host-2".equals(connection.getHost().getName());
         }).when(primaryHostDeterminer).isPrimary(any(PgConnection.class));
-        final ConnectionCredentials credentials = ConnectionCredentials.of(Arrays.asList(
+        final ConnectionCredentials credentials = ConnectionCredentials.of(List.of(
                 "jdbc:postgresql://host-1:6432,host-2:6432/db_name?ssl=true&sslmode=require",
                 "jdbc:postgresql://host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require",
                 "jdbc:postgresql://host-5:6432/db_name?ssl=true&sslmode=require"), "postgres", "postgres");
         final HighAvailabilityPgConnection haPgConnection = connectionFactory.of(credentials);
         assertThat(haPgConnection).isNotNull();
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster()).hasSize(5);
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
+                .hasSize(5)
+                .isUnmodifiable();
         checkPrimary(haPgConnection);
     }
 
@@ -95,7 +100,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
         assertThatThrownBy(() -> connectionFactory.ofUrls(null, null, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("connectionUrls cannot be null");
-        final Set<String> urls = Collections.singleton("jdbc:postgresql://host-1:6432/db_name");
+        final Set<String> urls = Set.of("jdbc:postgresql://host-1:6432/db_name");
         assertThatThrownBy(() -> connectionFactory.ofUrls(urls, null, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("userName cannot be null");
@@ -118,7 +123,9 @@ class HighAvailabilityPgConnectionFactoryImplTest {
         final HighAvailabilityPgConnection haPgConnection = connectionFactory.ofUrl(
                 "jdbc:postgresql://host-D:6432,host-A:6432/db_name", "postgres", "postgres");
         assertThat(haPgConnection).isNotNull();
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster()).hasSize(2);
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
+                .hasSize(2)
+                .isUnmodifiable();
         assertThat(haPgConnection.getConnectionToPrimary()).isNotNull();
         assertThat(haPgConnection.getConnectionToPrimary().getHost().getName()).isEqualTo("host-A");
     }

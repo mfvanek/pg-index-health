@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.utils.Locales;
 import io.github.mfvanek.pg.utils.Validators;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,13 +30,13 @@ abstract class AbstractFilterByName {
     protected final Set<String> exclusions;
 
     protected AbstractFilterByName(@Nonnull final Collection<String> exclusions) {
-        this.exclusions = Collections.unmodifiableSet(
-                Objects.requireNonNull(exclusions, "exclusions cannot be null").stream()
-                        .map(s -> s.toLowerCase(Locales.DEFAULT))
-                        .collect(Collectors.toSet()));
+        this.exclusions = Objects.requireNonNull(exclusions, "exclusions cannot be null")
+                .stream()
+                .map(s -> s.toLowerCase(Locales.DEFAULT))
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     protected AbstractFilterByName(@Nonnull final String objectName) {
-        this(Collections.singleton(Validators.notBlank(objectName, "objectName")));
+        this(Set.of(Validators.notBlank(objectName, "objectName")));
     }
 }

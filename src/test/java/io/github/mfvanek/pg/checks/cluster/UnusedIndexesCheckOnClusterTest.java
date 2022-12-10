@@ -26,8 +26,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
 import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -76,7 +74,7 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                     .allMatch(i -> i.getIndexScans() == 0);
 
             final Predicate<IndexNameAware> predicate = FilterIndexesByNamePredicate.of(
-                    Arrays.asList(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_accounts_account_number")));
+                    List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_accounts_account_number")));
             assertThat(check.check(ctx, predicate))
                     .hasSize(4)
                     .containsExactlyInAnyOrder(
@@ -96,18 +94,20 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
         final UnusedIndex i3 = UnusedIndex.of("t2", "i3", 3L, 3L);
         final UnusedIndex i4 = UnusedIndex.of("t3", "i4", 4L, 4L);
         final UnusedIndex i5 = UnusedIndex.of("t3", "i5", 5L, 5L);
-        final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = Arrays.asList(
-                Arrays.asList(i5, i4, i1, i3),
-                Arrays.asList(i2, i1, i5),
-                Arrays.asList(i2, i5, i1, i4));
+        final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = List.of(
+                List.of(i5, i4, i1, i3),
+                List.of(i2, i1, i5),
+                List.of(i2, i5, i1, i4));
         assertThat(getResultAsIntersection(potentiallyUnusedIndexesFromAllHosts))
                 .hasSize(2)
-                .containsExactlyInAnyOrder(i1, i5);
+                .containsExactlyInAnyOrder(i1, i5)
+                .isUnmodifiable();
     }
 
     @Test
     void getResultAsIntersectionWithEmptyInput() {
-        assertThat(getResultAsIntersection(Collections.emptyList()))
+        assertThat(getResultAsIntersection(List.of()))
+                .isUnmodifiable()
                 .isEmpty();
     }
 

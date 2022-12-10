@@ -128,7 +128,8 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
             final List<T> resultsFromHost = executeOnHost(pgConnection, pgContext);
             acrossClusterResults.add(resultsFromHost);
         }
-        return acrossClusterResultsMapper.apply(acrossClusterResults).stream()
+        return acrossClusterResultsMapper.apply(acrossClusterResults)
+                .stream()
                 .filter(exclusionsFilter)
                 .collect(Collectors.toList());
     }

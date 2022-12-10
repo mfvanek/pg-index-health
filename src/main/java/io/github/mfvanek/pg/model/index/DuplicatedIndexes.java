@@ -15,8 +15,6 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.DuplicatedIndexesParser;
 import io.github.mfvanek.pg.utils.Validators;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -45,20 +43,17 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
     private final List<String> indexesNames;
 
     private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
-        final List<IndexWithSize> defensiveCopy = new ArrayList<>(
-                Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes cannot be null"));
+        final List<IndexWithSize> defensiveCopy = List.copyOf(Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes cannot be null"));
         Validators.validateThatTableIsTheSame(defensiveCopy);
-        this.indexes = Collections.unmodifiableList(
-                defensiveCopy.stream()
-                        .sorted(INDEX_WITH_SIZE_COMPARATOR)
-                        .collect(Collectors.toList()));
+        this.indexes = defensiveCopy.stream()
+                .sorted(INDEX_WITH_SIZE_COMPARATOR)
+                .collect(Collectors.toUnmodifiableList());
         this.totalSize = this.indexes.stream()
                 .mapToLong(IndexWithSize::getIndexSizeInBytes)
                 .sum();
-        this.indexesNames = Collections.unmodifiableList(
-                this.indexes.stream()
-                        .map(Index::getIndexName)
-                        .collect(Collectors.toList()));
+        this.indexesNames = this.indexes.stream()
+                .map(Index::getIndexName)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     /**

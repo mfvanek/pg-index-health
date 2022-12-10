@@ -24,9 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +74,7 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
             }
             unusedIndexes = CollectionUtils.intersection(unusedIndexes, unusedIndexesFromHost);
         }
-        final List<UnusedIndex> result = unusedIndexes == null ? Collections.emptyList() : new ArrayList<>(unusedIndexes);
+        final List<UnusedIndex> result = unusedIndexes == null ? List.of() : List.copyOf(unusedIndexes);
         LOGGER.debug("Intersection result {}", result);
         return result;
     }

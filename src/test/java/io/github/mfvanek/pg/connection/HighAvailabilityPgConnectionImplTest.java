@@ -13,8 +13,6 @@ package io.github.mfvanek.pg.connection;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,7 +47,7 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
     void withReplicas() {
         final PgConnection primary = getPgConnection();
         final PgConnection replica = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofName("replica"));
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary, Arrays.asList(primary, replica));
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary, List.of(primary, replica));
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
                 .isNotNull()
@@ -62,7 +60,7 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
     void shouldContainsConnectionToPrimary() {
         final PgConnection primary = getPgConnection();
         final PgConnection replica = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofName("replica"));
-        final List<PgConnection> connectionsOnlyToReplicas = Collections.singletonList(replica);
+        final List<PgConnection> connectionsOnlyToReplicas = List.of(replica);
         assertThatThrownBy(() -> HighAvailabilityPgConnectionImpl.of(primary, connectionsOnlyToReplicas))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("connectionsToAllHostsInCluster have to contain a connection to the primary");

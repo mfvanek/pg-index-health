@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.connection;
 
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -27,13 +26,13 @@ public class PgHostImpl implements PgHost {
                        @SuppressWarnings("unused") final boolean withValidation, //NOSONAR
                        final boolean maybePrimary) {
         this.pgUrl = PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
-        this.hostNames = Collections.unmodifiableSet(PgUrlParser.extractHostNames(pgUrl));
+        this.hostNames = PgUrlParser.extractHostNames(pgUrl);
         this.maybePrimary = maybePrimary;
     }
 
     private PgHostImpl(@Nonnull final String hostName, final boolean maybePrimary) {
         Objects.requireNonNull(hostName, "hostName");
-        this.hostNames = Collections.singleton(hostName);
+        this.hostNames = Set.of(hostName);
         this.pgUrl = PgUrlParser.URL_HEADER + hostName;
         this.maybePrimary = maybePrimary;
     }

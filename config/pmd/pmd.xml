@@ -91,5 +91,6 @@
         <exclude name="AvoidDuplicateLiterals"/>
         <exclude name="AvoidAccessibilityAlteration"/>
         <exclude name="NullAssignment"/>
+        <exclude name="TestClassWithoutTestCases"/>
     </rule>
 </ruleset>

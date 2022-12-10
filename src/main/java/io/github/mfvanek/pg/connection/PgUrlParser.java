@@ -46,12 +46,12 @@ final class PgUrlParser {
                 .distinct()
                 .sorted()
                 .map(h -> Pair.of(h, URL_HEADER + h + dbNameWithParamsForReplica))
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Nonnull
     private static String convertToReplicaConnectionString(@Nonnull final String dbNameWithParams) {
-        final List<String> primaryServerTypes = Arrays.asList("targetServerType=primary", "targetServerType=master");
+        final List<String> primaryServerTypes = List.of("targetServerType=primary", "targetServerType=master");
         for (final String serverType : primaryServerTypes) {
             if (dbNameWithParams.contains(serverType)) {
                 return dbNameWithParams.replace(serverType, "targetServerType=any");
@@ -67,7 +67,7 @@ final class PgUrlParser {
         return Arrays.stream(allHostsWithPort.split(","))
                 .filter(StringUtils::isNotBlank)
                 .map(h -> h.substring(0, h.lastIndexOf(':')))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     @Nonnull

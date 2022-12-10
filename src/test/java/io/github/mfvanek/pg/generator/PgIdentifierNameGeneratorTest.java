@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGenerator.MAX_IDENTIFIER_LENGTH;
@@ -205,7 +205,7 @@ class PgIdentifierNameGeneratorTest {
     @Nonnull
     static ForeignKey severalColumnsWithoutNulls() {
         return ForeignKey.of("table_with_very_very_very_long_name", "cn",
-                Arrays.asList(
+                List.of(
                         Column.ofNotNull("table_with_very_very_very_long_name", "column_1_with_very_long_name"),
                         Column.ofNotNull("table_with_very_very_very_long_name", "column_2_with_very_long_name")
                 ));
@@ -214,7 +214,7 @@ class PgIdentifierNameGeneratorTest {
     @Nonnull
     static ForeignKey severalColumnsWithNulls() {
         return ForeignKey.of("table_with_very_very_very_long_name", "cn",
-                Arrays.asList(
+                List.of(
                         Column.ofNotNull("table_with_very_very_very_long_name", "column_1_with_very_long_name"),
                         Column.ofNullable("table_with_very_very_very_long_name", "column_2_with_very_long_name")
                 ));

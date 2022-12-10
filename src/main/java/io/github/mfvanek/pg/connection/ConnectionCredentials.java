@@ -124,8 +124,7 @@ public class ConnectionCredentials {
     public static ConnectionCredentials ofUrl(@Nonnull final String writeUrl,
                                               @Nonnull final String userName,
                                               @Nonnull final String password) {
-        final Set<String> connectionUrls = Collections.singleton(
-                PgConnectionValidators.pgUrlNotBlankAndValid(writeUrl, "writeUrl"));
+        final Set<String> connectionUrls = Set.of(PgConnectionValidators.pgUrlNotBlankAndValid(writeUrl, "writeUrl"));
         return new ConnectionCredentials(connectionUrls, userName, password);
     }
 }
