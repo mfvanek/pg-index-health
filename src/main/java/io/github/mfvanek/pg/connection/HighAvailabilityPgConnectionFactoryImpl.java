@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.connection;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +45,8 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
     private void addDataSourcesForAllHostsFromUrl(@Nonnull final Map<String, PgConnection> connectionsToAllHostsInCluster,
                                                   @Nonnull final String anyUrl,
                                                   @Nonnull final ConnectionCredentials credentials) {
-        final List<Pair<String, String>> allHosts = PgUrlParser.extractNameWithPortAndUrlForEachHost(anyUrl);
-        for (final Pair<String, String> host : allHosts) {
+        final List<Map.Entry<String, String>> allHosts = PgUrlParser.extractNameWithPortAndUrlForEachHost(anyUrl);
+        for (final Map.Entry<String, String> host : allHosts) {
             connectionsToAllHostsInCluster.computeIfAbsent(host.getKey(),
                     h -> pgConnectionFactory.forUrl(host.getValue(), credentials.getUserName(), credentials.getPassword()));
         }

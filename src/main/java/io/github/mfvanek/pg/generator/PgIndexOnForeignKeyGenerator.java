@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -49,7 +48,7 @@ final class PgIndexOnForeignKeyGenerator extends AbstractOptionsAwareSqlGenerato
                 .append(keyword("if not exists "))
                 .append(hasToTruncate ? nameGenerator.generateTruncatedIndexName() : fullIndexName)
                 .append(options.isBreakLines() ? System.lineSeparator() : " ")
-                .append(options.isBreakLines() ? StringUtils.repeat(' ', options.getIndentation()) : "")
+                .append(options.isBreakLines() ? WHITESPACE.repeat(options.getIndentation()) : "")
                 .append(keyword("on "))
                 .append(foreignKey.getTableName())
                 .append(" (")

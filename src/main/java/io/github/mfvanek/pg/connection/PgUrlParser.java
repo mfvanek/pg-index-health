@@ -10,14 +10,13 @@
 
 package io.github.mfvanek.pg.connection;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
@@ -38,7 +37,7 @@ final class PgUrlParser {
 
     // For example, jdbc:postgresql://host-1:6432/db_name?param=value
     @Nonnull
-    static List<Pair<String, String>> extractNameWithPortAndUrlForEachHost(@Nonnull final String pgUrl) {
+    static List<Map.Entry<String, String>> extractNameWithPortAndUrlForEachHost(@Nonnull final String pgUrl) {
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
         final int lastIndex = pgUrl.lastIndexOf('/');
         final String dbNameWithParams = pgUrl.substring(lastIndex);
@@ -47,7 +46,7 @@ final class PgUrlParser {
         return Arrays.stream(allHostsWithPort.split(","))
                 .distinct()
                 .sorted()
-                .map(h -> Pair.of(h, URL_HEADER + h + dbNameWithParamsForReplica))
+                .map(h -> Map.entry(h, URL_HEADER + h + dbNameWithParamsForReplica))
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -67,7 +66,7 @@ final class PgUrlParser {
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
         final String allHostsWithPort = extractAllHostsWithPort(pgUrl);
         return Collections.unmodifiableSortedSet(Arrays.stream(allHostsWithPort.split(","))
-                .filter(StringUtils::isNotBlank)
+                .filter(Predicate.not(String::isBlank))
                 .map(h -> h.substring(0, h.lastIndexOf(':')))
                 .sorted()
                 .collect(Collectors.toCollection(TreeSet::new)));

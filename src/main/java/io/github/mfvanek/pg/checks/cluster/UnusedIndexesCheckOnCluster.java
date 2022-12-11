@@ -18,7 +18,7 @@ import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.utils.ClockHolder;
-import org.apache.commons.collections4.CollectionUtils;
+import io.github.mfvanek.pg.utils.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +71,7 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
         for (final List<UnusedIndex> unusedIndexesFromHost : potentiallyUnusedIndexesFromAllHosts) {
             if (unusedIndexes == null) {
                 unusedIndexes = unusedIndexesFromHost;
+                continue;
             }
             unusedIndexes = CollectionUtils.intersection(unusedIndexes, unusedIndexesFromHost);
         }

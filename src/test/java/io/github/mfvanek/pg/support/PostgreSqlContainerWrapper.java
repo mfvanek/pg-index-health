@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.apache.commons.lang3.tuple.Pair;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -29,7 +28,7 @@ final class PostgreSqlContainerWrapper implements AutoCloseable {
     private final PostgreSQLContainer<?> container;
     private final BasicDataSource dataSource;
 
-    PostgreSqlContainerWrapper(@Nonnull final List<Pair<String, String>> additionalParameters) {
+    PostgreSqlContainerWrapper(@Nonnull final List<Map.Entry<String, String>> additionalParameters) {
         this.pgVersion = preparePostgresVersion();
         //noinspection resource
         this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres")
@@ -64,7 +63,7 @@ final class PostgreSqlContainerWrapper implements AutoCloseable {
     }
 
     @Nonnull
-    private static String[] prepareCommandParts(@Nonnull final List<Pair<String, String>> additionalParameters) {
+    private static String[] prepareCommandParts(@Nonnull final List<Map.Entry<String, String>> additionalParameters) {
         return additionalParameters.stream()
                 .flatMap(kv -> Stream.of("-c", kv.getKey() + "=" + kv.getValue()))
                 .toArray(String[]::new);

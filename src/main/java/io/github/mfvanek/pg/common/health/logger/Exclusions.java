@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.utils.Locales;
 import io.github.mfvanek.pg.utils.Validators;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -75,12 +74,12 @@ public class Exclusions {
     }
 
     private static Set<String> prepareExclusions(@Nonnull final String rawExclusions) {
-        Objects.requireNonNull(rawExclusions);
+        Objects.requireNonNull(rawExclusions, "rawExclusions cannot be null");
         final Set<String> exclusions = new HashSet<>();
-        if (StringUtils.isNotBlank(rawExclusions)) {
+        if (!rawExclusions.isBlank()) {
             final String[] tables = rawExclusions.toLowerCase(Locales.DEFAULT).split(",");
             for (final String tableName : tables) {
-                if (StringUtils.isNotBlank(tableName)) {
+                if (!tableName.isBlank()) {
                     exclusions.add(tableName.trim());
                 }
             }

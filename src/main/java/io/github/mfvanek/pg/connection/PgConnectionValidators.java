@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.connection;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -60,7 +58,7 @@ final class PgConnectionValidators {
     }
 
     private static void notBlank(@Nonnull final String argumentValue, @Nonnull final String argumentName) {
-        if (StringUtils.isBlank(Objects.requireNonNull(argumentValue, argumentName + " cannot be null"))) {
+        if (Objects.requireNonNull(argumentValue, argumentName + " cannot be null").isBlank()) {
             throw new IllegalArgumentException(argumentName + " cannot be blank or empty");
         }
     }

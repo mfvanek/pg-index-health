@@ -37,7 +37,6 @@ import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -229,7 +228,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                                        @Nonnull final PgContext pgContext,
                                                        @Nonnull final LoggingKey key) {
         final List<T> checkResult = check.check(pgContext, exclusionsFilter);
-        if (CollectionUtils.isNotEmpty(checkResult)) {
+        if (!checkResult.isEmpty()) {
             LOGGER.warn("There are {} in the database {}", key.getDescription(), checkResult);
             return writeToLog(key, checkResult.size());
         }
