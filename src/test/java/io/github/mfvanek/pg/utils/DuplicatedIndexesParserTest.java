@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Map;
 
 import static io.github.mfvanek.pg.utils.DuplicatedIndexesParser.parseAsIndexNameAndSize;
@@ -46,40 +45,39 @@ class DuplicatedIndexesParserTest {
 
     @Test
     void withIncompleteString() {
-        List<Map.Entry<String, Long>> entries = parseAsIndexNameAndSize("i");
-        assertThat(entries)
-                .isNotNull()
+        assertThat(parseAsIndexNameAndSize("i"))
+                .isUnmodifiable()
                 .isEmpty();
 
-        entries = parseAsIndexNameAndSize("idx=i1, size=1");
-        assertThat(entries)
-                .isNotNull()
-                .hasSize(1);
+        assertThat(parseAsIndexNameAndSize("idx=i1, size=1"))
+                .isUnmodifiable()
+                .hasSize(1)
+                .contains(Map.entry("i1", 1L));
 
-        entries = parseAsIndexNameAndSize("idx=i2,size=3");
-        assertThat(entries)
-                .isNotNull()
-                .hasSize(1);
+        assertThat(parseAsIndexNameAndSize("idx=i2,size=3"))
+                .isUnmodifiable()
+                .hasSize(1)
+                .contains(Map.entry("i2", 3L));
     }
 
     @Test
     void withSpaces() {
-        final List<Map.Entry<String, Long>> entries = parseAsIndexNameAndSize("   idx=i2,   size=3   ; idx=i3   ,   size=5   ");
-        assertThat(entries)
-                .isNotNull()
-                .hasSize(2);
+        assertThat(parseAsIndexNameAndSize("   idx=i2,   size=3   ; idx=i3   ,   size=5   "))
+                .isUnmodifiable()
+                .hasSize(2)
+                .containsExactly(
+                        Map.entry("i2", 3L),
+                        Map.entry("i3", 5L));
     }
 
     @Test
     void withWrongDataFormat() {
-        List<Map.Entry<String, Long>> entries = parseAsIndexNameAndSize("idx=i2, input=3");
-        assertThat(entries)
-                .isNotNull()
+        assertThat(parseAsIndexNameAndSize("idx=i2, input=3"))
+                .isUnmodifiable()
                 .isEmpty();
 
-        entries = parseAsIndexNameAndSize("indx=i2, size=3");
-        assertThat(entries)
-                .isNotNull()
+        assertThat(parseAsIndexNameAndSize("indx=i2, size=3"))
+                .isUnmodifiable()
                 .isEmpty();
     }
 

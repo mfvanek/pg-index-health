@@ -33,6 +33,11 @@ public final class ClockHolder {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Allows to get currently set {@code Clock} instance.
+     *
+     * @return {@code Clock} instance
+     */
     @Nonnull
     public static Clock clock() {
         return CLOCK_REFERENCE.get();

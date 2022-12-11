@@ -152,7 +152,7 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
                 Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
         final List<IndexWithSize> duplicatedIndexes = indexesWithNameAndSize.stream()
                 .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
         return new DuplicatedIndexes(duplicatedIndexes);
     }
 
@@ -167,6 +167,6 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
         }
         final Stream<IndexWithSize> basePart = Stream.of(firstIndex, secondIndex);
         return new DuplicatedIndexes(Stream.concat(basePart, Stream.of(otherIndexes))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toUnmodifiableList()));
     }
 }

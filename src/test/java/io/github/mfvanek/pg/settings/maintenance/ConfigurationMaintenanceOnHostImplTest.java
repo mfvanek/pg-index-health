@@ -22,8 +22,8 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -55,10 +55,11 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
     void getParamsCurrentValues() {
         final Set<PgParam> currentValues = configurationMaintenance.getParamsCurrentValues();
         assertThat(currentValues)
-                .hasSizeGreaterThan(200);
+                .hasSizeGreaterThan(200)
+                .isUnmodifiable();
         final Set<String> allParamNames = currentValues.stream()
                 .map(PgParam::getName)
-                .collect(toSet());
+                .collect(Collectors.toUnmodifiableSet());
         for (final ImportantParam importantParam : ImportantParam.values()) {
             assertThat(allParamNames).contains(importantParam.getName());
         }

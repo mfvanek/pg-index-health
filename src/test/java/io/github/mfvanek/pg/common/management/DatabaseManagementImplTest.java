@@ -69,6 +69,7 @@ class DatabaseManagementImplTest extends StatisticsAwareTestBase {
     void shouldReturnParamsCurrentValues(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
                 assertThat(databaseManagement.getParamsCurrentValues())
-                        .hasSizeGreaterThan(ImportantParam.values().length));
+                        .hasSizeGreaterThan(ImportantParam.values().length)
+                        .isUnmodifiable());
     }
 }

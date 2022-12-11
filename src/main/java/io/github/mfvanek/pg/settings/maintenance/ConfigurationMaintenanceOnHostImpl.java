@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 public class ConfigurationMaintenanceOnHostImpl implements ConfigurationMaintenanceOnHost {
@@ -67,7 +68,8 @@ public class ConfigurationMaintenanceOnHostImpl implements ConfigurationMaintena
             final String currentValue = rs.getString("setting");
             return PgParamImpl.of(paramName, currentValue);
         });
-        return new HashSet<>(params);
+        return params.stream()
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     @Override
