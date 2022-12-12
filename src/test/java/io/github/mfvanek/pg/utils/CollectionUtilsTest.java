@@ -35,7 +35,8 @@ class CollectionUtilsTest {
         assertThatThrownBy(() -> CollectionUtils.intersection(null, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("first cannot be null");
-        assertThatThrownBy(() -> CollectionUtils.intersection(List.of(), null))
+        final List<Object> empty = List.of();
+        assertThatThrownBy(() -> CollectionUtils.intersection(empty, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("second cannot be null");
     }

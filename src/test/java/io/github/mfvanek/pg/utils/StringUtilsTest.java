@@ -41,7 +41,7 @@ class StringUtilsTest {
     @Test
     void truncateShouldWork() {
         assertThat(StringUtils.truncate("abc", 0))
-                .isEqualTo("");
+                .isEmpty();
         assertThat(StringUtils.truncate("abc", 1))
                 .isEqualTo("a");
         assertThat(StringUtils.truncate("abc", 2))
