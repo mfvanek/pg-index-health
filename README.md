@@ -54,7 +54,7 @@ but the best way to do it is to use [DatabaseManagement::resetStatistics()](http
 ## Installation
 Using Gradle:
 ```groovy
-implementation 'io.github.mfvanek:pg-index-health:0.7.0'
+implementation 'io.github.mfvanek:pg-index-health:0.8.0'
 ```
 
 Using Maven:
@@ -62,7 +62,7 @@ Using Maven:
 <dependency>
   <groupId>io.github.mfvanek</groupId>
   <artifactId>pg-index-health</artifactId>
-  <version>0.7.0</version>
+  <version>0.8.0</version>
 </dependency>
 ```
 
