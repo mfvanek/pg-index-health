@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +36,7 @@ class HighAvailabilityPgConnectionClusterTest {
         try (PgConnectionAwareCluster postgresCluster = new PgConnectionAwareCluster()) {
             final PgConnection firstConnection = postgresCluster.getFirstPgConnection();
             final PgConnection secondConnection = postgresCluster.getSecondPgConnection();
-            final List<PgConnection> pgConnections = Arrays.asList(firstConnection, secondConnection);
+            final List<PgConnection> pgConnections = List.of(firstConnection, secondConnection);
             final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(firstConnection, pgConnections, 5_000L);
 
             assertThat(haPgConnection.getConnectionToPrimary())

@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.generator.PgIdentifierNameGeneratorTest.notNullColumnWithSchema;
@@ -92,7 +92,7 @@ class PgIndexOnForeignKeyGeneratorTest {
     @Nonnull
     static ForeignKey severalColumnsWithNulls() {
         return ForeignKey.of("table", "cn",
-                Arrays.asList(
+                List.of(
                         Column.ofNotNull("table", "column_1"),
                         Column.ofNullable("table", "column_2")
                 ));

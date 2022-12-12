@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.model.index;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.utils.Validators;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -29,7 +29,7 @@ public final class IndexWithNulls extends IndexWithSize {
                            @Nonnull final Column nullableColumn) {
         super(tableName, indexName, indexSizeInBytes);
         Objects.requireNonNull(nullableColumn, "nullableColumn cannot be null");
-        Validators.validateThatTableIsTheSame(tableName, Collections.singletonList(nullableColumn));
+        Validators.validateThatTableIsTheSame(tableName, List.of(nullableColumn));
         this.nullableColumn = nullableColumn;
     }
 

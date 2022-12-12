@@ -15,8 +15,6 @@ import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -48,13 +46,12 @@ class ColumnsInForeignKeyParserTest {
 
     @Test
     void shouldWorkWhenValidDataPassed() {
-        final List<Column> columns = ColumnsInForeignKeyParser.parseRawColumnData("t", "c1, true", "c2, false", "c3, abracadabra");
-        assertThat(columns)
-                .isNotNull()
+        assertThat(ColumnsInForeignKeyParser.parseRawColumnData("t", "c1, true", "c2, false", "c3, abracadabra"))
                 .hasSize(3)
                 .containsExactly(
                         Column.ofNotNull("t", "c1"),
                         Column.ofNullable("t", "c2"),
-                        Column.ofNullable("t", "c3"));
+                        Column.ofNullable("t", "c3"))
+                .isUnmodifiable();
     }
 }

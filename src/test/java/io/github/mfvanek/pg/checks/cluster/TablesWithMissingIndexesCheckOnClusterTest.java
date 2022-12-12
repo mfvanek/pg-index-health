@@ -21,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -71,11 +69,11 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
         final TableWithMissingIndex t1 = TableWithMissingIndex.of("t1", 1L, 10L, 1L);
         final TableWithMissingIndex t2 = TableWithMissingIndex.of("t2", 2L, 30L, 3L);
         final TableWithMissingIndex t3 = TableWithMissingIndex.of("t3", 3L, 40L, 4L);
-        final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = Arrays.asList(
-                Collections.emptyList(),
-                Arrays.asList(t1, t3),
-                Collections.singletonList(t2),
-                Arrays.asList(t2, t3)
+        final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = List.of(
+                List.of(),
+                List.of(t1, t3),
+                List.of(t2),
+                List.of(t2, t3)
         );
         final List<TableWithMissingIndex> tablesWithMissingIndexes = TablesWithMissingIndexesCheckOnCluster.getResultAsUnion(
                 tablesWithMissingIndexesFromAllHosts);

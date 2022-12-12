@@ -18,6 +18,8 @@ import javax.annotation.Nonnull;
 
 abstract class AbstractOptionsAwareSqlGenerator<T extends TableNameAware> {
 
+    protected static final String WHITESPACE = " ";
+
     protected final GeneratingOptions options;
 
     protected AbstractOptionsAwareSqlGenerator(@Nonnull final GeneratingOptions options) {

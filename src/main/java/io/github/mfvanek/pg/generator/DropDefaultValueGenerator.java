@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -36,7 +35,7 @@ final class DropDefaultValueGenerator extends AbstractOptionsAwareSqlGenerator<C
                 keyword("if exists ") +
                 column.getTableName() +
                 (options.isBreakLines() ? System.lineSeparator() : " ") +
-                (options.isBreakLines() ? StringUtils.repeat(' ', options.getIndentation()) : "") +
+                (options.isBreakLines() ? WHITESPACE.repeat(options.getIndentation()) : "") +
                 keyword("alter column ") +
                 column.getColumnName() +
                 keyword(" drop default") +

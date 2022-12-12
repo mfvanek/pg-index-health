@@ -33,7 +33,7 @@ public class ColumnsInForeignKeyParser {
         }
         return Arrays.stream(rawColumns)
                 .map(c -> toColumn(tableName, c))
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Nonnull

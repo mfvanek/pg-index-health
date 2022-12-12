@@ -15,8 +15,6 @@ import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.utils.Validators;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -40,11 +38,10 @@ public class ForeignKey implements DbObject, TableNameAware {
                        @Nonnull final List<Column> columnsInConstraint) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
-        final List<Column> defensiveCopy = new ArrayList<>(
-                Objects.requireNonNull(columnsInConstraint, "columnsInConstraint"));
+        final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columnsInConstraint, "columnsInConstraint"));
         Validators.validateThatNotEmpty(defensiveCopy);
         Validators.validateThatTableIsTheSame(tableName, defensiveCopy);
-        this.columnsInConstraint = Collections.unmodifiableList(defensiveCopy);
+        this.columnsInConstraint = defensiveCopy;
     }
 
     /**
@@ -129,8 +126,8 @@ public class ForeignKey implements DbObject, TableNameAware {
     /**
      * Constructs a {@code ForeignKey} object with given columns.
      *
-     * @param tableName table name; should be non-blank.
-     * @param constraintName constraint name; should be non-blank.
+     * @param tableName           table name; should be non-blank.
+     * @param constraintName      constraint name; should be non-blank.
      * @param columnsInConstraint list of columns that are included in constraint; should be non-empty.
      * @return {@code ForeignKey}
      */
@@ -144,25 +141,24 @@ public class ForeignKey implements DbObject, TableNameAware {
     /**
      * Constructs a {@code ForeignKey} object with given {@code Column}.
      *
-     * @param tableName table name; should be non-blank.
+     * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
-     * @param column column that is included in constraint.
+     * @param column         column that is included in constraint.
      * @return {@code ForeignKey}
      */
     @Nonnull
     public static ForeignKey ofColumn(@Nonnull final String tableName,
                                       @Nonnull final String constraintName,
                                       @Nonnull final Column column) {
-        return new ForeignKey(tableName, constraintName,
-                Collections.singletonList(Objects.requireNonNull(column, "column")));
+        return new ForeignKey(tableName, constraintName, List.of(Objects.requireNonNull(column, "column")));
     }
 
     /**
      * Constructs a {@code ForeignKey} object with not null column.
      *
-     * @param tableName table name; should be non-blank.
+     * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
-     * @param columnName name of column that is included in constraint; should be non-blank.
+     * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      */
     @Nonnull
@@ -175,9 +171,9 @@ public class ForeignKey implements DbObject, TableNameAware {
     /**
      * Constructs a {@code ForeignKey} object with nullable column.
      *
-     * @param tableName table name; should be non-blank.
+     * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
-     * @param columnName name of column that is included in constraint; should be non-blank.
+     * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      */
     @Nonnull

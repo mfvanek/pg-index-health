@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 @Tag("fast")
 class DatabaseCheckOnClusterTest {
 
-    private static final Collection<PgContext> CONTEXTS = Arrays.asList(
+    private static final Collection<PgContext> CONTEXTS = List.of(
             PgContext.of("demo"), PgContext.of("test"), PgContext.ofPublic());
 
     @SuppressWarnings("unchecked")
@@ -36,7 +35,7 @@ class DatabaseCheckOnClusterTest {
         Mockito.when(check.check(any(PgContext.class), any()))
                 .thenAnswer(invocation -> {
                     final PgContext ctx = invocation.getArgument(0);
-                    return Arrays.asList(
+                    return List.of(
                             Table.of(ctx.enrichWithSchema("t1"), 1L),
                             Table.of(ctx.enrichWithSchema("t2"), 1L));
                 });

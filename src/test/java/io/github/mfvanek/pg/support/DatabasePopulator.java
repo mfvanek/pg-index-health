@@ -277,8 +277,6 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Override
     public void close() {
-        TestUtils.executeOnDatabase(dataSource, statement -> {
-            statement.execute(String.format("drop schema if exists %s cascade", schemaName));
-        });
+        TestUtils.executeOnDatabase(dataSource, statement -> statement.execute(String.format("drop schema if exists %s cascade", schemaName)));
     }
 }

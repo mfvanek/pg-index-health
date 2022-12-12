@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.utils;
 
-import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +31,8 @@ public final class DuplicatedIndexesParser {
                 .map(a -> {
                     final String indexName = a[0].trim().substring("idx=".length());
                     final String sizeAsString = a[1].trim().substring("size=".length());
-                    return new AbstractMap.SimpleEntry<>(indexName, Long.parseLong(sizeAsString));
+                    return Map.entry(indexName, Long.parseLong(sizeAsString));
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 }

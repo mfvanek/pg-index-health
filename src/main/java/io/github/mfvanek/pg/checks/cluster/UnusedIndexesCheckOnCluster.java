@@ -18,15 +18,13 @@ import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.utils.ClockHolder;
-import org.apache.commons.collections4.CollectionUtils;
+import io.github.mfvanek.pg.utils.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,10 +71,11 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
         for (final List<UnusedIndex> unusedIndexesFromHost : potentiallyUnusedIndexesFromAllHosts) {
             if (unusedIndexes == null) {
                 unusedIndexes = unusedIndexesFromHost;
+                continue;
             }
             unusedIndexes = CollectionUtils.intersection(unusedIndexes, unusedIndexesFromHost);
         }
-        final List<UnusedIndex> result = unusedIndexes == null ? Collections.emptyList() : new ArrayList<>(unusedIndexes);
+        final List<UnusedIndex> result = unusedIndexes == null ? List.of() : List.copyOf(unusedIndexes);
         LOGGER.debug("Intersection result {}", result);
         return result;
     }

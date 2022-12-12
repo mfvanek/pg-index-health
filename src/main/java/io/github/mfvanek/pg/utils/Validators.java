@@ -12,8 +12,6 @@ package io.github.mfvanek.pg.utils;
 
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableNameAware;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +47,7 @@ public final class Validators {
 
     @Nonnull
     public static String notBlank(@Nonnull final String argumentValue, @Nonnull final String argumentName) {
-        if (StringUtils.isBlank(Objects.requireNonNull(argumentValue, argumentName + " cannot be null"))) {
+        if (Objects.requireNonNull(argumentValue, argumentName + " cannot be null").isBlank()) {
             throw new IllegalArgumentException(argumentName + " cannot be blank");
         }
         return argumentValue;
@@ -108,12 +106,10 @@ public final class Validators {
         return duplicatedIndexes;
     }
 
-    @Nonnull
-    public static <T> List<T> validateThatNotEmpty(@Nonnull final List<T> columnsInConstraint) {
-        if (CollectionUtils.isEmpty(columnsInConstraint)) {
+    public static <T> void validateThatNotEmpty(@Nonnull final List<T> columnsInConstraint) {
+        if (columnsInConstraint.isEmpty()) {
             throw new IllegalArgumentException("columnsInConstraint cannot be empty");
         }
-        return columnsInConstraint;
     }
 
     public static String paramValueNotNull(@Nonnull final String value, @Nonnull final String message) {

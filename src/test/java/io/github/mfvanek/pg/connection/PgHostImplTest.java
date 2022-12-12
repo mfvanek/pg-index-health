@@ -45,20 +45,20 @@ class PgHostImplTest {
 
     @Test
     void ofUrl() {
-        final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
+        final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://host-4:6432,host-2:6432,host-3:6432,host-1:6432/db_name?ssl=true&sslmode=require");
         assertThat(host).isNotNull();
-        assertThat(host.getName()).isEqualTo("One of [host-3, host-4, host-1, host-2]");
-        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
+        assertThat(host.getName()).isEqualTo("One of [host-1, host-2, host-3, host-4]");
+        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-4:6432,host-2:6432,host-3:6432,host-1:6432/db_name?ssl=true&sslmode=require");
         assertThat(host.canBePrimary()).isTrue();
         assertThat(host.cannotBePrimary()).isFalse();
     }
 
     @Test
     void ofSecondaryUrl() {
-        final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require&targetServerType=secondary");
+        final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://host-3:6432,host-2:6432,host-1:6432,host-4:6432/db_name?ssl=true&sslmode=require&targetServerType=secondary");
         assertThat(host).isNotNull();
-        assertThat(host.getName()).isEqualTo("One of [host-3, host-4, host-1, host-2]");
-        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require&targetServerType=secondary");
+        assertThat(host.getName()).isEqualTo("One of [host-1, host-2, host-3, host-4]");
+        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-3:6432,host-2:6432,host-1:6432,host-4:6432/db_name?ssl=true&sslmode=require&targetServerType=secondary");
         assertThat(host.canBePrimary()).isFalse();
         assertThat(host.cannotBePrimary()).isTrue();
     }
@@ -74,10 +74,10 @@ class PgHostImplTest {
 
     @Test
     void ofUncompletedUrl() {
-        final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432");
+        final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://host-2:6432,host-4:6432,host-3:6432,host-1:6432");
         assertThat(host).isNotNull();
-        assertThat(host.getName()).isEqualTo("One of [host-3, host-4, host-1, host-2]");
-        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432");
+        assertThat(host.getName()).isEqualTo("One of [host-1, host-2, host-3, host-4]");
+        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-2:6432,host-4:6432,host-3:6432,host-1:6432");
     }
 
     @Test

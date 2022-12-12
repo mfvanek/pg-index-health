@@ -12,13 +12,12 @@ package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.apache.commons.lang3.tuple.Pair;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -29,12 +28,13 @@ final class PostgreSqlContainerWrapper implements AutoCloseable {
     private final PostgreSQLContainer<?> container;
     private final BasicDataSource dataSource;
 
-    PostgreSqlContainerWrapper(@Nonnull final List<Pair<String, String>> additionalParameters) {
+    PostgreSqlContainerWrapper(@Nonnull final List<Map.Entry<String, String>> additionalParameters) {
         this.pgVersion = preparePostgresVersion();
         //noinspection resource
-        this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres").withTag(pgVersion))
+        this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres")
+                .withTag(pgVersion))
                 .withSharedMemorySize(MemoryUnit.MB.convertToBytes(512))
-                .withTmpFs(Collections.singletonMap("/var/lib/postgresql/data", "rw"))
+                .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
                 .withCommand(prepareCommandParts(additionalParameters));
         this.container.start();
         this.dataSource = PostgreSqlDataSourceHelper.buildDataSource(container);
@@ -63,7 +63,7 @@ final class PostgreSqlContainerWrapper implements AutoCloseable {
     }
 
     @Nonnull
-    private static String[] prepareCommandParts(@Nonnull final List<Pair<String, String>> additionalParameters) {
+    private static String[] prepareCommandParts(@Nonnull final List<Map.Entry<String, String>> additionalParameters) {
         return additionalParameters.stream()
                 .flatMap(kv -> Stream.of("-c", kv.getKey() + "=" + kv.getValue()))
                 .toArray(String[]::new);

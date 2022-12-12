@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Tag("fast")
 class DropSequenceGeneratorTest {
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void shouldHandleInvalidArguments() {
         assertThatThrownBy(() -> new DropSequenceGenerator(null))

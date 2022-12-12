@@ -70,8 +70,8 @@ public class IndexWithBloat extends IndexWithSize implements IndexBloatAware {
     /**
      * Constructs a {@code IndexWithBloat} object.
      *
-     * @param tableName        table name; should be non blank.
-     * @param indexName        index name; should be non blank.
+     * @param tableName        table name; should be non-blank.
+     * @param indexName        index name; should be non-blank.
      * @param indexSizeInBytes index size in bytes; should be positive or zero.
      * @param bloatSizeInBytes bloat amount in bytes; should be positive or zero.
      * @param bloatPercentage  bloat percentage in the range from 0 to 100 inclusive.

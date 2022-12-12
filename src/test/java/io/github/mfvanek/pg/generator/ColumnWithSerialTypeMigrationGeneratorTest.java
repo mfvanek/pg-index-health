@@ -15,8 +15,7 @@ import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Tag("fast")
 class ColumnWithSerialTypeMigrationGeneratorTest {
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void shouldHandleInvalidArguments() {
         assertThatThrownBy(() -> new ColumnWithSerialTypeMigrationGenerator(null))
@@ -36,7 +36,7 @@ class ColumnWithSerialTypeMigrationGeneratorTest {
     void forSingleColumn() {
         final ColumnWithSerialTypeMigrationGenerator generator = new ColumnWithSerialTypeMigrationGenerator(GeneratingOptions.builder().build());
 
-        assertThat(generator.generate(Collections.singletonList(column())))
+        assertThat(generator.generate(List.of(column())))
                 .isEqualTo("alter table if exists s1.t1" + System.lineSeparator() +
                         "    alter column col1 drop default;" + System.lineSeparator() +
                         "drop sequence if exists s1.seq1;");
@@ -47,7 +47,7 @@ class ColumnWithSerialTypeMigrationGeneratorTest {
         final ColumnWithSerialType secondColumn = ColumnWithSerialType.ofSerial(Column.ofNotNull("s2.t2", "col2"), "s2.seq2");
         final ColumnWithSerialTypeMigrationGenerator generator = new ColumnWithSerialTypeMigrationGenerator(GeneratingOptions.builder().build());
 
-        assertThat(generator.generate(Arrays.asList(column(), secondColumn)))
+        assertThat(generator.generate(List.of(column(), secondColumn)))
                 .isEqualTo("alter table if exists s1.t1" + System.lineSeparator() +
                         "    alter column col1 drop default;" + System.lineSeparator() +
                         "drop sequence if exists s1.seq1;" + System.lineSeparator() +

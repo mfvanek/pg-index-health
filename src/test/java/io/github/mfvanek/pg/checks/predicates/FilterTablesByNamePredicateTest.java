@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +38,7 @@ class FilterTablesByNamePredicateTest {
 
     @Test
     void forEmpty() {
-        final Predicate<TableNameAware> predicate = FilterTablesByNamePredicate.of(Collections.emptyList());
+        final Predicate<TableNameAware> predicate = FilterTablesByNamePredicate.of(List.of());
         assertThat(predicate)
                 .accepts(FIRST)
                 .accepts(SECOND)

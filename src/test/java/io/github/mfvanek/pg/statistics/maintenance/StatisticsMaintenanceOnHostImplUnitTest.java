@@ -15,8 +15,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -44,7 +43,7 @@ class StatisticsMaintenanceOnHostImplUnitTest {
         final StatisticsQueryExecutor executorMock = Mockito.mock(StatisticsQueryExecutor.class);
         final StatisticsMaintenanceOnHost maintenance = new StatisticsMaintenanceOnHostImpl(connectionMock, executorMock);
         Mockito.when(executorMock.executeQuery(any(), any(), any()))
-                .thenReturn(Collections.emptyList());
+                .thenReturn(List.of());
         assertThat(maintenance.resetStatistics())
                 .isFalse();
     }
@@ -55,7 +54,7 @@ class StatisticsMaintenanceOnHostImplUnitTest {
         final StatisticsQueryExecutor executorMock = Mockito.mock(StatisticsQueryExecutor.class);
         final StatisticsMaintenanceOnHost maintenance = new StatisticsMaintenanceOnHostImpl(connectionMock, executorMock);
         Mockito.when(executorMock.executeQuery(any(), any(), any()))
-                .thenReturn(Arrays.asList(false, true));
+                .thenReturn(List.of(false, true));
         assertThat(maintenance.resetStatistics())
                 .isFalse();
     }

@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.utils;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +35,7 @@ public final class SqlQueryReader {
             if (inputStream == null) {
                 throw new FileNotFoundException(fileName);
             }
-            final String sqlQueryFromFile = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            final String sqlQueryFromFile = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             LOGGER.trace("Query from file {}", sqlQueryFromFile);
             return NamedParametersParser.parse(sqlQueryFromFile);
         } catch (IOException ex) {

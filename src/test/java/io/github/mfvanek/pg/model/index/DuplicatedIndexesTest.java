@@ -16,8 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +26,7 @@ class DuplicatedIndexesTest {
 
     @Test
     void withTheSameTable() {
-        final DuplicatedIndexes index = DuplicatedIndexes.of(Arrays.asList(
+        final DuplicatedIndexes index = DuplicatedIndexes.of(List.of(
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
         assertThat(index).isNotNull();
@@ -44,7 +42,7 @@ class DuplicatedIndexesTest {
 
     @Test
     void ordering() {
-        final DuplicatedIndexes indexes = DuplicatedIndexes.of(Arrays.asList(
+        final DuplicatedIndexes indexes = DuplicatedIndexes.of(List.of(
                 IndexWithSize.of("t1", "i3", 303L),
                 IndexWithSize.of("t1", "i1", 101L),
                 IndexWithSize.of("t1", "i2", 202L)));
@@ -66,7 +64,7 @@ class DuplicatedIndexesTest {
 
     @Test
     void shouldCreateDefensiveCopyOfIndexesList() {
-        final List<IndexWithSize> sourceIndexes = new ArrayList<>(Arrays.asList(
+        final List<IndexWithSize> sourceIndexes = new ArrayList<>(List.of(
                 IndexWithSize.of("t1", "i3", 303L),
                 IndexWithSize.of("t1", "i1", 101L),
                 IndexWithSize.of("t1", "i2", 202L)));
@@ -88,7 +86,7 @@ class DuplicatedIndexesTest {
 
     @Test
     void testToString() {
-        final DuplicatedIndexes indexes = DuplicatedIndexes.of(Arrays.asList(
+        final DuplicatedIndexes indexes = DuplicatedIndexes.of(List.of(
                 IndexWithSize.of("t", "i3", 303L),
                 IndexWithSize.of("t", "i1", 101L),
                 IndexWithSize.of("t", "i2", 202L)));
@@ -104,12 +102,12 @@ class DuplicatedIndexesTest {
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("duplicatedIndexes cannot be null");
 
-        final List<IndexWithSize> firstIndexes = Collections.emptyList();
+        final List<IndexWithSize> firstIndexes = List.of();
         assertThatThrownBy(() -> DuplicatedIndexes.of(firstIndexes))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("duplicatedIndexes cannot be empty");
 
-        final List<IndexWithSize> secondIndexes = Collections.singletonList(IndexWithSize.of("t", "i", 1L));
+        final List<IndexWithSize> secondIndexes = List.of(IndexWithSize.of("t", "i", 1L));
         assertThatThrownBy(() -> DuplicatedIndexes.of(secondIndexes))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("duplicatedIndexes should contains at least two rows");
@@ -117,7 +115,7 @@ class DuplicatedIndexesTest {
 
     @Test
     void withDifferentTables() {
-        final List<IndexWithSize> indexWithSizeList = Arrays.asList(
+        final List<IndexWithSize> indexWithSizeList = List.of(
                 IndexWithSize.of("t1", "i1", 1L),
                 IndexWithSize.of("t2", "i2", 2L));
         assertThatThrownBy(() -> DuplicatedIndexes.of(indexWithSizeList))
@@ -151,13 +149,13 @@ class DuplicatedIndexesTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
-        final DuplicatedIndexes first = DuplicatedIndexes.of(Arrays.asList(
+        final DuplicatedIndexes first = DuplicatedIndexes.of(List.of(
                 IndexWithSize.of("t1", "i1", 101L),
                 IndexWithSize.of("t1", "i2", 202L)));
-        final DuplicatedIndexes second = DuplicatedIndexes.of(Arrays.asList(
+        final DuplicatedIndexes second = DuplicatedIndexes.of(List.of(
                 IndexWithSize.of("t1", "i3", 301L),
                 IndexWithSize.of("t1", "i4", 402L)));
-        final DuplicatedIndexes third = DuplicatedIndexes.of(Arrays.asList(
+        final DuplicatedIndexes third = DuplicatedIndexes.of(List.of(
                 IndexWithSize.of("t2", "i5", 101L),
                 IndexWithSize.of("t2", "i6", 202L)));
 
