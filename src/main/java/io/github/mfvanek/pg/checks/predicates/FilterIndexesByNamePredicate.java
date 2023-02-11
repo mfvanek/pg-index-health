@@ -11,9 +11,9 @@
 package io.github.mfvanek.pg.checks.predicates;
 
 import io.github.mfvanek.pg.model.index.IndexNameAware;
-import io.github.mfvanek.pg.utils.Locales;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
@@ -38,7 +38,7 @@ public class FilterIndexesByNamePredicate extends AbstractFilterByName implement
         if (exclusions.isEmpty()) {
             return true;
         }
-        return !exclusions.contains(indexNameAware.getIndexName().toLowerCase(Locales.DEFAULT));
+        return !exclusions.contains(indexNameAware.getIndexName().toLowerCase(Locale.ROOT));
     }
 
     @Nonnull

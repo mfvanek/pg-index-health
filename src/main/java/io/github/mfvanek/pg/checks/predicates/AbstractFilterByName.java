@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.checks.predicates;
 
-import io.github.mfvanek.pg.utils.Locales;
-import io.github.mfvanek.pg.utils.Validators;
+import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,7 +32,7 @@ abstract class AbstractFilterByName {
     protected AbstractFilterByName(@Nonnull final Collection<String> exclusions) {
         this.exclusions = Objects.requireNonNull(exclusions, "exclusions cannot be null")
                 .stream()
-                .map(s -> s.toLowerCase(Locales.DEFAULT))
+                .map(s -> s.toLowerCase(Locale.ROOT))
                 .collect(Collectors.toUnmodifiableSet());
     }
 

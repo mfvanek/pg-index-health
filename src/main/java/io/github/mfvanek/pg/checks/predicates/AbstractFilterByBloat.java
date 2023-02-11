@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.checks.predicates;
 
 import io.github.mfvanek.pg.model.BloatAware;
-import io.github.mfvanek.pg.utils.Validators;
+import io.github.mfvanek.pg.model.validation.Validators;
 
 import javax.annotation.Nonnull;
 

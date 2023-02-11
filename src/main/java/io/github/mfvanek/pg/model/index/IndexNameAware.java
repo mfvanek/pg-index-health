@@ -14,12 +14,9 @@ import javax.annotation.Nonnull;
 
 /**
  * Allows getting index name.
- * Used as a marker interface for filtering exclusions in
- * {@link io.github.mfvanek.pg.common.health.logger.AbstractHealthLogger}
  *
  * @author Ivan Vakhrushev
  * @see io.github.mfvanek.pg.model.table.TableNameAware
- * @see io.github.mfvanek.pg.common.health.logger.Exclusions
  */
 public interface IndexNameAware {
 

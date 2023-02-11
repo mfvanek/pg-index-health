@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.model.column;
 
 import io.github.mfvanek.pg.model.DbObject;
-import io.github.mfvanek.pg.utils.Validators;
+import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;

@@ -11,9 +11,9 @@
 package io.github.mfvanek.pg.checks.predicates;
 
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
-import io.github.mfvanek.pg.utils.Locales;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
@@ -39,7 +39,7 @@ public class FilterDuplicatedIndexesByNamePredicate extends AbstractFilterByName
             return true;
         }
         return duplicatedIndexes.getIndexNames().stream()
-                .map(n -> n.toLowerCase(Locales.DEFAULT))
+                .map(n -> n.toLowerCase(Locale.ROOT))
                 .noneMatch(exclusions::contains);
     }
 

@@ -11,9 +11,9 @@
 package io.github.mfvanek.pg.checks.predicates;
 
 import io.github.mfvanek.pg.model.table.TableNameAware;
-import io.github.mfvanek.pg.utils.Locales;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
@@ -38,7 +38,7 @@ public class FilterTablesByNamePredicate extends AbstractFilterByName implements
         if (exclusions.isEmpty()) {
             return true;
         }
-        return !exclusions.contains(tableNameAware.getTableName().toLowerCase(Locales.DEFAULT));
+        return !exclusions.contains(tableNameAware.getTableName().toLowerCase(Locale.ROOT));
     }
 
     @Nonnull

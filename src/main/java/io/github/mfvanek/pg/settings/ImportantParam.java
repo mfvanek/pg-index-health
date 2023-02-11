@@ -10,7 +10,8 @@
 
 package io.github.mfvanek.pg.settings;
 
-import io.github.mfvanek.pg.utils.Validators;
+import io.github.mfvanek.pg.model.validation.Validators;
+import io.github.mfvanek.pg.settings.validation.ParamValidators;
 
 import javax.annotation.Nonnull;
 
@@ -32,7 +33,7 @@ public enum ImportantParam implements ParamNameAware {
 
     ImportantParam(@Nonnull final String name, @Nonnull final String defaultValue) {
         this.name = Validators.notBlank(name, "name");
-        this.defaultValue = Validators.paramValueNotNull(
+        this.defaultValue = ParamValidators.paramValueNotNull(
                 defaultValue, "defaultValue for '" + name + "' cannot be null");
     }
 

@@ -10,7 +10,8 @@
 
 package io.github.mfvanek.pg.settings;
 
-import io.github.mfvanek.pg.utils.Validators;
+import io.github.mfvanek.pg.model.validation.Validators;
+import io.github.mfvanek.pg.settings.validation.ParamValidators;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -22,7 +23,7 @@ public class PgParamImpl implements PgParam {
 
     private PgParamImpl(@Nonnull final String name, @Nonnull final String value) {
         this.name = Validators.notBlank(name, "name");
-        this.value = Validators.paramValueNotNull(value, "value for '" + name + "' cannot be null");
+        this.value = ParamValidators.paramValueNotNull(value, "value for '" + name + "' cannot be null");
     }
 
     @Override

@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.model.constraint;
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.table.TableNameAware;
-import io.github.mfvanek.pg.utils.Validators;
+import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.List;
 import java.util.Objects;

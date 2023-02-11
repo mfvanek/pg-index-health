@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import io.github.mfvanek.pg.utils.Validators;
+import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.sql.SQLException;
 import java.sql.Statement;

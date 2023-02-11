@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
-import io.github.mfvanek.pg.utils.Validators;
+import io.github.mfvanek.pg.model.validation.Validators;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
