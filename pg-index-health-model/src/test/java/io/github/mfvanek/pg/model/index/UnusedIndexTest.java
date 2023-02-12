@@ -42,9 +42,11 @@ class UnusedIndexTest {
     @Test
     void indexWithNegativeScans() {
         assertThatThrownBy(() -> UnusedIndex.of("t", "i", -1L, 0L))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("indexSizeInBytes cannot be less than zero");
         assertThatThrownBy(() -> UnusedIndex.of("t", "i", 1L, -1L))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("indexScans cannot be less than zero");
     }
 
     @SuppressWarnings("ConstantConditions")

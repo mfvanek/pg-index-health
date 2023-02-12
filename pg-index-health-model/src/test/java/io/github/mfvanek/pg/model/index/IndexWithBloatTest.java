@@ -47,11 +47,14 @@ class IndexWithBloatTest {
     @Test
     void withInvalidArguments() {
         assertThatThrownBy(() -> IndexWithBloat.of("t", "i", 0L, -1L, 0))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("bloatSizeInBytes cannot be less than zero");
         assertThatThrownBy(() -> IndexWithBloat.of("t", "i", 0L, 0L, -1))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("bloatPercentage cannot be less than zero");
         assertThatThrownBy(() -> IndexWithBloat.of("t", "i", -1L, 0L, 0))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("indexSizeInBytes cannot be less than zero");
         final IndexWithBloat bloat = IndexWithBloat.of("t", "i", 0L, 0L, 0);
         assertThat(bloat).isNotNull();
     }

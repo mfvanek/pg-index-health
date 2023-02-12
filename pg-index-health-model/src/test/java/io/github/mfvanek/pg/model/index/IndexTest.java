@@ -26,17 +26,23 @@ class IndexTest {
     @Test
     void validation() {
         assertThatThrownBy(() -> Index.of(null, null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("tableName cannot be null");
         assertThatThrownBy(() -> Index.of("t", null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("indexName cannot be null");
         assertThatThrownBy(() -> Index.of("", ""))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("tableName cannot be blank");
         assertThatThrownBy(() -> Index.of(" ", " "))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("tableName cannot be blank");
         assertThatThrownBy(() -> Index.of("t", ""))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("indexName cannot be blank");
         assertThatThrownBy(() -> Index.of("t", " "))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("indexName cannot be blank");
     }
 
     @Test

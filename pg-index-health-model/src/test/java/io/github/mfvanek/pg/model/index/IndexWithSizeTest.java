@@ -40,7 +40,8 @@ class IndexWithSizeTest {
     @Test
     void indexWithNegativeSize() {
         assertThatThrownBy(() -> IndexWithSize.of("t", "i", -1L))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("indexSizeInBytes cannot be less than zero");
     }
 
     @Test

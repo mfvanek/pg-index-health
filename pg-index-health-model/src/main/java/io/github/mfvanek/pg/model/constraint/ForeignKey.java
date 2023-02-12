@@ -38,7 +38,7 @@ public class ForeignKey implements DbObject, TableNameAware {
                        @Nonnull final List<Column> columnsInConstraint) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
-        final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columnsInConstraint, "columnsInConstraint"));
+        final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columnsInConstraint, "columnsInConstraint cannot be null"));
         Validators.validateThatNotEmpty(defensiveCopy);
         Validators.validateThatTableIsTheSame(tableName, defensiveCopy);
         this.columnsInConstraint = defensiveCopy;
@@ -150,7 +150,7 @@ public class ForeignKey implements DbObject, TableNameAware {
     public static ForeignKey ofColumn(@Nonnull final String tableName,
                                       @Nonnull final String constraintName,
                                       @Nonnull final Column column) {
-        return new ForeignKey(tableName, constraintName, List.of(Objects.requireNonNull(column, "column")));
+        return new ForeignKey(tableName, constraintName, List.of(Objects.requireNonNull(column, "column cannot be null")));
     }
 
     /**

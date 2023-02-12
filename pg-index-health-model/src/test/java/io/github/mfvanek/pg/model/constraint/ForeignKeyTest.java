@@ -92,30 +92,39 @@ class ForeignKeyTest {
     @Test
     void withInvalidArguments() {
         assertThatThrownBy(() -> ForeignKey.of(null, null, null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("tableName cannot be null");
         assertThatThrownBy(() -> ForeignKey.of("t", null, null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("constraintName cannot be null");
         assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("columnsInConstraint cannot be null");
         final List<Column> columns = List.of();
         assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", columns))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("columnsInConstraint cannot be empty");
         assertThatThrownBy(() -> ForeignKey.ofColumn("t", "fk", null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("column cannot be null");
         assertThatThrownBy(() -> ForeignKey.ofNotNullColumn("t", "fk", null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("columnName cannot be null");
         assertThatThrownBy(() -> ForeignKey.ofNotNullColumn("t", "fk", ""))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("columnName cannot be blank");
         assertThatThrownBy(() -> ForeignKey.ofNotNullColumn("t", "fk", "  "))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("columnName cannot be blank");
         assertThatThrownBy(() -> ForeignKey.ofNullableColumn("t", "fk", null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("columnName cannot be null");
         assertThatThrownBy(() -> ForeignKey.ofNullableColumn("t", "fk", ""))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("columnName cannot be blank");
         assertThatThrownBy(() -> ForeignKey.ofNullableColumn("t", "fk", "  "))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("columnName cannot be blank");
     }
 
     @SuppressWarnings("ConstantConditions")

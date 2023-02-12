@@ -51,13 +51,17 @@ class PgContextTest {
     @Test
     void withInvalidArguments() {
         assertThatThrownBy(() -> PgContext.of(null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("schemaName cannot be null");
         assertThatThrownBy(() -> PgContext.of(""))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("schemaName cannot be blank");
         assertThatThrownBy(() -> PgContext.of("   "))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("schemaName cannot be blank");
         assertThatThrownBy(() -> PgContext.of("s", -1))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("bloatPercentageThreshold cannot be less than zero");
     }
 
     @Test
@@ -92,8 +96,14 @@ class PgContextTest {
     @Test
     void complementWithSchemaWithInvalidArguments() {
         final PgContext pgContext = PgContext.ofPublic();
-        assertThatThrownBy(() -> pgContext.enrichWithSchema(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> pgContext.enrichWithSchema("")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> pgContext.enrichWithSchema("   ")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> pgContext.enrichWithSchema(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("objectName cannot be null");
+        assertThatThrownBy(() -> pgContext.enrichWithSchema(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("objectName cannot be blank");
+        assertThatThrownBy(() -> pgContext.enrichWithSchema("   "))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("objectName cannot be blank");
     }
 }
