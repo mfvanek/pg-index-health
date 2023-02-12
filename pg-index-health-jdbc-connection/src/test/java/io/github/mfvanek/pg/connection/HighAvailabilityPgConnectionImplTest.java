@@ -22,31 +22,31 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
 
     @Test
     void ofPrimary() {
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(getPgConnection());
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(DatabaseAwareTestBase.getPgConnection());
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
                 .isNotNull()
                 .hasSize(1)
-                .containsExactly(getPgConnection())
+                .containsExactly(DatabaseAwareTestBase.getPgConnection())
                 .isUnmodifiable();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster().iterator().next()).isEqualTo(haPgConnection.getConnectionToPrimary());
     }
 
     @Test
     void shouldBeUnmodifiable() {
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(getPgConnection());
+        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(DatabaseAwareTestBase.getPgConnection());
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
                 .isNotNull()
                 .hasSize(1)
-                .containsExactly(getPgConnection())
+                .containsExactly(DatabaseAwareTestBase.getPgConnection())
                 .isUnmodifiable();
     }
 
     @Test
     void withReplicas() {
-        final PgConnection primary = getPgConnection();
-        final PgConnection replica = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofName("replica"));
+        final PgConnection primary = DatabaseAwareTestBase.getPgConnection();
+        final PgConnection replica = PgConnectionImpl.of(DatabaseAwareTestBase.getDataSource(), PgHostImpl.ofName("replica"));
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary, List.of(primary, replica));
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
@@ -58,8 +58,8 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldContainsConnectionToPrimary() {
-        final PgConnection primary = getPgConnection();
-        final PgConnection replica = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofName("replica"));
+        final PgConnection primary = DatabaseAwareTestBase.getPgConnection();
+        final PgConnection replica = PgConnectionImpl.of(DatabaseAwareTestBase.getDataSource(), PgHostImpl.ofName("replica"));
         final List<PgConnection> connectionsOnlyToReplicas = List.of(replica);
         assertThatThrownBy(() -> HighAvailabilityPgConnectionImpl.of(primary, connectionsOnlyToReplicas))
                 .isInstanceOf(IllegalArgumentException.class)

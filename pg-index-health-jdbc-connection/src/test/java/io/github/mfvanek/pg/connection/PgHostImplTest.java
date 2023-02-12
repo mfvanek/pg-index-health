@@ -66,10 +66,18 @@ class PgHostImplTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidValues() {
-        assertThatThrownBy(() -> PgHostImpl.ofName(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> PgHostImpl.ofUrl(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> PgHostImpl.ofUrl("")).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> PgHostImpl.ofUrl("host")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> PgHostImpl.ofName(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("hostName cannot be null");
+        assertThatThrownBy(() -> PgHostImpl.ofUrl(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("pgUrl cannot be null");
+        assertThatThrownBy(() -> PgHostImpl.ofUrl(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("pgUrl cannot be blank or empty");
+        assertThatThrownBy(() -> PgHostImpl.ofUrl("host"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("pgUrl has invalid format");
     }
 
     @Test

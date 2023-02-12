@@ -34,7 +34,7 @@ public class PgHostImpl implements PgHost {
     }
 
     private PgHostImpl(@Nonnull final String hostName, final boolean maybePrimary) {
-        Objects.requireNonNull(hostName, "hostName");
+        Objects.requireNonNull(hostName, "hostName cannot be null");
         this.hostNames = Collections.unmodifiableSortedSet(new TreeSet<>(List.of(hostName)));
         this.pgUrl = PgUrlParser.URL_HEADER + hostName;
         this.maybePrimary = maybePrimary;

@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.settings;
 
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -18,7 +17,6 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Tag("fast")
 class ImportantParamTest {
 
     @Test

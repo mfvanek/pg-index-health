@@ -13,16 +13,22 @@ allprojects {
     group 'io.github.mfvanek'
     version '0.8.1-SNAPSHOT'
 
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'org.sonarqube'
+    apply plugin: 'signing'
+
     java {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
         withJavadocJar()
         withSourcesJar()
-    }
-
-    repositories {
-        mavenLocal()
-        mavenCentral()
     }
 
     jar {
@@ -44,12 +50,6 @@ allprojects {
             sign publishing.publications.mavenJava
         }
     }
-}
-
-subprojects {
-    apply plugin: 'java-library'
-    apply plugin: 'org.sonarqube'
-    apply plugin: 'signing'
 }
 
 sonarqube {

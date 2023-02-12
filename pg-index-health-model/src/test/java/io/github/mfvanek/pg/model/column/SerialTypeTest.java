@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.model.column;
 
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -19,7 +18,6 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Tag("fast")
 class SerialTypeTest {
 
     @Test

@@ -11,12 +11,10 @@
 package io.github.mfvanek.pg.settings.validation;
 
 import io.github.mfvanek.pg.support.TestUtils;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Tag("fast")
 class ParamValidatorsTest {
 
     @Test

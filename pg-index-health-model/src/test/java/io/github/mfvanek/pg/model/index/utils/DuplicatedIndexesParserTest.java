@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.model.index.utils;
 
 import io.github.mfvanek.pg.support.TestUtils;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -19,7 +18,6 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Tag("fast")
 class DuplicatedIndexesParserTest {
 
     @Test

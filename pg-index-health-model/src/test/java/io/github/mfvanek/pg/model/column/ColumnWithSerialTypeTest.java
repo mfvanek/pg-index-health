@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.model.column;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -20,7 +19,6 @@ import javax.annotation.Nonnull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Tag("fast")
 class ColumnWithSerialTypeTest {
 
     @Test
