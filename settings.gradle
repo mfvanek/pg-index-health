@@ -1,2 +1,3 @@
-rootProject.name = 'pg-index-health'
-
+rootProject.name = 'pg-index-health-build'
+include 'pg-index-health-model'
+include 'pg-index-health'
