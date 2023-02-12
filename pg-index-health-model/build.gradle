@@ -23,51 +23,24 @@ repositories {
 
 dependencies {
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
-    implementation 'org.apache.commons:commons-dbcp2:2.9.0'
-    implementation 'org.slf4j:slf4j-api:2.0.6'
 
     testImplementation enforcedPlatform('org.junit:junit-bom:5.9.2')
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params'
-    testImplementation 'ch.qos.logback:logback-classic:1.4.5'
-    testImplementation 'org.mockito:mockito-core:5.1.1'
     testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.13.1'
     testImplementation 'org.assertj:assertj-core:3.24.2'
-    testImplementation 'org.awaitility:awaitility:4.2.0'
-    testImplementation 'org.apache.commons:commons-lang3:3.12.0'
-
-    testImplementation 'org.postgresql:postgresql:42.5.3'
-    testImplementation enforcedPlatform('org.testcontainers:testcontainers-bom:1.17.6')
-    testImplementation 'org.testcontainers:testcontainers'
-    testImplementation 'org.testcontainers:junit-jupiter'
-    testImplementation 'org.testcontainers:postgresql'
 
     checkstyle 'com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1'
 }
 
 test {
     testLogging.showStandardStreams = false // set to true for debug purposes
-    useJUnitPlatform() {
-        excludeTags 'cluster'
-    }
+    useJUnitPlatform()
     dependsOn checkstyleMain, checkstyleTest, pmdMain, pmdTest, spotbugsMain, spotbugsTest
     maxParallelForks = 2 // try to set a higher value to speed up the local build
     finalizedBy jacocoTestReport
     finalizedBy jacocoTestCoverageVerification
 }
-
-tasks.register('clusterTest', Test) {
-    description = 'Runs tests on PostgreSQL cluster.'
-    group = 'verification'
-    useJUnitPlatform() {
-        includeTags 'cluster'
-    }
-    maxParallelForks = 1 // important!
-    mustRunAfter test
-}
-
-build.dependsOn clusterTest
 
 jar {
     manifest {
