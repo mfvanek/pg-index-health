@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.connection;
 
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.utils.PgSqlException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

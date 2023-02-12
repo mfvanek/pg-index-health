@@ -11,13 +11,13 @@
 package io.github.mfvanek.pg.settings.maintenance;
 
 import io.github.mfvanek.pg.connection.PgHostImpl;
+import io.github.mfvanek.pg.connection.PgSqlException;
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.PgParamImpl;
 import io.github.mfvanek.pg.settings.ServerSpecification;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.utils.PgSqlException;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;

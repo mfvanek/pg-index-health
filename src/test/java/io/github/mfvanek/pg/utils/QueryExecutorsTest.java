@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.utils;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.connection.PgSqlException;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.TestUtils;

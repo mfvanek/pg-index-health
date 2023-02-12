@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.utils;
+package io.github.mfvanek.pg.generator.utils;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;
