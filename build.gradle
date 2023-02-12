@@ -1,2 +1,61 @@
-group 'io.github.mfvanek'
-version '0.8.1-SNAPSHOT'
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'jacoco'
+    id 'com.github.spotbugs' version '5.0.13'
+    id 'checkstyle'
+    id 'org.sonarqube' version '3.5.0.2730'
+    id 'pmd'
+}
+
+allprojects {
+    group 'io.github.mfvanek'
+    version '0.8.1-SNAPSHOT'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+        withJavadocJar()
+        withSourcesJar()
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    jar {
+        manifest {
+            attributes("Implementation-Title": project.name,
+                    "Implementation-Version": project.version)
+        }
+    }
+
+    javadoc {
+        if (JavaVersion.current().isJava9Compatible()) {
+            options.addBooleanOption('html5', true)
+        }
+    }
+
+    signing {
+        if (!version.endsWith('SNAPSHOT')) {
+            useGpgCmd()
+            sign publishing.publications.mavenJava
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'org.sonarqube'
+    apply plugin: 'signing'
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "mfvanek_pg-index-health"
+        property "sonar.organization", "mfvanek"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
+}
