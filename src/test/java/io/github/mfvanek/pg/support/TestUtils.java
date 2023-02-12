@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.support;
 
+import io.github.mfvanek.pg.connection.PgSqlException;
 import io.github.mfvanek.pg.support.statements.DbStatement;
-import io.github.mfvanek.pg.utils.PgSqlException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

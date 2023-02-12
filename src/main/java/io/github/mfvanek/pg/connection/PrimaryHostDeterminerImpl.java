@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.utils.PgSqlException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
