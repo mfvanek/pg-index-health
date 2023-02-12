@@ -1,27 +1,20 @@
 dependencies {
     api project(':pg-index-health-model')
     api project(':pg-index-health-jdbc-connection')
-    implementation 'com.google.code.findbugs:jsr305:3.0.2'
-    implementation 'org.slf4j:slf4j-api:2.0.6'
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
-    testImplementation enforcedPlatform('org.junit:junit-bom:5.9.2')
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'org.junit.jupiter:junit-jupiter-params'
-    testImplementation 'ch.qos.logback:logback-classic:1.4.5'
-    testImplementation 'org.mockito:mockito-core:5.1.1'
-    testImplementation 'org.assertj:assertj-core:3.24.2'
-    testImplementation 'org.awaitility:awaitility:4.2.0'
-    testImplementation 'org.apache.commons:commons-lang3:3.12.0'
+    testImplementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    testImplementation "org.awaitility:awaitility:${awaitilityVersion}"
+    testImplementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
 
-    testImplementation 'org.apache.commons:commons-dbcp2:2.9.0'
-    testImplementation 'org.postgresql:postgresql:42.5.3'
-    testImplementation enforcedPlatform('org.testcontainers:testcontainers-bom:1.17.6')
+    testImplementation "org.apache.commons:commons-dbcp2:${dbcp2Version}"
+    testImplementation "org.postgresql:postgresql:${postgresqlVersion}"
+    testImplementation enforcedPlatform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
     testImplementation 'org.testcontainers:testcontainers'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
-
-    checkstyle 'com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1'
 }
 
 test {

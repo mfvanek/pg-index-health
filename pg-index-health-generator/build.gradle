@@ -1,13 +1,5 @@
 dependencies {
     api project(':pg-index-health-model')
-    implementation 'com.google.code.findbugs:jsr305:3.0.2'
-
-    testImplementation enforcedPlatform('org.junit:junit-bom:5.9.2')
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testImplementation 'org.assertj:assertj-core:3.24.2'
-
-    checkstyle 'com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1'
 }
 
 test {

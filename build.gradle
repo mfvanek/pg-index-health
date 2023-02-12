@@ -29,6 +29,29 @@ subprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
 
+    ext {
+        slf4jVersion = '2.0.6'
+        logbackVersion = '1.4.5'
+        dbcp2Version = '2.9.0'
+        testcontainersVersion = '1.17.6'
+        postgresqlVersion = '42.5.3'
+        mockitoVersion = '5.1.1'
+        awaitilityVersion = '4.2.0'
+        equalsverifierVersion = '3.13.1'
+        commonsLang3Version = '3.12.0'
+    }
+
+    dependencies {
+        implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+        testImplementation 'org.assertj:assertj-core:3.24.2'
+        testImplementation enforcedPlatform('org.junit:junit-bom:5.9.2')
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+        testImplementation 'org.junit.jupiter:junit-jupiter-api'
+
+        checkstyle 'com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1'
+    }
+
     java {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
