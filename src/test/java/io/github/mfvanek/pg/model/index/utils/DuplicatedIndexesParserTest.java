@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.utils;
+package io.github.mfvanek.pg.model.index.utils;
 
 import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Tag;
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static io.github.mfvanek.pg.utils.DuplicatedIndexesParser.parseAsIndexNameAndSize;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -32,29 +31,29 @@ class DuplicatedIndexesParserTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThatThrownBy(() -> parseAsIndexNameAndSize(null))
+        assertThatThrownBy(() -> DuplicatedIndexesParser.parseAsIndexNameAndSize(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("duplicatedAsString cannot be null");
-        assertThatThrownBy(() -> parseAsIndexNameAndSize(""))
+        assertThatThrownBy(() -> DuplicatedIndexesParser.parseAsIndexNameAndSize(""))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("duplicatedAsString cannot be blank");
-        assertThatThrownBy(() -> parseAsIndexNameAndSize("  "))
+        assertThatThrownBy(() -> DuplicatedIndexesParser.parseAsIndexNameAndSize("  "))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("duplicatedAsString cannot be blank");
     }
 
     @Test
     void withIncompleteString() {
-        assertThat(parseAsIndexNameAndSize("i"))
+        assertThat(DuplicatedIndexesParser.parseAsIndexNameAndSize("i"))
                 .isUnmodifiable()
                 .isEmpty();
 
-        assertThat(parseAsIndexNameAndSize("idx=i1, size=1"))
+        assertThat(DuplicatedIndexesParser.parseAsIndexNameAndSize("idx=i1, size=1"))
                 .isUnmodifiable()
                 .hasSize(1)
                 .contains(Map.entry("i1", 1L));
 
-        assertThat(parseAsIndexNameAndSize("idx=i2,size=3"))
+        assertThat(DuplicatedIndexesParser.parseAsIndexNameAndSize("idx=i2,size=3"))
                 .isUnmodifiable()
                 .hasSize(1)
                 .contains(Map.entry("i2", 3L));
@@ -62,7 +61,7 @@ class DuplicatedIndexesParserTest {
 
     @Test
     void withSpaces() {
-        assertThat(parseAsIndexNameAndSize("   idx=i2,   size=3   ; idx=i3   ,   size=5   "))
+        assertThat(DuplicatedIndexesParser.parseAsIndexNameAndSize("   idx=i2,   size=3   ; idx=i3   ,   size=5   "))
                 .isUnmodifiable()
                 .hasSize(2)
                 .containsExactly(
@@ -72,18 +71,18 @@ class DuplicatedIndexesParserTest {
 
     @Test
     void withWrongDataFormat() {
-        assertThat(parseAsIndexNameAndSize("idx=i2, input=3"))
+        assertThat(DuplicatedIndexesParser.parseAsIndexNameAndSize("idx=i2, input=3"))
                 .isUnmodifiable()
                 .isEmpty();
 
-        assertThat(parseAsIndexNameAndSize("indx=i2, size=3"))
+        assertThat(DuplicatedIndexesParser.parseAsIndexNameAndSize("indx=i2, size=3"))
                 .isUnmodifiable()
                 .isEmpty();
     }
 
     @Test
     void withWrongNumberFormat() {
-        assertThatThrownBy(() -> parseAsIndexNameAndSize("idx=i2, size=AB3"))
+        assertThatThrownBy(() -> DuplicatedIndexesParser.parseAsIndexNameAndSize("idx=i2, size=AB3"))
                 .isInstanceOf(NumberFormatException.class)
                 .hasMessage("For input string: \"AB3\"");
     }

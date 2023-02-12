@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
-import io.github.mfvanek.pg.utils.Validators;
+import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;

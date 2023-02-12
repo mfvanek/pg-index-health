@@ -8,21 +8,18 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.utils;
+package io.github.mfvanek.pg.settings.validation;
 
-import java.util.Locale;
+import java.util.Objects;
+import javax.annotation.Nonnull;
 
-/**
- * Default locale.
- *
- * @author Ivan Vahrushev
- * @since 0.5.0
- */
-public final class Locales {
+public final class ParamValidators {
 
-    public static final Locale DEFAULT = Locale.ENGLISH;
-
-    private Locales() {
+    private ParamValidators() {
         throw new UnsupportedOperationException();
+    }
+
+    public static String paramValueNotNull(@Nonnull final String value, @Nonnull final String message) {
+        return Objects.requireNonNull(value, message).trim();
     }
 }

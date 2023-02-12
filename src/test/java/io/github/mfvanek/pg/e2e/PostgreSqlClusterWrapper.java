@@ -39,12 +39,12 @@ import javax.sql.DataSource;
  * @author Alexey Antipin
  * @since 0.6.2
  */
-final class PostgresSqlClusterWrapper implements AutoCloseable {
+final class PostgreSqlClusterWrapper implements AutoCloseable {
 
     static final Duration WAIT_INTERVAL_SECONDS = Duration.ofSeconds(100L);
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final String IMAGE_TAG = preparePostgresBitnamiVersion();
-    private static final Logger LOGGER = LoggerFactory.getLogger(PostgresSqlClusterWrapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PostgreSqlClusterWrapper.class);
     private static final Duration STARTUP_TIMEOUT = Duration.ofSeconds(40L);
 
     private final String primaryAlias;
@@ -55,7 +55,7 @@ final class PostgresSqlClusterWrapper implements AutoCloseable {
     private final BasicDataSource dataSourceForPrimary;
     private final BasicDataSource dataSourceForStandBy;
 
-    PostgresSqlClusterWrapper() {
+    PostgreSqlClusterWrapper() {
         // REPMGR_NODE_NAME must end with a number, so aliases must also
         // To avoid a ConflictException when starting the container, aliases must be unique if there is more than one instance of PostgresSqlClusterWrapper
         final UUID uuid = UUID.randomUUID();

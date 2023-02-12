@@ -11,8 +11,8 @@
 package io.github.mfvanek.pg.model.table;
 
 import io.github.mfvanek.pg.model.DbObject;
-import io.github.mfvanek.pg.utils.Validators;
 
+import java.util.Objects;
 import javax.annotation.Nonnull;
 
 /**
@@ -26,7 +26,7 @@ abstract class AbstractTableAware implements DbObject, TableSizeAware {
     protected final Table table;
 
     AbstractTableAware(@Nonnull final Table table) {
-        this.table = Validators.tableNonNull(table);
+        this.table = Objects.requireNonNull(table, "table cannot be null");
     }
 
     /**

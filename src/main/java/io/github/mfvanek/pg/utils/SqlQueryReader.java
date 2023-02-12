@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.utils;
 
+import io.github.mfvanek.pg.model.validation.Validators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import javax.annotation.Nonnull;
 
 public final class SqlQueryReader {
@@ -29,7 +31,7 @@ public final class SqlQueryReader {
 
     @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     public static String getQueryFromFile(@Nonnull final String sqlFileName) {
-        final String fileName = Validators.validateSqlFileName(sqlFileName);
+        final String fileName = validateSqlFileName(sqlFileName);
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         try (InputStream inputStream = classLoader.getResourceAsStream("sql/" + fileName)) {
             if (inputStream == null) {
@@ -41,5 +43,14 @@ public final class SqlQueryReader {
         } catch (IOException ex) {
             throw new RuntimeException(ex); //NOSONAR
         }
+    }
+
+    @Nonnull
+    private static String validateSqlFileName(@Nonnull final String sqlFileName) {
+        final String fileName = Validators.notBlank(sqlFileName, "sqlFileName").toLowerCase(Locale.ROOT);
+        if (!fileName.endsWith(".sql")) {
+            throw new IllegalArgumentException("only *.sql files are supported");
+        }
+        return fileName;
     }
 }

@@ -11,8 +11,8 @@
 package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.table.TableNameAware;
-import io.github.mfvanek.pg.utils.Locales;
 
+import java.util.Locale;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
@@ -29,7 +29,7 @@ abstract class AbstractOptionsAwareSqlGenerator<T extends TableNameAware> {
     @Nonnull
     protected String keyword(@Nonnull final String keyword) {
         if (options.isUppercaseForKeywords()) {
-            return keyword.toUpperCase(Locales.DEFAULT);
+            return keyword.toUpperCase(Locale.ROOT);
         }
         return keyword;
     }

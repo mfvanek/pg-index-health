@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.utils.Locales;
-import io.github.mfvanek.pg.utils.Validators;
+import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -77,7 +77,7 @@ public class Exclusions {
         Objects.requireNonNull(rawExclusions, "rawExclusions cannot be null");
         final Set<String> exclusions = new HashSet<>();
         if (!rawExclusions.isBlank()) {
-            final String[] tables = rawExclusions.toLowerCase(Locales.DEFAULT).split(",");
+            final String[] tables = rawExclusions.toLowerCase(Locale.ROOT).split(",");
             for (final String tableName : tables) {
                 if (!tableName.isBlank()) {
                     exclusions.add(tableName.trim());

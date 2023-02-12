@@ -8,9 +8,8 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.utils;
+package io.github.mfvanek.pg.model.validation;
 
-import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.List;
@@ -21,11 +20,6 @@ public final class Validators {
 
     private Validators() {
         throw new UnsupportedOperationException();
-    }
-
-    @Nonnull
-    public static Table tableNonNull(@Nonnull final Table table) {
-        return Objects.requireNonNull(table, "table cannot be null");
     }
 
     public static long valueIsPositive(final long argumentValue, @Nonnull final String argumentName) {
@@ -82,11 +76,6 @@ public final class Validators {
         return percentValue;
     }
 
-    public static void validateThatTableIsTheSame(@Nonnull final List<? extends TableNameAware> duplicatedIndexes) {
-        final String tableName = validateThatContainsAtLeastTwoRows(duplicatedIndexes).get(0).getTableName();
-        validateThatTableIsTheSame(tableName, duplicatedIndexes);
-    }
-
     public static void validateThatTableIsTheSame(@Nonnull final String expectedTableName, @Nonnull final List<? extends TableNameAware> rows) {
         final boolean tableIsTheSame = rows.stream().allMatch(i -> i.getTableName().equals(expectedTableName));
         if (!tableIsTheSame) {
@@ -94,34 +83,9 @@ public final class Validators {
         }
     }
 
-    @Nonnull
-    private static <T> List<T> validateThatContainsAtLeastTwoRows(@Nonnull final List<T> duplicatedIndexes) {
-        final int size = Objects.requireNonNull(duplicatedIndexes).size();
-        if (0 == size) {
-            throw new IllegalArgumentException("duplicatedIndexes cannot be empty");
-        }
-        if (size < 2) {
-            throw new IllegalArgumentException("duplicatedIndexes should contains at least two rows");
-        }
-        return duplicatedIndexes;
-    }
-
     public static <T> void validateThatNotEmpty(@Nonnull final List<T> columnsInConstraint) {
         if (columnsInConstraint.isEmpty()) {
             throw new IllegalArgumentException("columnsInConstraint cannot be empty");
         }
-    }
-
-    public static String paramValueNotNull(@Nonnull final String value, @Nonnull final String message) {
-        return Objects.requireNonNull(value, message).trim();
-    }
-
-    @Nonnull
-    public static String validateSqlFileName(@Nonnull final String sqlFileName) {
-        final String fileName = notBlank(sqlFileName, "sqlFileName").toLowerCase(Locales.DEFAULT);
-        if (!fileName.endsWith(".sql")) {
-            throw new IllegalArgumentException("only *.sql files are supported");
-        }
-        return fileName;
     }
 }

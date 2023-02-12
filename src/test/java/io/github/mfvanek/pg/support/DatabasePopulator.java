@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.support;
 
+import io.github.mfvanek.pg.model.validation.Validators;
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnColumnsStatement;
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnTablesStatement;
@@ -42,7 +43,6 @@ import io.github.mfvanek.pg.support.statements.CreateTableWithoutPrimaryKeyState
 import io.github.mfvanek.pg.support.statements.DbStatement;
 import io.github.mfvanek.pg.support.statements.DropColumnStatement;
 import io.github.mfvanek.pg.support.statements.InsertDataIntoTablesAction;
-import io.github.mfvanek.pg.utils.Validators;
 
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.utils;
+package io.github.mfvanek.pg.settings.validation;
 
 import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Tag;
@@ -17,11 +17,11 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("fast")
-class LocalesTest {
+class ParamValidatorsTest {
 
     @Test
     void privateConstructor() {
-        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(Locales.class))
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(ParamValidators.class))
                 .isInstanceOf(UnsupportedOperationException.class);
     }
 }

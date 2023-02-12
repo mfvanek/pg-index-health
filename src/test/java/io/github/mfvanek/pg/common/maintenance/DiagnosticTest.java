@@ -10,12 +10,12 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
-import io.github.mfvanek.pg.utils.Locales;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,7 +35,7 @@ class DiagnosticTest {
     @Test
     void sqlQueryFileNameShouldBeInLowerCase() {
         for (final Diagnostic diagnostic : Diagnostic.values()) {
-            final String lower = diagnostic.getSqlQueryFileName().toLowerCase(Locales.DEFAULT);
+            final String lower = diagnostic.getSqlQueryFileName().toLowerCase(Locale.ROOT);
             assertThat(diagnostic.getSqlQueryFileName()).isEqualTo(lower);
         }
     }

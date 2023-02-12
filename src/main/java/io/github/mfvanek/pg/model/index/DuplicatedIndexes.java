@@ -11,9 +11,9 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.index.utils.DuplicatedIndexesParser;
 import io.github.mfvanek.pg.model.table.TableNameAware;
-import io.github.mfvanek.pg.utils.DuplicatedIndexesParser;
-import io.github.mfvanek.pg.utils.Validators;
+import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Comparator;
 import java.util.List;
@@ -44,7 +44,7 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
 
     private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
         final List<IndexWithSize> defensiveCopy = List.copyOf(Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes cannot be null"));
-        Validators.validateThatTableIsTheSame(defensiveCopy);
+        validateThatTableIsTheSame(defensiveCopy);
         this.indexes = defensiveCopy.stream()
                 .sorted(INDEX_WITH_SIZE_COMPARATOR)
                 .collect(Collectors.toUnmodifiableList());
@@ -168,5 +168,22 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
         final Stream<IndexWithSize> basePart = Stream.of(firstIndex, secondIndex);
         return new DuplicatedIndexes(Stream.concat(basePart, Stream.of(otherIndexes))
                 .collect(Collectors.toUnmodifiableList()));
+    }
+
+    private static void validateThatTableIsTheSame(@Nonnull final List<? extends TableNameAware> duplicatedIndexes) {
+        final String tableName = validateThatContainsAtLeastTwoRows(duplicatedIndexes).get(0).getTableName();
+        Validators.validateThatTableIsTheSame(tableName, duplicatedIndexes);
+    }
+
+    @Nonnull
+    private static <T> List<T> validateThatContainsAtLeastTwoRows(@Nonnull final List<T> duplicatedIndexes) {
+        final int size = Objects.requireNonNull(duplicatedIndexes).size();
+        if (0 == size) {
+            throw new IllegalArgumentException("duplicatedIndexes cannot be empty");
+        }
+        if (size < 2) {
+            throw new IllegalArgumentException("duplicatedIndexes should contains at least two rows");
+        }
+        return duplicatedIndexes;
     }
 }

@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.model;
 
-import io.github.mfvanek.pg.utils.Locales;
-import io.github.mfvanek.pg.utils.Validators;
+import io.github.mfvanek.pg.model.validation.Validators;
 
+import java.util.Locale;
 import javax.annotation.Nonnull;
 
 /**
@@ -32,7 +32,7 @@ public class PgContext {
     private final int bloatPercentageThreshold;
 
     private PgContext(@Nonnull final String schemaName, final int bloatPercentageThreshold) {
-        this.schemaName = Validators.notBlank(schemaName, "schemaName").toLowerCase(Locales.DEFAULT);
+        this.schemaName = Validators.notBlank(schemaName, "schemaName").toLowerCase(Locale.ROOT);
         this.bloatPercentageThreshold = Validators.argumentNotNegative(
                 bloatPercentageThreshold, "bloatPercentageThreshold");
     }
@@ -92,7 +92,7 @@ public class PgContext {
         }
 
         final String prefix = schemaName + ".";
-        if (objectName.toLowerCase(Locales.DEFAULT).startsWith(prefix)) {
+        if (objectName.toLowerCase(Locale.ROOT).startsWith(prefix)) {
             return objectName;
         }
 
