@@ -1,10 +1,6 @@
 plugins {
-    //id 'java-library'
     id 'maven-publish'
-    //id 'signing'
     id 'jacoco'
-    id 'com.github.spotbugs' version '5.0.13'
-    id 'checkstyle'
     id 'pmd'
 }
 
@@ -84,23 +80,6 @@ publishing {
     }
 }
 
-spotbugsMain {
-    reports {
-        html.enabled = true
-    }
-}
-spotbugsTest {
-    reports {
-        html.enabled = true
-    }
-}
-spotbugs {
-    showProgress = true
-    effort = 'max'
-    reportLevel = 'low'
-    excludeFilter = file("../config/spotbugs/exclude.xml")
-}
-
 jacocoTestReport {
     reports {
         xml.enabled true
@@ -147,20 +126,6 @@ jacocoTestCoverageVerification {
             }
         }
     }
-}
-
-checkstyle {
-    toolVersion '10.5.0'
-    configFile file("../config/checkstyle/checkstyle.xml")
-    ignoreFailures = false
-    maxWarnings = 0
-    maxErrors = 0
-}
-checkstyleMain {
-    source ='src/main/java'
-}
-checkstyleTest {
-    source ='src/test/java'
 }
 
 check.dependsOn jacocoTestReport, jacocoTestCoverageVerification

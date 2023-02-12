@@ -1,10 +1,6 @@
 plugins {
-    //id 'java-library'
     id 'maven-publish'
-    //id 'signing'
     id 'jacoco'
-    id 'com.github.spotbugs' version '5.0.13'
-    id 'checkstyle'
     id 'pmd'
 }
 
@@ -17,13 +13,11 @@ dependencies {
     testImplementation enforcedPlatform('org.junit:junit-bom:5.9.2')
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    //testImplementation 'org.junit.jupiter:junit-jupiter-params'
     testImplementation 'ch.qos.logback:logback-classic:1.4.5'
     testImplementation 'org.mockito:mockito-core:5.1.1'
     testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.13.1'
     testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation 'org.awaitility:awaitility:4.2.0'
-    //testImplementation 'org.apache.commons:commons-lang3:3.12.0'
 
     testImplementation 'org.postgresql:postgresql:42.5.3'
     testImplementation enforcedPlatform('org.testcontainers:testcontainers-bom:1.17.6')
@@ -97,23 +91,6 @@ publishing {
     }
 }
 
-spotbugsMain {
-    reports {
-        html.enabled = true
-    }
-}
-spotbugsTest {
-    reports {
-        html.enabled = true
-    }
-}
-spotbugs {
-    showProgress = true
-    effort = 'max'
-    reportLevel = 'low'
-    excludeFilter = file("../config/spotbugs/exclude.xml")
-}
-
 jacocoTestReport {
     reports {
         xml.enabled true
@@ -160,20 +137,6 @@ jacocoTestCoverageVerification {
             }
         }
     }
-}
-
-checkstyle {
-    toolVersion '10.5.0'
-    configFile file("../config/checkstyle/checkstyle.xml")
-    ignoreFailures = false
-    maxWarnings = 0
-    maxErrors = 0
-}
-checkstyleMain {
-    source ='src/main/java'
-}
-checkstyleTest {
-    source ='src/test/java'
 }
 
 check.dependsOn jacocoTestReport, jacocoTestCoverageVerification

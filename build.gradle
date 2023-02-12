@@ -23,6 +23,8 @@ subprojects {
     apply plugin: 'java-library'
     apply plugin: 'org.sonarqube'
     apply plugin: 'signing'
+    apply plugin: 'checkstyle'
+    apply plugin: 'com.github.spotbugs'
 
     java {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -49,6 +51,37 @@ subprojects {
             useGpgCmd()
             sign publishing.publications.mavenJava
         }
+    }
+
+    checkstyle {
+        toolVersion '10.5.0'
+        configFile file("../config/checkstyle/checkstyle.xml")
+        ignoreFailures = false
+        maxWarnings = 0
+        maxErrors = 0
+    }
+    checkstyleMain {
+        source ='src/main/java'
+    }
+    checkstyleTest {
+        source ='src/test/java'
+    }
+
+    spotbugsMain {
+        reports {
+            html.enabled = true
+        }
+    }
+    spotbugsTest {
+        reports {
+            html.enabled = true
+        }
+    }
+    spotbugs {
+        showProgress = true
+        effort = 'max'
+        reportLevel = 'low'
+        excludeFilter = file("../config/spotbugs/exclude.xml")
     }
 }
 
