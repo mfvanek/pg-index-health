@@ -30,7 +30,7 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
 
     @Test
     void isPrimary() {
-        final PgConnection pgConnection = PgConnectionImpl.of(DatabaseAwareTestBase.getDataSource(), localhost);
+        final PgConnection pgConnection = PgConnectionImpl.of(getDataSource(), localhost);
         assertThat(primaryHostDeterminer.isPrimary(pgConnection)).isTrue();
     }
 
@@ -62,8 +62,8 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
     @Test
     void isPrimaryForSecondaryHost() {
         final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
-                "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=secondary", DatabaseAwareTestBase.getPort());
-        final PgConnection secondary = PgConnectionImpl.of(DatabaseAwareTestBase.getDataSource(), PgHostImpl.ofUrl(readUrl));
+                "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=secondary", getPort());
+        final PgConnection secondary = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl(readUrl));
         assertThat(secondary).isNotNull();
         assertThat(primaryHostDeterminer.isPrimary(secondary)).isFalse();
     }

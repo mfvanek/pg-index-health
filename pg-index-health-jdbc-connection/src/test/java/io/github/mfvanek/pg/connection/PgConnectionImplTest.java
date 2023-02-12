@@ -25,17 +25,17 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
 
     @Test
     void getPrimaryDataSource() {
-        final PgConnection connection = DatabaseAwareTestBase.getPgConnection();
+        final PgConnection connection = getPgConnection();
         assertThat(connection.getDataSource()).isNotNull();
         assertThat(connection.getHost()).isEqualTo(PgHostImpl.ofPrimary());
     }
 
     @Test
     void isPrimaryForAnyHost() {
-        final int port = DatabaseAwareTestBase.getPort();
+        final int port = getPort();
         final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
                 "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=preferSecondary", port);
-        final PgConnection any = PgConnectionImpl.of(DatabaseAwareTestBase.getDataSource(), PgHostImpl.ofUrl(readUrl));
+        final PgConnection any = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl(readUrl));
         assertThat(any).isNotNull();
     }
 
@@ -45,7 +45,7 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
         assertThatThrownBy(() -> PgConnectionImpl.ofPrimary(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("dataSource cannot be null");
-        final DataSource dataSource = DatabaseAwareTestBase.getDataSource();
+        final DataSource dataSource = getDataSource();
         assertThatThrownBy(() -> PgConnectionImpl.of(dataSource, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("host cannot be null");
@@ -54,9 +54,9 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
     @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
-        final PgConnection first = PgConnectionImpl.ofPrimary(DatabaseAwareTestBase.getDataSource());
-        final PgConnection theSame = PgConnectionImpl.ofPrimary(DatabaseAwareTestBase.getDataSource());
-        final PgConnection second = PgConnectionImpl.of(DatabaseAwareTestBase.getDataSource(), PgHostImpl.ofName("second"));
+        final PgConnection first = PgConnectionImpl.ofPrimary(getDataSource());
+        final PgConnection theSame = PgConnectionImpl.ofPrimary(getDataSource());
+        final PgConnection second = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofName("second"));
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -93,7 +93,7 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
 
     @Test
     void toStringTest() {
-        final PgConnection connection = PgConnectionImpl.ofPrimary(DatabaseAwareTestBase.getDataSource());
+        final PgConnection connection = PgConnectionImpl.ofPrimary(getDataSource());
         assertThat(connection)
                 .hasToString("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}}");
     }
