@@ -11,8 +11,7 @@
 package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnNameAware;
-import org.junit.jupiter.api.Tag;
+import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
@@ -20,17 +19,16 @@ import javax.annotation.Nonnull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Tag("fast")
-class DropDefaultValueGeneratorTest {
+class DropSequenceGeneratorTest {
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void shouldHandleInvalidArguments() {
-        assertThatThrownBy(() -> new DropDefaultValueGenerator(null))
+        assertThatThrownBy(() -> new DropSequenceGenerator(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("options cannot be null");
 
-        final DropDefaultValueGenerator generator = new DropDefaultValueGenerator(GeneratingOptions.builder().build());
+        final DropSequenceGenerator generator = new DropSequenceGenerator(GeneratingOptions.builder().build());
         assertThatThrownBy(() -> generator.generate(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("column cannot be null");
@@ -38,35 +36,23 @@ class DropDefaultValueGeneratorTest {
 
     @Test
     void generateForColumnLowerCase() {
-        final DropDefaultValueGenerator generator = new DropDefaultValueGenerator(GeneratingOptions.builder().build());
+        final DropSequenceGenerator generator = new DropSequenceGenerator(GeneratingOptions.builder().build());
         assertThat(generator.generate(column()))
-                .isEqualTo("alter table if exists s1.t1" + System.lineSeparator() +
-                        "    alter column col1 drop default;");
-    }
-
-    @Test
-    void generateWithoutBreakingLines() {
-        final DropDefaultValueGenerator generator = new DropDefaultValueGenerator(
-                GeneratingOptions.builder()
-                        .doNotBreakLines()
-                        .build());
-        assertThat(generator.generate(column()))
-                .isEqualTo("alter table if exists s1.t1 alter column col1 drop default;");
+                .isEqualTo("drop sequence if exists s1.seq1;");
     }
 
     @Test
     void generateForColumnUpperCase() {
-        final DropDefaultValueGenerator generator = new DropDefaultValueGenerator(
+        final DropSequenceGenerator generator = new DropSequenceGenerator(
                 GeneratingOptions.builder()
                         .uppercaseForKeywords()
-                        .doNotBreakLines()
                         .build());
         assertThat(generator.generate(column()))
-                .isEqualTo("ALTER TABLE IF EXISTS s1.t1 ALTER COLUMN col1 DROP DEFAULT;");
+                .isEqualTo("DROP SEQUENCE IF EXISTS s1.seq1;");
     }
 
     @Nonnull
-    private ColumnNameAware column() {
-        return Column.ofNotNull("s1.t1", "col1");
+    private ColumnWithSerialType column() {
+        return ColumnWithSerialType.ofSerial(Column.ofNotNull("s1.t1", "col1"), "s1.seq1");
     }
 }

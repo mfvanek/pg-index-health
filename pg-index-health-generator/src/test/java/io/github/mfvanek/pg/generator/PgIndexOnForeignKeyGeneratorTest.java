@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -22,7 +21,6 @@ import static io.github.mfvanek.pg.generator.PgIdentifierNameGeneratorTest.notNu
 import static io.github.mfvanek.pg.generator.PgIdentifierNameGeneratorTest.nullableColumnWithSchema;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Tag("fast")
 class PgIndexOnForeignKeyGeneratorTest {
 
     @Test
