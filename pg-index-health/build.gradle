@@ -11,13 +11,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.awaitility:awaitility:${awaitilityVersion}"
     testImplementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
-
-    //testImplementation "org.apache.commons:commons-dbcp2:${dbcp2Version}"
     testImplementation "org.postgresql:postgresql:${postgresqlVersion}"
-    //testImplementation enforcedPlatform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
-    //testImplementation 'org.testcontainers:testcontainers'
-    //testImplementation 'org.testcontainers:junit-jupiter'
-    //testImplementation 'org.testcontainers:postgresql'
 }
 
 test {

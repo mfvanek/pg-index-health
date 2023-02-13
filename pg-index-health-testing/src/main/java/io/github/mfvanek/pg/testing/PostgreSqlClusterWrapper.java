@@ -23,9 +23,7 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.sql.SQLException;
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -46,8 +44,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostgreSqlClusterWrapper.class);
     private static final Duration STARTUP_TIMEOUT = Duration.ofSeconds(40L);
 
-    private final String primaryAlias;
-    private final String standbyAlias;
+    private final PostgreSqlClusterAliasHolder aliases;
     private final Network network;
     private final JdbcDatabaseContainer<?> containerForPrimary;
     private final JdbcDatabaseContainer<?> containerForStandBy;
@@ -55,22 +52,18 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private final BasicDataSource dataSourceForStandBy;
 
     public PostgreSqlClusterWrapper() {
-        // REPMGR_NODE_NAME must end with a number, so aliases must also
-        // To avoid a ConflictException when starting the container, aliases must be unique if there is more than one instance of PostgresSqlClusterWrapper
-        final UUID uuid = UUID.randomUUID();
-        this.primaryAlias = String.format("pg-%s-0", uuid);
-        this.standbyAlias = String.format("pg-%s-1", uuid);
+        this.aliases = new PostgreSqlClusterAliasHolder();
         this.network = Network.newNetwork();
         // Primary node
         final WaitStrategy waitStrategyForPrimary = new LogMessageWaitStrategy()
                 .withRegEx(".*Starting repmgrd.*\\s")
                 .withStartupTimeout(STARTUP_TIMEOUT);
-        this.containerForPrimary = createContainerAndInitWith(this::primaryEnvVarsMap, primaryAlias, waitStrategyForPrimary);
+        this.containerForPrimary = createContainerAndInitWith(aliases::createPrimaryEnvVarsMap, aliases.getPrimaryAlias(), waitStrategyForPrimary);
         // Standby node
         final WaitStrategy waitStrategyForStandBy = new LogMessageWaitStrategy()
                 .withRegEx(".*starting monitoring of node.*\\s")
                 .withStartupTimeout(STARTUP_TIMEOUT);
-        this.containerForStandBy = createContainerAndInitWith(this::standbyEnvVarsMap, standbyAlias, waitStrategyForStandBy);
+        this.containerForStandBy = createContainerAndInitWith(aliases::createStandbyEnvVarsMap, aliases.getStandbyAlias(), waitStrategyForStandBy);
 
         this.containerForPrimary.start();
         Awaitility.await("Ensure primary is ready")
@@ -121,13 +114,15 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     @Nonnull
     public String getFirstContainerJdbcUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://%s:%d/%s", primaryAlias, containerForPrimary.getFirstMappedPort(), containerForPrimary.getDatabaseName());
+        return String.format("jdbc:postgresql://%s:%d/%s",
+                aliases.getPrimaryAlias(), containerForPrimary.getFirstMappedPort(), containerForPrimary.getDatabaseName());
     }
 
     @Nonnull
     public String getSecondContainerJdbcUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://%s:%d/%s", standbyAlias, containerForStandBy.getFirstMappedPort(), containerForStandBy.getDatabaseName());
+        return String.format("jdbc:postgresql://%s:%d/%s",
+                aliases.getStandbyAlias(), containerForStandBy.getFirstMappedPort(), containerForStandBy.getDatabaseName());
     }
 
     public void stopFirstContainer() {
@@ -141,46 +136,6 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
                 .atMost(WAIT_INTERVAL_SECONDS)
                 .pollInterval(Duration.ofSeconds(1L))
                 .until(() -> containerForStandBy.getLogs().contains("standby promoted to primary after"));
-    }
-
-    @Nonnull
-    private Map<String, String> primaryEnvVarsMap() {
-        final Map<String, String> envVarsMap = new HashMap<>();
-        envVarsMap.put("POSTGRESQL_POSTGRES_PASSWORD", "adminpassword");
-        envVarsMap.put("POSTGRESQL_USERNAME", "customuser");
-        envVarsMap.put("POSTGRESQL_PASSWORD", "custompassword");
-        envVarsMap.put("POSTGRESQL_DATABASE", "customdatabase");
-        envVarsMap.put("REPMGR_PASSWORD", "repmgrpassword");
-        envVarsMap.put("REPMGR_PRIMARY_HOST", primaryAlias);
-        envVarsMap.put("REPMGR_PRIMARY_PORT", "5432");
-        envVarsMap.put("REPMGR_PARTNER_NODES", String.format("%s,%s:5432", primaryAlias, standbyAlias));
-        envVarsMap.put("REPMGR_NODE_NAME", primaryAlias);
-        envVarsMap.put("REPMGR_NODE_NETWORK_NAME", primaryAlias);
-        envVarsMap.put("REPMGR_PORT_NUMBER", "5432");
-        envVarsMap.put("REPMGR_CONNECT_TIMEOUT", "1");
-        envVarsMap.put("REPMGR_RECONNECT_ATTEMPTS", "1");
-        envVarsMap.put("REPMGR_RECONNECT_INTERVAL", "1");
-        return envVarsMap;
-    }
-
-    @Nonnull
-    private Map<String, String> standbyEnvVarsMap() {
-        final Map<String, String> envVarsMap = new HashMap<>();
-        envVarsMap.put("POSTGRESQL_POSTGRES_PASSWORD", "adminpassword");
-        envVarsMap.put("POSTGRESQL_USERNAME", "customuser");
-        envVarsMap.put("POSTGRESQL_PASSWORD", "custompassword");
-        envVarsMap.put("POSTGRESQL_DATABASE", "customdatabase");
-        envVarsMap.put("REPMGR_PASSWORD", "repmgrpassword");
-        envVarsMap.put("REPMGR_PRIMARY_HOST", primaryAlias);
-        envVarsMap.put("REPMGR_PRIMARY_PORT", "5432");
-        envVarsMap.put("REPMGR_PARTNER_NODES", String.format("%s,%s:5432", primaryAlias, standbyAlias));
-        envVarsMap.put("REPMGR_NODE_NAME", standbyAlias);
-        envVarsMap.put("REPMGR_NODE_NETWORK_NAME", standbyAlias);
-        envVarsMap.put("REPMGR_PORT_NUMBER", "5432");
-        envVarsMap.put("REPMGR_CONNECT_TIMEOUT", "1");
-        envVarsMap.put("REPMGR_RECONNECT_ATTEMPTS", "1");
-        envVarsMap.put("REPMGR_RECONNECT_INTERVAL", "1");
-        return envVarsMap;
     }
 
     @Nonnull
@@ -207,7 +162,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         if (pgVersion != null) {
             return pgVersion + ".0";
         }
-        return "15.1.0";
+        return "15.2.0";
     }
 
     private void throwErrorIfNotInitialized() {

@@ -21,14 +21,14 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @since 0.6.2
  */
-public final class PostgreSqlDataSourceHelper {
+final class PostgreSqlDataSourceHelper {
 
     private PostgreSqlDataSourceHelper() {
         throw new UnsupportedOperationException();
     }
 
     @Nonnull
-    public static BasicDataSource buildDataSource(@Nonnull final JdbcDatabaseContainer<?> container) {
+    static BasicDataSource buildDataSource(@Nonnull final JdbcDatabaseContainer<?> container) {
         final BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setUrl(container.getJdbcUrl());
         basicDataSource.setUsername(container.getUsername());

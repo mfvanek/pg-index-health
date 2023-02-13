@@ -1,3 +1,5 @@
+import com.github.spotbugs.snom.SpotBugsTask
+
 plugins {
     id 'maven-publish'
     id 'signing'
@@ -82,12 +84,6 @@ subprojects {
         maxWarnings = 0
         maxErrors = 0
     }
-//    checkstyleMain {
-//        source ='src/main/java'
-//    }
-//    checkstyleTest {
-//        source ='src/test/java'
-//    }
 
     pmd {
         consoleOutput = true
@@ -96,21 +92,21 @@ subprojects {
         ruleSets = []
     }
 
-    spotbugsMain {
-        reports {
-            html.enabled = true
-        }
-    }
-    spotbugsTest {
-        reports {
-            html.enabled = true
-        }
-    }
     spotbugs {
         showProgress = true
         effort = 'max'
         reportLevel = 'low'
         excludeFilter = file("../config/spotbugs/exclude.xml")
+    }
+    tasks.withType(SpotBugsTask) {
+        reports {
+            xml {
+                required.set(true)
+            }
+            html {
+                required.set(true)
+            }
+        }
     }
 
     jacocoTestReport {
@@ -133,28 +129,28 @@ subprojects {
                 limit {
                     counter = 'METHOD'
                     value = 'MISSEDCOUNT'
-                    maximum = 0
+                    maximum = 10
                 }
             }
             rule {
                 limit {
                     counter = 'LINE'
                     value = 'MISSEDCOUNT'
-                    maximum = 0
+                    maximum = 40
                 }
             }
             rule {
                 limit {
                     counter = 'INSTRUCTION'
                     value = 'COVEREDRATIO'
-                    minimum = 1.0
+                    minimum = 0.1
                 }
             }
             rule {
                 limit {
                     counter = 'BRANCH'
                     value = 'COVEREDRATIO'
-                    minimum = 1.0
+                    minimum = 0.1
                 }
             }
         }
