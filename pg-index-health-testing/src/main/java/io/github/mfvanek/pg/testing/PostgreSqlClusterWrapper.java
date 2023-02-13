@@ -190,7 +190,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
             final WaitStrategy waitStrategy
     ) {
         //noinspection resource
-        return new PostgresBitnamiRepmgrContainer(DockerImageName.parse(IMAGE_NAME).withTag(IMAGE_TAG), envVarsProvider.get())
+        return new PostgresBitnamiRepmgrContainer(DockerImageName.parse(IMAGE_NAME).withTag(IMAGE_TAG), envVarsProvider.get()) //NOSONAR
                 .withCreateContainerCmdModifier(cmd -> cmd.withName(alias))
                 .withSharedMemorySize(MemoryUnit.MB.convertToBytes(768))
                 .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))

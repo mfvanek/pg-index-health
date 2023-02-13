@@ -4,6 +4,8 @@ dependencies {
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
     testImplementation project(':pg-index-health-testing')
+    testImplementation(testFixtures(project(":pg-index-health-model")))
+    testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
     testImplementation 'org.junit.jupiter:junit-jupiter-params'
     testImplementation "ch.qos.logback:logback-classic:${logbackVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"

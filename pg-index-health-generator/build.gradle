@@ -1,5 +1,7 @@
 dependencies {
     api project(':pg-index-health-model')
+
+    testImplementation(testFixtures(project(":pg-index-health-model")))
 }
 
 test {

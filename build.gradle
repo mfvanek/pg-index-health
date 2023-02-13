@@ -6,6 +6,7 @@ plugins {
     id 'checkstyle'
     id 'org.sonarqube' version '3.5.0.2730'
     id 'pmd'
+    id 'java-test-fixtures'
 }
 
 allprojects {
@@ -27,6 +28,7 @@ subprojects {
     apply plugin: 'jacoco'
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
+    apply plugin: 'java-test-fixtures'
 
     ext {
         slf4jVersion = '2.0.6'
@@ -38,11 +40,12 @@ subprojects {
         awaitilityVersion = '4.2.0'
         equalsverifierVersion = '3.13.1'
         commonsLang3Version = '3.12.0'
+        jsr305Version = '3.0.2'
         customMaxParallelForks = 3 // try to set a higher value to speed up the local build
     }
 
     dependencies {
-        implementation 'com.google.code.findbugs:jsr305:3.0.2'
+        implementation "com.google.code.findbugs:jsr305:${jsr305Version}"
 
         testImplementation 'org.assertj:assertj-core:3.24.2'
         testImplementation enforcedPlatform('org.junit:junit-bom:5.9.2')
@@ -79,12 +82,12 @@ subprojects {
         maxWarnings = 0
         maxErrors = 0
     }
-    checkstyleMain {
-        source ='src/main/java'
-    }
-    checkstyleTest {
-        source ='src/test/java'
-    }
+//    checkstyleMain {
+//        source ='src/main/java'
+//    }
+//    checkstyleTest {
+//        source ='src/test/java'
+//    }
 
     pmd {
         consoleOutput = true

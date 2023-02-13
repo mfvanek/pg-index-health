@@ -261,7 +261,7 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     public void populate() {
-        TestUtils.executeInTransaction(dataSource, statementsToExecuteInSameTransaction.values());
+        ExecuteUtils.executeInTransaction(dataSource, statementsToExecuteInSameTransaction.values());
         actionsToExecuteOutsideTransaction.forEach((k, v) -> v.run());
     }
 
@@ -277,6 +277,6 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Override
     public void close() {
-        TestUtils.executeOnDatabase(dataSource, statement -> statement.execute(String.format("drop schema if exists %s cascade", schemaName)));
+        ExecuteUtils.executeOnDatabase(dataSource, statement -> statement.execute(String.format("drop schema if exists %s cascade", schemaName)));
     }
 }

@@ -13,8 +13,6 @@ package io.github.mfvanek.pg.support;
 import io.github.mfvanek.pg.connection.PgSqlException;
 import io.github.mfvanek.pg.support.statements.DbStatement;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,23 +20,10 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-public final class TestUtils {
+public final class ExecuteUtils {
 
-    private TestUtils() {
+    private ExecuteUtils() {
         throw new UnsupportedOperationException();
-    }
-
-    @SuppressWarnings("checkstyle:IllegalThrows")
-    public static <T> void invokePrivateConstructor(@Nonnull final Class<T> type)
-            throws Throwable {
-        final Constructor<T> constructor = type.getDeclaredConstructor();
-        constructor.setAccessible(true);
-
-        try {
-            constructor.newInstance();
-        } catch (InvocationTargetException ex) {
-            throw ex.getTargetException();
-        }
     }
 
     public static void executeOnDatabase(@Nonnull final DataSource dataSource,

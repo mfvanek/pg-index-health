@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.testing;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.utility.DockerImageName;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -31,7 +30,7 @@ class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitna
 
     PostgresBitnamiRepmgrContainer(final DockerImageName dockerImageName, final Map<String, String> envVars) {
         super(dockerImageName);
-        this.envVars = Collections.unmodifiableMap(envVars);
+        this.envVars = Map.copyOf(envVars);
         addExposedPort(POSTGRESQL_PORT);
     }
 

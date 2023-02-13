@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.testing;
+package io.github.mfvanek.pg.support;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;

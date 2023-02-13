@@ -1,8 +1,6 @@
 dependencies {
     api project(':pg-index-health-model')
     implementation "org.apache.commons:commons-dbcp2:${dbcp2Version}"
-    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
-    implementation "ch.qos.logback:logback-classic:${logbackVersion}"
     implementation enforcedPlatform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
     implementation 'org.testcontainers:testcontainers'
     implementation 'org.testcontainers:postgresql'

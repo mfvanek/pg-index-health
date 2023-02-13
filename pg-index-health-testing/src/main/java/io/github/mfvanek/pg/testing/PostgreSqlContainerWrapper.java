@@ -32,7 +32,7 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable {
     public PostgreSqlContainerWrapper(@Nonnull final List<Map.Entry<String, String>> additionalParameters) {
         this.pgVersion = preparePostgresVersion();
         //noinspection resource
-        this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres")
+        this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres") //NOSONAR
                 .withTag(pgVersion))
                 .withSharedMemorySize(MemoryUnit.MB.convertToBytes(512))
                 .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
