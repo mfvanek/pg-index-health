@@ -18,7 +18,7 @@ import io.github.mfvanek.pg.model.index.IndexNameAware;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.support.LogsCaptor;
+import io.github.mfvanek.pg.testing.LogsCaptor;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

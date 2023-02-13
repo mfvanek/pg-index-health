@@ -8,10 +8,9 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.e2e;
+package io.github.mfvanek.pg.testing;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
-import io.github.mfvanek.pg.support.PostgreSqlDataSourceHelper;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.awaitility.Awaitility;
 import org.slf4j.Logger;
@@ -39,9 +38,9 @@ import javax.sql.DataSource;
  * @author Alexey Antipin
  * @since 0.6.2
  */
-final class PostgreSqlClusterWrapper implements AutoCloseable {
+public final class PostgreSqlClusterWrapper implements AutoCloseable {
 
-    static final Duration WAIT_INTERVAL_SECONDS = Duration.ofSeconds(100L);
+    public static final Duration WAIT_INTERVAL_SECONDS = Duration.ofSeconds(100L);
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final String IMAGE_TAG = preparePostgresBitnamiVersion();
     private static final Logger LOGGER = LoggerFactory.getLogger(PostgreSqlClusterWrapper.class);
@@ -55,7 +54,7 @@ final class PostgreSqlClusterWrapper implements AutoCloseable {
     private final BasicDataSource dataSourceForPrimary;
     private final BasicDataSource dataSourceForStandBy;
 
-    PostgreSqlClusterWrapper() {
+    public PostgreSqlClusterWrapper() {
         // REPMGR_NODE_NAME must end with a number, so aliases must also
         // To avoid a ConflictException when starting the container, aliases must be unique if there is more than one instance of PostgresSqlClusterWrapper
         final UUID uuid = UUID.randomUUID();

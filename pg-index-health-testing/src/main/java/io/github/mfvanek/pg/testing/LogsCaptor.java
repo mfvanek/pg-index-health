@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.support;
+package io.github.mfvanek.pg.testing;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -52,6 +52,7 @@ public final class LogsCaptor implements AutoCloseable {
         logAppender.list.clear();
     }
 
+    @Nonnull
     public List<ILoggingEvent> getLogs() {
         return List.copyOf(logAppender.list);
     }

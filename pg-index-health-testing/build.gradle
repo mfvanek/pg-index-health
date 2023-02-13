@@ -2,13 +2,12 @@ dependencies {
     api project(':pg-index-health-model')
     implementation "org.apache.commons:commons-dbcp2:${dbcp2Version}"
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
-
-    testImplementation project(':pg-index-health-testing')
-    testImplementation "ch.qos.logback:logback-classic:${logbackVersion}"
-    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
-    testImplementation "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
-    testImplementation "org.awaitility:awaitility:${awaitilityVersion}"
-    testImplementation "org.postgresql:postgresql:${postgresqlVersion}"
+    implementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    implementation enforcedPlatform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
+    implementation 'org.testcontainers:testcontainers'
+    implementation 'org.testcontainers:postgresql'
+    implementation "org.awaitility:awaitility:${awaitilityVersion}"
+    implementation "org.postgresql:postgresql:${postgresqlVersion}"
 }
 
 test {

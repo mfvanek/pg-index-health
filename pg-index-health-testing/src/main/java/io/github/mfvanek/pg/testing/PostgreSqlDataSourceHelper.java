@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.support;
+package io.github.mfvanek.pg.testing;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.testcontainers.containers.JdbcDatabaseContainer;

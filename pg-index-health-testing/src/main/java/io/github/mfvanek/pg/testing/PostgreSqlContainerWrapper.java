@@ -8,9 +8,10 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.support;
+package io.github.mfvanek.pg.testing;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
+import io.github.mfvanek.pg.settings.ImportantParam;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -22,13 +23,13 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-final class PostgreSqlContainerWrapper implements AutoCloseable {
+public final class PostgreSqlContainerWrapper implements AutoCloseable {
 
     private final String pgVersion;
     private final PostgreSQLContainer<?> container;
     private final BasicDataSource dataSource;
 
-    PostgreSqlContainerWrapper(@Nonnull final List<Map.Entry<String, String>> additionalParameters) {
+    public PostgreSqlContainerWrapper(@Nonnull final List<Map.Entry<String, String>> additionalParameters) {
         this.pgVersion = preparePostgresVersion();
         //noinspection resource
         this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres")
@@ -38,6 +39,16 @@ final class PostgreSqlContainerWrapper implements AutoCloseable {
                 .withCommand(prepareCommandParts(additionalParameters));
         this.container.start();
         this.dataSource = PostgreSqlDataSourceHelper.buildDataSource(container);
+    }
+
+    public PostgreSqlContainerWrapper() {
+        this(List.of(
+                Map.entry(ImportantParam.LOCK_TIMEOUT.getName(), "1000"),
+                Map.entry(ImportantParam.SHARED_BUFFERS.getName(), "256MB"),
+                Map.entry(ImportantParam.MAINTENANCE_WORK_MEM.getName(), "128MB"),
+                Map.entry(ImportantParam.WORK_MEM.getName(), "16MB"),
+                Map.entry(ImportantParam.RANDOM_PAGE_COST.getName(), "1")
+        ));
     }
 
     /**

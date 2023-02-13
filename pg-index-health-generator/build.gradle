@@ -6,7 +6,7 @@ test {
     testLogging.showStandardStreams = false // set to true for debug purposes
     useJUnitPlatform()
     dependsOn checkstyleMain, checkstyleTest, pmdMain, pmdTest, spotbugsMain, spotbugsTest
-    maxParallelForks = 2 // try to set a higher value to speed up the local build
+    maxParallelForks = customMaxParallelForks
     finalizedBy jacocoTestReport
     finalizedBy jacocoTestCoverageVerification
 }

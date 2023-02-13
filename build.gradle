@@ -38,6 +38,7 @@ subprojects {
         awaitilityVersion = '4.2.0'
         equalsverifierVersion = '3.13.1'
         commonsLang3Version = '3.12.0'
+        customMaxParallelForks = 3 // try to set a higher value to speed up the local build
     }
 
     dependencies {
