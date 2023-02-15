@@ -40,11 +40,11 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
 
     public static final Duration WAIT_INTERVAL_SECONDS = Duration.ofSeconds(100L);
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
-    private static final String IMAGE_TAG = preparePostgresBitnamiVersion();
     private static final Logger LOGGER = LoggerFactory.getLogger(PostgreSqlClusterWrapper.class);
     private static final Duration STARTUP_TIMEOUT = Duration.ofSeconds(40L);
 
     private final PostgreSqlClusterAliasHolder aliases;
+    private final PostgresVersionHolder pgVersion;
     private final Network network;
     private final JdbcDatabaseContainer<?> containerForPrimary;
     private final JdbcDatabaseContainer<?> containerForStandBy;
@@ -53,6 +53,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
 
     public PostgreSqlClusterWrapper() {
         this.aliases = new PostgreSqlClusterAliasHolder();
+        this.pgVersion = PostgresVersionHolder.forCluster();
         this.network = Network.newNetwork();
         // Primary node
         final WaitStrategy waitStrategyForPrimary = new LogMessageWaitStrategy()
@@ -144,8 +145,10 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
             final String alias,
             final WaitStrategy waitStrategy
     ) {
+        final DockerImageName dockerImageName = DockerImageName.parse(IMAGE_NAME)
+                .withTag(pgVersion.getVersion());
         //noinspection resource
-        return new PostgresBitnamiRepmgrContainer(DockerImageName.parse(IMAGE_NAME).withTag(IMAGE_TAG), envVarsProvider.get()) //NOSONAR
+        return new PostgresBitnamiRepmgrContainer(dockerImageName, envVarsProvider.get()) //NOSONAR
                 .withCreateContainerCmdModifier(cmd -> cmd.withName(alias))
                 .withSharedMemorySize(MemoryUnit.MB.convertToBytes(768))
                 .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
@@ -153,16 +156,6 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
                 .withNetworkAliases(alias)
                 .withExposedPorts(5432)
                 .waitingFor(waitStrategy);
-    }
-
-    @Nonnull
-    private static String preparePostgresBitnamiVersion() {
-        // Bitnami images use semantic versioning with three digits
-        final String pgVersion = System.getenv("TEST_PG_VERSION");
-        if (pgVersion != null) {
-            return pgVersion + ".0";
-        }
-        return "15.2.0";
     }
 
     private void throwErrorIfNotInitialized() {

@@ -19,21 +19,23 @@ import org.testcontainers.utility.DockerImageName;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-public final class PostgreSqlContainerWrapper implements AutoCloseable {
+public final class PostgreSqlContainerWrapper implements AutoCloseable, PostgresVersionAware {
 
-    private final String pgVersion;
+    private final PostgresVersionHolder pgVersion;
     private final PostgreSQLContainer<?> container;
     private final BasicDataSource dataSource;
 
-    public PostgreSqlContainerWrapper(@Nonnull final List<Map.Entry<String, String>> additionalParameters) {
-        this.pgVersion = preparePostgresVersion();
+    PostgreSqlContainerWrapper(@Nonnull final PostgresVersionHolder pgVersion,
+                               @Nonnull final List<Map.Entry<String, String>> additionalParameters) {
+        this.pgVersion = Objects.requireNonNull(pgVersion, "pgVersion cannot be null");
         //noinspection resource
         this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres") //NOSONAR
-                .withTag(pgVersion))
+                .withTag(pgVersion.getVersion()))
                 .withSharedMemorySize(MemoryUnit.MB.convertToBytes(512))
                 .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
                 .withCommand(prepareCommandParts(additionalParameters));
@@ -41,8 +43,8 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable {
         this.dataSource = PostgreSqlDataSourceHelper.buildDataSource(container);
     }
 
-    public PostgreSqlContainerWrapper() {
-        this(List.of(
+    PostgreSqlContainerWrapper(final PostgresVersionHolder pgVersion) {
+        this(pgVersion, List.of(
                 Map.entry(ImportantParam.LOCK_TIMEOUT.getName(), "1000"),
                 Map.entry(ImportantParam.SHARED_BUFFERS.getName(), "256MB"),
                 Map.entry(ImportantParam.MAINTENANCE_WORK_MEM.getName(), "128MB"),
@@ -62,15 +64,6 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable {
             // ignore
         }
         container.close();
-    }
-
-    @Nonnull
-    private static String preparePostgresVersion() {
-        final String pgVersion = System.getenv("TEST_PG_VERSION");
-        if (pgVersion != null) {
-            return pgVersion;
-        }
-        return "15.2";
     }
 
     @Nonnull
@@ -105,38 +98,36 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable {
     }
 
     /**
-     * Checks whether <a href="https://www.postgresql.org/docs/current/monitoring-stats.html">The Cumulative Statistics System</a> is supported for given PostgreSQL container.
-     *
-     * @return true for version 15 and higher
-     * @see <a href="https://www.percona.com/blog/postgresql-15-stats-collector-gone-whats-new/">PostgreSQL 15: Stats Collector Gone? What’s New?</a>
-     * @since 0.7.0
+     * {@inheritDoc}
      */
+    @Override
     public boolean isCumulativeStatisticsSystemSupported() {
-        return getMajorVersion() >= 15;
+        return pgVersion.isCumulativeStatisticsSystemSupported();
     }
 
     /**
-     * Checks whether <a href="https://www.postgresql.org/docs/current/sql-createprocedure.html">CREATE PROCEDURE</a> command is supported for given PostgreSQL container.
-     *
-     * @return true for version 11 and higher
-     * @since 0.7.0
+     * {@inheritDoc}
      */
+    @Override
     public boolean isProceduresSupported() {
-        return getMajorVersion() >= 11;
-    }
-
-    private int getMajorVersion() {
-        final String[] parts = pgVersion.split("\\.");
-        return Integer.parseInt(parts[0]);
+        return pgVersion.isProceduresSupported();
     }
 
     /**
-     * Checks whether <a href="https://www.postgresql.org/docs/current/sql-createprocedure.html">CREATE PROCEDURE</a> command supports OUT parameters.
-     *
-     * @return true for version 14 and higher
-     * @since 0.7.0
+     * {@inheritDoc}
      */
+    @Override
     public boolean isOutParametersInProcedureSupported() {
-        return isProceduresSupported() && getMajorVersion() >= 14;
+        return pgVersion.isOutParametersInProcedureSupported();
+    }
+
+    @Nonnull
+    public static PostgreSqlContainerWrapper withDefaultVersion() {
+        return new PostgreSqlContainerWrapper(PostgresVersionHolder.forSingleNode());
+    }
+
+    @Nonnull
+    public static PostgreSqlContainerWrapper withVersion(@Nonnull final PostgresVersionHolder pgVersion) {
+        return new PostgreSqlContainerWrapper(pgVersion);
     }
 }

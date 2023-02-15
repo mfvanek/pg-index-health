@@ -14,25 +14,63 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PostgreSqlContainerWrapperTest {
 
     @Test
-    void shouldWork() {
-        try (PostgreSqlContainerWrapper container = new PostgreSqlContainerWrapper()) {
+    void withDefaultVersionShouldWork() {
+        try (PostgreSqlContainerWrapper container = PostgreSqlContainerWrapper.withDefaultVersion()) {
             assertThat(container)
-                    .isNotNull();
-            assertThat(container.getDataSource())
                     .isNotNull()
-                    .isInstanceOf(BasicDataSource.class);
-            assertThat(container.getPort())
-                    .isPositive();
-            assertThat(container.getUrl())
-                    .startsWith("jdbc:postgresql://");
-            assertThat(container.getUsername())
-                    .isNotBlank();
-            assertThat(container.getPassword())
-                    .isNotBlank();
+                    .satisfies(c -> {
+                        assertThat(c.getDataSource())
+                                .isNotNull()
+                                .isInstanceOf(BasicDataSource.class);
+                        assertThat(c.getPort())
+                                .isPositive();
+                        assertThat(c.getUrl())
+                                .startsWith("jdbc:postgresql://");
+                        assertThat(c.getUsername())
+                                .isNotBlank();
+                        assertThat(c.getPassword())
+                                .isNotBlank();
+                    });
         }
+    }
+
+    @Test
+    void withVersionShouldWork() {
+        try (PostgreSqlContainerWrapper container = PostgreSqlContainerWrapper.withVersion(new PostgresVersionHolder("15.2"))) {
+            assertThat(container)
+                    .isNotNull()
+                    .satisfies(c -> {
+                        assertThat(c.getDataSource())
+                                .isNotNull()
+                                .isInstanceOf(BasicDataSource.class);
+                        assertThat(c.getPort())
+                                .isPositive();
+                        assertThat(c.getUrl())
+                                .startsWith("jdbc:postgresql://");
+                        assertThat(c.getUsername())
+                                .isNotBlank();
+                        assertThat(c.getPassword())
+                                .isNotBlank();
+                        assertThat(c.isProceduresSupported())
+                                .isTrue();
+                        assertThat(c.isOutParametersInProcedureSupported())
+                                .isTrue();
+                        assertThat(c.isCumulativeStatisticsSystemSupported())
+                                .isTrue();
+                    });
+        }
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void shouldThrowExceptionWhenVersionIsNull() {
+        assertThatThrownBy(() -> PostgreSqlContainerWrapper.withVersion(null)) //NOSONAR
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("pgVersion cannot be null");
     }
 }

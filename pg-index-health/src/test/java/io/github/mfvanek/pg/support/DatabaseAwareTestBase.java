@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 
 public abstract class DatabaseAwareTestBase {
 
-    private static final PostgreSqlContainerWrapper POSTGRES = new PostgreSqlContainerWrapper();
+    private static final PostgreSqlContainerWrapper POSTGRES = PostgreSqlContainerWrapper.withDefaultVersion();
 
     @Nonnull
     protected static PgConnection getPgConnection() {
