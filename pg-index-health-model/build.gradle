@@ -1,3 +1,5 @@
+description = 'pg-index-health-model is a set of common classes and interfaces for getting information about PostgreSQL database objects.'
+
 dependencies {
     testImplementation "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"

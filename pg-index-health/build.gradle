@@ -1,3 +1,5 @@
+description = 'pg-index-health is a Java library for analyzing and maintaining indexes health in PostgreSQL databases.'
+
 dependencies {
     api project(':pg-index-health-model')
     api project(':pg-index-health-jdbc-connection')

@@ -11,6 +11,8 @@ plugins {
     id 'java-test-fixtures'
 }
 
+description = 'pg-index-health build'
+
 allprojects {
     group 'io.github.mfvanek'
     version '0.9.0-SNAPSHOT'
@@ -172,7 +174,7 @@ subprojects {
 
                 pom {
                     name = project.name
-                    description = 'pg-index-health is a Java library for analyzing and maintaining indexes health in PostgreSQL databases.'
+                    description = project.provider(project::getDescription)
                     url = 'https://github.com/mfvanek/pg-index-health'
                     licenses {
                         license {
@@ -186,6 +188,11 @@ subprojects {
                             id = 'mfvanek'
                             name = 'Ivan Vakhrushev'
                             email = 'mfvanek@gmail.com'
+                        }
+                        developer {
+                            id = 'Evreke'
+                            name = 'Alex Antipin'
+                            email = 'evreke@gmail.com'
                         }
                     }
 
