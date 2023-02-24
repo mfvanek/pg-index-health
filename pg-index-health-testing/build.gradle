@@ -1,9 +1,8 @@
 dependencies {
     api project(':pg-index-health-model')
     implementation "org.apache.commons:commons-dbcp2:${dbcp2Version}"
-    implementation enforcedPlatform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
-    implementation 'org.testcontainers:testcontainers'
-    implementation 'org.testcontainers:postgresql'
+    implementation "org.testcontainers:testcontainers:${testcontainersVersion}"
+    implementation "org.testcontainers:postgresql:${testcontainersVersion}"
     implementation "org.awaitility:awaitility:${awaitilityVersion}"
     implementation "org.postgresql:postgresql:${postgresqlVersion}"
 
