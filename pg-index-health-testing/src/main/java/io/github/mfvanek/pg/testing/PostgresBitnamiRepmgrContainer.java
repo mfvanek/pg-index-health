@@ -85,20 +85,19 @@ class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitna
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("PMD.CloseResource")
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
+    public boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+
+        if (!(other instanceof PostgresBitnamiRepmgrContainer)) {
             return false;
         }
-        if (!super.equals(o)) {
-            return false;
-        }
-        try (PostgresBitnamiRepmgrContainer that = (PostgresBitnamiRepmgrContainer) o) {
-            return Objects.equals(envVars, that.envVars);
-        }
+
+        final PostgresBitnamiRepmgrContainer that = (PostgresBitnamiRepmgrContainer) other;
+        return Objects.equals(envVars, that.envVars);
     }
 
     /**
@@ -106,6 +105,6 @@ class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitna
      */
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), envVars);
+        return Objects.hash(System.identityHashCode(this), envVars);
     }
 }

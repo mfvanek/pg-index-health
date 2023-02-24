@@ -129,28 +129,28 @@ subprojects {
                 limit {
                     counter = 'METHOD'
                     value = 'MISSEDCOUNT'
-                    maximum = 6
+                    maximum = 0
                 }
             }
             rule {
                 limit {
                     counter = 'LINE'
                     value = 'MISSEDCOUNT'
-                    maximum = 27
+                    maximum = 0
                 }
             }
             rule {
                 limit {
                     counter = 'INSTRUCTION'
                     value = 'COVEREDRATIO'
-                    minimum = 0.86
+                    minimum = 1.0
                 }
             }
             rule {
                 limit {
                     counter = 'BRANCH'
                     value = 'COVEREDRATIO'
-                    minimum = 0.5
+                    minimum = 1.0
                 }
             }
         }

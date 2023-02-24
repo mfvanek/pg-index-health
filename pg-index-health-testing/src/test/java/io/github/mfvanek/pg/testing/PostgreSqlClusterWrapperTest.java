@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.testing;
 
+import io.github.mfvanek.pg.support.LogsCaptor;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +35,18 @@ class PostgreSqlClusterWrapperTest {
             assertThat(cluster.getSecondContainerJdbcUrl())
                     .startsWith("jdbc:postgresql://")
                     .isNotEqualTo(cluster.getFirstContainerJdbcUrl());
+        }
+    }
+
+    @Test
+    void stopFirstContainerShouldWork() {
+        try (PostgreSqlClusterWrapper cluster = new PostgreSqlClusterWrapper();
+             LogsCaptor logsCaptor = new LogsCaptor(PostgreSqlClusterWrapper.class)) {
+            assertThat(cluster.stopFirstContainer())
+                    .isTrue();
+            assertThat(logsCaptor.getLogs())
+                    .hasSizeGreaterThanOrEqualTo(1)
+                    .anyMatch(l -> l.getMessage().contains("Waiting for standby will be promoted to primary"));
         }
     }
 }

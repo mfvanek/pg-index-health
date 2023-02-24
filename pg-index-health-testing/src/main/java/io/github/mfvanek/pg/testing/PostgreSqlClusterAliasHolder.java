@@ -10,6 +10,10 @@
 
 package io.github.mfvanek.pg.testing;
 
+import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
+import org.testcontainers.containers.wait.strategy.WaitStrategy;
+
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -18,6 +22,8 @@ import javax.annotation.concurrent.Immutable;
 
 @Immutable
 final class PostgreSqlClusterAliasHolder {
+
+    static final Duration STARTUP_TIMEOUT = Duration.ofSeconds(40L);
 
     private final String primaryAlias;
     private final String standbyAlias;
@@ -36,7 +42,7 @@ final class PostgreSqlClusterAliasHolder {
     }
 
     @Nonnull
-    public String getStandbyAlias() {
+    String getStandbyAlias() {
         return standbyAlias;
     }
 
@@ -54,6 +60,20 @@ final class PostgreSqlClusterAliasHolder {
         envVarsMap.put("REPMGR_NODE_NAME", standbyAlias);
         envVarsMap.put("REPMGR_NODE_NETWORK_NAME", standbyAlias);
         return envVarsMap;
+    }
+
+    @Nonnull
+    WaitStrategy getWaitStrategyForPrimary() {
+        return new LogMessageWaitStrategy()
+                .withRegEx(".*Starting repmgrd.*\\s")
+                .withStartupTimeout(STARTUP_TIMEOUT);
+    }
+
+    @Nonnull
+    WaitStrategy getWaitStrategyForStandBy() {
+        return new LogMessageWaitStrategy()
+                .withRegEx(".*starting monitoring of node.*\\s")
+                .withStartupTimeout(STARTUP_TIMEOUT);
     }
 
     @Nonnull

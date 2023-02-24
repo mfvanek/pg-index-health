@@ -8,6 +8,7 @@ dependencies {
     implementation "org.postgresql:postgresql:${postgresqlVersion}"
 
     testImplementation(testFixtures(project(":pg-index-health-model")))
+    testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "ch.qos.logback:logback-classic:${logbackVersion}"
 }

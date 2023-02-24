@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.testing;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.settings.ImportantParam;
+import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -56,6 +57,7 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
     /**
      * {@inheritDoc}
      */
+    @ExcludeFromJacocoGeneratedReport
     @Override
     public void close() {
         try {

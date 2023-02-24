@@ -11,13 +11,13 @@
 package io.github.mfvanek.pg.testing;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
+import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.awaitility.Awaitility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.Network;
-import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import org.testcontainers.utility.DockerImageName;
 
@@ -41,7 +41,6 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     public static final Duration WAIT_INTERVAL_SECONDS = Duration.ofSeconds(100L);
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final Logger LOGGER = LoggerFactory.getLogger(PostgreSqlClusterWrapper.class);
-    private static final Duration STARTUP_TIMEOUT = Duration.ofSeconds(40L);
 
     private final PostgreSqlClusterAliasHolder aliases;
     private final PostgresVersionHolder pgVersion;
@@ -56,24 +55,18 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         this.pgVersion = PostgresVersionHolder.forCluster();
         this.network = Network.newNetwork();
         // Primary node
-        final WaitStrategy waitStrategyForPrimary = new LogMessageWaitStrategy()
-                .withRegEx(".*Starting repmgrd.*\\s")
-                .withStartupTimeout(STARTUP_TIMEOUT);
-        this.containerForPrimary = createContainerAndInitWith(aliases::createPrimaryEnvVarsMap, aliases.getPrimaryAlias(), waitStrategyForPrimary);
+        this.containerForPrimary = createContainerAndInitWith(aliases::createPrimaryEnvVarsMap, aliases.getPrimaryAlias(), aliases.getWaitStrategyForPrimary());
         // Standby node
-        final WaitStrategy waitStrategyForStandBy = new LogMessageWaitStrategy()
-                .withRegEx(".*starting monitoring of node.*\\s")
-                .withStartupTimeout(STARTUP_TIMEOUT);
-        this.containerForStandBy = createContainerAndInitWith(aliases::createStandbyEnvVarsMap, aliases.getStandbyAlias(), waitStrategyForStandBy);
+        this.containerForStandBy = createContainerAndInitWith(aliases::createStandbyEnvVarsMap, aliases.getStandbyAlias(), aliases.getWaitStrategyForStandBy());
 
         this.containerForPrimary.start();
         Awaitility.await("Ensure primary is ready")
-                .atMost(STARTUP_TIMEOUT)
+                .atMost(PostgreSqlClusterAliasHolder.STARTUP_TIMEOUT)
                 .pollInterval(Duration.ofSeconds(1L))
                 .until(() -> containerForPrimary.getLogs().contains("database system is ready to accept connections"));
         this.containerForStandBy.start();
         Awaitility.await("Ensure cluster is ready")
-                .atMost(STARTUP_TIMEOUT)
+                .atMost(PostgreSqlClusterAliasHolder.STARTUP_TIMEOUT)
                 .pollInterval(Duration.ofSeconds(1L))
                 .until(() -> containerForStandBy.getLogs().contains("started streaming WAL from primary"));
 
@@ -84,6 +77,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     /**
      * {@inheritDoc}
      */
+    @ExcludeFromJacocoGeneratedReport
     @Override
     public void close() {
         try {
@@ -126,7 +120,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
                 aliases.getStandbyAlias(), containerForStandBy.getFirstMappedPort(), containerForStandBy.getDatabaseName());
     }
 
-    public void stopFirstContainer() {
+    public boolean stopFirstContainer() {
         containerForPrimary.stop();
         LOGGER.info("Waiting for standby will be promoted to primary");
         Awaitility.await("Promoting standby to primary")
@@ -137,6 +131,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
                 .atMost(WAIT_INTERVAL_SECONDS)
                 .pollInterval(Duration.ofSeconds(1L))
                 .until(() -> containerForStandBy.getLogs().contains("standby promoted to primary after"));
+        return true;
     }
 
     @Nonnull
@@ -158,6 +153,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
                 .waitingFor(waitStrategy);
     }
 
+    @ExcludeFromJacocoGeneratedReport
     private void throwErrorIfNotInitialized() {
         if (containerForPrimary == null || dataSourceForPrimary == null || containerForStandBy == null || dataSourceForStandBy == null) {
             throw new AssertionError("not initialized");
