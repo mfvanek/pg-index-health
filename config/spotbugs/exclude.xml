@@ -32,8 +32,8 @@
     <Match>
         <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
         <Or>
-            <Class name="io.github.mfvanek.pg.support.PostgreSqlContainerWrapper"/>
-            <Class name="io.github.mfvanek.pg.e2e.PostgreSqlClusterWrapper"/>
+            <Class name="io.github.mfvanek.pg.testing.PostgreSqlClusterWrapper"/>
+            <Class name="io.github.mfvanek.pg.testing.PostgreSqlContainerWrapper"/>
         </Or>
     </Match>
     <Match>

@@ -1,0 +1,28 @@
+description = 'pg-index-health-jdbc-connection is an abstraction of a connection to a high availability PostgreSQL cluster.'
+
+dependencies {
+    api project(':pg-index-health-model')
+    implementation "org.apache.commons:commons-dbcp2:${dbcp2Version}"
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+
+    testImplementation project(':pg-index-health-testing')
+    testImplementation(testFixtures(project(":pg-index-health-model")))
+    testImplementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    testImplementation "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
+    testImplementation "org.awaitility:awaitility:${awaitilityVersion}"
+    testImplementation "org.postgresql:postgresql:${postgresqlVersion}"
+
+    testFixturesImplementation "com.google.code.findbugs:jsr305:${jsr305Version}"
+    testFixturesImplementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    testFixturesImplementation "ch.qos.logback:logback-classic:${logbackVersion}"
+}
+
+test {
+    testLogging.showStandardStreams = false // set to true for debug purposes
+    useJUnitPlatform()
+    dependsOn checkstyleMain, checkstyleTest, checkstyleTestFixtures, pmdMain, pmdTest, pmdTestFixtures, spotbugsMain, spotbugsTest, spotbugsTestFixtures
+    maxParallelForks = customMaxParallelForks
+    finalizedBy jacocoTestReport
+    finalizedBy jacocoTestCoverageVerification
+}

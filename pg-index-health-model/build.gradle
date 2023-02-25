@@ -1,0 +1,17 @@
+description = 'pg-index-health-model is a set of common classes and interfaces for getting information about PostgreSQL database objects.'
+
+dependencies {
+    testImplementation "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+
+    testFixturesImplementation "com.google.code.findbugs:jsr305:${jsr305Version}"
+}
+
+test {
+    testLogging.showStandardStreams = false // set to true for debug purposes
+    useJUnitPlatform()
+    dependsOn checkstyleMain, checkstyleTest, checkstyleTestFixtures, pmdMain, pmdTest, pmdTestFixtures, spotbugsMain, spotbugsTest, spotbugsTestFixtures
+    maxParallelForks = customMaxParallelForks
+    finalizedBy jacocoTestReport
+    finalizedBy jacocoTestCoverageVerification
+}

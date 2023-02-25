@@ -1,4 +1,3 @@
-[submodule "src/main/resources"]
-    path = src/main/resources
-    url = https://github.com/mfvanek/pg-index-health-sql.git
-    branch = master
+[submodule "pg-index-health/src/main/resources"]
+	path = pg-index-health/src/main/resources
+	url = https://github.com/mfvanek/pg-index-health-sql.git
