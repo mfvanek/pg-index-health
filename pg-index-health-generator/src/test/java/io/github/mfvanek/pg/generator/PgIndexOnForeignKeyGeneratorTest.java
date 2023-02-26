@@ -83,16 +83,16 @@ class PgIndexOnForeignKeyGeneratorTest {
     void generateWithoutTruncation() {
         final PgIndexOnForeignKeyGenerator generator = new PgIndexOnForeignKeyGenerator(GeneratingOptions.builder().build());
         assertThat(generator.generate(severalColumnsWithNulls()))
-                .isEqualTo("create index concurrently if not exists table_column_1_column_2_without_nulls_idx" + System.lineSeparator() +
-                        "    on table (column_1, column_2) where column_2 is not null;");
+                .isEqualTo("create index concurrently if not exists custom_table_custom_column_1_custom_column_22_without_nulls_idx" + System.lineSeparator() +
+                        "    on custom_table (custom_column_1, custom_column_22) where custom_column_22 is not null;");
     }
 
     @Nonnull
     static ForeignKey severalColumnsWithNulls() {
-        return ForeignKey.of("table", "cn",
+        return ForeignKey.of("custom_table", "cn",
                 List.of(
-                        Column.ofNotNull("table", "column_1"),
-                        Column.ofNullable("table", "column_2")
+                        Column.ofNotNull("custom_table", "custom_column_1"),
+                        Column.ofNullable("custom_table", "custom_column_22")
                 ));
     }
 }

@@ -40,11 +40,11 @@ class ForeignKeyMigrationGeneratorTest {
                 List.of(severalColumnsWithNulls(), severalColumnsWithNulls(), nullableColumnWithSchema()));
         assertThat(result)
                 .isNotBlank()
-                .isEqualTo("create index concurrently if not exists table_column_1_column_2_without_nulls_idx" + System.lineSeparator() +
-                        "    on table (column_1, column_2) where column_2 is not null;" + System.lineSeparator() +
+                .isEqualTo("create index concurrently if not exists custom_table_custom_column_1_custom_column_22_without_nulls_idx" + System.lineSeparator() +
+                        "    on custom_table (custom_column_1, custom_column_22) where custom_column_22 is not null;" + System.lineSeparator() +
                         System.lineSeparator() +
-                        "create index concurrently if not exists table_column_1_column_2_without_nulls_idx" + System.lineSeparator() +
-                        "    on table (column_1, column_2) where column_2 is not null;" + System.lineSeparator() +
+                        "create index concurrently if not exists custom_table_custom_column_1_custom_column_22_without_nulls_idx" + System.lineSeparator() +
+                        "    on custom_table (custom_column_1, custom_column_22) where custom_column_22 is not null;" + System.lineSeparator() +
                         System.lineSeparator() +
                         "/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
                         "create index concurrently if not exists table_with_very_very_very_long_name_3202677_without_nulls_idx" + System.lineSeparator() +
