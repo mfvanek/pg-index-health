@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.connection;
 
 import io.github.mfvanek.pg.support.TestUtils;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -31,8 +32,21 @@ class PgConnectionHelperTest {
 
     @Test
     void createDataSource() {
-        final DataSource dataSource = PgConnectionHelper.createDataSource(getWriteUrl(), "postgres", "postgres");
-        assertThat(dataSource).isNotNull();
+        final DataSource dataSource = PgConnectionHelper.createDataSource(getWriteUrl(), "postgres_user", "postgres_pwd");
+        assertThat(dataSource)
+                .isNotNull()
+                .isInstanceOfSatisfying(BasicDataSource.class, ds -> {
+                    assertThat(ds.getDriverClassName()).isEqualTo("org.postgresql.Driver");
+                    assertThat(ds.getUsername()).isEqualTo("postgres_user");
+                    assertThat(ds.getPassword()).isEqualTo("postgres_pwd");
+                    assertThat(ds.getValidationQuery()).isEqualTo("select 1");
+                    assertThat(ds.getMaxTotal()).isEqualTo(1);
+                    assertThat(ds.getMaxIdle()).isEqualTo(1);
+                    assertThat(ds.getMaxOpenPreparedStatements()).isEqualTo(1);
+                    assertThat(ds.getUrl())
+                            .isNotBlank()
+                            .startsWith("jdbc:postgresql://localhost");
+                });
     }
 
     @Nonnull

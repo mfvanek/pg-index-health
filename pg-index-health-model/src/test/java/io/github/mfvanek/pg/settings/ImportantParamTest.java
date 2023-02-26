@@ -23,7 +23,7 @@ class ImportantParamTest {
     void completenessTest() {
         for (final ImportantParam param : ImportantParam.values()) {
             assertThat(param.getName()).isNotNull();
-            assertThat(param.getDefaultValue()).isNotNull();
+            assertThat(param.getDefaultValue()).isNotBlank();
         }
     }
 

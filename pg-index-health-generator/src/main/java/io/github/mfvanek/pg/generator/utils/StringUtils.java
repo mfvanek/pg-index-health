@@ -10,10 +10,15 @@
 
 package io.github.mfvanek.pg.generator.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class StringUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StringUtils.class);
 
     private StringUtils() {
         throw new UnsupportedOperationException();
@@ -23,7 +28,7 @@ public final class StringUtils {
      * Truncates a String.
      * Similar to the {@code truncate} method from Apache commons-lang3.
      *
-     * @param str the String to truncate, cannot be null
+     * @param str      the String to truncate, cannot be null
      * @param maxWidth maximum length of result String, must be positive
      * @return truncated String
      */
@@ -33,9 +38,10 @@ public final class StringUtils {
         if (maxWidth < 0) {
             throw new IllegalArgumentException("maxWith cannot be negative");
         }
-        if (str.length() > maxWidth) {
-            return str.substring(0, maxWidth);
+        if (str.length() <= maxWidth) {
+            return str;
         }
-        return str;
+        LOGGER.trace("String {} will be truncated", str);
+        return str.substring(0, maxWidth);
     }
 }

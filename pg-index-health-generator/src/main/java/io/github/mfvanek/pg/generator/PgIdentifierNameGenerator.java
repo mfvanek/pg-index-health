@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.generator;
 
+import io.github.mfvanek.pg.generator.utils.NameUtils;
 import io.github.mfvanek.pg.generator.utils.StringUtils;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
@@ -37,7 +38,7 @@ class PgIdentifierNameGenerator {
     private PgIdentifierNameGenerator(@Nonnull final ForeignKey foreignKey, @Nonnull final GeneratingOptions options) {
         Objects.requireNonNull(foreignKey, "foreignKey cannot be null");
         this.options = Objects.requireNonNull(options, "options cannot be null");
-        this.tableNameWithoutSchema = getTableNameWithoutSchema(foreignKey);
+        this.tableNameWithoutSchema = NameUtils.getTableNameWithoutSchema(foreignKey);
         this.columnsInIndex = foreignKey.getColumnsInConstraint().stream()
                 .map(Column::getColumnName)
                 .collect(Collectors.joining(AbstractDbMigrationGenerator.DELIMITER));
@@ -107,17 +108,6 @@ class PgIdentifierNameGenerator {
             }
         }
         return nameBuilder;
-    }
-
-    @Nonnull
-    private static String getTableNameWithoutSchema(@Nonnull final ForeignKey foreignKey) {
-        final String tableName = foreignKey.getTableName();
-        final int index = tableName.indexOf('.');
-        final boolean containsSchema = index >= 0;
-        if (containsSchema) {
-            return tableName.substring(index + 1);
-        }
-        return tableName;
     }
 
     @Nonnull

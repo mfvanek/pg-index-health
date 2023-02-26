@@ -107,4 +107,17 @@ class GeneratingOptionsTest {
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("idxPosition cannot be null");
     }
+
+    @Test
+    void withValidIndentation() {
+        final GeneratingOptions.Builder builder = GeneratingOptions.builder();
+
+        assertThat(builder.withIndentation(0).build())
+                .isNotNull()
+                .satisfies(b -> assertThat(b.getIndentation()).isZero());
+
+        assertThat(builder.withIndentation(8).build())
+                .isNotNull()
+                .satisfies(b -> assertThat(b.getIndentation()).isEqualTo(8));
+    }
 }
