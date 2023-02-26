@@ -25,18 +25,41 @@ class ColumnWithSerialTypeTest {
     void gettersShouldWork() {
         final ColumnWithSerialType column = prepare();
         assertThat(column)
-                .isNotNull();
-        assertThat(column.getTableName())
-                .isEqualTo("t1");
-        assertThat(column.getColumnName())
-                .isEqualTo("c1")
-                .isEqualTo(column.getName());
-        assertThat(column.isNullable())
-                .isFalse();
-        assertThat(column.getSerialType())
-                .isEqualTo(SerialType.SERIAL);
-        assertThat(column.getSequenceName())
-                .isEqualTo("s1");
+                .isNotNull()
+                .satisfies(c -> {
+                    assertThat(c.getTableName())
+                            .isEqualTo("t1");
+                    assertThat(c.getColumnName())
+                            .isEqualTo("c1")
+                            .isEqualTo(c.getName());
+                    assertThat(c.isNullable())
+                            .isFalse();
+                    assertThat(c.isNotNull())
+                            .isTrue();
+                    assertThat(c.getSerialType())
+                            .isEqualTo(SerialType.SERIAL);
+                    assertThat(c.getSequenceName())
+                            .isEqualTo("s1");
+                });
+
+        final ColumnWithSerialType theSameButNullable = prepareNullable();
+        assertThat(theSameButNullable)
+                .isNotNull()
+                .satisfies(c -> {
+                    assertThat(c.getTableName())
+                            .isEqualTo("t1");
+                    assertThat(c.getColumnName())
+                            .isEqualTo("c1")
+                            .isEqualTo(c.getName());
+                    assertThat(c.isNullable())
+                            .isTrue();
+                    assertThat(c.isNotNull())
+                            .isFalse();
+                    assertThat(c.getSerialType())
+                            .isEqualTo(SerialType.SERIAL);
+                    assertThat(c.getSequenceName())
+                            .isEqualTo("s1");
+                });
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -75,7 +98,7 @@ class ColumnWithSerialTypeTest {
     void testEqualsAndHashCode() {
         final ColumnWithSerialType first = prepare();
         final ColumnWithSerialType theSame = prepare();
-        final ColumnWithSerialType theSameButNullable = ColumnWithSerialType.ofSerial(Column.ofNullable("t1", "c1"), "s1");
+        final ColumnWithSerialType theSameButNullable = prepareNullable();
         final ColumnWithSerialType second = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c2"), "s1");
         final ColumnWithSerialType third = ColumnWithSerialType.ofSmallSerial(Column.ofNotNull("t1", "c1"), "s1");
         final ColumnWithSerialType forth = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c1"), "s2");
@@ -124,10 +147,11 @@ class ColumnWithSerialTypeTest {
     void compareToTest() {
         final ColumnWithSerialType first = prepare();
         final ColumnWithSerialType theSame = prepare();
-        final ColumnWithSerialType theSameButNullable = ColumnWithSerialType.ofSerial(Column.ofNullable("t1", "c1"), "s1");
+        final ColumnWithSerialType theSameButNullable = prepareNullable();
         final ColumnWithSerialType second = ColumnWithSerialType.ofSmallSerial(Column.ofNotNull("t1", "c1"), "s1");
         final ColumnWithSerialType third = ColumnWithSerialType.ofBigSerial(Column.ofNotNull("t1", "c1"), "s1");
         final ColumnWithSerialType forth = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c2"), "s2");
+        final ColumnWithSerialType fifth = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c1"), "s2");
 
         //noinspection ResultOfMethodCallIgnored,ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
@@ -140,7 +164,8 @@ class ColumnWithSerialTypeTest {
                 .isGreaterThan(theSameButNullable) // do not ignore nullability of column
                 .isGreaterThan(second)
                 .isLessThan(third)
-                .isLessThan(forth);
+                .isLessThan(forth)
+                .isLessThan(fifth);
 
         assertThat(theSameButNullable)
                 .isLessThan(first);
@@ -148,16 +173,23 @@ class ColumnWithSerialTypeTest {
         assertThat(second)
                 .isLessThan(first)
                 .isLessThan(third)
-                .isLessThan(forth);
+                .isLessThan(forth)
+                .isLessThan(fifth);
 
         assertThat(third)
                 .isGreaterThan(first)
                 .isGreaterThan(second)
-                .isLessThan(forth);
+                .isLessThan(forth)
+                .isGreaterThan(fifth);
     }
 
     @Nonnull
     private static ColumnWithSerialType prepare() {
         return ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c1"), "s1");
+    }
+
+    @Nonnull
+    private static ColumnWithSerialType prepareNullable() {
+        return ColumnWithSerialType.ofSerial(Column.ofNullable("t1", "c1"), "s1");
     }
 }
