@@ -30,7 +30,7 @@ pitest {
     threads = 4
     outputFormats = System.getenv('STRYKER_DASHBOARD_API_KEY') != null ? ['stryker-dashboard'] : ['HTML']
     timestampedReports = false
-    mutationThreshold = 95
+    mutationThreshold = 96
 }
 
 tasks.named('pitest').configure {
