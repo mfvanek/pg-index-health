@@ -15,7 +15,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
     testImplementation "org.awaitility:awaitility:${awaitilityVersion}"
-    testImplementation "org.postgresql:postgresql:${postgresqlVersion}"
+    testRuntimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
 
     testFixturesImplementation "com.google.code.findbugs:jsr305:${jsr305Version}"
     testFixturesImplementation "org.slf4j:slf4j-api:${slf4jVersion}"
