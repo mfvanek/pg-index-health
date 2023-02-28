@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -87,7 +86,7 @@ class IndexWithNullsTest {
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
-        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
+        assertThat(first.equals(Integer.MAX_VALUE)).isFalse();
 
         // self
         assertThat(first)

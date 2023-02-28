@@ -14,7 +14,6 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -73,7 +72,7 @@ class ConnectionCredentialsTest {
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
-        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
+        assertThat(first.equals(Integer.MAX_VALUE)).isFalse();
 
         // self
         assertThat(first)

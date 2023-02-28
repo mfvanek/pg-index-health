@@ -13,8 +13,6 @@ package io.github.mfvanek.pg.model.function;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -96,7 +94,7 @@ class StoredFunctionTest {
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
-        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
+        assertThat(first.equals(Integer.MAX_VALUE)).isFalse();
 
         // self
         assertThat(first)

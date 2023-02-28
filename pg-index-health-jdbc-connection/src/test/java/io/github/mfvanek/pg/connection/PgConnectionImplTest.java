@@ -15,7 +15,6 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.math.BigDecimal;
 import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,7 +59,7 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
-        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
+        assertThat(first.equals(Integer.MAX_VALUE)).isFalse();
 
         // self
         assertThat(first)
