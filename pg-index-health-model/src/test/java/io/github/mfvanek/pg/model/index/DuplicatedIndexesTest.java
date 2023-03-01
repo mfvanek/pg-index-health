@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.model.index;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,7 +158,7 @@ class DuplicatedIndexesTest {
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
-        assertThat(first.equals(BigDecimal.ZERO)).isFalse();
+        assertThat(first.equals(Integer.MAX_VALUE)).isFalse();
 
         // self
         assertThat(first)

@@ -35,7 +35,7 @@ class ClockHolderTest {
     void clockDefaultValue() {
         assertThat(ClockHolder.clock())
                 .isNotNull()
-                .isEqualTo(Clock.systemDefaultZone());
+                .isEqualTo(Clock.systemUTC());
     }
 
     @Test

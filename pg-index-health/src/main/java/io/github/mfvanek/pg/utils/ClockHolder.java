@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 public final class ClockHolder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClockHolder.class);
-    private static final AtomicReference<Clock> CLOCK_REFERENCE = new AtomicReference<>(Clock.systemDefaultZone());
+    private static final AtomicReference<Clock> CLOCK_REFERENCE = new AtomicReference<>(Clock.systemUTC());
 
     private ClockHolder() {
         throw new UnsupportedOperationException();
