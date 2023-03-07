@@ -42,7 +42,6 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final Logger LOGGER = LoggerFactory.getLogger(PostgreSqlClusterWrapper.class);
 
-    private final PostgreSqlClusterAliasHolder aliases;
     private final PostgresVersionHolder pgVersion;
     private final Network network;
     private final JdbcDatabaseContainer<?> containerForPrimary;
@@ -51,7 +50,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private final BasicDataSource dataSourceForStandBy;
 
     public PostgreSqlClusterWrapper() {
-        this.aliases = new PostgreSqlClusterAliasHolder();
+        final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
         this.pgVersion = PostgresVersionHolder.forCluster();
         this.network = Network.newNetwork();
         // Primary node
@@ -70,8 +69,8 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
                 .pollInterval(Duration.ofSeconds(1L))
                 .until(() -> containerForStandBy.getLogs().contains("started streaming WAL from primary"));
 
-        this.dataSourceForPrimary = PostgreSqlDataSourceHelper.buildDataSource(containerForPrimary);
-        this.dataSourceForStandBy = PostgreSqlDataSourceHelper.buildDataSource(containerForStandBy);
+        this.dataSourceForPrimary = PostgreSqlDataSourceHelper.buildDataSource(getContainerForPrimary());
+        this.dataSourceForStandBy = PostgreSqlDataSourceHelper.buildDataSource(getContainerForStandBy());
     }
 
     /**
@@ -95,6 +94,16 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     }
 
     @Nonnull
+    public JdbcDatabaseContainer<?> getContainerForPrimary() {
+        return containerForPrimary;
+    }
+
+    @Nonnull
+    public JdbcDatabaseContainer<?> getContainerForStandBy() {
+        return containerForStandBy;
+    }
+
+    @Nonnull
     public DataSource getDataSourceForPrimary() {
         throwErrorIfNotInitialized();
         return dataSourceForPrimary;
@@ -109,15 +118,13 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     @Nonnull
     public String getFirstContainerJdbcUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://%s:%d/%s",
-                aliases.getPrimaryAlias(), containerForPrimary.getFirstMappedPort(), containerForPrimary.getDatabaseName());
+        return String.format("jdbc:postgresql://localhost:%d/%s", containerForPrimary.getFirstMappedPort(), containerForPrimary.getDatabaseName());
     }
 
     @Nonnull
     public String getSecondContainerJdbcUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://%s:%d/%s",
-                aliases.getStandbyAlias(), containerForStandBy.getFirstMappedPort(), containerForStandBy.getDatabaseName());
+        return String.format("jdbc:postgresql://localhost:%d/%s", containerForStandBy.getFirstMappedPort(), containerForStandBy.getDatabaseName());
     }
 
     public boolean stopFirstContainer() {
