@@ -12,8 +12,10 @@ package io.github.mfvanek.pg.connection;
 
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.List;
+import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -64,5 +66,20 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
         assertThatThrownBy(() -> HighAvailabilityPgConnectionImpl.of(primary, connectionsOnlyToReplicas))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("connectionsToAllHostsInCluster have to contain a connection to the primary");
+    }
+
+    @Test
+    void highAvailabilityConnectionConsiderTwoDifferentConnectionsAsTheSame() {
+        final DataSource firstDatasource = Mockito.mock(DataSource.class);
+        final DataSource secondDatasource = Mockito.mock(DataSource.class);
+        final PgConnection firstPgConnection = PgConnectionImpl.of(firstDatasource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:5432"));
+        final PgConnection secondPgConnection = PgConnectionImpl.of(secondDatasource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:5431"));
+
+        final HighAvailabilityPgConnection highAvailabilityConnection = HighAvailabilityPgConnectionImpl.of(firstPgConnection, List.of(firstPgConnection, secondPgConnection));
+
+        /*
+        * Two different connections should start primary host determiner in hapgconnection. But this won't happen because of the equals implementation of PgHost
+         */
+        assertThat(highAvailabilityConnection.getConnectionsToAllHostsInCluster()).hasSize(1);
     }
 }
