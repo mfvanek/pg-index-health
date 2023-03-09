@@ -14,6 +14,8 @@ import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("fast")
@@ -23,5 +25,13 @@ class PgConnectionValidatorsTest {
     void privateConstructor() {
         assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(PgConnectionValidators.class))
                 .isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    void connectionUrlsNotEmptyAndValid() {
+        final List<String> urls = List.of("jdbc:postgresql:/", "jdb:postgresl://");
+        assertThatThrownBy(() -> PgConnectionValidators.connectionUrlsNotEmptyAndValid(urls))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("connectionUrl has invalid format");
     }
 }

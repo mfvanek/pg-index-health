@@ -94,6 +94,16 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
     void toStringTest() {
         final PgConnection connection = PgConnectionImpl.ofPrimary(getDataSource());
         assertThat(connection)
-                .hasToString("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}}");
+                .hasToString("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostName=primary, port=5432, maybePrimary=true}}");
+    }
+
+    @Test
+    void twoConnectionsDifferentSameHostWithDifferentPortsConsideredNotEqual() {
+        final DataSource firstDatasource = Mockito.mock(DataSource.class);
+        final DataSource secondDatasource = Mockito.mock(DataSource.class);
+        final PgConnection firstPgConnection = PgConnectionImpl.of(firstDatasource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:5432"));
+        final PgConnection secondPgConnection = PgConnectionImpl.of(secondDatasource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:5431"));
+
+        assertThat(firstPgConnection).isNotEqualTo(secondPgConnection);
     }
 }

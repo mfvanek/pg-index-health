@@ -85,7 +85,7 @@ class PgUrlParserTest {
     void extractHostNames() {
         assertThat(PgUrlParser.extractHostNames("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require"))
                 .hasSize(4)
-                .containsExactly("host-1", "host-2", "host-3", "host-4")
+                .containsExactly(Map.entry("host-1", 6432), Map.entry("host-2", 6432), Map.entry("host-3", 6432), Map.entry("host-4", 6432))
                 .isUnmodifiable();
     }
 
@@ -93,7 +93,7 @@ class PgUrlParserTest {
     void extractHostNamesWithIncompleteUrl() {
         assertThat(PgUrlParser.extractHostNames("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432"))
                 .hasSize(4)
-                .containsExactly("host-1", "host-2", "host-3", "host-4")
+                .containsExactly(Map.entry("host-1", 6432), Map.entry("host-2", 6432), Map.entry("host-3", 6432), Map.entry("host-4", 6432))
                 .isUnmodifiable();
     }
 

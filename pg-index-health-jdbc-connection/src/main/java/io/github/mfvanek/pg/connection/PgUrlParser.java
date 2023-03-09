@@ -11,11 +11,8 @@
 package io.github.mfvanek.pg.connection;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -62,14 +59,16 @@ final class PgUrlParser {
     }
 
     @Nonnull
-    static SortedSet<String> extractHostNames(@Nonnull final String pgUrl) {
+    static List<Map.Entry<String, Integer>> extractHostNames(@Nonnull final String pgUrl) {
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
         final String allHostsWithPort = extractAllHostsWithPort(pgUrl);
-        return Collections.unmodifiableSortedSet(Arrays.stream(allHostsWithPort.split(","))
+        return Arrays.stream(allHostsWithPort.split(","))
                 .filter(Predicate.not(String::isBlank))
-                .map(h -> h.substring(0, h.lastIndexOf(':')))
-                .sorted()
-                .collect(Collectors.toCollection(TreeSet::new)));
+                .map(h -> {
+                    final String[] hostToPort = h.split(":");
+                    return Map.entry(hostToPort[0], Integer.parseInt(hostToPort[1]));
+                }).sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Nonnull
