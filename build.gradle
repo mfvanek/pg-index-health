@@ -45,7 +45,7 @@ subprojects {
         dbcp2Version = '2.9.0'
         testcontainersVersion = '1.17.6'
         postgresqlVersion = '42.5.4'
-        mockitoVersion = '5.1.1'
+        mockitoVersion = '5.2.0'
         awaitilityVersion = '4.2.0'
         equalsverifierVersion = '3.14'
         commonsLang3Version = '3.12.0'
