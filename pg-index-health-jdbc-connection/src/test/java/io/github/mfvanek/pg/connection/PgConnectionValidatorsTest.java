@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("fast")
@@ -33,5 +34,19 @@ class PgConnectionValidatorsTest {
         assertThatThrownBy(() -> PgConnectionValidators.connectionUrlsNotEmptyAndValid(urls))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("connectionUrl has invalid format");
+    }
+
+    @Test
+    void portInAcceptableRange() {
+        assertThatThrownBy(() -> PgConnectionValidators.portInAcceptableRange(1023))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("the port number must be in the range from 1024 to 65535");
+        assertThatThrownBy(() -> PgConnectionValidators.portInAcceptableRange(65_536))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("the port number must be in the range from 1024 to 65535");
+        assertThat(PgConnectionValidators.portInAcceptableRange(1024))
+                .isEqualTo(1024);
+        assertThat(PgConnectionValidators.portInAcceptableRange(65_535))
+                .isEqualTo(65_535);
     }
 }

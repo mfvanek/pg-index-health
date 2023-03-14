@@ -67,9 +67,9 @@ class PgHostImplTest {
 
     @Test
     void withPort() {
-        final PgHost hostWithLowerBoundPort = PgHostImpl.ofName("any-host", 1);
+        final PgHost hostWithLowerBoundPort = PgHostImpl.ofName("any-host", 1024);
         final PgHost hostWithUpperBoundPort = PgHostImpl.ofName("any-host", 65_535);
-        assertThat(hostWithLowerBoundPort.getPort()).isEqualTo(1);
+        assertThat(hostWithLowerBoundPort.getPort()).isEqualTo(1024);
         assertThat(hostWithUpperBoundPort.getPort()).isEqualTo(65_535);
     }
 
@@ -106,10 +106,10 @@ class PgHostImplTest {
                 .hasMessage("hostName cannot be null");
         assertThatThrownBy(() -> PgHostImpl.ofName("hostname", 0))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("the port number must be in the range from 1 to 65535");
+                .hasMessage("the port number must be in the range from 1024 to 65535");
         assertThatThrownBy(() -> PgHostImpl.ofName("hostname", 65_536))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("the port number must be in the range from 1 to 65535");
+                .hasMessage("the port number must be in the range from 1024 to 65535");
         assertThatThrownBy(() -> PgHostImpl.ofUrl(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("pgUrl cannot be null");

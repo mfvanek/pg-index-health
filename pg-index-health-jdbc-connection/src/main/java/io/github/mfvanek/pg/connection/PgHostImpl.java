@@ -27,19 +27,10 @@ public class PgHostImpl implements PgHost {
     private PgHostImpl(@Nonnull final String pgUrl,
                        @Nonnull final String hostName,
                        final int port,
-                       @SuppressWarnings("unused") final boolean withValidation, //NOSONAR
                        final boolean maybePrimary) {
         this.pgUrl = PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
         this.hostName = Objects.requireNonNull(hostName, "hostName cannot be null");
-        this.port = port;
-        this.maybePrimary = maybePrimary;
-    }
-
-    private PgHostImpl(@Nonnull final String hostName, @Nonnull final Integer port, final boolean maybePrimary) {
-        Objects.requireNonNull(hostName, "hostName cannot be null");
-        this.hostName = hostName;
-        this.port = port;
-        this.pgUrl = PgUrlParser.URL_HEADER + hostName;
+        this.port = PgConnectionValidators.portInAcceptableRange(port);
         this.maybePrimary = maybePrimary;
     }
 
@@ -79,12 +70,13 @@ public class PgHostImpl implements PgHost {
 
     @Nonnull
     public static PgHost ofPrimary() {
-        return new PgHostImpl("primary", 5432, true);
+        return ofPrimary(5432);
     }
 
     @Nonnull
-    public static PgHost ofPrimary(@Nonnull final Integer port) {
-        return new PgHostImpl("primary", port, true);
+    public static PgHost ofPrimary(final int port) {
+        final String hostName = "primary";
+        return new PgHostImpl(PgUrlParser.URL_HEADER + hostName, hostName, port, true);
     }
 
     @Nonnull
@@ -95,20 +87,17 @@ public class PgHostImpl implements PgHost {
         }
 
         final Map.Entry<String, Integer> host = extractHostNames.get(0);
-        return new PgHostImpl(pgUrl, host.getKey(), host.getValue(), true, !PgUrlParser.isReplicaUrl(pgUrl));
+        return new PgHostImpl(pgUrl, host.getKey(), host.getValue(), !PgUrlParser.isReplicaUrl(pgUrl));
     }
 
     @Nonnull
     public static PgHost ofName(@Nonnull final String hostName) {
-        return new PgHostImpl(hostName, 5432, true);
+        return ofName(hostName, 5432);
     }
 
     @Nonnull
     public static PgHost ofName(@Nonnull final String hostName, final int port) {
-        if (port < 1 || port > 65_535) {
-            throw new IllegalArgumentException("the port number must be in the range from 1 to 65535");
-        }
-        return new PgHostImpl(hostName, port, true);
+        return new PgHostImpl(PgUrlParser.URL_HEADER + hostName, hostName, port, true);
     }
 
     /**
