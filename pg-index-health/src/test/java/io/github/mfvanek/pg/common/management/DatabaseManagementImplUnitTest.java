@@ -54,8 +54,8 @@ class DatabaseManagementImplUnitTest {
         final StatisticsMaintenanceOnHost firstStatisticsMock = Mockito.mock(StatisticsMaintenanceOnHost.class);
         final StatisticsMaintenanceOnHost secondStatisticsMock = Mockito.mock(StatisticsMaintenanceOnHost.class);
         final DataSource dataSourceMock = Mockito.mock(DataSource.class);
-        final PgConnection firstConnection = PgConnectionImpl.of(dataSourceMock, PgHostImpl.ofName("primary"));
-        final PgConnection secondConnection = PgConnectionImpl.of(dataSourceMock, PgHostImpl.ofName("secondary"));
+        final PgConnection firstConnection = PgConnectionImpl.of(dataSourceMock, PgHostImpl.ofUrl("jdbc:postgresql://primary:6432"));
+        final PgConnection secondConnection = PgConnectionImpl.of(dataSourceMock, PgHostImpl.ofUrl("jdbc:postgresql://secondary:6432"));
         final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory = pgConnection -> {
             if (pgConnection.equals(firstConnection)) {
                 return firstStatisticsMock;

@@ -25,8 +25,10 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
     @Test
     void getPrimaryDataSource() {
         final PgConnection connection = getPgConnection();
-        assertThat(connection.getDataSource()).isNotNull();
-        assertThat(connection.getHost()).isEqualTo(PgHostImpl.ofPrimary());
+        assertThat(connection.getDataSource())
+                .isNotNull();
+        assertThat(connection.getHost())
+                .isEqualTo(getHost());
     }
 
     @Test
@@ -41,9 +43,6 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThatThrownBy(() -> PgConnectionImpl.ofPrimary(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("dataSource cannot be null");
         final DataSource dataSource = getDataSource();
         assertThatThrownBy(() -> PgConnectionImpl.of(dataSource, null))
                 .isInstanceOf(NullPointerException.class)
@@ -53,9 +52,10 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
     @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
-        final PgConnection first = PgConnectionImpl.ofPrimary(getDataSource());
-        final PgConnection theSame = PgConnectionImpl.ofPrimary(getDataSource());
-        final PgConnection second = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofName("second"));
+        final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://first:6432");
+        final PgConnection first = PgConnectionImpl.of(getDataSource(), host);
+        final PgConnection theSame = PgConnectionImpl.of(getDataSource(), host);
+        final PgConnection second = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl("jdbc:postgresql://second:5432"));
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -78,7 +78,7 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
 
         // another implementation of PgConnection
         final PgConnection connectionMock = Mockito.mock(PgConnection.class);
-        Mockito.when(connectionMock.getHost()).thenReturn(PgHostImpl.ofPrimary());
+        Mockito.when(connectionMock.getHost()).thenReturn(PgHostImpl.ofUrl("jdbc:postgresql://first:6432"));
         assertThat(first).isEqualTo(connectionMock);
     }
 
@@ -92,9 +92,9 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
 
     @Test
     void toStringTest() {
-        final PgConnection connection = PgConnectionImpl.ofPrimary(getDataSource());
+        final PgConnection connection = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl("jdbc:postgresql://primary:5432"));
         assertThat(connection)
-                .hasToString("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary', hostName=primary, port=5432, maybePrimary=true}}");
+                .hasToString("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary:5432', hostName=primary, port=5432, maybePrimary=true}}");
     }
 
     @Test

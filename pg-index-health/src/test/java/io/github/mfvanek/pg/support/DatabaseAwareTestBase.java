@@ -15,6 +15,8 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.connection.PgHost;
+import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.testing.PostgreSqlContainerWrapper;
 
@@ -28,7 +30,12 @@ public abstract class DatabaseAwareTestBase {
 
     @Nonnull
     protected static PgConnection getPgConnection() {
-        return PgConnectionImpl.ofPrimary(getDataSource());
+        return PgConnectionImpl.of(getDataSource(), getHost());
+    }
+
+    @Nonnull
+    protected static PgHost getHost() {
+        return PgHostImpl.ofUrl(POSTGRES.getUrl());
     }
 
     @Nonnull
@@ -46,10 +53,6 @@ public abstract class DatabaseAwareTestBase {
         return POSTGRES.getDataSource();
     }
 
-    protected static int getPort() {
-        return POSTGRES.getPort();
-    }
-
     protected void executeTestOnDatabase(@Nonnull final String schemaName,
                                          @Nonnull final DatabaseConfigurer databaseConfigurer,
                                          @Nonnull final Consumer<PgContext> testExecutor) {
@@ -58,10 +61,6 @@ public abstract class DatabaseAwareTestBase {
                     .populate();
             testExecutor.accept(PgContext.of(schemaName, 0));
         }
-    }
-
-    protected static boolean isCumulativeStatisticsSystemSupported() {
-        return POSTGRES.isCumulativeStatisticsSystemSupported();
     }
 
     protected static boolean isProceduresSupported() {

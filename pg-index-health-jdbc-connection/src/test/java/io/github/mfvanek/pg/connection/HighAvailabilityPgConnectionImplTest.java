@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -46,7 +47,7 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
     @Test
     void withReplicas() {
         final PgConnection primary = getPgConnection();
-        final PgConnection replica = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofName("replica"));
+        final PgConnection replica = getConnectionToReplica();
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary, List.of(primary, replica));
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
@@ -59,10 +60,15 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
     @Test
     void shouldContainsConnectionToPrimary() {
         final PgConnection primary = getPgConnection();
-        final PgConnection replica = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofName("replica"));
+        final PgConnection replica = getConnectionToReplica();
         final List<PgConnection> connectionsOnlyToReplicas = List.of(replica);
         assertThatThrownBy(() -> HighAvailabilityPgConnectionImpl.of(primary, connectionsOnlyToReplicas))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("connectionsToAllHostsInCluster have to contain a connection to the primary");
+    }
+
+    @Nonnull
+    private PgConnection getConnectionToReplica() {
+        return PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl("jdbc:postgresql://replica:5432"));
     }
 }

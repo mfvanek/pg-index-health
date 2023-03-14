@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.settings.maintenance;
 
-import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.connection.PgSqlException;
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.settings.ImportantParam;
@@ -34,7 +33,7 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
     @Test
     void getHostShouldReturnPrimary() {
         assertThat(configurationMaintenance.getHost())
-                .isEqualTo(PgHostImpl.ofPrimary());
+                .isEqualTo(getHost());
     }
 
     @Test

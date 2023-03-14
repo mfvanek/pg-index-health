@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.checks.host;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
@@ -28,6 +27,6 @@ class IndexesWithBloatCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
                 .hasType(IndexWithBloat.class)
                 .hasDiagnostic(Diagnostic.BLOATED_INDEXES)
-                .hasHost(PgHostImpl.ofPrimary());
+                .hasHost(getHost());
     }
 }

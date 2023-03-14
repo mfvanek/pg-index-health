@@ -29,7 +29,7 @@ public class PgHostImpl implements PgHost {
                        final int port,
                        final boolean maybePrimary) {
         this.pgUrl = PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
-        this.hostName = Objects.requireNonNull(hostName, "hostName cannot be null");
+        this.hostName = PgConnectionValidators.hostNameNotBlank(hostName);
         this.port = PgConnectionValidators.portInAcceptableRange(port);
         this.maybePrimary = maybePrimary;
     }
@@ -69,17 +69,6 @@ public class PgHostImpl implements PgHost {
     }
 
     @Nonnull
-    public static PgHost ofPrimary() {
-        return ofPrimary(5432);
-    }
-
-    @Nonnull
-    public static PgHost ofPrimary(final int port) {
-        final String hostName = "primary";
-        return new PgHostImpl(PgUrlParser.URL_HEADER + hostName, hostName, port, true);
-    }
-
-    @Nonnull
     public static PgHost ofUrl(@Nonnull final String pgUrl) {
         final List<Map.Entry<String, Integer>> extractHostNames = PgUrlParser.extractHostNames(pgUrl);
         if (extractHostNames.size() > 1) {
@@ -88,16 +77,6 @@ public class PgHostImpl implements PgHost {
 
         final Map.Entry<String, Integer> host = extractHostNames.get(0);
         return new PgHostImpl(pgUrl, host.getKey(), host.getValue(), !PgUrlParser.isReplicaUrl(pgUrl));
-    }
-
-    @Nonnull
-    public static PgHost ofName(@Nonnull final String hostName) {
-        return ofName(hostName, 5432);
-    }
-
-    @Nonnull
-    public static PgHost ofName(@Nonnull final String hostName, final int port) {
-        return new PgHostImpl(PgUrlParser.URL_HEADER + hostName, hostName, port, true);
     }
 
     /**

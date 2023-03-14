@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
 
     private final PrimaryHostDeterminer primaryHostDeterminer = new PrimaryHostDeterminerImpl();
-    private final PgHost localhost = PgHostImpl.ofName("localhost");
+    private final PgHost localhost = PgHostImpl.ofUrl("jdbc:postgresql://localhost:5432");
 
     @Test
     void isPrimary() {

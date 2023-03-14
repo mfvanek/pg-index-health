@@ -65,6 +65,12 @@ final class PgConnectionValidators {
         return port;
     }
 
+    @Nonnull
+    static String hostNameNotBlank(@Nonnull final String hostName) {
+        notBlank(hostName, "hostName");
+        return hostName;
+    }
+
     private static void notBlank(@Nonnull final String argumentValue, @Nonnull final String argumentName) {
         if (Objects.requireNonNull(argumentValue, argumentName + " cannot be null").isBlank()) {
             throw new IllegalArgumentException(argumentName + " cannot be blank or empty");

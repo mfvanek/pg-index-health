@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.checks.host;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
@@ -31,7 +30,7 @@ class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
                 .hasType(Table.class)
                 .hasDiagnostic(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY)
-                .hasHost(PgHostImpl.ofPrimary());
+                .hasHost(getHost());
     }
 
     @ParameterizedTest

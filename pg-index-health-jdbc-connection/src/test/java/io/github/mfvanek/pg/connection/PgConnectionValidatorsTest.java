@@ -49,4 +49,20 @@ class PgConnectionValidatorsTest {
         assertThat(PgConnectionValidators.portInAcceptableRange(65_535))
                 .isEqualTo(65_535);
     }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void hostNameNotBlank() {
+        assertThatThrownBy(() -> PgConnectionValidators.hostNameNotBlank(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("hostName cannot be null");
+        assertThatThrownBy(() -> PgConnectionValidators.hostNameNotBlank(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("hostName cannot be blank or empty");
+        assertThatThrownBy(() -> PgConnectionValidators.hostNameNotBlank("  "))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("hostName cannot be blank or empty");
+        assertThat(PgConnectionValidators.hostNameNotBlank("localhost"))
+                .isEqualTo("localhost");
+    }
 }
