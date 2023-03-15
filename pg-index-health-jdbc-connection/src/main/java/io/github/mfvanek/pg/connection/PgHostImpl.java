@@ -16,6 +16,12 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+/**
+ * A standard implementation of {@code PgHost} interface.
+ *
+ * @author Ivan Vakhrushev
+ * @see PgHost
+ */
 @Immutable
 public class PgHostImpl implements PgHost {
 
@@ -68,6 +74,12 @@ public class PgHostImpl implements PgHost {
         return maybePrimary;
     }
 
+    /**
+     * Constructs a {@code PgHost} object from given JDBC connection string.
+     *
+     * @param pgUrl connection string to a database in JDBC format
+     * @return {@code PgHost}
+     */
     @Nonnull
     public static PgHost ofUrl(@Nonnull final String pgUrl) {
         final List<Map.Entry<String, Integer>> extractHostNames = PgUrlParser.extractHostNames(pgUrl);

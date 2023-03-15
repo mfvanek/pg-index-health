@@ -67,7 +67,9 @@ final class PgUrlParser {
                 .map(h -> {
                     final String[] hostToPort = h.split(":");
                     return Map.entry(hostToPort[0], Integer.parseInt(hostToPort[1]));
-                }).sorted(Map.Entry.comparingByKey())
+                })
+                .distinct()
+                .sorted(Map.Entry.comparingByKey())
                 .collect(Collectors.toUnmodifiableList());
     }
 

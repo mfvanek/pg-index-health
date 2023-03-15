@@ -98,6 +98,14 @@ class PgUrlParserTest {
     }
 
     @Test
+    void extractHostNamesWithDuplicatesInUrl() {
+        assertThat(PgUrlParser.extractHostNames("jdbc:postgresql://host-1:6432,host-1:6432,host-1:6432,host-2:6432"))
+                .hasSize(2)
+                .containsExactly(Map.entry("host-1", 6432), Map.entry("host-2", 6432))
+                .isUnmodifiable();
+    }
+
+    @Test
     void extractHostNamesWithEmptyUrl() {
         assertThat(PgUrlParser.extractHostNames("jdbc:postgresql://"))
                 .isUnmodifiable()
