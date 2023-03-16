@@ -12,6 +12,8 @@ package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.connection.PgHost;
+import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.testing.PostgreSqlContainerWrapper;
 
 import javax.annotation.Nonnull;
@@ -23,7 +25,12 @@ public abstract class DatabaseAwareTestBase {
 
     @Nonnull
     protected static PgConnection getPgConnection() {
-        return PgConnectionImpl.ofPrimary(getDataSource());
+        return PgConnectionImpl.of(getDataSource(), getHost());
+    }
+
+    @Nonnull
+    protected static PgHost getHost() {
+        return PgHostImpl.ofUrl(POSTGRES.getUrl());
     }
 
     @Nonnull

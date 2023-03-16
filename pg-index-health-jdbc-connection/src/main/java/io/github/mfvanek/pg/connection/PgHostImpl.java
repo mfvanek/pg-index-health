@@ -10,33 +10,33 @@
 
 package io.github.mfvanek.pg.connection;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+/**
+ * A standard implementation of {@code PgHost} interface.
+ *
+ * @author Ivan Vakhrushev
+ * @see PgHost
+ */
 @Immutable
 public class PgHostImpl implements PgHost {
 
     private final String pgUrl;
-    private final SortedSet<String> hostNames;
+    private final String hostName;
+    private final int port;
     private final boolean maybePrimary;
 
     private PgHostImpl(@Nonnull final String pgUrl,
-                       @SuppressWarnings("unused") final boolean withValidation, //NOSONAR
+                       @Nonnull final String hostName,
+                       final int port,
                        final boolean maybePrimary) {
         this.pgUrl = PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
-        this.hostNames = PgUrlParser.extractHostNames(pgUrl);
-        this.maybePrimary = maybePrimary;
-    }
-
-    private PgHostImpl(@Nonnull final String hostName, final boolean maybePrimary) {
-        Objects.requireNonNull(hostName, "hostName cannot be null");
-        this.hostNames = Collections.unmodifiableSortedSet(new TreeSet<>(List.of(hostName)));
-        this.pgUrl = PgUrlParser.URL_HEADER + hostName;
+        this.hostName = PgConnectionValidators.hostNameNotBlank(hostName);
+        this.port = PgConnectionValidators.portInAcceptableRange(port);
         this.maybePrimary = maybePrimary;
     }
 
@@ -55,9 +55,15 @@ public class PgHostImpl implements PgHost {
     @Nonnull
     @Override
     public String getName() {
-        return hostNames.size() == 1 ?
-                hostNames.iterator().next() :
-                "One of " + hostNames;
+        return hostName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getPort() {
+        return port;
     }
 
     /**
@@ -68,19 +74,21 @@ public class PgHostImpl implements PgHost {
         return maybePrimary;
     }
 
-    @Nonnull
-    public static PgHost ofPrimary() {
-        return new PgHostImpl("primary", true);
-    }
-
+    /**
+     * Constructs a {@code PgHost} object from given JDBC connection string.
+     *
+     * @param pgUrl connection string to a database in JDBC format
+     * @return {@code PgHost}
+     */
     @Nonnull
     public static PgHost ofUrl(@Nonnull final String pgUrl) {
-        return new PgHostImpl(pgUrl, true, !PgUrlParser.isReplicaUrl(pgUrl));
-    }
+        final List<Map.Entry<String, Integer>> extractHostNames = PgUrlParser.extractHostNames(pgUrl);
+        if (extractHostNames.size() > 1) {
+            throw new IllegalArgumentException("pgUrl couldn't contain multiple hosts");
+        }
 
-    @Nonnull
-    public static PgHost ofName(@Nonnull final String hostName) {
-        return new PgHostImpl(hostName, true);
+        final Map.Entry<String, Integer> host = extractHostNames.get(0);
+        return new PgHostImpl(pgUrl, host.getKey(), host.getValue(), !PgUrlParser.isReplicaUrl(pgUrl));
     }
 
     /**
@@ -98,7 +106,7 @@ public class PgHostImpl implements PgHost {
         }
 
         final PgHostImpl pgHost = (PgHostImpl) other;
-        return Objects.equals(hostNames, pgHost.hostNames);
+        return Objects.equals(hostName, pgHost.hostName) && port == pgHost.port;
     }
 
     /**
@@ -106,7 +114,7 @@ public class PgHostImpl implements PgHost {
      */
     @Override
     public final int hashCode() {
-        return Objects.hash(hostNames);
+        return Objects.hash(hostName, port);
     }
 
     /**
@@ -117,7 +125,8 @@ public class PgHostImpl implements PgHost {
     public String toString() {
         return PgHostImpl.class.getSimpleName() + '{' +
                 "pgUrl='" + pgUrl + '\'' +
-                ", hostNames=" + hostNames +
+                ", hostName=" + hostName +
+                ", port=" + port +
                 ", maybePrimary=" + maybePrimary +
                 '}';
     }

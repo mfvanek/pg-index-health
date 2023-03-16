@@ -22,41 +22,26 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class PgHostImplTest {
 
     @Test
-    void ofPrimary() {
-        final PgHost host = PgHostImpl.ofPrimary();
-        assertThat(host).isNotNull();
-        assertThat(host.getName()).isEqualTo("primary");
-        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://primary");
-        assertThat(host.canBePrimary()).isTrue();
-        assertThat(host.cannotBePrimary()).isFalse();
-    }
-
-    @Test
-    void ofName() {
-        final PgHost host = PgHostImpl.ofName("any-host");
-        assertThat(host).isNotNull();
-        assertThat(host.getName()).isEqualTo("any-host");
-        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://any-host");
-        assertThat(host.canBePrimary()).isTrue();
-        assertThat(host.cannotBePrimary()).isFalse();
-    }
-
-    @Test
     void ofUrl() {
-        final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://host-4:6432,host-2:6432,host-3:6432,host-1:6432/db_name?ssl=true&sslmode=require");
-        assertThat(host).isNotNull();
-        assertThat(host.getName()).isEqualTo("One of [host-1, host-2, host-3, host-4]");
-        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-4:6432,host-2:6432,host-3:6432,host-1:6432/db_name?ssl=true&sslmode=require");
-        assertThat(host.canBePrimary()).isTrue();
-        assertThat(host.cannotBePrimary()).isFalse();
+        assertThatThrownBy(() -> PgHostImpl.ofUrl("jdbc:postgresql://host-4:6432,host-2:6432,host-3:6432,host-1:6432/db_name?ssl=true&sslmode=require"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("pgUrl couldn't contain multiple hosts");
+    }
+
+    @Test
+    void ofUrlWithMultipleHosts() {
+        assertThatThrownBy(() -> PgHostImpl.ofUrl("jdbc:postgresql://host-4:6432,host-2:6432,host-3:6432,host-1:6432/db_name?ssl=true&sslmode=require"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("pgUrl couldn't contain multiple hosts");
     }
 
     @Test
     void ofSecondaryUrl() {
-        final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://host-3:6432,host-2:6432,host-1:6432,host-4:6432/db_name?ssl=true&sslmode=require&targetServerType=secondary");
+        final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://host-3:6432/db_name?ssl=true&sslmode=require&targetServerType=secondary");
         assertThat(host).isNotNull();
-        assertThat(host.getName()).isEqualTo("One of [host-1, host-2, host-3, host-4]");
-        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-3:6432,host-2:6432,host-1:6432,host-4:6432/db_name?ssl=true&sslmode=require&targetServerType=secondary");
+        assertThat(host.getName()).isEqualTo("host-3");
+        assertThat(host.getPort()).isEqualTo(6432);
+        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-3:6432/db_name?ssl=true&sslmode=require&targetServerType=secondary");
         assertThat(host.canBePrimary()).isFalse();
         assertThat(host.cannotBePrimary()).isTrue();
     }
@@ -64,9 +49,6 @@ class PgHostImplTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidValues() {
-        assertThatThrownBy(() -> PgHostImpl.ofName(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("hostName cannot be null");
         assertThatThrownBy(() -> PgHostImpl.ofUrl(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("pgUrl cannot be null");
@@ -76,29 +58,38 @@ class PgHostImplTest {
         assertThatThrownBy(() -> PgHostImpl.ofUrl("host"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("pgUrl has invalid format");
+        assertThatThrownBy(() -> PgHostImpl.ofUrl("jdbc:postgresql://:6432"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("hostName cannot be blank or empty");
+        assertThatThrownBy(() -> PgHostImpl.ofUrl("jdbc:postgresql://localhost:1023"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("the port number must be in the range from 1024 to 65535");
+        assertThatThrownBy(() -> PgHostImpl.ofUrl("jdbc:postgresql://localhost:65536"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("the port number must be in the range from 1024 to 65535");
     }
 
     @Test
     void ofUncompletedUrl() {
-        final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://host-2:6432,host-4:6432,host-3:6432,host-1:6432");
+        final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432");
         assertThat(host).isNotNull();
-        assertThat(host.getName()).isEqualTo("One of [host-1, host-2, host-3, host-4]");
-        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-2:6432,host-4:6432,host-3:6432,host-1:6432");
+        assertThat(host.getName()).isEqualTo("host-1");
+        assertThat(host.getPort()).isEqualTo(6432);
+        assertThat(host.getPgUrl()).isEqualTo("jdbc:postgresql://host-1:6432");
     }
 
     @Test
     void toStringTest() {
-        assertThat(PgHostImpl.ofPrimary())
-                .hasToString("PgHostImpl{pgUrl='jdbc:postgresql://primary', hostNames=[primary], maybePrimary=true}");
+        assertThat(PgHostImpl.ofUrl("jdbc:postgresql://primary:5432"))
+                .hasToString("PgHostImpl{pgUrl='jdbc:postgresql://primary:5432', hostName=primary, port=5432, maybePrimary=true}");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
-        final PgHost first = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
-        final PgHost theSame = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432,host-3:6432,host-4:6432/db_name?ssl=true&sslmode=require");
-        final PgHost withDifferentHostsOrder = PgHostImpl.ofUrl("jdbc:postgresql://host-2:5432,host-1:4432,host-4:3432,host-3:2432/db_name?ssl=true&sslmode=require");
-        final PgHost second = PgHostImpl.ofPrimary();
+        final PgHost first = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432/db_name?ssl=true&sslmode=require");
+        final PgHost theSame = PgHostImpl.ofUrl("jdbc:postgresql://host-1:6432/db_name?ssl=true&sslmode=require");
+        final PgHost second = PgHostImpl.ofUrl("jdbc:postgresql://primary:5432");
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -115,10 +106,6 @@ class PgHostImplTest {
                 .hasSameHashCodeAs(first);
 
         // others
-        assertThat(withDifferentHostsOrder)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
-
         assertThat(second)
                 .isNotEqualTo(first)
                 .doesNotHaveSameHashCodeAs(first);
@@ -127,8 +114,14 @@ class PgHostImplTest {
         final PgHost pgHostMock = Mockito.mock(PgHost.class);
         Mockito.when(pgHostMock.canBePrimary()).thenReturn(true);
         Mockito.when(pgHostMock.getName()).thenReturn("primary");
-        Mockito.when(pgHostMock.getPgUrl()).thenReturn("jdbc:postgresql://primary");
-        assertThat(pgHostMock).isNotEqualTo(second);
+        Mockito.when(pgHostMock.getPgUrl()).thenReturn("jdbc:postgresql://primary:5432");
+        assertThat(pgHostMock)
+                .isNotEqualTo(second)
+                .satisfies(h -> {
+                    assertThat(h.canBePrimary()).isEqualTo(second.canBePrimary());
+                    assertThat(h.getName()).isEqualTo(second.getName());
+                    assertThat(h.getPgUrl()).isEqualTo(second.getPgUrl());
+                });
     }
 
     @Test

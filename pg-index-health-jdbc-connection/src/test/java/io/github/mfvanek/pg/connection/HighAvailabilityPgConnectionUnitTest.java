@@ -128,8 +128,8 @@ class HighAvailabilityPgConnectionUnitTest {
 
     @Nonnull
     private List<PgConnection> prepareConnections() {
-        final PgHost localhostOne = PgHostImpl.ofName("localhost-1");
-        final PgHost localhostTwo = PgHostImpl.ofName("localhost-2");
+        final PgHost localhostOne = PgHostImpl.ofUrl("jdbc:postgresql://localhost-1:5432");
+        final PgHost localhostTwo = PgHostImpl.ofUrl("jdbc:postgresql://localhost-2:5432");
         final PgConnection firstConnection = PgConnectionImpl.of(firstConnectionMocks.dataSource, localhostOne);
         final PgConnection secondConnection = PgConnectionImpl.of(secondConnectionMocks.dataSource, localhostTwo);
         return List.of(firstConnection, secondConnection);

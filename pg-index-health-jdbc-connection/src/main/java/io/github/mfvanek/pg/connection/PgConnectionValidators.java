@@ -57,6 +57,20 @@ final class PgConnectionValidators {
         }
     }
 
+    static int portInAcceptableRange(final int port) {
+        // https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers
+        if (port < 1024 || port > 65_535) {
+            throw new IllegalArgumentException("the port number must be in the range from 1024 to 65535");
+        }
+        return port;
+    }
+
+    @Nonnull
+    static String hostNameNotBlank(@Nonnull final String hostName) {
+        notBlank(hostName, "hostName");
+        return hostName;
+    }
+
     private static void notBlank(@Nonnull final String argumentValue, @Nonnull final String argumentName) {
         if (Objects.requireNonNull(argumentValue, argumentName + " cannot be null").isBlank()) {
             throw new IllegalArgumentException(argumentName + " cannot be blank or empty");

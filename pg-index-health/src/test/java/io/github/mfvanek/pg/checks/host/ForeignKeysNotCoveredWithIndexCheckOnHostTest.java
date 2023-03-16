@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.checks.host;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
@@ -32,7 +31,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
         assertThat(check)
                 .hasType(ForeignKey.class)
                 .hasDiagnostic(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX)
-                .hasHost(PgHostImpl.ofPrimary());
+                .hasHost(getHost());
     }
 
     @ParameterizedTest

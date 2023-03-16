@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.checks.host;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.IndexWithSize;
@@ -32,7 +31,7 @@ class DuplicatedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
                 .hasType(DuplicatedIndexes.class)
                 .hasDiagnostic(Diagnostic.DUPLICATED_INDEXES)
-                .hasHost(PgHostImpl.ofPrimary());
+                .hasHost(getHost());
     }
 
     @ParameterizedTest

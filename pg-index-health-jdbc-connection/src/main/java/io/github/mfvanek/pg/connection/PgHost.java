@@ -39,6 +39,13 @@ public interface PgHost {
     String getName();
 
     /**
+     * Gets the port of this host.
+     *
+     * @return port
+     */
+    int getPort();
+
+    /**
      * Determines whether this host can be a primary host.
      *
      * @return {@code true} if this host can be a primary host

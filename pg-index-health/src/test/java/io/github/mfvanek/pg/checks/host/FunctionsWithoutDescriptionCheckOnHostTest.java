@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.checks.host;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.function.StoredFunction;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
@@ -33,7 +32,7 @@ class FunctionsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
                 .hasType(StoredFunction.class)
                 .hasDiagnostic(Diagnostic.FUNCTIONS_WITHOUT_DESCRIPTION)
-                .hasHost(PgHostImpl.ofPrimary());
+                .hasHost(getHost());
     }
 
     @ParameterizedTest

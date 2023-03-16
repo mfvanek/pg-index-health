@@ -111,7 +111,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
     }
 
     private void startPrimaryUpdater(final long primaryRefreshIntervalMilliseconds) {
-        if (this.getConnectionsToAllHostsInCluster().size() > 1) {
+        if (this.getConnectionsToAllHostsInCluster().size() >= 2) {
             executorService.scheduleWithFixedDelay(this::updateConnectionToPrimary, primaryRefreshIntervalMilliseconds, primaryRefreshIntervalMilliseconds, TimeUnit.MILLISECONDS);
         } else {
             LOGGER.debug("Single node. There's no point to monitor primary node.");

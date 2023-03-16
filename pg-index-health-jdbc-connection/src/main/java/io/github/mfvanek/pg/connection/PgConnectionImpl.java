@@ -14,6 +14,12 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
+/**
+ * A standard implementation of {@code PgConnection} interface with awareness of real host.
+ *
+ * @author Ivan Vakhrushev
+ * @see PgConnection
+ */
 public class PgConnectionImpl implements PgConnection {
 
     private final DataSource dataSource;
@@ -42,11 +48,16 @@ public class PgConnectionImpl implements PgConnection {
         return host;
     }
 
-    @Nonnull
-    public static PgConnection ofPrimary(@Nonnull final DataSource dataSource) {
-        return new PgConnectionImpl(dataSource, PgHostImpl.ofPrimary());
-    }
-
+    /**
+     * Constructs a {@code PgConnection} object with given dataSource and host.
+     *
+     * @param dataSource a factory for connections to the physical database
+     * @param host information about database host
+     * @return {@code PgConnection}
+     *
+     * @see DataSource
+     * @see PgHost
+     */
     @Nonnull
     public static PgConnection of(@Nonnull final DataSource dataSource, @Nonnull final PgHost host) {
         return new PgConnectionImpl(dataSource, host);

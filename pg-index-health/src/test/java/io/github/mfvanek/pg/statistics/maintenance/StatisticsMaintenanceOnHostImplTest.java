@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.statistics.maintenance;
 
-import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
 import io.github.mfvanek.pg.utils.ClockHolder;
@@ -55,11 +54,8 @@ class StatisticsMaintenanceOnHostImplTest extends StatisticsAwareTestBase {
     }
 
     @Test
-    void getHost() {
-        final PgHost host = statisticsMaintenance.getHost();
-        assertThat(host)
-                .isNotNull()
-                .extracting(PgHost::getName)
-                .isEqualTo("primary");
+    void getHostShouldWork() {
+        assertThat(statisticsMaintenance.getHost())
+                .isEqualTo(getHost());
     }
 }

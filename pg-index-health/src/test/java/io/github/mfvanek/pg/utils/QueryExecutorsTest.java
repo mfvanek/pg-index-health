@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.utils;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.connection.PgSqlException;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
@@ -76,7 +77,7 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
             Mockito.doAnswer(invocation -> {
                 throw new SQLException("bad parameter");
             }).when(statement).setString(anyInt(), anyString());
-            final PgConnection pgConnection = PgConnectionImpl.ofPrimary(dataSource);
+            final PgConnection pgConnection = PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:6432"));
             final PgContext context = PgContext.ofPublic();
             assertThatThrownBy(() -> QueryExecutors.executeQueryWithSchema(pgConnection, context, "select version()", rs -> rs.getString(1)))
                     .isInstanceOf(PgSqlException.class)
@@ -96,7 +97,7 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
             Mockito.doAnswer(invocation -> {
                 throw new SQLException("bad parameter");
             }).when(statement).setString(anyInt(), anyString());
-            final PgConnection pgConnection = PgConnectionImpl.ofPrimary(dataSource);
+            final PgConnection pgConnection = PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:6432"));
             final PgContext context = PgContext.ofPublic();
             assertThatThrownBy(() -> QueryExecutors.executeQueryWithBloatThreshold(pgConnection, context, "select version()", rs -> rs.getString(1)))
                     .isInstanceOf(PgSqlException.class)
