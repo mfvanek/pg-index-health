@@ -39,7 +39,7 @@ subprojects {
 
     ext {
         slf4jVersion = '2.0.7'
-        logbackVersion = '1.4.5'
+        logbackVersion = '1.4.6'
         dbcp2Version = '2.9.0'
         testcontainersVersion = '1.17.6'
         postgresqlVersion = '42.6.0'
