@@ -38,7 +38,7 @@ subprojects {
     apply plugin: 'net.ltgt.errorprone'
 
     ext {
-        slf4jVersion = '2.0.6'
+        slf4jVersion = '2.0.7'
         logbackVersion = '1.4.5'
         dbcp2Version = '2.9.0'
         testcontainersVersion = '1.17.6'
