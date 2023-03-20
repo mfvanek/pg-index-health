@@ -42,7 +42,7 @@ subprojects {
         logbackVersion = '1.4.5'
         dbcp2Version = '2.9.0'
         testcontainersVersion = '1.17.6'
-        postgresqlVersion = '42.5.4'
+        postgresqlVersion = '42.6.0'
         mockitoVersion = '5.2.0'
         awaitilityVersion = '4.2.0'
         equalsverifierVersion = '3.14'
