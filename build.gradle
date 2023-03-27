@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'jacoco'
-    id 'com.github.spotbugs' version '5.0.13'
+    id 'com.github.spotbugs' version '5.0.14'
     id 'checkstyle'
     id 'org.sonarqube' version '4.0.0.2929'
     id 'pmd'
