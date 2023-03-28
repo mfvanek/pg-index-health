@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.SQLException;
@@ -39,7 +40,8 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
                 .withTag(pgVersion.getVersion()))
                 .withSharedMemorySize(MemoryUnit.MB.convertToBytes(512))
                 .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
-                .withCommand(prepareCommandParts(additionalParameters));
+                .withCommand(prepareCommandParts(additionalParameters))
+                .waitingFor(Wait.defaultWaitStrategy());
         this.container.start();
         this.dataSource = PostgreSqlDataSourceHelper.buildDataSource(container);
     }
