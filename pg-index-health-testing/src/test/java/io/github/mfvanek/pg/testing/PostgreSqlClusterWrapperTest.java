@@ -20,7 +20,8 @@ class PostgreSqlClusterWrapperTest {
 
     @Test
     void shouldWork() {
-        try (PostgreSqlClusterWrapper cluster = new PostgreSqlClusterWrapper()) {
+        try (PostgreSqlClusterWrapper cluster = new PostgreSqlClusterWrapper.Builder().username("customuser").password("customuser").build()) {
+
             assertThat(cluster)
                     .isNotNull();
             assertThat(cluster.getDataSourceForPrimary())
@@ -40,13 +41,33 @@ class PostgreSqlClusterWrapperTest {
 
     @Test
     void stopFirstContainerShouldWork() {
-        try (PostgreSqlClusterWrapper cluster = new PostgreSqlClusterWrapper();
+        try (PostgreSqlClusterWrapper cluster = new PostgreSqlClusterWrapper.Builder().username("customuser").password("customuser").build();
              LogsCaptor logsCaptor = new LogsCaptor(PostgreSqlClusterWrapper.class)) {
             assertThat(cluster.stopFirstContainer())
                     .isTrue();
             assertThat(logsCaptor.getLogs())
                     .hasSizeGreaterThanOrEqualTo(1)
                     .anyMatch(l -> l.getMessage().contains("Waiting for standby will be promoted to primary"));
+        }
+    }
+
+    @Test
+    void builderWithDefaultFields() {
+        try (PostgreSqlClusterWrapper cluster = new PostgreSqlClusterWrapper.Builder().build()) {
+            assertThat(cluster).satisfies(it -> {
+                assertThat(it.getUsername()).isEqualTo("customuser");
+                assertThat(it.getPassword()).isEqualTo("custompassword");
+            });
+        }
+    }
+
+    @Test
+    void builderWithCustomFields() {
+        try (PostgreSqlClusterWrapper cluster = new PostgreSqlClusterWrapper.Builder().username("user").password("password").build()) {
+            assertThat(cluster).satisfies(it -> {
+                assertThat(it.getUsername()).isEqualTo("user");
+                assertThat(it.getPassword()).isEqualTo("password");
+            });
         }
     }
 }

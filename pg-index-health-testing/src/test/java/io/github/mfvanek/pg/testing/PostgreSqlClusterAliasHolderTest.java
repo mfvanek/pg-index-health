@@ -38,8 +38,8 @@ class PostgreSqlClusterAliasHolderTest {
         final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
         assertThat(aliases)
                 .isNotNull()
-                .satisfies(a -> assertThat(a.createPrimaryEnvVarsMap())
+                .satisfies(a -> assertThat(a.createPrimaryEnvVarsMap("username", "password"))
                         .hasSize(14)
-                        .hasSameSizeAs(a.createStandbyEnvVarsMap()));
+                        .hasSameSizeAs(a.createStandbyEnvVarsMap("username", "password")));
     }
 }

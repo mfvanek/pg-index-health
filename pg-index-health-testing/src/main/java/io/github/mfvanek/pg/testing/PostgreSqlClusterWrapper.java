@@ -49,15 +49,28 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private final JdbcDatabaseContainer<?> containerForStandBy;
     private final BasicDataSource dataSourceForPrimary;
     private final BasicDataSource dataSourceForStandBy;
+    private final String username;
+    private final String password;
 
-    public PostgreSqlClusterWrapper() {
-        this.aliases = new PostgreSqlClusterAliasHolder();
+    private PostgreSqlClusterWrapper(final Builder builder) {
         this.pgVersion = PostgresVersionHolder.forCluster();
         this.network = Network.newNetwork();
+
+        this.username = builder.username;
+        this.password = builder.password;
+
+        this.aliases = new PostgreSqlClusterAliasHolder();
         // Primary node
-        this.containerForPrimary = createContainerAndInitWith(aliases::createPrimaryEnvVarsMap, aliases.getPrimaryAlias(), aliases.getWaitStrategyForPrimary());
+        this.containerForPrimary = createContainerAndInitWith(
+                () -> aliases.createPrimaryEnvVarsMap(username, password),
+                aliases.getPrimaryAlias(),
+                aliases.getWaitStrategyForPrimary());
         // Standby node
-        this.containerForStandBy = createContainerAndInitWith(aliases::createStandbyEnvVarsMap, aliases.getStandbyAlias(), aliases.getWaitStrategyForStandBy());
+        this.containerForStandBy = createContainerAndInitWith(
+                () -> aliases.createStandbyEnvVarsMap(username, password),
+                aliases.getStandbyAlias(),
+                aliases.getWaitStrategyForStandBy()
+        );
 
         this.containerForPrimary.start();
         Awaitility.await("Ensure primary is ready")
@@ -109,15 +122,23 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     @Nonnull
     public String getFirstContainerJdbcUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://%s:%d/%s",
-                aliases.getPrimaryAlias(), containerForPrimary.getFirstMappedPort(), containerForPrimary.getDatabaseName());
+        return containerForPrimary.getJdbcUrl();
     }
 
     @Nonnull
     public String getSecondContainerJdbcUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://%s:%d/%s",
-                aliases.getStandbyAlias(), containerForStandBy.getFirstMappedPort(), containerForStandBy.getDatabaseName());
+        return containerForStandBy.getJdbcUrl();
+    }
+
+    @Nonnull
+    public String getUsername() {
+        return containerForPrimary.getUsername();
+    }
+
+    @Nonnull
+    public String getPassword() {
+        return containerForPrimary.getPassword();
     }
 
     public boolean stopFirstContainer() {
@@ -157,6 +178,35 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private void throwErrorIfNotInitialized() {
         if (containerForPrimary == null || dataSourceForPrimary == null || containerForStandBy == null || dataSourceForStandBy == null) {
             throw new AssertionError("not initialized");
+        }
+    }
+
+    /**
+     * Provide convenient way to create cluster with single username/password.
+     * If no username/password is specified, "customuser" and "custompassword" will be used as default values for username and password, respectively
+     */
+    public static class Builder {
+
+        private String username;
+        private String password;
+
+        public Builder() {
+            this.username = "customuser";
+            this.password = "custompassword";
+        }
+
+        public Builder username(final String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder password(final String password) {
+            this.password = password;
+            return this;
+        }
+
+        public PostgreSqlClusterWrapper build() {
+            return new PostgreSqlClusterWrapper(this);
         }
     }
 }

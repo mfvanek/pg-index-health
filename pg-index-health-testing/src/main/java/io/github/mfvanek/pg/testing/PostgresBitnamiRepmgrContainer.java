@@ -62,11 +62,6 @@ class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitna
     }
 
     @Override
-    public String getDatabaseName() {
-        return envVars.get("POSTGRESQL_DATABASE");
-    }
-
-    @Override
     protected String getTestQueryString() {
         return "SELECT 1";
     }
