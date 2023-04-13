@@ -49,15 +49,13 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private final JdbcDatabaseContainer<?> containerForStandBy;
     private final BasicDataSource dataSourceForPrimary;
     private final BasicDataSource dataSourceForStandBy;
-    private final String username;
-    private final String password;
 
-    private PostgreSqlClusterWrapper(final Builder builder) {
+    private PostgreSqlClusterWrapper(
+            final String username,
+            final String password
+    ) {
         this.pgVersion = PostgresVersionHolder.forCluster();
         this.network = Network.newNetwork();
-
-        this.username = builder.username;
-        this.password = builder.password;
 
         this.aliases = new PostgreSqlClusterAliasHolder();
         // Primary node
@@ -181,32 +179,37 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         }
     }
 
+    @Nonnull
+    public static Builder builder() {
+        return new Builder();
+    }
+
     /**
      * Provide convenient way to create cluster with single username/password.
      * If no username/password is specified, "customuser" and "custompassword" will be used as default values for username and password, respectively
      */
     public static class Builder {
 
-        private String username;
-        private String password;
+        private String username = "customuser";
+        private String password = "custompassword";
 
-        public Builder() {
-            this.username = "customuser";
-            this.password = "custompassword";
+        private Builder() {
+
         }
 
-        public Builder username(final String username) {
+        public Builder withUsername(final String username) {
             this.username = username;
             return this;
         }
 
-        public Builder password(final String password) {
+        public Builder withPassword(final String password) {
             this.password = password;
             return this;
         }
 
         public PostgreSqlClusterWrapper build() {
-            return new PostgreSqlClusterWrapper(this);
+
+            return new PostgreSqlClusterWrapper(username, password);
         }
     }
 }

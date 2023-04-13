@@ -20,7 +20,7 @@ class PostgreSqlClusterWrapperTest {
 
     @Test
     void shouldWork() {
-        try (PostgreSqlClusterWrapper cluster = new PostgreSqlClusterWrapper.Builder().username("customuser").password("customuser").build()) {
+        try (PostgreSqlClusterWrapper cluster = PostgreSqlClusterWrapper.builder().build()) {
 
             assertThat(cluster)
                     .isNotNull();
@@ -41,7 +41,7 @@ class PostgreSqlClusterWrapperTest {
 
     @Test
     void stopFirstContainerShouldWork() {
-        try (PostgreSqlClusterWrapper cluster = new PostgreSqlClusterWrapper.Builder().username("customuser").password("customuser").build();
+        try (PostgreSqlClusterWrapper cluster = PostgreSqlClusterWrapper.builder().build();
              LogsCaptor logsCaptor = new LogsCaptor(PostgreSqlClusterWrapper.class)) {
             assertThat(cluster.stopFirstContainer())
                     .isTrue();
@@ -53,7 +53,7 @@ class PostgreSqlClusterWrapperTest {
 
     @Test
     void builderWithDefaultFields() {
-        try (PostgreSqlClusterWrapper cluster = new PostgreSqlClusterWrapper.Builder().build()) {
+        try (PostgreSqlClusterWrapper cluster = PostgreSqlClusterWrapper.builder().build()) {
             assertThat(cluster).satisfies(it -> {
                 assertThat(it.getUsername()).isEqualTo("customuser");
                 assertThat(it.getPassword()).isEqualTo("custompassword");
@@ -63,7 +63,7 @@ class PostgreSqlClusterWrapperTest {
 
     @Test
     void builderWithCustomFields() {
-        try (PostgreSqlClusterWrapper cluster = new PostgreSqlClusterWrapper.Builder().username("user").password("password").build()) {
+        try (PostgreSqlClusterWrapper cluster = PostgreSqlClusterWrapper.builder().withUsername("user").withPassword("password").build()) {
             assertThat(cluster).satisfies(it -> {
                 assertThat(it.getUsername()).isEqualTo("user");
                 assertThat(it.getPassword()).isEqualTo("password");
