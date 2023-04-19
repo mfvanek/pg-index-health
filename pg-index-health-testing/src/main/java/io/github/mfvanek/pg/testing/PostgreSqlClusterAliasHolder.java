@@ -49,8 +49,8 @@ final class PostgreSqlClusterAliasHolder {
 
     @Nonnull
     Map<String, String> createPrimaryEnvVarsMap(
-            final String username,
-            final String password
+            @Nonnull final String username,
+            @Nonnull final String password
     ) {
         final Map<String, String> envVarsMap = createCommonEnvVarsMap(username, password);
         envVarsMap.put("REPMGR_NODE_NAME", primaryAlias);
@@ -60,8 +60,8 @@ final class PostgreSqlClusterAliasHolder {
 
     @Nonnull
     Map<String, String> createStandbyEnvVarsMap(
-            final String username,
-            final String password
+            @Nonnull final String username,
+            @Nonnull final String password
     ) {
         final Map<String, String> envVarsMap = createCommonEnvVarsMap(username, password);
         envVarsMap.put("REPMGR_NODE_NAME", standbyAlias);
@@ -85,11 +85,11 @@ final class PostgreSqlClusterAliasHolder {
 
     @Nonnull
     private Map<String, String> createCommonEnvVarsMap(
-            final String customUsername,
-            final String customPassword
+            @Nonnull final String customUsername,
+            @Nonnull final String customPassword
     ) {
-        final String username = Objects.requireNonNullElse(customUsername, "customuser");
-        final String password = Objects.requireNonNullElse(customPassword, "custompassword");
+        final String username = Objects.requireNonNull(customUsername, "username mustn't be null");
+        final String password = Objects.requireNonNull(customPassword, "password mustn't be null");
 
         final Map<String, String> envVarsMap = new HashMap<>();
         envVarsMap.put("POSTGRESQL_POSTGRES_PASSWORD", "adminpassword");
