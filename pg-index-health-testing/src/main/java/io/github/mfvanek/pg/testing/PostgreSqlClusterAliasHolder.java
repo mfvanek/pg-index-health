@@ -16,6 +16,7 @@ import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -47,16 +48,22 @@ final class PostgreSqlClusterAliasHolder {
     }
 
     @Nonnull
-    Map<String, String> createPrimaryEnvVarsMap() {
-        final Map<String, String> envVarsMap = createCommonEnvVarsMap();
+    Map<String, String> createPrimaryEnvVarsMap(
+            @Nonnull final String username,
+            @Nonnull final String password
+    ) {
+        final Map<String, String> envVarsMap = createCommonEnvVarsMap(username, password);
         envVarsMap.put("REPMGR_NODE_NAME", primaryAlias);
         envVarsMap.put("REPMGR_NODE_NETWORK_NAME", primaryAlias);
         return envVarsMap;
     }
 
     @Nonnull
-    Map<String, String> createStandbyEnvVarsMap() {
-        final Map<String, String> envVarsMap = createCommonEnvVarsMap();
+    Map<String, String> createStandbyEnvVarsMap(
+            @Nonnull final String username,
+            @Nonnull final String password
+    ) {
+        final Map<String, String> envVarsMap = createCommonEnvVarsMap(username, password);
         envVarsMap.put("REPMGR_NODE_NAME", standbyAlias);
         envVarsMap.put("REPMGR_NODE_NETWORK_NAME", standbyAlias);
         return envVarsMap;
@@ -77,11 +84,17 @@ final class PostgreSqlClusterAliasHolder {
     }
 
     @Nonnull
-    private Map<String, String> createCommonEnvVarsMap() {
+    private Map<String, String> createCommonEnvVarsMap(
+            @Nonnull final String customUsername,
+            @Nonnull final String customPassword
+    ) {
+        final String username = Objects.requireNonNull(customUsername, "username cannot be null");
+        final String password = Objects.requireNonNull(customPassword, "password cannot be null");
+
         final Map<String, String> envVarsMap = new HashMap<>();
         envVarsMap.put("POSTGRESQL_POSTGRES_PASSWORD", "adminpassword");
-        envVarsMap.put("POSTGRESQL_USERNAME", "customuser");
-        envVarsMap.put("POSTGRESQL_PASSWORD", "custompassword");
+        envVarsMap.put("POSTGRESQL_USERNAME", username);
+        envVarsMap.put("POSTGRESQL_PASSWORD", password);
         envVarsMap.put("POSTGRESQL_DATABASE", "customdatabase");
         envVarsMap.put("REPMGR_PASSWORD", "repmgrpassword");
         envVarsMap.put("REPMGR_PRIMARY_HOST", primaryAlias);

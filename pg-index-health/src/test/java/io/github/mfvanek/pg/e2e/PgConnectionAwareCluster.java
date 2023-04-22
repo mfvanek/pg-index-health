@@ -28,7 +28,7 @@ final class PgConnectionAwareCluster implements AutoCloseable {
 
     // on some systems promoting to primary could take up to minute and even more
     public static final Duration MAX_WAIT_INTERVAL_SECONDS = PostgreSqlClusterWrapper.WAIT_INTERVAL_SECONDS.multipliedBy(2L);
-    private final PostgreSqlClusterWrapper postgresCluster = new PostgreSqlClusterWrapper();
+    private final PostgreSqlClusterWrapper postgresCluster = PostgreSqlClusterWrapper.builder().build();
 
     /**
      * {@inheritDoc}

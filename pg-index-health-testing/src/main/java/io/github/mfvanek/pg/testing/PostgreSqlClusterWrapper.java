@@ -24,7 +24,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
@@ -42,7 +42,6 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final Logger LOGGER = LoggerFactory.getLogger(PostgreSqlClusterWrapper.class);
 
-    private final PostgreSqlClusterAliasHolder aliases;
     private final PostgresVersionHolder pgVersion;
     private final Network network;
     private final JdbcDatabaseContainer<?> containerForPrimary;
@@ -50,14 +49,25 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private final BasicDataSource dataSourceForPrimary;
     private final BasicDataSource dataSourceForStandBy;
 
-    public PostgreSqlClusterWrapper() {
-        this.aliases = new PostgreSqlClusterAliasHolder();
+    private PostgreSqlClusterWrapper(
+            @Nonnull final String username,
+            @Nonnull final String password
+    ) {
         this.pgVersion = PostgresVersionHolder.forCluster();
         this.network = Network.newNetwork();
+
+        final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
         // Primary node
-        this.containerForPrimary = createContainerAndInitWith(aliases::createPrimaryEnvVarsMap, aliases.getPrimaryAlias(), aliases.getWaitStrategyForPrimary());
+        this.containerForPrimary = createContainerAndInitWith(
+                aliases.createPrimaryEnvVarsMap(username, password),
+                aliases.getPrimaryAlias(),
+                aliases.getWaitStrategyForPrimary());
         // Standby node
-        this.containerForStandBy = createContainerAndInitWith(aliases::createStandbyEnvVarsMap, aliases.getStandbyAlias(), aliases.getWaitStrategyForStandBy());
+        this.containerForStandBy = createContainerAndInitWith(
+                aliases.createStandbyEnvVarsMap(username, password),
+                aliases.getStandbyAlias(),
+                aliases.getWaitStrategyForStandBy()
+        );
 
         this.containerForPrimary.start();
         Awaitility.await("Ensure primary is ready")
@@ -109,17 +119,30 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     @Nonnull
     public String getFirstContainerJdbcUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://%s:%d/%s",
-                aliases.getPrimaryAlias(), containerForPrimary.getFirstMappedPort(), containerForPrimary.getDatabaseName());
+        return containerForPrimary.getJdbcUrl();
     }
 
     @Nonnull
     public String getSecondContainerJdbcUrl() {
         throwErrorIfNotInitialized();
-        return String.format("jdbc:postgresql://%s:%d/%s",
-                aliases.getStandbyAlias(), containerForStandBy.getFirstMappedPort(), containerForStandBy.getDatabaseName());
+        return containerForStandBy.getJdbcUrl();
     }
 
+    @Nonnull
+    public String getUsername() {
+        return containerForPrimary.getUsername();
+    }
+
+    @Nonnull
+    public String getPassword() {
+        return containerForPrimary.getPassword();
+    }
+
+    /**
+     * Stops first container in the cluster and waits for auto failover.
+     *
+     * @return always true
+     */
     public boolean stopFirstContainer() {
         containerForPrimary.stop();
         LOGGER.info("Waiting for standby will be promoted to primary");
@@ -136,14 +159,14 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
 
     @Nonnull
     private PostgresBitnamiRepmgrContainer createContainerAndInitWith(
-            final Supplier<Map<String, String>> envVarsProvider,
+            final Map<String, String> envVars,
             final String alias,
             final WaitStrategy waitStrategy
     ) {
         final DockerImageName dockerImageName = DockerImageName.parse(IMAGE_NAME)
                 .withTag(pgVersion.getVersion());
         //noinspection resource
-        return new PostgresBitnamiRepmgrContainer(dockerImageName, envVarsProvider.get()) //NOSONAR
+        return new PostgresBitnamiRepmgrContainer(dockerImageName, envVars) //NOSONAR
                 .withCreateContainerCmdModifier(cmd -> cmd.withName(alias))
                 .withSharedMemorySize(MemoryUnit.MB.convertToBytes(768))
                 .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
@@ -157,6 +180,49 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private void throwErrorIfNotInitialized() {
         if (containerForPrimary == null || dataSourceForPrimary == null || containerForStandBy == null || dataSourceForStandBy == null) {
             throw new AssertionError("not initialized");
+        }
+    }
+
+    @Nonnull
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Provide convenient way to create cluster with single username/password.
+     * If no username/password is specified, "customuser" and "custompassword" will be used as default values for username and password, respectively.
+     *
+     * @author Alexey Antipin
+     */
+    public static class Builder {
+
+        private String username = "customuser";
+        private String password = "custompassword";
+
+        private Builder() {
+        }
+
+        @Nonnull
+        public Builder withUsername(@Nonnull final String username) {
+            this.username = Objects.requireNonNull(username, "username cannot be null");
+            return this;
+        }
+
+        @Nonnull
+        public Builder withPassword(@Nonnull final String password) {
+            this.password = Objects.requireNonNull(password, "password cannot be null");
+            return this;
+        }
+
+        /**
+         * Used to create a PostgresSqlClusterWrapper with a given username/password.
+         *
+         * @return PostgreSqlClusterWrapper
+         */
+        @Nonnull
+        public PostgreSqlClusterWrapper build() {
+
+            return new PostgreSqlClusterWrapper(username, password);
         }
     }
 }
