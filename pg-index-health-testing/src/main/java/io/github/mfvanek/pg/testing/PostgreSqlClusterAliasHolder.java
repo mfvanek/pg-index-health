@@ -88,8 +88,8 @@ final class PostgreSqlClusterAliasHolder {
             @Nonnull final String customUsername,
             @Nonnull final String customPassword
     ) {
-        final String username = Objects.requireNonNull(customUsername, "username mustn't be null");
-        final String password = Objects.requireNonNull(customPassword, "password mustn't be null");
+        final String username = Objects.requireNonNull(customUsername, "username cannot be null");
+        final String password = Objects.requireNonNull(customPassword, "password cannot be null");
 
         final Map<String, String> envVarsMap = new HashMap<>();
         envVarsMap.put("POSTGRESQL_POSTGRES_PASSWORD", "adminpassword");

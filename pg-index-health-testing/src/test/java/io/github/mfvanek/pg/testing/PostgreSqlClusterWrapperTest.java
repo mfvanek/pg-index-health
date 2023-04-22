@@ -15,6 +15,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PostgreSqlClusterWrapperTest {
 
@@ -54,20 +55,37 @@ class PostgreSqlClusterWrapperTest {
     @Test
     void builderWithDefaultFields() {
         try (PostgreSqlClusterWrapper cluster = PostgreSqlClusterWrapper.builder().build()) {
-            assertThat(cluster).satisfies(it -> {
-                assertThat(it.getUsername()).isEqualTo("customuser");
-                assertThat(it.getPassword()).isEqualTo("custompassword");
-            });
+            assertThat(cluster)
+                    .satisfies(it -> {
+                        assertThat(it.getUsername()).isEqualTo("customuser");
+                        assertThat(it.getPassword()).isEqualTo("custompassword");
+                    });
         }
     }
 
     @Test
     void builderWithCustomFields() {
-        try (PostgreSqlClusterWrapper cluster = PostgreSqlClusterWrapper.builder().withUsername("user").withPassword("password").build()) {
-            assertThat(cluster).satisfies(it -> {
-                assertThat(it.getUsername()).isEqualTo("user");
-                assertThat(it.getPassword()).isEqualTo("password");
-            });
+        try (PostgreSqlClusterWrapper cluster = PostgreSqlClusterWrapper.builder()
+                .withUsername("user")
+                .withPassword("password")
+                .build()) {
+            assertThat(cluster)
+                    .satisfies(it -> {
+                        assertThat(it.getUsername()).isEqualTo("user");
+                        assertThat(it.getPassword()).isEqualTo("password");
+                    });
         }
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void builderWithInvalidArgs() {
+        final PostgreSqlClusterWrapper.Builder builder = PostgreSqlClusterWrapper.builder();
+        assertThatThrownBy(() -> builder.withUsername(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("username cannot be null");
+        assertThatThrownBy(() -> builder.withPassword(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("password cannot be null");
     }
 }

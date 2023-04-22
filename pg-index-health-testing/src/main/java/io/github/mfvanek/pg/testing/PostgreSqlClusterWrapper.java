@@ -140,6 +140,11 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         return containerForPrimary.getPassword();
     }
 
+    /**
+     * Stops first container in the cluster and waits for auto failover.
+     *
+     * @return always true
+     */
     public boolean stopFirstContainer() {
         containerForPrimary.stop();
         LOGGER.info("Waiting for standby will be promoted to primary");
@@ -197,16 +202,17 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         private String password = "custompassword";
 
         private Builder() {
-
         }
 
-        public Builder withUsername(final String username) {
-            this.username = Objects.requireNonNull(username, "username mustn't be null");
+        @Nonnull
+        public Builder withUsername(@Nonnull final String username) {
+            this.username = Objects.requireNonNull(username, "username cannot be null");
             return this;
         }
 
-        public Builder withPassword(final String password) {
-            this.password = Objects.requireNonNull(password, "password mustn't be null");
+        @Nonnull
+        public Builder withPassword(@Nonnull final String password) {
+            this.password = Objects.requireNonNull(password, "password cannot be null");
             return this;
         }
 
@@ -215,6 +221,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
          *
          * @return PostgreSqlClusterWrapper
          */
+        @Nonnull
         public PostgreSqlClusterWrapper build() {
 
             return new PostgreSqlClusterWrapper(username, password);
