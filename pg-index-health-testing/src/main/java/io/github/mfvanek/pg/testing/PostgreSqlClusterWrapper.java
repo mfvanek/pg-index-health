@@ -25,7 +25,6 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
@@ -43,7 +42,6 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
     private static final Logger LOGGER = LoggerFactory.getLogger(PostgreSqlClusterWrapper.class);
 
-    private final PostgreSqlClusterAliasHolder aliases;
     private final PostgresVersionHolder pgVersion;
     private final Network network;
     private final JdbcDatabaseContainer<?> containerForPrimary;
@@ -58,15 +56,15 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         this.pgVersion = PostgresVersionHolder.forCluster();
         this.network = Network.newNetwork();
 
-        this.aliases = new PostgreSqlClusterAliasHolder();
+        final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
         // Primary node
         this.containerForPrimary = createContainerAndInitWith(
-                () -> aliases.createPrimaryEnvVarsMap(username, password),
+                aliases.createPrimaryEnvVarsMap(username, password),
                 aliases.getPrimaryAlias(),
                 aliases.getWaitStrategyForPrimary());
         // Standby node
         this.containerForStandBy = createContainerAndInitWith(
-                () -> aliases.createStandbyEnvVarsMap(username, password),
+                aliases.createStandbyEnvVarsMap(username, password),
                 aliases.getStandbyAlias(),
                 aliases.getWaitStrategyForStandBy()
         );
@@ -161,14 +159,14 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
 
     @Nonnull
     private PostgresBitnamiRepmgrContainer createContainerAndInitWith(
-            final Supplier<Map<String, String>> envVarsProvider,
+            final Map<String, String> envVars,
             final String alias,
             final WaitStrategy waitStrategy
     ) {
         final DockerImageName dockerImageName = DockerImageName.parse(IMAGE_NAME)
                 .withTag(pgVersion.getVersion());
         //noinspection resource
-        return new PostgresBitnamiRepmgrContainer(dockerImageName, envVarsProvider.get()) //NOSONAR
+        return new PostgresBitnamiRepmgrContainer(dockerImageName, envVars) //NOSONAR
                 .withCreateContainerCmdModifier(cmd -> cmd.withName(alias))
                 .withSharedMemorySize(MemoryUnit.MB.convertToBytes(768))
                 .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
