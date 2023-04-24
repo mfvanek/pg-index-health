@@ -10,7 +10,7 @@ plugins {
     id 'pmd'
     id 'java-test-fixtures'
     id 'info.solidsoft.pitest' version '1.9.11'
-    id 'net.ltgt.errorprone' version '3.0.1'
+    id 'net.ltgt.errorprone' version '3.1.0'
 }
 
 description = 'pg-index-health build'
