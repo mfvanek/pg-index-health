@@ -11,6 +11,7 @@ plugins {
     id 'java-test-fixtures'
     id 'info.solidsoft.pitest' version '1.9.11'
     id 'net.ltgt.errorprone' version '3.1.0'
+    id 'jacoco-report-aggregation'
 }
 
 description = 'pg-index-health build'
@@ -236,6 +237,24 @@ subprojects {
             sign publishing.publications.mavenJava
         }
     }
+}
+
+dependencies {
+    subprojects.forEach {
+        jacocoAggregation it
+    }
+}
+
+reporting {
+    reports {
+        testCodeCoverageReport(JacocoCoverageReport) {
+            testType = TestSuiteType.UNIT_TEST
+        }
+    }
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('testCodeCoverageReport', JacocoReport)
 }
 
 sonarqube {
