@@ -57,7 +57,7 @@ subprojects {
         implementation "com.google.code.findbugs:jsr305:${jsr305Version}"
 
         testImplementation 'org.assertj:assertj-core:3.24.2'
-        testImplementation enforcedPlatform('org.junit:junit-bom:5.9.2')
+        testImplementation enforcedPlatform('org.junit:junit-bom:5.9.3')
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
         testImplementation 'org.junit.jupiter:junit-jupiter-api'
 
