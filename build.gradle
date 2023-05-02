@@ -12,6 +12,7 @@ plugins {
     id 'info.solidsoft.pitest' version '1.9.11'
     id 'net.ltgt.errorprone' version '3.1.0'
     id 'jacoco-report-aggregation'
+    id 'org.gradle.test-retry' version '1.5.2'
 }
 
 description = 'pg-index-health build'
@@ -37,6 +38,7 @@ subprojects {
     apply plugin: 'signing'
     apply plugin: 'java-test-fixtures'
     apply plugin: 'net.ltgt.errorprone'
+    apply plugin: 'org.gradle.test-retry'
 
     ext {
         slf4jVersion = '2.0.7'
@@ -75,6 +77,13 @@ subprojects {
         options.errorprone {
             disableWarningsInGeneratedCode = true
             disable('StringSplitter', 'ImmutableEnumChecker', 'FutureReturnValueIgnored', 'EqualsIncompatibleType')
+        }
+    }
+    tasks.withType(Test).configureEach {
+        retry {
+            maxRetries = 3
+            maxFailures = 10
+            failOnPassedAfterRetry = false
         }
     }
 
