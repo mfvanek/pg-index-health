@@ -19,7 +19,7 @@ description = 'pg-index-health build'
 
 allprojects {
     group 'io.github.mfvanek'
-    version '0.9.1-SNAPSHOT'
+    version '0.9.1'
 
     repositories {
         mavenLocal()
