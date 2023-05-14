@@ -44,7 +44,7 @@ subprojects {
         slf4jVersion = '2.0.7'
         logbackVersion = '1.4.7'
         dbcp2Version = '2.9.0'
-        testcontainersVersion = '1.18.0'
+        testcontainersVersion = '1.18.1'
         postgresqlVersion = '42.6.0'
         mockitoVersion = '5.3.1'
         awaitilityVersion = '4.2.0'
