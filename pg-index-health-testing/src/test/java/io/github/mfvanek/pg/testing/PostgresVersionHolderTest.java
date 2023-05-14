@@ -84,7 +84,7 @@ class PostgresVersionHolderTest {
     }
 
     @Test
-    void forClusterShouldUseForcedVersionWhetSet() {
+    void forClusterShouldUseForcedVersionWhenSet() {
         final var versionHolder = PostgresVersionHolder.forCluster("14.3");
         assertThat(versionHolder)
                 .isNotNull()
