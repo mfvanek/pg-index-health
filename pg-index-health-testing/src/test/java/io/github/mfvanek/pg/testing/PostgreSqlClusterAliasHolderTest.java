@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("fast")
 class PostgreSqlClusterAliasHolderTest {
@@ -37,26 +36,14 @@ class PostgreSqlClusterAliasHolderTest {
     @Test
     void shouldCreateEnvMaps() {
         final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
+        final var builder = PostgreSqlClusterWrapper.builder()
+                .withUsername("username")
+                .withPassword("any#pwd")
+                .withDatabaseName("test_db");
         assertThat(aliases)
                 .isNotNull()
-                .satisfies(a -> assertThat(a.createPrimaryEnvVarsMap("username", "password"))
+                .satisfies(a -> assertThat(a.createPrimaryEnvVarsMap(builder))
                         .hasSize(14)
-                        .hasSameSizeAs(a.createStandbyEnvVarsMap("username", "password")));
-    }
-
-    @SuppressWarnings("DataFlowIssue")
-    @Test
-    void shouldNotCreateEnvMapsWithInvalidArgs() {
-        final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
-        assertThat(aliases)
-                .isNotNull()
-                .satisfies(a -> {
-                    assertThatThrownBy(() -> a.createPrimaryEnvVarsMap(null, null))
-                            .isInstanceOf(NullPointerException.class)
-                            .hasMessage("username cannot be null");
-                    assertThatThrownBy(() -> a.createPrimaryEnvVarsMap("username", null))
-                            .isInstanceOf(NullPointerException.class)
-                            .hasMessage("password cannot be null");
-                });
+                        .hasSameSizeAs(a.createStandbyEnvVarsMap(builder)));
     }
 }

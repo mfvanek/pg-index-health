@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport
 
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 final class PostgresVersionHolder implements PostgresVersionAware {
 
@@ -67,9 +68,11 @@ final class PostgresVersionHolder implements PostgresVersionAware {
         return "15.2";
     }
 
-    public static PostgresVersionHolder forCluster() {
+    public static PostgresVersionHolder forCluster(@Nullable final String forcedPostgresVersion) {
+        final String pgVersion = forcedPostgresVersion != null ?
+                forcedPostgresVersion : preparePostgresVersion();
         // Bitnami images use semantic versioning with three digits
-        return new PostgresVersionHolder(preparePostgresVersion() + ".0");
+        return new PostgresVersionHolder(pgVersion + ".0");
     }
 
     public static PostgresVersionHolder forSingleNode() {
