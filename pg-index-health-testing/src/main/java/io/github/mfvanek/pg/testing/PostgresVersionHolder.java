@@ -15,11 +15,16 @@ import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
+/**
+ * A helper class to obtain PostgreSQL version to run with Testcontainers.
+ *
+ * @author Ivan Vakhrushev
+ */
 final class PostgresVersionHolder implements PostgresVersionAware {
 
     private final String pgVersion;
 
-    PostgresVersionHolder(final String pgVersion) {
+    PostgresVersionHolder(@Nonnull final String pgVersion) {
         this.pgVersion = Objects.requireNonNull(pgVersion, "pgVersion cannot be null");
     }
 
@@ -28,6 +33,11 @@ final class PostgresVersionHolder implements PostgresVersionAware {
         return Integer.parseInt(parts[0]);
     }
 
+    /**
+     * Gets target PostgreSQL version to run with Testcontainers.
+     *
+     * @return PostgreSQL version to run
+     */
     @Nonnull
     public String getVersion() {
         return pgVersion;
@@ -64,15 +74,40 @@ final class PostgresVersionHolder implements PostgresVersionAware {
         if (pgVersion != null) {
             return pgVersion;
         }
-        return "15.2";
+        return "15.3";
     }
 
+    /**
+     * Creates {@code PostgresVersionHolder} for Bitnami cluster installation.
+     * The version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
+     * otherwise the default version {@code 15.3.0} is used.
+     *
+     * @return {@code PostgresVersionHolder}
+     */
     public static PostgresVersionHolder forCluster() {
         // Bitnami images use semantic versioning with three digits
         return new PostgresVersionHolder(preparePostgresVersion() + ".0");
     }
 
+    /**
+     * Creates {@code PostgresVersionHolder} for single mode installation.
+     * The version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
+     * otherwise the default version {@code 15.3} is used.
+     *
+     * @return {@code PostgresVersionHolder}
+     */
     public static PostgresVersionHolder forSingleNode() {
         return new PostgresVersionHolder(preparePostgresVersion());
+    }
+
+    /**
+     * Creates {@code PostgresVersionHolder} with given version for single mode installation.
+     *
+     * @param pgVersion given PostgreSQL version
+     * @return {@code PostgresVersionHolder}
+     * @since 0.9.2
+     */
+    public static PostgresVersionHolder forSingleNode(@Nonnull final String pgVersion) {
+        return new PostgresVersionHolder(pgVersion);
     }
 }

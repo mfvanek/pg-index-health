@@ -44,8 +44,8 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
 
     private final PostgresVersionHolder pgVersion;
     private final Network network;
-    private final JdbcDatabaseContainer<?> containerForPrimary;
-    private final JdbcDatabaseContainer<?> containerForStandBy;
+    private final PostgresBitnamiRepmgrContainer containerForPrimary;
+    private final PostgresBitnamiRepmgrContainer containerForStandBy;
     private final BasicDataSource dataSourceForPrimary;
     private final BasicDataSource dataSourceForStandBy;
 

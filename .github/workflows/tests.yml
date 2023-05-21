@@ -10,7 +10,7 @@ jobs:
     build:
         strategy:
             matrix:
-                pg_version: [ "11.16", "12.14", "13.10", "14.7", "15.2" ]
+                pg_version: [ "11.16", "12.16", "13.11", "14.8", "15.3" ]
         env:
             TEST_PG_VERSION: ${{ matrix.pg_version }}
         runs-on: ubuntu-latest
@@ -42,16 +42,16 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-gradle-
             -   name: Build with Gradle and analyze
-                if: matrix.pg_version == '14.7'
+                if: matrix.pg_version == '14.8'
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
                 run: ./gradlew build sonarqube --info
             -   name: Build with Gradle
-                if: matrix.pg_version != '14.7'
+                if: matrix.pg_version != '14.8'
                 run: ./gradlew build
             -   name: Upload coverage to Codecov
-                if: matrix.pg_version == '14.7'
+                if: matrix.pg_version == '14.8'
                 uses: codecov/codecov-action@v3
                 with:
                     token: ${{ secrets.CODECOV_TOKEN }}
