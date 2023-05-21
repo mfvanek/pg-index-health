@@ -10,6 +10,11 @@
 
 package io.github.mfvanek.pg.testing;
 
+/**
+ * Allows getting information about capabilities of concrete PostgreSQL version.
+ *
+ * @author Ivan Vakhrushev
+ */
 public interface PostgresVersionAware {
 
     /**

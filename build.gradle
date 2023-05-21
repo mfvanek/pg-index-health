@@ -1,25 +1,25 @@
 import com.github.spotbugs.snom.SpotBugsTask
 
 plugins {
-    id 'maven-publish'
-    id 'signing'
-    id 'jacoco'
-    id 'com.github.spotbugs' version '5.0.14'
-    id 'checkstyle'
-    id 'org.sonarqube' version '4.0.0.2929'
-    id 'pmd'
-    id 'java-test-fixtures'
-    id 'info.solidsoft.pitest' version '1.9.11'
-    id 'net.ltgt.errorprone' version '3.1.0'
-    id 'jacoco-report-aggregation'
-    id 'org.gradle.test-retry' version '1.5.2'
+    id "maven-publish"
+    id "signing"
+    id "jacoco"
+    id "com.github.spotbugs" version "5.0.14"
+    id "checkstyle"
+    id "org.sonarqube" version "4.0.0.2929"
+    id "pmd"
+    id "java-test-fixtures"
+    id "info.solidsoft.pitest" version "1.9.11"
+    id "net.ltgt.errorprone" version "3.1.0"
+    id "jacoco-report-aggregation"
+    id "org.gradle.test-retry" version "1.5.2"
 }
 
-description = 'pg-index-health build'
+description = "pg-index-health build"
 
 allprojects {
-    group 'io.github.mfvanek'
-    version '0.9.2-SNAPSHOT'
+    group = "io.github.mfvanek"
+    version = "0.9.2-SNAPSHOT"
 
     repositories {
         mavenLocal()
@@ -28,43 +28,43 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java-library'
-    apply plugin: 'org.sonarqube'
-    apply plugin: 'checkstyle'
-    apply plugin: 'pmd'
-    apply plugin: 'com.github.spotbugs'
-    apply plugin: 'jacoco'
-    apply plugin: 'maven-publish'
-    apply plugin: 'signing'
-    apply plugin: 'java-test-fixtures'
-    apply plugin: 'net.ltgt.errorprone'
-    apply plugin: 'org.gradle.test-retry'
+    apply plugin: "java-library"
+    apply plugin: "org.sonarqube"
+    apply plugin: "checkstyle"
+    apply plugin: "pmd"
+    apply plugin: "com.github.spotbugs"
+    apply plugin: "jacoco"
+    apply plugin: "maven-publish"
+    apply plugin: "signing"
+    apply plugin: "java-test-fixtures"
+    apply plugin: "net.ltgt.errorprone"
+    apply plugin: "org.gradle.test-retry"
 
     ext {
-        slf4jVersion = '2.0.7'
-        logbackVersion = '1.4.7'
-        dbcp2Version = '2.9.0'
-        testcontainersVersion = '1.18.1'
-        postgresqlVersion = '42.6.0'
-        mockitoVersion = '5.3.1'
-        awaitilityVersion = '4.2.0'
-        equalsverifierVersion = '3.14.1'
-        commonsLang3Version = '3.12.0'
-        jsr305Version = '3.0.2'
-        pitDashboardReporterVersion = '0.1.5'
+        slf4jVersion = "2.0.7"
+        logbackVersion = "1.4.7"
+        dbcp2Version = "2.9.0"
+        testcontainersVersion = "1.18.1"
+        postgresqlVersion = "42.6.0"
+        mockitoVersion = "5.3.1"
+        awaitilityVersion = "4.2.0"
+        equalsverifierVersion = "3.14.1"
+        commonsLang3Version = "3.12.0"
+        jsr305Version = "3.0.2"
+        pitDashboardReporterVersion = "0.1.5"
         customMaxParallelForks = 1 // try to set a higher value to speed up the local build
     }
 
     dependencies {
-        implementation "com.google.code.findbugs:jsr305:${jsr305Version}"
+        implementation("com.google.code.findbugs:jsr305:${jsr305Version}")
 
-        testImplementation 'org.assertj:assertj-core:3.24.2'
-        testImplementation enforcedPlatform('org.junit:junit-bom:5.9.3')
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-        testImplementation 'org.junit.jupiter:junit-jupiter-api'
+        testImplementation("org.assertj:assertj-core:3.24.2")
+        testImplementation(enforcedPlatform("org.junit:junit-bom:5.9.3"))
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+        testImplementation("org.junit.jupiter:junit-jupiter-api")
 
-        checkstyle 'com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1'
-        errorprone 'com.google.errorprone:error_prone_core:2.19.1'
+        checkstyle("com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1")
+        errorprone("com.google.errorprone:error_prone_core:2.19.1")
     }
 
     java {
@@ -76,7 +76,7 @@ subprojects {
     tasks.withType(JavaCompile).configureEach {
         options.errorprone {
             disableWarningsInGeneratedCode = true
-            disable('StringSplitter', 'ImmutableEnumChecker', 'FutureReturnValueIgnored', 'EqualsIncompatibleType')
+            disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType")
         }
     }
     tasks.withType(Test).configureEach {
@@ -89,20 +89,19 @@ subprojects {
 
     jar {
         manifest {
-            attributes("Implementation-Title": project.name,
-                    "Implementation-Version": project.version)
+            attributes("Implementation-Title": project.name, "Implementation-Version": project.version)
         }
     }
 
     javadoc {
         if (JavaVersion.current().isJava9Compatible()) {
-            options.addBooleanOption('html5', true)
+            options.addBooleanOption("html5", true)
         }
     }
 
     checkstyle {
-        toolVersion '10.5.0'
-        configFile file("../config/checkstyle/checkstyle.xml")
+        toolVersion = "10.5.0"
+        configFile = file("../config/checkstyle/checkstyle.xml")
         ignoreFailures = false
         maxWarnings = 0
         maxErrors = 0
@@ -110,15 +109,15 @@ subprojects {
 
     pmd {
         consoleOutput = true
-        toolVersion = '6.52.0'
+        toolVersion = "6.52.0"
         ruleSetFiles = files("../config/pmd/pmd.xml")
         ruleSets = []
     }
 
     spotbugs {
         showProgress = true
-        effort = 'max'
-        reportLevel = 'low'
+        effort = "max"
+        reportLevel = "low"
         excludeFilter = file("../config/spotbugs/exclude.xml")
     }
     tasks.withType(SpotBugsTask).configureEach {
@@ -139,36 +138,36 @@ subprojects {
         violationRules {
             rule {
                 limit {
-                    counter = 'CLASS'
-                    value = 'MISSEDCOUNT'
+                    counter = "CLASS"
+                    value = "MISSEDCOUNT"
                     maximum = 0
                 }
             }
             rule {
                 limit {
-                    counter = 'METHOD'
-                    value = 'MISSEDCOUNT'
+                    counter = "METHOD"
+                    value = "MISSEDCOUNT"
                     maximum = 0
                 }
             }
             rule {
                 limit {
-                    counter = 'LINE'
-                    value = 'MISSEDCOUNT'
+                    counter = "LINE"
+                    value = "MISSEDCOUNT"
                     maximum = 0
                 }
             }
             rule {
                 limit {
-                    counter = 'INSTRUCTION'
-                    value = 'COVEREDRATIO'
+                    counter = "INSTRUCTION"
+                    value = "COVEREDRATIO"
                     minimum = 1.0
                 }
             }
             rule {
                 limit {
-                    counter = 'BRANCH'
-                    value = 'COVEREDRATIO'
+                    counter = "BRANCH"
+                    value = "COVEREDRATIO"
                     minimum = 1.0
                 }
             }
@@ -182,14 +181,14 @@ subprojects {
                 from components.java
                 jar.preserveFileTimestamps = false
                 jar.reproducibleFileOrder = true
-                suppressPomMetadataWarningsFor('testFixturesApiElements')
-                suppressPomMetadataWarningsFor('testFixturesRuntimeElements')
+                suppressPomMetadataWarningsFor("testFixturesApiElements")
+                suppressPomMetadataWarningsFor("testFixturesRuntimeElements")
 
                 versionMapping {
-                    usage('java-api') {
-                        fromResolutionOf('runtimeClasspath')
+                    usage("java-api") {
+                        fromResolutionOf("runtimeClasspath")
                     }
-                    usage('java-runtime') {
+                    usage("java-runtime") {
                         fromResolutionResult()
                     }
                 }
@@ -197,31 +196,31 @@ subprojects {
                 pom {
                     name = project.name
                     description = project.provider(project::getDescription)
-                    url = 'https://github.com/mfvanek/pg-index-health'
+                    url = "https://github.com/mfvanek/pg-index-health"
                     licenses {
                         license {
-                            name = 'Apache License Version 2.0'
-                            url = 'https://www.apache.org/licenses/LICENSE-2.0'
+                            name = "Apache License Version 2.0"
+                            url = "https://www.apache.org/licenses/LICENSE-2.0"
                         }
                     }
 
                     developers {
                         developer {
-                            id = 'mfvanek'
-                            name = 'Ivan Vakhrushev'
-                            email = 'mfvanek@gmail.com'
+                            id = "mfvanek"
+                            name = "Ivan Vakhrushev"
+                            email = "mfvanek@gmail.com"
                         }
                         developer {
-                            id = 'Evreke'
-                            name = 'Alex Antipin'
-                            email = 'evreke@gmail.com'
+                            id = "Evreke"
+                            name = "Alex Antipin"
+                            email = "evreke@gmail.com"
                         }
                     }
 
                     scm {
-                        connection = 'scm:git:https://github.com/mfvanek/pg-index-health.git'
-                        developerConnection = 'scm:git@github.com:mfvanek/pg-index-health.git'
-                        url = 'https://github.com/mfvanek/pg-index-health'
+                        connection = "scm:git:https://github.com/mfvanek/pg-index-health.git"
+                        developerConnection = "scm:git@github.com:mfvanek/pg-index-health.git"
+                        url = "https://github.com/mfvanek/pg-index-health"
                     }
                 }
             }
@@ -231,7 +230,7 @@ subprojects {
             maven {
                 def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
                 def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
-                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
                 credentials {
                     username sonatypeUsername
                     password sonatypePassword
@@ -241,7 +240,7 @@ subprojects {
     }
 
     signing {
-        if (!version.endsWith('SNAPSHOT')) {
+        if (!version.endsWith("SNAPSHOT")) {
             useGpgCmd()
             sign publishing.publications.mavenJava
         }
@@ -262,8 +261,8 @@ reporting {
     }
 }
 
-tasks.named('check') {
-    dependsOn tasks.named('testCodeCoverageReport', JacocoReport)
+tasks.named("check") {
+    dependsOn tasks.named("testCodeCoverageReport", JacocoReport)
 }
 
 sonarqube {

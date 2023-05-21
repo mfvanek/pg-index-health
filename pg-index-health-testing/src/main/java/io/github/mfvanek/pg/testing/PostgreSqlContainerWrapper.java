@@ -46,7 +46,7 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
         this.dataSource = PostgreSqlDataSourceHelper.buildDataSource(container);
     }
 
-    PostgreSqlContainerWrapper(final PostgresVersionHolder pgVersion) {
+    PostgreSqlContainerWrapper(@Nonnull final PostgresVersionHolder pgVersion) {
         this(pgVersion, List.of(
                 Map.entry(ImportantParam.LOCK_TIMEOUT.getName(), "1000"),
                 Map.entry(ImportantParam.SHARED_BUFFERS.getName(), "256MB"),

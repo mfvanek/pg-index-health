@@ -53,7 +53,6 @@ class PostgresBitnamiRepmgrContainerTest {
         }
     }
 
-    @SuppressWarnings("EqualsWithItself")
     @Test
     void testEqualsAndHashCode() {
         final var builder = PostgreSqlClusterWrapper.builder();
@@ -73,7 +72,7 @@ class PostgresBitnamiRepmgrContainerTest {
 
     @Nonnull
     private DockerImageName prepareDockerImageName() {
-        final PostgresVersionHolder versionHolder = PostgresVersionHolder.forCluster(null);
+        final PostgresVersionHolder versionHolder = PostgresVersionHolder.forCluster();
         return DockerImageName.parse("docker.io/bitnami/postgresql-repmgr")
                 .withTag(versionHolder.getVersion());
     }

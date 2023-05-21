@@ -14,13 +14,19 @@ import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport
 
 import java.util.Objects;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
+/**
+ * A helper class to obtain PostgreSQL version to run with Testcontainers.
+ *
+ * @author Ivan Vakhrushev
+ */
+@Immutable
 final class PostgresVersionHolder implements PostgresVersionAware {
 
     private final String pgVersion;
 
-    PostgresVersionHolder(final String pgVersion) {
+    PostgresVersionHolder(@Nonnull final String pgVersion) {
         this.pgVersion = Objects.requireNonNull(pgVersion, "pgVersion cannot be null");
     }
 
@@ -29,6 +35,11 @@ final class PostgresVersionHolder implements PostgresVersionAware {
         return Integer.parseInt(parts[0]);
     }
 
+    /**
+     * Gets target PostgreSQL version to run with Testcontainers.
+     *
+     * @return PostgreSQL version to run
+     */
     @Nonnull
     public String getVersion() {
         return pgVersion;
@@ -65,17 +76,60 @@ final class PostgresVersionHolder implements PostgresVersionAware {
         if (pgVersion != null) {
             return pgVersion;
         }
-        return "15.2";
+        return "15.3";
     }
 
-    public static PostgresVersionHolder forCluster(@Nullable final String forcedPostgresVersion) {
-        final String pgVersion = forcedPostgresVersion != null ?
-                forcedPostgresVersion : preparePostgresVersion();
+    @Nonnull
+    private static String toBitnamiVersion(@Nonnull final String pgVersion) {
         // Bitnami images use semantic versioning with three digits
-        return new PostgresVersionHolder(pgVersion + ".0");
+        return pgVersion + ".0";
     }
 
+    /**
+     * Creates {@code PostgresVersionHolder} for Bitnami cluster installation.
+     * The version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
+     * otherwise the default version {@code 15.3.0} is used.
+     *
+     * @return {@code PostgresVersionHolder}
+     */
+    @Nonnull
+    public static PostgresVersionHolder forCluster() {
+        return new PostgresVersionHolder(toBitnamiVersion(preparePostgresVersion()));
+    }
+
+    /**
+     * Creates {@code PostgresVersionHolder} with given version for Bitnami cluster installation.
+     *
+     * @param pgVersion given PostgreSQL version
+     * @return {@code PostgresVersionHolder}
+     * @since 0.9.2
+     */
+    @Nonnull
+    public static PostgresVersionHolder forCluster(@Nonnull final String pgVersion) {
+        return new PostgresVersionHolder(toBitnamiVersion(pgVersion));
+    }
+
+    /**
+     * Creates {@code PostgresVersionHolder} for single node installation.
+     * The version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
+     * otherwise the default version {@code 15.3} is used.
+     *
+     * @return {@code PostgresVersionHolder}
+     */
+    @Nonnull
     public static PostgresVersionHolder forSingleNode() {
         return new PostgresVersionHolder(preparePostgresVersion());
+    }
+
+    /**
+     * Creates {@code PostgresVersionHolder} with given version for single node installation.
+     *
+     * @param pgVersion given PostgreSQL version
+     * @return {@code PostgresVersionHolder}
+     * @since 0.9.2
+     */
+    @Nonnull
+    public static PostgresVersionHolder forSingleNode(@Nonnull final String pgVersion) {
+        return new PostgresVersionHolder(pgVersion);
     }
 }

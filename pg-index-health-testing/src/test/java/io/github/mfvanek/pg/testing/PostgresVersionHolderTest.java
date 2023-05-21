@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Tag("fast")
 class PostgresVersionHolderTest {
 
+    @SuppressWarnings("DataFlowIssue")
     @Test
     void shouldThrowExceptionForInvalidVersion() {
         assertThatThrownBy(() -> new PostgresVersionHolder(null))
@@ -64,7 +65,7 @@ class PostgresVersionHolderTest {
 
     @Test
     void forClusterShouldBeBitnamiAware() {
-        final var versionHolder = PostgresVersionHolder.forCluster(null);
+        final var versionHolder = PostgresVersionHolder.forCluster();
         assertThat(versionHolder)
                 .isNotNull()
                 .satisfies(v -> {
@@ -79,7 +80,7 @@ class PostgresVersionHolderTest {
                     .isEqualTo(System.getenv("TEST_PG_VERSION") + ".0");
         } else {
             assertThat(versionHolder.getVersion())
-                    .isEqualTo("15.2.0");
+                    .isEqualTo("15.3.0");
         }
     }
 
@@ -109,7 +110,16 @@ class PostgresVersionHolderTest {
                     .isEqualTo(System.getenv("TEST_PG_VERSION"));
         } else {
             assertThat(versionHolder.getVersion())
-                    .isEqualTo("15.2");
+                    .isEqualTo("15.3");
         }
+    }
+
+    @Test
+    void forSingleNodeShouldBeAbleToForceVersion() {
+        final PostgresVersionHolder versionHolder = PostgresVersionHolder.forSingleNode("345.678");
+        assertThat(versionHolder)
+                .isNotNull();
+        assertThat(versionHolder.getVersion())
+                .isEqualTo("345.678");
     }
 }
