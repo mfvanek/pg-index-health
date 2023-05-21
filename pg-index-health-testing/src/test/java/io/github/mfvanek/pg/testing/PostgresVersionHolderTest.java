@@ -65,7 +65,7 @@ class PostgresVersionHolderTest {
 
     @Test
     void forClusterShouldBeBitnamiAware() {
-        final PostgresVersionHolder versionHolder = PostgresVersionHolder.forCluster();
+        final var versionHolder = PostgresVersionHolder.forCluster(null);
         assertThat(versionHolder)
                 .isNotNull()
                 .satisfies(v -> {
@@ -82,6 +82,22 @@ class PostgresVersionHolderTest {
             assertThat(versionHolder.getVersion())
                     .isEqualTo("15.3.0");
         }
+    }
+
+    @Test
+    void forClusterShouldUseForcedVersionWhenSet() {
+        final var versionHolder = PostgresVersionHolder.forCluster("14.3");
+        assertThat(versionHolder)
+                .isNotNull()
+                .satisfies(v -> {
+                    assertThat(v.getVersion()).endsWith(".0");
+                    assertThat(v.getVersion().chars()
+                            .mapToObj(c -> (char) c)
+                            .filter(c -> c == '.'))
+                            .hasSize(2);
+                });
+        assertThat(versionHolder.getVersion())
+                .isEqualTo("14.3.0");
     }
 
     @Test

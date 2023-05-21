@@ -26,6 +26,7 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.sql.DataSource;
 
 /**
@@ -44,27 +45,24 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
 
     private final PostgresVersionHolder pgVersion;
     private final Network network;
-    private final PostgresBitnamiRepmgrContainer containerForPrimary;
-    private final PostgresBitnamiRepmgrContainer containerForStandBy;
+    private final JdbcDatabaseContainer<PostgresBitnamiRepmgrContainer> containerForPrimary;
+    private final JdbcDatabaseContainer<PostgresBitnamiRepmgrContainer> containerForStandBy;
     private final BasicDataSource dataSourceForPrimary;
     private final BasicDataSource dataSourceForStandBy;
 
-    private PostgreSqlClusterWrapper(
-            @Nonnull final String username,
-            @Nonnull final String password
-    ) {
-        this.pgVersion = PostgresVersionHolder.forCluster();
+    private PostgreSqlClusterWrapper(@Nonnull final PostgreSqlClusterBuilder builder) {
+        this.pgVersion = PostgresVersionHolder.forCluster(builder.getPostgresVersion());
         this.network = Network.newNetwork();
 
         final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
         // Primary node
         this.containerForPrimary = createContainerAndInitWith(
-                aliases.createPrimaryEnvVarsMap(username, password),
+                aliases.createPrimaryEnvVarsMap(builder),
                 aliases.getPrimaryAlias(),
                 aliases.getWaitStrategyForPrimary());
         // Standby node
         this.containerForStandBy = createContainerAndInitWith(
-                aliases.createStandbyEnvVarsMap(username, password),
+                aliases.createStandbyEnvVarsMap(builder),
                 aliases.getStandbyAlias(),
                 aliases.getWaitStrategyForStandBy()
         );
@@ -184,8 +182,8 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     }
 
     @Nonnull
-    public static Builder builder() {
-        return new Builder();
+    public static PostgreSqlClusterBuilder builder() {
+        return new PostgreSqlClusterBuilder();
     }
 
     /**
@@ -194,35 +192,68 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
      *
      * @author Alexey Antipin
      */
-    public static class Builder {
+    public static class PostgreSqlClusterBuilder {
 
         private String username = "customuser";
         private String password = "custompassword";
+        private String databaseName = "customdatabase";
+        private String postgresVersion;
 
-        private Builder() {
+        private PostgreSqlClusterBuilder() {
         }
 
         @Nonnull
-        public Builder withUsername(@Nonnull final String username) {
+        public String getUsername() {
+            return username;
+        }
+
+        @Nonnull
+        public String getPassword() {
+            return password;
+        }
+
+        @Nonnull
+        public String getDatabaseName() {
+            return databaseName;
+        }
+
+        @Nullable
+        public String getPostgresVersion() {
+            return postgresVersion;
+        }
+
+        @Nonnull
+        public PostgreSqlClusterBuilder withUsername(@Nonnull final String username) {
             this.username = Objects.requireNonNull(username, "username cannot be null");
             return this;
         }
 
         @Nonnull
-        public Builder withPassword(@Nonnull final String password) {
+        public PostgreSqlClusterBuilder withPassword(@Nonnull final String password) {
             this.password = Objects.requireNonNull(password, "password cannot be null");
             return this;
         }
 
+        @Nonnull
+        public PostgreSqlClusterBuilder withDatabaseName(@Nonnull final String databaseName) {
+            this.databaseName = Objects.requireNonNull(databaseName, "databaseName cannot be null");
+            return this;
+        }
+
+        @Nonnull
+        public PostgreSqlClusterBuilder withPostgresVersion(@Nonnull final String postgresVersion) {
+            this.postgresVersion = Objects.requireNonNull(postgresVersion, "postgresVersion cannot be null");
+            return this;
+        }
+
         /**
-         * Used to create a PostgresSqlClusterWrapper with a given username/password.
+         * Creates a PostgresSqlClusterWrapper with a given parameters.
          *
          * @return PostgreSqlClusterWrapper
          */
         @Nonnull
         public PostgreSqlClusterWrapper build() {
-
-            return new PostgreSqlClusterWrapper(username, password);
+            return new PostgreSqlClusterWrapper(this);
         }
     }
 }

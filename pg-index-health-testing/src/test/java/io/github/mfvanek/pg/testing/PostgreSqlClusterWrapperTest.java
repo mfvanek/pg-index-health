@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.testing;
 
 import io.github.mfvanek.pg.support.LogsCaptor;
+import io.github.mfvanek.pg.support.PostgresVersionReader;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,6 @@ class PostgreSqlClusterWrapperTest {
     @Test
     void shouldWork() {
         try (PostgreSqlClusterWrapper cluster = PostgreSqlClusterWrapper.builder().build()) {
-
             assertThat(cluster)
                     .isNotNull();
             assertThat(cluster.getDataSourceForPrimary())
@@ -59,6 +59,8 @@ class PostgreSqlClusterWrapperTest {
                     .satisfies(it -> {
                         assertThat(it.getUsername()).isEqualTo("customuser");
                         assertThat(it.getPassword()).isEqualTo("custompassword");
+                        assertThat(it.getFirstContainerJdbcUrl()).contains("/customdatabase");
+                        assertThat(it.getSecondContainerJdbcUrl()).contains("/customdatabase");
                     });
         }
     }
@@ -68,24 +70,55 @@ class PostgreSqlClusterWrapperTest {
         try (PostgreSqlClusterWrapper cluster = PostgreSqlClusterWrapper.builder()
                 .withUsername("user")
                 .withPassword("password")
+                .withDatabaseName("test_db_with_repmgr")
                 .build()) {
             assertThat(cluster)
                     .satisfies(it -> {
                         assertThat(it.getUsername()).isEqualTo("user");
                         assertThat(it.getPassword()).isEqualTo("password");
+                        assertThat(it.getFirstContainerJdbcUrl()).contains("/test_db_with_repmgr");
+                        assertThat(it.getSecondContainerJdbcUrl()).contains("/test_db_with_repmgr");
                     });
+        }
+    }
+
+    @Test
+    void builderWithForcedVersion() {
+        final var builder = PostgreSqlClusterWrapper.builder()
+                .withUsername("user")
+                .withPassword("password")
+                .withDatabaseName("test_db_with_repmgr")
+                .withPostgresVersion("14.7");
+        assertThat(builder.getPostgresVersion())
+                .isEqualTo("14.7");
+        try (PostgreSqlClusterWrapper cluster = builder.build()) {
+            assertThat(cluster)
+                    .satisfies(it -> {
+                        assertThat(it.getUsername()).isEqualTo("user");
+                        assertThat(it.getPassword()).isEqualTo("password");
+                        assertThat(it.getFirstContainerJdbcUrl()).contains("/test_db_with_repmgr");
+                        assertThat(it.getSecondContainerJdbcUrl()).contains("/test_db_with_repmgr");
+                    });
+            final String actualPgVersionString = PostgresVersionReader.readVersion(cluster.getDataSourceForPrimary());
+            assertThat(actualPgVersionString).startsWith("14.7");
         }
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
     void builderWithInvalidArgs() {
-        final PostgreSqlClusterWrapper.Builder builder = PostgreSqlClusterWrapper.builder();
+        final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder = PostgreSqlClusterWrapper.builder();
         assertThatThrownBy(() -> builder.withUsername(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("username cannot be null");
         assertThatThrownBy(() -> builder.withPassword(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("password cannot be null");
+        assertThatThrownBy(() -> builder.withDatabaseName(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("databaseName cannot be null");
+        assertThatThrownBy(() -> builder.withPostgresVersion(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("postgresVersion cannot be null");
     }
 }

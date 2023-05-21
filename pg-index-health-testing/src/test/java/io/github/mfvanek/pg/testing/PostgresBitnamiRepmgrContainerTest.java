@@ -28,7 +28,8 @@ class PostgresBitnamiRepmgrContainerTest {
     @Test
     void containerShouldWork() {
         final PostgreSqlClusterAliasHolder aliasHolder = new PostgreSqlClusterAliasHolder();
-        try (PostgresBitnamiRepmgrContainer container = new PostgresBitnamiRepmgrContainer(prepareDockerImageName(), aliasHolder.createPrimaryEnvVarsMap("username", "password"))
+        try (PostgresBitnamiRepmgrContainer container = new PostgresBitnamiRepmgrContainer(
+                prepareDockerImageName(), aliasHolder.createPrimaryEnvVarsMap(PostgreSqlClusterWrapper.builder()))
                 .withCreateContainerCmdModifier(cmd -> cmd.withName(aliasHolder.getPrimaryAlias()))
                 .withSharedMemorySize(MemoryUnit.MB.convertToBytes(768))
                 .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
@@ -52,17 +53,19 @@ class PostgresBitnamiRepmgrContainerTest {
         }
     }
 
+    @SuppressWarnings("EqualsWithItself")
     @Test
     void testEqualsAndHashCode() {
+        final var builder = PostgreSqlClusterWrapper.builder();
         final PostgreSqlClusterAliasHolder aliasHolder = new PostgreSqlClusterAliasHolder();
-        try (PostgresBitnamiRepmgrContainer first = new PostgresBitnamiRepmgrContainer(prepareDockerImageName(), aliasHolder.createPrimaryEnvVarsMap("username", "password"));
-             PostgresBitnamiRepmgrContainer second = new PostgresBitnamiRepmgrContainer(prepareDockerImageName(), aliasHolder.createStandbyEnvVarsMap("username", "password"))) {
+        try (PostgresBitnamiRepmgrContainer first = new PostgresBitnamiRepmgrContainer(prepareDockerImageName(), aliasHolder.createPrimaryEnvVarsMap(builder));
+             PostgresBitnamiRepmgrContainer second = new PostgresBitnamiRepmgrContainer(prepareDockerImageName(), aliasHolder.createStandbyEnvVarsMap(builder))) {
             assertThat(first)
                     .isNotNull()
                     .isNotEqualTo(null)
                     .isEqualTo(first)
                     .isNotEqualTo(BigDecimal.ONE)
-                    .doesNotHaveSameHashCodeAs(aliasHolder.createPrimaryEnvVarsMap("username", "password"))
+                    .doesNotHaveSameHashCodeAs(aliasHolder.createPrimaryEnvVarsMap(builder))
                     .isNotEqualTo(second)
                     .doesNotHaveSameHashCodeAs(second);
         }
@@ -70,7 +73,7 @@ class PostgresBitnamiRepmgrContainerTest {
 
     @Nonnull
     private DockerImageName prepareDockerImageName() {
-        final PostgresVersionHolder versionHolder = PostgresVersionHolder.forCluster();
+        final PostgresVersionHolder versionHolder = PostgresVersionHolder.forCluster(null);
         return DockerImageName.parse("docker.io/bitnami/postgresql-repmgr")
                 .withTag(versionHolder.getVersion());
     }
