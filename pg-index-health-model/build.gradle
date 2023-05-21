@@ -5,12 +5,12 @@ plugins {
 description = "pg-index-health-model is a set of common classes and interfaces for getting information about PostgreSQL database objects."
 
 dependencies {
-    testImplementation "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
-    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    testImplementation("nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}")
+    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
 
-    testFixturesImplementation "com.google.code.findbugs:jsr305:${jsr305Version}"
+    testFixturesImplementation("com.google.code.findbugs:jsr305:${jsr305Version}")
 
-    pitest "it.mulders.stryker:pit-dashboard-reporter:${pitDashboardReporterVersion}"
+    pitest("it.mulders.stryker:pit-dashboard-reporter:${pitDashboardReporterVersion}")
 }
 
 test {

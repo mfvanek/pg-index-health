@@ -5,14 +5,14 @@ plugins {
 description = "pg-index-health-generator is an extension for generating database migrations in sql format based on pg-index-health diagnostics."
 
 dependencies {
-    api project(":pg-index-health-model")
-    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    api(project(":pg-index-health-model"))
+    implementation("org.slf4j:slf4j-api:${slf4jVersion}")
 
     testImplementation(testFixtures(project(":pg-index-health-model")))
     testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
-    testImplementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    testImplementation("ch.qos.logback:logback-classic:${logbackVersion}")
 
-    pitest "it.mulders.stryker:pit-dashboard-reporter:${pitDashboardReporterVersion}"
+    pitest("it.mulders.stryker:pit-dashboard-reporter:${pitDashboardReporterVersion}")
 }
 
 test {
