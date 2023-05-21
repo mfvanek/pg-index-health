@@ -65,7 +65,7 @@ class PostgresVersionHolderTest {
 
     @Test
     void forClusterShouldBeBitnamiAware() {
-        final var versionHolder = PostgresVersionHolder.forCluster(null);
+        final var versionHolder = PostgresVersionHolder.forCluster();
         assertThat(versionHolder)
                 .isNotNull()
                 .satisfies(v -> {
