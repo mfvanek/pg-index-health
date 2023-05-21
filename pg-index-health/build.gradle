@@ -1,14 +1,14 @@
-description = 'pg-index-health is a Java library for analyzing and maintaining indexes health in PostgreSQL databases.'
+description = "pg-index-health is a Java library for analyzing and maintaining indexes health in PostgreSQL databases."
 
 dependencies {
-    api project(':pg-index-health-model')
-    api project(':pg-index-health-jdbc-connection')
+    api project(":pg-index-health-model")
+    api project(":pg-index-health-jdbc-connection")
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
-    testImplementation project(':pg-index-health-testing')
+    testImplementation project(":pg-index-health-testing")
     testImplementation(testFixtures(project(":pg-index-health-model")))
     testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
-    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+    testImplementation "org.junit.jupiter:junit-jupiter-params"
     testImplementation "ch.qos.logback:logback-classic:${logbackVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.awaitility:awaitility:${awaitilityVersion}"
@@ -19,7 +19,7 @@ dependencies {
 test {
     testLogging.showStandardStreams = false // set to true for debug purposes
     useJUnitPlatform() {
-        excludeTags 'cluster'
+        excludeTags "cluster"
     }
     dependsOn checkstyleMain, checkstyleTest, pmdMain, pmdTest, spotbugsMain, spotbugsTest
     maxParallelForks = customMaxParallelForks
@@ -27,11 +27,11 @@ test {
     finalizedBy jacocoTestCoverageVerification
 }
 
-tasks.register('clusterTest', Test) {
-    description = 'Runs tests on PostgreSQL cluster.'
-    group = 'verification'
+tasks.register("clusterTest", Test) {
+    description = "Runs tests on PostgreSQL cluster."
+    group = "verification"
     useJUnitPlatform() {
-        includeTags 'cluster'
+        includeTags "cluster"
     }
     maxParallelForks = 1 // important!
     mustRunAfter test

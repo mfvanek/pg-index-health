@@ -1,8 +1,8 @@
 plugins {
-    id 'info.solidsoft.pitest'
+    id "info.solidsoft.pitest"
 }
 
-description = 'pg-index-health-model is a set of common classes and interfaces for getting information about PostgreSQL database objects.'
+description = "pg-index-health-model is a set of common classes and interfaces for getting information about PostgreSQL database objects."
 
 dependencies {
     testImplementation "nl.jqno.equalsverifier:equalsverifier:${equalsverifierVersion}"
@@ -23,16 +23,16 @@ test {
 }
 
 pitest {
-    junit5PluginVersion = '1.1.2'
-    pitestVersion = '1.10.4'
+    junit5PluginVersion = "1.1.2"
+    pitestVersion = "1.10.4"
     threads = 4
-    outputFormats = System.getenv('STRYKER_DASHBOARD_API_KEY') != null ? ['stryker-dashboard'] : ['HTML']
+    outputFormats = System.getenv("STRYKER_DASHBOARD_API_KEY") != null ? ["stryker-dashboard"] : ["HTML"]
     timestampedReports = false
     mutationThreshold = 100
 }
 
-tasks.named('pitest').configure {
+tasks.named("pitest").configure {
     mustRunAfter test
 }
 
-build.dependsOn 'pitest'
+build.dependsOn "pitest"

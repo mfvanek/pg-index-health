@@ -1,15 +1,15 @@
 plugins {
-    id 'info.solidsoft.pitest'
+    id "info.solidsoft.pitest"
 }
 
-description = 'pg-index-health-jdbc-connection is an abstraction of a connection to a high availability PostgreSQL cluster.'
+description = "pg-index-health-jdbc-connection is an abstraction of a connection to a high availability PostgreSQL cluster."
 
 dependencies {
-    api project(':pg-index-health-model')
+    api project(":pg-index-health-model")
     implementation "org.apache.commons:commons-dbcp2:${dbcp2Version}"
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
-    testImplementation project(':pg-index-health-testing')
+    testImplementation project(":pg-index-health-testing")
     testImplementation(testFixtures(project(":pg-index-health-model")))
     testImplementation "ch.qos.logback:logback-classic:${logbackVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
@@ -34,16 +34,16 @@ test {
 }
 
 pitest {
-    junit5PluginVersion = '1.1.2'
-    pitestVersion = '1.10.4'
+    junit5PluginVersion = "1.1.2"
+    pitestVersion = "1.10.4"
     threads = 4
-    outputFormats = System.getenv('STRYKER_DASHBOARD_API_KEY') != null ? ['stryker-dashboard'] : ['HTML']
+    outputFormats = System.getenv("STRYKER_DASHBOARD_API_KEY") != null ? ["stryker-dashboard"] : ["HTML"]
     timestampedReports = false
     mutationThreshold = 98
 }
 
-tasks.named('pitest').configure {
+tasks.named("pitest").configure {
     mustRunAfter test
 }
 
-build.dependsOn 'pitest'
+build.dependsOn "pitest"
