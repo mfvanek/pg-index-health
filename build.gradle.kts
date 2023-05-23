@@ -280,15 +280,6 @@ dependencies {
     }
 }
 
-// TODO !!!! FIXME
-//reporting {
-//    reports {
-//        val testCodeCoverageReport by creating(JacocoCoverageReport::class) {
-//            testType.set(TestSuiteType.UNIT_TEST)
-//        }
-//    }
-//}
-
 tasks.check {
     dependsOn(tasks.named<JacocoReport>("testCodeCoverageReport"))
 }
@@ -301,12 +292,9 @@ sonarqube {
     }
 }
 
-// To avoid creation of build folder in the root
+// To avoid creation of jar's in build folder in the root
 tasks {
     jar {
-        isEnabled = false
-    }
-    build {
         isEnabled = false
     }
     testFixturesJar {
