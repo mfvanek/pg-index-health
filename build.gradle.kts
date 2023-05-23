@@ -199,7 +199,7 @@ subprojects {
         showProgress.set(true)
         effort.set(Effort.MAX)
         reportLevel.set(Confidence.LOW)
-        excludeFilter.set(file("config/spotbugs/exclude.xml"))
+        excludeFilter.set(file("../config/spotbugs/exclude.xml"))
     }
 
     publishing {
@@ -280,7 +280,7 @@ dependencies {
     }
 }
 
-// TODO
+// TODO !!!! FIXME
 //reporting {
 //    reports {
 //        val testCodeCoverageReport by creating(JacocoCoverageReport::class) {
@@ -307,6 +307,9 @@ tasks {
         isEnabled = false
     }
     build {
+        isEnabled = false
+    }
+    testFixturesJar {
         isEnabled = false
     }
 }
