@@ -93,7 +93,7 @@ final class PostgresVersionHolder implements PostgresVersionAware {
      * @return {@code PostgresVersionHolder}
      */
     @Nonnull
-    public static PostgresVersionHolder forCluster() {
+    static PostgresVersionHolder forCluster() {
         return new PostgresVersionHolder(toBitnamiVersion(preparePostgresVersion()));
     }
 
@@ -105,7 +105,7 @@ final class PostgresVersionHolder implements PostgresVersionAware {
      * @since 0.9.2
      */
     @Nonnull
-    public static PostgresVersionHolder forCluster(@Nonnull final String pgVersion) {
+    static PostgresVersionHolder forCluster(@Nonnull final String pgVersion) {
         return new PostgresVersionHolder(toBitnamiVersion(pgVersion));
     }
 
@@ -117,7 +117,7 @@ final class PostgresVersionHolder implements PostgresVersionAware {
      * @return {@code PostgresVersionHolder}
      */
     @Nonnull
-    public static PostgresVersionHolder forSingleNode() {
+    static PostgresVersionHolder forSingleNode() {
         return new PostgresVersionHolder(preparePostgresVersion());
     }
 
@@ -129,7 +129,7 @@ final class PostgresVersionHolder implements PostgresVersionAware {
      * @since 0.9.2
      */
     @Nonnull
-    public static PostgresVersionHolder forSingleNode(@Nonnull final String pgVersion) {
+    static PostgresVersionHolder forSingleNode(@Nonnull final String pgVersion) {
         return new PostgresVersionHolder(pgVersion);
     }
 }
