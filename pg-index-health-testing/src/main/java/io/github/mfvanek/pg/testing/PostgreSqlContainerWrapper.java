@@ -125,13 +125,26 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
         return pgVersion.isOutParametersInProcedureSupported();
     }
 
+    /**
+     * Creates {@code PostgreSqlContainerWrapper} with default PostgreSQL version.
+     * The default version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
+     * otherwise the default version {@code 15.3} is used.
+     *
+     * @return {@code PostgreSqlContainerWrapper}
+     */
     @Nonnull
     public static PostgreSqlContainerWrapper withDefaultVersion() {
         return new PostgreSqlContainerWrapper(PostgresVersionHolder.forSingleNode());
     }
 
+    /**
+     * Creates {@code PostgreSqlContainerWrapper} with given version.
+     *
+     * @param pgVersion given PostgreSQL version
+     * @return {@code PostgreSqlContainerWrapper}
+     */
     @Nonnull
-    public static PostgreSqlContainerWrapper withVersion(@Nonnull final PostgresVersionHolder pgVersion) {
-        return new PostgreSqlContainerWrapper(pgVersion);
+    public static PostgreSqlContainerWrapper withVersion(@Nonnull final String pgVersion) {
+        return new PostgreSqlContainerWrapper(PostgresVersionHolder.forSingleNode(pgVersion));
     }
 }
