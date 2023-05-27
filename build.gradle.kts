@@ -75,15 +75,18 @@ subprojects {
         withJavadocJar()
         withSourcesJar()
     }
+    tasks.withType<JavaCompile>().configureEach {
+        options.errorprone {
+            disableWarningsInGeneratedCode.set(true)
+            disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType")
+        }
+    }
+
+    jacoco {
+        toolVersion = "0.8.10"
+    }
 
     tasks {
-        withType<JavaCompile>().configureEach {
-            options.errorprone {
-                disableWarningsInGeneratedCode.set(true)
-                disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType")
-            }
-        }
-
         test {
             testLogging.showStandardStreams = false // set to true for debug purposes
             useJUnitPlatform()
