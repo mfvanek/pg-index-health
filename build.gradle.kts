@@ -17,7 +17,7 @@ plugins {
     id("com.github.spotbugs") version "5.0.14"
     id("org.sonarqube") version "4.0.0.2929"
     id("info.solidsoft.pitest") version "1.9.11"
-    id("org.gradle.test-retry") version "1.5.2"
+    id("org.gradle.test-retry") version "1.5.3"
 }
 
 description = "pg-index-health build"
