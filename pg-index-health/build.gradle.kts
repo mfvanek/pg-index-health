@@ -1,26 +1,19 @@
 description = "pg-index-health is a Java library for analyzing and maintaining indexes health in PostgreSQL databases."
 
 dependencies {
-    val slf4jVersion: String by rootProject.extra
-    val logbackVersion: String by rootProject.extra
-    val postgresqlVersion: String by rootProject.extra
-    val mockitoVersion: String by rootProject.extra
-    val awaitilityVersion: String by rootProject.extra
-    val commonsLang3Version: String by rootProject.extra
-
     api(project(":pg-index-health-model"))
     api(project(":pg-index-health-jdbc-connection"))
-    implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    implementation(rootProject.libs.slf4j.api)
 
     testImplementation(project(":pg-index-health-testing"))
     testImplementation(testFixtures(project(":pg-index-health-model")))
     testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
     testImplementation("org.junit.jupiter:junit-jupiter-params")
-    testImplementation("ch.qos.logback:logback-classic:$logbackVersion")
-    testImplementation("org.mockito:mockito-core:$mockitoVersion")
-    testImplementation("org.awaitility:awaitility:$awaitilityVersion")
-    testImplementation("org.apache.commons:commons-lang3:$commonsLang3Version")
-    testImplementation("org.postgresql:postgresql:$postgresqlVersion")
+    testImplementation(rootProject.libs.logback.classic)
+    testImplementation(rootProject.libs.mockito.core)
+    testImplementation(rootProject.libs.awaitility)
+    testImplementation(rootProject.libs.apache.commons.lang3)
+    testImplementation(rootProject.libs.postgresql)
 }
 
 tasks {

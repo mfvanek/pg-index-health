@@ -32,18 +32,6 @@ allprojects {
     }
 }
 
-val slf4jVersion by extra { "2.0.7" }
-val logbackVersion by extra { "1.4.7" }
-val dbcp2Version by extra { "2.9.0" }
-val testcontainersVersion by extra { "1.18.1" }
-val postgresqlVersion by extra { "42.6.0" }
-val mockitoVersion by extra { "5.3.1" }
-val awaitilityVersion by extra { "4.2.0" }
-val equalsverifierVersion by extra { "3.14.1" }
-val commonsLang3Version by extra { "3.12.0" }
-val jsr305Version by extra { "3.0.2" }
-val pitDashboardReporterVersion by extra { "0.1.5" }
-
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "org.sonarqube")
@@ -58,10 +46,10 @@ subprojects {
     apply(plugin = "org.gradle.test-retry")
 
     dependencies {
-        implementation("com.google.code.findbugs:jsr305:$jsr305Version")
+        implementation(rootProject.libs.jsr305)
 
         testImplementation("org.assertj:assertj-core:3.24.2")
-        testImplementation(enforcedPlatform("org.junit:junit-bom:5.9.3"))
+        testImplementation(platform("org.junit:junit-bom:5.9.3"))
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
         testImplementation("org.junit.jupiter:junit-jupiter-api")
 
