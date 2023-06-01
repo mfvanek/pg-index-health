@@ -7,38 +7,31 @@ plugins {
 description = "pg-index-health-jdbc-connection is an abstraction of a connection to a high availability PostgreSQL cluster."
 
 dependencies {
-    val slf4jVersion: String by rootProject.extra
-    val logbackVersion: String by rootProject.extra
-    val dbcp2Version: String by rootProject.extra
-    val postgresqlVersion: String by rootProject.extra
-    val mockitoVersion: String by rootProject.extra
-    val awaitilityVersion: String by rootProject.extra
-    val equalsverifierVersion: String by rootProject.extra
-    val jsr305Version: String by rootProject.extra
-    val pitDashboardReporterVersion: String by rootProject.extra
-
     api(project(":pg-index-health-model"))
-    implementation("org.apache.commons:commons-dbcp2:$dbcp2Version")
-    implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    implementation(rootProject.libs.apache.commons.dbcp2)
+    implementation(rootProject.libs.slf4j.api)
 
     testImplementation(project(":pg-index-health-testing"))
     testImplementation(testFixtures(project(":pg-index-health-model")))
-    testImplementation("ch.qos.logback:logback-classic:$logbackVersion")
-    testImplementation("org.mockito:mockito-core:$mockitoVersion")
-    testImplementation("nl.jqno.equalsverifier:equalsverifier:$equalsverifierVersion")
-    testImplementation("org.awaitility:awaitility:$awaitilityVersion")
-    testRuntimeOnly("org.postgresql:postgresql:$postgresqlVersion")
+    testImplementation(rootProject.libs.logback.classic)
+    testImplementation(rootProject.libs.mockito.core)
+    testImplementation(rootProject.libs.equalsverifier)
+    testImplementation(rootProject.libs.awaitility)
+    testRuntimeOnly(rootProject.libs.postgresql)
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher") {
+        because("required for pitest")
+    }
 
-    testFixturesImplementation("com.google.code.findbugs:jsr305:$jsr305Version")
-    testFixturesImplementation("org.slf4j:slf4j-api:$slf4jVersion")
-    testFixturesImplementation("ch.qos.logback:logback-classic:$logbackVersion")
+    testFixturesImplementation(rootProject.libs.jsr305)
+    testFixturesImplementation(rootProject.libs.slf4j.api)
+    testFixturesImplementation(rootProject.libs.logback.classic)
 
-    pitest("it.mulders.stryker:pit-dashboard-reporter:$pitDashboardReporterVersion")
+    pitest(rootProject.libs.pitest.dashboard.reporter)
 }
 
 pitest {
-    junit5PluginVersion.set("1.1.2")
-    pitestVersion.set("1.10.4")
+    junit5PluginVersion.set(rootProject.libs.versions.pitest.junit5Plugin.get())
+    pitestVersion.set(rootProject.libs.versions.pitest.core.get())
     threads.set(4)
     if (System.getenv("STRYKER_DASHBOARD_API_KEY") != null) {
         outputFormats.set(setOf("stryker-dashboard"))

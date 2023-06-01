@@ -7,23 +7,22 @@ plugins {
 description = "pg-index-health-generator is an extension for generating database migrations in sql format based on pg-index-health diagnostics."
 
 dependencies {
-    val slf4jVersion: String by rootProject.extra
-    val logbackVersion: String by rootProject.extra
-    val pitDashboardReporterVersion: String by rootProject.extra
-
     api(project(":pg-index-health-model"))
-    implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    implementation(rootProject.libs.slf4j.api)
 
     testImplementation(testFixtures(project(":pg-index-health-model")))
     testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
-    testImplementation("ch.qos.logback:logback-classic:$logbackVersion")
+    testImplementation(rootProject.libs.logback.classic)
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher") {
+        because("required for pitest")
+    }
 
-    pitest("it.mulders.stryker:pit-dashboard-reporter:$pitDashboardReporterVersion")
+    pitest(rootProject.libs.pitest.dashboard.reporter)
 }
 
 pitest {
-    junit5PluginVersion.set("1.1.2")
-    pitestVersion.set("1.10.4")
+    junit5PluginVersion.set(rootProject.libs.versions.pitest.junit5Plugin.get())
+    pitestVersion.set(rootProject.libs.versions.pitest.core.get())
     threads.set(4)
     if (System.getenv("STRYKER_DASHBOARD_API_KEY") != null) {
         outputFormats.set(setOf("stryker-dashboard"))
