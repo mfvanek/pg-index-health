@@ -20,6 +20,9 @@ dependencyResolutionManagement {
             library("pitest-dashboard-reporter", "it.mulders.stryker:pit-dashboard-reporter:0.2.1")
             version("pitest-junit5Plugin", "1.2.0")
             version("pitest-core", "1.14.1")
+            version("checkstyle", "10.12.0")
+            version("pmd", "6.55.0")
+            version("jacoco", "0.8.10")
         }
     }
 }

@@ -71,7 +71,7 @@ subprojects {
     }
 
     jacoco {
-        toolVersion = "0.8.10"
+        toolVersion = rootProject.libs.versions.jacoco.get()
     }
 
     tasks {
@@ -172,7 +172,7 @@ subprojects {
     }
 
     checkstyle {
-        toolVersion = "10.5.0"
+        toolVersion = rootProject.libs.versions.checkstyle.get()
         configFile = file("../config/checkstyle/checkstyle.xml")
         isIgnoreFailures = false
         maxWarnings = 0
@@ -180,8 +180,8 @@ subprojects {
     }
 
     pmd {
+        toolVersion = rootProject.libs.versions.pmd.get()
         isConsoleOutput = true
-        toolVersion = "6.52.0"
         ruleSetFiles = files("../config/pmd/pmd.xml")
         ruleSets = listOf()
     }
