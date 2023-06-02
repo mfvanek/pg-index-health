@@ -115,7 +115,7 @@ subprojects {
         }
 
         jacocoTestCoverageVerification {
-            dependsOn(test)
+            dependsOn(jacocoTestReport)
             violationRules {
                 rule {
                     limit {
@@ -156,7 +156,7 @@ subprojects {
         }
 
         check {
-            dependsOn(jacocoTestReport, jacocoTestCoverageVerification)
+            dependsOn(jacocoTestCoverageVerification)
         }
 
         withType<SpotBugsTask>().configureEach {
