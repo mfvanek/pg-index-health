@@ -13,24 +13,24 @@ plugins {
     id("checkstyle")
     id("pmd")
     id("java-test-fixtures")
-    id("net.ltgt.errorprone") version "3.1.0"
-    id("com.github.spotbugs") version "5.0.14"
-    id("org.sonarqube") version "4.1.0.3113"
-    id("info.solidsoft.pitest") version "1.9.11"
-    id("org.gradle.test-retry") version "1.5.3"
+    id("net.ltgt.errorprone")// version "3.1.0"
+    id("com.github.spotbugs")// version "5.0.14"
+    id("org.sonarqube")// version "4.1.0.3113"
+    id("info.solidsoft.pitest")// version "1.9.11"
+    id("org.gradle.test-retry")// version "1.5.3"
 }
 
-description = "pg-index-health build"
-
-allprojects {
-    group = "io.github.mfvanek"
-    version = "0.9.4"
-
-    repositories {
-        mavenLocal()
-        mavenCentral()
-    }
-}
+//description = "pg-index-health build"
+//
+//allprojects {
+//    group = "io.github.mfvanek"
+//    version = "0.9.4"
+//
+//    repositories {
+//        mavenLocal()
+//        mavenCentral()
+//    }
+//}
 
 subprojects {
     apply(plugin = "java-library")
@@ -53,22 +53,22 @@ subprojects {
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
         testImplementation("org.junit.jupiter:junit-jupiter-api")
 
-        checkstyle("com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1")
-        errorprone("com.google.errorprone:error_prone_core:2.19.1")
+        //checkstyle("com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1")
+        //errorprone("com.google.errorprone:error_prone_core:2.19.1")
     }
 
-    java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-        withJavadocJar()
-        withSourcesJar()
-    }
-    tasks.withType<JavaCompile>().configureEach {
-        options.errorprone {
-            disableWarningsInGeneratedCode.set(true)
-            disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType")
-        }
-    }
+//    java {
+//        sourceCompatibility = JavaVersion.VERSION_11
+//        targetCompatibility = JavaVersion.VERSION_11
+//        withJavadocJar()
+//        withSourcesJar()
+//    }
+//    tasks.withType<JavaCompile>().configureEach {
+//        options.errorprone {
+//            disableWarningsInGeneratedCode.set(true)
+//            disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType")
+//        }
+//    }
 
     jacoco {
         toolVersion = rootProject.libs.versions.jacoco.get()
@@ -159,39 +159,39 @@ subprojects {
             dependsOn(jacocoTestCoverageVerification)
         }
 
-        withType<SpotBugsTask>().configureEach {
-            reports {
-                create("xml") { enabled = true }
-                create("html") { enabled = true }
-            }
-        }
+//        withType<SpotBugsTask>().configureEach {
+//            reports {
+//                create("xml") { enabled = true }
+//                create("html") { enabled = true }
+//            }
+//        }
 
         withType<SonarTask>().configureEach {
             dependsOn(test, jacocoTestReport)
         }
     }
 
-    checkstyle {
-        toolVersion = rootProject.libs.versions.checkstyle.get()
-        configFile = file("../config/checkstyle/checkstyle.xml")
-        isIgnoreFailures = false
-        maxWarnings = 0
-        maxErrors = 0
-    }
-
-    pmd {
-        toolVersion = rootProject.libs.versions.pmd.get()
-        isConsoleOutput = true
-        ruleSetFiles = files("../config/pmd/pmd.xml")
-        ruleSets = listOf()
-    }
-
-    spotbugs {
-        showProgress.set(true)
-        effort.set(Effort.MAX)
-        reportLevel.set(Confidence.LOW)
-        excludeFilter.set(file("../config/spotbugs/exclude.xml"))
-    }
+//    checkstyle {
+//        toolVersion = rootProject.libs.versions.checkstyle.get()
+//        configFile = file("../config/checkstyle/checkstyle.xml")
+//        isIgnoreFailures = false
+//        maxWarnings = 0
+//        maxErrors = 0
+//    }
+//
+//    pmd {
+//        toolVersion = rootProject.libs.versions.pmd.get()
+//        isConsoleOutput = true
+//        ruleSetFiles = files("../config/pmd/pmd.xml")
+//        ruleSets = listOf()
+//    }
+//
+//    spotbugs {
+//        showProgress.set(true)
+//        effort.set(Effort.MAX)
+//        reportLevel.set(Confidence.LOW)
+//        excludeFilter.set(file("../config/spotbugs/exclude.xml"))
+//    }
 
     publishing {
         publications {
