@@ -24,11 +24,10 @@ final class PostgresVersionTest extends DatabaseAwareTestBase {
     @DisplayName("PostgreSQL version is the same as specified in environment variable " + PG_VERSION_ENVIRONMENT_VARIABLE)
     @Test
     void checkPgVersion() {
-        String requiredPgVersionString = System.getenv(PG_VERSION_ENVIRONMENT_VARIABLE);
-        if (requiredPgVersionString == null) {
-            requiredPgVersionString = "15.3 (Debian 15.3-";
-        }
+        final String pgVersionFromEnv = System.getenv(PG_VERSION_ENVIRONMENT_VARIABLE);
+        final String requiredPgVersionString = (pgVersionFromEnv == null) ? "15.3 (Debian 15.3-" : pgVersionFromEnv.split("-")[0];
         final String actualPgVersionString = PostgresVersionReader.readVersion(getDataSource());
-        assertThat(actualPgVersionString).startsWith(requiredPgVersionString);
+        assertThat(actualPgVersionString)
+                .startsWith(requiredPgVersionString);
     }
 }

@@ -23,6 +23,6 @@ public class CreateDuplicatedCustomCollationIndexStatement extends AbstractDbSta
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create index if not exists i_accounts_account_number " +
-                "on %s.accounts (account_number collate \"C.UTF-8\")", schemaName));
+                "on %1$s.accounts (account_number collate %1$s.\"C.UTF-8\")", schemaName));
     }
 }

@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.support.statements;
 
 import io.github.mfvanek.pg.connection.PgSqlException;
-import org.apache.commons.lang3.SystemUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,6 +18,8 @@ import java.sql.Statement;
 import javax.annotation.Nonnull;
 
 public class CreateCustomCollationStatement extends AbstractDbStatement {
+
+    private static final String ICU_COLLATION = "en-US-x-icu";
 
     public CreateCustomCollationStatement(@Nonnull final String schemaName) {
         super(schemaName);
@@ -45,24 +46,10 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
 
     private void createCustomCollation(@Nonnull final Statement statement,
                                        @Nonnull final String customCollation) throws SQLException {
-        final String systemLocale;
-        if (SystemUtils.IS_OS_WINDOWS) {
-            final String icuCollation = "en-US-x-icu";
-            if (isCollationExist(statement, icuCollation)) {
-                systemLocale = icuCollation; // for Pg 10+
-            } else {
-                systemLocale = "C"; // for Pg 9.6
-            }
-        } else {
-            if (SystemUtils.IS_OS_LINUX) {
-                systemLocale = "en_US.utf8";
-            } else if (SystemUtils.IS_OS_MAC) {
-                systemLocale = "en_US.UTF-8";
-            } else {
-                throw new IllegalStateException("Unsupported operation system");
-            }
+        if (!isCollationExist(statement, ICU_COLLATION)) {
+            throw new IllegalStateException(String.format("System collation '%s' not found", ICU_COLLATION));
         }
-        final String query = "create collation \"%s\" from \"%s\";";
-        statement.execute(String.format(query, customCollation, systemLocale));
+        final String query = "create collation %s.\"%s\" from \"%s\";";
+        statement.execute(String.format(query, schemaName, customCollation, ICU_COLLATION));
     }
 }
