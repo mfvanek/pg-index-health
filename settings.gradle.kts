@@ -13,7 +13,7 @@ dependencyResolutionManagement {
             library("logback-classic", "ch.qos.logback:logback-classic:1.4.7")
             library("slf4j-api", "org.slf4j:slf4j-api:2.0.7")
             library("apache-commons-dbcp2", "org.apache.commons:commons-dbcp2:2.9.0")
-            library("mockito-core", "org.mockito:mockito-core:5.3.1")
+            library("mockito-core", "org.mockito:mockito-core:5.4.0")
             library("awaitility", "org.awaitility:awaitility:4.2.0")
             library("apache-commons-lang3", "org.apache.commons:commons-lang3:3.12.0")
             library("equalsverifier", "nl.jqno.equalsverifier:equalsverifier:3.14.2")
