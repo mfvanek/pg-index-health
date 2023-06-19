@@ -77,7 +77,7 @@ class PostgresVersionHolderTest {
                 });
         if (System.getenv("TEST_PG_VERSION") != null) {
             assertThat(versionHolder.getVersion())
-                    .isEqualTo(System.getenv("TEST_PG_VERSION") + ".0");
+                    .isEqualTo(System.getenv("TEST_PG_VERSION").split("-")[0] + ".0");
         } else {
             assertThat(versionHolder.getVersion())
                     .isEqualTo("15.3.0");
@@ -121,5 +121,13 @@ class PostgresVersionHolderTest {
                 .isNotNull();
         assertThat(versionHolder.getVersion())
                 .isEqualTo("345.678");
+    }
+
+    @Test
+    void toBitnamiVersionShouldSkipSuffix() {
+        assertThat(PostgresVersionHolder.toBitnamiVersion("15.3"))
+                .isEqualTo("15.3.0");
+        assertThat(PostgresVersionHolder.toBitnamiVersion("14.5-alpine3.17"))
+                .isEqualTo("14.5.0");
     }
 }

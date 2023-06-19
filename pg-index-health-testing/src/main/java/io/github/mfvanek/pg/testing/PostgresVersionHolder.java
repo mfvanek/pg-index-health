@@ -80,9 +80,11 @@ final class PostgresVersionHolder implements PostgresVersionAware {
     }
 
     @Nonnull
-    private static String toBitnamiVersion(@Nonnull final String pgVersion) {
+    static String toBitnamiVersion(@Nonnull final String pgVersion) {
+        final int index = pgVersion.indexOf('-');
+        final String bitnamiVersion = index == -1 ? pgVersion : pgVersion.substring(0, index);
         // Bitnami images use semantic versioning with three digits
-        return pgVersion + ".0";
+        return bitnamiVersion + ".0";
     }
 
     /**
