@@ -27,14 +27,13 @@ import javax.annotation.Nonnull;
 public class ExclusionsBuilder {
 
     private static final String THRESHOLD_UNITS_COUNT = "thresholdUnitsCount";
-    private static final String EMPTY = "";
 
-    private String duplicatedIndexesExclusions = EMPTY;
-    private String intersectedIndexesExclusions = EMPTY;
-    private String unusedIndexesExclusions = EMPTY;
-    private String tablesWithMissingIndexesExclusions = EMPTY;
-    private String tablesWithoutPrimaryKeyExclusions = EMPTY;
-    private String indexesWithNullValuesExclusions = EMPTY;
+    private String duplicatedIndexesExclusions = "";
+    private String intersectedIndexesExclusions = "";
+    private String unusedIndexesExclusions = "";
+    private String tablesWithMissingIndexesExclusions = "";
+    private String tablesWithoutPrimaryKeyExclusions = "";
+    private String indexesWithNullValuesExclusions = "";
     private long indexSizeThresholdInBytes;
     private long tableSizeThresholdInBytes;
     private long indexBloatSizeThresholdInBytes;
