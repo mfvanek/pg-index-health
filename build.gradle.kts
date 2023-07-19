@@ -277,11 +277,12 @@ tasks.check {
     dependsOn(tasks.named<JacocoReport>("testCodeCoverageReport"))
 }
 
-sonarqube {
+sonar {
     properties {
         property("sonar.projectKey", "mfvanek_pg-index-health")
         property("sonar.organization", "mfvanek")
         property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.exclusions", "**/build.gradle.kts")
     }
 }
 
