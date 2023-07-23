@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.testing;
 
+import io.github.mfvanek.pg.connection.PgUrlParser;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -42,7 +43,7 @@ class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitna
     @Override
     public String getJdbcUrl() {
         final String additionalUrlParams = constructUrlParameters("?", "&");
-        return "jdbc:postgresql://" +
+        return PgUrlParser.URL_HEADER +
                 getHost() +
                 ":" +
                 getMappedPort(POSTGRESQL_PORT) +

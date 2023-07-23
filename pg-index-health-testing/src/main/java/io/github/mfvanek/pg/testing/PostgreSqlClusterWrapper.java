@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.testing;
 
+import io.github.mfvanek.pg.connection.PgUrlParser;
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -126,6 +127,12 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     public String getSecondContainerJdbcUrl() {
         throwErrorIfNotInitialized();
         return containerForStandBy.getJdbcUrl();
+    }
+
+    @Nonnull
+    public String getCommonUrlToPrimary() {
+        throwErrorIfNotInitialized();
+        return PgUrlParser.buildCommonUrlToPrimary(containerForPrimary.getJdbcUrl(), containerForStandBy.getJdbcUrl());
     }
 
     @Nonnull
