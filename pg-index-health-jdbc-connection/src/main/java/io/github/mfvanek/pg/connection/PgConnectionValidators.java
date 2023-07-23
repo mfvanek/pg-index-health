@@ -24,7 +24,7 @@ final class PgConnectionValidators {
     @Nonnull
     static String pgUrlNotBlankAndValid(@Nonnull final String pgUrl, @Nonnull final String argumentName) {
         notBlank(pgUrl, argumentName);
-        if (!Objects.requireNonNull(pgUrl).startsWith("jdbc:postgresql://")) {
+        if (!Objects.requireNonNull(pgUrl).startsWith(PgUrlParser.URL_HEADER)) {
             throw new IllegalArgumentException(argumentName + " has invalid format");
         }
         return pgUrl;

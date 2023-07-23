@@ -2,6 +2,7 @@ description = "pg-index-health-testing is an auxiliary library that allows you t
 
 dependencies {
     api(project(":pg-index-health-model"))
+    api(project(":pg-index-health-jdbc-connection"))
     implementation(rootProject.libs.apache.commons.dbcp2)
     implementation(platform("org.testcontainers:testcontainers-bom:1.18.3"))
     implementation("org.testcontainers:testcontainers")

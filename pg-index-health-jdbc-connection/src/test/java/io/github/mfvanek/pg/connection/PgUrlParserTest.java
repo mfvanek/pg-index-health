@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -161,5 +162,58 @@ class PgUrlParserTest {
         assertThatThrownBy(() -> PgUrlParser.isReplicaUrl("host-name:5432"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("pgUrl has invalid format");
+    }
+
+    @Test
+    void extractDatabaseNameShouldWork() {
+        assertThat(PgUrlParser.extractDatabaseName(Set.of("jdbc:postgresql://host:5432/db1?param=1")))
+                .isEqualTo("/db1");
+
+        assertThat(PgUrlParser.extractDatabaseName(Set.of("jdbc:postgresql://host:5432/db2?")))
+                .isEqualTo("/db2");
+
+        assertThat(PgUrlParser.extractDatabaseName(Set.of("jdbc:postgresql://host:5432/db3")))
+                .isEqualTo("/db3");
+    }
+
+    @Test
+    void constructUrlParametersShouldAddDefaultValues() {
+        assertThat(PgUrlParser.constructUrlParameters(Map.of()))
+                .isEqualTo("?connectTimeout=1&hostRecheckSeconds=2&socketTimeout=600&targetServerType=primary");
+
+        assertThat(PgUrlParser.constructUrlParameters(
+                Map.ofEntries(
+                        Map.entry("connectTimeout", "10"))))
+                .isEqualTo("?connectTimeout=10&hostRecheckSeconds=2&socketTimeout=600&targetServerType=primary");
+
+        assertThat(PgUrlParser.constructUrlParameters(
+                Map.ofEntries(
+                        Map.entry("targetServerType", "any"),
+                        Map.entry("readOnly", "true"))))
+                .isEqualTo("?connectTimeout=1&hostRecheckSeconds=2&readOnly=true&socketTimeout=600&targetServerType=any");
+    }
+
+    @Test
+    void buildCommonUrlToPrimaryWithTwoUrls() {
+        assertThat(PgUrlParser.buildCommonUrlToPrimary("jdbc:postgresql://host:5432/db1", "jdbc:postgresql://host:6432/db1"))
+                .isEqualTo("jdbc:postgresql://host:5432,host:6432/db1?connectTimeout=1&hostRecheckSeconds=2&socketTimeout=600&targetServerType=primary");
+
+        assertThat(PgUrlParser.buildCommonUrlToPrimary("jdbc:postgresql://host:5432/db1", "jdbc:postgresql://host:6432/db1",
+                Map.ofEntries(
+                        Map.entry("targetServerType", "secondary"),
+                        Map.entry("readOnly", "true"))))
+                .isEqualTo("jdbc:postgresql://host:5432,host:6432/db1?connectTimeout=1&hostRecheckSeconds=2&readOnly=true&socketTimeout=600&targetServerType=secondary");
+    }
+
+    @Test
+    void buildCommonUrlToPrimaryWithSeveralUrls() {
+        assertThat(PgUrlParser.buildCommonUrlToPrimary(Set.of("jdbc:postgresql://host2:5432/db1", "jdbc:postgresql://host:5432/db1", "jdbc:postgresql://host:6432/db1")))
+                .isEqualTo("jdbc:postgresql://host2:5432,host:5432,host:6432/db1?connectTimeout=1&hostRecheckSeconds=2&socketTimeout=600&targetServerType=primary");
+
+        assertThat(PgUrlParser.buildCommonUrlToPrimary(Set.of("jdbc:postgresql://host2:5432/db1", "jdbc:postgresql://host:5432/db1", "jdbc:postgresql://host:6432/db1"),
+                Map.ofEntries(
+                        Map.entry("targetServerType", "secondary"),
+                        Map.entry("readOnly", "true"))))
+                .isEqualTo("jdbc:postgresql://host2:5432,host:5432,host:6432/db1?connectTimeout=1&hostRecheckSeconds=2&readOnly=true&socketTimeout=600&targetServerType=secondary");
     }
 }

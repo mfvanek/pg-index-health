@@ -37,13 +37,17 @@ class PostgreSqlClusterWrapperTest {
             assertThat(cluster.getSecondContainerJdbcUrl())
                     .startsWith("jdbc:postgresql://")
                     .isNotEqualTo(cluster.getFirstContainerJdbcUrl());
+            assertThat(cluster.getCommonUrlToPrimary())
+                    .startsWith("jdbc:postgresql://")
+                    .containsPattern("^.+/localhost:[0-9]{4,6},localhost:[0-9]{4,6}/.+$")
+                    .endsWith("/customdatabase?connectTimeout=1&hostRecheckSeconds=2&socketTimeout=600&targetServerType=primary");
         }
     }
 
     @Test
     void stopFirstContainerShouldWork() {
         try (PostgreSqlClusterWrapper cluster = PostgreSqlClusterWrapper.builder().build();
-             LogsCaptor logsCaptor = new LogsCaptor(PostgreSqlClusterWrapper.class)) {
+                LogsCaptor logsCaptor = new LogsCaptor(PostgreSqlClusterWrapper.class)) {
             assertThat(cluster.stopFirstContainer())
                     .isTrue();
             assertThat(logsCaptor.getLogs())
