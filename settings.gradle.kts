@@ -15,7 +15,7 @@ dependencyResolutionManagement {
             library("apache-commons-dbcp2", "org.apache.commons:commons-dbcp2:2.9.0")
             library("mockito-core", "org.mockito:mockito-core:5.4.0")
             library("awaitility", "org.awaitility:awaitility:4.2.0")
-            library("apache-commons-lang3", "org.apache.commons:commons-lang3:3.12.0")
+            library("apache-commons-lang3", "org.apache.commons:commons-lang3:3.13.0")
             library("equalsverifier", "nl.jqno.equalsverifier:equalsverifier:3.15")
             library("pitest-dashboard-reporter", "it.mulders.stryker:pit-dashboard-reporter:0.2.1")
             version("pitest-junit5Plugin", "1.2.0")
