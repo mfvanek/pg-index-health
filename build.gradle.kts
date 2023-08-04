@@ -15,7 +15,7 @@ plugins {
     id("pmd")
     id("java-test-fixtures")
     id("net.ltgt.errorprone") version "3.1.0"
-    id("com.github.spotbugs") version "5.0.14"
+    id("com.github.spotbugs") version "5.1.1"
     id("org.sonarqube") version "4.3.0.3225"
     id("info.solidsoft.pitest") version "1.9.11"
     id("org.gradle.test-retry") version "1.5.4"
@@ -56,7 +56,7 @@ subprojects {
         testImplementation("org.junit.jupiter:junit-jupiter-api")
 
         checkstyle("com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1")
-        errorprone("com.google.errorprone:error_prone_core:2.20.0")
+        errorprone("com.google.errorprone:error_prone_core:2.21.0")
     }
 
     java {
