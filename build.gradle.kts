@@ -56,7 +56,7 @@ subprojects {
         testImplementation("org.junit.jupiter:junit-jupiter-api")
 
         checkstyle("com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1")
-        errorprone("com.google.errorprone:error_prone_core:2.21.0")
+        errorprone("com.google.errorprone:error_prone_core:2.21.1")
     }
 
     java {
