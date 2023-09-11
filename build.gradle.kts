@@ -19,7 +19,7 @@ plugins {
     id("org.sonarqube") version "4.3.1.3277"
     id("info.solidsoft.pitest") version "1.9.11"
     id("org.gradle.test-retry") version "1.5.4"
-    id("com.github.ben-manes.versions") version "0.47.0"
+    id("com.github.ben-manes.versions") version "0.48.0"
 }
 
 description = "pg-index-health build"
