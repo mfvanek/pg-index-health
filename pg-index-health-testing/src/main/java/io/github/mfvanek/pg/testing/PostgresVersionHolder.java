@@ -76,7 +76,7 @@ final class PostgresVersionHolder implements PostgresVersionAware {
         if (pgVersion != null) {
             return pgVersion;
         }
-        return "15.3";
+        return "16.0";
     }
 
     @Nonnull
@@ -84,13 +84,17 @@ final class PostgresVersionHolder implements PostgresVersionAware {
         final int index = pgVersion.indexOf('-');
         final String bitnamiVersion = index == -1 ? pgVersion : pgVersion.substring(0, index);
         // Bitnami images use semantic versioning with three digits
+        // TODO Waiting for https://github.com/bitnami/containers/issues/49856
+        if ("16.0".equals(bitnamiVersion)) {
+            return "15.4.0";
+        }
         return bitnamiVersion + ".0";
     }
 
     /**
      * Creates {@code PostgresVersionHolder} for Bitnami cluster installation.
      * The version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
-     * otherwise the default version {@code 15.3.0} is used.
+     * otherwise the default version {@code 15.4.0} is used.
      *
      * @return {@code PostgresVersionHolder}
      */
@@ -114,7 +118,7 @@ final class PostgresVersionHolder implements PostgresVersionAware {
     /**
      * Creates {@code PostgresVersionHolder} for single node installation.
      * The version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
-     * otherwise the default version {@code 15.3} is used.
+     * otherwise the default version {@code 16.0} is used.
      *
      * @return {@code PostgresVersionHolder}
      */
