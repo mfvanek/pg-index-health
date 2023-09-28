@@ -84,10 +84,6 @@ final class PostgresVersionHolder implements PostgresVersionAware {
         final int index = pgVersion.indexOf('-');
         final String bitnamiVersion = index == -1 ? pgVersion : pgVersion.substring(0, index);
         // Bitnami images use semantic versioning with three digits
-        // TODO Waiting for https://github.com/bitnami/containers/issues/49856
-        if ("16.0".equals(bitnamiVersion)) {
-            return "15.4.0";
-        }
         return bitnamiVersion + ".0";
     }
 
