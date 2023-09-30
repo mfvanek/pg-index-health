@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -33,19 +34,16 @@ abstract class AbstractDbMigrationGenerator<T extends TableNameAware> implements
      */
     @Nonnull
     @Override
-    public final String generate(@Nonnull final List<T> rows) {
+    public final List<String> generate(@Nonnull final List<T> rows) {
         Objects.requireNonNull(rows, "rows cannot be null");
 
-        final StringBuilder queryBuilder = new StringBuilder();
-        for (int i = 0; i < rows.size(); ++i) {
-            if (i != 0) {
-                queryBuilder.append(System.lineSeparator())
-                        .append(System.lineSeparator());
-            }
-            generate(queryBuilder, rows.get(i));
+        final List<String> migrations = new ArrayList<>(rows.size());
+        for (final T row : rows) {
+            migrations.add(generate(row));
         }
-        return queryBuilder.toString();
+        return migrations;
     }
 
-    protected abstract void generate(@Nonnull StringBuilder queryBuilder, @Nonnull T row);
+    @Nonnull
+    protected abstract String generate(@Nonnull T row);
 }

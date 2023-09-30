@@ -31,9 +31,10 @@ public class ColumnWithSerialTypeMigrationGenerator extends AbstractDbMigrationG
     }
 
     @Override
-    protected void generate(@Nonnull final StringBuilder queryBuilder, @Nonnull final ColumnWithSerialType column) {
-        queryBuilder.append(dropDefaultValueGenerator.generate(column))
-                .append(System.lineSeparator())
-                .append(dropSequenceGenerator.generate(column));
+    @Nonnull
+    protected String generate(@Nonnull final ColumnWithSerialType column) {
+        return dropDefaultValueGenerator.generate(column) +
+                System.lineSeparator() +
+                dropSequenceGenerator.generate(column);
     }
 }

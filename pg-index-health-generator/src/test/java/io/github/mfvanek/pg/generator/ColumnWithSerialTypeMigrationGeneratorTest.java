@@ -35,7 +35,8 @@ class ColumnWithSerialTypeMigrationGeneratorTest {
         final ColumnWithSerialTypeMigrationGenerator generator = new ColumnWithSerialTypeMigrationGenerator(GeneratingOptions.builder().build());
 
         assertThat(generator.generate(List.of(column())))
-                .isEqualTo("alter table if exists s1.t1" + System.lineSeparator() +
+                .hasSize(1)
+                .containsExactly("alter table if exists s1.t1" + System.lineSeparator() +
                         "    alter column col1 drop default;" + System.lineSeparator() +
                         "drop sequence if exists s1.seq1;");
     }
@@ -46,13 +47,13 @@ class ColumnWithSerialTypeMigrationGeneratorTest {
         final ColumnWithSerialTypeMigrationGenerator generator = new ColumnWithSerialTypeMigrationGenerator(GeneratingOptions.builder().build());
 
         assertThat(generator.generate(List.of(column(), secondColumn)))
-                .isEqualTo("alter table if exists s1.t1" + System.lineSeparator() +
-                        "    alter column col1 drop default;" + System.lineSeparator() +
-                        "drop sequence if exists s1.seq1;" + System.lineSeparator() +
-                        System.lineSeparator() +
+                .hasSize(2)
+                .containsExactly("alter table if exists s1.t1" + System.lineSeparator() +
+                                "    alter column col1 drop default;" + System.lineSeparator() +
+                                "drop sequence if exists s1.seq1;",
                         "alter table if exists s2.t2" + System.lineSeparator() +
-                        "    alter column col2 drop default;" + System.lineSeparator() +
-                        "drop sequence if exists s2.seq2;");
+                                "    alter column col2 drop default;" + System.lineSeparator() +
+                                "drop sequence if exists s2.seq2;");
     }
 
     @Nonnull
