@@ -41,7 +41,7 @@ class PostgreSqlContainerWrapperTest {
 
     @Test
     void withVersionShouldWork() {
-        try (PostgreSqlContainerWrapper container = PostgreSqlContainerWrapper.withVersion("15.3")) {
+        try (PostgreSqlContainerWrapper container = PostgreSqlContainerWrapper.withVersion("16.0")) {
             assertThat(container)
                     .isNotNull()
                     .satisfies(c -> {
