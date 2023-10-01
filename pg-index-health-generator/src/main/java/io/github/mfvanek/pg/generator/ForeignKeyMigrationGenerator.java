@@ -29,7 +29,8 @@ public class ForeignKeyMigrationGenerator extends AbstractDbMigrationGenerator<F
     }
 
     @Override
-    protected void generate(@Nonnull final StringBuilder queryBuilder, @Nonnull final ForeignKey foreignKey) {
-        queryBuilder.append(generator.generate(foreignKey));
+    @Nonnull
+    protected String generate(@Nonnull final ForeignKey foreignKey) {
+        return generator.generate(foreignKey);
     }
 }
