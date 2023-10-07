@@ -9,9 +9,6 @@ description = "pg-index-health-model is a set of common classes and interfaces f
 dependencies {
     testImplementation(rootProject.libs.equalsverifier)
     testImplementation(rootProject.libs.mockito.core)
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher") {
-        because("required for pitest")
-    }
 
     testFixturesImplementation(rootProject.libs.jsr305)
 

@@ -17,10 +17,8 @@ dependencies {
     testImplementation(rootProject.libs.mockito.core)
     testImplementation(rootProject.libs.equalsverifier)
     testImplementation(rootProject.libs.awaitility)
+
     testRuntimeOnly(rootProject.libs.postgresql)
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher") {
-        because("required for pitest")
-    }
 
     testFixturesImplementation(rootProject.libs.jsr305)
     testFixturesImplementation(rootProject.libs.slf4j.api)
