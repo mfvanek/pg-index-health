@@ -16,7 +16,7 @@ plugins {
     id("java-test-fixtures")
     id("net.ltgt.errorprone") version "3.1.0"
     id("com.github.spotbugs") version "5.1.3"
-    id("org.sonarqube") version "4.3.1.3277"
+    id("org.sonarqube") version "4.4.0.3356"
     id("info.solidsoft.pitest") version "1.9.11"
     id("org.gradle.test-retry") version "1.5.5"
     id("com.github.ben-manes.versions") version "0.48.0"
