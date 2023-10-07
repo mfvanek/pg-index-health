@@ -13,9 +13,6 @@ dependencies {
     testImplementation(testFixtures(project(":pg-index-health-model")))
     testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
     testImplementation(rootProject.libs.logback.classic)
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher") {
-        because("required for pitest")
-    }
 
     pitest(rootProject.libs.pitest.dashboard.reporter)
 }
