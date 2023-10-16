@@ -10,7 +10,7 @@ dependencyResolutionManagement {
         create("libs") {
             library("jsr305", "com.google.code.findbugs:jsr305:3.0.2")
             library("postgresql", "org.postgresql:postgresql:42.6.0")
-            library("logback-classic", "ch.qos.logback:logback-classic:1.2.12")
+            library("logback-classic", "ch.qos.logback:logback-classic:1.4.11")
             library("slf4j-api", "org.slf4j:slf4j-api:1.7.36") // to be compatible with Spring Boot 2.7.X
             library("apache-commons-dbcp2", "org.apache.commons:commons-dbcp2:2.10.0")
             library("mockito-core", "org.mockito:mockito-core:5.6.0")
