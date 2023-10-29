@@ -7,7 +7,7 @@
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
     </Match>
     <Match>
-        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2,CT_CONSTRUCTOR_THROW"/>
     </Match>
     <Match>
         <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
@@ -39,5 +39,14 @@
     <Match>
         <Bug pattern="OBL_UNSATISFIED_OBLIGATION,ODR_OPEN_DATABASE_RESOURCE"/>
         <Class name="io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionUnitTest"/>
+    </Match>
+    <Match>
+        <Bug pattern="PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES"/>
+        <Or>
+            <Class name="io.github.mfvanek.pg.model.table.Table"/>
+            <Class name="io.github.mfvanek.pg.generator.utils.StringUtils"/>
+            <Class name="io.github.mfvanek.pg.generator.GeneratingOptions$Builder"/>
+            <Class name="io.github.mfvanek.pg.common.maintenance.Diagnostic"/>
+        </Or>
     </Match>
 </FindBugsFilter>
