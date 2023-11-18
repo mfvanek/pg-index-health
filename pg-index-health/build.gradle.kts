@@ -10,7 +10,7 @@ dependencies {
     testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation(rootProject.libs.logback.classic)
-    testImplementation(rootProject.libs.mockito.core)
+    testImplementation("org.mockito:mockito-core")
     testImplementation(rootProject.libs.awaitility)
     testImplementation(rootProject.libs.apache.commons.lang3)
     testImplementation(rootProject.libs.postgresql)

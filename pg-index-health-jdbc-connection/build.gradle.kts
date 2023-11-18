@@ -14,7 +14,7 @@ dependencies {
     testImplementation(project(":pg-index-health-testing"))
     testImplementation(testFixtures(project(":pg-index-health-model")))
     testImplementation(rootProject.libs.logback.classic)
-    testImplementation(rootProject.libs.mockito.core)
+    testImplementation("org.mockito:mockito-core")
     testImplementation(rootProject.libs.equalsverifier)
     testImplementation(rootProject.libs.awaitility)
 
