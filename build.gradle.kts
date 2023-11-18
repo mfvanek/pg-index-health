@@ -19,7 +19,7 @@ plugins {
     id("org.sonarqube") version "4.4.1.3373"
     id("info.solidsoft.pitest") version "1.15.0"
     id("org.gradle.test-retry") version "1.5.6"
-    id("com.github.ben-manes.versions") version "0.49.0"
+    id("com.github.ben-manes.versions") version "0.50.0"
 }
 
 description = "pg-index-health build"
@@ -51,9 +51,11 @@ subprojects {
         implementation(rootProject.libs.jsr305)
 
         testImplementation("org.assertj:assertj-core:3.24.2")
+        testImplementation(platform("org.mockito:mockito-bom:5.7.0"))
         testImplementation(platform("org.junit:junit-bom:5.10.1"))
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
         testImplementation("org.junit.jupiter:junit-jupiter-api")
+
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
         checkstyle("com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1")
         errorprone("com.google.errorprone:error_prone_core:2.23.0")
@@ -300,6 +302,10 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     rejectVersionIf {
         isNonStable(candidate.version)
     }
+}
+
+tasks.wrapper {
+    gradleVersion = "8.4"
 }
 
 // To avoid creation of jar's in build folder in the root

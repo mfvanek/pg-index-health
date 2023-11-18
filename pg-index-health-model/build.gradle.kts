@@ -8,7 +8,7 @@ description = "pg-index-health-model is a set of common classes and interfaces f
 
 dependencies {
     testImplementation(rootProject.libs.equalsverifier)
-    testImplementation(rootProject.libs.mockito.core)
+    testImplementation("org.mockito:mockito-core")
 
     testFixturesImplementation(rootProject.libs.jsr305)
 
