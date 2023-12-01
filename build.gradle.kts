@@ -15,10 +15,10 @@ plugins {
     id("pmd")
     id("java-test-fixtures")
     id("net.ltgt.errorprone") version "3.1.0"
-    id("com.github.spotbugs") version "5.2.4"
+    id("com.github.spotbugs") version "5.2.5"
     id("org.sonarqube") version "4.4.1.3373"
     id("info.solidsoft.pitest") version "1.15.0"
-    id("org.gradle.test-retry") version "1.5.6"
+    id("org.gradle.test-retry") version "1.5.7"
     id("com.github.ben-manes.versions") version "0.50.0"
 }
 
@@ -68,6 +68,7 @@ subprojects {
         withSourcesJar()
     }
     tasks.withType<JavaCompile>().configureEach {
+        options.compilerArgs.add("-parameters")
         options.errorprone {
             disableWarningsInGeneratedCode.set(true)
             disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType")
@@ -75,7 +76,7 @@ subprojects {
     }
 
     jacoco {
-        toolVersion = rootProject.libs.versions.jacoco.get()
+        toolVersion = "0.8.11"
     }
 
     tasks {
@@ -176,7 +177,7 @@ subprojects {
     }
 
     checkstyle {
-        toolVersion = rootProject.libs.versions.checkstyle.get()
+        toolVersion = "10.12.5"
         configFile = file("../config/checkstyle/checkstyle.xml")
         isIgnoreFailures = false
         maxWarnings = 0
@@ -184,7 +185,7 @@ subprojects {
     }
 
     pmd {
-        toolVersion = rootProject.libs.versions.pmd.get()
+        toolVersion = "6.55.0"
         isConsoleOutput = true
         ruleSetFiles = files("../config/pmd/pmd.xml")
         ruleSets = listOf()
@@ -305,7 +306,7 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
 }
 
 tasks.wrapper {
-    gradleVersion = "8.4"
+    gradleVersion = "8.5"
 }
 
 // To avoid creation of jar's in build folder in the root

@@ -8,18 +8,18 @@ description = "pg-index-health-generator is an extension for generating database
 
 dependencies {
     api(project(":pg-index-health-model"))
-    implementation(rootProject.libs.slf4j.api)
+    implementation(libs.slf4j.api)
 
     testImplementation(testFixtures(project(":pg-index-health-model")))
     testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
-    testImplementation(rootProject.libs.logback.classic)
+    testImplementation(libs.logback.classic)
 
-    pitest(rootProject.libs.pitest.dashboard.reporter)
+    pitest(libs.pitest.dashboard.reporter)
 }
 
 pitest {
-    junit5PluginVersion.set(rootProject.libs.versions.pitest.junit5Plugin.get())
-    pitestVersion.set(rootProject.libs.versions.pitest.core.get())
+    junit5PluginVersion.set(libs.versions.pitest.junit5Plugin.get())
+    pitestVersion.set(libs.versions.pitest.core.get())
     threads.set(4)
     if (System.getenv("STRYKER_DASHBOARD_API_KEY") != null) {
         outputFormats.set(setOf("stryker-dashboard"))
