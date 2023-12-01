@@ -1,23 +1,25 @@
 import info.solidsoft.gradle.pitest.PitestTask
 
 plugins {
+    id("pg-index-health.java-conventions")
+    id("pg-index-health.publish")
     id("info.solidsoft.pitest")
 }
 
 description = "pg-index-health-model is a set of common classes and interfaces for getting information about PostgreSQL database objects."
 
 dependencies {
-    testImplementation(rootProject.libs.equalsverifier)
+    testImplementation(libs.equalsverifier)
     testImplementation("org.mockito:mockito-core")
 
-    testFixturesImplementation(rootProject.libs.jsr305)
+    testFixturesImplementation(libs.jsr305)
 
-    pitest(rootProject.libs.pitest.dashboard.reporter)
+    pitest(libs.pitest.dashboard.reporter)
 }
 
 pitest {
-    junit5PluginVersion.set(rootProject.libs.versions.pitest.junit5Plugin.get())
-    pitestVersion.set(rootProject.libs.versions.pitest.core.get())
+    junit5PluginVersion.set(libs.versions.pitest.junit5Plugin.get())
+    pitestVersion.set(libs.versions.pitest.core.get())
     threads.set(4)
     if (System.getenv("STRYKER_DASHBOARD_API_KEY") != null) {
         outputFormats.set(setOf("stryker-dashboard"))

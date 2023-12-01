@@ -1,6 +1,8 @@
 import info.solidsoft.gradle.pitest.PitestTask
 
 plugins {
+    id("pg-index-health.java-conventions")
+    id("pg-index-health.publish")
     id("info.solidsoft.pitest")
 }
 
@@ -8,28 +10,28 @@ description = "pg-index-health-jdbc-connection is an abstraction of a connection
 
 dependencies {
     api(project(":pg-index-health-model"))
-    implementation(rootProject.libs.apache.commons.dbcp2)
-    implementation(rootProject.libs.slf4j.api)
+    implementation(libs.apache.commons.dbcp2)
+    implementation(libs.slf4j.api)
 
     testImplementation(project(":pg-index-health-testing"))
     testImplementation(testFixtures(project(":pg-index-health-model")))
-    testImplementation(rootProject.libs.logback.classic)
+    testImplementation(libs.logback.classic)
     testImplementation("org.mockito:mockito-core")
-    testImplementation(rootProject.libs.equalsverifier)
-    testImplementation(rootProject.libs.awaitility)
+    testImplementation(libs.equalsverifier)
+    testImplementation(libs.awaitility)
 
-    testRuntimeOnly(rootProject.libs.postgresql)
+    testRuntimeOnly(libs.postgresql)
 
-    testFixturesImplementation(rootProject.libs.jsr305)
-    testFixturesImplementation(rootProject.libs.slf4j.api)
-    testFixturesImplementation(rootProject.libs.logback.classic)
+    testFixturesImplementation(libs.jsr305)
+    testFixturesImplementation(libs.slf4j.api)
+    testFixturesImplementation(libs.logback.classic)
 
-    pitest(rootProject.libs.pitest.dashboard.reporter)
+    pitest(libs.pitest.dashboard.reporter)
 }
 
 pitest {
-    junit5PluginVersion.set(rootProject.libs.versions.pitest.junit5Plugin.get())
-    pitestVersion.set(rootProject.libs.versions.pitest.core.get())
+    junit5PluginVersion.set(libs.versions.pitest.junit5Plugin.get())
+    pitestVersion.set(libs.versions.pitest.core.get())
     threads.set(4)
     if (System.getenv("STRYKER_DASHBOARD_API_KEY") != null) {
         outputFormats.set(setOf("stryker-dashboard"))
