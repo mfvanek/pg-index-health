@@ -1,6 +1,8 @@
 import info.solidsoft.gradle.pitest.PitestTask
 
 plugins {
+    id("pg-index-health.java-conventions")
+    id("pg-index-health.publish")
     id("info.solidsoft.pitest")
 }
 

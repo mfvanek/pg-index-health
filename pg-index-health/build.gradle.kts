@@ -1,3 +1,8 @@
+plugins {
+    id("pg-index-health.java-conventions")
+    id("pg-index-health.publish")
+}
+
 description = "pg-index-health is a Java library for analyzing and maintaining indexes health in PostgreSQL databases."
 
 dependencies {
