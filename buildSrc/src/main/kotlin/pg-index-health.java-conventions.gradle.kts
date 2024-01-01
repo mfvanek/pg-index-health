@@ -150,7 +150,7 @@ tasks {
 }
 
 checkstyle {
-    toolVersion = "10.12.5"
+    toolVersion = "10.12.7"
     configFile = file("../config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     maxWarnings = 0
