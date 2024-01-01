@@ -23,15 +23,15 @@ dependencies {
         implementation(it)
     }
 
-    testImplementation("org.assertj:assertj-core:3.24.2")
-    testImplementation(platform("org.mockito:mockito-bom:5.7.0"))
+    testImplementation("org.assertj:assertj-core:3.25.0")
+    testImplementation(platform("org.mockito:mockito-bom:5.8.0"))
     testImplementation(platform("org.junit:junit-bom:5.10.1"))
     testImplementation("org.junit.jupiter:junit-jupiter-api")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
     checkstyle("com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1")
-    errorprone("com.google.errorprone:error_prone_core:2.23.0")
+    errorprone("com.google.errorprone:error_prone_core:2.24.0")
 }
 
 java {
@@ -44,7 +44,7 @@ tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-parameters")
     options.errorprone {
         disableWarningsInGeneratedCode.set(true)
-        disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType")
+        disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType", "TruthSelfEquals")
     }
 }
 
