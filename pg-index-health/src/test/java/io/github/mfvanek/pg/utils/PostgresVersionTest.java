@@ -25,7 +25,7 @@ final class PostgresVersionTest extends DatabaseAwareTestBase {
     @Test
     void checkPgVersion() {
         final String pgVersionFromEnv = System.getenv(PG_VERSION_ENVIRONMENT_VARIABLE);
-        final String requiredPgVersionString = (pgVersionFromEnv == null) ? "16.0 (Debian 16.0-" : pgVersionFromEnv.split("-")[0];
+        final String requiredPgVersionString = (pgVersionFromEnv == null) ? "16.1 (Debian 16.1-" : pgVersionFromEnv.split("-")[0];
         final String actualPgVersionString = PostgresVersionReader.readVersion(getDataSource());
         assertThat(actualPgVersionString)
                 .startsWith(requiredPgVersionString);
