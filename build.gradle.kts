@@ -4,7 +4,7 @@ plugins {
     id("java")
     id("jacoco-report-aggregation")
     id("org.sonarqube")
-    id("com.github.ben-manes.versions") version "0.50.0"
+    id("com.github.ben-manes.versions") version "0.51.0"
 }
 
 description = "pg-index-health build"
