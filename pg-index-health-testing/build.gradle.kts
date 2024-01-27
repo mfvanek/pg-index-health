@@ -9,7 +9,7 @@ dependencies {
     api(project(":pg-index-health-model"))
     api(project(":pg-index-health-jdbc-connection"))
     implementation(libs.apache.commons.dbcp2)
-    implementation(platform("org.testcontainers:testcontainers-bom:1.19.3"))
+    implementation(platform("org.testcontainers:testcontainers-bom:1.19.4"))
     implementation("org.testcontainers:testcontainers")
     implementation("org.testcontainers:postgresql")
     implementation(libs.awaitility)
