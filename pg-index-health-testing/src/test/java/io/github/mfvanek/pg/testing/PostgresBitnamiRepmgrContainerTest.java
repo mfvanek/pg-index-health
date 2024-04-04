@@ -55,7 +55,7 @@ class PostgresBitnamiRepmgrContainerTest {
 
     @Test
     void testEqualsAndHashCode() {
-        final var builder = PostgreSqlClusterWrapper.builder();
+        final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder = PostgreSqlClusterWrapper.builder();
         final PostgreSqlClusterAliasHolder aliasHolder = new PostgreSqlClusterAliasHolder();
         try (PostgresBitnamiRepmgrContainer first = new PostgresBitnamiRepmgrContainer(prepareDockerImageName(), aliasHolder.createPrimaryEnvVarsMap(builder));
              PostgresBitnamiRepmgrContainer second = new PostgresBitnamiRepmgrContainer(prepareDockerImageName(), aliasHolder.createStandbyEnvVarsMap(builder))) {

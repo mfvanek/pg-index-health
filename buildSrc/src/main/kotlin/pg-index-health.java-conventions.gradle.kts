@@ -23,16 +23,16 @@ dependencies {
         implementation(it)
     }
 
-    testImplementation(platform("org.assertj:assertj-bom:3.25.2"))
+    testImplementation(platform("org.assertj:assertj-bom:3.25.3"))
     testImplementation("org.assertj:assertj-core")
-    testImplementation(platform("org.mockito:mockito-bom:5.10.0"))
-    testImplementation(platform("org.junit:junit-bom:5.10.1"))
+    testImplementation(platform("org.mockito:mockito-bom:5.11.0"))
+    testImplementation(platform("org.junit:junit-bom:5.10.2"))
     testImplementation("org.junit.jupiter:junit-jupiter-api")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
     checkstyle("com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1")
-    errorprone("com.google.errorprone:error_prone_core:2.24.1")
+    errorprone("com.google.errorprone:error_prone_core:2.26.1")
 }
 
 java {
@@ -50,7 +50,7 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 jacoco {
-    toolVersion = "0.8.11"
+    toolVersion = "0.8.12"
 }
 
 tasks {
@@ -151,7 +151,7 @@ tasks {
 }
 
 checkstyle {
-    toolVersion = "10.12.7"
+    toolVersion = "10.15.0"
     configFile = file("../config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     maxWarnings = 0
@@ -159,7 +159,7 @@ checkstyle {
 }
 
 pmd {
-    toolVersion = "6.55.0"
+    toolVersion = "7.0.0"
     isConsoleOutput = true
     ruleSetFiles = files("../config/pmd/pmd.xml")
     ruleSets = listOf()

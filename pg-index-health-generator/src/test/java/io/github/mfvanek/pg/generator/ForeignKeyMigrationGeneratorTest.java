@@ -24,7 +24,7 @@ class ForeignKeyMigrationGeneratorTest {
     @Test
     void generateForSingleForeignKey() {
         final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator(GeneratingOptions.builder().build());
-        final var result = generator.generate(List.of(nullableColumnWithSchema()));
+        final List<String> result = generator.generate(List.of(nullableColumnWithSchema()));
         assertThat(result)
                 .hasSize(1)
                 .containsExactly("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
@@ -36,7 +36,7 @@ class ForeignKeyMigrationGeneratorTest {
     @Test
     void generateForSeveralForeignKeys() {
         final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator(GeneratingOptions.builder().build());
-        final var result = generator.generate(List.of(severalColumnsWithNulls(), severalColumnsWithNulls(), nullableColumnWithSchema()));
+        final List<String> result = generator.generate(List.of(severalColumnsWithNulls(), severalColumnsWithNulls(), nullableColumnWithSchema()));
         assertThat(result)
                 .hasSize(3)
                 .containsExactly(

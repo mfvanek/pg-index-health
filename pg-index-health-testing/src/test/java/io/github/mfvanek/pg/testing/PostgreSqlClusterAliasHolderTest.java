@@ -36,7 +36,7 @@ class PostgreSqlClusterAliasHolderTest {
     @Test
     void shouldCreateEnvMaps() {
         final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
-        final var builder = PostgreSqlClusterWrapper.builder()
+        final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder = PostgreSqlClusterWrapper.builder()
                 .withUsername("username")
                 .withPassword("any#pwd")
                 .withDatabaseName("test_db");

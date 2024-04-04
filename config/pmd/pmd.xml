@@ -8,14 +8,10 @@
     <rule ref="category/java/bestpractices.xml">
         <exclude name="JUnitTestContainsTooManyAsserts"/>
         <exclude name="JUnitAssertionsShouldIncludeMessage"/>
+        <exclude name="JUnitTestsShouldIncludeAssert"/>
         <exclude name="GuardLogStatement"/>
-        <exclude name="JUnitTestsShouldIncludeAssert"/> <!-- too many false positive; waiting for PMD 7 -->
-    </rule>
-
-    <rule ref="category/java/bestpractices.xml/AbstractClassWithoutAbstractMethod">
-        <properties>
-            <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration['.*TestBase']"/>
-        </properties>
+        <exclude name="AbstractClassWithoutAbstractMethod"/> <!-- useless -->
+        <exclude name="CheckResultSet"/>
     </rule>
 
     <rule ref="category/java/codestyle.xml">
@@ -42,13 +38,14 @@
     <rule ref="category/java/codestyle.xml/LinguisticNaming">
         <properties>
             <property name="checkSetters" value="false"/>
-            <property name="violationSuppressXPath" value="//ClassOrInterfaceBodyDeclaration/Annotation/MarkerAnnotation//Name[@Image='Test']"/>
+            <property name="violationSuppressXPath"
+                      value=".[pmd-java:hasAnnotation('org.junit.jupiter.api.Test')] | .[pmd-java:hasAnnotation('org.junit.jupiter.params.ParameterizedTest')]"/>
         </properties>
     </rule>
 
     <rule ref="category/java/codestyle.xml/FieldNamingConventions">
         <properties>
-            <property name="exclusions" value="serialVersionUID|logger"/>
+            <property name="exclusions" value="serialVersionUID, logger"/>
         </properties>
     </rule>
 
@@ -60,11 +57,12 @@
         <exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal"/>
         <exclude name="DataClass"/>
         <exclude name="TooManyMethods"/>
+        <exclude name="ExceptionAsFlowControl"/>
     </rule>
 
-    <rule ref="category/java/design.xml/AbstractClassWithoutAnyMethod">
+    <rule ref="category/java/design.xml/SimplifyBooleanReturns">
         <properties>
-            <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration['.*TestBase']"/>
+            <property name="violationSuppressXPath" value="./ancestor::*[@Name = 'equals'] | ./ancestor::*[@Name = 'hashCode'] | ./ancestor::*[@Name = 'test']"/>
         </properties>
     </rule>
 
@@ -84,7 +82,6 @@
     <rule ref="category/java/security.xml"/>
 
     <rule ref="category/java/errorprone.xml">
-        <exclude name="DataflowAnomalyAnalysis"/>
         <exclude name="AvoidLiteralsInIfCondition"/>
         <exclude name="AvoidFieldNameMatchingMethodName"/>
         <exclude name="EqualsNull"/>
@@ -92,5 +89,6 @@
         <exclude name="AvoidAccessibilityAlteration"/>
         <exclude name="NullAssignment"/>
         <exclude name="TestClassWithoutTestCases"/>
+        <exclude name="ConstructorCallsOverridableMethod"/>
     </rule>
 </ruleset>

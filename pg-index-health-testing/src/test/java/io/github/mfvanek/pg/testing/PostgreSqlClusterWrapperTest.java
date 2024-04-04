@@ -88,7 +88,7 @@ class PostgreSqlClusterWrapperTest {
 
     @Test
     void builderWithForcedVersion() {
-        final var builder = PostgreSqlClusterWrapper.builder()
+        final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder = PostgreSqlClusterWrapper.builder()
                 .withUsername("user")
                 .withPassword("password")
                 .withDatabaseName("test_db_with_repmgr")
