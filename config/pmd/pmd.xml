@@ -8,6 +8,7 @@
     <rule ref="category/java/bestpractices.xml">
         <exclude name="JUnitTestContainsTooManyAsserts"/>
         <exclude name="JUnitAssertionsShouldIncludeMessage"/>
+        <exclude name="JUnitTestsShouldIncludeAssert"/>
         <exclude name="GuardLogStatement"/>
         <exclude name="AbstractClassWithoutAbstractMethod"/> <!-- useless -->
         <exclude name="CheckResultSet"/>
@@ -37,6 +38,8 @@
     <rule ref="category/java/codestyle.xml/LinguisticNaming">
         <properties>
             <property name="checkSetters" value="false"/>
+            <property name="violationSuppressXPath"
+                      value=".[pmd-java:hasAnnotation('org.junit.jupiter.api.Test')] | .[pmd-java:hasAnnotation('org.junit.jupiter.params.ParameterizedTest')]"/>
         </properties>
     </rule>
 
