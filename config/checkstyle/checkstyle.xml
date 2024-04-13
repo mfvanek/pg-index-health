@@ -29,10 +29,31 @@
     <module name="UniqueProperties"/>
     <module name="TreeWalker">
         <module name="SuppressWarningsHolder"/>
+        <module name="AbbreviationAsWordInName">
+            <property name="ignoreFinal" value="false"/>
+            <property name="allowedAbbreviationLength" value="0"/>
+            <property name="allowedAbbreviations" value="SSD"/>
+            <property name="tokens"
+                      value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, ANNOTATION_DEF, ANNOTATION_FIELD_DEF, PARAMETER_DEF, VARIABLE_DEF, METHOD_DEF, PATTERN_VARIABLE_DEF, RECORD_DEF, RECORD_COMPONENT_DEF"/>
+        </module>
         <module name="AbstractClassName">
             <property name="ignoreName" value="true"/>
         </module>
+        <module name="AnnotationLocation">
+            <property name="id" value="AnnotationLocationMostCases"/>
+            <property name="tokens"
+                      value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF,
+                      RECORD_DEF, COMPACT_CTOR_DEF"/>
+        </module>
+        <module name="AnnotationLocation">
+            <property name="id" value="AnnotationLocationVariables"/>
+            <property name="tokens" value="VARIABLE_DEF"/>
+            <property name="allowSamelineMultipleAnnotations" value="true"/>
+        </module>
+        <!--<module name="AnnotationOnSameLine"/> invalid -->
+        <module name="AnnotationUseStyle"/>
         <module name="AnonInnerLength"/>
+        <module name="ArrayTypeStyle"/>
         <!--<module name="AvoidInlineConditionals"/> invalid -->
         <module name="AvoidNestedBlocks"/>
         <module name="BooleanExpressionComplexity"/>
@@ -61,6 +82,7 @@
         <module name="IllegalInstantiation"/>
         <module name="IllegalThrows"/>
         <module name="IllegalType"/>
+        <!-- <module name="ImportControl"/> not applicable -->
         <module name="InnerAssignment"/>
         <module name="InnerTypeLast"/>
         <module name="InterfaceIsType"/>
@@ -149,7 +171,6 @@
         <module name="EmptyStatement"/>
         <module name="OneStatementPerLine"/>
         <module name="MultipleVariableDeclarations"/>
-        <module name="ArrayTypeStyle"/>
         <module name="MissingSwitchDefault"/>
         <module name="DefaultComesLast"/>
         <module name="FallThrough"/>
@@ -205,13 +226,6 @@
         <module name="NoFinalizer"/>
         <module name="GenericWhitespace"/>
         <module name="Indentation"/>
-        <module name="AbbreviationAsWordInName">
-            <property name="ignoreFinal" value="false"/>
-            <property name="allowedAbbreviationLength" value="0"/>
-            <property name="allowedAbbreviations" value="SSD"/>
-            <property name="tokens"
-                      value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, ANNOTATION_DEF, ANNOTATION_FIELD_DEF, PARAMETER_DEF, VARIABLE_DEF, METHOD_DEF, PATTERN_VARIABLE_DEF, RECORD_DEF, RECORD_COMPONENT_DEF"/>
-        </module>
         <!-- <module name="OverloadMethodsDeclarationOrder"/> invalid -->
         <module name="VariableDeclarationUsageDistance"/>
         <!-- <module name="ImportOrder"/> invalid -->
@@ -248,19 +262,6 @@
         <module name="OperatorWrap">
             <property name="option" value="EOL"/>
         </module>
-        <module name="AnnotationLocation">
-            <property name="id" value="AnnotationLocationMostCases"/>
-            <property name="tokens"
-                      value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF,
-                      RECORD_DEF, COMPACT_CTOR_DEF"/>
-        </module>
-        <module name="AnnotationLocation">
-            <property name="id" value="AnnotationLocationVariables"/>
-            <property name="tokens" value="VARIABLE_DEF"/>
-            <property name="allowSamelineMultipleAnnotations" value="true"/>
-        </module>
-        <!--<module name="AnnotationOnSameLine"/> invalid -->
-        <module name="AnnotationUseStyle"/>
         <module name="NonEmptyAtclauseDescription"/>
         <module name="InvalidJavadocPosition"/>
         <module name="JavadocBlockTagLocation"/>
