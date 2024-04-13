@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+    postgres:
+        image: postgres:16.1
+        environment:
+            POSTGRES_DB: "pgih-db"
+            POSTGRES_USER: "pgih-db-user"
+            POSTGRES_PASSWORD: "pgih-db-password"
+            PGDATA: "/var/lib/postgresql/data/pgdata"
+        volumes:
+            - pgih-db-data:/var/lib/postgresql/data
+        ports:
+            - "6432:5432"
+
+volumes:
+    pgih-db-data:
