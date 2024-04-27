@@ -38,12 +38,19 @@ public enum Diagnostic {
     COLUMNS_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "columns_without_description.sql", QueryExecutors::executeQueryWithSchema),
     COLUMNS_WITH_JSON_TYPE(ExecutionTopology.ON_PRIMARY, "columns_with_json_type.sql", QueryExecutors::executeQueryWithSchema),
     COLUMNS_WITH_SERIAL_TYPES(ExecutionTopology.ON_PRIMARY, "non_primary_key_columns_with_serial_types.sql", QueryExecutors::executeQueryWithSchema),
-    FUNCTIONS_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "functions_without_description.sql", QueryExecutors::executeQueryWithSchema);
+    FUNCTIONS_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "functions_without_description.sql", QueryExecutors::executeQueryWithSchema),
+    INDEXES_WITH_BOOLEAN(ExecutionTopology.ON_PRIMARY, "indexes_with_boolean.sql", QueryExecutors::executeQueryWithSchema);
 
     private final ExecutionTopology executionTopology;
     private final String sqlQueryFileName;
     private final QueryExecutor queryExecutor;
 
+    /**
+     * Creates a Diagnostic instance
+     * @param executionTopology the place where the diagnostic should be executed
+     * @param sqlQueryFileName the associated sql query file name
+     * @param queryExecutor the lambda which executes the associated sql query
+     */
     Diagnostic(@Nonnull final ExecutionTopology executionTopology,
                @Nonnull final String sqlQueryFileName,
                @Nonnull final QueryExecutor queryExecutor) {
@@ -52,21 +59,41 @@ public enum Diagnostic {
         this.queryExecutor = Objects.requireNonNull(queryExecutor, "queryExecutor cannot be null");
     }
 
+    /**
+     * Gets the place where the diagnostic should be executed.
+     *
+     * @return {@code ExecutionTopology}
+     */
     @Nonnull
     public ExecutionTopology getExecutionTopology() {
         return executionTopology;
     }
 
+    /**
+     * Gets the associated sql query file name.
+     *
+     * @return sql query file name
+     */
     @Nonnull
     public String getSqlQueryFileName() {
         return sqlQueryFileName;
     }
 
+    /**
+     * Gets the lambda which executes the associated sql query.
+     *
+     * @return {@code QueryExecutor}
+     */
     @Nonnull
     public QueryExecutor getQueryExecutor() {
         return queryExecutor;
     }
 
+    /**
+     * Shows whether diagnostic results should be collected from all nodes in the cluster.
+     *
+     * @return true if diagnostic results should be collected from all nodes in the cluster
+     */
     public boolean isAcrossCluster() {
         return executionTopology == ExecutionTopology.ACROSS_CLUSTER;
     }
