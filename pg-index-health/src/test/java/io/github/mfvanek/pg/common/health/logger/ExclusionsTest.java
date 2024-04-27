@@ -29,6 +29,7 @@ class ExclusionsTest {
                 .withTablesWithMissingIndexesExclusions(",  , , s.t1, s.t2")
                 .withTablesWithoutPrimaryKeyExclusions("  , , s.t3, s.t4, s.t5, t6")
                 .withIndexesWithNullValuesExclusions(",,s.i1,  , , ,,,")
+                .withBtreeIndexesOnArrayColumnsExclusions(",s.i2, , ,s.i3")
                 .build();
         assertThat(e).isNotNull();
 
@@ -61,6 +62,11 @@ class ExclusionsTest {
                 .isNotNull()
                 .hasSize(1)
                 .containsExactlyInAnyOrder("s.i1");
+
+        assertThat(e.getBtreeIndexesOnArrayColumnsExclusions())
+                .isNotNull()
+                .hasSize(2)
+                .containsExactlyInAnyOrder("s.i2", "s.i3");
     }
 
     @Test
@@ -135,7 +141,8 @@ class ExclusionsTest {
         final Exclusions e = Exclusions.empty();
         assertThat(e)
                 .hasToString("Exclusions{duplicatedIndexesExclusions=[], " + "intersectedIndexesExclusions=[], unusedIndexesExclusions=[], " +
-                        "tablesWithMissingIndexesExclusions=[], tablesWithoutPrimaryKeyExclusions=[], " + "indexesWithNullValuesExclusions=[], " +
+                        "tablesWithMissingIndexesExclusions=[], tablesWithoutPrimaryKeyExclusions=[], " +
+                        "indexesWithNullValuesExclusions=[], btreeIndexesOnArrayColumnsExclusions=[], " +
                         "indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " +
                         "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0, " + "tableBloatSizeThresholdInBytes=0, tableBloatPercentageThreshold=0}");
     }

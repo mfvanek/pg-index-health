@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
+import io.github.mfvanek.pg.checks.cluster.BtreeIndexesOnArrayColumnsCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ColumnsWithJsonTypeCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ColumnsWithSerialTypesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ColumnsWithoutDescriptionCheckOnCluster;
@@ -58,7 +59,9 @@ public class DatabaseChecks {
                 new ColumnsWithJsonTypeCheckOnCluster(haPgConnection),
                 new ColumnsWithSerialTypesCheckOnCluster(haPgConnection),
                 new FunctionsWithoutDescriptionCheckOnCluster(haPgConnection),
-                new IndexesWithBooleanCheckOnCluster(haPgConnection));
+                new IndexesWithBooleanCheckOnCluster(haPgConnection),
+                new BtreeIndexesOnArrayColumnsCheckOnCluster(haPgConnection)
+        );
         allChecks.forEach(check -> this.checks.putIfAbsent(check.getDiagnostic(), check));
     }
 
