@@ -13,7 +13,7 @@ Java >= 11 is required.
     
    This will build the project and run tests.
     
-By default, [PostgreSQL 16.1 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
+By default, [PostgreSQL 16.2 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
 Set `TEST_PG_VERSION` environment variable to use any of other available PostgreSQL version:
 ```
 TEST_PG_VERSION=11.20-alpine
@@ -38,7 +38,7 @@ Domain model is located in a [pg-index-health-model](https://github.com/mfvanek/
 All domain classes should be minimalistic and well-defined.
 They should include enough information to generate corrective SQL migrations via [pg-index-health-generator](https://github.com/mfvanek/pg-index-health/tree/master/pg-index-health-generator).
 
-### Add the code for a new check
+### Add the code for the new check
 
 All checks can be divided into 2 parts:
 1. Runtime checks (those that make sense to run only on a production database)
@@ -63,3 +63,11 @@ Implement a new class extending [AbstractCheckOnCluster](https://github.com/mfva
 
 * Your code must be 100% covered.
 * Mutation tests via [pitest](https://pitest.org/) should work.
+
+### Further steps
+
+1. Update readme and add information about the new check
+2. Update [Spring Boot starter](https://github.com/mfvanek/pg-index-health-test-starter).
+   Use a locally built pg-index-health version and send a draft PR.
+3. Add sample code to the demo apps ([first](https://github.com/mfvanek/pg-index-health-demo), [second](https://github.com/mfvanek/pg-index-health-spring-boot-demo)).
+   Use a locally built pg-index-health version and send a draft PR.

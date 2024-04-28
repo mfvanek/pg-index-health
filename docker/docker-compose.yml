@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
     postgres:
-        image: postgres:16.1
+        image: postgres:16.2
         environment:
             POSTGRES_DB: "pgih-db"
             POSTGRES_USER: "pgih-db-user"
