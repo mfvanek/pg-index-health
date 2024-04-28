@@ -28,6 +28,7 @@ import io.github.mfvanek.pg.support.statements.CreateDuplicatedHashIndexStatemen
 import io.github.mfvanek.pg.support.statements.CreateDuplicatedIndexStatement;
 import io.github.mfvanek.pg.support.statements.CreateForeignKeyOnNullableColumnStatement;
 import io.github.mfvanek.pg.support.statements.CreateFunctionsStatement;
+import io.github.mfvanek.pg.support.statements.CreateIndexWithBooleanValues;
 import io.github.mfvanek.pg.support.statements.CreateIndexWithNullValues;
 import io.github.mfvanek.pg.support.statements.CreateIndexesWithDifferentOpclassStatement;
 import io.github.mfvanek.pg.support.statements.CreateMaterializedViewStatement;
@@ -132,6 +133,12 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withNullValuesInIndex() {
         statementsToExecuteInSameTransaction.putIfAbsent(48, new CreateIndexWithNullValues(schemaName));
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withBooleanValuesInIndex() {
+        statementsToExecuteInSameTransaction.putIfAbsent(49, new CreateIndexWithBooleanValues(schemaName));
         return this;
     }
 

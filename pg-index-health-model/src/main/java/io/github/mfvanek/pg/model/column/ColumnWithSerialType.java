@@ -25,7 +25,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.6.2
  */
 @Immutable
-public class ColumnWithSerialType implements DbObject, ColumnNameAware, Comparable<ColumnWithSerialType> {
+public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Comparable<ColumnWithSerialType> {
 
     private final Column column;
     private final SerialType serialType;
@@ -44,7 +44,7 @@ public class ColumnWithSerialType implements DbObject, ColumnNameAware, Comparab
      */
     @Nonnull
     @Override
-    public final String getName() {
+    public String getName() {
         return column.getName();
     }
 
@@ -110,7 +110,7 @@ public class ColumnWithSerialType implements DbObject, ColumnNameAware, Comparab
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -129,7 +129,7 @@ public class ColumnWithSerialType implements DbObject, ColumnNameAware, Comparab
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(column, serialType, sequenceName);
     }
 
@@ -148,6 +148,14 @@ public class ColumnWithSerialType implements DbObject, ColumnNameAware, Comparab
         return sequenceName.compareTo(other.sequenceName);
     }
 
+    /**
+     * Constructs a {@code ColumnWithSerialType} object of given serial type.
+     *
+     * @param column       column; should be non-null.
+     * @param serialType   column serial type; should be non-null.
+     * @param sequenceName sequence name; should be non-blank.
+     * @return {@code ColumnWithSerialType}
+     */
     @Nonnull
     public static ColumnWithSerialType of(@Nonnull final Column column,
                                           @Nonnull final SerialType serialType,
@@ -155,18 +163,39 @@ public class ColumnWithSerialType implements DbObject, ColumnNameAware, Comparab
         return new ColumnWithSerialType(column, serialType, sequenceName);
     }
 
+    /**
+     * Constructs a {@code ColumnWithSerialType} object of {@code bigserial} type.
+     *
+     * @param column       column; should be non-null.
+     * @param sequenceName sequence name; should be non-blank.
+     * @return {@code ColumnWithSerialType}
+     */
     @Nonnull
     public static ColumnWithSerialType ofBigSerial(@Nonnull final Column column,
                                                    @Nonnull final String sequenceName) {
         return of(column, SerialType.BIG_SERIAL, sequenceName);
     }
 
+    /**
+     * Constructs a {@code ColumnWithSerialType} object of {@code serial} type.
+     *
+     * @param column       column; should be non-null.
+     * @param sequenceName sequence name; should be non-blank.
+     * @return {@code ColumnWithSerialType}
+     */
     @Nonnull
     public static ColumnWithSerialType ofSerial(@Nonnull final Column column,
                                                 @Nonnull final String sequenceName) {
         return of(column, SerialType.SERIAL, sequenceName);
     }
 
+    /**
+     * Constructs a {@code ColumnWithSerialType} object of {@code smallserial} type.
+     *
+     * @param column       column; should be non-null.
+     * @param sequenceName sequence name; should be non-blank.
+     * @return {@code ColumnWithSerialType}
+     */
     @Nonnull
     public static ColumnWithSerialType ofSmallSerial(@Nonnull final Column column,
                                                      @Nonnull final String sequenceName) {

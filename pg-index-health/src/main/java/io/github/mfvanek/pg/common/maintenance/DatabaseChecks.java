@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.checks.cluster.DuplicatedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ForeignKeysNotCoveredWithIndexCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.FunctionsWithoutDescriptionCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.IndexesWithBloatCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.IndexesWithBooleanCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.IndexesWithNullValuesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.IntersectedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.InvalidIndexesCheckOnCluster;
@@ -56,7 +57,8 @@ public class DatabaseChecks {
                 new ColumnsWithoutDescriptionCheckOnCluster(haPgConnection),
                 new ColumnsWithJsonTypeCheckOnCluster(haPgConnection),
                 new ColumnsWithSerialTypesCheckOnCluster(haPgConnection),
-                new FunctionsWithoutDescriptionCheckOnCluster(haPgConnection));
+                new FunctionsWithoutDescriptionCheckOnCluster(haPgConnection),
+                new IndexesWithBooleanCheckOnCluster(haPgConnection));
         allChecks.forEach(check -> this.checks.putIfAbsent(check.getDiagnostic(), check));
     }
 

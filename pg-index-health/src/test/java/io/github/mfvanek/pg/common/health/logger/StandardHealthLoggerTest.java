@@ -39,6 +39,7 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                         .withData()
                         .withInvalidIndex()
                         .withNullValuesInIndex()
+                        .withBooleanValuesInIndex()
                         .withTableWithoutPrimaryKey()
                         .withDuplicatedIndex()
                         .withNonSuitableIndex()
@@ -56,16 +57,17 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                                     "foreign_keys_without_index:1",
                                     "tables_without_primary_key:1",
                                     "indexes_with_null_values:1",
-                                    "indexes_with_bloat:11",
+                                    "indexes_with_bloat:13",
                                     "tables_with_bloat:2",
-                                    "intersected_indexes:5",
-                                    "unused_indexes:7",
+                                    "intersected_indexes:7",
+                                    "unused_indexes:8",
                                     "tables_with_missing_indexes:0",
                                     "tables_without_description:4",
                                     "columns_without_description:17",
                                     "columns_with_json_type:1",
                                     "columns_with_serial_types:2",
-                                    "functions_without_description:2");
+                                    "functions_without_description:2",
+                                    "indexes_with_boolean:1");
                 });
     }
 

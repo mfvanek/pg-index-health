@@ -73,7 +73,13 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
         return Index.class.getSimpleName() + '{' + innerToString() + '}';
     }
 
+    /**
+     * An auxiliary utility method for implementing {@code toString()} in child classes.
+     *
+     * @return string representation of the internal fields of this class
+     */
     @SuppressWarnings("WeakerAccess")
+    @Nonnull
     protected String innerToString() {
         return "tableName='" + tableName + '\'' +
                 ", indexName='" + indexName + '\'';

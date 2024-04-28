@@ -32,6 +32,7 @@ import io.github.mfvanek.pg.model.function.StoredFunction;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.table.Table;
@@ -94,6 +95,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         logResult.add(logColumnsWithJsonType(databaseChecks, pgContext));
         logResult.add(logColumnsWithSerialTypes(databaseChecks, pgContext));
         logResult.add(logFunctionsWithoutDescription(databaseChecks, pgContext));
+        logResult.add(logIndexesWithBoolean(databaseChecks, pgContext));
         return logResult;
     }
 
@@ -220,6 +222,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                                   @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.FUNCTIONS_WITHOUT_DESCRIPTION, StoredFunction.class),
                 c -> true, pgContext, SimpleLoggingKey.FUNCTIONS_WITHOUT_DESCRIPTION);
+    }
+
+    @Nonnull
+    private String logIndexesWithBoolean(@Nonnull final DatabaseChecks databaseChecks,
+                                         @Nonnull final PgContext pgContext) {
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.INDEXES_WITH_BOOLEAN, IndexWithColumns.class),
+                c -> true, pgContext, SimpleLoggingKey.INDEXES_WITH_BOOLEAN);
     }
 
     @Nonnull

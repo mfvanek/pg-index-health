@@ -15,6 +15,12 @@ import io.github.mfvanek.pg.model.validation.Validators;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+/**
+ * Represents database index with information about size.
+ *
+ * @author Ivan Vahrushev
+ * @since 0.0.1
+ */
 @Immutable
 public class IndexWithSize extends Index implements IndexSizeAware {
 
@@ -36,6 +42,10 @@ public class IndexWithSize extends Index implements IndexSizeAware {
         return indexSizeInBytes;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     protected String innerToString() {
         return super.innerToString() + ", indexSizeInBytes=" + indexSizeInBytes;
@@ -50,6 +60,15 @@ public class IndexWithSize extends Index implements IndexSizeAware {
         return IndexWithSize.class.getSimpleName() + '{' + innerToString() + '}';
     }
 
+    /**
+     * Constructs an {@code IndexWithSize} object.
+     *
+     * @param tableName        table name; should be non-blank.
+     * @param indexName        index name; should be non-blank.
+     * @param indexSizeInBytes index size in bytes; should be positive or zero.
+     * @return {@code IndexWithSize}
+     */
+    @Nonnull
     public static IndexWithSize of(@Nonnull final String tableName,
                                    @Nonnull final String indexName,
                                    final long indexSizeInBytes) {

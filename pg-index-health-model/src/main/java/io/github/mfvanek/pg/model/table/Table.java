@@ -59,6 +59,12 @@ public class Table implements DbObject, TableSizeAware, Comparable<Table> {
         return tableSizeInBytes;
     }
 
+    /**
+     * An auxiliary utility method for implementing {@code toString()} in child classes.
+     *
+     * @return string representation of the internal fields of this class
+     */
+    @Nonnull
     final String innerToString() {
         return "tableName='" + tableName + '\'' +
                 ", tableSizeInBytes=" + tableSizeInBytes;

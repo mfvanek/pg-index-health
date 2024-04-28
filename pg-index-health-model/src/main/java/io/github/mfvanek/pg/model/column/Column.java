@@ -30,6 +30,13 @@ public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
     private final String columnName;
     private final boolean notNull;
 
+    /**
+     * Constructs a {@code Column} object.
+     *
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @param notNull    whether column is not null or nullable
+     */
     protected Column(@Nonnull final String tableName,
                      @Nonnull final String columnName,
                      final boolean notNull) {
@@ -126,11 +133,25 @@ public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
         return Boolean.compare(notNull, other.notNull);
     }
 
+    /**
+     * Constructs a not null {@code Column} object.
+     *
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     */
     @Nonnull
     public static Column ofNotNull(@Nonnull final String tableName, @Nonnull final String columnName) {
         return new Column(tableName, columnName, true);
     }
 
+    /**
+     * Constructs a nullable {@code Column} object.
+     *
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     */
     @Nonnull
     public static Column ofNullable(@Nonnull final String tableName, @Nonnull final String columnName) {
         return new Column(tableName, columnName, false);

@@ -52,6 +52,10 @@ public class IndexWithBloat extends IndexWithSize implements IndexBloatAware {
         return bloatPercentage;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
     protected String innerToString() {
         return super.innerToString() + ", bloatSizeInBytes=" + bloatSizeInBytes +

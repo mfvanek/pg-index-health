@@ -14,64 +14,80 @@ import io.github.mfvanek.pg.model.column.Column;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class IndexWithNullsTest {
+class IndexWithColumnsTest {
 
     @Test
     void gettersShouldWork() {
-        final IndexWithNulls index = IndexWithNulls.of("t", "i", 11L, "f");
+        final Column column = Column.ofNullable("t", "f");
+        final IndexWithColumns index = IndexWithColumns.ofSingle("t", "i", 11L, column);
         assertThat(index.getTableName()).isEqualTo("t");
         assertThat(index.getIndexName())
                 .isEqualTo("i")
                 .isEqualTo(index.getName());
         assertThat(index.getIndexSizeInBytes()).isEqualTo(11L);
-        assertThat(index.getNullableColumn()).isEqualTo(Column.ofNullable("t", "f"));
+        assertThat(index.getColumns())
+                .hasSize(1)
+                .isUnmodifiable()
+                .containsExactly(Column.ofNullable("t", "f"));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
-        assertThatThrownBy(() -> IndexWithNulls.of(null, null, 0, "f"))
+        assertThatThrownBy(() -> IndexWithColumns.ofColumns(null, null, 0, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("tableName cannot be null");
-        assertThatThrownBy(() -> IndexWithNulls.of("", null, 0, "f"))
+        assertThatThrownBy(() -> IndexWithColumns.ofColumns("", null, 0, null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("tableName cannot be blank");
-        assertThatThrownBy(() -> IndexWithNulls.of("  ", null, 0, "f"))
+        assertThatThrownBy(() -> IndexWithColumns.ofColumns("  ", null, 0, null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("tableName cannot be blank");
-        assertThatThrownBy(() -> IndexWithNulls.of("t", null, 0, "f"))
+        assertThatThrownBy(() -> IndexWithColumns.ofColumns("t", null, 0, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("indexName cannot be null");
-        assertThatThrownBy(() -> IndexWithNulls.of("t", "", 0, "f"))
+        assertThatThrownBy(() -> IndexWithColumns.ofColumns("t", "", 0, null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("indexName cannot be blank");
-        assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, null))
+        assertThatThrownBy(() -> IndexWithColumns.ofSingle("t", "i", 0, null))
                 .isInstanceOf(NullPointerException.class)
-                .hasMessage("columnName cannot be null");
-        assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, ""))
+                .hasMessage("column cannot be null");
+        assertThatThrownBy(() -> IndexWithColumns.ofColumns("t", "i", 0, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("columns cannot be null");
+    }
+
+    @Test
+    void tableShouldBeTheSame() {
+        final Column column = Column.ofNullable("t2", "f");
+        assertThatThrownBy(() -> IndexWithColumns.ofSingle("t", "i", 1L, column))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("columnName cannot be blank");
-        assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, "  "))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("columnName cannot be blank");
+                .hasMessage("Table name is not the same within given rows");
     }
 
     @Test
     void testToString() {
-        assertThat(IndexWithNulls.of("t", "i", 22L, "f"))
-                .hasToString("IndexWithNulls{tableName='t', indexName='i', " + "indexSizeInBytes=22, columns=[Column{tableName='t', columnName='f', notNull=false}]}");
+        final Column column = Column.ofNullable("t", "f");
+        assertThat(IndexWithColumns.ofSingle("t", "i", 22L, column))
+                .hasToString("IndexWithColumns{tableName='t', indexName='i', " + "indexSizeInBytes=22, columns=[Column{tableName='t', columnName='f', notNull=false}]}");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
-        final IndexWithNulls first = IndexWithNulls.of("t1", "i1", 1, "f");
-        final IndexWithNulls theSame = IndexWithNulls.of("t1", "i1", 3, "f"); // different size!
-        final IndexWithNulls second = IndexWithNulls.of("t2", "i2", 2, "f");
-        final IndexWithNulls third = IndexWithNulls.of("t3", "i3", 2, "t");
+        final Column column = Column.ofNullable("t1", "f");
+        final IndexWithColumns first = IndexWithColumns.ofSingle("t1", "i1", 1, column);
+        final IndexWithColumns theSame = IndexWithColumns.ofSingle("t1", "i1", 3, column); // different size!
+        final IndexWithColumns second = IndexWithColumns.ofSingle("t2", "i2", 2, Column.ofNotNull("t2", "f2"));
+        final List<Column> columns = List.of(
+                Column.ofNullable("t3", "t"),
+                Column.ofNullable("t3", "f"));
+        final IndexWithColumns third = IndexWithColumns.ofColumns("t3", "i3", 2, columns);
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -108,7 +124,7 @@ class IndexWithNullsTest {
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
-        EqualsVerifier.forClass(IndexWithNulls.class)
+        EqualsVerifier.forClass(IndexWithColumns.class)
                 .withIgnoredFields("indexSizeInBytes", "columns")
                 .verify();
     }

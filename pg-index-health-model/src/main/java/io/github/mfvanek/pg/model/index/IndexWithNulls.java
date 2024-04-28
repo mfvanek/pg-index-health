@@ -11,31 +11,36 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+/**
+ * Represents database index with information about size and nullable columns.
+ *
+ * @author Ivan Vahrushev
+ * @since 0.0.1
+ */
 @Immutable
-public final class IndexWithNulls extends IndexWithSize {
-
-    private final Column nullableColumn;
+public final class IndexWithNulls extends IndexWithColumns {
 
     private IndexWithNulls(@Nonnull final String tableName,
                            @Nonnull final String indexName,
                            final long indexSizeInBytes,
                            @Nonnull final Column nullableColumn) {
-        super(tableName, indexName, indexSizeInBytes);
-        Objects.requireNonNull(nullableColumn, "nullableColumn cannot be null");
-        Validators.validateThatTableIsTheSame(tableName, List.of(nullableColumn));
-        this.nullableColumn = nullableColumn;
+        super(tableName, indexName, indexSizeInBytes, List.of(Objects.requireNonNull(nullableColumn, "nullableColumn cannot be null")));
     }
 
+    /**
+     * Gets nullable column in index.
+     *
+     * @return nullable column
+     */
     @Nonnull
     public Column getNullableColumn() {
-        return nullableColumn;
+        return getColumns().get(0);
     }
 
     /**
@@ -44,11 +49,19 @@ public final class IndexWithNulls extends IndexWithSize {
     @Nonnull
     @Override
     public String toString() {
-        return IndexWithNulls.class.getSimpleName() + '{' +
-                innerToString() +
-                ", nullableColumn=" + nullableColumn + '}';
+        return IndexWithNulls.class.getSimpleName() + '{' + innerToString() + '}';
     }
 
+    /**
+     * Constructs an {@code IndexWithNulls} object.
+     *
+     * @param tableName          table name; should be non-blank.
+     * @param indexName          index name; should be non-blank.
+     * @param indexSizeInBytes   index size in bytes; should be positive or zero.
+     * @param nullableColumnName nullable column in this index.
+     * @return {@code IndexWithNulls}
+     */
+    @Nonnull
     public static IndexWithNulls of(@Nonnull final String tableName,
                                     @Nonnull final String indexName,
                                     final long indexSizeInBytes,
