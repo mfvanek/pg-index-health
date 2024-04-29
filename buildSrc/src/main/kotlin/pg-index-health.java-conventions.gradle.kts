@@ -32,7 +32,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
     checkstyle("com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1")
-    errorprone("com.google.errorprone:error_prone_core:2.26.1")
+    errorprone("com.google.errorprone:error_prone_core:2.27.0")
 }
 
 java {
