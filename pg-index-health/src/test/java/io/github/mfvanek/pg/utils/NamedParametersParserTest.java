@@ -99,4 +99,16 @@ class NamedParametersParserTest {
         assertThat(parse("select * from accounts where account_number = :%"))
                 .isEqualTo("select * from accounts where account_number = :%");
     }
+
+    @Test
+    void parseWithArraySlice() {
+        assertThat(parse("select schedule[1:2][1:1] from sal_emp where name = 'Bill';"))
+                .isEqualTo("select schedule[1:2][1:1] from sal_emp where name = 'Bill';");
+
+        assertThat(parse("select schedule[1:2][1:1] from sal_emp where name = :name_param::text;"))
+                .isEqualTo("select schedule[1:2][1:1] from sal_emp where name = ?::text;");
+
+        assertThat(parse("inner join pg_catalog.pg_attribute as col on i.indrelid = col.attrelid and col.attnum = any((string_to_array(i.indkey::text, ' ')::int2[])[:i.indnkeyatts])"))
+                .isEqualTo("inner join pg_catalog.pg_attribute as col on i.indrelid = col.attrelid and col.attnum = any((string_to_array(i.indkey::text, ' ')::int2[])[:i.indnkeyatts])");
+    }
 }

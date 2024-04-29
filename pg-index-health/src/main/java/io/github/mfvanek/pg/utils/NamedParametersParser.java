@@ -14,9 +14,10 @@ import io.github.mfvanek.pg.model.validation.Validators;
 
 import javax.annotation.Nonnull;
 
-@SuppressWarnings({"PMD.ShortVariable", "PMD.AvoidReassigningLoopVariables", "PMD.CognitiveComplexity", "PMD.CyclomaticComplexity",
-    "checkstyle:CyclomaticComplexity", "checkstyle:ModifiedControlVariable"})
+@SuppressWarnings({"PMD.AvoidReassigningLoopVariables", "PMD.CognitiveComplexity", "PMD.CyclomaticComplexity", "checkstyle:CyclomaticComplexity", "checkstyle:ModifiedControlVariable"})
 public final class NamedParametersParser {
+
+    private static final char SINGLE_QUOTE = '\'';
 
     private final String originalSqlQuery;
     private final int queryLength;
@@ -26,6 +27,8 @@ public final class NamedParametersParser {
     private boolean isPartOfSingleLineComment;
     private boolean isPartOfMultiLineComment;
     private boolean isDoubleColon;
+    private boolean isInSquareBrackets;
+    private char currentCharacter;
 
     private NamedParametersParser(@Nonnull final String originalSqlQuery) {
         this.originalSqlQuery = Validators.notBlank(originalSqlQuery, "originalSqlQuery");
@@ -36,46 +39,42 @@ public final class NamedParametersParser {
     private String doParse() {
         final StringBuilder resultQuery = new StringBuilder(queryLength);
         for (int i = 0; i < queryLength; ++i) {
-            char c = originalSqlQuery.charAt(i);
+            currentCharacter = originalSqlQuery.charAt(i);
             if (isInSingleQuotes) {
-                if (c == '\'') {
-                    isInSingleQuotes = false;
-                }
+                processNextSingleQuoteIfNeed();
             } else if (isInDoubleQuotes) {
-                if (c == '"') {
-                    isInDoubleQuotes = false;
-                }
+                processNextDoubleQuoteIfNeed();
             } else if (isPartOfMultiLineComment) {
-                if (c == '*' && nextChar(i) == '/') {
-                    isPartOfMultiLineComment = false;
-                }
+                processEndOfMultiLineCommentIfNeed(i);
             } else if (isDoubleColon) {
                 isDoubleColon = false;
             } else if (isPartOfSingleLineComment) {
-                if (c == '\n') {
-                    isPartOfSingleLineComment = false;
-                }
+                processEndOfSingleLineCommentIfNeed();
+            } else if (isInSquareBrackets) {
+                processClosingSquareBracketIfNeed();
             } else {
-                if (c == '\'') {
+                if (currentCharacter == SINGLE_QUOTE) {
                     isInSingleQuotes = true;
-                } else if (c == '"') {
+                } else if (currentCharacter == '"') {
                     isInDoubleQuotes = true;
-                } else if (c == '/' && nextChar(i) == '*') {
+                } else if (currentCharacter == '[') {
+                    isInSquareBrackets = true;
+                } else if (currentCharacter == '/' && nextChar(i) == '*') {
                     isPartOfMultiLineComment = true;
-                } else if (c == '-' && nextChar(i) == '-') {
+                } else if (currentCharacter == '-' && nextChar(i) == '-') {
                     isPartOfSingleLineComment = true;
-                } else if (c == ':' && hasNextChar(i) && nextChar(i) == ':') {
+                } else if (currentCharacter == ':' && hasNextChar(i) && nextChar(i) == ':') {
                     isDoubleColon = true;
-                } else if (c == ':' && hasNextChar(i) && Character.isJavaIdentifierStart(nextChar(i))) {
+                } else if (currentCharacter == ':' && hasNextChar(i) && Character.isJavaIdentifierStart(nextChar(i))) {
                     int j = i + 2;
                     while (j < queryLength && Character.isJavaIdentifierPart(originalSqlQuery.charAt(j))) {
                         ++j;
                     }
-                    c = '?'; // replace the parameter with a question mark
+                    currentCharacter = '?'; // replace the parameter with a question mark
                     i = j - 1; // skip past the end if the parameter
                 }
             }
-            resultQuery.append(c);
+            resultQuery.append(currentCharacter);
         }
 
         return resultQuery.toString();
@@ -87,6 +86,36 @@ public final class NamedParametersParser {
 
     private boolean hasNextChar(final int currentPosition) {
         return currentPosition + 1 < queryLength;
+    }
+
+    private void processNextSingleQuoteIfNeed() {
+        if (currentCharacter == SINGLE_QUOTE) {
+            isInSingleQuotes = false;
+        }
+    }
+
+    private void processNextDoubleQuoteIfNeed() {
+        if (currentCharacter == '"') {
+            isInDoubleQuotes = false;
+        }
+    }
+
+    private void processEndOfMultiLineCommentIfNeed(final int currentPosition) {
+        if (currentCharacter == '*' && nextChar(currentPosition) == '/') {
+            isPartOfMultiLineComment = false;
+        }
+    }
+
+    private void processEndOfSingleLineCommentIfNeed() {
+        if (currentCharacter == '\n') {
+            isPartOfSingleLineComment = false;
+        }
+    }
+
+    private void processClosingSquareBracketIfNeed() {
+        if (currentCharacter == ']') {
+            isInSquareBrackets = false;
+        }
     }
 
     @Nonnull
