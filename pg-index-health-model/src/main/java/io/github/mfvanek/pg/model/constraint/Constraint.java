@@ -59,7 +59,7 @@ public class Constraint implements DbObject, TableNameAware {
     }
 
     /**
-     * Gets the name of constraint
+     * Gets the name of constraint.
      *
      * @return the name of constraint
      */
@@ -69,7 +69,7 @@ public class Constraint implements DbObject, TableNameAware {
     }
 
     /**
-     * Gets type of Constraint
+     * Gets type of Constraint.
      *
      * @return type of constraint
      * @see ConstraintType

@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.ConstraintType;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.support.DatabasePopulator;
 import io.github.mfvanek.pg.support.ExecuteUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,7 +23,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
-public class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
+class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
 
     private final DatabaseCheckOnHost<Constraint> check = new NotValidConstraintsCheckOnHost(getPgConnection());
 
@@ -45,10 +44,9 @@ public class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
                     .hasSize(2)
                     .containsExactly(
                             Constraint.of(ctx.enrichWithSchema("accounts"), "c_accounts_chk_client_id_not_validated_yet", ConstraintType.CHECK),
-                            Constraint.of(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY)
-                    );
+                            Constraint.of(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
 
-            ExecuteUtils.executeOnDatabase(DatabaseAwareTestBase.getDataSource(), statement -> {
+            ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {
                 statement.execute(String.format("alter table %1$s.accounts validate constraint c_accounts_fk_client_id_not_validated_yet;", schemaName));
                 statement.execute(String.format("alter table %1$s.accounts validate constraint c_accounts_chk_client_id_not_validated_yet;", schemaName));
             });

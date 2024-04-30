@@ -36,8 +36,8 @@ public enum ConstraintType {
     }
 
     @Nonnull
-    public static ConstraintType fromConstraintType(String pgConType) {
-        for (ConstraintType ct : values()) {
+    public static ConstraintType fromConstraintType(final String pgConType) {
+        for (final ConstraintType ct : values()) {
             if (ct.getPgConType().equals(pgConType)) {
                 return ct;
             }
