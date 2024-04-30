@@ -10,9 +10,11 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,11 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final BtreeIndexesOnArrayColumnsCheckOnCluster check = new BtreeIndexesOnArrayColumnsCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<IndexWithColumns> check = new BtreeIndexesOnArrayColumnsCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(Index.class);
+        assertThat(check.getType()).isEqualTo(IndexWithColumns.class);
         assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS);
     }
 
@@ -45,8 +47,10 @@ class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase
                 assertThat(check.check(ctx))
                         .hasSize(2)
                         .containsExactlyInAnyOrder(
-                                Index.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_roles_btree_idx")),
-                                Index.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_roles_btree_idx"))
+                                IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_roles_btree_idx"), 0L,
+                                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles")),
+                                IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_roles_btree_idx"), 0L,
+                                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles"))
                         )
         );
     }

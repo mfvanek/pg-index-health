@@ -10,9 +10,11 @@
 
 package io.github.mfvanek.pg.checks.host;
 
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,12 +24,12 @@ import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
 class BtreeIndexesOnArrayColumnsCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final BtreeIndexesOnArrayColumnsCheckOnHost check = new BtreeIndexesOnArrayColumnsCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<IndexWithColumns> check = new BtreeIndexesOnArrayColumnsCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-                .hasType(Index.class)
+                .hasType(IndexWithColumns.class)
                 .hasDiagnostic(Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS)
                 .hasHost(getHost());
     }
@@ -40,8 +42,10 @@ class BtreeIndexesOnArrayColumnsCheckOnHostTest extends DatabaseAwareTestBase {
                     .executing(ctx)
                     .hasSize(2)
                     .containsExactlyInAnyOrder(
-                            Index.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_roles_btree_idx")),
-                            Index.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_roles_btree_idx"))
+                            IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_roles_btree_idx"), 0L,
+                                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles")),
+                            IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_roles_btree_idx"), 0L,
+                                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles"))
                     )
         );
     }

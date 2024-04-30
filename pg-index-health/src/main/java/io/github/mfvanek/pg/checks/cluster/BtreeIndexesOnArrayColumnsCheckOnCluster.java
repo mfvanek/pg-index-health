@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.checks.cluster;
 
 import io.github.mfvanek.pg.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import javax.annotation.Nonnull;
 
@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * @author Vadim Khizhin
  * @since 0.10.4
  */
-public class BtreeIndexesOnArrayColumnsCheckOnCluster extends AbstractCheckOnCluster<Index> {
+public class BtreeIndexesOnArrayColumnsCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
     public BtreeIndexesOnArrayColumnsCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, BtreeIndexesOnArrayColumnsCheckOnHost::new);
