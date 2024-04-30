@@ -10,15 +10,21 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.host.NotValidConstraintsOnHost;
+import io.github.mfvanek.pg.checks.host.NotValidConstraintsCheckOnHost;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.model.constraint.Constraint;
 
 import javax.annotation.Nonnull;
 
-public class NotValidConstraintsOnCluster extends AbstractCheckOnCluster<Constraint> {
+/**
+ * Check for not valid constraint on all hosts in the cluster.
+ *
+ * @author Blohny
+ * @since 0.10.3
+ */
+public class NotValidConstraintsCheckOnCluster extends AbstractCheckOnCluster<Constraint> {
 
-    protected NotValidConstraintsOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
-        super(haPgConnection, NotValidConstraintsOnHost::new);
+    protected NotValidConstraintsCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+        super(haPgConnection, NotValidConstraintsCheckOnHost::new);
     }
 }

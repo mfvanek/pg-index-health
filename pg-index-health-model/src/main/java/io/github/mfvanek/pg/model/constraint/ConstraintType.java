@@ -13,6 +13,12 @@ package io.github.mfvanek.pg.model.constraint;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
+/**
+ * A mapping to PostgreSQL constraint types.
+ *
+ * @author Blohny
+ * @since 0.10.3
+ */
 public enum ConstraintType {
 
     CHECK("c"),
@@ -27,5 +33,15 @@ public enum ConstraintType {
     @Nonnull
     public String getPgConType() {
         return pgConType;
+    }
+
+    @Nonnull
+    public static ConstraintType fromConstraintType(String pgConType) {
+        for (ConstraintType ct : values()) {
+            if (ct.getPgConType().equals(pgConType)) {
+                return ct;
+            }
+        }
+        throw new IllegalArgumentException("Unknown pgConType: " + pgConType);
     }
 }
