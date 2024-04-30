@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 
 public enum ConstraintType {
 
@@ -22,5 +22,10 @@ public enum ConstraintType {
 
     ConstraintType(@Nonnull final String pgConType) {
         this.pgConType = Objects.requireNonNull(pgConType, "pgConType");
+    }
+
+    @Nonnull
+    public String getPgConType() {
+        return pgConType;
     }
 }

@@ -14,9 +14,9 @@ import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import java.util.Objects;
 
 @Immutable
 public class Constraint implements DbObject, TableNameAware {
@@ -26,9 +26,9 @@ public class Constraint implements DbObject, TableNameAware {
     private final ConstraintType constraintType;
 
     private Constraint(
-            @Nonnull String tableName,
-            @Nonnull String constraintName,
-            @Nonnull ConstraintType constraintType) {
+            @Nonnull final String tableName,
+            @Nonnull final String constraintName,
+            @Nonnull final ConstraintType constraintType) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
         this.constraintType = constraintType;
@@ -58,14 +58,18 @@ public class Constraint implements DbObject, TableNameAware {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Constraint)) return false;
+        if (this == o) {
+            return true;
+        }
 
-        Constraint that = (Constraint) o;
+        if (!(o instanceof Constraint)) {
+            return false;
+        }
 
-        if (!tableName.equals(that.tableName)) return false;
-        if (!constraintName.equals(that.constraintName)) return false;
-        return constraintType == that.constraintType;
+        final Constraint that = (Constraint) o;
+        return Objects.equals(tableName, that.tableName) &&
+                Objects.equals(constraintName, that.constraintName) &&
+                constraintType == that.constraintType;
     }
 
     @Override
@@ -84,9 +88,9 @@ public class Constraint implements DbObject, TableNameAware {
 
     @Nonnull
     public static Constraint of(
-            @Nonnull String tableName,
-            @Nonnull String constraintName,
-            @Nonnull ConstraintType constraintType) {
+            @Nonnull final String tableName,
+            @Nonnull final String constraintName,
+            @Nonnull final ConstraintType constraintType) {
         return new Constraint(tableName, constraintName, constraintType);
     }
 }
