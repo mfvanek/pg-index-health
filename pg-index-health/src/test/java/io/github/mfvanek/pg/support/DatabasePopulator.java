@@ -18,6 +18,7 @@ import io.github.mfvanek.pg.support.statements.AddCommentOnColumnsStatement;
 import io.github.mfvanek.pg.support.statements.AddCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.support.statements.AddCommentOnTablesStatement;
+import io.github.mfvanek.pg.support.statements.AddInvalidForeignKeyStatement;
 import io.github.mfvanek.pg.support.statements.AddLinksBetweenAccountsAndClientsStatement;
 import io.github.mfvanek.pg.support.statements.ConvertColumnToJsonTypeStatement;
 import io.github.mfvanek.pg.support.statements.CreateAccountsTableStatement;
@@ -264,6 +265,12 @@ public final class DatabasePopulator implements AutoCloseable {
         if (supportsProcedures) {
             statementsToExecuteInSameTransaction.putIfAbsent(94, new AddCommentOnProceduresStatement(schemaName));
         }
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withNotValidConstraints() {
+        statementsToExecuteInSameTransaction.putIfAbsent(95, new AddInvalidForeignKeyStatement(schemaName));
         return this;
     }
 
