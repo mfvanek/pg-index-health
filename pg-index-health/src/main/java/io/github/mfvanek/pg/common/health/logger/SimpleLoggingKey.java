@@ -30,7 +30,8 @@ public enum SimpleLoggingKey implements LoggingKey {
     COLUMNS_WITH_JSON_TYPE("columns_with_json_type"),
     COLUMNS_WITH_SERIAL_TYPES("columns_with_serial_types"),
     FUNCTIONS_WITHOUT_DESCRIPTION("functions_without_description"),
-    INDEXES_WITH_BOOLEAN("indexes_with_boolean");
+    INDEXES_WITH_BOOLEAN("indexes_with_boolean"),
+    NOT_VALID_CONSTRAINTS("not_valid_constraints");
 
     private final String subKeyName;
 

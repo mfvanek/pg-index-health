@@ -68,7 +68,8 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                         .withNonSuitableIndex()
                         .withJsonType()
                         .withSerialType()
-                        .withFunctions(),
+                        .withFunctions()
+                        .withNotValidConstraints(),
                 ctx -> {
                     collectStatistics(schemaName);
                     assertThat(logger.logAll(Exclusions.empty(), ctx))
@@ -76,7 +77,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                             .containsExactlyInAnyOrder(
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tinvalid_indexes\t1",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tduplicated_indexes\t2",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t1",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t2",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_primary_key\t1",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_null_values\t1",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_bloat\t13",
@@ -89,7 +90,8 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_json_type\t1",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_serial_types\t2",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tfunctions_without_description\t2",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_boolean\t1");
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_boolean\t1",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tnot_valid_constraints\t2");
                 });
     }
 

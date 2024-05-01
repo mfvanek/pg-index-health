@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  */
 public class NotValidConstraintsCheckOnCluster extends AbstractCheckOnCluster<Constraint> {
 
-    protected NotValidConstraintsCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public NotValidConstraintsCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, NotValidConstraintsCheckOnHost::new);
     }
 }
