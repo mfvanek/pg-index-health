@@ -34,6 +34,7 @@ public class ExclusionsBuilder {
     private String tablesWithMissingIndexesExclusions = "";
     private String tablesWithoutPrimaryKeyExclusions = "";
     private String indexesWithNullValuesExclusions = "";
+    private String btreeIndexesOnArrayColumnsExclusions = "";
     private long indexSizeThresholdInBytes;
     private long tableSizeThresholdInBytes;
     private long indexBloatSizeThresholdInBytes;
@@ -93,6 +94,11 @@ public class ExclusionsBuilder {
 
     public ExclusionsBuilder withIndexesWithNullValuesExclusions(@Nonnull final String indexesWithNullValuesExclusions) {
         this.indexesWithNullValuesExclusions = Objects.requireNonNull(indexesWithNullValuesExclusions);
+        return this;
+    }
+
+    public ExclusionsBuilder withBtreeIndexesOnArrayColumnsExclusions(@Nonnull final String btreeIndexesOnArrayFieldsExclusions) {
+        this.btreeIndexesOnArrayColumnsExclusions = Objects.requireNonNull(btreeIndexesOnArrayFieldsExclusions);
         return this;
     }
 
@@ -164,6 +170,7 @@ public class ExclusionsBuilder {
                 tablesWithMissingIndexesExclusions,
                 tablesWithoutPrimaryKeyExclusions,
                 indexesWithNullValuesExclusions,
+                btreeIndexesOnArrayColumnsExclusions,
                 indexSizeThresholdInBytes,
                 tableSizeThresholdInBytes,
                 indexBloatSizeThresholdInBytes,
@@ -185,6 +192,7 @@ public class ExclusionsBuilder {
                 ", tablesWithMissingIndexesExclusions='" + tablesWithMissingIndexesExclusions + '\'' +
                 ", tablesWithoutPrimaryKeyExclusions='" + tablesWithoutPrimaryKeyExclusions + '\'' +
                 ", indexesWithNullValuesExclusions='" + indexesWithNullValuesExclusions + '\'' +
+                ", btreeIndexesOnArrayColumnsExclusions='" + btreeIndexesOnArrayColumnsExclusions + '\'' +
                 ", indexSizeThresholdInBytes=" + indexSizeThresholdInBytes +
                 ", tableSizeThresholdInBytes=" + tableSizeThresholdInBytes +
                 ", indexBloatSizeThresholdInBytes=" + indexBloatSizeThresholdInBytes +

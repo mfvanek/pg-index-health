@@ -30,6 +30,7 @@ import io.github.mfvanek.pg.support.statements.CreateForeignKeyOnNullableColumnS
 import io.github.mfvanek.pg.support.statements.CreateFunctionsStatement;
 import io.github.mfvanek.pg.support.statements.CreateIndexWithBooleanValues;
 import io.github.mfvanek.pg.support.statements.CreateIndexWithNullValues;
+import io.github.mfvanek.pg.support.statements.CreateIndexesOnArrayColumn;
 import io.github.mfvanek.pg.support.statements.CreateIndexesWithDifferentOpclassStatement;
 import io.github.mfvanek.pg.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
@@ -264,6 +265,12 @@ public final class DatabasePopulator implements AutoCloseable {
         if (supportsProcedures) {
             statementsToExecuteInSameTransaction.putIfAbsent(94, new AddCommentOnProceduresStatement(schemaName));
         }
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withBtreeIndexesOnArrayColumn() {
+        statementsToExecuteInSameTransaction.putIfAbsent(95, new CreateIndexesOnArrayColumn(schemaName));
         return this;
     }
 
