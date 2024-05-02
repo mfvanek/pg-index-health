@@ -10,6 +10,8 @@
 
 package io.github.mfvanek.pg.checks.host;
 
+import io.github.mfvanek.pg.checks.extractors.IndexWithSingleColumnExtractor;
+import io.github.mfvanek.pg.checks.extractors.TableExtractor;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
@@ -33,12 +35,13 @@ import javax.annotation.Nonnull;
  */
 abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckOnHost<T> {
 
-    protected static final String TABLE_NAME = "table_name";
-    protected static final String INDEX_NAME = "index_name";
-    protected static final String TABLE_SIZE = "table_size";
-    protected static final String INDEX_SIZE = "index_size";
+    protected static final String TABLE_NAME = TableExtractor.TABLE_NAME;
+    protected static final String INDEX_NAME = IndexWithSingleColumnExtractor.INDEX_NAME;
+    protected static final String TABLE_SIZE = TableExtractor.TABLE_SIZE;
+    protected static final String INDEX_SIZE = IndexWithSingleColumnExtractor.INDEX_SIZE;
     protected static final String BLOAT_SIZE = "bloat_size";
     protected static final String BLOAT_PERCENTAGE = "bloat_percentage";
+    protected static final String CONSTRAINT_NAME = "constraint_name";
 
     /**
      * An original java type representing database object.

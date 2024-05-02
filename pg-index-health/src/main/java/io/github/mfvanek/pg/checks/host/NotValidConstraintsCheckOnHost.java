@@ -20,7 +20,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Check for not valid constraint on a specific host.
+ * Check for not valid constraints on a specific host.
  *
  * @author Blohny
  * @since 0.10.4
@@ -32,17 +32,18 @@ public class NotValidConstraintsCheckOnHost extends AbstractCheckOnHost<Constrai
     }
 
     /**
-     * Returns constraints in the specified schema.
+     * Returns not valid constraints in the specified schema.
      *
      * @param pgContext check's context with the specified schema
-     * @return list of constraint
+     * @return list of not valid constraints
+     * @see Constraint
      */
     @Nonnull
     @Override
     public List<Constraint> check(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
-            final String constraintName = rs.getString("constraint_name");
+            final String constraintName = rs.getString(CONSTRAINT_NAME);
             final String constraintType = rs.getString("constraint_type");
             final ConstraintType ct = ConstraintType.valueFrom(constraintType);
             return Constraint.ofType(tableName, constraintName, ct);
