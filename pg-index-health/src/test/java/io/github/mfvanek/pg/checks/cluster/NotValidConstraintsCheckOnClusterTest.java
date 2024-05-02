@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -38,21 +40,24 @@ class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withNotValidConstraints().withUniqueConstraintOnSerialColumn(), ctx -> {
-            assertThat(check.check(ctx))
+            final List<Constraint> notValidConstraints = check.check(ctx);
+            assertThat(notValidConstraints)
                     .hasSize(2)
                     .containsExactly(
                             Constraint.of(ctx.enrichWithSchema("accounts"), "c_accounts_chk_client_id_not_validated_yet", ConstraintType.CHECK),
                             Constraint.of(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
 
+            assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
+                    .isEmpty();
+
             ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {
-                statement.execute(String.format("alter table %1$s.accounts validate constraint c_accounts_fk_client_id_not_validated_yet;", schemaName));
-                statement.execute(String.format("alter table %1$s.accounts validate constraint c_accounts_chk_client_id_not_validated_yet;", schemaName));
+                for (final Constraint constraint : notValidConstraints) {
+                    statement.execute(String.format("alter table %s validate constraint %s;",
+                            constraint.getTableName(), constraint.getConstraintName()));
+                }
             });
 
             assertThat(check.check(ctx))
-                    .isEmpty();
-
-            assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
                     .isEmpty();
         });
     }

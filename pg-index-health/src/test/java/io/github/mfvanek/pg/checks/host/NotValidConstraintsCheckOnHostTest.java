@@ -17,9 +17,12 @@ import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.ConstraintType;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.ExecuteUtils;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
@@ -39,16 +42,18 @@ class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withNotValidConstraints().withUniqueConstraintOnSerialColumn(), ctx -> {
-            assertThat(check)
-                    .executing(ctx)
+            final List<Constraint> notValidConstraints = check.check(ctx);
+            Assertions.assertThat(notValidConstraints)
                     .hasSize(2)
                     .containsExactly(
                             Constraint.of(ctx.enrichWithSchema("accounts"), "c_accounts_chk_client_id_not_validated_yet", ConstraintType.CHECK),
                             Constraint.of(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
 
             ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {
-                statement.execute(String.format("alter table %1$s.accounts validate constraint c_accounts_fk_client_id_not_validated_yet;", schemaName));
-                statement.execute(String.format("alter table %1$s.accounts validate constraint c_accounts_chk_client_id_not_validated_yet;", schemaName));
+                for (final Constraint constraint : notValidConstraints) {
+                    statement.execute(String.format("alter table %s validate constraint %s;",
+                            constraint.getTableName(), constraint.getConstraintName()));
+                }
             });
 
             assertThat(check)
