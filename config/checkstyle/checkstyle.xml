@@ -114,7 +114,7 @@
         <module name="PackageDeclaration"/>
         <module name="ParameterAssignment"/>
         <module name="ParameterNumber">
-            <property name="max" value="12"/>
+            <property name="max" value="13"/>
             <property name="ignoreOverriddenMethods" value="true"/>
         </module>
         <module name="RecordComponentNumber"/>

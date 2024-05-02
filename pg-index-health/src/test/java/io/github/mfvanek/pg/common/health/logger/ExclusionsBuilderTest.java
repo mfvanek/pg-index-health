@@ -23,7 +23,8 @@ class ExclusionsBuilderTest {
         assertThat(Exclusions.builder())
                 .hasToString("ExclusionsBuilder{duplicatedIndexesExclusions='', intersectedIndexesExclusions='', " +
                         "unusedIndexesExclusions='', tablesWithMissingIndexesExclusions='', tablesWithoutPrimaryKeyExclusions='', " +
-                        "indexesWithNullValuesExclusions='', indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " + "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0, " +
+                        "indexesWithNullValuesExclusions='', btreeIndexesOnArrayColumnsExclusions='', " +
+                        "indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " + "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0, " +
                         "tableBloatSizeThresholdInBytes=0, tableBloatPercentageThreshold=0}");
     }
 }

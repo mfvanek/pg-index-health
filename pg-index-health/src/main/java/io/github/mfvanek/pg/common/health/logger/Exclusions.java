@@ -34,6 +34,7 @@ public class Exclusions {
     private final Set<String> tablesWithMissingIndexesExclusions;
     private final Set<String> tablesWithoutPrimaryKeyExclusions;
     private final Set<String> indexesWithNullValuesExclusions;
+    private final Set<String> btreeIndexesOnArrayColumnsExclusions;
     private final long indexSizeThresholdInBytes;
     private final long tableSizeThresholdInBytes;
     private final long indexBloatSizeThresholdInBytes;
@@ -48,6 +49,7 @@ public class Exclusions {
                @Nonnull final String tablesWithMissingIndexesExclusions,
                @Nonnull final String tablesWithoutPrimaryKeyExclusions,
                @Nonnull final String indexesWithNullValuesExclusions,
+               @Nonnull final String btreeIndexesOnArrayColumnsExclusions,
                final long indexSizeThresholdInBytes,
                final long tableSizeThresholdInBytes,
                final long indexBloatSizeThresholdInBytes,
@@ -60,6 +62,7 @@ public class Exclusions {
         this.tablesWithMissingIndexesExclusions = prepareExclusions(tablesWithMissingIndexesExclusions);
         this.tablesWithoutPrimaryKeyExclusions = prepareExclusions(tablesWithoutPrimaryKeyExclusions);
         this.indexesWithNullValuesExclusions = prepareExclusions(indexesWithNullValuesExclusions);
+        this.btreeIndexesOnArrayColumnsExclusions = prepareExclusions(btreeIndexesOnArrayColumnsExclusions);
         this.indexSizeThresholdInBytes = Validators.sizeNotNegative(
                 indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
         this.tableSizeThresholdInBytes = Validators.sizeNotNegative(
@@ -118,6 +121,11 @@ public class Exclusions {
         return indexesWithNullValuesExclusions;
     }
 
+    @Nonnull
+    Set<String> getBtreeIndexesOnArrayColumnsExclusions() {
+        return btreeIndexesOnArrayColumnsExclusions;
+    }
+
     long getIndexSizeThresholdInBytes() {
         return indexSizeThresholdInBytes;
     }
@@ -155,6 +163,7 @@ public class Exclusions {
                 ", tablesWithMissingIndexesExclusions=" + tablesWithMissingIndexesExclusions +
                 ", tablesWithoutPrimaryKeyExclusions=" + tablesWithoutPrimaryKeyExclusions +
                 ", indexesWithNullValuesExclusions=" + indexesWithNullValuesExclusions +
+                ", btreeIndexesOnArrayColumnsExclusions=" + btreeIndexesOnArrayColumnsExclusions +
                 ", indexSizeThresholdInBytes=" + indexSizeThresholdInBytes +
                 ", tableSizeThresholdInBytes=" + tableSizeThresholdInBytes +
                 ", indexBloatSizeThresholdInBytes=" + indexBloatSizeThresholdInBytes +

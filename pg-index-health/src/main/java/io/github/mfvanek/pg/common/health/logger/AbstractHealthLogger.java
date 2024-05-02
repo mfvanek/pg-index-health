@@ -98,6 +98,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         logResult.add(logFunctionsWithoutDescription(databaseChecks, pgContext));
         logResult.add(logIndexesWithBoolean(databaseChecks, pgContext));
         logResult.add(logNotValidConstraints(databaseChecks, pgContext));
+        logResult.add(logBtreeIndexesOnArrayColumns(databaseChecks, exclusions, pgContext));
         return logResult;
     }
 
@@ -231,6 +232,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                          @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.INDEXES_WITH_BOOLEAN, IndexWithColumns.class),
                 c -> true, pgContext, SimpleLoggingKey.INDEXES_WITH_BOOLEAN);
+    }
+
+    private String logBtreeIndexesOnArrayColumns(@Nonnull final DatabaseChecks databaseChecks,
+                                                 @Nonnull final Exclusions exclusions,
+                                                 @Nonnull final PgContext pgContext) {
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS, Index.class),
+                FilterIndexesByNamePredicate.of(exclusions.getBtreeIndexesOnArrayColumnsExclusions()), pgContext, SimpleLoggingKey.BTREE_INDEXES_ON_ARRAY_COLUMNS);
     }
 
     @Nonnull
