@@ -25,8 +25,17 @@ import javax.annotation.Nonnull;
  */
 public enum SerialType {
 
+    /**
+     * Constant for smallserial.
+     */
     SMALL_SERIAL("smallserial"),
+    /**
+     * Constant for serial.
+     */
     SERIAL("serial"),
+    /**
+     * Constant for bigserial.
+     */
     BIG_SERIAL("bigserial");
 
     private static final Map<String, SerialType> VALUES = new HashMap<>();
@@ -59,6 +68,12 @@ public enum SerialType {
                 '}';
     }
 
+    /**
+     * Gets {@code SerialType} from PostgreSQL serial column type.
+     *
+     * @param pgColumnType PostgreSQL serial column type; should be non-null.
+     * @return {@code SerialType}
+     */
     @Nonnull
     public static SerialType valueFrom(@Nonnull final String pgColumnType) {
         Objects.requireNonNull(pgColumnType, "pgColumnType cannot be null");

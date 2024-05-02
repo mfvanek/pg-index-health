@@ -23,6 +23,7 @@ import javax.annotation.concurrent.Immutable;
  *
  * @author Blohny
  * @see TableNameAware
+ * @since 0.10.4
  */
 @Immutable
 public class Constraint implements DbObject, TableNameAware {
@@ -31,13 +32,20 @@ public class Constraint implements DbObject, TableNameAware {
     private final String constraintName;
     private final ConstraintType constraintType;
 
+    /**
+     * Constructs a {@code Constraint} object with given {@code ConstraintType}.
+     *
+     * @param tableName      table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param constraintType constraint type; should be non-null.
+     */
     protected Constraint(
             @Nonnull final String tableName,
             @Nonnull final String constraintName,
             @Nonnull final ConstraintType constraintType) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
-        this.constraintType = constraintType;
+        this.constraintType = Objects.requireNonNull(constraintType, "constraintType cannot be null");
     }
 
     /**
@@ -69,7 +77,7 @@ public class Constraint implements DbObject, TableNameAware {
     }
 
     /**
-     * Gets type of Constraint.
+     * Gets type of constraint.
      *
      * @return type of constraint
      * @see ConstraintType
@@ -107,23 +115,31 @@ public class Constraint implements DbObject, TableNameAware {
     }
 
     /**
+     * An auxiliary utility method for implementing {@code toString()} in child classes.
+     *
+     * @return string representation of the internal fields of this class
+     */
+    @Nonnull
+    final String innerToString() {
+        return "tableName='" + tableName + '\'' +
+                ", constraintName='" + constraintName + '\'' +
+                ", constraintType=" + constraintType;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public String toString() {
-        return Constraint.class.getSimpleName() + '{' +
-                "tableName='" + tableName + '\'' +
-                ", constraintName='" + constraintName + '\'' +
-                ", constraintType=" + constraintType +
-                '}';
+        return Constraint.class.getSimpleName() + '{' + innerToString() + '}';
     }
 
     /**
      * Constructs a {@code Constraint} object with given {@code ConstraintType}.
      *
-     * @param tableName           table name; should be non-blank.
-     * @param constraintName      constraint name; should be non-blank.
-     * @param constraintType      constraint type; should be non-blank.
+     * @param tableName      table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param constraintType constraint type; should be non-null.
      * @return {@code Constraint}
      */
     @Nonnull

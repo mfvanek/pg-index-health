@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * Check for not valid constraint on a specific host.
  *
  * @author Blohny
- * @since 0.10.3
+ * @since 0.10.4
  */
 public class NotValidConstraintsCheckOnHost extends AbstractCheckOnHost<Constraint> {
 
@@ -44,7 +44,7 @@ public class NotValidConstraintsCheckOnHost extends AbstractCheckOnHost<Constrai
             final String tableName = rs.getString(TABLE_NAME);
             final String constraintName = rs.getString("constraint_name");
             final String constraintType = rs.getString("constraint_type");
-            final ConstraintType ct = ConstraintType.fromConstraintType(constraintType);
+            final ConstraintType ct = ConstraintType.valueFrom(constraintType);
             return Constraint.of(tableName, constraintName, ct);
         });
     }

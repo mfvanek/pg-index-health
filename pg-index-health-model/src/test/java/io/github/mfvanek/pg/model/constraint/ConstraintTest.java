@@ -10,9 +10,11 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ConstraintTest {
 
@@ -54,12 +56,28 @@ class ConstraintTest {
                 .isEqualTo(ConstraintType.FOREIGN_KEY);
     }
 
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void withInvalidArguments() {
+        assertThatThrownBy(() -> Constraint.of(null, null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("tableName cannot be null");
+        assertThatThrownBy(() -> Constraint.of("t", null, null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("constraintName cannot be null");
+        assertThatThrownBy(() -> Constraint.of("t", "c_t_order_id", null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("constraintType cannot be null");
+    }
+
+    @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
         final Constraint first = new Constraint("t", "not_valid_id", ConstraintType.CHECK);
         final Constraint theSame = new Constraint("t", "not_valid_id", ConstraintType.CHECK);
         final Constraint different = new Constraint("t", "valid_id", ConstraintType.CHECK);
         final Constraint second = new Constraint("t", "not_valid_id", ConstraintType.FOREIGN_KEY);
+        final Constraint third = new Constraint("t1", "not_valid_id", ConstraintType.FOREIGN_KEY);
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -80,5 +98,18 @@ class ConstraintTest {
         assertThat(second)
                 .isNotEqualTo(first)
                 .doesNotHaveSameHashCodeAs(first);
+
+        assertThat(third)
+                .isNotEqualTo(first)
+                .doesNotHaveSameHashCodeAs(first)
+                .isNotEqualTo(second)
+                .doesNotHaveSameHashCodeAs(second);
+    }
+
+    @Test
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
+    void equalsHashCodeShouldAdhereContracts() {
+        EqualsVerifier.forClass(Constraint.class)
+                .verify();
     }
 }
