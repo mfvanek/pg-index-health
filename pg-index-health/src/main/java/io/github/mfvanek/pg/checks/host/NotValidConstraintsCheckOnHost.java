@@ -45,7 +45,7 @@ public class NotValidConstraintsCheckOnHost extends AbstractCheckOnHost<Constrai
             final String constraintName = rs.getString("constraint_name");
             final String constraintType = rs.getString("constraint_type");
             final ConstraintType ct = ConstraintType.valueFrom(constraintType);
-            return Constraint.of(tableName, constraintName, ct);
+            return Constraint.ofType(tableName, constraintName, ct);
         });
     }
 }

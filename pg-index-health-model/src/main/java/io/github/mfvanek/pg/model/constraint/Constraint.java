@@ -102,8 +102,7 @@ public class Constraint implements DbObject, TableNameAware {
 
         final Constraint that = (Constraint) other;
         return Objects.equals(tableName, that.tableName) &&
-                Objects.equals(constraintName, that.constraintName) &&
-                constraintType == that.constraintType;
+                Objects.equals(constraintName, that.constraintName);
     }
 
     /**
@@ -111,7 +110,7 @@ public class Constraint implements DbObject, TableNameAware {
      */
     @Override
     public final int hashCode() {
-        return Objects.hash(tableName, constraintName, constraintType);
+        return Objects.hash(tableName, constraintName);
     }
 
     /**
@@ -122,8 +121,7 @@ public class Constraint implements DbObject, TableNameAware {
     @Nonnull
     final String innerToString() {
         return "tableName='" + tableName + '\'' +
-                ", constraintName='" + constraintName + '\'' +
-                ", constraintType=" + constraintType;
+                ", constraintName='" + constraintName + '\'';
     }
 
     /**
@@ -131,7 +129,10 @@ public class Constraint implements DbObject, TableNameAware {
      */
     @Override
     public String toString() {
-        return Constraint.class.getSimpleName() + '{' + innerToString() + '}';
+        return Constraint.class.getSimpleName() + '{' +
+                innerToString() +
+                ", constraintType=" + constraintType +
+                '}';
     }
 
     /**
@@ -143,10 +144,9 @@ public class Constraint implements DbObject, TableNameAware {
      * @return {@code Constraint}
      */
     @Nonnull
-    public static Constraint of(
-            @Nonnull final String tableName,
-            @Nonnull final String constraintName,
-            @Nonnull final ConstraintType constraintType) {
+    public static Constraint ofType(@Nonnull final String tableName,
+                                    @Nonnull final String constraintName,
+                                    @Nonnull final ConstraintType constraintType) {
         return new Constraint(tableName, constraintName, constraintType);
     }
 }

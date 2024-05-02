@@ -133,7 +133,7 @@ class ForeignKeyTest {
                 List.of(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "limit")));
         final ForeignKey withDifferentOrderOfColumns = ForeignKey.of("t", "c_t_order_id",
                 List.of(Column.ofNotNull("t", "limit"), Column.ofNotNull("t", "order_id")));
-        final ForeignKey second = ForeignKey.ofNullableColumn("t", "c_t_order_id", "no_matter_what");
+        final ForeignKey withDifferentColumnName = ForeignKey.ofNullableColumn("t", "c_t_order_id", "no_matter_what");
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -149,14 +149,15 @@ class ForeignKeyTest {
                 .isEqualTo(first)
                 .hasSameHashCodeAs(first);
 
-        // column order matters
+        // column order doesn't matter
         assertThat(withDifferentOrderOfColumns)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
-        assertThat(second)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+        // column name doesn't matter
+        assertThat(withDifferentColumnName)
+                .isEqualTo(first)
+                .hasSameHashCodeAs(first);
 
         final ForeignKey third = ForeignKey.of("table", "c_t_order_id",
                 List.of(Column.ofNotNull("table", "order_id"), Column.ofNotNull("table", "limit")));
@@ -175,6 +176,7 @@ class ForeignKeyTest {
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(ForeignKey.class)
+                .withIgnoredFields("constraintType", "columnsInConstraint")
                 .verify();
     }
 }
