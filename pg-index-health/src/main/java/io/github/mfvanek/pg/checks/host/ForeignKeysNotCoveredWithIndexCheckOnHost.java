@@ -44,7 +44,7 @@ public class ForeignKeysNotCoveredWithIndexCheckOnHost extends AbstractCheckOnHo
     public List<ForeignKey> check(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
-            final String constraintName = rs.getString("constraint_name");
+            final String constraintName = rs.getString(CONSTRAINT_NAME);
             final Array columnsArray = rs.getArray("columns");
             final String[] rawColumns = (String[]) columnsArray.getArray();
             final List<Column> columns = ColumnsInForeignKeyParser.parseRawColumnData(tableName, rawColumns);

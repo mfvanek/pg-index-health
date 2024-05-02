@@ -25,6 +25,9 @@ import javax.annotation.Nonnull;
  */
 public class TableExtractor implements ResultSetExtractor<Table> {
 
+    public static final String TABLE_NAME = "table_name";
+    public static final String TABLE_SIZE = "table_size";
+
     private TableExtractor() {
     }
 
@@ -34,8 +37,8 @@ public class TableExtractor implements ResultSetExtractor<Table> {
     @Nonnull
     @Override
     public Table extractData(@Nonnull final ResultSet resultSet) throws SQLException {
-        final String tableName = resultSet.getString("table_name");
-        final long tableSize = resultSet.getLong("table_size");
+        final String tableName = resultSet.getString(TABLE_NAME);
+        final long tableSize = resultSet.getLong(TABLE_SIZE);
         return Table.of(tableName, tableSize);
     }
 

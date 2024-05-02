@@ -17,6 +17,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.annotation.Nonnull;
 
+import static io.github.mfvanek.pg.checks.extractors.TableExtractor.TABLE_NAME;
+
 /**
  * A mapper from raw data to {@link Column} model.
  *
@@ -34,7 +36,7 @@ public class ColumnExtractor implements ResultSetExtractor<Column> {
     @Nonnull
     @Override
     public Column extractData(@Nonnull final ResultSet resultSet) throws SQLException {
-        final String tableName = resultSet.getString("table_name");
+        final String tableName = resultSet.getString(TABLE_NAME);
         final String columnName = resultSet.getString("column_name");
         final boolean columnNotNull = resultSet.getBoolean("column_not_null");
         if (columnNotNull) {

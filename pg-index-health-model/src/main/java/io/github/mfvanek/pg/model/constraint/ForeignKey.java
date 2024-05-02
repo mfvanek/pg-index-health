@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
-import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
@@ -25,51 +24,21 @@ import javax.annotation.concurrent.Immutable;
  *
  * @author Ivan Vakhrushev
  * @see TableNameAware
+ * @see Constraint
  */
 @Immutable
-public class ForeignKey implements DbObject, TableNameAware {
+public class ForeignKey extends Constraint {
 
-    private final String tableName;
-    private final String constraintName;
     private final List<Column> columnsInConstraint;
 
     private ForeignKey(@Nonnull final String tableName,
                        @Nonnull final String constraintName,
                        @Nonnull final List<Column> columnsInConstraint) {
-        this.tableName = Validators.tableNameNotBlank(tableName);
-        this.constraintName = Validators.notBlank(constraintName, "constraintName");
+        super(tableName, constraintName, ConstraintType.FOREIGN_KEY);
         final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columnsInConstraint, "columnsInConstraint cannot be null"));
         Validators.validateThatNotEmpty(defensiveCopy);
         Validators.validateThatTableIsTheSame(tableName, defensiveCopy);
         this.columnsInConstraint = defensiveCopy;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Nonnull
-    @Override
-    public final String getName() {
-        return getConstraintName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Nonnull
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * Gets the name of foreign key constraint.
-     *
-     * @return the name of foreign key
-     */
-    @Nonnull
-    public String getConstraintName() {
-        return constraintName;
     }
 
     /**
@@ -86,39 +55,11 @@ public class ForeignKey implements DbObject, TableNameAware {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public final boolean equals(final Object other) {
-        if (this == other) {
-            return true;
-        }
-
-        if (!(other instanceof ForeignKey)) {
-            return false;
-        }
-
-        final ForeignKey that = (ForeignKey) other;
-        return Objects.equals(tableName, that.tableName) &&
-                Objects.equals(constraintName, that.constraintName) &&
-                Objects.equals(columnsInConstraint, that.columnsInConstraint);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final int hashCode() {
-        return Objects.hash(tableName, constraintName, columnsInConstraint);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Nonnull
     @Override
     public String toString() {
         return ForeignKey.class.getSimpleName() + '{' +
-                "tableName='" + tableName + '\'' +
-                ", constraintName='" + constraintName + '\'' +
+                innerToString() +
                 ", columnsInConstraint=" + columnsInConstraint +
                 '}';
     }

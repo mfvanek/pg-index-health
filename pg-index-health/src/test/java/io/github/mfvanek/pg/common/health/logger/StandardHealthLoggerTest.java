@@ -46,7 +46,8 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                         .withNonSuitableIndex()
                         .withJsonType()
                         .withSerialType()
-                        .withFunctions(),
+                        .withFunctions()
+                        .withNotValidConstraints(),
                 ctx -> {
                     collectStatistics(schemaName);
                     final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
@@ -55,7 +56,7 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                             .containsExactlyInAnyOrder(
                                     "invalid_indexes:1",
                                     "duplicated_indexes:2",
-                                    "foreign_keys_without_index:1",
+                                    "foreign_keys_without_index:2",
                                     "tables_without_primary_key:1",
                                     "indexes_with_null_values:1",
                                     "indexes_with_bloat:16",
@@ -69,6 +70,7 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                                     "columns_with_serial_types:2",
                                     "functions_without_description:2",
                                     "indexes_with_boolean:1",
+                                    "not_valid_constraints:2",
                                     "btree_indexes_on_array_columns:2");
                 });
     }

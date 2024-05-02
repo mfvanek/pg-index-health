@@ -27,6 +27,7 @@ import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.function.StoredFunction;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
@@ -96,6 +97,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         logResult.add(logColumnsWithSerialTypes(databaseChecks, pgContext));
         logResult.add(logFunctionsWithoutDescription(databaseChecks, pgContext));
         logResult.add(logIndexesWithBoolean(databaseChecks, pgContext));
+        logResult.add(logNotValidConstraints(databaseChecks, pgContext));
         logResult.add(logBtreeIndexesOnArrayColumns(databaseChecks, exclusions, pgContext));
         return logResult;
     }
@@ -237,6 +239,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                                  @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS, Index.class),
                 FilterIndexesByNamePredicate.of(exclusions.getBtreeIndexesOnArrayColumnsExclusions()), pgContext, SimpleLoggingKey.BTREE_INDEXES_ON_ARRAY_COLUMNS);
+    }
+
+    @Nonnull
+    private String logNotValidConstraints(@Nonnull final DatabaseChecks databaseChecks,
+                                          @Nonnull final PgContext pgContext) {
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.NOT_VALID_CONSTRAINTS, Constraint.class),
+                c -> true, pgContext, SimpleLoggingKey.NOT_VALID_CONSTRAINTS);
     }
 
     @Nonnull

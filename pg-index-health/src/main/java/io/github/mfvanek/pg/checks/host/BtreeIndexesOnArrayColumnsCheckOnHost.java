@@ -10,12 +10,10 @@
 
 package io.github.mfvanek.pg.checks.host;
 
-import io.github.mfvanek.pg.checks.extractors.ColumnExtractor;
+import io.github.mfvanek.pg.checks.extractors.IndexWithSingleColumnExtractor;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import java.util.List;
@@ -34,16 +32,15 @@ public class BtreeIndexesOnArrayColumnsCheckOnHost extends AbstractCheckOnHost<I
         super(IndexWithColumns.class, pgConnection, Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS);
     }
 
+    /**
+     * Returns B-tree indexes on array columns in the specified schema.
+     *
+     * @param pgContext check's context with the specified schema
+     * @return list of B-tree indexes on array columns
+     */
     @Nonnull
     @Override
     public List<IndexWithColumns> check(@Nonnull final PgContext pgContext) {
-        final ResultSetExtractor<Column> columnExtractor = ColumnExtractor.of();
-        return executeQuery(pgContext, rs -> {
-            final String tableName = rs.getString(TABLE_NAME);
-            final String indexName = rs.getString(INDEX_NAME);
-            final long indexSize = rs.getLong(INDEX_SIZE);
-            final Column column = columnExtractor.extractData(rs);
-            return IndexWithColumns.ofSingle(tableName, indexName, indexSize, column);
-        });
+        return executeQuery(pgContext, IndexWithSingleColumnExtractor.of());
     }
 }

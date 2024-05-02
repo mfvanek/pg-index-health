@@ -69,6 +69,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                         .withJsonType()
                         .withSerialType()
                         .withFunctions()
+                        .withNotValidConstraints()
                         .withBtreeIndexesOnArrayColumn(),
                 ctx -> {
                     collectStatistics(schemaName);
@@ -77,7 +78,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                             .containsExactlyInAnyOrder(
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tinvalid_indexes\t1",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tduplicated_indexes\t2",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t1",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t2",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_primary_key\t1",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_null_values\t1",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_bloat\t16",
@@ -91,6 +92,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_serial_types\t2",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tfunctions_without_description\t2",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_boolean\t1",
+                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tnot_valid_constraints\t2",
                                     "1999-12-31T23:59:59Z\tdb_indexes_health\tbtree_indexes_on_array_columns\t2");
                 });
     }
