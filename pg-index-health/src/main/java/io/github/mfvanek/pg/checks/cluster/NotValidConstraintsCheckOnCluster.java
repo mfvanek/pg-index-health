@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
  * Check for not valid constraint on all hosts in the cluster.
  *
  * @author Blohny
- * @since 0.10.4
+ * @since 0.11.0
  */
 public class NotValidConstraintsCheckOnCluster extends AbstractCheckOnCluster<Constraint> {
 

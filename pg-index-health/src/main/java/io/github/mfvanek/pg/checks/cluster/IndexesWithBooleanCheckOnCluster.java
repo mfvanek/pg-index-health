@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
  * Check for indexes that contain boolean values on all hosts in the cluster.
  *
  * @author Ivan Vahrushev
- * @since 0.10.4
+ * @since 0.11.0
  */
 public class IndexesWithBooleanCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
