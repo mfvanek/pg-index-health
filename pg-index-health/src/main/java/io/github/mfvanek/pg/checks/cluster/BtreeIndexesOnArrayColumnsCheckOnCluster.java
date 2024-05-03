@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  * GIN-index should be used instead for such columns.
  *
  * @author Vadim Khizhin
- * @since 0.10.4
+ * @since 0.11.0
  */
 public class BtreeIndexesOnArrayColumnsCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 

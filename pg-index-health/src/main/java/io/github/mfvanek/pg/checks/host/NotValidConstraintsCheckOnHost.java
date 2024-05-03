@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * Check for not valid constraints on a specific host.
  *
  * @author Blohny
- * @since 0.10.4
+ * @since 0.11.0
  */
 public class NotValidConstraintsCheckOnHost extends AbstractCheckOnHost<Constraint> {
 

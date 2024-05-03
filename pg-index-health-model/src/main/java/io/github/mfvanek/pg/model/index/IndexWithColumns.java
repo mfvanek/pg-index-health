@@ -22,7 +22,7 @@ import javax.annotation.concurrent.Immutable;
  * Represents database index with information about size and columns.
  *
  * @author Ivan Vahrushev
- * @since 0.10.4
+ * @since 0.11.0
  */
 @Immutable
 public class IndexWithColumns extends IndexWithSize {

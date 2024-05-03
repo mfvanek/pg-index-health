@@ -24,7 +24,7 @@ import static io.github.mfvanek.pg.checks.extractors.TableExtractor.TABLE_NAME;
  * A mapper from raw data to {@link IndexWithColumns} model.
  *
  * @author Ivan Vahrushev
- * @since 0.10.4
+ * @since 0.11.0
  */
 public class IndexWithSingleColumnExtractor implements ResultSetExtractor<IndexWithColumns> {
 
