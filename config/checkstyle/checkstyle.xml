@@ -76,7 +76,7 @@
         <module name="FinalLocalVariable"/>
         <module name="FinalParameters"/>
         <!-- <module name="HiddenField"/> invalid -->
-        <module name="HideUtilityClassConstructor"/>
+        <!-- <module name="HideUtilityClassConstructor"/> useless -->
         <module name="IllegalCatch"/>
         <module name="IllegalIdentifierName"/>
         <module name="IllegalInstantiation"/>
@@ -134,7 +134,7 @@
         <module name="TodoComment"/>
         <!-- <module name="TrailingComment"/> invalid -->
         <module name="TypecastParenPad"/>
-        <module name="UncommentedMain"/>
+        <!-- <module name="UncommentedMain"/> useless -->
         <module name="UnnecessaryParentheses"/>
         <module name="UnnecessarySemicolonInEnumeration"/>
         <module name="UnnecessarySemicolonInTryWithResources"/>

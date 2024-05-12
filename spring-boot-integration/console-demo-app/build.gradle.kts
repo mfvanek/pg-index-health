@@ -16,3 +16,15 @@ dependencies {
 
     spotbugsSlf4j(libs.slf4j.simple)
 }
+
+checkstyle {
+    configFile = file("../../config/checkstyle/checkstyle.xml")
+}
+
+pmd {
+    ruleSetFiles = files("../../config/pmd/pmd.xml")
+}
+
+spotbugs {
+    excludeFilter.set(file("../../config/spotbugs/exclude.xml"))
+}

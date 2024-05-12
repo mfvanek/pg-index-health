@@ -18,3 +18,15 @@ dependencies {
     testImplementation(libs.apache.commons.lang3)
     testImplementation(libs.postgresql)
 }
+
+checkstyle {
+    configFile = file("../../config/checkstyle/checkstyle.xml")
+}
+
+pmd {
+    ruleSetFiles = files("../../config/pmd/pmd.xml")
+}
+
+spotbugs {
+    excludeFilter.set(file("../../config/spotbugs/exclude.xml"))
+}

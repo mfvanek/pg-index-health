@@ -59,7 +59,7 @@
         <Class name="io.github.mfvanek.pg.spring.DatabaseStructureHealthAutoConfigurationFilteringTest"/>
     </Match>
     <Match>
-        <Bug pattern="SLF4J_LOGGER_SHOULD_BE_NON_STATIC"/>
+        <Bug pattern="SLF4J_LOGGER_SHOULD_BE_NON_STATIC,SLF4J_SIGN_ONLY_FORMAT"/>
     </Match>
     <Match>
         <Bug pattern="PDP_POORLY_DEFINED_PARAMETER"/>
