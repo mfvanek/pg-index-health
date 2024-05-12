@@ -20,6 +20,13 @@ pitest {
     }
     timestampedReports.set(false)
     mutationThreshold.set(100)
+    exportLineCoverage.set(true)
+
+    reportAggregator {
+        testStrengthThreshold = 1
+        mutationThreshold = 1
+        maxSurviving = 10
+    }
 }
 
 tasks.withType<PitestTask>().configureEach {
