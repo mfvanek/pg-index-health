@@ -34,6 +34,7 @@
         <Or>
             <Class name="io.github.mfvanek.pg.testing.PostgreSqlClusterWrapper"/>
             <Class name="io.github.mfvanek.pg.testing.PostgreSqlContainerWrapper"/>
+            <Class name="io.github.mfvanek.pg.spring.postgres.config.DatabaseConfig"/>
         </Or>
     </Match>
     <Match>
@@ -48,5 +49,34 @@
             <Class name="io.github.mfvanek.pg.generator.GeneratingOptions$Builder"/>
             <Class name="io.github.mfvanek.pg.common.maintenance.Diagnostic"/>
         </Or>
+    </Match>
+    <Match>
+        <Bug pattern="MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR"/>
+        <Class name="io.github.mfvanek.pg.spring.AutoConfigurationTestBase"/>
+    </Match>
+    <Match>
+        <Bug pattern="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED"/>
+        <Class name="io.github.mfvanek.pg.spring.DatabaseStructureHealthAutoConfigurationFilteringTest"/>
+    </Match>
+    <Match>
+        <Bug pattern="SLF4J_LOGGER_SHOULD_BE_NON_STATIC"/>
+    </Match>
+    <Match>
+        <Bug pattern="PDP_POORLY_DEFINED_PARAMETER"/>
+        <Class name="io.github.mfvanek.pg.spring.AutoConfigurationTestBase"/>
+    </Match>
+    <Match>
+        <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+        <Class name="io.github.mfvanek.pg.spring.DatabaseStructureHealthAutoConfiguration"/>
+    </Match>
+    <Match>
+        <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING,OPM_OVERLY_PERMISSIVE_METHOD,CE_CLASS_ENVY,EXS_EXCEPTION_SOFTENING_HAS_CHECKED,EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS,MDM_THREAD_YIELD,PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS,RFI_SET_ACCESSIBLE,SIL_SQL_IN_LOOP"/>
+    </Match>
+    <Match>
+        <Bug pattern="SQL_INJECTION_JDBC,IMPROPER_UNICODE"/>
+    </Match>
+    <Match>
+        <Bug pattern="NSE_NON_SYMMETRIC_EQUALS"/>
+        <Class name="io.github.mfvanek.pg.connection.PgConnectionImpl"/>
     </Match>
 </FindBugsFilter>

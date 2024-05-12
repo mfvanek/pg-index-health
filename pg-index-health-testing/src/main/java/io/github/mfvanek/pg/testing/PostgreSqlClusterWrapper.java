@@ -94,12 +94,12 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         try {
             dataSourceForStandBy.close();
         } catch (SQLException ex) {
-            LOGGER.warn(ex.getMessage(), ex);
+            LOGGER.warn("Error occurred while closing data source to replica", ex);
         }
         try {
             dataSourceForPrimary.close();
         } catch (SQLException ex) {
-            LOGGER.warn(ex.getMessage(), ex);
+            LOGGER.warn("Error occurred while closing data source to primary", ex);
         }
         containerForStandBy.close();
         containerForPrimary.close();

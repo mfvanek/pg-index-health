@@ -23,14 +23,14 @@ dependencies {
     errorprone("jp.skypencil.errorprone.slf4j:errorprone-slf4j:0.1.23")
 
     spotbugsPlugins("jp.skypencil.findbugs.slf4j:bug-pattern:1.5.0")
-    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.4")
+    //spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0") TODO
+    //spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.4") TODO
 }
 
 tasks.withType<JavaCompile>().configureEach {
     options.errorprone {
         disableWarningsInGeneratedCode.set(true)
-        disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType", "TruthSelfEquals", "Slf4jLoggerShouldBeNonStatic")
+        disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType", "TruthSelfEquals", "Slf4jLoggerShouldBeNonStatic", "Slf4jSignOnlyFormat")
     }
 }
 

@@ -38,7 +38,7 @@ tasks.withType<KotlinCompile> {
 
 detekt {
     toolVersion = libs.versions.detekt.get()
-    config.setFrom(file("../config/detekt/detekt.yml"))
+    config.setFrom(file("../../config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
 }
 

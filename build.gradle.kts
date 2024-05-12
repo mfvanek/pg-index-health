@@ -20,8 +20,11 @@ allprojects {
 }
 
 dependencies {
+    val excludedSubprojects = setOf("pg-index-health-bom", "spring-boot-integration")
     subprojects.forEach {
-        jacocoAggregation(it)
+        if (!excludedSubprojects.contains(it.name)) {
+            jacocoAggregation(it)
+        }
     }
 }
 
