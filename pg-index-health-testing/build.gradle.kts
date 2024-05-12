@@ -1,4 +1,6 @@
 plugins {
+    id("java-library")
+    id("pg-index-health.java-compilation")
     id("pg-index-health.java-conventions")
     id("pg-index-health.publish")
 }
@@ -9,7 +11,7 @@ dependencies {
     api(project(":pg-index-health-model"))
     api(project(":pg-index-health-jdbc-connection"))
     implementation(libs.apache.commons.dbcp2)
-    implementation(platform("org.testcontainers:testcontainers-bom:1.19.7"))
+    implementation(platform(libs.testcontainers.bom))
     implementation("org.testcontainers:testcontainers")
     implementation("org.testcontainers:postgresql")
     implementation(libs.awaitility)

@@ -5,10 +5,7 @@ plugins {
     id("jacoco-report-aggregation")
     id("org.sonarqube")
     id("com.github.ben-manes.versions") version "0.51.0"
-    id("info.solidsoft.pitest")
 }
-
-apply(plugin = "info.solidsoft.pitest.aggregator")
 
 description = "pg-index-health build"
 
@@ -40,10 +37,6 @@ tasks{
     // To avoid creation of jar's in build folder in the root
     jar {
         isEnabled = false
-    }
-
-    build {
-        dependsOn("pitestReportAggregate")
     }
 }
 

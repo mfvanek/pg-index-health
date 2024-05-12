@@ -11,7 +11,7 @@ dependencies {
 
 pitest {
     junit5PluginVersion.set("1.2.1")
-    pitestVersion.set("1.15.3")
+    pitestVersion.set("1.15.8")
     threads.set(4)
     if (System.getenv("STRYKER_DASHBOARD_API_KEY") != null) {
         outputFormats.set(setOf("stryker-dashboard"))
@@ -21,12 +21,6 @@ pitest {
     timestampedReports.set(false)
     mutationThreshold.set(100)
     exportLineCoverage.set(true)
-
-    reportAggregator {
-        testStrengthThreshold = 1
-        mutationThreshold = 1
-        maxSurviving = 10
-    }
 }
 
 tasks.withType<PitestTask>().configureEach {

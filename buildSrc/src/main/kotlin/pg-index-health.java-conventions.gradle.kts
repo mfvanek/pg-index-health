@@ -5,7 +5,7 @@ import net.ltgt.gradle.errorprone.errorprone
 import org.sonarqube.gradle.SonarTask
 
 plugins {
-    id("java-library")
+    id("java")
     id("org.sonarqube")
     id("checkstyle")
     id("pmd")
@@ -16,50 +16,27 @@ plugins {
     id("org.gradle.test-retry")
 }
 
-val versionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
-
 dependencies {
-    versionCatalog.findLibrary("jsr305").ifPresent {
-        implementation(it)
-    }
-
-    testImplementation(platform("org.assertj:assertj-bom:3.25.3"))
-    testImplementation("org.assertj:assertj-core")
-    testImplementation(platform("org.mockito:mockito-bom:5.11.0"))
-    testImplementation(platform("org.junit:junit-bom:5.10.2"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-
     checkstyle("com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1")
+
     errorprone("com.google.errorprone:error_prone_core:2.27.0")
+    errorprone("jp.skypencil.errorprone.slf4j:errorprone-slf4j:0.1.23")
+
+    spotbugsPlugins("jp.skypencil.findbugs.slf4j:bug-pattern:1.5.0")
+    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.4")
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-    withJavadocJar()
-    withSourcesJar()
-}
 tasks.withType<JavaCompile>().configureEach {
-    options.compilerArgs.add("-parameters")
     options.errorprone {
         disableWarningsInGeneratedCode.set(true)
-        disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType", "TruthSelfEquals")
+        disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType", "TruthSelfEquals", "Slf4jLoggerShouldBeNonStatic")
     }
-}
-
-jacoco {
-    toolVersion = "0.8.12"
 }
 
 tasks {
     test {
-        testLogging.showStandardStreams = false // set to true for debug purposes
-        useJUnitPlatform()
         dependsOn(checkstyleMain, checkstyleTest, pmdMain, pmdTest, spotbugsMain, spotbugsTest)
-        maxParallelForks = 1 // try to set a higher value to speed up the local build
-        finalizedBy(jacocoTestReport, jacocoTestCoverageVerification)
     }
 
     withType<Test>().configureEach {
@@ -85,59 +62,6 @@ tasks {
         }
     }
 
-    jacocoTestReport {
-        dependsOn(test)
-        reports {
-            xml.required.set(true)
-            html.required.set(true)
-        }
-    }
-
-    jacocoTestCoverageVerification {
-        dependsOn(jacocoTestReport)
-        violationRules {
-            rule {
-                limit {
-                    counter = "CLASS"
-                    value = "MISSEDCOUNT"
-                    maximum = "0.0".toBigDecimal()
-                }
-            }
-            rule {
-                limit {
-                    counter = "METHOD"
-                    value = "MISSEDCOUNT"
-                    maximum = "0.0".toBigDecimal()
-                }
-            }
-            rule {
-                limit {
-                    counter = "LINE"
-                    value = "MISSEDCOUNT"
-                    maximum = "0.0".toBigDecimal()
-                }
-            }
-            rule {
-                limit {
-                    counter = "INSTRUCTION"
-                    value = "COVEREDRATIO"
-                    minimum = "1.0".toBigDecimal()
-                }
-            }
-            rule {
-                limit {
-                    counter = "BRANCH"
-                    value = "COVEREDRATIO"
-                    minimum = "1.0".toBigDecimal()
-                }
-            }
-        }
-    }
-
-    check {
-        dependsOn(jacocoTestCoverageVerification)
-    }
-
     withType<SpotBugsTask>().configureEach {
         reports {
             create("xml") { enabled = true }
@@ -159,7 +83,7 @@ checkstyle {
 }
 
 pmd {
-    toolVersion = "7.0.0"
+    toolVersion = "7.1.0"
     isConsoleOutput = true
     ruleSetFiles = files("../config/pmd/pmd.xml")
     ruleSets = listOf()
