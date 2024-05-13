@@ -53,7 +53,7 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
             assertThat(logsCaptor.getLogs())
                     .hasSize(1)
-                    .allMatch(l -> l.getMessage().contains("reset"));
+                    .allMatch(l -> l.getFormattedMessage().contains("reset"));
         }
     }
 
