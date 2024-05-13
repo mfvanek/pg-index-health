@@ -29,14 +29,27 @@ public class DatabaseStructureHealthProperties {
      */
     private final boolean enabled;
 
+    /**
+     * Constructs a {@code DatabaseStructureHealthProperties} instance.
+     *
+     * @param enabled enabled or disabled autoconfiguration
+     */
     public DatabaseStructureHealthProperties(@DefaultValue("true") final boolean enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * Gets the state of autoconfiguration: enabled or disabled.
+     *
+     * @return true if starter enabled otherwise false
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return DatabaseStructureHealthProperties.class.getSimpleName() + '{' +

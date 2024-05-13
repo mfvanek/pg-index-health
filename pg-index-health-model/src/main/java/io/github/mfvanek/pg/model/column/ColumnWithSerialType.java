@@ -22,6 +22,7 @@ import javax.annotation.concurrent.Immutable;
  *
  * @author Ivan Vakhrushev
  * @see SerialType
+ * @see Column
  * @since 0.6.2
  */
 @Immutable

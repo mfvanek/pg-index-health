@@ -19,10 +19,16 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 import javax.annotation.Nullable;
 
+/**
+ * Custom {@link SpringBootCondition} to disable starter when configured a data source to another database (not PostgreSQL).
+ */
 public class DatabaseStructureHealthCondition extends SpringBootCondition {
 
     private static final String PROPERTY_NAME = "spring.datasource.url";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ConditionOutcome getMatchOutcome(final ConditionContext context, final AnnotatedTypeMetadata metadata) {
         final ConditionMessage.Builder message = ConditionMessage.forCondition("pg.index.health.test PostgreSQL condition");

@@ -56,7 +56,7 @@ import java.util.Objects;
 import javax.sql.DataSource;
 
 /**
- * Autoconfiguration for using pg-index-health in unit tests.
+ * Autoconfiguration for using pg-index-health in component/integration tests.
  *
  * @author Ivan Vakhrushev
  * @since 0.3.1
@@ -70,6 +70,13 @@ import javax.sql.DataSource;
 @AutoConfigureAfter(DataSourceAutoConfiguration.class)
 public class DatabaseStructureHealthAutoConfiguration {
 
+    /**
+     * {@link PgConnection} bean.
+     *
+     * @param dataSource {@link DataSource} instance
+     * @param databaseUrl connection string to database
+     * @return {@link PgConnection} instance
+     */
     @Bean
     @ConditionalOnBean(name = "dataSource")
     @ConditionalOnMissingBean
