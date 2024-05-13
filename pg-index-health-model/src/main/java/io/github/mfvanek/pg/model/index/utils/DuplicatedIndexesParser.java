@@ -33,7 +33,7 @@ public final class DuplicatedIndexesParser {
                 .map(a -> {
                     final String indexName = a[0].trim().substring("idx=".length());
                     final String sizeAsString = a[1].trim().substring("size=".length());
-                    return Map.entry(indexName, Long.parseLong(sizeAsString));
+                    return Map.entry(indexName, Long.valueOf(sizeAsString));
                 })
                 .collect(Collectors.toUnmodifiableList());
     }

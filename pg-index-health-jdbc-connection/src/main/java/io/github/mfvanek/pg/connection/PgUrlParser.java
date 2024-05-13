@@ -74,7 +74,7 @@ public final class PgUrlParser {
                 .filter(Predicate.not(String::isBlank))
                 .map(h -> {
                     final String[] hostToPort = h.split(":");
-                    return Map.entry(hostToPort[0], Integer.parseInt(hostToPort[1]));
+                    return Map.entry(hostToPort[0], Integer.valueOf(hostToPort[1]));
                 })
                 .distinct()
                 .sorted(Map.Entry.comparingByKey())

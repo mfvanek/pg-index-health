@@ -52,7 +52,7 @@ public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnH
      */
     @Override
     public boolean resetStatistics() {
-        final List<Boolean> result = queryExecutor.executeQuery(pgConnection, "select pg_stat_reset()", rs -> true);
+        final List<Boolean> result = queryExecutor.executeQuery(pgConnection, "select pg_stat_reset()", rs -> Boolean.TRUE);
         return !result.isEmpty() && result.get(0);
     }
 

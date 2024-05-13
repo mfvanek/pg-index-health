@@ -70,7 +70,7 @@
         <Class name="io.github.mfvanek.pg.spring.DatabaseStructureHealthAutoConfiguration"/>
     </Match>
     <Match>
-        <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING,OPM_OVERLY_PERMISSIVE_METHOD,CE_CLASS_ENVY,EXS_EXCEPTION_SOFTENING_HAS_CHECKED,EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS,MDM_THREAD_YIELD,PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS,RFI_SET_ACCESSIBLE,SIL_SQL_IN_LOOP"/>
+        <Bug pattern="PSC_PRESIZE_COLLECTIONS,WEM_WEAK_EXCEPTION_MESSAGING,IMC_IMMATURE_CLASS_NO_EQUALS,FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY,CLI_CONSTANT_LIST_INDEX,IMC_IMMATURE_CLASS_NO_TOSTRING,OPM_OVERLY_PERMISSIVE_METHOD,CE_CLASS_ENVY,EXS_EXCEPTION_SOFTENING_NO_CHECKED,EXS_EXCEPTION_SOFTENING_HAS_CHECKED,EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS,MDM_THREAD_YIELD,PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS,RFI_SET_ACCESSIBLE,SIL_SQL_IN_LOOP"/>
     </Match>
     <Match>
         <Bug pattern="SQL_INJECTION_JDBC,IMPROPER_UNICODE,CRLF_INJECTION_LOGS"/>
@@ -81,6 +81,28 @@
     </Match>
     <Match>
         <Bug pattern="NSE_NON_SYMMETRIC_EQUALS"/>
-        <Class name="io.github.mfvanek.pg.connection.PgConnectionImpl"/>
+        <Or>
+            <Class name="io.github.mfvanek.pg.connection.PgConnectionImpl"/>
+            <Class name="io.github.mfvanek.pg.settings.PgParamImpl"/>
+        </Or>
+    </Match>
+    <Match>
+        <Bug pattern="UCPM_USE_CHARACTER_PARAMETERIZED_METHOD"/>
+        <Class name="io.github.mfvanek.pg.generator.PgIdentifierNameGenerator"/>
+    </Match>
+    <Match>
+        <Bug pattern="IMC_IMMATURE_CLASS_BAD_SERIALVERSIONUID"/>
+        <Class name="io.github.mfvanek.pg.connection.PgSqlException"/>
+    </Match>
+    <Match>
+        <Bug pattern="STT_STRING_PARSING_A_FIELD"/>
+        <Class name="io.github.mfvanek.pg.testing.PostgresVersionHolder"/>
+    </Match>
+    <Match>
+        <Bug pattern="LO_SUSPECT_LOG_CLASS"/>
+        <Class name="io.github.mfvanek.pg.common.health.logger.KeyValueFileHealthLogger"/>
+    </Match>
+    <Match>
+        <Bug pattern="FCBL_FIELD_COULD_BE_LOCAL,SEC_SIDE_EFFECT_CONSTRUCTOR"/>
     </Match>
 </FindBugsFilter>

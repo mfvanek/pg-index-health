@@ -115,7 +115,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
 
     @Test
     void shouldFailWhenPrimaryHosNotFound() {
-        Mockito.when(primaryHostDeterminer.isPrimary(any(PgConnection.class))).thenReturn(false);
+        Mockito.when(primaryHostDeterminer.isPrimary(any(PgConnection.class))).thenReturn(Boolean.FALSE);
         assertThatThrownBy(() -> connectionFactory.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432/db_name", "postgres", "postgres"))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessageStartingWith("Connection to primary host not found in ");
@@ -123,7 +123,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
 
     @Test
     void shouldNotFailWhenSplitBrainOrMultyMasterConfiguration() {
-        Mockito.when(primaryHostDeterminer.isPrimary(any(PgConnection.class))).thenReturn(true);
+        Mockito.when(primaryHostDeterminer.isPrimary(any(PgConnection.class))).thenReturn(Boolean.TRUE);
         final HighAvailabilityPgConnection haPgConnection = connectionFactory.ofUrl(
                 "jdbc:postgresql://host-D:6432,host-A:6432/db_name", "postgres", "postgres");
         assertThat(haPgConnection)

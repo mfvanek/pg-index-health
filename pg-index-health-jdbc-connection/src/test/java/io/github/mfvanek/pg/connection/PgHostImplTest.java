@@ -112,7 +112,7 @@ class PgHostImplTest {
 
         // another implementation of PgHost
         final PgHost pgHostMock = Mockito.mock(PgHost.class);
-        Mockito.when(pgHostMock.canBePrimary()).thenReturn(true);
+        Mockito.when(pgHostMock.canBePrimary()).thenReturn(Boolean.TRUE);
         Mockito.when(pgHostMock.getName()).thenReturn("primary");
         Mockito.when(pgHostMock.getPgUrl()).thenReturn("jdbc:postgresql://primary:5432");
         assertThat(pgHostMock)

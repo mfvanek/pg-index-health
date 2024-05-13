@@ -142,7 +142,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Co
         if (!column.equals(other.column)) {
             return column.compareTo(other.column);
         }
-        if (!serialType.equals(other.serialType)) {
+        if (serialType != other.serialType) {
             return serialType.compareTo(other.serialType);
         }
         return sequenceName.compareTo(other.sequenceName);

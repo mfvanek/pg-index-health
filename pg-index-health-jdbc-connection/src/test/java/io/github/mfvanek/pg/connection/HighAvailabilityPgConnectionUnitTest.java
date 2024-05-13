@@ -37,8 +37,8 @@ class HighAvailabilityPgConnectionUnitTest {
 
     @Test
     void cachedPrimaryWillBeReturnedIfThereIsNoPrimaryUpdate() throws SQLException {
-        initMocks(firstConnectionMocks, true);
-        initMocks(secondConnectionMocks, false);
+        initMocks(firstConnectionMocks, Boolean.TRUE);
+        initMocks(secondConnectionMocks, Boolean.FALSE);
 
         final List<PgConnection> pgConnections = prepareConnections();
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnections.get(0), pgConnections, 400L);
@@ -52,24 +52,24 @@ class HighAvailabilityPgConnectionUnitTest {
                 .await()
                 .atMost(Duration.ofMillis(1000L))
                 .pollDelay(Duration.ofMillis(500L))
-                .until(() -> true);
+                .until(() -> Boolean.TRUE);
 
-        Mockito.when(firstConnectionMocks.resultSet.getBoolean(1)).thenReturn(false);
+        Mockito.when(firstConnectionMocks.resultSet.getBoolean(1)).thenReturn(Boolean.FALSE);
         Awaitility
                 .await()
                 .atMost(Duration.ofMillis(1000L))
                 .pollDelay(Duration.ofMillis(500L))
-                .until(() -> true);
+                .until(() -> Boolean.TRUE);
         assertThat(haPgConnection.getConnectionToPrimary())
                 .as("Without new primary first connection considered as primary")
                 .isEqualTo(pgConnections.get(0));
 
-        Mockito.when(secondConnectionMocks.resultSet.getBoolean(1)).thenReturn(true);
+        Mockito.when(secondConnectionMocks.resultSet.getBoolean(1)).thenReturn(Boolean.TRUE);
         Awaitility
                 .await()
                 .atMost(Duration.ofMillis(1000L))
                 .pollDelay(Duration.ofMillis(500L))
-                .until(() -> true);
+                .until(() -> Boolean.TRUE);
         assertThat(haPgConnection.getConnectionToPrimary())
                 .as("Second connection become new primary")
                 .isEqualTo(pgConnections.get(1));
@@ -77,8 +77,8 @@ class HighAvailabilityPgConnectionUnitTest {
 
     @Test
     void primaryUpdaterExpectedToExecuteTenTimes() throws SQLException {
-        initMocks(firstConnectionMocks, false);
-        initMocks(secondConnectionMocks, false);
+        initMocks(firstConnectionMocks, Boolean.FALSE);
+        initMocks(secondConnectionMocks, Boolean.FALSE);
 
         final List<PgConnection> pgConnections = prepareConnections();
         HighAvailabilityPgConnectionImpl.of(pgConnections.get(0), pgConnections, 50L);
@@ -86,7 +86,7 @@ class HighAvailabilityPgConnectionUnitTest {
         Awaitility
                 .await()
                 .pollDelay(Duration.ofMillis(650)) // start delay compensation + OS dependent behavior
-                .until(() -> true);
+                .until(() -> Boolean.TRUE);
 
         // Due to interleaving method may be called more than 10 times but not less than 10
         Mockito.verify(firstConnectionMocks.dataSource, Mockito.atLeast(10)).getConnection();
@@ -106,7 +106,7 @@ class HighAvailabilityPgConnectionUnitTest {
             Awaitility
                     .await()
                     .pollDelay(Duration.ofMillis(120)) // start delay compensation + OS dependent behavior
-                    .until(() -> true);
+                    .until(() -> Boolean.TRUE);
 
             assertThat(logsCaptor.getLogs())
                     .hasSizeGreaterThanOrEqualTo(10)
@@ -114,7 +114,7 @@ class HighAvailabilityPgConnectionUnitTest {
         }
     }
 
-    private void initMocks(final ConnectionMocks connectionMocks, final boolean resultSetBooleanValue) throws SQLException {
+    private void initMocks(final ConnectionMocks connectionMocks, final Boolean resultSetBooleanValue) throws SQLException {
         initMocksCommon(connectionMocks);
         Mockito.when(connectionMocks.resultSet.getBoolean(1)).thenReturn(resultSetBooleanValue);
     }
@@ -122,7 +122,7 @@ class HighAvailabilityPgConnectionUnitTest {
     private void initMocksCommon(final ConnectionMocks connectionMocks) throws SQLException {
         Mockito.when(connectionMocks.dataSource.getConnection()).thenReturn(connectionMocks.connection);
         Mockito.when(connectionMocks.connection.createStatement()).thenReturn(connectionMocks.statement);
-        Mockito.when(connectionMocks.resultSet.next()).thenReturn(true);
+        Mockito.when(connectionMocks.resultSet.next()).thenReturn(Boolean.TRUE);
         Mockito.when(connectionMocks.statement.executeQuery(anyString())).thenReturn(connectionMocks.resultSet);
     }
 
