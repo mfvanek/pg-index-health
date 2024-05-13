@@ -14,7 +14,10 @@ dependencies {
         testImplementation(platform("org.assertj:assertj-bom:$it"))
     }
     testImplementation("org.assertj:assertj-core")
-    testImplementation(platform("org.mockito:mockito-bom:5.11.0"))
+
+    versionCatalog.findVersion("mockito").ifPresent {
+        testImplementation(platform("org.mockito:mockito-bom:$it"))
+    }
     versionCatalog.findVersion("junit").ifPresent {
         testImplementation(platform("org.junit:junit-bom:$it"))
     }

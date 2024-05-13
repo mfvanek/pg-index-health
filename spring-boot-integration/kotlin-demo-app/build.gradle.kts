@@ -13,6 +13,8 @@ plugins {
 
 ext["commons-lang3.version"] = libs.versions.commons.lang3.get()
 ext["assertj.version"] = libs.versions.assertj.get()
+ext["mockito.version"] = libs.versions.mockito.get()
+ext["junit-jupiter.version"] = libs.versions.junit.get()
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
