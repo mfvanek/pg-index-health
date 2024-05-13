@@ -12,19 +12,22 @@ package io.github.mfvanek.pg.spring.postgres.kt.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import io.github.mfvanek.pg.testing.PostgresVersionHolder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
 import org.testcontainers.containers.JdbcDatabaseContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.containers.wait.strategy.Wait
+import org.testcontainers.utility.DockerImageName
 import javax.sql.DataSource
 
 @Configuration(proxyBeanMethods = false)
 class DatabaseConfig {
     @Bean(initMethod = "start", destroyMethod = "stop")
     fun jdbcDatabaseContainer(): JdbcDatabaseContainer<*> {
-        return PostgreSQLContainer("postgres:16.2")
+        val pgVersion = PostgresVersionHolder.forSingleNode().version
+        return PostgreSQLContainer(DockerImageName.parse("postgres").withTag(pgVersion))
             .withDatabaseName("demo_for_pg_index_health_starter")
             .withUsername("demo_user")
             .withPassword("myUniquePassword")

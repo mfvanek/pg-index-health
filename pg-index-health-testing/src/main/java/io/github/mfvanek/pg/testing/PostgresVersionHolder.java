@@ -22,7 +22,7 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-final class PostgresVersionHolder implements PostgresVersionAware {
+public final class PostgresVersionHolder implements PostgresVersionAware {
 
     private final String pgVersion;
 
@@ -80,7 +80,7 @@ final class PostgresVersionHolder implements PostgresVersionAware {
     }
 
     @Nonnull
-    static String toBitnamiVersion(@Nonnull final String pgVersion) {
+    public static String toBitnamiVersion(@Nonnull final String pgVersion) {
         final int index = pgVersion.indexOf('-');
         final String bitnamiVersion = index == -1 ? pgVersion : pgVersion.substring(0, index);
         // Bitnami images use semantic versioning with three digits
@@ -95,7 +95,7 @@ final class PostgresVersionHolder implements PostgresVersionAware {
      * @return {@code PostgresVersionHolder}
      */
     @Nonnull
-    static PostgresVersionHolder forCluster() {
+    public static PostgresVersionHolder forCluster() {
         return new PostgresVersionHolder(toBitnamiVersion(preparePostgresVersion()));
     }
 
@@ -107,7 +107,7 @@ final class PostgresVersionHolder implements PostgresVersionAware {
      * @since 0.9.2
      */
     @Nonnull
-    static PostgresVersionHolder forCluster(@Nonnull final String pgVersion) {
+    public static PostgresVersionHolder forCluster(@Nonnull final String pgVersion) {
         return new PostgresVersionHolder(toBitnamiVersion(pgVersion));
     }
 
@@ -119,7 +119,7 @@ final class PostgresVersionHolder implements PostgresVersionAware {
      * @return {@code PostgresVersionHolder}
      */
     @Nonnull
-    static PostgresVersionHolder forSingleNode() {
+    public static PostgresVersionHolder forSingleNode() {
         return new PostgresVersionHolder(preparePostgresVersion());
     }
 
@@ -131,7 +131,7 @@ final class PostgresVersionHolder implements PostgresVersionAware {
      * @since 0.9.2
      */
     @Nonnull
-    static PostgresVersionHolder forSingleNode(@Nonnull final String pgVersion) {
+    public static PostgresVersionHolder forSingleNode(@Nonnull final String pgVersion) {
         return new PostgresVersionHolder(pgVersion);
     }
 }
