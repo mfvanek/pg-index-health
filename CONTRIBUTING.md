@@ -67,7 +67,6 @@ Implement a new class extending [AbstractCheckOnCluster](https://github.com/mfva
 ### Further steps
 
 1. Update readme and add information about the new check
-2. Update [Spring Boot starter](https://github.com/mfvanek/pg-index-health-test-starter).
-   Use a locally built pg-index-health version and send a draft PR.
+2. Update [Spring Boot starter](spring-boot-integration%2Fpg-index-health-test-starter).
 3. Add sample code to the demo apps ([first](https://github.com/mfvanek/pg-index-health-demo), [second](https://github.com/mfvanek/pg-index-health-spring-boot-demo)).
    Use a locally built pg-index-health version and send a draft PR.

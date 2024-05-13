@@ -105,7 +105,7 @@ public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
         }
 
         final Column that = (Column) other;
-        return notNull == that.notNull&&
+        return notNull == that.notNull &&
                 Objects.equals(tableName, that.tableName) &&
                 Objects.equals(columnName, that.columnName);
     }
