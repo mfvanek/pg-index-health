@@ -1,0 +1,15 @@
+performance:
+    SpreadOperator:
+        active: false
+
+libraries:
+    LibraryEntitiesShouldNotBePublic:
+        active: false
+
+formatting:
+    MaximumLineLength:
+        maxLineLength: 200
+
+style:
+    MaxLineLength:
+        maxLineLength: 200

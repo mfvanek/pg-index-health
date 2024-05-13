@@ -58,6 +58,8 @@
         <exclude name="DataClass"/>
         <exclude name="TooManyMethods"/>
         <exclude name="ExceptionAsFlowControl"/>
+        <exclude name="ExcessiveImports"/>
+        <exclude name="CouplingBetweenObjects"/> <!-- useless -->
     </rule>
 
     <rule ref="category/java/design.xml/SimplifyBooleanReturns">

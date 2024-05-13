@@ -54,7 +54,7 @@ class StatisticsMaintenanceOnHostImplUnitTest {
         final StatisticsQueryExecutor executorMock = Mockito.mock(StatisticsQueryExecutor.class);
         final StatisticsMaintenanceOnHost maintenance = new StatisticsMaintenanceOnHostImpl(connectionMock, executorMock);
         Mockito.when(executorMock.executeQuery(any(), any(), any()))
-                .thenReturn(List.of(false, true));
+                .thenReturn(List.of(Boolean.FALSE, Boolean.TRUE));
         assertThat(maintenance.resetStatistics())
                 .isFalse();
     }

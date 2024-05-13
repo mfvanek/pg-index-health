@@ -106,7 +106,7 @@ public class PgHostImpl implements PgHost {
         }
 
         final PgHostImpl pgHost = (PgHostImpl) other;
-        return Objects.equals(hostName, pgHost.hostName) && port == pgHost.port;
+        return port == pgHost.port && Objects.equals(hostName, pgHost.hostName);
     }
 
     /**

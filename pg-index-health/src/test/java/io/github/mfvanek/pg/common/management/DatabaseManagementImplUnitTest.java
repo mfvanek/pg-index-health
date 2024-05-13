@@ -67,8 +67,8 @@ class DatabaseManagementImplUnitTest {
                 .thenReturn(Set.of(firstConnection, secondConnection));
 
         // False on all hosts
-        Mockito.when(firstStatisticsMock.resetStatistics()).thenReturn(false);
-        Mockito.when(secondStatisticsMock.resetStatistics()).thenReturn(false);
+        Mockito.when(firstStatisticsMock.resetStatistics()).thenReturn(Boolean.FALSE);
+        Mockito.when(secondStatisticsMock.resetStatistics()).thenReturn(Boolean.FALSE);
         assertThat(management.resetStatistics())
                 .isFalse();
         Mockito.verify(firstStatisticsMock, Mockito.times(1)).resetStatistics();
@@ -76,8 +76,8 @@ class DatabaseManagementImplUnitTest {
         Mockito.verifyNoMoreInteractions(firstStatisticsMock, secondStatisticsMock);
 
         // True on all hosts
-        Mockito.when(firstStatisticsMock.resetStatistics()).thenReturn(true);
-        Mockito.when(secondStatisticsMock.resetStatistics()).thenReturn(true);
+        Mockito.when(firstStatisticsMock.resetStatistics()).thenReturn(Boolean.TRUE);
+        Mockito.when(secondStatisticsMock.resetStatistics()).thenReturn(Boolean.TRUE);
         assertThat(management.resetStatistics())
                 .isTrue();
         Mockito.verify(firstStatisticsMock, Mockito.times(2)).resetStatistics();

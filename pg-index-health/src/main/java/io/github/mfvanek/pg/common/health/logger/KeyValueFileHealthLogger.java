@@ -55,7 +55,7 @@ public class KeyValueFileHealthLogger extends AbstractHealthLogger {
     @Override
     protected String writeToLog(@Nonnull final LoggingKey key, final int value) {
         final String result = format(key.getKeyName(), key.getSubKeyName(), value);
-        KV_LOG.info(result);
+        KV_LOG.info("{}", result);
         return result;
     }
 

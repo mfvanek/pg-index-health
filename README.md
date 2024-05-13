@@ -102,9 +102,53 @@ All these cases are covered with examples in the [pg-index-health-demo](https://
 
 ## Integration with Spring Boot
 
-There is a Spring Boot starter [pg-index-health-test-starter](https://github.com/mfvanek/pg-index-health-test-starter) 
+There is a Spring Boot starter [pg-index-health-test-starter](spring-boot-integration%2Fpg-index-health-test-starter)
 for unit/integration testing as well.  
 More examples you can find in [pg-index-health-spring-boot-demo](https://github.com/mfvanek/pg-index-health-spring-boot-demo) project.
+
+### Starter installation
+
+Using Gradle:
+
+```groovy
+testImplementation 'io.github.mfvanek:pg-index-health-test-starter:0.11.0'
+```
+
+<details>
+<summary>with Kotlin DSL</summary>
+
+```kotlin
+testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.11.0")
+```
+
+</details>
+
+Using Maven:
+
+```xml
+<dependency>
+    <groupId>io.github.mfvanek</groupId>
+    <artifactId>pg-index-health-test-starter</artifactId>
+    <version>0.11.0</version>
+    <scope>test</scope>
+</dependency>
+```
+
+### Spring Boot compatibility
+
+| Spring Boot | Min JDK | pg-index-health-test-starter |
+|-------------|---------|------------------------------|
+| 2.4.x       | 8       | 0.3.x — 0.4.x                |
+| 2.5.x       | 8       | 0.5.x — 0.6.x                |
+| 2.6.x       | 8       | 0.7.x                        |
+| 2.7.x       | 11      | 0.8.x — 0.11.x               |
+
+#### Spring Boot 3 compatibility
+
+* Starting from [0.9.0.1](https://github.com/mfvanek/pg-index-health-test-starter/releases/tag/v.0.9.0.1)
+  added support for [Spring Boot 3.0](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#auto-configuration-files)
+* Starting from [0.10.2](https://github.com/mfvanek/pg-index-health-test-starter/releases/tag/v.0.10.2)
+  added support for [Spring Boot 3.2](https://github.com/spring-projects/spring-framework/wiki/Upgrading-to-Spring-Framework-6.x#parameter-name-retention)
 
 ## Questions, issues, feature requests and contributions
 
