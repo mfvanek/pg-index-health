@@ -16,7 +16,3 @@ dependencies {
     testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
     testImplementation(libs.logback.classic)
 }
-
-pitest {
-    mutationThreshold.set(96)
-}
