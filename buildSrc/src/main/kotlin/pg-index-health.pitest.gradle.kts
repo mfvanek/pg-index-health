@@ -21,6 +21,7 @@ pitest {
     timestampedReports.set(false)
     mutationThreshold.set(100)
     exportLineCoverage.set(true)
+    pluginConfiguration.set(mapOf("stryker.moduleName" to project.name))
 }
 
 tasks.withType<PitestTask>().configureEach {
