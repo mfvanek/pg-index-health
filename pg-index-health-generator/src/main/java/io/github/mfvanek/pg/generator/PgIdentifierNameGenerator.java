@@ -19,6 +19,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
+import static io.github.mfvanek.pg.generator.AbstractDbMigrationGenerator.DELIMITER_LENGTH;
+import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGenerator.MAX_IDENTIFIER_LENGTH;
+
 /**
  * Index name generator.
  *
@@ -57,11 +60,10 @@ class PgIdentifierNameGenerator {
 
     @Nonnull
     public String generateTruncatedIndexName() {
-        int remainingLength = options.isNeedToAddIdx() ?
-                PgIndexOnForeignKeyGenerator.MAX_IDENTIFIER_LENGTH - IDX.length() - AbstractDbMigrationGenerator.DELIMITER.length() :
-                PgIndexOnForeignKeyGenerator.MAX_IDENTIFIER_LENGTH;
+        int remainingLength = options.isNeedToAddIdx() ? MAX_IDENTIFIER_LENGTH - IDX.length() - DELIMITER_LENGTH : MAX_IDENTIFIER_LENGTH;
         final StringBuilder truncatedNameBuilder = new StringBuilder();
-        if (tableNameWithoutSchema.length() + AbstractDbMigrationGenerator.DELIMITER.length() + columnsInIndex.length() > remainingLength) {
+        final int mainPathLength = getMainPartLength();
+        if (mainPathLength > remainingLength) {
             final int hash = columnsInIndex.hashCode(); // to make unique name
             final String columnsPart;
             if (hash < 0) {
@@ -69,13 +71,14 @@ class PgIdentifierNameGenerator {
             } else {
                 columnsPart = String.valueOf(hash);
             }
-            remainingLength = remainingLength - AbstractDbMigrationGenerator.DELIMITER.length() - columnsPart.length();
+            remainingLength = remainingLength - DELIMITER_LENGTH - columnsPart.length();
             truncatedNameBuilder.append(StringUtils.truncate(tableNameWithoutSchema, remainingLength))
                     .append(AbstractDbMigrationGenerator.DELIMITER)
                     .append(columnsPart);
             remainingLength -= tableNameWithoutSchema.length();
         } else {
             addMainPart(truncatedNameBuilder);
+            remainingLength -= mainPathLength;
         }
         if (remainingLength > WITHOUT_NULLS.length()) {
             addWithoutNullsIfNeed(truncatedNameBuilder);
@@ -88,6 +91,10 @@ class PgIdentifierNameGenerator {
         nameBuilder.append(tableNameWithoutSchema)
                 .append(AbstractDbMigrationGenerator.DELIMITER)
                 .append(columnsInIndex);
+    }
+
+    private int getMainPartLength() {
+        return tableNameWithoutSchema.length() + DELIMITER_LENGTH + columnsInIndex.length();
     }
 
     private void addWithoutNullsIfNeed(@Nonnull final StringBuilder nameBuilder) {

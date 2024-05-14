@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
 abstract class AbstractDbMigrationGenerator<T extends TableNameAware> implements DbMigrationGenerator<T> {
 
     protected static final String DELIMITER = "_";
+    protected static final int DELIMITER_LENGTH = DELIMITER.length();
 
     /**
      * {@inheritDoc}
