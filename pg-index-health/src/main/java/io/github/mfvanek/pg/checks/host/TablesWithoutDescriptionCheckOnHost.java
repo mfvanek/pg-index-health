@@ -34,10 +34,9 @@ public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Tab
     /**
      * Returns tables without description (comment) in the specified schema.
      *
-     * @see <a href="https://www.postgresql.org/docs/current/sql-comment.html">SQL Commands - COMMENT</a>
-     *
      * @param pgContext check's context with the specified schema
      * @return list of tables without description
+     * @see <a href="https://www.postgresql.org/docs/current/sql-comment.html">SQL Commands - COMMENT</a>
      */
     @Nonnull
     @Override

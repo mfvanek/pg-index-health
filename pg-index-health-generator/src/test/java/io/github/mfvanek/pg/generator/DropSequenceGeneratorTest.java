@@ -25,30 +25,30 @@ class DropSequenceGeneratorTest {
     @Test
     void shouldHandleInvalidArguments() {
         assertThatThrownBy(() -> new DropSequenceGenerator(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("options cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("options cannot be null");
 
         final DropSequenceGenerator generator = new DropSequenceGenerator(GeneratingOptions.builder().build());
         assertThatThrownBy(() -> generator.generate(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("column cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("column cannot be null");
     }
 
     @Test
     void generateForColumnLowerCase() {
         final DropSequenceGenerator generator = new DropSequenceGenerator(GeneratingOptions.builder().build());
         assertThat(generator.generate(column()))
-                .isEqualTo("drop sequence if exists s1.seq1;");
+            .isEqualTo("drop sequence if exists s1.seq1;");
     }
 
     @Test
     void generateForColumnUpperCase() {
         final DropSequenceGenerator generator = new DropSequenceGenerator(
-                GeneratingOptions.builder()
-                        .uppercaseForKeywords()
-                        .build());
+            GeneratingOptions.builder()
+                .uppercaseForKeywords()
+                .build());
         assertThat(generator.generate(column()))
-                .isEqualTo("DROP SEQUENCE IF EXISTS s1.seq1;");
+            .isEqualTo("DROP SEQUENCE IF EXISTS s1.seq1;");
     }
 
     @Nonnull

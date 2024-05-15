@@ -23,8 +23,8 @@ public class CreateIndexesWithDifferentOpclassStatement extends AbstractDbStatem
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create index if not exists i_clients_last_name " +
-                "on %s.clients using btree(lower(last_name))", schemaName));
+            "on %s.clients using btree(lower(last_name))", schemaName));
         statement.execute(String.format("create index if not exists i_clients_last_name_ops " +
-                "on %s.clients using btree(lower(last_name) text_pattern_ops)", schemaName));
+            "on %s.clients using btree(lower(last_name) text_pattern_ops)", schemaName));
     }
 }

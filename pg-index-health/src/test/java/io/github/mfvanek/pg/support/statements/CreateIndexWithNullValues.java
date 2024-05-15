@@ -23,6 +23,6 @@ public class CreateIndexWithNullValues extends AbstractDbStatement {
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create index if not exists i_clients_middle_name " +
-                "on %s.clients (middle_name)", schemaName));
+            "on %s.clients (middle_name)", schemaName));
     }
 }

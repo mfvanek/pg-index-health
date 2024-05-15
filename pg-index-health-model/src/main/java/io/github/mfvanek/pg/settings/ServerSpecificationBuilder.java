@@ -59,9 +59,9 @@ public class ServerSpecificationBuilder {
     @Override
     public String toString() {
         return ServerSpecificationBuilder.class.getSimpleName() + '{' +
-                "cpuCoresAmount=" + cpuCoresAmount +
-                ", memoryAmountInBytes=" + memoryAmountInBytes +
-                ", hasSSD=" + hasSSD +
-                '}';
+            "cpuCoresAmount=" + cpuCoresAmount +
+            ", memoryAmountInBytes=" + memoryAmountInBytes +
+            ", hasSSD=" + hasSSD +
+            '}';
     }
 }

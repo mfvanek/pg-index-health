@@ -31,17 +31,17 @@ class FilterIndexesByNamePredicateTest {
     void caseShouldNotMatter() {
         final Predicate<IndexNameAware> predicate = FilterIndexesByNamePredicate.of("idx3");
         assertThat(predicate)
-                .accepts(FIRST)
-                .accepts(SECOND)
-                .rejects(THIRD);
+            .accepts(FIRST)
+            .accepts(SECOND)
+            .rejects(THIRD);
     }
 
     @Test
     void forEmpty() {
         final Predicate<IndexNameAware> predicate = FilterIndexesByNamePredicate.of(List.of());
         assertThat(predicate)
-                .accepts(FIRST)
-                .accepts(SECOND)
-                .accepts(THIRD);
+            .accepts(FIRST)
+            .accepts(SECOND)
+            .accepts(THIRD);
     }
 }

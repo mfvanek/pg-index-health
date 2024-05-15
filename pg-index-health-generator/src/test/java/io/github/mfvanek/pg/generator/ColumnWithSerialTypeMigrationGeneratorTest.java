@@ -26,8 +26,8 @@ class ColumnWithSerialTypeMigrationGeneratorTest {
     @Test
     void shouldHandleInvalidArguments() {
         assertThatThrownBy(() -> new ColumnWithSerialTypeMigrationGenerator(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("options cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("options cannot be null");
     }
 
     @Test
@@ -35,10 +35,10 @@ class ColumnWithSerialTypeMigrationGeneratorTest {
         final ColumnWithSerialTypeMigrationGenerator generator = new ColumnWithSerialTypeMigrationGenerator(GeneratingOptions.builder().build());
 
         assertThat(generator.generate(List.of(column())))
-                .hasSize(1)
-                .containsExactly("alter table if exists s1.t1" + System.lineSeparator() +
-                        "    alter column col1 drop default;" + System.lineSeparator() +
-                        "drop sequence if exists s1.seq1;");
+            .hasSize(1)
+            .containsExactly("alter table if exists s1.t1" + System.lineSeparator() +
+                "    alter column col1 drop default;" + System.lineSeparator() +
+                "drop sequence if exists s1.seq1;");
     }
 
     @Test
@@ -47,13 +47,13 @@ class ColumnWithSerialTypeMigrationGeneratorTest {
         final ColumnWithSerialTypeMigrationGenerator generator = new ColumnWithSerialTypeMigrationGenerator(GeneratingOptions.builder().build());
 
         assertThat(generator.generate(List.of(column(), secondColumn)))
-                .hasSize(2)
-                .containsExactly("alter table if exists s1.t1" + System.lineSeparator() +
-                                "    alter column col1 drop default;" + System.lineSeparator() +
-                                "drop sequence if exists s1.seq1;",
-                        "alter table if exists s2.t2" + System.lineSeparator() +
-                                "    alter column col2 drop default;" + System.lineSeparator() +
-                                "drop sequence if exists s2.seq2;");
+            .hasSize(2)
+            .containsExactly("alter table if exists s1.t1" + System.lineSeparator() +
+                    "    alter column col1 drop default;" + System.lineSeparator() +
+                    "drop sequence if exists s1.seq1;",
+                "alter table if exists s2.t2" + System.lineSeparator() +
+                    "    alter column col2 drop default;" + System.lineSeparator() +
+                    "drop sequence if exists s2.seq2;");
     }
 
     @Nonnull

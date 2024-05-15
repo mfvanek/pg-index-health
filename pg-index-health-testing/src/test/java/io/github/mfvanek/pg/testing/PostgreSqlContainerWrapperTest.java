@@ -22,20 +22,20 @@ class PostgreSqlContainerWrapperTest {
     void withDefaultVersionShouldWork() {
         try (PostgreSqlContainerWrapper container = PostgreSqlContainerWrapper.withDefaultVersion()) {
             assertThat(container)
-                    .isNotNull()
-                    .satisfies(c -> {
-                        assertThat(c.getDataSource())
-                                .isNotNull()
-                                .isInstanceOf(BasicDataSource.class);
-                        assertThat(c.getPort())
-                                .isPositive();
-                        assertThat(c.getUrl())
-                                .startsWith("jdbc:postgresql://");
-                        assertThat(c.getUsername())
-                                .isNotBlank();
-                        assertThat(c.getPassword())
-                                .isNotBlank();
-                    });
+                .isNotNull()
+                .satisfies(c -> {
+                    assertThat(c.getDataSource())
+                        .isNotNull()
+                        .isInstanceOf(BasicDataSource.class);
+                    assertThat(c.getPort())
+                        .isPositive();
+                    assertThat(c.getUrl())
+                        .startsWith("jdbc:postgresql://");
+                    assertThat(c.getUsername())
+                        .isNotBlank();
+                    assertThat(c.getPassword())
+                        .isNotBlank();
+                });
         }
     }
 
@@ -43,26 +43,26 @@ class PostgreSqlContainerWrapperTest {
     void withVersionShouldWork() {
         try (PostgreSqlContainerWrapper container = PostgreSqlContainerWrapper.withVersion("16.2")) {
             assertThat(container)
-                    .isNotNull()
-                    .satisfies(c -> {
-                        assertThat(c.getDataSource())
-                                .isNotNull()
-                                .isInstanceOf(BasicDataSource.class);
-                        assertThat(c.getPort())
-                                .isPositive();
-                        assertThat(c.getUrl())
-                                .startsWith("jdbc:postgresql://");
-                        assertThat(c.getUsername())
-                                .isNotBlank();
-                        assertThat(c.getPassword())
-                                .isNotBlank();
-                        assertThat(c.isProceduresSupported())
-                                .isTrue();
-                        assertThat(c.isOutParametersInProcedureSupported())
-                                .isTrue();
-                        assertThat(c.isCumulativeStatisticsSystemSupported())
-                                .isTrue();
-                    });
+                .isNotNull()
+                .satisfies(c -> {
+                    assertThat(c.getDataSource())
+                        .isNotNull()
+                        .isInstanceOf(BasicDataSource.class);
+                    assertThat(c.getPort())
+                        .isPositive();
+                    assertThat(c.getUrl())
+                        .startsWith("jdbc:postgresql://");
+                    assertThat(c.getUsername())
+                        .isNotBlank();
+                    assertThat(c.getPassword())
+                        .isNotBlank();
+                    assertThat(c.isProceduresSupported())
+                        .isTrue();
+                    assertThat(c.isOutParametersInProcedureSupported())
+                        .isTrue();
+                    assertThat(c.isCumulativeStatisticsSystemSupported())
+                        .isTrue();
+                });
         }
     }
 
@@ -70,7 +70,7 @@ class PostgreSqlContainerWrapperTest {
     @Test
     void shouldThrowExceptionWhenVersionIsNull() {
         assertThatThrownBy(() -> PostgreSqlContainerWrapper.withVersion(null)) //NOSONAR
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("pgVersion cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgVersion cannot be null");
     }
 }

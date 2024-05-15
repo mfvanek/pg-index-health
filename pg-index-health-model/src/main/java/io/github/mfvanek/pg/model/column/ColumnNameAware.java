@@ -18,8 +18,8 @@ import javax.annotation.Nonnull;
  * Allows getting column name.
  *
  * @author Ivan Vakhrushev
- * @since 0.6.2
  * @see io.github.mfvanek.pg.model.table.TableNameAware
+ * @since 0.6.2
  */
 public interface ColumnNameAware extends TableNameAware {
 

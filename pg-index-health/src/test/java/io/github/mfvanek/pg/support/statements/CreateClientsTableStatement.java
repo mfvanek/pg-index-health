@@ -24,10 +24,10 @@ public class CreateClientsTableStatement extends AbstractDbStatement {
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create sequence if not exists %s.clients_seq", schemaName));
         statement.execute(String.format("create table if not exists %1$s.clients (" +
-                "id bigint not null primary key default nextval('%1$s.clients_seq')," +
-                "last_name varchar(255) not null," +
-                "first_name varchar(255) not null," +
-                "middle_name varchar(255)," +
-                "info jsonb)", schemaName));
+            "id bigint not null primary key default nextval('%1$s.clients_seq')," +
+            "last_name varchar(255) not null," +
+            "first_name varchar(255) not null," +
+            "middle_name varchar(255)," +
+            "info jsonb)", schemaName));
     }
 }

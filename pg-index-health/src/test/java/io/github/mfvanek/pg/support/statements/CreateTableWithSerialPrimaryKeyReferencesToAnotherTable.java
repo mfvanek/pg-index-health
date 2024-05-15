@@ -23,11 +23,11 @@ public class CreateTableWithSerialPrimaryKeyReferencesToAnotherTable extends Abs
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create table if not exists %1$s.test_table(" +
-                        "id bigserial, " +
-                        "num bigserial, " +
-                        "constraint test_table_pkey_id primary key (id), " +
-                        "constraint test_table_fkey_other_id foreign key (id) references %1$s.another_table (id), " +
-                        "constraint test_table_fkey_one_more_id foreign key (id) references %1$s.one_more_table (id));",
-                schemaName));
+                "id bigserial, " +
+                "num bigserial, " +
+                "constraint test_table_pkey_id primary key (id), " +
+                "constraint test_table_fkey_other_id foreign key (id) references %1$s.another_table (id), " +
+                "constraint test_table_fkey_one_more_id foreign key (id) references %1$s.one_more_table (id));",
+            schemaName));
     }
 }

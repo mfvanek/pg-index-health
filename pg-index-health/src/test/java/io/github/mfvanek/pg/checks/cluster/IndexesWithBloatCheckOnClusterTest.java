@@ -44,7 +44,7 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
             collectStatistics(schemaName);
             assertThat(check.check(ctx))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 
@@ -54,29 +54,29 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             collectStatistics(schemaName);
             assertThat(existsStatisticsForTable(schemaName, "accounts"))
-                    .isTrue();
+                .isTrue();
 
             assertThat(check.check(ctx))
-                    .hasSize(3)
-                    .containsExactlyInAnyOrder(
-                            IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
-                            IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_pkey"), 0L, 0L, 0),
-                            IndexWithBloat.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("clients_pkey"), 0L, 0L, 0))
-                    .allMatch(i -> i.getIndexSizeInBytes() > 1L)
-                    .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
+                .hasSize(3)
+                .containsExactlyInAnyOrder(
+                    IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
+                    IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_pkey"), 0L, 0L, 0),
+                    IndexWithBloat.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("clients_pkey"), 0L, 0L, 0))
+                .allMatch(i -> i.getIndexSizeInBytes() > 1L)
+                .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
 
             final Predicate<IndexSizeAware> predicate = FilterIndexesBySizePredicate.of(1L)
-                    .and(FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("accounts_pkey")));
+                .and(FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("accounts_pkey")));
             assertThat(check.check(ctx, predicate))
-                    .hasSize(2)
-                    .containsExactlyInAnyOrder(
-                            IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
-                            IndexWithBloat.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("clients_pkey"), 0L, 0L, 0))
-                    .allMatch(i -> i.getIndexSizeInBytes() > 1L)
-                    .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
+                .hasSize(2)
+                .containsExactlyInAnyOrder(
+                    IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
+                    IndexWithBloat.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("clients_pkey"), 0L, 0L, 0))
+                .allMatch(i -> i.getIndexSizeInBytes() > 1L)
+                .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
 
             assertThat(check.check(ctx, FilterIndexesByBloatPredicate.of(1_000_000L, 50)))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 }

@@ -23,6 +23,6 @@ public class CreateMaterializedViewStatement extends AbstractDbStatement {
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create materialized view if not exists %1$s.accounts_mat_view as (" +
-                "select client_id, account_number from %1$s.accounts);", schemaName));
+            "select client_id, account_number from %1$s.accounts);", schemaName));
     }
 }

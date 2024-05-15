@@ -124,10 +124,10 @@ public class PgHostImpl implements PgHost {
     @Override
     public String toString() {
         return PgHostImpl.class.getSimpleName() + '{' +
-                "pgUrl='" + pgUrl + '\'' +
-                ", hostName=" + hostName +
-                ", port=" + port +
-                ", maybePrimary=" + maybePrimary +
-                '}';
+            "pgUrl='" + pgUrl + '\'' +
+            ", hostName=" + hostName +
+            ", port=" + port +
+            ", maybePrimary=" + maybePrimary +
+            '}';
     }
 }

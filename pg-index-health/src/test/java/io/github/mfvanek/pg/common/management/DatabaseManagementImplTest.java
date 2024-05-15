@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DatabaseManagementImplTest extends StatisticsAwareTestBase {
 
     private final DatabaseManagement databaseManagement = new DatabaseManagementImpl(getHaPgConnection(),
-            StatisticsMaintenanceOnHostImpl::new, ConfigurationMaintenanceOnHostImpl::new);
+        StatisticsMaintenanceOnHostImpl::new, ConfigurationMaintenanceOnHostImpl::new);
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
@@ -38,17 +38,17 @@ class DatabaseManagementImplTest extends StatisticsAwareTestBase {
             final OffsetDateTime testStartTime = OffsetDateTime.now(ClockHolder.clock());
             tryToFindAccountByClientId(schemaName);
             assertThat(getSeqScansForAccounts(ctx))
-                    .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
+                .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             assertThat(databaseManagement.resetStatistics())
-                    .isTrue();
+                .isTrue();
             collectStatistics(schemaName);
             assertThat(getSeqScansForAccounts(ctx))
-                    .isZero();
+                .isZero();
 
             assertThat(databaseManagement.getLastStatsResetTimestamp())
-                    .isPresent()
-                    .get()
-                    .satisfies(t -> assertThat(t).isAfter(testStartTime));
+                .isPresent()
+                .get()
+                .satisfies(t -> assertThat(t).isAfter(testStartTime));
         });
     }
 
@@ -58,9 +58,9 @@ class DatabaseManagementImplTest extends StatisticsAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final ServerSpecification specification = ServerSpecification.builder().withCpuCores(2).withMemoryAmount(2, MemoryUnit.GB).withSSD().build();
             assertThat(databaseManagement.getParamsWithDefaultValues(specification))
-                    .hasSize(5)
-                    .extracting(PgParam::getName)
-                    .containsExactlyInAnyOrder("log_min_duration_statement", "idle_in_transaction_session_timeout", "statement_timeout", "effective_cache_size", "temp_file_limit");
+                .hasSize(5)
+                .extracting(PgParam::getName)
+                .containsExactlyInAnyOrder("log_min_duration_statement", "idle_in_transaction_session_timeout", "statement_timeout", "effective_cache_size", "temp_file_limit");
         });
     }
 
@@ -68,8 +68,8 @@ class DatabaseManagementImplTest extends StatisticsAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldReturnParamsCurrentValues(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
-                assertThat(databaseManagement.getParamsCurrentValues())
-                        .hasSizeGreaterThan(ImportantParam.values().length)
-                        .isUnmodifiable());
+            assertThat(databaseManagement.getParamsCurrentValues())
+                .hasSizeGreaterThan(ImportantParam.values().length)
+                .isUnmodifiable());
     }
 }

@@ -32,7 +32,7 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
     private StoredFunction(@Nonnull final String functionName, @Nonnull final String functionSignature) {
         this.functionName = Validators.notBlank(functionName, "functionName");
         this.functionSignature = Objects.requireNonNull(functionSignature, "functionSignature cannot be null")
-                .trim(); // can be empty
+            .trim(); // can be empty
     }
 
     /**
@@ -71,7 +71,7 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
     @Override
     public String toString() {
         return StoredFunction.class.getSimpleName() + "{functionName='" + functionName + '\'' +
-                ", functionSignature='" + functionSignature + "'}";
+            ", functionSignature='" + functionSignature + "'}";
     }
 
     /**
@@ -89,7 +89,7 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
 
         final StoredFunction that = (StoredFunction) other;
         return Objects.equals(functionName, that.functionName) &&
-                Objects.equals(functionSignature, that.functionSignature);
+            Objects.equals(functionSignature, that.functionSignature);
     }
 
     /**

@@ -37,12 +37,12 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withTableWithoutPrimaryKey(), ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(1)
-                    .containsExactly(Table.of(ctx.enrichWithSchema("bad_clients"), 0L))
-                    .allMatch(t -> t.getTableSizeInBytes() == 0L);
+                .hasSize(1)
+                .containsExactly(Table.of(ctx.enrichWithSchema("bad_clients"), 0L))
+                .allMatch(t -> t.getTableSizeInBytes() == 0L);
 
             assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients"))))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 
@@ -50,7 +50,7 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldReturnNothingForMaterializedViews(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withMaterializedView(), ctx ->
-                assertThat(check.check())
-                        .isEmpty());
+            assertThat(check.check())
+                .isEmpty());
     }
 }

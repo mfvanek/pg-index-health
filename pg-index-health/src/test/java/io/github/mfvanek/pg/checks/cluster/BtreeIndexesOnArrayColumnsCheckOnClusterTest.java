@@ -36,22 +36,22 @@ class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
-                assertThat(check.check(ctx))
-                        .isEmpty());
+            assertThat(check.check(ctx))
+                .isEmpty());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withBtreeIndexesOnArrayColumn(), ctx ->
-                assertThat(check.check(ctx))
-                        .hasSize(2)
-                        .containsExactlyInAnyOrder(
-                                IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_roles_btree_idx"), 0L,
-                                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles")),
-                                IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_roles_btree_idx"), 0L,
-                                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles"))
-                        )
+            assertThat(check.check(ctx))
+                .hasSize(2)
+                .containsExactlyInAnyOrder(
+                    IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_roles_btree_idx"), 0L,
+                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles")),
+                    IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_roles_btree_idx"), 0L,
+                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles"))
+                )
         );
     }
 }

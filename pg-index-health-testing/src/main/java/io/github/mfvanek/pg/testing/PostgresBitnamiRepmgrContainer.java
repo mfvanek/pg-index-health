@@ -44,12 +44,12 @@ class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitna
     public String getJdbcUrl() {
         final String additionalUrlParams = constructUrlParameters("?", "&");
         return PgUrlParser.URL_HEADER +
-                getHost() +
-                ":" +
-                getMappedPort(POSTGRESQL_PORT) +
-                "/" +
-                envVars.get("POSTGRESQL_DATABASE") +
-                additionalUrlParams;
+            getHost() +
+            ":" +
+            getMappedPort(POSTGRESQL_PORT) +
+            "/" +
+            envVars.get("POSTGRESQL_DATABASE") +
+            additionalUrlParams;
     }
 
     @Override

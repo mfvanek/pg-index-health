@@ -26,16 +26,16 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
     void getPrimaryDataSource() {
         final PgConnection connection = getPgConnection();
         assertThat(connection.getDataSource())
-                .isNotNull();
+            .isNotNull();
         assertThat(connection.getHost())
-                .isEqualTo(getHost());
+            .isEqualTo(getHost());
     }
 
     @Test
     void isPrimaryForAnyHost() {
         final int port = getPort();
         final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
-                "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=preferSecondary", port);
+            "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=preferSecondary", port);
         final PgConnection any = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl(readUrl));
         assertThat(any).isNotNull();
     }
@@ -45,8 +45,8 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
     void withInvalidArguments() {
         final DataSource dataSource = getDataSource();
         assertThatThrownBy(() -> PgConnectionImpl.of(dataSource, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("host cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("host cannot be null");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -63,18 +63,18 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
 
         // self
         assertThat(first)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // the same
         assertThat(theSame)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // others
         assertThat(second)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
 
         // another implementation of PgConnection
         final PgConnection connectionMock = Mockito.mock(PgConnection.class);
@@ -86,15 +86,15 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(PgConnectionImpl.class)
-                .withIgnoredFields("dataSource")
-                .verify();
+            .withIgnoredFields("dataSource")
+            .verify();
     }
 
     @Test
     void toStringTest() {
         final PgConnection connection = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl("jdbc:postgresql://primary:5432"));
         assertThat(connection)
-                .hasToString("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary:5432', hostName=primary, port=5432, maybePrimary=true}}");
+            .hasToString("PgConnectionImpl{host=PgHostImpl{pgUrl='jdbc:postgresql://primary:5432', hostName=primary, port=5432, maybePrimary=true}}");
     }
 
     @Test

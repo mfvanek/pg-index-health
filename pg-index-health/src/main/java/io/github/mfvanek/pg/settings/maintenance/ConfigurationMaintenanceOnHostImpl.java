@@ -69,7 +69,7 @@ public class ConfigurationMaintenanceOnHostImpl implements ConfigurationMaintena
             return PgParamImpl.of(paramName, currentValue);
         });
         return params.stream()
-                .collect(Collectors.toUnmodifiableSet());
+            .collect(Collectors.toUnmodifiableSet());
     }
 
     @Override

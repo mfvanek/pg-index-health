@@ -33,32 +33,32 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
     @Test
     void getHostShouldReturnPrimary() {
         assertThat(configurationMaintenance.getHost())
-                .isEqualTo(getHost());
+            .isEqualTo(getHost());
     }
 
     @Test
     void getParamsWithDefaultValues() {
         final ServerSpecification specification = ServerSpecification.builder()
-                .withCpuCores(2)
-                .withMemoryAmount(2, MemoryUnit.GB)
-                .withSSD()
-                .build();
+            .withCpuCores(2)
+            .withMemoryAmount(2, MemoryUnit.GB)
+            .withSSD()
+            .build();
         final Set<PgParam> paramsWithDefaultValues = configurationMaintenance.getParamsWithDefaultValues(specification);
         assertThat(paramsWithDefaultValues)
-                .hasSize(5)
-                .extracting(PgParam::getName)
-                .containsExactlyInAnyOrder("log_min_duration_statement", "idle_in_transaction_session_timeout", "statement_timeout", "effective_cache_size", "temp_file_limit");
+            .hasSize(5)
+            .extracting(PgParam::getName)
+            .containsExactlyInAnyOrder("log_min_duration_statement", "idle_in_transaction_session_timeout", "statement_timeout", "effective_cache_size", "temp_file_limit");
     }
 
     @Test
     void getParamsCurrentValues() {
         final Set<PgParam> currentValues = configurationMaintenance.getParamsCurrentValues();
         assertThat(currentValues)
-                .hasSizeGreaterThan(200)
-                .isUnmodifiable();
+            .hasSizeGreaterThan(200)
+            .isUnmodifiable();
         final Set<String> allParamNames = currentValues.stream()
-                .map(PgParam::getName)
-                .collect(Collectors.toUnmodifiableSet());
+            .map(PgParam::getName)
+            .collect(Collectors.toUnmodifiableSet());
         for (final ImportantParam importantParam : ImportantParam.values()) {
             assertThat(allParamNames).contains(importantParam.getName());
         }
@@ -68,17 +68,17 @@ class ConfigurationMaintenanceOnHostImplTest extends DatabaseAwareTestBase {
     void getParamCurrentValue() {
         final PgParam currentValue = configurationMaintenance.getParamCurrentValue(ImportantParam.LOG_MIN_DURATION_STATEMENT);
         assertThat(currentValue)
-                .isNotNull()
-                .extracting(PgParam::getValue)
-                .isEqualTo(ImportantParam.LOG_MIN_DURATION_STATEMENT.getDefaultValue());
+            .isNotNull()
+            .extracting(PgParam::getValue)
+            .isEqualTo(ImportantParam.LOG_MIN_DURATION_STATEMENT.getDefaultValue());
     }
 
     @Test
     void getCurrentValueForUnknownParam() {
         final PgParam pgParam = PgParamImpl.of("unknown_param", "");
         assertThatThrownBy(() -> configurationMaintenance.getParamCurrentValue(pgParam))
-                .isInstanceOf(PgSqlException.class)
-                .hasCauseInstanceOf(SQLException.class)
-                .hasMessageContaining("unknown_param");
+            .isInstanceOf(PgSqlException.class)
+            .hasCauseInstanceOf(SQLException.class)
+            .hasMessageContaining("unknown_param");
     }
 }

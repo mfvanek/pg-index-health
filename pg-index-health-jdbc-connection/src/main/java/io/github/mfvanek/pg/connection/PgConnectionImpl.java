@@ -52,9 +52,8 @@ public class PgConnectionImpl implements PgConnection {
      * Constructs a {@code PgConnection} object with given dataSource and host.
      *
      * @param dataSource a factory for connections to the physical database
-     * @param host information about database host
+     * @param host       information about database host
      * @return {@code PgConnection}
-     *
      * @see DataSource
      * @see PgHost
      */
@@ -95,7 +94,7 @@ public class PgConnectionImpl implements PgConnection {
     @Override
     public String toString() {
         return PgConnectionImpl.class.getSimpleName() + '{' +
-                "host=" + host +
-                '}';
+            "host=" + host +
+            '}';
     }
 }

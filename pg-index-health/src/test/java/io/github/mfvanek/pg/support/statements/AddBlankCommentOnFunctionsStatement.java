@@ -23,6 +23,6 @@ public class AddBlankCommentOnFunctionsStatement extends AbstractDbStatement {
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("comment on function %1$s.add(a integer, b integer) is '   ';" +
-                "comment on function %1$s.add(a int, b int, c int) is '';", schemaName));
+            "comment on function %1$s.add(a int, b int, c int) is '';", schemaName));
     }
 }

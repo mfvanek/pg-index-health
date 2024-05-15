@@ -31,17 +31,17 @@ class FilterTablesByNamePredicateTest {
     void caseShouldNotMatter() {
         final Predicate<TableNameAware> predicate = FilterTablesByNamePredicate.of("table3");
         assertThat(predicate)
-                .accepts(FIRST)
-                .accepts(SECOND)
-                .rejects(THIRD);
+            .accepts(FIRST)
+            .accepts(SECOND)
+            .rejects(THIRD);
     }
 
     @Test
     void forEmpty() {
         final Predicate<TableNameAware> predicate = FilterTablesByNamePredicate.of(List.of());
         assertThat(predicate)
-                .accepts(FIRST)
-                .accepts(SECOND)
-                .accepts(THIRD);
+            .accepts(FIRST)
+            .accepts(SECOND)
+            .accepts(THIRD);
     }
 }

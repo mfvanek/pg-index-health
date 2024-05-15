@@ -42,23 +42,23 @@ class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withNotValidConstraints().withUniqueConstraintOnSerialColumn(), ctx -> {
             final List<Constraint> notValidConstraints = check.check(ctx);
             assertThat(notValidConstraints)
-                    .hasSize(2)
-                    .containsExactly(
-                            Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_chk_client_id_not_validated_yet", ConstraintType.CHECK),
-                            Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
+                .hasSize(2)
+                .containsExactly(
+                    Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_chk_client_id_not_validated_yet", ConstraintType.CHECK),
+                    Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
 
             assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
-                    .isEmpty();
+                .isEmpty();
 
             ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {
                 for (final Constraint constraint : notValidConstraints) {
                     statement.execute(String.format("alter table %s validate constraint %s;",
-                            constraint.getTableName(), constraint.getConstraintName()));
+                        constraint.getTableName(), constraint.getConstraintName()));
                 }
             });
 
             assertThat(check.check(ctx))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 }

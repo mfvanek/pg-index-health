@@ -25,35 +25,35 @@ class StringUtilsTest {
     @Test
     void privateConstructor() {
         assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(StringUtils.class))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void truncateShouldThrowExceptionOnInvalidArguments() {
         assertThatThrownBy(() -> StringUtils.truncate(null, 1))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("str cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("str cannot be null");
 
         assertThatThrownBy(() -> StringUtils.truncate("", -1))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("maxWith cannot be negative");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("maxWith cannot be negative");
     }
 
     @Test
     void truncationShouldBePerformed() {
         try (LogsCaptor logsCaptor = new LogsCaptor(StringUtils.class, Level.TRACE)) {
             assertThat(StringUtils.truncate(TARGET, 0))
-                    .isEmpty();
+                .isEmpty();
             assertThat(StringUtils.truncate(TARGET, 1))
-                    .isEqualTo("a");
+                .isEqualTo("a");
             assertThat(StringUtils.truncate(TARGET, 2))
-                    .isEqualTo("ab");
+                .isEqualTo("ab");
             assertThat(StringUtils.truncate(TARGET, 5))
-                    .isEqualTo("abcqw");
+                .isEqualTo("abcqw");
 
             assertThat(logsCaptor.getLogs())
-                    .hasSize(4);
+                .hasSize(4);
         }
     }
 
@@ -61,14 +61,14 @@ class StringUtilsTest {
     void truncationShouldNotBePerformed() {
         try (LogsCaptor logsCaptor = new LogsCaptor(StringUtils.class, Level.TRACE)) {
             assertThat(StringUtils.truncate(TARGET, 6))
-                    .isEqualTo("abcqwe")
-                    .isSameAs(TARGET);
+                .isEqualTo("abcqwe")
+                .isSameAs(TARGET);
             assertThat(StringUtils.truncate(TARGET, 7))
-                    .isEqualTo("abcqwe")
-                    .isSameAs(TARGET);
+                .isEqualTo("abcqwe")
+                .isSameAs(TARGET);
 
             assertThat(logsCaptor.getLogs())
-                    .isEmpty();
+                .isEmpty();
         }
     }
 }

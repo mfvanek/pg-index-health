@@ -36,17 +36,17 @@ class DatabaseManagementImplUnitTest {
     @Test
     void shouldThrowExceptionWhenInvalidArgumentsArePassed() {
         assertThatThrownBy(() -> new DatabaseManagementImpl(null, null, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("haPgConnection cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("haPgConnection cannot be null");
 
         assertThatThrownBy(() -> new DatabaseManagementImpl(haPgConnectionMock, null, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("statisticsOnHostFactory cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("statisticsOnHostFactory cannot be null");
 
         final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory = pgConnection -> Mockito.mock(StatisticsMaintenanceOnHost.class);
         assertThatThrownBy(() -> new DatabaseManagementImpl(haPgConnectionMock, statisticsOnHostFactory, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("configurationOnHostFactory cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("configurationOnHostFactory cannot be null");
     }
 
     @Test
@@ -64,13 +64,13 @@ class DatabaseManagementImplUnitTest {
         };
         final DatabaseManagement management = new DatabaseManagementImpl(haPgConnectionMock, statisticsOnHostFactory, ConfigurationMaintenanceOnHostImpl::new);
         Mockito.when(haPgConnectionMock.getConnectionsToAllHostsInCluster())
-                .thenReturn(Set.of(firstConnection, secondConnection));
+            .thenReturn(Set.of(firstConnection, secondConnection));
 
         // False on all hosts
         Mockito.when(firstStatisticsMock.resetStatistics()).thenReturn(Boolean.FALSE);
         Mockito.when(secondStatisticsMock.resetStatistics()).thenReturn(Boolean.FALSE);
         assertThat(management.resetStatistics())
-                .isFalse();
+            .isFalse();
         Mockito.verify(firstStatisticsMock, Mockito.times(1)).resetStatistics();
         Mockito.verify(secondStatisticsMock, Mockito.times(1)).resetStatistics();
         Mockito.verifyNoMoreInteractions(firstStatisticsMock, secondStatisticsMock);
@@ -79,7 +79,7 @@ class DatabaseManagementImplUnitTest {
         Mockito.when(firstStatisticsMock.resetStatistics()).thenReturn(Boolean.TRUE);
         Mockito.when(secondStatisticsMock.resetStatistics()).thenReturn(Boolean.TRUE);
         assertThat(management.resetStatistics())
-                .isTrue();
+            .isTrue();
         Mockito.verify(firstStatisticsMock, Mockito.times(2)).resetStatistics();
         Mockito.verify(secondStatisticsMock, Mockito.times(2)).resetStatistics();
         Mockito.verifyNoMoreInteractions(firstStatisticsMock, secondStatisticsMock);

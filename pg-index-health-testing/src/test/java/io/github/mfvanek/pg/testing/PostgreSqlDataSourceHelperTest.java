@@ -26,7 +26,7 @@ class PostgreSqlDataSourceHelperTest {
     @Test
     void privateConstructor() {
         assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(PostgreSqlDataSourceHelper.class))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
@@ -38,13 +38,13 @@ class PostgreSqlDataSourceHelperTest {
             when(container.getDriverClassName()).thenReturn("some postgresql driver");
 
             assertThat(PostgreSqlDataSourceHelper.buildDataSource(container))
-                    .isNotNull()
-                    .satisfies(ds -> {
-                        assertThat(ds.getUrl()).isEqualTo("test url");
-                        assertThat(ds.getUsername()).isEqualTo("some user name");
-                        assertThat(ds.getPassword()).isEqualTo("test password");
-                        assertThat(ds.getDriverClassName()).isEqualTo("some postgresql driver");
-                    });
+                .isNotNull()
+                .satisfies(ds -> {
+                    assertThat(ds.getUrl()).isEqualTo("test url");
+                    assertThat(ds.getUsername()).isEqualTo("some user name");
+                    assertThat(ds.getPassword()).isEqualTo("test password");
+                    assertThat(ds.getDriverClassName()).isEqualTo("some postgresql driver");
+                });
         }
     }
 }

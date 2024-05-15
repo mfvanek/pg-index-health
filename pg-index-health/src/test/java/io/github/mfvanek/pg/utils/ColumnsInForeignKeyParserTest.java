@@ -24,34 +24,34 @@ class ColumnsInForeignKeyParserTest {
     @Test
     void privateConstructor() {
         assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(ColumnsInForeignKeyParser.class))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void shouldThrowExceptionWhenPassedInvalidData() {
         assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("tableName cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("tableName cannot be null");
         assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Columns array cannot be empty");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Columns array cannot be empty");
         assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t", "abracadabra"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Cannot parse column info from abracadabra");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Cannot parse column info from abracadabra");
         assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t", "a, b, c"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Cannot parse column info from a, b, c");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Cannot parse column info from a, b, c");
     }
 
     @Test
     void shouldWorkWhenValidDataPassed() {
         assertThat(ColumnsInForeignKeyParser.parseRawColumnData("t", "c1, true", "c2, false", "c3, abracadabra"))
-                .hasSize(3)
-                .containsExactly(
-                        Column.ofNotNull("t", "c1"),
-                        Column.ofNullable("t", "c2"),
-                        Column.ofNullable("t", "c3"))
-                .isUnmodifiable();
+            .hasSize(3)
+            .containsExactly(
+                Column.ofNotNull("t", "c1"),
+                Column.ofNullable("t", "c2"),
+                Column.ofNullable("t", "c3"))
+            .isUnmodifiable();
     }
 }

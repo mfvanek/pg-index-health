@@ -21,7 +21,7 @@ class ColumnWithSerialTypeExtractorTest {
     @Test
     void shouldCreateInstance() {
         assertThat(ColumnWithSerialTypeExtractor.of())
-                .isNotNull()
-                .isInstanceOf(ColumnWithSerialTypeExtractor.class);
+            .isNotNull()
+            .isInstanceOf(ColumnWithSerialTypeExtractor.class);
     }
 }

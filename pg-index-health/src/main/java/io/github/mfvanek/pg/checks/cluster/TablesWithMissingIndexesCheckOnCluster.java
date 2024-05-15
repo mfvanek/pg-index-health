@@ -39,10 +39,10 @@ public class TablesWithMissingIndexesCheckOnCluster extends AbstractCheckOnClust
     static List<TableWithMissingIndex> getResultAsUnion(@Nonnull final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts) {
         LOGGER.debug("tablesWithMissingIndexesFromAllHosts = {}", tablesWithMissingIndexesFromAllHosts);
         final List<TableWithMissingIndex> result = tablesWithMissingIndexesFromAllHosts.stream()
-                .flatMap(Collection::stream)
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
+            .flatMap(Collection::stream)
+            .distinct()
+            .sorted()
+            .collect(Collectors.toList());
         LOGGER.debug("Union result {}", result);
         return result;
     }

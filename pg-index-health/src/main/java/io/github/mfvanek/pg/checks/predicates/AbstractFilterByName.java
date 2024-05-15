@@ -31,9 +31,9 @@ abstract class AbstractFilterByName {
 
     protected AbstractFilterByName(@Nonnull final Collection<String> exclusions) {
         this.exclusions = Objects.requireNonNull(exclusions, "exclusions cannot be null")
-                .stream()
-                .map(s -> s.toLowerCase(Locale.ROOT))
-                .collect(Collectors.toUnmodifiableSet());
+            .stream()
+            .map(s -> s.toLowerCase(Locale.ROOT))
+            .collect(Collectors.toUnmodifiableSet());
     }
 
     protected AbstractFilterByName(@Nonnull final String objectName) {

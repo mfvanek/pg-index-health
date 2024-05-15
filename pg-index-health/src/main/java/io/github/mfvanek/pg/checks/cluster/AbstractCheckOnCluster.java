@@ -36,7 +36,6 @@ import javax.annotation.Nullable;
  * An abstract class for all database checks performed on entire cluster.
  *
  * @param <T> represents an object in a database associated with a table
- *
  * @author Ivan Vakhrushev
  * @since 0.6.0
  */
@@ -116,8 +115,8 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
         final DatabaseCheckOnHost<T> checkOnPrimary = computeCheckForPrimaryIfNeed();
         LOGGER.debug("Going to execute on primary host {}", checkOnPrimary.getHost().getName());
         return checkOnPrimary.check(pgContext).stream()
-                .filter(exclusionsFilter)
-                .collect(Collectors.toList());
+            .filter(exclusionsFilter)
+            .collect(Collectors.toList());
     }
 
     @Nonnull
@@ -129,9 +128,9 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
             acrossClusterResults.add(resultsFromHost);
         }
         return acrossClusterResultsMapper.apply(acrossClusterResults)
-                .stream()
-                .filter(exclusionsFilter)
-                .collect(Collectors.toList());
+            .stream()
+            .filter(exclusionsFilter)
+            .collect(Collectors.toList());
     }
 
     @Nonnull

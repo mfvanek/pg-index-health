@@ -29,21 +29,21 @@ class IndexesWithBooleanCheckOnHostTest extends DatabaseAwareTestBase {
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-                .hasType(IndexWithColumns.class)
-                .hasDiagnostic(Diagnostic.INDEXES_WITH_BOOLEAN)
-                .hasHost(getHost());
+            .hasType(IndexWithColumns.class)
+            .hasDiagnostic(Diagnostic.INDEXES_WITH_BOOLEAN)
+            .hasHost(getHost());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBooleanValuesInIndex(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .hasSize(1)
-                        .containsExactly(
-                                IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_deleted"), 0L,
-                                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "deleted"))
-                        ));
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_deleted"), 0L,
+                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "deleted"))
+                ));
     }
 }

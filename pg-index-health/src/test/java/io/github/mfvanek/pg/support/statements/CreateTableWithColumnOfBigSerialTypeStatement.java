@@ -23,11 +23,11 @@ public class CreateTableWithColumnOfBigSerialTypeStatement extends AbstractDbSta
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create table if not exists %s.bad_accounts (" +
-                "id bigserial not null primary key, " +
-                "name varchar(255) not null," +
-                // not null constraint will be added for all serial columns
-                "real_client_id bigserial," +
-                "real_account_id bigserial)", schemaName));
+            "id bigserial not null primary key, " +
+            "name varchar(255) not null," +
+            // not null constraint will be added for all serial columns
+            "real_client_id bigserial," +
+            "real_account_id bigserial)", schemaName));
         throwExceptionIfTableDoesNotExist(statement, "bad_accounts");
     }
 }

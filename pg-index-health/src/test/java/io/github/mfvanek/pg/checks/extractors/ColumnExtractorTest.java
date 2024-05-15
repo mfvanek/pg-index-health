@@ -21,7 +21,7 @@ class ColumnExtractorTest {
     @Test
     void shouldCreateInstance() {
         assertThat(ColumnExtractor.of())
-                .isNotNull()
-                .isInstanceOf(ColumnExtractor.class);
+            .isNotNull()
+            .isInstanceOf(ColumnExtractor.class);
     }
 }

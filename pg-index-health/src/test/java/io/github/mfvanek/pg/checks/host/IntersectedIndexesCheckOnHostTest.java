@@ -29,49 +29,49 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-                .hasType(DuplicatedIndexes.class)
-                .hasDiagnostic(Diagnostic.INTERSECTED_INDEXES)
-                .hasHost(getHost());
+            .hasType(DuplicatedIndexes.class)
+            .hasDiagnostic(Diagnostic.INTERSECTED_INDEXES)
+            .hasHost(getHost());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .hasSize(2)
-                        .containsExactly(
-                                DuplicatedIndexes.of(
-                                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), 0L),
-                                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), 0L)
-                                ),
-                                DuplicatedIndexes.of(
-                                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L),
-                                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
-                        .allMatch(d -> d.getTotalSize() >= 106_496L));
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(2)
+                .containsExactly(
+                    DuplicatedIndexes.of(
+                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), 0L),
+                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), 0L)
+                    ),
+                    DuplicatedIndexes.of(
+                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L),
+                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
+                .allMatch(d -> d.getTotalSize() >= 106_496L));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldFindHashIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedHashIndex(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .hasSize(1)
-                        .containsExactly(
-                                DuplicatedIndexes.of(
-                                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L),
-                                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
-                        .allMatch(d -> d.getTotalSize() >= 106_496L));
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    DuplicatedIndexes.of(
+                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L),
+                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
+                .allMatch(d -> d.getTotalSize() >= 106_496L));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void withDifferentOpclassShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDifferentOpclassIndexes(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .isEmpty());
+            assertThat(check)
+                .executing(ctx)
+                .isEmpty());
     }
 }

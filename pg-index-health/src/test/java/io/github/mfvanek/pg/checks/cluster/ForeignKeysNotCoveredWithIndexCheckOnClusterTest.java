@@ -40,8 +40,8 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp, ctx ->
-                assertThat(check.check(ctx))
-                        .isEmpty());
+            assertThat(check.check(ctx))
+                .isEmpty());
     }
 
     @ParameterizedTest
@@ -49,22 +49,22 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn(), ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(2)
-                    .containsExactlyInAnyOrder(
-                            ForeignKey.ofColumn(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id",
-                                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id")),
-                            ForeignKey.ofColumn(ctx.enrichWithSchema("bad_clients"), "c_bad_clients_fk_real_client_id",
-                                    Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id")))
-                    .flatExtracting(ForeignKey::getColumnsInConstraint)
-                    .hasSize(2)
-                    .containsExactlyInAnyOrder(
-                            Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"),
-                            Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id"));
+                .hasSize(2)
+                .containsExactlyInAnyOrder(
+                    ForeignKey.ofColumn(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id",
+                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id")),
+                    ForeignKey.ofColumn(ctx.enrichWithSchema("bad_clients"), "c_bad_clients_fk_real_client_id",
+                        Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id")))
+                .flatExtracting(ForeignKey::getColumnsInConstraint)
+                .hasSize(2)
+                .containsExactlyInAnyOrder(
+                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"),
+                    Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id"));
 
             final Predicate<TableNameAware> predicate = FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))
-                    .and(FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients")));
+                .and(FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients")));
             assertThat(check.check(ctx, predicate))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 
@@ -73,22 +73,22 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     void onDatabaseWithNotSuitableIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withNonSuitableIndex(), ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(2)
-                    .containsExactlyInAnyOrder(
-                            ForeignKey.ofColumn(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id",
-                                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id")),
-                            ForeignKey.ofColumn(ctx.enrichWithSchema("bad_clients"), "c_bad_clients_fk_real_client_id",
-                                    Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id")))
-                    .flatExtracting(ForeignKey::getColumnsInConstraint)
-                    .hasSize(2)
-                    .containsExactlyInAnyOrder(
-                            Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"),
-                            Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id"));
+                .hasSize(2)
+                .containsExactlyInAnyOrder(
+                    ForeignKey.ofColumn(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id",
+                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id")),
+                    ForeignKey.ofColumn(ctx.enrichWithSchema("bad_clients"), "c_bad_clients_fk_real_client_id",
+                        Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id")))
+                .flatExtracting(ForeignKey::getColumnsInConstraint)
+                .hasSize(2)
+                .containsExactlyInAnyOrder(
+                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"),
+                    Column.ofNullable(ctx.enrichWithSchema("bad_clients"), "real_client_id"));
 
             final Predicate<TableNameAware> predicate = FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))
-                    .and(FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients")));
+                .and(FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients")));
             assertThat(check.check(ctx, predicate))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 
@@ -96,7 +96,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithSuitableIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withSuitableIndex(), ctx ->
-                assertThat(check.check(ctx))
-                        .isEmpty());
+            assertThat(check.check(ctx))
+                .isEmpty());
     }
 }

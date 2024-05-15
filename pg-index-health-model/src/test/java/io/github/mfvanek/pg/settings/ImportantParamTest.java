@@ -39,6 +39,6 @@ class ImportantParamTest {
     @Test
     void testToString() {
         assertThat(ImportantParam.MAINTENANCE_WORK_MEM)
-                .hasToString("ImportantParam{name='maintenance_work_mem', defaultValue='64MB'}");
+            .hasToString("ImportantParam{name='maintenance_work_mem', defaultValue='64MB'}");
     }
 }

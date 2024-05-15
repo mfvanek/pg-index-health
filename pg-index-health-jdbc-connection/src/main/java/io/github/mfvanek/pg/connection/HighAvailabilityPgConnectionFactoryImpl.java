@@ -37,7 +37,7 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
         Objects.requireNonNull(credentials, "credentials cannot be null");
         final Map<String, PgConnection> connectionsToAllHostsInCluster = new LinkedHashMap<>();
         credentials.getConnectionUrls().forEach(
-                url -> addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, url, credentials));
+            url -> addDataSourcesForAllHostsFromUrl(connectionsToAllHostsInCluster, url, credentials));
         final PgConnection connectionToPrimary = findConnectionToPrimary(connectionsToAllHostsInCluster);
         return HighAvailabilityPgConnectionImpl.of(connectionToPrimary, connectionsToAllHostsInCluster.values());
     }
@@ -48,7 +48,7 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
         final List<Map.Entry<String, String>> allHosts = PgUrlParser.extractNameWithPortAndUrlForEachHost(anyUrl);
         for (final Map.Entry<String, String> host : allHosts) {
             connectionsToAllHostsInCluster.computeIfAbsent(host.getKey(),
-                    h -> pgConnectionFactory.forUrl(host.getValue(), credentials.getUserName(), credentials.getPassword()));
+                h -> pgConnectionFactory.forUrl(host.getValue(), credentials.getUserName(), credentials.getPassword()));
         }
     }
 

@@ -49,27 +49,27 @@ class PgContextTest {
     @Test
     void withInvalidArguments() {
         assertThatThrownBy(() -> PgContext.of(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("schemaName cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("schemaName cannot be null");
         assertThatThrownBy(() -> PgContext.of(""))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("schemaName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("schemaName cannot be blank");
         assertThatThrownBy(() -> PgContext.of("   "))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("schemaName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("schemaName cannot be blank");
         assertThatThrownBy(() -> PgContext.of("s", -1))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("bloatPercentageThreshold cannot be less than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("bloatPercentageThreshold cannot be less than zero");
     }
 
     @Test
     void testToString() {
         assertThat(PgContext.of("s"))
-                .hasToString("PgContext{schemaName='s', bloatPercentageThreshold=10}");
+            .hasToString("PgContext{schemaName='s', bloatPercentageThreshold=10}");
         assertThat(PgContext.of("s", 11))
-                .hasToString("PgContext{schemaName='s', bloatPercentageThreshold=11}");
+            .hasToString("PgContext{schemaName='s', bloatPercentageThreshold=11}");
         assertThat(PgContext.ofPublic())
-                .hasToString("PgContext{schemaName='public', bloatPercentageThreshold=10}");
+            .hasToString("PgContext{schemaName='public', bloatPercentageThreshold=10}");
     }
 
     @Test
@@ -95,13 +95,13 @@ class PgContextTest {
     void complementWithSchemaWithInvalidArguments() {
         final PgContext pgContext = PgContext.ofPublic();
         assertThatThrownBy(() -> pgContext.enrichWithSchema(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("objectName cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("objectName cannot be null");
         assertThatThrownBy(() -> pgContext.enrichWithSchema(""))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("objectName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("objectName cannot be blank");
         assertThatThrownBy(() -> pgContext.enrichWithSchema("   "))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("objectName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("objectName cannot be blank");
     }
 }

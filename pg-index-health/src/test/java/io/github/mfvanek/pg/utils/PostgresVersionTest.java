@@ -28,6 +28,6 @@ final class PostgresVersionTest extends DatabaseAwareTestBase {
         final String requiredPgVersionString = (pgVersionFromEnv == null) ? "16.2 (Debian 16.2-" : pgVersionFromEnv.split("-")[0];
         final String actualPgVersionString = PostgresVersionReader.readVersion(getDataSource());
         assertThat(actualPgVersionString)
-                .startsWith(requiredPgVersionString);
+            .startsWith(requiredPgVersionString);
     }
 }

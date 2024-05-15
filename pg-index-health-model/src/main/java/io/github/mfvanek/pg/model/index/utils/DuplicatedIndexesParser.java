@@ -28,13 +28,13 @@ public final class DuplicatedIndexesParser {
         Validators.notBlank(duplicatedAsString, "duplicatedAsString");
         final String[] indexes = duplicatedAsString.split("; ");
         return Arrays.stream(indexes)
-                .map(s -> s.split(","))
-                .filter(a -> a[0].trim().startsWith("idx=") && a[1].trim().startsWith("size="))
-                .map(a -> {
-                    final String indexName = a[0].trim().substring("idx=".length());
-                    final String sizeAsString = a[1].trim().substring("size=".length());
-                    return Map.entry(indexName, Long.valueOf(sizeAsString));
-                })
-                .collect(Collectors.toUnmodifiableList());
+            .map(s -> s.split(","))
+            .filter(a -> a[0].trim().startsWith("idx=") && a[1].trim().startsWith("size="))
+            .map(a -> {
+                final String indexName = a[0].trim().substring("idx=".length());
+                final String sizeAsString = a[1].trim().substring("size=".length());
+                return Map.entry(indexName, Long.valueOf(sizeAsString));
+            })
+            .collect(Collectors.toUnmodifiableList());
     }
 }

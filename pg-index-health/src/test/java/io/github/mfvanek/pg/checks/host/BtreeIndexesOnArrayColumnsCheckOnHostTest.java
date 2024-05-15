@@ -29,9 +29,9 @@ class BtreeIndexesOnArrayColumnsCheckOnHostTest extends DatabaseAwareTestBase {
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-                .hasType(IndexWithColumns.class)
-                .hasDiagnostic(Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS)
-                .hasHost(getHost());
+            .hasType(IndexWithColumns.class)
+            .hasDiagnostic(Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS)
+            .hasHost(getHost());
     }
 
     @ParameterizedTest
@@ -39,14 +39,14 @@ class BtreeIndexesOnArrayColumnsCheckOnHostTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withBtreeIndexesOnArrayColumn(), ctx ->
             assertThat(check)
-                    .executing(ctx)
-                    .hasSize(2)
-                    .containsExactlyInAnyOrder(
-                            IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_roles_btree_idx"), 0L,
-                                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles")),
-                            IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_roles_btree_idx"), 0L,
-                                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles"))
-                    )
+                .executing(ctx)
+                .hasSize(2)
+                .containsExactlyInAnyOrder(
+                    IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_roles_btree_idx"), 0L,
+                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles")),
+                    IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_roles_btree_idx"), 0L,
+                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles"))
+                )
         );
     }
 }

@@ -88,8 +88,8 @@ public class ConnectionCredentials {
 
         final ConnectionCredentials that = (ConnectionCredentials) other;
         return Objects.equals(connectionUrls, that.connectionUrls) &&
-                Objects.equals(userName, that.userName) &&
-                Objects.equals(password, that.password);
+            Objects.equals(userName, that.userName) &&
+            Objects.equals(password, that.password);
     }
 
     /**
@@ -107,10 +107,10 @@ public class ConnectionCredentials {
     @Override
     public String toString() {
         return ConnectionCredentials.class.getSimpleName() + '{' +
-                "connectionUrls=" + connectionUrls +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+            "connectionUrls=" + connectionUrls +
+            ", userName='" + userName + '\'' +
+            ", password='" + password + '\'' +
+            '}';
     }
 
     @Nonnull

@@ -102,9 +102,9 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Co
     @Override
     public String toString() {
         return ColumnWithSerialType.class.getSimpleName() + "{column=" + column +
-                ", serialType=" + serialType +
-                ", sequenceName='" + sequenceName + '\'' +
-                '}';
+            ", serialType=" + serialType +
+            ", sequenceName='" + sequenceName + '\'' +
+            '}';
     }
 
     /**
@@ -122,8 +122,8 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Co
 
         final ColumnWithSerialType that = (ColumnWithSerialType) other;
         return Objects.equals(column, that.column) &&
-                Objects.equals(serialType, that.serialType) &&
-                Objects.equals(sequenceName, that.sequenceName);
+            Objects.equals(serialType, that.serialType) &&
+            Objects.equals(sequenceName, that.sequenceName);
     }
 
     /**

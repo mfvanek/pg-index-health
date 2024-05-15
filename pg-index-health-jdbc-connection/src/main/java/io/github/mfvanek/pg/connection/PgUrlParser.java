@@ -24,10 +24,10 @@ public final class PgUrlParser {
     public static final String URL_HEADER = "jdbc:postgresql://";
     private static final String PG_URL = "pgUrl";
     private static final Map<String, String> DEFAULT_URL_PARAMETERS = Map.ofEntries(
-            Map.entry("targetServerType", "primary"),
-            Map.entry("hostRecheckSeconds", "2"),
-            Map.entry("connectTimeout", "1"),
-            Map.entry("socketTimeout", "600")
+        Map.entry("targetServerType", "primary"),
+        Map.entry("hostRecheckSeconds", "2"),
+        Map.entry("connectTimeout", "1"),
+        Map.entry("socketTimeout", "600")
     );
 
     private PgUrlParser() {
@@ -37,7 +37,7 @@ public final class PgUrlParser {
     static boolean isReplicaUrl(@Nonnull final String pgUrl) {
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
         return pgUrl.contains("targetServerType=slave") ||
-                pgUrl.contains("targetServerType=secondary");
+            pgUrl.contains("targetServerType=secondary");
     }
 
     // For example, jdbc:postgresql://host-1:6432/db_name?param=value
@@ -49,10 +49,10 @@ public final class PgUrlParser {
         final String dbNameWithParamsForReplica = convertToReplicaConnectionString(dbNameWithParams);
         final String allHostsWithPort = extractAllHostsWithPort(pgUrl);
         return Arrays.stream(allHostsWithPort.split(","))
-                .distinct()
-                .sorted()
-                .map(h -> Map.entry(h, URL_HEADER + h + dbNameWithParamsForReplica))
-                .collect(Collectors.toUnmodifiableList());
+            .distinct()
+            .sorted()
+            .map(h -> Map.entry(h, URL_HEADER + h + dbNameWithParamsForReplica))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     @Nonnull
@@ -71,14 +71,14 @@ public final class PgUrlParser {
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
         final String allHostsWithPort = extractAllHostsWithPort(pgUrl);
         return Arrays.stream(allHostsWithPort.split(","))
-                .filter(Predicate.not(String::isBlank))
-                .map(h -> {
-                    final String[] hostToPort = h.split(":");
-                    return Map.entry(hostToPort[0], Integer.valueOf(hostToPort[1]));
-                })
-                .distinct()
-                .sorted(Map.Entry.comparingByKey())
-                .collect(Collectors.toUnmodifiableList());
+            .filter(Predicate.not(String::isBlank))
+            .map(h -> {
+                final String[] hostToPort = h.split(":");
+                return Map.entry(hostToPort[0], Integer.valueOf(hostToPort[1]));
+            })
+            .distinct()
+            .sorted(Map.Entry.comparingByKey())
+            .collect(Collectors.toUnmodifiableList());
     }
 
     @Nonnull
@@ -127,10 +127,10 @@ public final class PgUrlParser {
                                                  @Nonnull final Map<String, String> urlParameters) {
         final String additionalUrlParams = constructUrlParameters(urlParameters);
         return URL_HEADER + pgUrls.stream()
-                .map(PgUrlParser::extractAllHostsWithPort)
-                .sorted()
-                .collect(Collectors.joining(",")) +
-                extractDatabaseName(pgUrls) + additionalUrlParams;
+            .map(PgUrlParser::extractAllHostsWithPort)
+            .sorted()
+            .collect(Collectors.joining(",")) +
+            extractDatabaseName(pgUrls) + additionalUrlParams;
     }
 
     @Nonnull
@@ -139,8 +139,8 @@ public final class PgUrlParser {
         DEFAULT_URL_PARAMETERS.forEach(jointUrlParameters::putIfAbsent);
 
         final String additionalParameters = jointUrlParameters.entrySet().stream()
-                .map(e -> e.getKey() + "=" + e.getValue())
-                .collect(Collectors.joining("&"));
+            .map(e -> e.getKey() + "=" + e.getValue())
+            .collect(Collectors.joining("&"));
         return "?" + additionalParameters;
     }
 }

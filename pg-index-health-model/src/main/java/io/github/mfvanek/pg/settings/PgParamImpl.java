@@ -45,9 +45,9 @@ public class PgParamImpl implements PgParam {
     @Override
     public String toString() {
         return PgParamImpl.class.getSimpleName() + '{' +
-                "name='" + name + '\'' +
-                ", value='" + value + '\'' +
-                '}';
+            "name='" + name + '\'' +
+            ", value='" + value + '\'' +
+            '}';
     }
 
     /**

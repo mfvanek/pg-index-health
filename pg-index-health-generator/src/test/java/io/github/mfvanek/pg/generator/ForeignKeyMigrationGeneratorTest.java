@@ -26,11 +26,11 @@ class ForeignKeyMigrationGeneratorTest {
         final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator(GeneratingOptions.builder().build());
         final List<String> result = generator.generate(List.of(nullableColumnWithSchema()));
         assertThat(result)
-                .hasSize(1)
-                .containsExactly("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
-                        "create index concurrently if not exists table_with_very_very_very_long_name_3202677_without_nulls_idx" + System.lineSeparator() +
-                        "    on schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name) " +
-                        "where column_with_very_very_very_long_name is not null;");
+            .hasSize(1)
+            .containsExactly("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
+                "create index concurrently if not exists table_with_very_very_very_long_name_3202677_without_nulls_idx" + System.lineSeparator() +
+                "    on schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name) " +
+                "where column_with_very_very_very_long_name is not null;");
     }
 
     @Test
@@ -38,15 +38,15 @@ class ForeignKeyMigrationGeneratorTest {
         final DbMigrationGenerator<ForeignKey> generator = new ForeignKeyMigrationGenerator(GeneratingOptions.builder().build());
         final List<String> result = generator.generate(List.of(severalColumnsWithNulls(), severalColumnsWithNulls(), nullableColumnWithSchema()));
         assertThat(result)
-                .hasSize(3)
-                .containsExactly(
-                        "create index concurrently if not exists custom_table_custom_column_1_custom_column_22_without_nulls_idx" + System.lineSeparator() +
-                                "    on custom_table (custom_column_1, custom_column_22) where custom_column_22 is not null;",
-                        "create index concurrently if not exists custom_table_custom_column_1_custom_column_22_without_nulls_idx" + System.lineSeparator() +
-                                "    on custom_table (custom_column_1, custom_column_22) where custom_column_22 is not null;",
-                        "/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
-                                "create index concurrently if not exists table_with_very_very_very_long_name_3202677_without_nulls_idx" + System.lineSeparator() +
-                                "    on schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name) " +
-                                "where column_with_very_very_very_long_name is not null;");
+            .hasSize(3)
+            .containsExactly(
+                "create index concurrently if not exists custom_table_custom_column_1_custom_column_22_without_nulls_idx" + System.lineSeparator() +
+                    "    on custom_table (custom_column_1, custom_column_22) where custom_column_22 is not null;",
+                "create index concurrently if not exists custom_table_custom_column_1_custom_column_22_without_nulls_idx" + System.lineSeparator() +
+                    "    on custom_table (custom_column_1, custom_column_22) where custom_column_22 is not null;",
+                "/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
+                    "create index concurrently if not exists table_with_very_very_very_long_name_3202677_without_nulls_idx" + System.lineSeparator() +
+                    "    on schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name) " +
+                    "where column_with_very_very_very_long_name is not null;");
     }
 }

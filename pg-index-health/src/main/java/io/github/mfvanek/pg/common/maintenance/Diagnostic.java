@@ -51,8 +51,8 @@ public enum Diagnostic {
      * Creates a {@code Diagnostic} instance.
      *
      * @param executionTopology the place where the diagnostic should be executed
-     * @param sqlQueryFileName the associated sql query file name
-     * @param queryExecutor the lambda which executes the associated sql query
+     * @param sqlQueryFileName  the associated sql query file name
+     * @param queryExecutor     the lambda which executes the associated sql query
      */
     Diagnostic(@Nonnull final ExecutionTopology executionTopology,
                @Nonnull final String sqlQueryFileName,

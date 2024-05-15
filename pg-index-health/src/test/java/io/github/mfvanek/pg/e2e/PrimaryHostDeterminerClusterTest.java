@@ -39,25 +39,25 @@ class PrimaryHostDeterminerClusterTest {
             final PgConnection secondConnection = postgresCluster.getSecondPgConnection();
 
             assertThat(primaryHostDeterminer.isPrimary(firstConnection))
-                    .as("First connection is primary")
-                    .isTrue();
+                .as("First connection is primary")
+                .isTrue();
 
             assertThat(primaryHostDeterminer.isPrimary(secondConnection))
-                    .as("Second connection is not primary")
-                    .isFalse();
+                .as("Second connection is not primary")
+                .isFalse();
 
             postgresCluster.stopFirstContainer();
 
             Awaitility
-                    .await("Second node becomes primary")
-                    .atMost(PgConnectionAwareCluster.MAX_WAIT_INTERVAL_SECONDS)
-                    .with()
-                    .pollInterval(Duration.ofSeconds(2))
-                    .until(() -> primaryHostDeterminer.isPrimary(secondConnection));
+                .await("Second node becomes primary")
+                .atMost(PgConnectionAwareCluster.MAX_WAIT_INTERVAL_SECONDS)
+                .with()
+                .pollInterval(Duration.ofSeconds(2))
+                .until(() -> primaryHostDeterminer.isPrimary(secondConnection));
 
             assertThat(primaryHostDeterminer.isPrimary(secondConnection))
-                    .as("Second connection is primary")
-                    .isTrue();
+                .as("Second connection is primary")
+                .isTrue();
         }
     }
 }

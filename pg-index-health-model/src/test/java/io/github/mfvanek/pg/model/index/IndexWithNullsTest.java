@@ -24,8 +24,8 @@ class IndexWithNullsTest {
         final IndexWithNulls index = IndexWithNulls.of("t", "i", 11L, "f");
         assertThat(index.getTableName()).isEqualTo("t");
         assertThat(index.getIndexName())
-                .isEqualTo("i")
-                .isEqualTo(index.getName());
+            .isEqualTo("i")
+            .isEqualTo(index.getName());
         assertThat(index.getIndexSizeInBytes()).isEqualTo(11L);
         assertThat(index.getNullableColumn()).isEqualTo(Column.ofNullable("t", "f"));
     }
@@ -34,35 +34,35 @@ class IndexWithNullsTest {
     @Test
     void withInvalidArguments() {
         assertThatThrownBy(() -> IndexWithNulls.of(null, null, 0, "f"))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("tableName cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("tableName cannot be null");
         assertThatThrownBy(() -> IndexWithNulls.of("", null, 0, "f"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("tableName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("tableName cannot be blank");
         assertThatThrownBy(() -> IndexWithNulls.of("  ", null, 0, "f"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("tableName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("tableName cannot be blank");
         assertThatThrownBy(() -> IndexWithNulls.of("t", null, 0, "f"))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("indexName cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("indexName cannot be null");
         assertThatThrownBy(() -> IndexWithNulls.of("t", "", 0, "f"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("indexName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("indexName cannot be blank");
         assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("columnName cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("columnName cannot be null");
         assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, ""))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("columnName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("columnName cannot be blank");
         assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, "  "))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("columnName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("columnName cannot be blank");
     }
 
     @Test
     void testToString() {
         assertThat(IndexWithNulls.of("t", "i", 22L, "f"))
-                .hasToString("IndexWithNulls{tableName='t', indexName='i', " + "indexSizeInBytes=22, columns=[Column{tableName='t', columnName='f', notNull=false}]}");
+            .hasToString("IndexWithNulls{tableName='t', indexName='i', " + "indexSizeInBytes=22, columns=[Column{tableName='t', columnName='f', notNull=false}]}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -79,37 +79,37 @@ class IndexWithNullsTest {
 
         // self
         assertThat(first)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // the same
         assertThat(theSame)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // others
         assertThat(second)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
 
         assertThat(third)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first)
-                .isNotEqualTo(second)
-                .doesNotHaveSameHashCodeAs(second);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first)
+            .isNotEqualTo(second)
+            .doesNotHaveSameHashCodeAs(second);
 
         // another
         final Index anotherType = Index.of("t1", "i1");
         assertThat(anotherType)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
     }
 
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(IndexWithNulls.class)
-                .withIgnoredFields("indexSizeInBytes", "columns")
-                .verify();
+            .withIgnoredFields("indexSizeInBytes", "columns")
+            .verify();
     }
 }

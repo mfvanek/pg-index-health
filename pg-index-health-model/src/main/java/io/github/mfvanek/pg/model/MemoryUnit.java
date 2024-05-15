@@ -49,8 +49,8 @@ public enum MemoryUnit {
     @Override
     public String toString() {
         return MemoryUnit.class.getSimpleName() + '{' +
-                "dimension=" + dimension +
-                ", description='" + description + '\'' +
-                '}';
+            "dimension=" + dimension +
+            ", description='" + description + '\'' +
+            '}';
     }
 }

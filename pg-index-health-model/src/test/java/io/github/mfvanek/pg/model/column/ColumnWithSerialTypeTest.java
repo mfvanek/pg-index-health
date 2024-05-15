@@ -24,72 +24,72 @@ class ColumnWithSerialTypeTest {
     void gettersShouldWork() {
         final ColumnWithSerialType column = prepare();
         assertThat(column)
-                .isNotNull()
-                .satisfies(c -> {
-                    assertThat(c.getTableName())
-                            .isEqualTo("t1");
-                    assertThat(c.getColumnName())
-                            .isEqualTo("c1")
-                            .isEqualTo(c.getName());
-                    assertThat(c.isNullable())
-                            .isFalse();
-                    assertThat(c.isNotNull())
-                            .isTrue();
-                    assertThat(c.getSerialType())
-                            .isEqualTo(SerialType.SERIAL);
-                    assertThat(c.getSequenceName())
-                            .isEqualTo("s1");
-                });
+            .isNotNull()
+            .satisfies(c -> {
+                assertThat(c.getTableName())
+                    .isEqualTo("t1");
+                assertThat(c.getColumnName())
+                    .isEqualTo("c1")
+                    .isEqualTo(c.getName());
+                assertThat(c.isNullable())
+                    .isFalse();
+                assertThat(c.isNotNull())
+                    .isTrue();
+                assertThat(c.getSerialType())
+                    .isEqualTo(SerialType.SERIAL);
+                assertThat(c.getSequenceName())
+                    .isEqualTo("s1");
+            });
 
         final ColumnWithSerialType theSameButNullable = prepareNullable();
         assertThat(theSameButNullable)
-                .isNotNull()
-                .satisfies(c -> {
-                    assertThat(c.getTableName())
-                            .isEqualTo("t1");
-                    assertThat(c.getColumnName())
-                            .isEqualTo("c1")
-                            .isEqualTo(c.getName());
-                    assertThat(c.isNullable())
-                            .isTrue();
-                    assertThat(c.isNotNull())
-                            .isFalse();
-                    assertThat(c.getSerialType())
-                            .isEqualTo(SerialType.SERIAL);
-                    assertThat(c.getSequenceName())
-                            .isEqualTo("s1");
-                });
+            .isNotNull()
+            .satisfies(c -> {
+                assertThat(c.getTableName())
+                    .isEqualTo("t1");
+                assertThat(c.getColumnName())
+                    .isEqualTo("c1")
+                    .isEqualTo(c.getName());
+                assertThat(c.isNullable())
+                    .isTrue();
+                assertThat(c.isNotNull())
+                    .isFalse();
+                assertThat(c.getSerialType())
+                    .isEqualTo(SerialType.SERIAL);
+                assertThat(c.getSequenceName())
+                    .isEqualTo("s1");
+            });
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidValuesShouldThrowException() {
         assertThatThrownBy(() -> ColumnWithSerialType.of(null, null, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("column cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("column cannot be null");
 
         final Column column = Column.ofNullable("t1", "c1");
         assertThatThrownBy(() -> ColumnWithSerialType.of(column, null, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("serialType cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("serialType cannot be null");
 
         assertThatThrownBy(() -> ColumnWithSerialType.of(column, SerialType.BIG_SERIAL, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("sequenceName cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("sequenceName cannot be null");
 
         assertThatThrownBy(() -> ColumnWithSerialType.of(column, SerialType.SMALL_SERIAL, ""))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("sequenceName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("sequenceName cannot be blank");
 
         assertThatThrownBy(() -> ColumnWithSerialType.of(column, SerialType.SMALL_SERIAL, "   "))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("sequenceName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("sequenceName cannot be blank");
     }
 
     @Test
     void toStringTest() {
         assertThat(prepare())
-                .hasToString("ColumnWithSerialType{column=Column{tableName='t1', columnName='c1', notNull=true}, serialType=SerialType{columnType='serial'}, sequenceName='s1'}");
+            .hasToString("ColumnWithSerialType{column=Column{tableName='t1', columnName='c1', notNull=true}, serialType=SerialType{columnType='serial'}, sequenceName='s1'}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -108,38 +108,38 @@ class ColumnWithSerialTypeTest {
 
         // self
         assertThat(first)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // the same
         assertThat(theSame)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // do not ignore nullability of column
         assertThat(theSameButNullable)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
 
         // others
         assertThat(second)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
 
         assertThat(third)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
 
         assertThat(forth)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
     }
 
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(ColumnWithSerialType.class)
-                .verify();
+            .verify();
     }
 
     @Test
@@ -154,32 +154,32 @@ class ColumnWithSerialTypeTest {
 
         //noinspection ResultOfMethodCallIgnored,ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("other cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("other cannot be null");
 
         assertThat(first)
-                .isEqualByComparingTo(first) // self
-                .isEqualByComparingTo(theSame) // the same
-                .isGreaterThan(theSameButNullable) // do not ignore nullability of column
-                .isGreaterThan(second)
-                .isLessThan(third)
-                .isLessThan(forth)
-                .isLessThan(fifth);
+            .isEqualByComparingTo(first) // self
+            .isEqualByComparingTo(theSame) // the same
+            .isGreaterThan(theSameButNullable) // do not ignore nullability of column
+            .isGreaterThan(second)
+            .isLessThan(third)
+            .isLessThan(forth)
+            .isLessThan(fifth);
 
         assertThat(theSameButNullable)
-                .isLessThan(first);
+            .isLessThan(first);
 
         assertThat(second)
-                .isLessThan(first)
-                .isLessThan(third)
-                .isLessThan(forth)
-                .isLessThan(fifth);
+            .isLessThan(first)
+            .isLessThan(third)
+            .isLessThan(forth)
+            .isLessThan(fifth);
 
         assertThat(third)
-                .isGreaterThan(first)
-                .isGreaterThan(second)
-                .isLessThan(forth)
-                .isGreaterThan(fifth);
+            .isGreaterThan(first)
+            .isGreaterThan(second)
+            .isLessThan(forth)
+            .isGreaterThan(fifth);
     }
 
     @Nonnull

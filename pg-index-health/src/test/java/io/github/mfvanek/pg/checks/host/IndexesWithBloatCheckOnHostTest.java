@@ -25,8 +25,8 @@ class IndexesWithBloatCheckOnHostTest extends DatabaseAwareTestBase {
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-                .hasType(IndexWithBloat.class)
-                .hasDiagnostic(Diagnostic.BLOATED_INDEXES)
-                .hasHost(getHost());
+            .hasType(IndexWithBloat.class)
+            .hasDiagnostic(Diagnostic.BLOATED_INDEXES)
+            .hasHost(getHost());
     }
 }

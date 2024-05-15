@@ -22,28 +22,28 @@ class PostgreSqlClusterAliasHolderTest {
     void primaryAndStandbyNamesShouldDiffer() {
         final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
         assertThat(aliases)
-                .isNotNull()
-                .satisfies(a -> {
-                    assertThat(a.getPrimaryAlias())
-                            .startsWith("pg-")
-                            .endsWith("-0");
-                    assertThat(a.getStandbyAlias())
-                            .endsWith("-1")
-                            .startsWith(a.getPrimaryAlias().substring(0, a.getPrimaryAlias().length() - 1));
-                });
+            .isNotNull()
+            .satisfies(a -> {
+                assertThat(a.getPrimaryAlias())
+                    .startsWith("pg-")
+                    .endsWith("-0");
+                assertThat(a.getStandbyAlias())
+                    .endsWith("-1")
+                    .startsWith(a.getPrimaryAlias().substring(0, a.getPrimaryAlias().length() - 1));
+            });
     }
 
     @Test
     void shouldCreateEnvMaps() {
         final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
         final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder = PostgreSqlClusterWrapper.builder()
-                .withUsername("username")
-                .withPassword("any#pwd")
-                .withDatabaseName("test_db");
+            .withUsername("username")
+            .withPassword("any#pwd")
+            .withDatabaseName("test_db");
         assertThat(aliases)
-                .isNotNull()
-                .satisfies(a -> assertThat(a.createPrimaryEnvVarsMap(builder))
-                        .hasSize(14)
-                        .hasSameSizeAs(a.createStandbyEnvVarsMap(builder)));
+            .isNotNull()
+            .satisfies(a -> assertThat(a.createPrimaryEnvVarsMap(builder))
+                .hasSize(14)
+                .hasSameSizeAs(a.createStandbyEnvVarsMap(builder)));
     }
 }

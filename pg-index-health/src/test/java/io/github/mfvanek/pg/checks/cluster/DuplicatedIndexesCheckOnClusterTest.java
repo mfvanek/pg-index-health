@@ -38,18 +38,18 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDuplicatedIndex(), ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(1)
-                    .containsExactly(
-                            DuplicatedIndexes.of(
-                                    IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L),
-                                    IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number"), 0L)))
-                    .allMatch(d -> d.getTotalSize() >= 16_384L);
+                .hasSize(1)
+                .containsExactly(
+                    DuplicatedIndexes.of(
+                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L),
+                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number"), 0L)))
+                .allMatch(d -> d.getTotalSize() >= 16_384L);
 
             assertThat(check.check(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("accounts_account_number_key"))))
-                    .isEmpty();
+                .isEmpty();
 
             assertThat(check.check(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("i_accounts_account_number"))))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 
@@ -57,23 +57,23 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void withHashIndexShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDuplicatedHashIndex(), ctx ->
-                assertThat(check.check(ctx))
-                        .isEmpty());
+            assertThat(check.check(ctx))
+                .isEmpty());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void withDifferentOpclassShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDifferentOpclassIndexes(), ctx ->
-                assertThat(check.check(ctx))
-                        .isEmpty());
+            assertThat(check.check(ctx))
+                .isEmpty());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void withDifferentCollationShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withCustomCollation().withDuplicatedCustomCollationIndex(), ctx ->
-                assertThat(check.check(ctx))
-                        .isEmpty());
+            assertThat(check.check(ctx))
+                .isEmpty());
     }
 }

@@ -39,16 +39,16 @@ class TablesWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(2)
-                    .containsExactly(
-                            Table.of(ctx.enrichWithSchema("accounts"), 0L),
-                            Table.of(ctx.enrichWithSchema("clients"), 0L));
+                .hasSize(2)
+                .containsExactly(
+                    Table.of(ctx.enrichWithSchema("accounts"), 0L),
+                    Table.of(ctx.enrichWithSchema("clients"), 0L));
 
             assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
-                    .hasSize(1)
-                    .containsExactly(
-                            Table.of(ctx.enrichWithSchema("clients"), 0L))
-                    .allMatch(t -> t.getTableSizeInBytes() > 0L);
+                .hasSize(1)
+                .containsExactly(
+                    Table.of(ctx.enrichWithSchema("clients"), 0L))
+                .allMatch(t -> t.getTableSizeInBytes() > 0L);
         });
     }
 
@@ -57,16 +57,16 @@ class TablesWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
     void shouldNotTakingIntoAccountBlankComments(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnTables(), ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(2)
-                    .containsExactly(
-                            Table.of(ctx.enrichWithSchema("accounts"), 0L),
-                            Table.of(ctx.enrichWithSchema("clients"), 0L));
+                .hasSize(2)
+                .containsExactly(
+                    Table.of(ctx.enrichWithSchema("accounts"), 0L),
+                    Table.of(ctx.enrichWithSchema("clients"), 0L));
 
             assertThat(check.check(ctx, FilterTablesBySizePredicate.of(1_234L)))
-                    .hasSize(1)
-                    .containsExactly(
-                            Table.of(ctx.enrichWithSchema("clients"), 0L))
-                    .allMatch(t -> t.getTableSizeInBytes() > 1_234L);
+                .hasSize(1)
+                .containsExactly(
+                    Table.of(ctx.enrichWithSchema("clients"), 0L))
+                .allMatch(t -> t.getTableSizeInBytes() > 1_234L);
         });
     }
 }

@@ -23,6 +23,6 @@ public class CreateNotSuitableIndexForForeignKeyStatement extends AbstractDbStat
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create index if not exists " +
-                "i_accounts_account_number_client_id on %s.accounts (account_number, client_id)", schemaName));
+            "i_accounts_account_number_client_id on %s.accounts (account_number, client_id)", schemaName));
     }
 }

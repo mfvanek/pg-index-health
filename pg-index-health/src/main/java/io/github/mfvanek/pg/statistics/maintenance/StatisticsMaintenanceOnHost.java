@@ -30,8 +30,8 @@ public interface StatisticsMaintenanceOnHost extends StatisticsAware, HostAware 
      * <p>
      * Note: superuser privileges are required.
      *
-     * @see <a href="https://www.postgresql.org/docs/current/monitoring-stats.html">Monitoring Database Activity</a>
      * @return true if the operation is successful
+     * @see <a href="https://www.postgresql.org/docs/current/monitoring-stats.html">Monitoring Database Activity</a>
      */
     @Override
     boolean resetStatistics();

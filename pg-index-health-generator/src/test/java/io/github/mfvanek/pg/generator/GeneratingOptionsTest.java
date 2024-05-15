@@ -22,27 +22,27 @@ class GeneratingOptionsTest {
         final GeneratingOptions.Builder builder = GeneratingOptions.builder();
         final GeneratingOptions options = builder.build();
         assertThat(options)
-                .hasToString("GeneratingOptions{concurrently=true, excludeNulls=true, breakLines=true, indentation=4, uppercaseForKeywords=false, nameWithoutNulls=true, idxPosition=SUFFIX}");
+            .hasToString("GeneratingOptions{concurrently=true, excludeNulls=true, breakLines=true, indentation=4, uppercaseForKeywords=false, nameWithoutNulls=true, idxPosition=SUFFIX}");
 
         builder.normally()
-                .includeNulls()
-                .doNotBreakLines()
-                .withIndentation(2)
-                .uppercaseForKeywords()
-                .doNotNameWithoutNulls()
-                .withIdxPosition(IdxPosition.PREFIX);
+            .includeNulls()
+            .doNotBreakLines()
+            .withIndentation(2)
+            .uppercaseForKeywords()
+            .doNotNameWithoutNulls()
+            .withIdxPosition(IdxPosition.PREFIX);
         assertThat(builder)
-                .hasToString("Builder{concurrently=false, excludeNulls=false, breakLines=false, indentation=2, uppercaseForKeywords=true, nameWithoutNulls=false, idxPosition=PREFIX}");
+            .hasToString("Builder{concurrently=false, excludeNulls=false, breakLines=false, indentation=2, uppercaseForKeywords=true, nameWithoutNulls=false, idxPosition=PREFIX}");
 
         builder.concurrently()
-                .excludeNulls()
-                .breakLines()
-                .withIndentation(4)
-                .lowercaseForKeywords()
-                .nameWithoutNulls()
-                .withIdxPosition(IdxPosition.SUFFIX);
+            .excludeNulls()
+            .breakLines()
+            .withIndentation(4)
+            .lowercaseForKeywords()
+            .nameWithoutNulls()
+            .withIdxPosition(IdxPosition.SUFFIX);
         assertThat(builder)
-                .hasToString("Builder{concurrently=true, excludeNulls=true, breakLines=true, indentation=4, uppercaseForKeywords=false, nameWithoutNulls=true, idxPosition=SUFFIX}");
+            .hasToString("Builder{concurrently=true, excludeNulls=true, breakLines=true, indentation=4, uppercaseForKeywords=false, nameWithoutNulls=true, idxPosition=SUFFIX}");
     }
 
     @SuppressWarnings("checkstyle:ExecutableStatementCount")
@@ -96,16 +96,16 @@ class GeneratingOptionsTest {
         final GeneratingOptions.Builder builder = GeneratingOptions.builder();
 
         assertThatThrownBy(() -> builder.withIndentation(-1))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("indentation should be in the range [0, 8]");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("indentation should be in the range [0, 8]");
         assertThatThrownBy(() -> builder.withIndentation(9))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("indentation should be in the range [0, 8]");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("indentation should be in the range [0, 8]");
 
         //noinspection ConstantConditions
         assertThatThrownBy(() -> builder.withIdxPosition(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("idxPosition cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("idxPosition cannot be null");
     }
 
     @Test
@@ -113,11 +113,11 @@ class GeneratingOptionsTest {
         final GeneratingOptions.Builder builder = GeneratingOptions.builder();
 
         assertThat(builder.withIndentation(0).build())
-                .isNotNull()
-                .satisfies(b -> assertThat(b.getIndentation()).isZero());
+            .isNotNull()
+            .satisfies(b -> assertThat(b.getIndentation()).isZero());
 
         assertThat(builder.withIndentation(8).build())
-                .isNotNull()
-                .satisfies(b -> assertThat(b.getIndentation()).isEqualTo(8));
+            .isNotNull()
+            .satisfies(b -> assertThat(b.getIndentation()).isEqualTo(8));
     }
 }

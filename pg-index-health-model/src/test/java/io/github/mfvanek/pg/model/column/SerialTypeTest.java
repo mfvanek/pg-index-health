@@ -25,46 +25,46 @@ class SerialTypeTest {
         final Set<String> types = new HashSet<>();
         for (final SerialType serialType : SerialType.values()) {
             assertThat(serialType.getColumnType())
-                    .isNotBlank();
+                .isNotBlank();
             types.add(serialType.getColumnType());
         }
         assertThat(types)
-                .hasSameSizeAs(SerialType.values());
+            .hasSameSizeAs(SerialType.values());
     }
 
     @Test
     void toStringTest() {
         assertThat(SerialType.SMALL_SERIAL)
-                .hasToString("SerialType{columnType='smallserial'}");
+            .hasToString("SerialType{columnType='smallserial'}");
         assertThat(SerialType.SERIAL)
-                .hasToString("SerialType{columnType='serial'}");
+            .hasToString("SerialType{columnType='serial'}");
         assertThat(SerialType.BIG_SERIAL)
-                .hasToString("SerialType{columnType='bigserial'}");
+            .hasToString("SerialType{columnType='bigserial'}");
     }
 
     @Test
     void creationFromStringShouldWork() {
         assertThat(SerialType.valueFrom("smallserial"))
-                .isEqualTo(SerialType.SMALL_SERIAL);
+            .isEqualTo(SerialType.SMALL_SERIAL);
         assertThat(SerialType.valueOf("SMALL_SERIAL"))
-                .isEqualTo(SerialType.SMALL_SERIAL);
+            .isEqualTo(SerialType.SMALL_SERIAL);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void creationFromStringShouldThrowExceptionWhenNotFound() {
         assertThatThrownBy(() -> SerialType.valueFrom(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("pgColumnType cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgColumnType cannot be null");
         assertThatThrownBy(() -> SerialType.valueFrom(""))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("pgColumnType = ''");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("pgColumnType = ''");
 
         assertThatThrownBy(() -> SerialType.valueOf(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("Name is null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("Name is null");
         assertThatThrownBy(() -> SerialType.valueOf(""))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("No enum constant io.github.mfvanek.pg.model.column.SerialType.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("No enum constant io.github.mfvanek.pg.model.column.SerialType.");
     }
 }

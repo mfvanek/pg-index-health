@@ -26,10 +26,10 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(getPgConnection());
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
-                .isNotNull()
-                .hasSize(1)
-                .containsExactly(getPgConnection())
-                .isUnmodifiable();
+            .isNotNull()
+            .hasSize(1)
+            .containsExactly(getPgConnection())
+            .isUnmodifiable();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster().iterator().next()).isEqualTo(haPgConnection.getConnectionToPrimary());
     }
 
@@ -38,10 +38,10 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(getPgConnection());
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
-                .isNotNull()
-                .hasSize(1)
-                .containsExactly(getPgConnection())
-                .isUnmodifiable();
+            .isNotNull()
+            .hasSize(1)
+            .containsExactly(getPgConnection())
+            .isUnmodifiable();
     }
 
     @Test
@@ -51,10 +51,10 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
         final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary, List.of(primary, replica));
         assertThat(haPgConnection).isNotNull();
         assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
-                .isNotNull()
-                .hasSize(2)
-                .containsExactlyInAnyOrder(primary, replica)
-                .isUnmodifiable();
+            .isNotNull()
+            .hasSize(2)
+            .containsExactlyInAnyOrder(primary, replica)
+            .isUnmodifiable();
     }
 
     @Test
@@ -63,8 +63,8 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
         final PgConnection replica = getConnectionToReplica();
         final List<PgConnection> connectionsOnlyToReplicas = List.of(replica);
         assertThatThrownBy(() -> HighAvailabilityPgConnectionImpl.of(primary, connectionsOnlyToReplicas))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("connectionsToAllHostsInCluster have to contain a connection to the primary");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("connectionsToAllHostsInCluster have to contain a connection to the primary");
     }
 
     @Nonnull

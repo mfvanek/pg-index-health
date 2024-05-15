@@ -17,8 +17,8 @@ import javax.annotation.Nonnull;
  * A mapping to PostgreSQL constraint types.
  *
  * @author Blohny
- * @since 0.11.0
  * @see <a href="https://www.postgresql.org/docs/current/catalog-pg-constraint.html">pg_constraint</a>
+ * @since 0.11.0
  */
 public enum ConstraintType {
 

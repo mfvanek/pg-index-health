@@ -48,7 +48,7 @@ final class PostgreSqlClusterAliasHolder {
 
     @Nonnull
     Map<String, String> createPrimaryEnvVarsMap(
-            @Nonnull final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder
+        @Nonnull final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder
     ) {
         final Map<String, String> envVarsMap = createCommonEnvVarsMap(builder);
         envVarsMap.put("REPMGR_NODE_NAME", primaryAlias);
@@ -58,7 +58,7 @@ final class PostgreSqlClusterAliasHolder {
 
     @Nonnull
     Map<String, String> createStandbyEnvVarsMap(
-            @Nonnull final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder
+        @Nonnull final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder
     ) {
         final Map<String, String> envVarsMap = createCommonEnvVarsMap(builder);
         envVarsMap.put("REPMGR_NODE_NAME", standbyAlias);
@@ -69,20 +69,20 @@ final class PostgreSqlClusterAliasHolder {
     @Nonnull
     WaitStrategy getWaitStrategyForPrimary() {
         return new LogMessageWaitStrategy()
-                .withRegEx(".*Starting repmgrd.*\\s")
-                .withStartupTimeout(STARTUP_TIMEOUT);
+            .withRegEx(".*Starting repmgrd.*\\s")
+            .withStartupTimeout(STARTUP_TIMEOUT);
     }
 
     @Nonnull
     WaitStrategy getWaitStrategyForStandBy() {
         return new LogMessageWaitStrategy()
-                .withRegEx(".*starting monitoring of node.*\\s")
-                .withStartupTimeout(STARTUP_TIMEOUT);
+            .withRegEx(".*starting monitoring of node.*\\s")
+            .withStartupTimeout(STARTUP_TIMEOUT);
     }
 
     @Nonnull
     private Map<String, String> createCommonEnvVarsMap(
-            @Nonnull final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder
+        @Nonnull final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder
     ) {
         final Map<String, String> envVarsMap = new HashMap<>();
         envVarsMap.put("POSTGRESQL_POSTGRES_PASSWORD", "adminpassword");

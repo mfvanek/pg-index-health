@@ -34,7 +34,7 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
     @Test
     void privateConstructor() {
         assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(QueryExecutors.class))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -43,8 +43,8 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
         final String invalidSql = "select unknown_field from unknown_table";
         final PgConnection pgConnection = getPgConnection();
         assertThatThrownBy(() -> QueryExecutors.executeQuery(pgConnection, invalidSql, rs -> null))
-                .isInstanceOf(PgSqlException.class)
-                .hasCauseInstanceOf(SQLException.class);
+            .isInstanceOf(PgSqlException.class)
+            .hasCauseInstanceOf(SQLException.class);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -54,8 +54,8 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
         final PgContext context = PgContext.of("s");
         final PgConnection pgConnection = getPgConnection();
         assertThatThrownBy(() -> QueryExecutors.executeQueryWithSchema(pgConnection, context, invalidSqlWithParam, rs -> null))
-                .isInstanceOf(PgSqlException.class)
-                .hasCauseInstanceOf(SQLException.class);
+            .isInstanceOf(PgSqlException.class)
+            .hasCauseInstanceOf(SQLException.class);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -63,8 +63,8 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
     void executeNullQuery() {
         final PgConnection pgConnection = getPgConnection();
         assertThatThrownBy(() -> QueryExecutors.executeQuery(pgConnection, null, rs -> null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("sqlQuery cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("sqlQuery cannot be null");
     }
 
     @Test
@@ -80,10 +80,10 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
             final PgConnection pgConnection = PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:6432"));
             final PgContext context = PgContext.ofPublic();
             assertThatThrownBy(() -> QueryExecutors.executeQueryWithSchema(pgConnection, context, "select version()", rs -> rs.getString(1)))
-                    .isInstanceOf(PgSqlException.class)
-                    .hasMessage("bad parameter")
-                    .hasCauseInstanceOf(SQLException.class)
-                    .hasRootCauseMessage("bad parameter");
+                .isInstanceOf(PgSqlException.class)
+                .hasMessage("bad parameter")
+                .hasCauseInstanceOf(SQLException.class)
+                .hasRootCauseMessage("bad parameter");
         }
     }
 
@@ -100,10 +100,10 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
             final PgConnection pgConnection = PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:6432"));
             final PgContext context = PgContext.ofPublic();
             assertThatThrownBy(() -> QueryExecutors.executeQueryWithBloatThreshold(pgConnection, context, "select version()", rs -> rs.getString(1)))
-                    .isInstanceOf(PgSqlException.class)
-                    .hasMessage("bad parameter")
-                    .hasCauseInstanceOf(SQLException.class)
-                    .hasRootCauseMessage("bad parameter");
+                .isInstanceOf(PgSqlException.class)
+                .hasMessage("bad parameter")
+                .hasCauseInstanceOf(SQLException.class)
+                .hasRootCauseMessage("bad parameter");
         }
     }
 }

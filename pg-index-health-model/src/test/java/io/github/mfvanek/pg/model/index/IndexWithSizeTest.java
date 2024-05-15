@@ -22,8 +22,8 @@ class IndexWithSizeTest {
     void indexWithZeroSize() {
         final IndexWithSize index = IndexWithSize.of("t", "i", 0L);
         assertThat(index.getIndexName())
-                .isEqualTo("i")
-                .isEqualTo(index.getName());
+            .isEqualTo("i")
+            .isEqualTo(index.getName());
         assertThat(index.getIndexSizeInBytes()).isZero();
     }
 
@@ -36,14 +36,14 @@ class IndexWithSizeTest {
     @Test
     void indexWithNegativeSize() {
         assertThatThrownBy(() -> IndexWithSize.of("t", "i", -1L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("indexSizeInBytes cannot be less than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("indexSizeInBytes cannot be less than zero");
     }
 
     @Test
     void testToString() {
         assertThat(IndexWithSize.of("t", "i", 33L))
-                .hasToString("IndexWithSize{tableName='t', indexName='i', indexSizeInBytes=33}");
+            .hasToString("IndexWithSize{tableName='t', indexName='i', indexSizeInBytes=33}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -60,38 +60,38 @@ class IndexWithSizeTest {
 
         // self
         assertThat(first)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // the same
         assertThat(theSame)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // others
         assertThat(second)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
 
         assertThat(third)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first)
-                .isNotEqualTo(second)
-                .doesNotHaveSameHashCodeAs(second);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first)
+            .isNotEqualTo(second)
+            .doesNotHaveSameHashCodeAs(second);
 
         // another
         final Index another = Index.of("t1", "i1");
         assertThat(another)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
     }
 
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(IndexWithSize.class)
-                .withIgnoredFields("indexSizeInBytes")
-                .verify();
+            .withIgnoredFields("indexSizeInBytes")
+            .verify();
     }
 
     @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
@@ -103,21 +103,21 @@ class IndexWithSizeTest {
         final IndexWithSize third = IndexWithSize.of("t3", "i3", 22L);
 
         assertThatThrownBy(() -> first.compareTo(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("other cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("other cannot be null");
 
         assertThat(first)
-                .isEqualByComparingTo(first) // self
-                .isEqualByComparingTo(theSame) // the same
-                .isLessThan(second)
-                .isLessThan(third);
+            .isEqualByComparingTo(first) // self
+            .isEqualByComparingTo(theSame) // the same
+            .isLessThan(second)
+            .isLessThan(third);
 
         assertThat(second)
-                .isGreaterThan(first)
-                .isLessThan(third);
+            .isGreaterThan(first)
+            .isLessThan(third);
 
         assertThat(third)
-                .isGreaterThan(first)
-                .isGreaterThan(second);
+            .isGreaterThan(first)
+            .isGreaterThan(second);
     }
 }

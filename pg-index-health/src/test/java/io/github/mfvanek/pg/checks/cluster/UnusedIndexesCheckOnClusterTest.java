@@ -49,11 +49,11 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void checkOnClusterShouldLogResetStatisticsData() {
         try (LogsCaptor logsCaptor = new LogsCaptor(UnusedIndexesCheckOnCluster.class)) {
             assertThat(check.check())
-                    .isEmpty();
+                .isEmpty();
 
             assertThat(logsCaptor.getLogs())
-                    .hasSize(1)
-                    .allMatch(l -> l.getFormattedMessage().contains("reset"));
+                .hasSize(1)
+                .allMatch(l -> l.getFormattedMessage().contains("reset"));
         }
     }
 
@@ -62,28 +62,28 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(6)
-                    .containsExactlyInAnyOrder(
-                            UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L, 0),
-                            UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L, 0),
-                            UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number"), 0L, 0),
-                            UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), 0L, 0),
-                            UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), 0L, 0),
-                            UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_id_account_number_not_deleted"), 0L, 0))
-                    .allMatch(i -> i.getIndexSizeInBytes() > 0L)
-                    .allMatch(i -> i.getIndexScans() == 0);
+                .hasSize(6)
+                .containsExactlyInAnyOrder(
+                    UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L, 0),
+                    UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L, 0),
+                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number"), 0L, 0),
+                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), 0L, 0),
+                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), 0L, 0),
+                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_id_account_number_not_deleted"), 0L, 0))
+                .allMatch(i -> i.getIndexSizeInBytes() > 0L)
+                .allMatch(i -> i.getIndexScans() == 0);
 
             final Predicate<IndexNameAware> predicate = FilterIndexesByNamePredicate.of(
-                    List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_accounts_account_number")));
+                List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_accounts_account_number")));
             assertThat(check.check(ctx, predicate))
-                    .hasSize(4)
-                    .containsExactlyInAnyOrder(
-                            UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L, 0),
-                            UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), 0L, 0),
-                            UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), 0L, 0),
-                            UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_id_account_number_not_deleted"), 0L, 0))
-                    .allMatch(i -> i.getIndexSizeInBytes() > 0L)
-                    .allMatch(i -> i.getIndexScans() == 0);
+                .hasSize(4)
+                .containsExactlyInAnyOrder(
+                    UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L, 0),
+                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), 0L, 0),
+                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), 0L, 0),
+                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_id_account_number_not_deleted"), 0L, 0))
+                .allMatch(i -> i.getIndexSizeInBytes() > 0L)
+                .allMatch(i -> i.getIndexScans() == 0);
         });
     }
 
@@ -95,28 +95,28 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
         final UnusedIndex i4 = UnusedIndex.of("t3", "i4", 4L, 4L);
         final UnusedIndex i5 = UnusedIndex.of("t3", "i5", 5L, 5L);
         final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = List.of(
-                List.of(i5, i4, i1, i3),
-                List.of(i2, i1, i5),
-                List.of(i2, i5, i1, i4));
+            List.of(i5, i4, i1, i3),
+            List.of(i2, i1, i5),
+            List.of(i2, i5, i1, i4));
         assertThat(getResultAsIntersection(potentiallyUnusedIndexesFromAllHosts))
-                .hasSize(2)
-                .containsExactlyInAnyOrder(i1, i5)
-                .isUnmodifiable();
+            .hasSize(2)
+            .containsExactlyInAnyOrder(i1, i5)
+            .isUnmodifiable();
     }
 
     @Test
     void getResultAsIntersectionWithEmptyInput() {
         assertThat(getResultAsIntersection(List.of()))
-                .isUnmodifiable()
-                .isEmpty();
+            .isUnmodifiable()
+            .isEmpty();
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void getLastStatsResetDateLogMessageWithWrongArguments() {
         assertThatThrownBy(() -> getLastStatsResetDateLogMessage(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("statisticsMaintenance cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("statisticsMaintenance cannot be null");
     }
 
     @Test
@@ -125,7 +125,7 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
         Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.empty());
         final String logMessage = getLastStatsResetDateLogMessage(statisticsMaintenance);
         assertThat(logMessage)
-                .isEqualTo("Statistics have never been reset on this host");
+            .isEqualTo("Statistics have never been reset on this host");
     }
 
     @Test
@@ -135,6 +135,6 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
         Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.of(resetDate.minusDays(123L)));
         final String logMessage = getLastStatsResetDateLogMessage(statisticsMaintenance);
         assertThat(logMessage)
-                .startsWith("Last statistics reset on this host was 123 days ago (");
+            .startsWith("Last statistics reset on this host was 123 days ago (");
     }
 }

@@ -23,17 +23,17 @@ public class CreateProceduresStatement extends AbstractDbStatement {
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create or replace procedure %1$s.insert_data(a integer, b integer) " +
-                " language sql " +
-                "as $$ " +
-                "insert into %1$s.clients values (a); " +
-                "insert into %1$s.clients values (b); " +
-                "$$;", schemaName));
+            " language sql " +
+            "as $$ " +
+            "insert into %1$s.clients values (a); " +
+            "insert into %1$s.clients values (b); " +
+            "$$;", schemaName));
         statement.execute(String.format("create or replace procedure %1$s.insert_data(a int, b int, c int) " +
-                "language sql " +
-                "as $$ " +
-                "insert into %1$s.clients values (a); " +
-                "insert into %1$s.clients values (b); " +
-                "insert into %1$s.clients values (c); " +
-                "$$;", schemaName));
+            "language sql " +
+            "as $$ " +
+            "insert into %1$s.clients values (a); " +
+            "insert into %1$s.clients values (b); " +
+            "insert into %1$s.clients values (c); " +
+            "$$;", schemaName));
     }
 }

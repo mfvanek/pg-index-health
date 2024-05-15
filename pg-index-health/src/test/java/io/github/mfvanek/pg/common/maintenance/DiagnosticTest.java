@@ -50,19 +50,19 @@ class DiagnosticTest {
     @Test
     void shouldBeAtLeastTwoChecksAcrossTheCluster() {
         final long countOfChecksAcrossTheCluster = Arrays.stream(Diagnostic.values())
-                .peek(d -> {
-                    assertThat(d.getQueryExecutor()).isNotNull();
-                    assertThat(d.getExecutionTopology()).isNotNull();
-                })
-                .filter(d -> d.getExecutionTopology() == Diagnostic.ExecutionTopology.ACROSS_CLUSTER)
-                .peek(d -> assertThat(d.isAcrossCluster()).isTrue())
-                .count();
+            .peek(d -> {
+                assertThat(d.getQueryExecutor()).isNotNull();
+                assertThat(d.getExecutionTopology()).isNotNull();
+            })
+            .filter(d -> d.getExecutionTopology() == Diagnostic.ExecutionTopology.ACROSS_CLUSTER)
+            .peek(d -> assertThat(d.isAcrossCluster()).isTrue())
+            .count();
         assertThat(countOfChecksAcrossTheCluster).isEqualTo(2);
     }
 
     @Test
     void toStringTest() {
         assertThat(Diagnostic.UNUSED_INDEXES)
-                .hasToString("UNUSED_INDEXES");
+            .hasToString("UNUSED_INDEXES");
     }
 }

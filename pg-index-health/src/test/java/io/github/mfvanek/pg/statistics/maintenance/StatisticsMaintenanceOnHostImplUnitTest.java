@@ -28,13 +28,13 @@ class StatisticsMaintenanceOnHostImplUnitTest {
     @Test
     void shouldFailOnNullArguments() {
         assertThatThrownBy(() -> new StatisticsMaintenanceOnHostImpl(null, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("pgConnection cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgConnection cannot be null");
 
         final PgConnection connectionMock = Mockito.mock(PgConnection.class);
         assertThatThrownBy(() -> new StatisticsMaintenanceOnHostImpl(connectionMock, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("queryExecutor cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("queryExecutor cannot be null");
     }
 
     @Test
@@ -43,9 +43,9 @@ class StatisticsMaintenanceOnHostImplUnitTest {
         final StatisticsQueryExecutor executorMock = Mockito.mock(StatisticsQueryExecutor.class);
         final StatisticsMaintenanceOnHost maintenance = new StatisticsMaintenanceOnHostImpl(connectionMock, executorMock);
         Mockito.when(executorMock.executeQuery(any(), any(), any()))
-                .thenReturn(List.of());
+            .thenReturn(List.of());
         assertThat(maintenance.resetStatistics())
-                .isFalse();
+            .isFalse();
     }
 
     @Test
@@ -54,8 +54,8 @@ class StatisticsMaintenanceOnHostImplUnitTest {
         final StatisticsQueryExecutor executorMock = Mockito.mock(StatisticsQueryExecutor.class);
         final StatisticsMaintenanceOnHost maintenance = new StatisticsMaintenanceOnHostImpl(connectionMock, executorMock);
         Mockito.when(executorMock.executeQuery(any(), any(), any()))
-                .thenReturn(List.of(Boolean.FALSE, Boolean.TRUE));
+            .thenReturn(List.of(Boolean.FALSE, Boolean.TRUE));
         assertThat(maintenance.resetStatistics())
-                .isFalse();
+            .isFalse();
     }
 }

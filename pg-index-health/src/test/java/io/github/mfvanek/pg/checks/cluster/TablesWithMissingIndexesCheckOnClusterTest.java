@@ -41,26 +41,26 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             tryToFindAccountByClientId(schemaName);
             assertThat(check.check(ctx))
-                    .hasSize(1)
-                    .containsExactly(
-                            TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))
-                    .allMatch(t -> t.getSeqScans() >= AMOUNT_OF_TRIES)
-                    .allMatch(t -> t.getIndexScans() == 0)
-                    .allMatch(t -> t.getTableSizeInBytes() > 1L);
+                .hasSize(1)
+                .containsExactly(
+                    TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))
+                .allMatch(t -> t.getSeqScans() >= AMOUNT_OF_TRIES)
+                .allMatch(t -> t.getIndexScans() == 0)
+                .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
             assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
-                    .isEmpty();
+                .isEmpty();
 
             assertThat(check.check(ctx, FilterTablesBySizePredicate.of(1L)))
-                    .hasSize(1)
-                    .containsExactly(
-                            TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))
-                    .allMatch(t -> t.getSeqScans() >= AMOUNT_OF_TRIES)
-                    .allMatch(t -> t.getIndexScans() == 0)
-                    .allMatch(t -> t.getTableSizeInBytes() > 1L);
+                .hasSize(1)
+                .containsExactly(
+                    TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))
+                .allMatch(t -> t.getSeqScans() >= AMOUNT_OF_TRIES)
+                .allMatch(t -> t.getIndexScans() == 0)
+                .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
             assertThat(check.check(ctx, FilterTablesBySizePredicate.of(1_000_000L)))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 
@@ -70,15 +70,15 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
         final TableWithMissingIndex t2 = TableWithMissingIndex.of("t2", 2L, 30L, 3L);
         final TableWithMissingIndex t3 = TableWithMissingIndex.of("t3", 3L, 40L, 4L);
         final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = List.of(
-                List.of(),
-                List.of(t1, t3),
-                List.of(t2),
-                List.of(t2, t3)
+            List.of(),
+            List.of(t1, t3),
+            List.of(t2),
+            List.of(t2, t3)
         );
         final List<TableWithMissingIndex> tablesWithMissingIndexes = TablesWithMissingIndexesCheckOnCluster.getResultAsUnion(
-                tablesWithMissingIndexesFromAllHosts);
+            tablesWithMissingIndexesFromAllHosts);
         assertThat(tablesWithMissingIndexes)
-                .hasSize(3)
-                .containsExactlyInAnyOrder(t1, t2, t3);
+            .hasSize(3)
+            .containsExactlyInAnyOrder(t1, t2, t3);
     }
 }

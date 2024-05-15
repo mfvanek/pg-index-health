@@ -28,7 +28,7 @@ class StatisticsMaintenanceOnHostImplTest extends StatisticsAwareTestBase {
     @Test
     void resetStatisticsOnEmptyDatabaseShouldExecuteCorrectly() {
         assertThat(statisticsMaintenance.resetStatistics())
-                .isTrue();
+            .isTrue();
     }
 
     @ParameterizedTest
@@ -39,23 +39,23 @@ class StatisticsMaintenanceOnHostImplTest extends StatisticsAwareTestBase {
             tryToFindAccountByClientId(schemaName);
             final PgContext pgContext = PgContext.of(schemaName);
             assertThat(getSeqScansForAccounts(pgContext))
-                    .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
+                .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             assertThat(statisticsMaintenance.resetStatistics())
-                    .isTrue();
+                .isTrue();
             collectStatistics(schemaName);
             assertThat(getSeqScansForAccounts(pgContext))
-                    .isZero();
+                .isZero();
 
             assertThat(statisticsMaintenance.getLastStatsResetTimestamp())
-                    .isPresent()
-                    .get()
-                    .satisfies(t -> assertThat(t).isAfter(testStartTime));
+                .isPresent()
+                .get()
+                .satisfies(t -> assertThat(t).isAfter(testStartTime));
         });
     }
 
     @Test
     void getHostShouldWork() {
         assertThat(statisticsMaintenance.getHost())
-                .isEqualTo(getHost());
+            .isEqualTo(getHost());
     }
 }

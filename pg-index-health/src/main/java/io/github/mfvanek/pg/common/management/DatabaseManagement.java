@@ -26,8 +26,8 @@ public interface DatabaseManagement extends StatisticsAware, ConfigurationAware 
      * It is safe running this method on your database.
      * It just reset counters without any impact on performance.
      *
-     * @see StatisticsMaintenanceOnHost
      * @return true if the operation is successful
+     * @see StatisticsMaintenanceOnHost
      */
     @Override
     boolean resetStatistics();

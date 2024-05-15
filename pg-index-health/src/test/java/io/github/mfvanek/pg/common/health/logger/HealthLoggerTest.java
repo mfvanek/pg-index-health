@@ -38,9 +38,9 @@ class HealthLoggerTest extends HealthLoggerTestBase {
     private static Clock originalClock;
 
     private final HealthLogger logger = new KeyValueFileHealthLogger(
-            getConnectionCredentials(),
-            new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
-            DatabaseChecks::new);
+        getConnectionCredentials(),
+        new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
+        DatabaseChecks::new);
 
     @BeforeAll
     static void setUp() {
@@ -58,43 +58,43 @@ class HealthLoggerTest extends HealthLoggerTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void logAll(final String schemaName) {
         executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences()
-                        .withData()
-                        .withInvalidIndex()
-                        .withNullValuesInIndex()
-                        .withBooleanValuesInIndex()
-                        .withTableWithoutPrimaryKey()
-                        .withDuplicatedIndex()
-                        .withNonSuitableIndex()
-                        .withJsonType()
-                        .withSerialType()
-                        .withFunctions()
-                        .withNotValidConstraints()
-                        .withBtreeIndexesOnArrayColumn(),
-                ctx -> {
-                    collectStatistics(schemaName);
-                    assertThat(logger.logAll(Exclusions.empty(), ctx))
-                            .hasSameSizeAs(Diagnostic.values())
-                            .containsExactlyInAnyOrder(
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tinvalid_indexes\t1",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tduplicated_indexes\t2",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t2",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_primary_key\t1",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_null_values\t1",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_bloat\t16",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_bloat\t2",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tintersected_indexes\t11",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tunused_indexes\t12",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t0",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_description\t4",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_without_description\t18",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_json_type\t1",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_serial_types\t2",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tfunctions_without_description\t2",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_boolean\t1",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tnot_valid_constraints\t2",
-                                    "1999-12-31T23:59:59Z\tdb_indexes_health\tbtree_indexes_on_array_columns\t2");
-                });
+            dbp -> dbp.withReferences()
+                .withData()
+                .withInvalidIndex()
+                .withNullValuesInIndex()
+                .withBooleanValuesInIndex()
+                .withTableWithoutPrimaryKey()
+                .withDuplicatedIndex()
+                .withNonSuitableIndex()
+                .withJsonType()
+                .withSerialType()
+                .withFunctions()
+                .withNotValidConstraints()
+                .withBtreeIndexesOnArrayColumn(),
+            ctx -> {
+                collectStatistics(schemaName);
+                assertThat(logger.logAll(Exclusions.empty(), ctx))
+                    .hasSameSizeAs(Diagnostic.values())
+                    .containsExactlyInAnyOrder(
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tinvalid_indexes\t1",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tduplicated_indexes\t2",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t2",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_primary_key\t1",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_null_values\t1",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_bloat\t16",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_bloat\t2",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tintersected_indexes\t11",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tunused_indexes\t12",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t0",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_description\t4",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_without_description\t18",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_json_type\t1",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_serial_types\t2",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tfunctions_without_description\t2",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_boolean\t1",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tnot_valid_constraints\t2",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tbtree_indexes_on_array_columns\t2");
+            });
     }
 
     @ParameterizedTest
@@ -104,10 +104,10 @@ class HealthLoggerTest extends HealthLoggerTestBase {
             tryToFindAccountByClientId(schemaName);
 
             assertThat(logger.logAll(Exclusions.empty(), ctx))
-                    .hasSameSizeAs(Diagnostic.values())
-                    .filteredOn(ofKey(SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES))
-                    .hasSize(1)
-                    .containsExactly("1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t1");
+                .hasSameSizeAs(Diagnostic.values())
+                .filteredOn(ofKey(SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES))
+                .hasSize(1)
+                .containsExactly("1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t1");
         });
     }
 
@@ -115,19 +115,19 @@ class HealthLoggerTest extends HealthLoggerTestBase {
     void logAllWithDefaultSchema() {
         final List<String> logs = logger.logAll(Exclusions.empty());
         assertThat(logs)
-                .hasSameSizeAs(Diagnostic.values());
+            .hasSameSizeAs(Diagnostic.values());
         for (final SimpleLoggingKey key : SimpleLoggingKey.values()) {
             assertThat(logs)
-                    .filteredOn(ofKey(key))
-                    .hasSize(1)
-                    .containsExactly("1999-12-31T23:59:59Z\tdb_indexes_health\t" + key.getSubKeyName() + "\t0");
+                .filteredOn(ofKey(key))
+                .hasSize(1)
+                .containsExactly("1999-12-31T23:59:59Z\tdb_indexes_health\t" + key.getSubKeyName() + "\t0");
         }
     }
 
     @Test
     void completenessTest() {
         assertThat(logger.logAll(Exclusions.empty()))
-                .as("All diagnostics must be logged")
-                .hasSameSizeAs(Diagnostic.values());
+            .as("All diagnostics must be logged")
+            .hasSameSizeAs(Diagnostic.values());
     }
 }

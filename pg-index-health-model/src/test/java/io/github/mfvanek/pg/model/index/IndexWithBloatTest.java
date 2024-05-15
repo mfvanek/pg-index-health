@@ -22,10 +22,10 @@ class IndexWithBloatTest {
     void getBloatSizeInBytes() {
         final IndexWithBloat bloat = IndexWithBloat.of("t", "i", 10L, 2L, 20);
         assertThat(bloat.getIndexName())
-                .isEqualTo("i")
-                .isEqualTo(bloat.getName());
+            .isEqualTo("i")
+            .isEqualTo(bloat.getName());
         assertThat(bloat.getBloatSizeInBytes())
-                .isEqualTo(2L);
+            .isEqualTo(2L);
     }
 
     @Test
@@ -37,20 +37,20 @@ class IndexWithBloatTest {
     @Test
     void testToString() {
         assertThat(IndexWithBloat.of("t", "i", 2L, 1L, 50))
-                .hasToString("IndexWithBloat{tableName='t', indexName='i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}");
+            .hasToString("IndexWithBloat{tableName='t', indexName='i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}");
     }
 
     @Test
     void withInvalidArguments() {
         assertThatThrownBy(() -> IndexWithBloat.of("t", "i", 0L, -1L, 0))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("bloatSizeInBytes cannot be less than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("bloatSizeInBytes cannot be less than zero");
         assertThatThrownBy(() -> IndexWithBloat.of("t", "i", 0L, 0L, -1))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("bloatPercentage cannot be less than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("bloatPercentage cannot be less than zero");
         assertThatThrownBy(() -> IndexWithBloat.of("t", "i", -1L, 0L, 0))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("indexSizeInBytes cannot be less than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("indexSizeInBytes cannot be less than zero");
         final IndexWithBloat bloat = IndexWithBloat.of("t", "i", 0L, 0L, 0);
         assertThat(bloat).isNotNull();
     }
@@ -69,37 +69,37 @@ class IndexWithBloatTest {
 
         // self
         assertThat(first)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // the same
         assertThat(theSame)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // others
         assertThat(second)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
 
         assertThat(third)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first)
-                .isNotEqualTo(second)
-                .doesNotHaveSameHashCodeAs(second);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first)
+            .isNotEqualTo(second)
+            .doesNotHaveSameHashCodeAs(second);
 
         // another
         final Index anotherType = Index.of("t1", "i1");
         assertThat(anotherType)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
     }
 
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(IndexWithBloat.class)
-                .withIgnoredFields("indexSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
-                .verify();
+            .withIgnoredFields("indexSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
+            .verify();
     }
 }

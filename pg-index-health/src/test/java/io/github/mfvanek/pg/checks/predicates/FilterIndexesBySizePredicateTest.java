@@ -30,25 +30,25 @@ class FilterIndexesBySizePredicateTest {
     @Test
     void shouldValidateArguments() {
         assertThatThrownBy(() -> FilterIndexesBySizePredicate.of(-1L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("thresholdInBytes cannot be less than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("thresholdInBytes cannot be less than zero");
     }
 
     @Test
     void shouldBeInclusive() {
         final Predicate<IndexSizeAware> predicate = FilterIndexesBySizePredicate.of(20L);
         assertThat(predicate)
-                .rejects(FIRST)
-                .accepts(SECOND)
-                .accepts(THIRD);
+            .rejects(FIRST)
+            .accepts(SECOND)
+            .accepts(THIRD);
     }
 
     @Test
     void forZero() {
         final Predicate<IndexSizeAware> predicate = FilterIndexesBySizePredicate.of(0L);
         assertThat(predicate)
-                .accepts(FIRST)
-                .accepts(SECOND)
-                .accepts(THIRD);
+            .accepts(FIRST)
+            .accepts(SECOND)
+            .accepts(THIRD);
     }
 }

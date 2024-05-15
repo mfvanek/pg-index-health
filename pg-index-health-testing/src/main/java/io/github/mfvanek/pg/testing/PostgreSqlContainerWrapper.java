@@ -37,22 +37,22 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
         this.pgVersion = Objects.requireNonNull(pgVersion, "pgVersion cannot be null");
         //noinspection resource
         this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres") //NOSONAR
-                .withTag(pgVersion.getVersion()))
-                .withSharedMemorySize(MemoryUnit.MB.convertToBytes(512))
-                .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
-                .withCommand(prepareCommandParts(additionalParameters))
-                .waitingFor(Wait.defaultWaitStrategy());
+            .withTag(pgVersion.getVersion()))
+            .withSharedMemorySize(MemoryUnit.MB.convertToBytes(512))
+            .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
+            .withCommand(prepareCommandParts(additionalParameters))
+            .waitingFor(Wait.defaultWaitStrategy());
         this.container.start();
         this.dataSource = PostgreSqlDataSourceHelper.buildDataSource(container);
     }
 
     PostgreSqlContainerWrapper(@Nonnull final PostgresVersionHolder pgVersion) {
         this(pgVersion, List.of(
-                Map.entry(ImportantParam.LOCK_TIMEOUT.getName(), "1000"),
-                Map.entry(ImportantParam.SHARED_BUFFERS.getName(), "256MB"),
-                Map.entry(ImportantParam.MAINTENANCE_WORK_MEM.getName(), "128MB"),
-                Map.entry(ImportantParam.WORK_MEM.getName(), "16MB"),
-                Map.entry(ImportantParam.RANDOM_PAGE_COST.getName(), "1")
+            Map.entry(ImportantParam.LOCK_TIMEOUT.getName(), "1000"),
+            Map.entry(ImportantParam.SHARED_BUFFERS.getName(), "256MB"),
+            Map.entry(ImportantParam.MAINTENANCE_WORK_MEM.getName(), "128MB"),
+            Map.entry(ImportantParam.WORK_MEM.getName(), "16MB"),
+            Map.entry(ImportantParam.RANDOM_PAGE_COST.getName(), "1")
         ));
     }
 
@@ -73,8 +73,8 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
     @Nonnull
     private static String[] prepareCommandParts(@Nonnull final List<Map.Entry<String, String>> additionalParameters) {
         return additionalParameters.stream()
-                .flatMap(kv -> Stream.of("-c", kv.getKey() + "=" + kv.getValue()))
-                .toArray(String[]::new);
+            .flatMap(kv -> Stream.of("-c", kv.getKey() + "=" + kv.getValue()))
+            .toArray(String[]::new);
     }
 
     @Nonnull

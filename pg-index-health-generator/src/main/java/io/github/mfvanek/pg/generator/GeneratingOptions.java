@@ -108,14 +108,14 @@ public class GeneratingOptions {
     @Override
     public String toString() {
         return GeneratingOptions.class.getSimpleName() + '{' +
-                "concurrently=" + concurrently +
-                ", excludeNulls=" + excludeNulls +
-                ", breakLines=" + breakLines +
-                ", indentation=" + indentation +
-                ", uppercaseForKeywords=" + uppercaseForKeywords +
-                ", nameWithoutNulls=" + nameWithoutNulls +
-                ", idxPosition=" + idxPosition +
-                '}';
+            "concurrently=" + concurrently +
+            ", excludeNulls=" + excludeNulls +
+            ", breakLines=" + breakLines +
+            ", indentation=" + indentation +
+            ", uppercaseForKeywords=" + uppercaseForKeywords +
+            ", nameWithoutNulls=" + nameWithoutNulls +
+            ", idxPosition=" + idxPosition +
+            '}';
     }
 
     @Nonnull
@@ -230,14 +230,14 @@ public class GeneratingOptions {
         @Override
         public String toString() {
             return Builder.class.getSimpleName() + '{' +
-                    "concurrently=" + concurrently +
-                    ", excludeNulls=" + excludeNulls +
-                    ", breakLines=" + breakLines +
-                    ", indentation=" + indentation +
-                    ", uppercaseForKeywords=" + uppercaseForKeywords +
-                    ", nameWithoutNulls=" + nameWithoutNulls +
-                    ", idxPosition=" + idxPosition +
-                    '}';
+                "concurrently=" + concurrently +
+                ", excludeNulls=" + excludeNulls +
+                ", breakLines=" + breakLines +
+                ", indentation=" + indentation +
+                ", uppercaseForKeywords=" + uppercaseForKeywords +
+                ", nameWithoutNulls=" + nameWithoutNulls +
+                ", idxPosition=" + idxPosition +
+                '}';
         }
 
         private static int validateIndentation(final int indentation) {

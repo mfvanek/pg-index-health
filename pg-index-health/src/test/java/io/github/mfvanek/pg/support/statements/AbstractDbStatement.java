@@ -26,13 +26,13 @@ abstract class AbstractDbStatement implements DbStatement {
 
     protected void throwExceptionIfTableDoesNotExist(@Nonnull final Statement statement, @Nonnull final String tableName) throws SQLException {
         final String checkQuery = String.format("select exists (%n" +
-                "   select 1 %n" +
-                "   from pg_catalog.pg_class c%n" +
-                "   join pg_catalog.pg_namespace n on n.oid = c.relnamespace%n" +
-                "   where n.nspname = '%s'%n" +
-                "   and c.relname = '%s'%n" +
-                "   and c.relkind = 'r'%n" +
-                "   );", schemaName, tableName);
+            "   select 1 %n" +
+            "   from pg_catalog.pg_class c%n" +
+            "   join pg_catalog.pg_namespace n on n.oid = c.relnamespace%n" +
+            "   where n.nspname = '%s'%n" +
+            "   and c.relname = '%s'%n" +
+            "   and c.relkind = 'r'%n" +
+            "   );", schemaName, tableName);
         try (ResultSet rs = statement.executeQuery(checkQuery)) {
             if (rs.next()) {
                 final boolean schemaExists = rs.getBoolean(1);

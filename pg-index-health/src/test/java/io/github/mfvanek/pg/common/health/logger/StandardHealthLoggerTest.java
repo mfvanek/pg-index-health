@@ -27,64 +27,64 @@ import static org.assertj.core.api.Assertions.assertThat;
 class StandardHealthLoggerTest extends HealthLoggerTestBase {
 
     private final HealthLogger logger = new StandardHealthLogger(
-            getConnectionCredentials(),
-            new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
-            DatabaseChecks::new);
+        getConnectionCredentials(),
+        new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()),
+        DatabaseChecks::new);
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void logAll(final String schemaName) {
         executeTestOnDatabase(schemaName,
-                dbp -> dbp.withReferences()
-                        .withData()
-                        .withInvalidIndex()
-                        .withNullValuesInIndex()
-                        .withBooleanValuesInIndex()
-                        .withBtreeIndexesOnArrayColumn()
-                        .withTableWithoutPrimaryKey()
-                        .withDuplicatedIndex()
-                        .withNonSuitableIndex()
-                        .withJsonType()
-                        .withSerialType()
-                        .withFunctions()
-                        .withNotValidConstraints(),
-                ctx -> {
-                    collectStatistics(schemaName);
-                    final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
-                    assertThat(logs)
-                            .hasSameSizeAs(Diagnostic.values())
-                            .containsExactlyInAnyOrder(
-                                    "invalid_indexes:1",
-                                    "duplicated_indexes:2",
-                                    "foreign_keys_without_index:2",
-                                    "tables_without_primary_key:1",
-                                    "indexes_with_null_values:1",
-                                    "indexes_with_bloat:16",
-                                    "tables_with_bloat:2",
-                                    "intersected_indexes:11",
-                                    "unused_indexes:12",
-                                    "tables_with_missing_indexes:0",
-                                    "tables_without_description:4",
-                                    "columns_without_description:18",
-                                    "columns_with_json_type:1",
-                                    "columns_with_serial_types:2",
-                                    "functions_without_description:2",
-                                    "indexes_with_boolean:1",
-                                    "not_valid_constraints:2",
-                                    "btree_indexes_on_array_columns:2");
-                });
+            dbp -> dbp.withReferences()
+                .withData()
+                .withInvalidIndex()
+                .withNullValuesInIndex()
+                .withBooleanValuesInIndex()
+                .withBtreeIndexesOnArrayColumn()
+                .withTableWithoutPrimaryKey()
+                .withDuplicatedIndex()
+                .withNonSuitableIndex()
+                .withJsonType()
+                .withSerialType()
+                .withFunctions()
+                .withNotValidConstraints(),
+            ctx -> {
+                collectStatistics(schemaName);
+                final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
+                assertThat(logs)
+                    .hasSameSizeAs(Diagnostic.values())
+                    .containsExactlyInAnyOrder(
+                        "invalid_indexes:1",
+                        "duplicated_indexes:2",
+                        "foreign_keys_without_index:2",
+                        "tables_without_primary_key:1",
+                        "indexes_with_null_values:1",
+                        "indexes_with_bloat:16",
+                        "tables_with_bloat:2",
+                        "intersected_indexes:11",
+                        "unused_indexes:12",
+                        "tables_with_missing_indexes:0",
+                        "tables_without_description:4",
+                        "columns_without_description:18",
+                        "columns_with_json_type:1",
+                        "columns_with_serial_types:2",
+                        "functions_without_description:2",
+                        "indexes_with_boolean:1",
+                        "not_valid_constraints:2",
+                        "btree_indexes_on_array_columns:2");
+            });
     }
 
     @Test
     void logAllWithDefaultSchema() {
         final List<String> logs = logger.logAll(Exclusions.empty());
         assertThat(logs)
-                .hasSameSizeAs(Diagnostic.values());
+            .hasSameSizeAs(Diagnostic.values());
         for (final SimpleLoggingKey key : SimpleLoggingKey.values()) {
             assertThat(logs)
-                    .filteredOn(ofKey(key))
-                    .hasSize(1)
-                    .containsExactly(key.getSubKeyName() + ":0");
+                .filteredOn(ofKey(key))
+                .hasSize(1)
+                .containsExactly(key.getSubKeyName() + ":0");
         }
     }
 }
