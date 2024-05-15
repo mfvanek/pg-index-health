@@ -62,6 +62,6 @@ public class KeyValueFileHealthLogger extends AbstractHealthLogger {
     @Nonnull
     private String format(@Nonnull final String keyName, @Nonnull final String subKeyName, final int value) {
         return DateTimeFormatter.ISO_INSTANT.format(
-                ZonedDateTime.now(ClockHolder.clock())) + "\t" + keyName + "\t" + subKeyName + "\t" + value;
+            ZonedDateTime.now(ClockHolder.clock())) + "\t" + keyName + "\t" + subKeyName + "\t" + value;
     }
 }

@@ -37,16 +37,16 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
             final long before = getRowsCount(ctx.getSchemaName(), "clients");
             assertThat(before).isEqualTo(1001L);
             assertThat(check.check(PgContext.of("; truncate table clients;")))
-                    .isEmpty();
+                .isEmpty();
             assertThat(getRowsCount(ctx.getSchemaName(), "clients")).isEqualTo(before);
 
             assertThat(check.check(PgContext.of("; select pg_sleep(100000000);")))
-                    .isEmpty();
+                .isEmpty();
 
             assertThat(check.check()) // executing on public schema by default
-                    .hasSize(1)
-                    .containsExactly(
-                            IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name"));
+                .hasSize(1)
+                .containsExactly(
+                    IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name"));
         });
     }
 
@@ -55,7 +55,7 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
         try (Connection connection = getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet resultSet = statement.executeQuery(
-                    "select count(*) from " + schemaName + '.' + tableName)) {
+                "select count(*) from " + schemaName + '.' + tableName)) {
                 resultSet.next();
                 return resultSet.getLong(1);
             }

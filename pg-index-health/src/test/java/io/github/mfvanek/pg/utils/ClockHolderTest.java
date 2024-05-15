@@ -28,14 +28,14 @@ class ClockHolderTest {
     @Test
     void privateConstructor() {
         assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(ClockHolder.class))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void clockDefaultValue() {
         assertThat(ClockHolder.clock())
-                .isNotNull()
-                .isEqualTo(Clock.systemUTC());
+            .isNotNull()
+            .isEqualTo(Clock.systemUTC());
     }
 
     @Test
@@ -45,11 +45,11 @@ class ClockHolderTest {
         final Clock oldClock = ClockHolder.setClock(fixed);
         try {
             assertThat(ClockHolder.clock())
-                    .isNotNull()
-                    .isSameAs(fixed);
+                .isNotNull()
+                .isSameAs(fixed);
             assertThat(LocalDateTime.now(ClockHolder.clock()))
-                    .isNotNull()
-                    .isEqualTo(dateTime);
+                .isNotNull()
+                .isEqualTo(dateTime);
         } finally {
             ClockHolder.setClock(oldClock);
         }

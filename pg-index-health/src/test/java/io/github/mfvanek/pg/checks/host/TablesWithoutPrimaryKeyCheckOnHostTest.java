@@ -28,29 +28,29 @@ class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-                .hasType(Table.class)
-                .hasDiagnostic(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY)
-                .hasHost(getHost());
+            .hasType(Table.class)
+            .hasDiagnostic(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY)
+            .hasHost(getHost());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withTableWithoutPrimaryKey(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .hasSize(1)
-                        .containsExactly(
-                                Table.of(ctx.enrichWithSchema("bad_clients"), 0L))
-                        .allMatch(t -> t.getTableSizeInBytes() == 0L));
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    Table.of(ctx.enrichWithSchema("bad_clients"), 0L))
+                .allMatch(t -> t.getTableSizeInBytes() == 0L));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldReturnNothingForMaterializedViews(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withMaterializedView(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .isEmpty());
+            assertThat(check)
+                .executing(ctx)
+                .isEmpty());
     }
 }

@@ -23,6 +23,6 @@ public class AddCommentOnFunctionsStatement extends AbstractDbStatement {
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("comment on function %1$s.add(a integer, b integer) is 'Sums two given arguments';" +
-                "comment on function %1$s.add(a int, b int, c int) is 'Sums three given arguments';", schemaName));
+            "comment on function %1$s.add(a int, b int, c int) is 'Sums three given arguments';", schemaName));
     }
 }

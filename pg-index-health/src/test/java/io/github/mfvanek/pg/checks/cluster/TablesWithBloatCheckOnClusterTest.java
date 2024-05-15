@@ -42,27 +42,27 @@ class TablesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             collectStatistics(schemaName);
             assertThat(existsStatisticsForTable(schemaName, "accounts"))
-                    .isTrue();
+                .isTrue();
 
             assertThat(check.check(ctx))
-                    .hasSize(2)
-                    .containsExactlyInAnyOrder(
-                            TableWithBloat.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0),
-                            TableWithBloat.of(ctx.enrichWithSchema("clients"), 0L, 0L, 0))
-                    .allMatch(t -> t.getTableSizeInBytes() > 0L) // real size doesn't matter
-                    .allMatch(t -> t.getBloatPercentage() == 0 && t.getBloatSizeInBytes() == 0L);
+                .hasSize(2)
+                .containsExactlyInAnyOrder(
+                    TableWithBloat.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0),
+                    TableWithBloat.of(ctx.enrichWithSchema("clients"), 0L, 0L, 0))
+                .allMatch(t -> t.getTableSizeInBytes() > 0L) // real size doesn't matter
+                .allMatch(t -> t.getBloatPercentage() == 0 && t.getBloatSizeInBytes() == 0L);
 
             assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("clients"))))
-                    .hasSize(1)
-                    .containsExactly(
-                            TableWithBloat.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0))
-                    .allMatch(t -> t.getTableSizeInBytes() > 0L) // real size doesn't matter
-                    .allMatch(t -> t.getBloatPercentage() == 0 && t.getBloatSizeInBytes() == 0L);
+                .hasSize(1)
+                .containsExactly(
+                    TableWithBloat.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0))
+                .allMatch(t -> t.getTableSizeInBytes() > 0L) // real size doesn't matter
+                .allMatch(t -> t.getBloatPercentage() == 0 && t.getBloatSizeInBytes() == 0L);
 
             final Predicate<TableBloatAware> predicate = FilterTablesByBloatPredicate.of(0L, 10)
-                    .and(FilterTablesByNamePredicate.of(ctx.enrichWithSchema("clients")));
+                .and(FilterTablesByNamePredicate.of(ctx.enrichWithSchema("clients")));
             assertThat(check.check(ctx, predicate))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 }

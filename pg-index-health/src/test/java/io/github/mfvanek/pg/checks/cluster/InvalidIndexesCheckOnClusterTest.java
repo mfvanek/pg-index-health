@@ -37,12 +37,12 @@ class InvalidIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withInvalidIndex(), ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(1)
-                    .containsExactly(
-                            Index.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name_first_name")));
+                .hasSize(1)
+                .containsExactly(
+                    Index.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name_first_name")));
 
             assertThat(check.check(ctx, FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_name_first_name"))))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 }

@@ -38,13 +38,13 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withFunctions, ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(2)
-                    .containsExactly(
-                            StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer"),
-                            StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer, c integer"));
+                .hasSize(2)
+                .containsExactly(
+                    StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer"),
+                    StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer, c integer"));
 
             assertThat(check.check(ctx, f -> !f.getFunctionName().contains("add")))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 
@@ -54,18 +54,18 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
     void onDatabaseWithThemForProcedures(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withProcedures, ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(2)
-                    .containsExactly(
-                            StoredFunction.of(ctx.enrichWithSchema("insert_data"),
-                                    isOutParametersInProcedureSupported() ? "IN a integer, IN b integer" : "a integer, b integer"),
-                            StoredFunction.of(ctx.enrichWithSchema("insert_data"),
-                                    isOutParametersInProcedureSupported() ? "IN a integer, IN b integer, IN c integer" : "a integer, b integer, c integer"));
+                .hasSize(2)
+                .containsExactly(
+                    StoredFunction.of(ctx.enrichWithSchema("insert_data"),
+                        isOutParametersInProcedureSupported() ? "IN a integer, IN b integer" : "a integer, b integer"),
+                    StoredFunction.of(ctx.enrichWithSchema("insert_data"),
+                        isOutParametersInProcedureSupported() ? "IN a integer, IN b integer, IN c integer" : "a integer, b integer, c integer"));
 
             assertThat(check.check(ctx, f -> !f.getFunctionSignature().contains("c integer")))
-                    .hasSize(1)
-                    .containsExactly(
-                            StoredFunction.of(ctx.enrichWithSchema("insert_data"),
-                                    isOutParametersInProcedureSupported() ? "IN a integer, IN b integer" : "a integer, b integer"));
+                .hasSize(1)
+                .containsExactly(
+                    StoredFunction.of(ctx.enrichWithSchema("insert_data"),
+                        isOutParametersInProcedureSupported() ? "IN a integer, IN b integer" : "a integer, b integer"));
         });
     }
 
@@ -73,20 +73,20 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldNotTakingIntoAccountBlankComments(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withFunctions().withBlankCommentOnFunctions(), ctx ->
-                assertThat(check.check(ctx))
-                        .hasSize(2)
-                        .containsExactly(
-                                StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer"),
-                                StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer, c integer")
-                        ));
+            assertThat(check.check(ctx))
+                .hasSize(2)
+                .containsExactly(
+                    StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer"),
+                    StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer, c integer")
+                ));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldTakingIntoAccountNonBlankComments(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withFunctions().withCommentOnFunctions(), ctx ->
-                assertThat(check.check(ctx))
-                        .isEmpty()
+            assertThat(check.check(ctx))
+                .isEmpty()
         );
     }
 
@@ -95,8 +95,8 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldTakingIntoAccountNonBlankCommentsForProcedures(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withProcedures().withCommentOnProcedures(), ctx ->
-                assertThat(check.check(ctx))
-                        .isEmpty()
+            assertThat(check.check(ctx))
+                .isEmpty()
         );
     }
 }

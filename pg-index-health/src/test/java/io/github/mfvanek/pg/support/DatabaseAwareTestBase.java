@@ -58,7 +58,7 @@ public abstract class DatabaseAwareTestBase {
                                          @Nonnull final Consumer<PgContext> testExecutor) {
         try (DatabasePopulator databasePopulator = DatabasePopulator.builder(getDataSource(), schemaName, isProceduresSupported())) {
             databaseConfigurer.configure(databasePopulator)
-                    .populate();
+                .populate();
             testExecutor.accept(PgContext.of(schemaName, 0));
         }
     }

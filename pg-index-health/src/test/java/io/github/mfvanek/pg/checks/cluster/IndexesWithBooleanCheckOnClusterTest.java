@@ -38,13 +38,13 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBooleanValuesInIndex(), ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(1)
-                    .containsExactly(
-                            IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_deleted"), 0L,
-                                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "deleted")));
+                .hasSize(1)
+                .containsExactly(
+                    IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_deleted"), 0L,
+                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "deleted")));
 
             assertThat(check.check(ctx, FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("i_accounts_deleted"))))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 }

@@ -29,49 +29,49 @@ class DuplicatedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-                .hasType(DuplicatedIndexes.class)
-                .hasDiagnostic(Diagnostic.DUPLICATED_INDEXES)
-                .hasHost(getHost());
+            .hasType(DuplicatedIndexes.class)
+            .hasDiagnostic(Diagnostic.DUPLICATED_INDEXES)
+            .hasHost(getHost());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDuplicatedIndex(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .hasSize(1)
-                        .containsExactly(
-                                DuplicatedIndexes.of(
-                                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L),
-                                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number"), 0L)))
-                        .allMatch(d -> d.getTotalSize() >= 16_384L));
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    DuplicatedIndexes.of(
+                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L),
+                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number"), 0L)))
+                .allMatch(d -> d.getTotalSize() >= 16_384L));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void withHashIndexShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDuplicatedHashIndex(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .isEmpty());
+            assertThat(check)
+                .executing(ctx)
+                .isEmpty());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void withDifferentOpclassShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDifferentOpclassIndexes(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .isEmpty());
+            assertThat(check)
+                .executing(ctx)
+                .isEmpty());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void withDifferentCollationShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withCustomCollation().withDuplicatedCustomCollationIndex(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .isEmpty());
+            assertThat(check)
+                .executing(ctx)
+                .isEmpty());
     }
 }

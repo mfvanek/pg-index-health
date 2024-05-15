@@ -39,8 +39,8 @@ public class FilterDuplicatedIndexesByNamePredicate extends AbstractFilterByName
             return true;
         }
         return duplicatedIndexes.getIndexNames().stream()
-                .map(n -> n.toLowerCase(Locale.ROOT))
-                .noneMatch(exclusions::contains);
+            .map(n -> n.toLowerCase(Locale.ROOT))
+            .noneMatch(exclusions::contains);
     }
 
     @Nonnull

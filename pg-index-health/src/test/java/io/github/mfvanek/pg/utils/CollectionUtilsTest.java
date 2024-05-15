@@ -26,43 +26,43 @@ class CollectionUtilsTest {
     @Test
     void privateConstructor() {
         assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(CollectionUtils.class))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void intersectionShouldThrowExceptionOnInvalidArguments() {
         assertThatThrownBy(() -> CollectionUtils.intersection(null, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("first cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("first cannot be null");
         final List<Object> empty = List.of();
         assertThatThrownBy(() -> CollectionUtils.intersection(empty, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("second cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("second cannot be null");
     }
 
     @Test
     void intersectionShouldWorkWithEmptyCollections() {
         assertThat(CollectionUtils.intersection(List.of(), Set.of(1)))
-                .isEmpty();
+            .isEmpty();
         assertThat(CollectionUtils.intersection(Set.of(1), List.of()))
-                .isEmpty();
+            .isEmpty();
     }
 
     @Test
     void intersectionShouldRemoveDuplicates() {
         assertThat(CollectionUtils.intersection(List.of(10, 10, 11, 12), Set.of(10, 12, 14)))
-                .hasSize(2)
-                .containsExactly(10, 12);
+            .hasSize(2)
+            .containsExactly(10, 12);
         assertThat(CollectionUtils.intersection(Set.of(44, 90, 33, 12), List.of(21, 44, 12, 33, 34, 12, 44, 33)))
-                .hasSize(3)
-                .containsExactlyInAnyOrder(44, 33, 12); // ordering based on first argument and not guaranteed for Set
+            .hasSize(3)
+            .containsExactlyInAnyOrder(44, 33, 12); // ordering based on first argument and not guaranteed for Set
     }
 
     @Test
     void intersectionShouldRemainOrderingFromFirstIfPossible() {
         assertThat(CollectionUtils.intersection(List.of(7, 1, -1, 0, 3), List.of(0, 3, 7)))
-                .hasSize(3)
-                .containsExactly(7, 0, 3);
+            .hasSize(3)
+            .containsExactly(7, 0, 3);
     }
 }

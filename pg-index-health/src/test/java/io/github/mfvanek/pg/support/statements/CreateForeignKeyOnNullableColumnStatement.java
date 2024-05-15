@@ -23,6 +23,6 @@ public class CreateForeignKeyOnNullableColumnStatement extends AbstractDbStateme
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("alter table if exists %1$s.bad_clients " +
-                "add constraint c_bad_clients_fk_real_client_id foreign key (real_client_id) references %1$s.clients (id);", schemaName));
+            "add constraint c_bad_clients_fk_real_client_id foreign key (real_client_id) references %1$s.clients (id);", schemaName));
     }
 }

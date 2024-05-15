@@ -34,18 +34,18 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
     void shouldThrowExceptionIfMapperNotPassedForCrossClusterCheck() {
         final HighAvailabilityPgConnection haPgConnection = getHaPgConnection();
         assertThatThrownBy(() -> new WrongCheck(haPgConnection))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("acrossClusterResultsMapper cannot be null for diagnostic UNUSED_INDEXES");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("acrossClusterResultsMapper cannot be null for diagnostic UNUSED_INDEXES");
     }
 
     @ParameterizedTest
     @ValueSource(strings = PgContext.DEFAULT_SCHEMA_NAME)
     void forPublicSchema(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx ->
-                assertThat(check.check()) // executing on public schema by default
-                        .hasSize(1)
-                        .containsExactly(
-                                IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name"))
+            assertThat(check.check()) // executing on public schema by default
+                .hasSize(1)
+                .containsExactly(
+                    IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name"))
         );
     }
 

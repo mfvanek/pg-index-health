@@ -18,7 +18,6 @@ import javax.annotation.Nonnull;
  * Allows getting information about original generic type.
  *
  * @param <T> represents an object in a database associated with a table
- *
  * @author Ivan Vakhrushev
  * @since 0.6.0
  */

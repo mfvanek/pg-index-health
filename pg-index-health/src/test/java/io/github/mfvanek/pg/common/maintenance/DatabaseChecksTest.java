@@ -37,8 +37,8 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     @Test
     void shouldThrowExceptionForInvalidType() {
         assertThatThrownBy(() -> checks.getCheck(Diagnostic.INVALID_INDEXES, Table.class))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Illegal type: class io.github.mfvanek.pg.model.table.Table");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Illegal type: class io.github.mfvanek.pg.model.table.Table");
     }
 
     @ParameterizedTest
@@ -46,9 +46,9 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     @DisplayName("For each diagnostic should exist check")
     void completenessTest(@Nonnull final Diagnostic diagnostic) {
         assertThat(checks.getCheck(diagnostic, DbObject.class))
-                .isNotNull()
-                .satisfies(c -> assertThat(c.getDiagnostic())
-                        .isEqualTo(diagnostic));
+            .isNotNull()
+            .satisfies(c -> assertThat(c.getDiagnostic())
+                .isEqualTo(diagnostic));
     }
 
     @Test
@@ -61,8 +61,8 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
         clearMethod.invoke(fieldValue);
 
         assertThatThrownBy(() -> databaseChecks.getCheck(Diagnostic.INVALID_INDEXES, Index.class))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Check for diagnostic INVALID_INDEXES not found");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("Check for diagnostic INVALID_INDEXES not found");
     }
 
     @ParameterizedTest
@@ -70,7 +70,7 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     @DisplayName("Each check should return nothing on empty database")
     void onEmptyDatabaseCheckShouldReturnNothing(@Nonnull final Diagnostic diagnostic) {
         assertThat(checks.getCheck(diagnostic, DbObject.class).check())
-                .isEmpty();
+            .isEmpty();
     }
 
     @ParameterizedTest
@@ -78,8 +78,8 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     void onDatabaseWithoutThemCheckShouldReturnNothing(@Nonnull final Diagnostic diagnostic) {
         for (final String schemaName : SCHEMAS) {
             executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(), ctx ->
-                    assertThat(checks.getCheck(diagnostic, DbObject.class).check(ctx))
-                            .isEmpty());
+                assertThat(checks.getCheck(diagnostic, DbObject.class).check(ctx))
+                    .isEmpty());
         }
     }
 }

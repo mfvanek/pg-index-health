@@ -64,7 +64,7 @@ public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnH
     public Optional<OffsetDateTime> getLastStatsResetTimestamp() {
         final String query = "select stats_reset from pg_stat_database where datname = current_database()";
         final List<OffsetDateTime> statsResetTimes = queryExecutor.executeQuery(pgConnection, query,
-                rs -> rs.getObject(1, OffsetDateTime.class));
+            rs -> rs.getObject(1, OffsetDateTime.class));
         return Optional.ofNullable(statsResetTimes.get(0));
     }
 }

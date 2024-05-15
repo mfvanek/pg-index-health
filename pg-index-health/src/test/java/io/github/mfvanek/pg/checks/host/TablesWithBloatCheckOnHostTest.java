@@ -25,8 +25,8 @@ class TablesWithBloatCheckOnHostTest extends DatabaseAwareTestBase {
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-                .hasType(TableWithBloat.class)
-                .hasDiagnostic(Diagnostic.BLOATED_TABLES)
-                .hasHost(getHost());
+            .hasType(TableWithBloat.class)
+            .hasDiagnostic(Diagnostic.BLOATED_TABLES)
+            .hasHost(getHost());
     }
 }

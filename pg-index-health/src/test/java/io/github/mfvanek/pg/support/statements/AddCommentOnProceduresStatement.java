@@ -23,6 +23,6 @@ public class AddCommentOnProceduresStatement extends AbstractDbStatement {
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("comment on procedure %1$s.insert_data(a integer, b integer) is 'Inserts two rows into clients';" +
-                "comment on procedure %1$s.insert_data(a int, b int, c int) is 'Inserts three rows into clients';", schemaName));
+            "comment on procedure %1$s.insert_data(a int, b int, c int) is 'Inserts three rows into clients';", schemaName));
     }
 }

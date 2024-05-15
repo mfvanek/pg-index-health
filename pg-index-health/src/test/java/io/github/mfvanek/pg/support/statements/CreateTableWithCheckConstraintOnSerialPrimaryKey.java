@@ -23,9 +23,9 @@ public class CreateTableWithCheckConstraintOnSerialPrimaryKey extends AbstractDb
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create table if not exists %1$s.another_table(" +
-                        "id bigserial primary key, " +
-                        "constraint not_reserved_id check (id > 1000), " +
-                        "constraint less_than_million check (id < 1000000));",
-                schemaName));
+                "id bigserial primary key, " +
+                "constraint not_reserved_id check (id > 1000), " +
+                "constraint less_than_million check (id < 1000000));",
+            schemaName));
     }
 }

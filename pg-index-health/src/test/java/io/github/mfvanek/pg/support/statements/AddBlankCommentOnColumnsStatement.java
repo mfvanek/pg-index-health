@@ -23,6 +23,6 @@ public class AddBlankCommentOnColumnsStatement extends AbstractDbStatement {
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("comment on column %1$s.clients.id is '';" +
-                "comment on column %1$s.accounts.id is '   ';", schemaName));
+            "comment on column %1$s.accounts.id is '   ';", schemaName));
     }
 }

@@ -64,17 +64,17 @@ public class Exclusions {
         this.indexesWithNullValuesExclusions = prepareExclusions(indexesWithNullValuesExclusions);
         this.btreeIndexesOnArrayColumnsExclusions = prepareExclusions(btreeIndexesOnArrayColumnsExclusions);
         this.indexSizeThresholdInBytes = Validators.sizeNotNegative(
-                indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
+            indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
         this.tableSizeThresholdInBytes = Validators.sizeNotNegative(
-                tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
+            tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
         this.indexBloatSizeThresholdInBytes = Validators.sizeNotNegative(
-                indexBloatSizeThresholdInBytes, "indexBloatSizeThresholdInBytes");
+            indexBloatSizeThresholdInBytes, "indexBloatSizeThresholdInBytes");
         this.indexBloatPercentageThreshold = AdditionalValidators.validPercent(
-                indexBloatPercentageThreshold, "indexBloatPercentageThreshold");
+            indexBloatPercentageThreshold, "indexBloatPercentageThreshold");
         this.tableBloatSizeThresholdInBytes = Validators.sizeNotNegative(
-                tableBloatSizeThresholdInBytes, "tableBloatSizeThresholdInBytes");
+            tableBloatSizeThresholdInBytes, "tableBloatSizeThresholdInBytes");
         this.tableBloatPercentageThreshold = AdditionalValidators.validPercent(
-                tableBloatPercentageThreshold, "tableBloatPercentageThreshold");
+            tableBloatPercentageThreshold, "tableBloatPercentageThreshold");
     }
 
     private static Set<String> prepareExclusions(@Nonnull final String rawExclusions) {
@@ -157,20 +157,20 @@ public class Exclusions {
     @Override
     public String toString() {
         return Exclusions.class.getSimpleName() + '{' +
-                "duplicatedIndexesExclusions=" + duplicatedIndexesExclusions +
-                ", intersectedIndexesExclusions=" + intersectedIndexesExclusions +
-                ", unusedIndexesExclusions=" + unusedIndexesExclusions +
-                ", tablesWithMissingIndexesExclusions=" + tablesWithMissingIndexesExclusions +
-                ", tablesWithoutPrimaryKeyExclusions=" + tablesWithoutPrimaryKeyExclusions +
-                ", indexesWithNullValuesExclusions=" + indexesWithNullValuesExclusions +
-                ", btreeIndexesOnArrayColumnsExclusions=" + btreeIndexesOnArrayColumnsExclusions +
-                ", indexSizeThresholdInBytes=" + indexSizeThresholdInBytes +
-                ", tableSizeThresholdInBytes=" + tableSizeThresholdInBytes +
-                ", indexBloatSizeThresholdInBytes=" + indexBloatSizeThresholdInBytes +
-                ", indexBloatPercentageThreshold=" + indexBloatPercentageThreshold +
-                ", tableBloatSizeThresholdInBytes=" + tableBloatSizeThresholdInBytes +
-                ", tableBloatPercentageThreshold=" + tableBloatPercentageThreshold +
-                '}';
+            "duplicatedIndexesExclusions=" + duplicatedIndexesExclusions +
+            ", intersectedIndexesExclusions=" + intersectedIndexesExclusions +
+            ", unusedIndexesExclusions=" + unusedIndexesExclusions +
+            ", tablesWithMissingIndexesExclusions=" + tablesWithMissingIndexesExclusions +
+            ", tablesWithoutPrimaryKeyExclusions=" + tablesWithoutPrimaryKeyExclusions +
+            ", indexesWithNullValuesExclusions=" + indexesWithNullValuesExclusions +
+            ", btreeIndexesOnArrayColumnsExclusions=" + btreeIndexesOnArrayColumnsExclusions +
+            ", indexSizeThresholdInBytes=" + indexSizeThresholdInBytes +
+            ", tableSizeThresholdInBytes=" + tableSizeThresholdInBytes +
+            ", indexBloatSizeThresholdInBytes=" + indexBloatSizeThresholdInBytes +
+            ", indexBloatPercentageThreshold=" + indexBloatPercentageThreshold +
+            ", tableBloatSizeThresholdInBytes=" + tableBloatSizeThresholdInBytes +
+            ", tableBloatPercentageThreshold=" + tableBloatPercentageThreshold +
+            '}';
     }
 
     /**

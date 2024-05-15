@@ -113,7 +113,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     private String logInvalidIndexes(@Nonnull final DatabaseChecks databaseChecks,
                                      @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.INVALID_INDEXES, Index.class),
-                c -> true, pgContext, SimpleLoggingKey.INVALID_INDEXES);
+            c -> true, pgContext, SimpleLoggingKey.INVALID_INDEXES);
     }
 
     @Nonnull
@@ -121,7 +121,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                         @Nonnull final Exclusions exclusions,
                                         @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.DUPLICATED_INDEXES, DuplicatedIndexes.class),
-                FilterDuplicatedIndexesByNamePredicate.of(exclusions.getDuplicatedIndexesExclusions()), pgContext, SimpleLoggingKey.DUPLICATED_INDEXES);
+            FilterDuplicatedIndexesByNamePredicate.of(exclusions.getDuplicatedIndexesExclusions()), pgContext, SimpleLoggingKey.DUPLICATED_INDEXES);
     }
 
     @Nonnull
@@ -129,7 +129,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                          @Nonnull final Exclusions exclusions,
                                          @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.INTERSECTED_INDEXES, DuplicatedIndexes.class),
-                FilterDuplicatedIndexesByNamePredicate.of(exclusions.getIntersectedIndexesExclusions()), pgContext, SimpleLoggingKey.INTERSECTED_INDEXES);
+            FilterDuplicatedIndexesByNamePredicate.of(exclusions.getIntersectedIndexesExclusions()), pgContext, SimpleLoggingKey.INTERSECTED_INDEXES);
     }
 
     @Nonnull
@@ -137,15 +137,15 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                     @Nonnull final Exclusions exclusions,
                                     @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.UNUSED_INDEXES, UnusedIndex.class),
-                FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())
-                        .and(FilterIndexesByNamePredicate.of(exclusions.getUnusedIndexesExclusions())), pgContext, SimpleLoggingKey.UNUSED_INDEXES);
+            FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())
+                .and(FilterIndexesByNamePredicate.of(exclusions.getUnusedIndexesExclusions())), pgContext, SimpleLoggingKey.UNUSED_INDEXES);
     }
 
     @Nonnull
     private String logForeignKeysNotCoveredWithIndex(@Nonnull final DatabaseChecks databaseChecks,
                                                      @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX, ForeignKey.class),
-                c -> true, pgContext, SimpleLoggingKey.FOREIGN_KEYS_WITHOUT_INDEX);
+            c -> true, pgContext, SimpleLoggingKey.FOREIGN_KEYS_WITHOUT_INDEX);
     }
 
     @Nonnull
@@ -153,8 +153,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                                @Nonnull final Exclusions exclusions,
                                                @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.TABLES_WITH_MISSING_INDEXES, TableWithMissingIndex.class),
-                FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
-                        .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithMissingIndexesExclusions())), pgContext, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES);
+            FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
+                .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithMissingIndexesExclusions())), pgContext, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES);
     }
 
     @Nonnull
@@ -162,8 +162,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                               @Nonnull final Exclusions exclusions,
                                               @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, Table.class),
-                FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
-                        .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithoutPrimaryKeyExclusions())), pgContext, SimpleLoggingKey.TABLES_WITHOUT_PRIMARY_KEY);
+            FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
+                .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithoutPrimaryKeyExclusions())), pgContext, SimpleLoggingKey.TABLES_WITHOUT_PRIMARY_KEY);
     }
 
     @Nonnull
@@ -171,7 +171,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                             @Nonnull final Exclusions exclusions,
                                             @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.INDEXES_WITH_NULL_VALUES, IndexWithNulls.class),
-                FilterIndexesByNamePredicate.of(exclusions.getIndexesWithNullValuesExclusions()), pgContext, SimpleLoggingKey.INDEXES_WITH_NULL_VALUES);
+            FilterIndexesByNamePredicate.of(exclusions.getIndexesWithNullValuesExclusions()), pgContext, SimpleLoggingKey.INDEXES_WITH_NULL_VALUES);
     }
 
     @Nonnull
@@ -179,8 +179,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                    @Nonnull final Exclusions exclusions,
                                    @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.BLOATED_INDEXES, IndexWithBloat.class),
-                FilterIndexesByBloatPredicate.of(exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold())
-                        .and(FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())), pgContext, SimpleLoggingKey.BLOATED_INDEXES);
+            FilterIndexesByBloatPredicate.of(exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold())
+                .and(FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())), pgContext, SimpleLoggingKey.BLOATED_INDEXES);
     }
 
     @Nonnull
@@ -188,64 +188,64 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                   @Nonnull final Exclusions exclusions,
                                   @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.BLOATED_TABLES, TableWithBloat.class),
-                FilterTablesByBloatPredicate.of(exclusions.getTableBloatSizeThresholdInBytes(), exclusions.getTableBloatPercentageThreshold())
-                        .and(FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())), pgContext, SimpleLoggingKey.BLOATED_TABLES);
+            FilterTablesByBloatPredicate.of(exclusions.getTableBloatSizeThresholdInBytes(), exclusions.getTableBloatPercentageThreshold())
+                .and(FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())), pgContext, SimpleLoggingKey.BLOATED_TABLES);
     }
 
     @Nonnull
     private String logTablesWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
                                                @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_DESCRIPTION, Table.class),
-                c -> true, pgContext, SimpleLoggingKey.TABLES_WITHOUT_DESCRIPTION);
+            c -> true, pgContext, SimpleLoggingKey.TABLES_WITHOUT_DESCRIPTION);
     }
 
     @Nonnull
     private String logColumnsWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
                                                 @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.COLUMNS_WITHOUT_DESCRIPTION, Column.class),
-                c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITHOUT_DESCRIPTION);
+            c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITHOUT_DESCRIPTION);
     }
 
     @Nonnull
     private String logColumnsWithJsonType(@Nonnull final DatabaseChecks databaseChecks,
                                           @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.COLUMNS_WITH_JSON_TYPE, Column.class),
-                c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITH_JSON_TYPE);
+            c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITH_JSON_TYPE);
     }
 
     @Nonnull
     private String logColumnsWithSerialTypes(@Nonnull final DatabaseChecks databaseChecks,
                                              @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.COLUMNS_WITH_SERIAL_TYPES, ColumnWithSerialType.class),
-                c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITH_SERIAL_TYPES);
+            c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITH_SERIAL_TYPES);
     }
 
     @Nonnull
     private String logFunctionsWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
                                                   @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.FUNCTIONS_WITHOUT_DESCRIPTION, StoredFunction.class),
-                c -> true, pgContext, SimpleLoggingKey.FUNCTIONS_WITHOUT_DESCRIPTION);
+            c -> true, pgContext, SimpleLoggingKey.FUNCTIONS_WITHOUT_DESCRIPTION);
     }
 
     @Nonnull
     private String logIndexesWithBoolean(@Nonnull final DatabaseChecks databaseChecks,
                                          @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.INDEXES_WITH_BOOLEAN, IndexWithColumns.class),
-                c -> true, pgContext, SimpleLoggingKey.INDEXES_WITH_BOOLEAN);
+            c -> true, pgContext, SimpleLoggingKey.INDEXES_WITH_BOOLEAN);
     }
 
     private String logBtreeIndexesOnArrayColumns(@Nonnull final DatabaseChecks databaseChecks,
                                                  @Nonnull final Exclusions exclusions,
                                                  @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS, Index.class),
-                FilterIndexesByNamePredicate.of(exclusions.getBtreeIndexesOnArrayColumnsExclusions()), pgContext, SimpleLoggingKey.BTREE_INDEXES_ON_ARRAY_COLUMNS);
+            FilterIndexesByNamePredicate.of(exclusions.getBtreeIndexesOnArrayColumnsExclusions()), pgContext, SimpleLoggingKey.BTREE_INDEXES_ON_ARRAY_COLUMNS);
     }
 
     @Nonnull
     private String logNotValidConstraints(@Nonnull final DatabaseChecks databaseChecks,
                                           @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.NOT_VALID_CONSTRAINTS, Constraint.class),
-                c -> true, pgContext, SimpleLoggingKey.NOT_VALID_CONSTRAINTS);
+            c -> true, pgContext, SimpleLoggingKey.NOT_VALID_CONSTRAINTS);
     }
 
     @Nonnull

@@ -37,12 +37,12 @@ class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withJsonType(), ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(1)
-                    .containsExactly(
-                            Column.ofNullable(ctx.enrichWithSchema("clients"), "info"));
+                .hasSize(1)
+                .containsExactly(
+                    Column.ofNullable(ctx.enrichWithSchema("clients"), "info"));
 
             assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("clients"))))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 
@@ -51,7 +51,7 @@ class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
     void shouldIgnoreDroppedColumns(final String schemaName) {
         // withData - skipped here below
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withJsonType().withDroppedInfoColumn(), ctx ->
-                assertThat(check.check(ctx))
-                        .isEmpty());
+            assertThat(check.check(ctx))
+                .isEmpty());
     }
 }

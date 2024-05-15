@@ -33,8 +33,8 @@ public class ColumnsInForeignKeyParser {
             throw new IllegalArgumentException("Columns array cannot be empty");
         }
         return Arrays.stream(rawColumns)
-                .map(c -> toColumn(tableName, c))
-                .collect(Collectors.toUnmodifiableList());
+            .map(c -> toColumn(tableName, c))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     @Nonnull

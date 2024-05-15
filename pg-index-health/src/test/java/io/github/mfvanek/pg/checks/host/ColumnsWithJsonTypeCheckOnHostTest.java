@@ -28,20 +28,20 @@ class ColumnsWithJsonTypeCheckOnHostTest extends DatabaseAwareTestBase {
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-                .hasType(Column.class)
-                .hasDiagnostic(Diagnostic.COLUMNS_WITH_JSON_TYPE)
-                .hasHost(getHost());
+            .hasType(Column.class)
+            .hasDiagnostic(Diagnostic.COLUMNS_WITH_JSON_TYPE)
+            .hasHost(getHost());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withJsonType(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .hasSize(1)
-                        .containsExactly(
-                                Column.ofNullable(ctx.enrichWithSchema("clients"), "info")));
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    Column.ofNullable(ctx.enrichWithSchema("clients"), "info")));
     }
 
     @ParameterizedTest
@@ -49,8 +49,8 @@ class ColumnsWithJsonTypeCheckOnHostTest extends DatabaseAwareTestBase {
     void shouldIgnoreDroppedColumns(final String schemaName) {
         // withData - skipped here below
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withJsonType().withDroppedInfoColumn(), ctx ->
-                assertThat(check)
-                        .executing(ctx)
-                        .isEmpty());
+            assertThat(check)
+                .executing(ctx)
+                .isEmpty());
     }
 }

@@ -35,10 +35,9 @@ public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<Column> 
      * Returns columns with json type in the specified schema.
      * These are candidates for conversion to the {@code jsonb} type.
      *
-     * @see <a href="https://www.postgresql.org/docs/current/datatype-json.html">JSON Types</a>
-     *
      * @param pgContext check's context with the specified schema
      * @return list of columns with json type
+     * @see <a href="https://www.postgresql.org/docs/current/datatype-json.html">JSON Types</a>
      */
     @Nonnull
     @Override

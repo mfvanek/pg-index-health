@@ -27,12 +27,12 @@ class SimpleLoggingKeyTest {
         final Set<String> keyNames = new HashSet<>();
         for (final LoggingKey key : SimpleLoggingKey.values()) {
             assertThat(key.getKeyName())
-                    .isLowerCase()
-                    .doesNotContainAnyWhitespaces();
+                .isLowerCase()
+                .doesNotContainAnyWhitespaces();
             keyNames.add(key.getKeyName());
         }
         assertThat(keyNames)
-                .hasSize(1);
+            .hasSize(1);
     }
 
     @Test
@@ -40,12 +40,12 @@ class SimpleLoggingKeyTest {
         final Set<String> subKeyNames = new HashSet<>();
         for (final LoggingKey key : SimpleLoggingKey.values()) {
             assertThat(key.getSubKeyName())
-                    .isLowerCase()
-                    .doesNotContainAnyWhitespaces();
+                .isLowerCase()
+                .doesNotContainAnyWhitespaces();
             subKeyNames.add(key.getSubKeyName());
         }
         assertThat(subKeyNames)
-                .hasSize(SimpleLoggingKey.values().length);
+            .hasSize(SimpleLoggingKey.values().length);
     }
 
     @Test
@@ -53,31 +53,31 @@ class SimpleLoggingKeyTest {
         final Set<String> descriptions = new HashSet<>();
         for (final LoggingKey key : SimpleLoggingKey.values()) {
             assertThat(key.getDescription())
-                    .isLowerCase()
-                    .containsWhitespaces();
+                .isLowerCase()
+                .containsWhitespaces();
             descriptions.add(key.getDescription());
         }
         assertThat(descriptions)
-                .hasSize(SimpleLoggingKey.values().length);
+            .hasSize(SimpleLoggingKey.values().length);
     }
 
     @Test
     void descriptionCorrespondsToSubKeyName() {
         for (final LoggingKey key : SimpleLoggingKey.values()) {
             assertThat(key.getSubKeyName())
-                    .isEqualTo(key.getDescription().replace(' ', '_'));
+                .isEqualTo(key.getDescription().replace(' ', '_'));
         }
     }
 
     @Test
     void completenessTest() {
         assertThat(SimpleLoggingKey.values())
-                .as("There must be logging key for each diagnostic")
-                .hasSameSizeAs(Diagnostic.values());
+            .as("There must be logging key for each diagnostic")
+            .hasSameSizeAs(Diagnostic.values());
         for (final SimpleLoggingKey key : SimpleLoggingKey.values()) {
             assertThat(Diagnostic.valueOf(key.toString()))
-                    .as("Name of SimpleLoggingKey have to correspond to Diagnostic name")
-                    .isNotNull();
+                .as("Name of SimpleLoggingKey have to correspond to Diagnostic name")
+                .isNotNull();
         }
     }
 }

@@ -23,10 +23,10 @@ public class CreateTableWithUniqueSerialColumn extends AbstractDbStatement {
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create table if not exists %1$s.one_more_table(" +
-                        "id bigserial, " +
-                        "constraint unique_id unique (id), " +
-                        "constraint not_reserved_id check (id > 1000), " +
-                        "constraint less_than_million check (id < 1000000));",
-                schemaName));
+                "id bigserial, " +
+                "constraint unique_id unique (id), " +
+                "constraint not_reserved_id check (id > 1000), " +
+                "constraint less_than_million check (id < 1000000));",
+            schemaName));
     }
 }

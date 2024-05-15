@@ -232,7 +232,7 @@ public final class DatabasePopulator implements AutoCloseable {
     public DatabasePopulator withSerialPrimaryKeyReferencesToAnotherTable() {
         statementsToExecuteInSameTransaction.putIfAbsent(82, new CreateTableWithSerialPrimaryKeyReferencesToAnotherTable(schemaName));
         return withCheckConstraintOnSerialPrimaryKey()
-                .withUniqueConstraintOnSerialColumn();
+            .withUniqueConstraintOnSerialColumn();
     }
 
     @Nonnull
@@ -289,7 +289,7 @@ public final class DatabasePopulator implements AutoCloseable {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute(String.format("create unique index concurrently if not exists " +
-                    "i_clients_last_name_first_name on %s.clients (last_name, first_name)", schemaName));
+                "i_clients_last_name_first_name on %s.clients (last_name, first_name)", schemaName));
         } catch (SQLException ignored) {
             // do nothing, just skip error
         }

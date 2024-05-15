@@ -40,25 +40,25 @@ class HighAvailabilityPgConnectionClusterTest {
             final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(firstConnection, pgConnections, 5_000L);
 
             assertThat(haPgConnection.getConnectionToPrimary())
-                    .as("First connection is primary")
-                    .isEqualTo(firstConnection)
-                    .as("Second connection is not primary")
-                    .isNotEqualTo(secondConnection);
+                .as("First connection is primary")
+                .isEqualTo(firstConnection)
+                .as("Second connection is not primary")
+                .isNotEqualTo(secondConnection);
 
             postgresCluster.stopFirstContainer();
 
             Awaitility
-                    .await()
-                    .atMost(PgConnectionAwareCluster.MAX_WAIT_INTERVAL_SECONDS)
-                    .with()
-                    .pollInterval(Duration.ofSeconds(2))
-                    .until(() -> haPgConnection.getConnectionToPrimary().equals(secondConnection));
+                .await()
+                .atMost(PgConnectionAwareCluster.MAX_WAIT_INTERVAL_SECONDS)
+                .with()
+                .pollInterval(Duration.ofSeconds(2))
+                .until(() -> haPgConnection.getConnectionToPrimary().equals(secondConnection));
 
             assertThat(haPgConnection.getConnectionToPrimary())
-                    .as("Second connection is primary")
-                    .isEqualTo(secondConnection)
-                    .as("First connection is not primary")
-                    .isNotEqualTo(firstConnection);
+                .as("Second connection is primary")
+                .isEqualTo(secondConnection)
+                .as("First connection is not primary")
+                .isNotEqualTo(firstConnection);
         }
     }
 }

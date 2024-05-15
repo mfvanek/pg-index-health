@@ -65,7 +65,7 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
 
     @Nonnull
     static List<UnusedIndex> getResultAsIntersection(
-            @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts) {
+        @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts) {
         LOGGER.debug("potentiallyUnusedIndexesFromAllHosts = {}", potentiallyUnusedIndexesFromAllHosts);
         Collection<UnusedIndex> unusedIndexes = null;
         for (final List<UnusedIndex> unusedIndexesFromHost : potentiallyUnusedIndexesFromAllHosts) {
@@ -87,7 +87,7 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
         if (statsResetTimestamp.isPresent()) {
             final long daysBetween = ChronoUnit.DAYS.between(statsResetTimestamp.get(), OffsetDateTime.now(ClockHolder.clock()));
             return String.format("Last statistics reset on this host was %d days ago (%s)",
-                    daysBetween, statsResetTimestamp.get());
+                daysBetween, statsResetTimestamp.get());
         }
         return "Statistics have never been reset on this host";
     }

@@ -38,9 +38,9 @@ public class InsertDataIntoTablesAction implements Runnable {
     public void run() {
         final int clientsCountToCreate = 1_000;
         final String insertClientSql = String.format(
-                "insert into %s.clients (id, first_name, last_name, info) values (?, ?, ?, ?)", schemaName);
+            "insert into %s.clients (id, first_name, last_name, info) values (?, ?, ?, ?)", schemaName);
         final String insertAccountSql = String.format(
-                "insert into %s.accounts (client_id, account_number) values (?, ?)", schemaName);
+            "insert into %s.accounts (client_id, account_number) values (?, ?)", schemaName);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement insertClientStatement = connection.prepareStatement(insertClientSql);
              PreparedStatement insertAccountStatement = connection.prepareStatement(insertAccountSql)) {

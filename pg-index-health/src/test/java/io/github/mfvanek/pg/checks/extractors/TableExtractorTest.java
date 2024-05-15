@@ -21,7 +21,7 @@ class TableExtractorTest {
     @Test
     void shouldCreateInstance() {
         assertThat(TableExtractor.of())
-                .isNotNull()
-                .isInstanceOf(TableExtractor.class);
+            .isNotNull()
+            .isInstanceOf(TableExtractor.class);
     }
 }

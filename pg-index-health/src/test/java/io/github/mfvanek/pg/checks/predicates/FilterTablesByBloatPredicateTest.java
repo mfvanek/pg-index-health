@@ -26,8 +26,8 @@ class FilterTablesByBloatPredicateTest {
     void shouldBeInclusive() {
         final Predicate<TableBloatAware> predicate = FilterTablesByBloatPredicate.of(10L, 20);
         assertThat(predicate)
-                .rejects(TableWithBloat.of("t", 100L, 10L, 10))
-                .rejects(TableWithBloat.of("t", 18L, 9L, 50))
-                .accepts(TableWithBloat.of("t", 100L, 20L, 20));
+            .rejects(TableWithBloat.of("t", 100L, 10L, 10))
+            .rejects(TableWithBloat.of("t", 18L, 9L, 50))
+            .accepts(TableWithBloat.of("t", 100L, 20L, 20));
     }
 }

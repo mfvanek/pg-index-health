@@ -24,10 +24,10 @@ public class CreateAccountsTableStatement extends AbstractDbStatement {
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format("create sequence if not exists %s.accounts_seq", schemaName));
         statement.execute(String.format("create table if not exists %1$s.accounts (" +
-                "id bigint not null primary key default nextval('%1$s.accounts_seq')," +
-                "client_id bigint not null," +
-                "account_number varchar(50) not null unique," +
-                "account_balance numeric(22,2) not null default 0," +
-                "deleted boolean not null default false)", schemaName));
+            "id bigint not null primary key default nextval('%1$s.accounts_seq')," +
+            "client_id bigint not null," +
+            "account_number varchar(50) not null unique," +
+            "account_balance numeric(22,2) not null default 0," +
+            "deleted boolean not null default false)", schemaName));
     }
 }

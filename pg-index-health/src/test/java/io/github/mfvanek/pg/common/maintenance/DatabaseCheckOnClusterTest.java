@@ -26,23 +26,23 @@ import static org.mockito.ArgumentMatchers.any;
 class DatabaseCheckOnClusterTest {
 
     private static final Collection<PgContext> CONTEXTS = List.of(
-            PgContext.of("demo"), PgContext.of("test"), PgContext.ofPublic());
+        PgContext.of("demo"), PgContext.of("test"), PgContext.ofPublic());
 
     @SuppressWarnings("unchecked")
     @Test
     void check() {
         final DatabaseCheckOnCluster<Table> check = (DatabaseCheckOnCluster<Table>) Mockito.spy(DatabaseCheckOnCluster.class);
         Mockito.when(check.check(any(PgContext.class), any()))
-                .thenAnswer(invocation -> {
-                    final PgContext ctx = invocation.getArgument(0);
-                    return List.of(
-                            Table.of(ctx.enrichWithSchema("t1"), 1L),
-                            Table.of(ctx.enrichWithSchema("t2"), 1L));
-                });
+            .thenAnswer(invocation -> {
+                final PgContext ctx = invocation.getArgument(0);
+                return List.of(
+                    Table.of(ctx.enrichWithSchema("t1"), 1L),
+                    Table.of(ctx.enrichWithSchema("t2"), 1L));
+            });
         final List<Table> tables = check.check(CONTEXTS, item -> true);
         assertThat(tables)
-                .hasSize(6)
-                .extracting(Table::getTableName)
-                .containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
+            .hasSize(6)
+            .extracting(Table::getTableName)
+            .containsExactlyInAnyOrder("t1", "demo.t1", "test.t1", "t2", "demo.t2", "test.t2");
     }
 }

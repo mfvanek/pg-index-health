@@ -28,9 +28,9 @@ class TablesWithMissingIndexesCheckOnHostTest extends StatisticsAwareTestBase {
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-                .hasType(TableWithMissingIndex.class)
-                .hasDiagnostic(Diagnostic.TABLES_WITH_MISSING_INDEXES)
-                .hasHost(getHost());
+            .hasType(TableWithMissingIndex.class)
+            .hasDiagnostic(Diagnostic.TABLES_WITH_MISSING_INDEXES)
+            .hasHost(getHost());
     }
 
     @ParameterizedTest
@@ -39,13 +39,13 @@ class TablesWithMissingIndexesCheckOnHostTest extends StatisticsAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             tryToFindAccountByClientId(schemaName);
             assertThat(check)
-                    .executing(ctx)
-                    .hasSize(1)
-                    .containsExactly(
-                            TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))
-                    .allMatch(t -> t.getSeqScans() >= AMOUNT_OF_TRIES)
-                    .allMatch(t -> t.getIndexScans() == 0)
-                    .allMatch(t -> t.getTableSizeInBytes() > 1L);
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))
+                .allMatch(t -> t.getSeqScans() >= AMOUNT_OF_TRIES)
+                .allMatch(t -> t.getIndexScans() == 0)
+                .allMatch(t -> t.getTableSizeInBytes() > 1L);
         });
     }
 }

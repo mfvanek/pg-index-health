@@ -34,6 +34,6 @@ abstract class AbstractFilterByBloat {
 
     protected boolean isOk(@Nonnull final BloatAware bloatAware) {
         return bloatAware.getBloatSizeInBytes() >= sizeThresholdInBytes &&
-                bloatAware.getBloatPercentage() >= percentageThreshold;
+            bloatAware.getBloatPercentage() >= percentageThreshold;
     }
 }

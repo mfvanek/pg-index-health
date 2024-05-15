@@ -45,24 +45,24 @@ public class DatabaseChecks {
 
     public DatabaseChecks(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         final Stream<DatabaseCheckOnCluster<? extends DbObject>> allChecks = Stream.of(
-                new TablesWithBloatCheckOnCluster(haPgConnection),
-                new TablesWithMissingIndexesCheckOnCluster(haPgConnection),
-                new TablesWithoutPrimaryKeyCheckOnCluster(haPgConnection),
-                new DuplicatedIndexesCheckOnCluster(haPgConnection),
-                new ForeignKeysNotCoveredWithIndexCheckOnCluster(haPgConnection),
-                new IndexesWithBloatCheckOnCluster(haPgConnection),
-                new IndexesWithNullValuesCheckOnCluster(haPgConnection),
-                new IntersectedIndexesCheckOnCluster(haPgConnection),
-                new InvalidIndexesCheckOnCluster(haPgConnection),
-                new UnusedIndexesCheckOnCluster(haPgConnection),
-                new TablesWithoutDescriptionCheckOnCluster(haPgConnection),
-                new ColumnsWithoutDescriptionCheckOnCluster(haPgConnection),
-                new ColumnsWithJsonTypeCheckOnCluster(haPgConnection),
-                new ColumnsWithSerialTypesCheckOnCluster(haPgConnection),
-                new FunctionsWithoutDescriptionCheckOnCluster(haPgConnection),
-                new IndexesWithBooleanCheckOnCluster(haPgConnection),
-                new NotValidConstraintsCheckOnCluster(haPgConnection),
-                new BtreeIndexesOnArrayColumnsCheckOnCluster(haPgConnection)
+            new TablesWithBloatCheckOnCluster(haPgConnection),
+            new TablesWithMissingIndexesCheckOnCluster(haPgConnection),
+            new TablesWithoutPrimaryKeyCheckOnCluster(haPgConnection),
+            new DuplicatedIndexesCheckOnCluster(haPgConnection),
+            new ForeignKeysNotCoveredWithIndexCheckOnCluster(haPgConnection),
+            new IndexesWithBloatCheckOnCluster(haPgConnection),
+            new IndexesWithNullValuesCheckOnCluster(haPgConnection),
+            new IntersectedIndexesCheckOnCluster(haPgConnection),
+            new InvalidIndexesCheckOnCluster(haPgConnection),
+            new UnusedIndexesCheckOnCluster(haPgConnection),
+            new TablesWithoutDescriptionCheckOnCluster(haPgConnection),
+            new ColumnsWithoutDescriptionCheckOnCluster(haPgConnection),
+            new ColumnsWithJsonTypeCheckOnCluster(haPgConnection),
+            new ColumnsWithSerialTypesCheckOnCluster(haPgConnection),
+            new FunctionsWithoutDescriptionCheckOnCluster(haPgConnection),
+            new IndexesWithBooleanCheckOnCluster(haPgConnection),
+            new NotValidConstraintsCheckOnCluster(haPgConnection),
+            new BtreeIndexesOnArrayColumnsCheckOnCluster(haPgConnection)
         );
         allChecks.forEach(check -> this.checks.putIfAbsent(check.getDiagnostic(), check));
     }

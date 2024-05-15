@@ -21,10 +21,9 @@ import javax.annotation.Nonnull;
  * A check on database structure on a specific host.
  *
  * @param <T> represents an object in a database associated with a table
- *
  * @author Ivan Vahrushev
- * @since 0.6.0
  * @see DbObject
+ * @since 0.6.0
  */
 public interface DatabaseCheckOnHost<T extends DbObject> extends DiagnosticAware, RawTypeAware<T>, HostAware {
 

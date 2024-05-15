@@ -30,16 +30,16 @@ class FilterTablesBySizePredicateTest {
     @Test
     void shouldValidateArguments() {
         assertThatThrownBy(() -> FilterTablesBySizePredicate.of(-1L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("thresholdInBytes cannot be less than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("thresholdInBytes cannot be less than zero");
     }
 
     @Test
     void shouldBeInclusive() {
         final Predicate<TableSizeAware> predicate = FilterTablesBySizePredicate.of(12L);
         assertThat(predicate)
-                .rejects(FIRST)
-                .accepts(SECOND)
-                .accepts(THIRD);
+            .rejects(FIRST)
+            .accepts(SECOND)
+            .accepts(THIRD);
     }
 }

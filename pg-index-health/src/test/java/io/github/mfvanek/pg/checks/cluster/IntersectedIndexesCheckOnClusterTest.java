@@ -41,21 +41,21 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(2)
-                    .containsExactly(
-                            DuplicatedIndexes.of(
-                                    IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), 0L),
-                                    IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), 0L)
-                            ),
-                            DuplicatedIndexes.of(
-                                    IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L),
-                                    IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
-                    .allMatch(d -> d.getTotalSize() >= 106_496L);
+                .hasSize(2)
+                .containsExactly(
+                    DuplicatedIndexes.of(
+                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), 0L),
+                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), 0L)
+                    ),
+                    DuplicatedIndexes.of(
+                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L),
+                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
+                .allMatch(d -> d.getTotalSize() >= 106_496L);
 
             final Predicate<DuplicatedIndexes> predicate = FilterDuplicatedIndexesByNamePredicate.of(
-                    List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted")));
+                List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted")));
             assertThat(check.check(ctx, predicate))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 
@@ -64,18 +64,18 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     void shouldFindHashIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedHashIndex(), ctx -> {
             assertThat(check.check(ctx))
-                    .hasSize(1)
-                    .containsExactly(
-                            DuplicatedIndexes.of(
-                                    IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L),
-                                    IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
-                    .allMatch(d -> d.getTotalSize() >= 106_496L);
+                .hasSize(1)
+                .containsExactly(
+                    DuplicatedIndexes.of(
+                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L),
+                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
+                .allMatch(d -> d.getTotalSize() >= 106_496L);
 
             assertThat(check.check(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_first"))))
-                    .isEmpty();
+                .isEmpty();
 
             assertThat(check.check(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_name"))))
-                    .isEmpty();
+                .isEmpty();
         });
     }
 
@@ -83,7 +83,7 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void withDifferentOpclassShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDifferentOpclassIndexes(), ctx ->
-                assertThat(check.check(ctx))
-                        .isEmpty());
+            assertThat(check.check(ctx))
+                .isEmpty());
     }
 }

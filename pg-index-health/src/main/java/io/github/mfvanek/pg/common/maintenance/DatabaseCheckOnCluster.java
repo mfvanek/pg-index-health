@@ -24,15 +24,15 @@ import javax.annotation.Nonnull;
  *
  * @param <T> any database object associated with a table (table itself, index, column, constraint)
  * @author Ivan Vahrushev
- * @since 0.6.0
  * @see DbObject
+ * @since 0.6.0
  */
 public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAware, RawTypeAware<T> {
 
     /**
      * Executes the check in the specified schema.
      *
-     * @param pgContext check's context with the specified schema
+     * @param pgContext        check's context with the specified schema
      * @param exclusionsFilter predicate to filter out unnecessary results
      * @return list of deviations from the specified rule
      * @see PgContext
@@ -66,15 +66,15 @@ public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAw
     /**
      * Executes the check in the specified schemas.
      *
-     * @param pgContexts a set of contexts specifying schemas
+     * @param pgContexts       a set of contexts specifying schemas
      * @param exclusionsFilter predicate to filter out unnecessary results
      * @return list of deviations from the specified rule
      */
     @Nonnull
     default List<T> check(@Nonnull final Collection<? extends PgContext> pgContexts, @Nonnull final Predicate<? super T> exclusionsFilter) {
         return pgContexts.stream()
-                .map(ctx -> check(ctx, exclusionsFilter))
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+            .map(ctx -> check(ctx, exclusionsFilter))
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
     }
 }

@@ -26,30 +26,30 @@ class FilterIndexesByBloatPredicateTest {
     @Test
     void shouldValidateArguments() {
         assertThatThrownBy(() -> FilterIndexesByBloatPredicate.of(-1L, -1))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("sizeThresholdInBytes cannot be less than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("sizeThresholdInBytes cannot be less than zero");
         assertThatThrownBy(() -> FilterIndexesByBloatPredicate.of(1L, -1))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("percentageThreshold should be in the range from 0 to 100 inclusive");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("percentageThreshold should be in the range from 0 to 100 inclusive");
         assertThatThrownBy(() -> FilterIndexesByBloatPredicate.of(1L, 101))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("percentageThreshold should be in the range from 0 to 100 inclusive");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("percentageThreshold should be in the range from 0 to 100 inclusive");
     }
 
     @Test
     void shouldBeInclusive() {
         final Predicate<IndexBloatAware> predicate = FilterIndexesByBloatPredicate.of(10L, 20);
         assertThat(predicate)
-                .rejects(IndexWithBloat.of("t", "idx", 200L, 20L, 10))
-                .rejects(IndexWithBloat.of("t", "idx", 18L, 9L, 50))
-                .accepts(IndexWithBloat.of("t", "idx", 20L, 10L, 50));
+            .rejects(IndexWithBloat.of("t", "idx", 200L, 20L, 10))
+            .rejects(IndexWithBloat.of("t", "idx", 18L, 9L, 50))
+            .accepts(IndexWithBloat.of("t", "idx", 20L, 10L, 50));
     }
 
     @Test
     void forZero() {
         final Predicate<IndexBloatAware> predicate = FilterIndexesByBloatPredicate.of(0L, 0);
         assertThat(predicate)
-                .accepts(IndexWithBloat.of("t", "idx", 1L, 0L, 0))
-                .accepts(IndexWithBloat.of("t", "idx", 11L, 11L, 100));
+            .accepts(IndexWithBloat.of("t", "idx", 1L, 0L, 0))
+            .accepts(IndexWithBloat.of("t", "idx", 11L, 11L, 100));
     }
 }

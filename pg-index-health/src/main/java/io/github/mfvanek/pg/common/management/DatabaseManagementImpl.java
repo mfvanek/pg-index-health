@@ -77,21 +77,21 @@ public class DatabaseManagementImpl implements DatabaseManagement {
     @Nonnull
     public Optional<OffsetDateTime> getLastStatsResetTimestamp() {
         return computeStatisticsForHostIfNeed(getPrimaryAngLog())
-                .getLastStatsResetTimestamp();
+            .getLastStatsResetTimestamp();
     }
 
     @Override
     @Nonnull
     public Set<PgParam> getParamsWithDefaultValues(@Nonnull final ServerSpecification specification) {
         return computeConfigurationForHostIfNeed(getPrimaryAngLog())
-                .getParamsWithDefaultValues(specification);
+            .getParamsWithDefaultValues(specification);
     }
 
     @Override
     @Nonnull
     public Set<PgParam> getParamsCurrentValues() {
         return computeConfigurationForHostIfNeed(getPrimaryAngLog())
-                .getParamsCurrentValues();
+            .getParamsCurrentValues();
     }
 
     @Nonnull
