@@ -22,66 +22,66 @@ class StoredFunctionTest {
     void gettersShouldWork() {
         final StoredFunction noArgsFunction = StoredFunction.ofNoArgs("f1");
         assertThat(noArgsFunction)
-                .isNotNull();
+            .isNotNull();
         assertThat(noArgsFunction.getFunctionName())
-                .isEqualTo("f1")
-                .isEqualTo(noArgsFunction.getName());
+            .isEqualTo("f1")
+            .isEqualTo(noArgsFunction.getName());
         assertThat(noArgsFunction.getFunctionSignature())
-                .isEmpty();
+            .isEmpty();
 
         final StoredFunction function = StoredFunction.of("f2", "IN a integer, IN b integer, IN c integer");
         assertThat(function)
-                .isNotNull();
+            .isNotNull();
         assertThat(function.getFunctionName())
-                .isEqualTo("f2")
-                .isEqualTo(function.getName());
+            .isEqualTo("f2")
+            .isEqualTo(function.getName());
         assertThat(function.getFunctionSignature())
-                .isEqualTo("IN a integer, IN b integer, IN c integer");
+            .isEqualTo("IN a integer, IN b integer, IN c integer");
     }
 
     @Test
     void trimShouldBeApplied() {
         final StoredFunction function = StoredFunction.of("f1", "   ");
         assertThat(function)
-                .isNotNull();
+            .isNotNull();
         assertThat(function.getFunctionSignature())
-                .isEmpty();
+            .isEmpty();
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidValuesShouldThrowException() {
         assertThatThrownBy(() -> StoredFunction.ofNoArgs(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("functionName cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("functionName cannot be null");
         assertThatThrownBy(() -> StoredFunction.ofNoArgs(""))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("functionName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("functionName cannot be blank");
         assertThatThrownBy(() -> StoredFunction.ofNoArgs("  "))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("functionName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("functionName cannot be blank");
 
         assertThatThrownBy(() -> StoredFunction.of(null, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("functionName cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("functionName cannot be null");
         assertThatThrownBy(() -> StoredFunction.of("", null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("functionName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("functionName cannot be blank");
         assertThatThrownBy(() -> StoredFunction.of("  ", null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("functionName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("functionName cannot be blank");
         assertThatThrownBy(() -> StoredFunction.of("f1", null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("functionSignature cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("functionSignature cannot be null");
     }
 
     @Test
     void testToString() {
         assertThat(StoredFunction.ofNoArgs("f1"))
-                .hasToString("StoredFunction{functionName='f1', functionSignature=''}");
+            .hasToString("StoredFunction{functionName='f1', functionSignature=''}");
 
         assertThat(StoredFunction.of("f2", "IN a integer, IN b integer, IN c integer"))
-                .hasToString("StoredFunction{functionName='f2', functionSignature='IN a integer, IN b integer, IN c integer'}");
+            .hasToString("StoredFunction{functionName='f2', functionSignature='IN a integer, IN b integer, IN c integer'}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -98,27 +98,27 @@ class StoredFunctionTest {
 
         // self
         assertThat(first)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // the same
         assertThat(theSame)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // others
         assertThat(second)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first)
-                .isNotEqualTo(third)
-                .doesNotHaveSameHashCodeAs(third);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first)
+            .isNotEqualTo(third)
+            .doesNotHaveSameHashCodeAs(third);
     }
 
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(StoredFunction.class)
-                .verify();
+            .verify();
     }
 
     @Test
@@ -130,21 +130,21 @@ class StoredFunctionTest {
 
         //noinspection ResultOfMethodCallIgnored,ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("other cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("other cannot be null");
 
         assertThat(first)
-                .isEqualByComparingTo(first) // self
-                .isEqualByComparingTo(theSame) // the same
-                .isGreaterThan(second)
-                .isLessThan(third);
+            .isEqualByComparingTo(first) // self
+            .isEqualByComparingTo(theSame) // the same
+            .isGreaterThan(second)
+            .isLessThan(third);
 
         assertThat(second)
-                .isLessThan(first)
-                .isLessThan(third);
+            .isLessThan(first)
+            .isLessThan(third);
 
         assertThat(third)
-                .isGreaterThan(first)
-                .isGreaterThan(second);
+            .isGreaterThan(first)
+            .isGreaterThan(second);
     }
 }

@@ -48,10 +48,10 @@ public class ServerSpecification {
     @Override
     public String toString() {
         return ServerSpecification.class.getSimpleName() + '{' +
-                "cpuCoresAmount=" + cpuCoresAmount +
-                ", memoryAmountInBytes=" + memoryAmountInBytes +
-                ", hasSSD=" + hasSSD +
-                '}';
+            "cpuCoresAmount=" + cpuCoresAmount +
+            ", memoryAmountInBytes=" + memoryAmountInBytes +
+            ", hasSSD=" + hasSSD +
+            '}';
     }
 
     @Nonnull

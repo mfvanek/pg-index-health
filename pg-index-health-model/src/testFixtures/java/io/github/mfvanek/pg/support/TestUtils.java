@@ -22,7 +22,7 @@ public final class TestUtils {
 
     @SuppressWarnings("checkstyle:IllegalThrows")
     public static <T> void invokePrivateConstructor(@Nonnull final Class<T> type)
-            throws Throwable {
+        throws Throwable {
         final Constructor<T> constructor = type.getDeclaredConstructor();
         constructor.setAccessible(true);
 

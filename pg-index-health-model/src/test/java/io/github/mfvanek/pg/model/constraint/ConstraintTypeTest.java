@@ -20,19 +20,19 @@ class ConstraintTypeTest {
     @Test
     void valueFrom() {
         assertThat(ConstraintType.valueFrom("c"))
-                .isEqualTo(ConstraintType.CHECK);
+            .isEqualTo(ConstraintType.CHECK);
         assertThat(ConstraintType.valueFrom("f"))
-                .isEqualTo(ConstraintType.FOREIGN_KEY);
+            .isEqualTo(ConstraintType.FOREIGN_KEY);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void creationFromStringShouldThrowExceptionWhenNotFound() {
         assertThatThrownBy(() -> ConstraintType.valueFrom(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("pgConType cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgConType cannot be null");
         assertThatThrownBy(() -> ConstraintType.valueFrom("hi"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Unknown pgConType: hi");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Unknown pgConType: hi");
     }
 }

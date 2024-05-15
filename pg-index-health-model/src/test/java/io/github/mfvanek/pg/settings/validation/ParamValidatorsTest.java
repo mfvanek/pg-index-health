@@ -20,6 +20,6 @@ class ParamValidatorsTest {
     @Test
     void privateConstructor() {
         assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(ParamValidators.class))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 }

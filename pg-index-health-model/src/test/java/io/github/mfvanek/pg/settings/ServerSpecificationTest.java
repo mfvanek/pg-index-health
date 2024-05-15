@@ -21,8 +21,8 @@ class ServerSpecificationTest {
     @Test
     void getCpuCoresAmount() {
         final ServerSpecification specification = ServerSpecification.builder()
-                .withCpuCores(2)
-                .build();
+            .withCpuCores(2)
+            .build();
         assertThat(specification).isNotNull();
         assertThat(specification.getCpuCoresAmount()).isEqualTo(2);
         assertThat(specification.getMemoryAmountInBytes()).isEqualTo(1024L * 1024L * 1024L);
@@ -30,18 +30,18 @@ class ServerSpecificationTest {
 
         final ServerSpecificationBuilder serverSpecificationBuilder = ServerSpecification.builder();
         assertThatThrownBy(() -> serverSpecificationBuilder.withCpuCores(0))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("cpuCoresAmount should be greater than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("cpuCoresAmount should be greater than zero");
         assertThatThrownBy(() -> serverSpecificationBuilder.withCpuCores(-1))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("cpuCoresAmount should be greater than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("cpuCoresAmount should be greater than zero");
     }
 
     @Test
     void getMemoryAmountInBytes() {
         final ServerSpecification specification = ServerSpecification.builder()
-                .withMemoryAmount(160, MemoryUnit.GB)
-                .build();
+            .withMemoryAmount(160, MemoryUnit.GB)
+            .build();
         assertThat(specification).isNotNull();
         assertThat(specification.getCpuCoresAmount()).isEqualTo(1);
         assertThat(specification.getMemoryAmountInBytes()).isEqualTo(160L * 1024L * 1024L * 1024L);
@@ -49,18 +49,18 @@ class ServerSpecificationTest {
 
         final ServerSpecificationBuilder serverSpecificationBuilder = ServerSpecification.builder();
         assertThatThrownBy(() -> serverSpecificationBuilder.withMemoryAmount(0, MemoryUnit.GB))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("unitsCount should be greater than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("unitsCount should be greater than zero");
         assertThatThrownBy(() -> serverSpecificationBuilder.withMemoryAmount(-1, MemoryUnit.GB))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("unitsCount should be greater than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("unitsCount should be greater than zero");
     }
 
     @Test
     void hasSSD() {
         final ServerSpecification specification = ServerSpecification.builder()
-                .withSSD()
-                .build();
+            .withSSD()
+            .build();
         assertThat(specification).isNotNull();
         assertThat(specification.getCpuCoresAmount()).isEqualTo(1);
         assertThat(specification.getMemoryAmountInBytes()).isEqualTo(1024L * 1024L * 1024L);
@@ -70,6 +70,6 @@ class ServerSpecificationTest {
     @Test
     void toStringTest() {
         assertThat(ServerSpecification.builder().build())
-                .hasToString("ServerSpecification{cpuCoresAmount=1, memoryAmountInBytes=1073741824, hasSSD=false}");
+            .hasToString("ServerSpecification{cpuCoresAmount=1, memoryAmountInBytes=1073741824, hasSSD=false}");
     }
 }

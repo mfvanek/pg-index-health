@@ -67,7 +67,7 @@ public class Table implements DbObject, TableSizeAware, Comparable<Table> {
     @Nonnull
     final String innerToString() {
         return "tableName='" + tableName + '\'' +
-                ", tableSizeInBytes=" + tableSizeInBytes;
+            ", tableSizeInBytes=" + tableSizeInBytes;
     }
 
     /**

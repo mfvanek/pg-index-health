@@ -52,10 +52,10 @@ public class TableWithMissingIndex extends AbstractTableAware implements Compara
     @Override
     public String toString() {
         return TableWithMissingIndex.class.getSimpleName() + '{' +
-                table.innerToString() +
-                ", seqScans=" + seqScans +
-                ", indexScans=" + indexScans +
-                '}';
+            table.innerToString() +
+            ", seqScans=" + seqScans +
+            ", indexScans=" + indexScans +
+            '}';
     }
 
     /**

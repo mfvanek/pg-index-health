@@ -82,7 +82,7 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
     @Nonnull
     protected String innerToString() {
         return "tableName='" + tableName + '\'' +
-                ", indexName='" + indexName + '\'';
+            ", indexName='" + indexName + '\'';
     }
 
     /**
@@ -100,7 +100,7 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
 
         final Index that = (Index) other;
         return Objects.equals(tableName, that.tableName) &&
-                Objects.equals(indexName, that.indexName);
+            Objects.equals(indexName, that.indexName);
     }
 
     /**

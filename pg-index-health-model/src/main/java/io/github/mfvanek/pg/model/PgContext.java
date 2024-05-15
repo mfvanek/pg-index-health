@@ -34,7 +34,7 @@ public class PgContext {
     private PgContext(@Nonnull final String schemaName, final int bloatPercentageThreshold) {
         this.schemaName = Validators.notBlank(schemaName, "schemaName").toLowerCase(Locale.ROOT);
         this.bloatPercentageThreshold = Validators.argumentNotNegative(
-                bloatPercentageThreshold, "bloatPercentageThreshold");
+            bloatPercentageThreshold, "bloatPercentageThreshold");
     }
 
     /**
@@ -72,9 +72,9 @@ public class PgContext {
     @Override
     public String toString() {
         return PgContext.class.getSimpleName() + '{' +
-                "schemaName='" + schemaName + '\'' +
-                ", bloatPercentageThreshold=" + bloatPercentageThreshold +
-                '}';
+            "schemaName='" + schemaName + '\'' +
+            ", bloatPercentageThreshold=" + bloatPercentageThreshold +
+            '}';
     }
 
     /**

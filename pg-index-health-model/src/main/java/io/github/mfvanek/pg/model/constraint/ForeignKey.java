@@ -59,9 +59,9 @@ public class ForeignKey extends Constraint {
     @Override
     public String toString() {
         return ForeignKey.class.getSimpleName() + '{' +
-                innerToString() +
-                ", columnsInConstraint=" + columnsInConstraint +
-                '}';
+            innerToString() +
+            ", columnsInConstraint=" + columnsInConstraint +
+            '}';
     }
 
     /**

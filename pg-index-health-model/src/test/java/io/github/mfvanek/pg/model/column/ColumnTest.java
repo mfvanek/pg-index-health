@@ -22,23 +22,23 @@ class ColumnTest {
     void gettersShouldWork() {
         final Column column = Column.ofNotNull("t1", "c1");
         assertThat(column.getTableName())
-                .isNotBlank()
-                .isEqualTo("t1");
+            .isNotBlank()
+            .isEqualTo("t1");
         assertThat(column.getColumnName())
-                .isNotBlank()
-                .isEqualTo("c1")
-                .isEqualTo(column.getName());
+            .isNotBlank()
+            .isEqualTo("c1")
+            .isEqualTo(column.getName());
         assertThat(column.isNotNull()).isTrue();
         assertThat(column.isNullable()).isFalse();
 
         final Column nullableColumn = Column.ofNullable("t2", "c2");
         assertThat(nullableColumn.getTableName())
-                .isNotBlank()
-                .isEqualTo("t2");
+            .isNotBlank()
+            .isEqualTo("t2");
         assertThat(nullableColumn.getColumnName())
-                .isNotBlank()
-                .isEqualTo("c2")
-                .isEqualTo(nullableColumn.getName());
+            .isNotBlank()
+            .isEqualTo("c2")
+            .isEqualTo(nullableColumn.getName());
         assertThat(nullableColumn.isNotNull()).isFalse();
         assertThat(nullableColumn.isNullable()).isTrue();
     }
@@ -47,33 +47,33 @@ class ColumnTest {
     @Test
     void withInvalidValuesShouldThrowException() {
         assertThatThrownBy(() -> Column.ofNotNull(null, "c1"))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("tableName cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("tableName cannot be null");
         assertThatThrownBy(() -> Column.ofNotNull("", "c1"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("tableName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("tableName cannot be blank");
         assertThatThrownBy(() -> Column.ofNotNull("   ", "c1"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("tableName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("tableName cannot be blank");
 
         assertThatThrownBy(() -> Column.ofNotNull("t1", null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("columnName cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("columnName cannot be null");
         assertThatThrownBy(() -> Column.ofNotNull("t1", ""))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("columnName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("columnName cannot be blank");
         assertThatThrownBy(() -> Column.ofNotNull("t1", "   "))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("columnName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("columnName cannot be blank");
     }
 
     @Test
     void testToString() {
         assertThat(Column.ofNotNull("t1", "c1"))
-                .hasToString("Column{tableName='t1', columnName='c1', notNull=true}");
+            .hasToString("Column{tableName='t1', columnName='c1', notNull=true}");
 
         assertThat(Column.ofNullable("t2", "c2"))
-                .hasToString("Column{tableName='t2', columnName='c2', notNull=false}");
+            .hasToString("Column{tableName='t2', columnName='c2', notNull=false}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -90,30 +90,30 @@ class ColumnTest {
 
         // self
         assertThat(first)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // the same
         assertThat(theSame)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // do not ignore nullability of column
         assertThat(theSameButNullable)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
 
         // others
         assertThat(second)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
     }
 
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(Column.class)
-                .verify();
+            .verify();
     }
 
     @Test
@@ -126,24 +126,24 @@ class ColumnTest {
 
         //noinspection ResultOfMethodCallIgnored,ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("other cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("other cannot be null");
 
         assertThat(first)
-                .isEqualByComparingTo(first) // self
-                .isEqualByComparingTo(theSame) // the same
-                .isGreaterThan(theSameButNullable) // do not ignore nullability of column
-                .isLessThan(second)
-                .isLessThan(third);
+            .isEqualByComparingTo(first) // self
+            .isEqualByComparingTo(theSame) // the same
+            .isGreaterThan(theSameButNullable) // do not ignore nullability of column
+            .isLessThan(second)
+            .isLessThan(third);
 
         assertThat(theSameButNullable).isLessThan(first);
 
         assertThat(second)
-                .isGreaterThan(first)
-                .isLessThan(third);
+            .isGreaterThan(first)
+            .isLessThan(third);
 
         assertThat(third)
-                .isGreaterThan(first)
-                .isGreaterThan(second);
+            .isGreaterThan(first)
+            .isGreaterThan(second);
     }
 }

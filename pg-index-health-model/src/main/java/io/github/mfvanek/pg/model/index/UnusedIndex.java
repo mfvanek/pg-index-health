@@ -39,9 +39,9 @@ public final class UnusedIndex extends IndexWithSize {
     @Override
     public String toString() {
         return UnusedIndex.class.getSimpleName() + '{' +
-                innerToString() +
-                ", indexScans=" + indexScans +
-                '}';
+            innerToString() +
+            ", indexScans=" + indexScans +
+            '}';
     }
 
     public static UnusedIndex of(@Nonnull final String tableName,

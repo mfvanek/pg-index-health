@@ -40,9 +40,9 @@ public class Constraint implements DbObject, TableNameAware {
      * @param constraintType constraint type; should be non-null.
      */
     protected Constraint(
-            @Nonnull final String tableName,
-            @Nonnull final String constraintName,
-            @Nonnull final ConstraintType constraintType) {
+        @Nonnull final String tableName,
+        @Nonnull final String constraintName,
+        @Nonnull final ConstraintType constraintType) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
         this.constraintType = Objects.requireNonNull(constraintType, "constraintType cannot be null");
@@ -102,7 +102,7 @@ public class Constraint implements DbObject, TableNameAware {
 
         final Constraint that = (Constraint) other;
         return Objects.equals(tableName, that.tableName) &&
-                Objects.equals(constraintName, that.constraintName);
+            Objects.equals(constraintName, that.constraintName);
     }
 
     /**
@@ -121,7 +121,7 @@ public class Constraint implements DbObject, TableNameAware {
     @Nonnull
     final String innerToString() {
         return "tableName='" + tableName + '\'' +
-                ", constraintName='" + constraintName + '\'';
+            ", constraintName='" + constraintName + '\'';
     }
 
     /**
@@ -130,9 +130,9 @@ public class Constraint implements DbObject, TableNameAware {
     @Override
     public String toString() {
         return Constraint.class.getSimpleName() + '{' +
-                innerToString() +
-                ", constraintType=" + constraintType +
-                '}';
+            innerToString() +
+            ", constraintType=" + constraintType +
+            '}';
     }
 
     /**

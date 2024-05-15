@@ -21,28 +21,28 @@ class ValidatorsTest {
     @Test
     void privateConstructor() {
         assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(Validators.class))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void valueIsPositive() {
         assertThat(Validators.valueIsPositive(1L, "arg"))
-                .isEqualTo(1L);
+            .isEqualTo(1L);
         assertThatThrownBy(() -> Validators.valueIsPositive(0, "arg"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("arg should be greater than zero");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("arg should be greater than zero");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void indexNameNotBlank() {
         assertThat(Validators.indexNameNotBlank("idx"))
-                .isEqualTo("idx");
+            .isEqualTo("idx");
         assertThatThrownBy(() -> Validators.indexNameNotBlank(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("indexName cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("indexName cannot be null");
         assertThatThrownBy(() -> Validators.indexNameNotBlank(""))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("indexName cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("indexName cannot be blank");
     }
 }

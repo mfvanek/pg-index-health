@@ -58,9 +58,9 @@ public class TableWithBloat extends AbstractTableAware implements TableBloatAwar
     @Override
     public String toString() {
         return TableWithBloat.class.getSimpleName() + '{' +
-                table.innerToString() +
-                ", bloatSizeInBytes=" + bloatSizeInBytes +
-                ", bloatPercentage=" + bloatPercentage + '}';
+            table.innerToString() +
+            ", bloatSizeInBytes=" + bloatSizeInBytes +
+            ", bloatPercentage=" + bloatPercentage + '}';
     }
 
     /**

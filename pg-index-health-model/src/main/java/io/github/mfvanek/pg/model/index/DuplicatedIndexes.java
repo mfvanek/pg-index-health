@@ -34,9 +34,9 @@ import javax.annotation.concurrent.Immutable;
 public class DuplicatedIndexes implements DbObject, TableNameAware {
 
     private static final Comparator<IndexWithSize> INDEX_WITH_SIZE_COMPARATOR =
-            Comparator.comparing(IndexWithSize::getTableName)
-                    .thenComparing(IndexWithSize::getIndexName)
-                    .thenComparing(IndexWithSize::getIndexSizeInBytes);
+        Comparator.comparing(IndexWithSize::getTableName)
+            .thenComparing(IndexWithSize::getIndexName)
+            .thenComparing(IndexWithSize::getIndexSizeInBytes);
 
     private final List<IndexWithSize> indexes;
     private final long totalSize;
@@ -46,14 +46,14 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
         final List<IndexWithSize> defensiveCopy = List.copyOf(Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes cannot be null"));
         validateThatTableIsTheSame(defensiveCopy);
         this.indexes = defensiveCopy.stream()
-                .sorted(INDEX_WITH_SIZE_COMPARATOR)
-                .collect(Collectors.toUnmodifiableList());
+            .sorted(INDEX_WITH_SIZE_COMPARATOR)
+            .collect(Collectors.toUnmodifiableList());
         this.totalSize = this.indexes.stream()
-                .mapToLong(IndexWithSize::getIndexSizeInBytes)
-                .sum();
+            .mapToLong(IndexWithSize::getIndexSizeInBytes)
+            .sum();
         this.indexesNames = this.indexes.stream()
-                .map(Index::getIndexName)
-                .collect(Collectors.toUnmodifiableList());
+            .map(Index::getIndexName)
+            .collect(Collectors.toUnmodifiableList());
     }
 
     /**
@@ -134,10 +134,10 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
     @Override
     public String toString() {
         return DuplicatedIndexes.class.getSimpleName() + '{' +
-                "tableName='" + getTableName() + '\'' +
-                ", totalSize=" + totalSize +
-                ", indexes=" + indexes +
-                '}';
+            "tableName='" + getTableName() + '\'' +
+            ", totalSize=" + totalSize +
+            ", indexes=" + indexes +
+            '}';
     }
 
     @Nonnull
@@ -149,10 +149,10 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
     public static DuplicatedIndexes of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
         Validators.tableNameNotBlank(tableName);
         final List<Map.Entry<String, Long>> indexesWithNameAndSize = DuplicatedIndexesParser.parseAsIndexNameAndSize(
-                Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
+            Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
         final List<IndexWithSize> duplicatedIndexes = indexesWithNameAndSize.stream()
-                .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
-                .collect(Collectors.toUnmodifiableList());
+            .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
+            .collect(Collectors.toUnmodifiableList());
         return new DuplicatedIndexes(duplicatedIndexes);
     }
 
@@ -167,7 +167,7 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
         }
         final Stream<IndexWithSize> basePart = Stream.of(firstIndex, secondIndex);
         return new DuplicatedIndexes(Stream.concat(basePart, Stream.of(otherIndexes))
-                .collect(Collectors.toUnmodifiableList()));
+            .collect(Collectors.toUnmodifiableList()));
     }
 
     private static void validateThatTableIsTheSame(@Nonnull final List<? extends TableNameAware> duplicatedIndexes) {

@@ -18,9 +18,8 @@ import javax.annotation.Nonnull;
 /**
  * A mapping to PostgreSQL serial types.
  *
- * @see <a href="https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL">Serial types</a>
- *
  * @author Ivan Vakhrushev
+ * @see <a href="https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL">Serial types</a>
  * @since 0.6.2
  */
 public enum SerialType {
@@ -64,8 +63,8 @@ public enum SerialType {
     @Override
     public String toString() {
         return SerialType.class.getSimpleName() + '{' +
-                "columnType='" + columnType + '\'' +
-                '}';
+            "columnType='" + columnType + '\'' +
+            '}';
     }
 
     /**

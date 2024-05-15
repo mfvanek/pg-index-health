@@ -31,17 +31,17 @@ class PgParamImplTest {
     @Test
     void withInvalidArguments() {
         assertThatThrownBy(() -> PgParamImpl.of(null, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("name cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("name cannot be null");
         assertThatThrownBy(() -> PgParamImpl.of("", null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("name cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("name cannot be blank");
         assertThatThrownBy(() -> PgParamImpl.of("  ", null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("name cannot be blank");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("name cannot be blank");
         assertThatThrownBy(() -> PgParamImpl.of("param_name", null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("value for 'param_name' cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("value for 'param_name' cannot be null");
     }
 
     @Test
@@ -58,7 +58,7 @@ class PgParamImplTest {
     @Test
     void testToString() {
         assertThat(PgParamImpl.of("statement_timeout", "2s"))
-                .hasToString("PgParamImpl{name='statement_timeout', value='2s'}");
+            .hasToString("PgParamImpl{name='statement_timeout', value='2s'}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -74,18 +74,18 @@ class PgParamImplTest {
 
         // self
         assertThat(first)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // the same
         assertThat(theSame)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // others
         assertThat(second)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
 
         // another implementation of PgParam
         final PgParam pgParamMock = Mockito.mock(PgParam.class);
@@ -97,7 +97,7 @@ class PgParamImplTest {
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(PgParamImpl.class)
-                .withIgnoredFields("value")
-                .verify();
+            .withIgnoredFields("value")
+            .verify();
     }
 }
