@@ -25,42 +25,42 @@ class DropDefaultValueGeneratorTest {
     @Test
     void shouldHandleInvalidArguments() {
         assertThatThrownBy(() -> new DropDefaultValueGenerator(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("options cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("options cannot be null");
 
         final DropDefaultValueGenerator generator = new DropDefaultValueGenerator(GeneratingOptions.builder().build());
         assertThatThrownBy(() -> generator.generate(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("column cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("column cannot be null");
     }
 
     @Test
     void generateForColumnLowerCase() {
         final DropDefaultValueGenerator generator = new DropDefaultValueGenerator(GeneratingOptions.builder().build());
         assertThat(generator.generate(column()))
-                .isEqualTo("alter table if exists s1.t1" + System.lineSeparator() +
-                        "    alter column col1 drop default;");
+            .isEqualTo("alter table if exists s1.t1" + System.lineSeparator() +
+                "    alter column col1 drop default;");
     }
 
     @Test
     void generateWithoutBreakingLines() {
         final DropDefaultValueGenerator generator = new DropDefaultValueGenerator(
-                GeneratingOptions.builder()
-                        .doNotBreakLines()
-                        .build());
+            GeneratingOptions.builder()
+                .doNotBreakLines()
+                .build());
         assertThat(generator.generate(column()))
-                .isEqualTo("alter table if exists s1.t1 alter column col1 drop default;");
+            .isEqualTo("alter table if exists s1.t1 alter column col1 drop default;");
     }
 
     @Test
     void generateForColumnUpperCase() {
         final DropDefaultValueGenerator generator = new DropDefaultValueGenerator(
-                GeneratingOptions.builder()
-                        .uppercaseForKeywords()
-                        .doNotBreakLines()
-                        .build());
+            GeneratingOptions.builder()
+                .uppercaseForKeywords()
+                .doNotBreakLines()
+                .build());
         assertThat(generator.generate(column()))
-                .isEqualTo("ALTER TABLE IF EXISTS s1.t1 ALTER COLUMN col1 DROP DEFAULT;");
+            .isEqualTo("ALTER TABLE IF EXISTS s1.t1 ALTER COLUMN col1 DROP DEFAULT;");
     }
 
     @Nonnull

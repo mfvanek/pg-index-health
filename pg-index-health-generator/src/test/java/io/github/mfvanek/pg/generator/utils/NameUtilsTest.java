@@ -22,21 +22,21 @@ class NameUtilsTest {
     @Test
     void privateConstructor() {
         assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(NameUtils.class))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void getTableNameWithoutSchemaShouldWork() {
         final Table first = Table.of("t1", 1L);
         assertThat(NameUtils.getTableNameWithoutSchema(first))
-                .isEqualTo("t1");
+            .isEqualTo("t1");
 
         final Table second = Table.of("public.t2", 1L);
         assertThat(NameUtils.getTableNameWithoutSchema(second))
-                .isEqualTo("t2");
+            .isEqualTo("t2");
 
         final Table third = Table.of(".t3", 1L);
         assertThat(NameUtils.getTableNameWithoutSchema(third))
-                .isEqualTo("t3");
+            .isEqualTo("t3");
     }
 }

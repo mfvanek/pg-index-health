@@ -32,13 +32,13 @@ final class DropDefaultValueGenerator extends AbstractOptionsAwareSqlGenerator<C
     public String generate(@Nonnull final ColumnNameAware column) {
         Objects.requireNonNull(column, "column cannot be null");
         return keyword("alter table ") +
-                keyword("if exists ") +
-                column.getTableName() +
-                (options.isBreakLines() ? System.lineSeparator() : " ") +
-                (options.isBreakLines() ? WHITESPACE.repeat(options.getIndentation()) : "") +
-                keyword("alter column ") +
-                column.getColumnName() +
-                keyword(" drop default") +
-                ';';
+            keyword("if exists ") +
+            column.getTableName() +
+            (options.isBreakLines() ? System.lineSeparator() : " ") +
+            (options.isBreakLines() ? WHITESPACE.repeat(options.getIndentation()) : "") +
+            keyword("alter column ") +
+            column.getColumnName() +
+            keyword(" drop default") +
+            ';';
     }
 }

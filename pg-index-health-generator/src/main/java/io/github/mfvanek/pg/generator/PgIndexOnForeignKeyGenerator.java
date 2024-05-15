@@ -44,42 +44,42 @@ final class PgIndexOnForeignKeyGenerator extends AbstractOptionsAwareSqlGenerato
             appendFullIndexNameAsComment(queryBuilder, fullIndexName);
         }
         queryBuilder.append(keyword("create index "))
-                .append(options.isConcurrently() ? keyword("concurrently ") : "")
-                .append(keyword("if not exists "))
-                .append(hasToTruncate ? nameGenerator.generateTruncatedIndexName() : fullIndexName)
-                .append(options.isBreakLines() ? System.lineSeparator() : " ")
-                .append(options.isBreakLines() ? WHITESPACE.repeat(options.getIndentation()) : "")
-                .append(keyword("on "))
-                .append(foreignKey.getTableName())
-                .append(" (")
-                .append(foreignKey.getColumnsInConstraint().stream().map(Column::getColumnName).collect(Collectors.joining(", ")))
-                .append(')');
+            .append(options.isConcurrently() ? keyword("concurrently ") : "")
+            .append(keyword("if not exists "))
+            .append(hasToTruncate ? nameGenerator.generateTruncatedIndexName() : fullIndexName)
+            .append(options.isBreakLines() ? System.lineSeparator() : " ")
+            .append(options.isBreakLines() ? WHITESPACE.repeat(options.getIndentation()) : "")
+            .append(keyword("on "))
+            .append(foreignKey.getTableName())
+            .append(" (")
+            .append(foreignKey.getColumnsInConstraint().stream().map(Column::getColumnName).collect(Collectors.joining(", ")))
+            .append(')');
         if (hasToExcludeNulls(foreignKey)) {
             excludeNulls(queryBuilder, foreignKey);
         }
         return queryBuilder.append(';')
-                .toString();
+            .toString();
     }
 
     private void appendFullIndexNameAsComment(@Nonnull final StringBuilder queryBuilder, @Nonnull final String fullIndexName) {
         queryBuilder.append("/* ")
-                .append(fullIndexName)
-                .append(" */")
-                .append(options.isBreakLines() ? System.lineSeparator() : " ");
+            .append(fullIndexName)
+            .append(" */")
+            .append(options.isBreakLines() ? System.lineSeparator() : " ");
     }
 
     private boolean hasToExcludeNulls(@Nonnull final ForeignKey foreignKey) {
         return options.isExcludeNulls() &&
-                foreignKey.getColumnsInConstraint().stream().anyMatch(Column::isNullable);
+            foreignKey.getColumnsInConstraint().stream().anyMatch(Column::isNullable);
     }
 
     private void excludeNulls(@Nonnull final StringBuilder queryBuilder, @Nonnull final ForeignKey foreignKey) {
         queryBuilder.append(keyword(" where "));
         final String columnsList = foreignKey.getColumnsInConstraint().stream()
-                .filter(Column::isNullable)
-                .map(Column::getColumnName)
-                .map(n -> n + keyword(" is not null"))
-                .collect(Collectors.joining(" and "));
+            .filter(Column::isNullable)
+            .map(Column::getColumnName)
+            .map(n -> n + keyword(" is not null"))
+            .collect(Collectors.joining(" and "));
         queryBuilder.append(columnsList);
     }
 }

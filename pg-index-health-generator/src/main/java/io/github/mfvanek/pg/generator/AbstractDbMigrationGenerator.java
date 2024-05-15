@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
  * Base class for all migration generators.
  *
  * @param <T> represents an object in a database associated with a table
- *
  * @author Ivan Vahrushev
  * @since 0.6.2
  */
