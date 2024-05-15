@@ -28,39 +28,34 @@ import io.github.mfvanek.pg.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.TablesWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.checks.host.UnusedIndexesCheckOnHost;
+import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.FilteredClassLoader;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigurationTestBase {
 
+    private static final int ADDITIONAL_BEANS = 3; // pgConnection + statisticsMaintenanceOnHost + configurationMaintenanceOnHost
+
+    @Test
+    void beansCompleteness() {
+        assertThat(EXPECTED_BEANS)
+            .as("All checks should be added to the starter")
+            .hasSize(Diagnostic.values().length + ADDITIONAL_BEANS);
+
+        assertThat(getCheckTypes())
+            .hasSize(Diagnostic.values().length + 2); // statisticsMaintenanceOnHost + configurationMaintenanceOnHost
+    }
+
     @ParameterizedTest
-    @ValueSource(classes = {
-        DuplicatedIndexesCheckOnHost.class,
-        ForeignKeysNotCoveredWithIndexCheckOnHost.class,
-        IndexesWithBloatCheckOnHost.class,
-        IndexesWithNullValuesCheckOnHost.class,
-        IntersectedIndexesCheckOnHost.class,
-        InvalidIndexesCheckOnHost.class,
-        TablesWithBloatCheckOnHost.class,
-        TablesWithMissingIndexesCheckOnHost.class,
-        TablesWithoutPrimaryKeyCheckOnHost.class,
-        UnusedIndexesCheckOnHost.class,
-        TablesWithoutDescriptionCheckOnHost.class,
-        ColumnsWithoutDescriptionCheckOnHost.class,
-        ColumnsWithJsonTypeCheckOnHost.class,
-        ColumnsWithSerialTypesCheckOnHost.class,
-        FunctionsWithoutDescriptionCheckOnHost.class,
-        IndexesWithBooleanCheckOnHost.class,
-        NotValidConstraintsCheckOnHost.class,
-        BtreeIndexesOnArrayColumnsCheckOnHost.class,
-        StatisticsMaintenanceOnHost.class,
-        ConfigurationMaintenanceOnHost.class})
+    @MethodSource("getCheckTypes")
     void withoutClass(final Class<?> type) {
         assertWithTestConfig()
             .withPropertyValues("spring.datasource.url=jdbc:postgresql://localhost:5432")
@@ -92,5 +87,29 @@ class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigur
                     .filteredOn(beanNamesFilter)
                     .isEmpty();
             });
+    }
+
+    private static List<Class<?>> getCheckTypes() {
+        return List.of(
+            DuplicatedIndexesCheckOnHost.class,
+            ForeignKeysNotCoveredWithIndexCheckOnHost.class,
+            IndexesWithBloatCheckOnHost.class,
+            IndexesWithNullValuesCheckOnHost.class,
+            IntersectedIndexesCheckOnHost.class,
+            InvalidIndexesCheckOnHost.class,
+            TablesWithBloatCheckOnHost.class,
+            TablesWithMissingIndexesCheckOnHost.class,
+            TablesWithoutPrimaryKeyCheckOnHost.class,
+            UnusedIndexesCheckOnHost.class,
+            TablesWithoutDescriptionCheckOnHost.class,
+            ColumnsWithoutDescriptionCheckOnHost.class,
+            ColumnsWithJsonTypeCheckOnHost.class,
+            ColumnsWithSerialTypesCheckOnHost.class,
+            FunctionsWithoutDescriptionCheckOnHost.class,
+            IndexesWithBooleanCheckOnHost.class,
+            NotValidConstraintsCheckOnHost.class,
+            BtreeIndexesOnArrayColumnsCheckOnHost.class,
+            StatisticsMaintenanceOnHost.class,
+            ConfigurationMaintenanceOnHost.class);
     }
 }
