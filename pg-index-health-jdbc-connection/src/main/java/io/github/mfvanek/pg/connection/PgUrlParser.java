@@ -87,8 +87,10 @@ public final class PgUrlParser {
         final int lastIndexOfSlash = pgUrl.lastIndexOf('/');
         final String dbNameWithParams = pgUrl.substring(lastIndexOfSlash);
         final int lastIndex = dbNameWithParams.lastIndexOf('?');
-        if (lastIndex >= 0) {
+        if (lastIndex > 1) {
             return dbNameWithParams.substring(0, lastIndex);
+        } else if (lastIndex == 1) {
+            throw new IllegalArgumentException("pgUrls contains invalid connection string " + pgUrl);
         }
         return dbNameWithParams;
     }

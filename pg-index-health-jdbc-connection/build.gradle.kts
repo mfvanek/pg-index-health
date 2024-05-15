@@ -26,7 +26,3 @@ dependencies {
     testFixturesImplementation(libs.slf4j.api)
     testFixturesImplementation(libs.logback.classic)
 }
-
-pitest {
-    mutationThreshold.set(98)
-}

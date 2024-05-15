@@ -174,6 +174,10 @@ class PgUrlParserTest {
 
         assertThat(PgUrlParser.extractDatabaseName(Set.of("jdbc:postgresql://host:5432/db3")))
                 .isEqualTo("/db3");
+
+        assertThatThrownBy(() -> PgUrlParser.extractDatabaseName(Set.of("jdbc:postgresql://host:5432/?")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("pgUrls contains invalid connection string jdbc:postgresql://host:5432/?");
     }
 
     @Test
