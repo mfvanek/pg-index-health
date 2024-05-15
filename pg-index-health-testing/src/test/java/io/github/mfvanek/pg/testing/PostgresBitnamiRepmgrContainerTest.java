@@ -29,27 +29,27 @@ class PostgresBitnamiRepmgrContainerTest {
     void containerShouldWork() {
         final PostgreSqlClusterAliasHolder aliasHolder = new PostgreSqlClusterAliasHolder();
         try (PostgresBitnamiRepmgrContainer container = new PostgresBitnamiRepmgrContainer(
-                prepareDockerImageName(), aliasHolder.createPrimaryEnvVarsMap(PostgreSqlClusterWrapper.builder()))
-                .withCreateContainerCmdModifier(cmd -> cmd.withName(aliasHolder.getPrimaryAlias()))
-                .withSharedMemorySize(MemoryUnit.MB.convertToBytes(768))
-                .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
-                .withNetwork(Network.newNetwork())
-                .withNetworkAliases(aliasHolder.getPrimaryAlias())
-                .withExposedPorts(5432)
-                .waitingFor(aliasHolder.getWaitStrategyForPrimary())) {
+            prepareDockerImageName(), aliasHolder.createPrimaryEnvVarsMap(PostgreSqlClusterWrapper.builder()))
+            .withCreateContainerCmdModifier(cmd -> cmd.withName(aliasHolder.getPrimaryAlias()))
+            .withSharedMemorySize(MemoryUnit.MB.convertToBytes(768))
+            .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
+            .withNetwork(Network.newNetwork())
+            .withNetworkAliases(aliasHolder.getPrimaryAlias())
+            .withExposedPorts(5432)
+            .waitingFor(aliasHolder.getWaitStrategyForPrimary())) {
             container.start();
             Awaitility.await("Ensure container is ready")
-                    .atMost(PostgreSqlClusterAliasHolder.STARTUP_TIMEOUT)
-                    .pollInterval(Duration.ofSeconds(1L))
-                    .until(() -> container.getLogs().contains("database system is ready to accept connections"));
+                .atMost(PostgreSqlClusterAliasHolder.STARTUP_TIMEOUT)
+                .pollInterval(Duration.ofSeconds(1L))
+                .until(() -> container.getLogs().contains("database system is ready to accept connections"));
 
             assertThat(container)
-                    .isNotNull()
-                    .satisfies(c -> {
-                        assertThat(c.getTestQueryString()).isEqualTo("SELECT 1");
-                        assertThat(c.getDriverClassName()).isEqualTo("org.postgresql.Driver");
-                        assertThat(c.getJdbcUrl()).startsWith("jdbc:postgresql://");
-                    });
+                .isNotNull()
+                .satisfies(c -> {
+                    assertThat(c.getTestQueryString()).isEqualTo("SELECT 1");
+                    assertThat(c.getDriverClassName()).isEqualTo("org.postgresql.Driver");
+                    assertThat(c.getJdbcUrl()).startsWith("jdbc:postgresql://");
+                });
         }
     }
 
@@ -60,13 +60,13 @@ class PostgresBitnamiRepmgrContainerTest {
         try (PostgresBitnamiRepmgrContainer first = new PostgresBitnamiRepmgrContainer(prepareDockerImageName(), aliasHolder.createPrimaryEnvVarsMap(builder));
              PostgresBitnamiRepmgrContainer second = new PostgresBitnamiRepmgrContainer(prepareDockerImageName(), aliasHolder.createStandbyEnvVarsMap(builder))) {
             assertThat(first)
-                    .isNotNull()
-                    .isNotEqualTo(null)
-                    .isEqualTo(first)
-                    .isNotEqualTo(BigDecimal.ONE)
-                    .doesNotHaveSameHashCodeAs(aliasHolder.createPrimaryEnvVarsMap(builder))
-                    .isNotEqualTo(second)
-                    .doesNotHaveSameHashCodeAs(second);
+                .isNotNull()
+                .isNotEqualTo(null)
+                .isEqualTo(first)
+                .isNotEqualTo(BigDecimal.ONE)
+                .doesNotHaveSameHashCodeAs(aliasHolder.createPrimaryEnvVarsMap(builder))
+                .isNotEqualTo(second)
+                .doesNotHaveSameHashCodeAs(second);
         }
     }
 
@@ -74,6 +74,6 @@ class PostgresBitnamiRepmgrContainerTest {
     private DockerImageName prepareDockerImageName() {
         final PostgresVersionHolder versionHolder = PostgresVersionHolder.forCluster();
         return DockerImageName.parse("docker.io/bitnami/postgresql-repmgr")
-                .withTag(versionHolder.getVersion());
+            .withTag(versionHolder.getVersion());
     }
 }

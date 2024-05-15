@@ -53,33 +53,33 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
 
     private PostgreSqlClusterWrapper(@Nonnull final PostgreSqlClusterBuilder builder) {
         this.pgVersion = builder.getPostgresVersion() != null ?
-                PostgresVersionHolder.forCluster(builder.getPostgresVersion()) :
-                PostgresVersionHolder.forCluster();
+            PostgresVersionHolder.forCluster(builder.getPostgresVersion()) :
+            PostgresVersionHolder.forCluster();
         this.network = Network.newNetwork();
 
         final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
         // Primary node
         this.containerForPrimary = createContainerAndInitWith(
-                aliases.createPrimaryEnvVarsMap(builder),
-                aliases.getPrimaryAlias(),
-                aliases.getWaitStrategyForPrimary());
+            aliases.createPrimaryEnvVarsMap(builder),
+            aliases.getPrimaryAlias(),
+            aliases.getWaitStrategyForPrimary());
         // Standby node
         this.containerForStandBy = createContainerAndInitWith(
-                aliases.createStandbyEnvVarsMap(builder),
-                aliases.getStandbyAlias(),
-                aliases.getWaitStrategyForStandBy()
+            aliases.createStandbyEnvVarsMap(builder),
+            aliases.getStandbyAlias(),
+            aliases.getWaitStrategyForStandBy()
         );
 
         this.containerForPrimary.start();
         Awaitility.await("Ensure primary is ready")
-                .atMost(PostgreSqlClusterAliasHolder.STARTUP_TIMEOUT)
-                .pollInterval(Duration.ofSeconds(1L))
-                .until(() -> containerForPrimary.getLogs().contains("database system is ready to accept connections"));
+            .atMost(PostgreSqlClusterAliasHolder.STARTUP_TIMEOUT)
+            .pollInterval(Duration.ofSeconds(1L))
+            .until(() -> containerForPrimary.getLogs().contains("database system is ready to accept connections"));
         this.containerForStandBy.start();
         Awaitility.await("Ensure cluster is ready")
-                .atMost(PostgreSqlClusterAliasHolder.STARTUP_TIMEOUT)
-                .pollInterval(Duration.ofSeconds(1L))
-                .until(() -> containerForStandBy.getLogs().contains("started streaming WAL from primary"));
+            .atMost(PostgreSqlClusterAliasHolder.STARTUP_TIMEOUT)
+            .pollInterval(Duration.ofSeconds(1L))
+            .until(() -> containerForStandBy.getLogs().contains("started streaming WAL from primary"));
 
         this.dataSourceForPrimary = PostgreSqlDataSourceHelper.buildDataSource(containerForPrimary);
         this.dataSourceForStandBy = PostgreSqlDataSourceHelper.buildDataSource(containerForStandBy);
@@ -154,33 +154,33 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         containerForPrimary.stop();
         LOGGER.info("Waiting for standby will be promoted to primary");
         Awaitility.await("Promoting standby to primary")
-                .atMost(WAIT_INTERVAL_SECONDS)
-                .pollInterval(Duration.ofSeconds(1L))
-                .until(() -> containerForStandBy.getLogs().contains("promoting standby to primary"));
+            .atMost(WAIT_INTERVAL_SECONDS)
+            .pollInterval(Duration.ofSeconds(1L))
+            .until(() -> containerForStandBy.getLogs().contains("promoting standby to primary"));
         Awaitility.await("Standby promoted to primary")
-                .atMost(WAIT_INTERVAL_SECONDS)
-                .pollInterval(Duration.ofSeconds(1L))
-                .until(() -> containerForStandBy.getLogs().contains("standby promoted to primary after"));
+            .atMost(WAIT_INTERVAL_SECONDS)
+            .pollInterval(Duration.ofSeconds(1L))
+            .until(() -> containerForStandBy.getLogs().contains("standby promoted to primary after"));
         return true;
     }
 
     @Nonnull
     private PostgresBitnamiRepmgrContainer createContainerAndInitWith(
-            final Map<String, String> envVars,
-            final String alias,
-            final WaitStrategy waitStrategy
+        final Map<String, String> envVars,
+        final String alias,
+        final WaitStrategy waitStrategy
     ) {
         final DockerImageName dockerImageName = DockerImageName.parse(IMAGE_NAME)
-                .withTag(pgVersion.getVersion());
+            .withTag(pgVersion.getVersion());
         //noinspection resource
         return new PostgresBitnamiRepmgrContainer(dockerImageName, envVars) //NOSONAR
-                .withCreateContainerCmdModifier(cmd -> cmd.withName(alias))
-                .withSharedMemorySize(MemoryUnit.MB.convertToBytes(768))
-                .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
-                .withNetwork(network)
-                .withNetworkAliases(alias)
-                .withExposedPorts(5432)
-                .waitingFor(waitStrategy);
+            .withCreateContainerCmdModifier(cmd -> cmd.withName(alias))
+            .withSharedMemorySize(MemoryUnit.MB.convertToBytes(768))
+            .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
+            .withNetwork(network)
+            .withNetworkAliases(alias)
+            .withExposedPorts(5432)
+            .waitingFor(waitStrategy);
     }
 
     @ExcludeFromJacocoGeneratedReport
