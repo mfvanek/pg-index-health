@@ -73,7 +73,7 @@ public class DatabaseStructureHealthAutoConfiguration {
     /**
      * {@link PgConnection} bean.
      *
-     * @param dataSource {@link DataSource} instance
+     * @param dataSource  {@link DataSource} instance
      * @param databaseUrl connection string to database
      * @return {@link PgConnection} instance
      */
