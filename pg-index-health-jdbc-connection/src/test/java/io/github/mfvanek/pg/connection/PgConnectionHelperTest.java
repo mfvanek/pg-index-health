@@ -27,26 +27,26 @@ class PgConnectionHelperTest {
     @Test
     void privateConstructor() {
         assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(PgConnectionHelper.class))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void createDataSource() {
         final DataSource dataSource = PgConnectionHelper.createDataSource(getWriteUrl(), "postgres_user", "postgres_pwd");
         assertThat(dataSource)
-                .isNotNull()
-                .isInstanceOfSatisfying(BasicDataSource.class, ds -> {
-                    assertThat(ds.getDriverClassName()).isEqualTo("org.postgresql.Driver");
-                    assertThat(ds.getUsername()).isEqualTo("postgres_user");
-                    assertThat(ds.getPassword()).isEqualTo("postgres_pwd");
-                    assertThat(ds.getValidationQuery()).isEqualTo("select 1");
-                    assertThat(ds.getMaxTotal()).isEqualTo(1);
-                    assertThat(ds.getMaxIdle()).isEqualTo(1);
-                    assertThat(ds.getMaxOpenPreparedStatements()).isEqualTo(1);
-                    assertThat(ds.getUrl())
-                            .isNotBlank()
-                            .startsWith("jdbc:postgresql://localhost");
-                });
+            .isNotNull()
+            .isInstanceOfSatisfying(BasicDataSource.class, ds -> {
+                assertThat(ds.getDriverClassName()).isEqualTo("org.postgresql.Driver");
+                assertThat(ds.getUsername()).isEqualTo("postgres_user");
+                assertThat(ds.getPassword()).isEqualTo("postgres_pwd");
+                assertThat(ds.getValidationQuery()).isEqualTo("select 1");
+                assertThat(ds.getMaxTotal()).isEqualTo(1);
+                assertThat(ds.getMaxIdle()).isEqualTo(1);
+                assertThat(ds.getMaxOpenPreparedStatements()).isEqualTo(1);
+                assertThat(ds.getUrl())
+                    .isNotBlank()
+                    .startsWith("jdbc:postgresql://localhost");
+            });
     }
 
     @Nonnull

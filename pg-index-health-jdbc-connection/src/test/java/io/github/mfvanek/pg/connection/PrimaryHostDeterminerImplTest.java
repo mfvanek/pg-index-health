@@ -44,10 +44,10 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
             Mockito.when(statement.executeQuery(anyString())).thenThrow(new SQLException("bad query"));
             final PgConnection pgConnection = PgConnectionImpl.of(dataSource, localhost);
             assertThatThrownBy(() -> primaryHostDeterminer.isPrimary(pgConnection))
-                    .isInstanceOf(PgSqlException.class)
-                    .hasMessage("bad query")
-                    .hasCauseInstanceOf(SQLException.class)
-                    .hasRootCauseMessage("bad query");
+                .isInstanceOf(PgSqlException.class)
+                .hasMessage("bad query")
+                .hasCauseInstanceOf(SQLException.class)
+                .hasRootCauseMessage("bad query");
         }
     }
 
@@ -55,14 +55,14 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
     @Test
     void withInvalidArgument() {
         assertThatThrownBy(() -> primaryHostDeterminer.isPrimary(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("pgConnection cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgConnection cannot be null");
     }
 
     @Test
     void isPrimaryForSecondaryHost() {
         final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
-                "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=secondary", getPort());
+            "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=secondary", getPort());
         final PgConnection secondary = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl(readUrl));
         assertThat(secondary).isNotNull();
         assertThat(primaryHostDeterminer.isPrimary(secondary)).isFalse();

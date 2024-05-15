@@ -24,15 +24,15 @@ class PgHostImplTest {
     @Test
     void ofUrl() {
         assertThatThrownBy(() -> PgHostImpl.ofUrl("jdbc:postgresql://host-4:6432,host-2:6432,host-3:6432,host-1:6432/db_name?ssl=true&sslmode=require"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("pgUrl couldn't contain multiple hosts");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("pgUrl couldn't contain multiple hosts");
     }
 
     @Test
     void ofUrlWithMultipleHosts() {
         assertThatThrownBy(() -> PgHostImpl.ofUrl("jdbc:postgresql://host-4:6432,host-2:6432,host-3:6432,host-1:6432/db_name?ssl=true&sslmode=require"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("pgUrl couldn't contain multiple hosts");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("pgUrl couldn't contain multiple hosts");
     }
 
     @Test
@@ -50,23 +50,23 @@ class PgHostImplTest {
     @Test
     void withInvalidValues() {
         assertThatThrownBy(() -> PgHostImpl.ofUrl(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("pgUrl cannot be null");
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgUrl cannot be null");
         assertThatThrownBy(() -> PgHostImpl.ofUrl(""))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("pgUrl cannot be blank or empty");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("pgUrl cannot be blank or empty");
         assertThatThrownBy(() -> PgHostImpl.ofUrl("host"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("pgUrl has invalid format");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("pgUrl has invalid format");
         assertThatThrownBy(() -> PgHostImpl.ofUrl("jdbc:postgresql://:6432"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("hostName cannot be blank or empty");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("hostName cannot be blank or empty");
         assertThatThrownBy(() -> PgHostImpl.ofUrl("jdbc:postgresql://localhost:1023"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("the port number must be in the range from 1024 to 65535");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("the port number must be in the range from 1024 to 65535");
         assertThatThrownBy(() -> PgHostImpl.ofUrl("jdbc:postgresql://localhost:65536"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("the port number must be in the range from 1024 to 65535");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("the port number must be in the range from 1024 to 65535");
     }
 
     @Test
@@ -81,7 +81,7 @@ class PgHostImplTest {
     @Test
     void toStringTest() {
         assertThat(PgHostImpl.ofUrl("jdbc:postgresql://primary:5432"))
-                .hasToString("PgHostImpl{pgUrl='jdbc:postgresql://primary:5432', hostName=primary, port=5432, maybePrimary=true}");
+            .hasToString("PgHostImpl{pgUrl='jdbc:postgresql://primary:5432', hostName=primary, port=5432, maybePrimary=true}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -97,18 +97,18 @@ class PgHostImplTest {
 
         // self
         assertThat(first)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // the same
         assertThat(theSame)
-                .isEqualTo(first)
-                .hasSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // others
         assertThat(second)
-                .isNotEqualTo(first)
-                .doesNotHaveSameHashCodeAs(first);
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
 
         // another implementation of PgHost
         final PgHost pgHostMock = Mockito.mock(PgHost.class);
@@ -116,19 +116,19 @@ class PgHostImplTest {
         Mockito.when(pgHostMock.getName()).thenReturn("primary");
         Mockito.when(pgHostMock.getPgUrl()).thenReturn("jdbc:postgresql://primary:5432");
         assertThat(pgHostMock)
-                .isNotEqualTo(second)
-                .satisfies(h -> {
-                    assertThat(h.canBePrimary()).isEqualTo(second.canBePrimary());
-                    assertThat(h.getName()).isEqualTo(second.getName());
-                    assertThat(h.getPgUrl()).isEqualTo(second.getPgUrl());
-                });
+            .isNotEqualTo(second)
+            .satisfies(h -> {
+                assertThat(h.canBePrimary()).isEqualTo(second.canBePrimary());
+                assertThat(h.getName()).isEqualTo(second.getName());
+                assertThat(h.getPgUrl()).isEqualTo(second.getPgUrl());
+            });
     }
 
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(PgHostImpl.class)
-                .withIgnoredFields("pgUrl", "maybePrimary")
-                .verify();
+            .withIgnoredFields("pgUrl", "maybePrimary")
+            .verify();
     }
 }
