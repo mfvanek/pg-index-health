@@ -89,6 +89,21 @@ public final class QueryExecutors {
     }
 
     @Nonnull
+    public static <T> List<T> executeQueryWithRemainingPercentageThreshold(@Nonnull final PgConnection pgConnection,
+                                                                           @Nonnull final PgContext pgContext,
+                                                                           @Nonnull final String sqlQuery,
+                                                                           @Nonnull final ResultSetExtractor<T> rse) {
+        return executeQuery(pgConnection, pgContext, sqlQuery, rse, statement -> {
+            try {
+                statement.setString(1, pgContext.getSchemaName());
+                statement.setDouble(2, pgContext.getRemainingPercentageThreshold());
+            } catch (SQLException e) {
+                throw new PgSqlException(e);
+            }
+        });
+    }
+
+    @Nonnull
     private static <T> List<T> executeQuery(@Nonnull final PgConnection pgConnection,
                                             @Nonnull final PgContext pgContext,
                                             @Nonnull final String sqlQuery,
