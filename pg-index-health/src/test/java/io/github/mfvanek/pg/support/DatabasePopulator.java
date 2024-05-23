@@ -37,6 +37,7 @@ import io.github.mfvanek.pg.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.support.statements.CreateProceduresStatement;
 import io.github.mfvanek.pg.support.statements.CreateSchemaStatement;
+import io.github.mfvanek.pg.support.statements.CreateSequenceStatement;
 import io.github.mfvanek.pg.support.statements.CreateSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKey;
 import io.github.mfvanek.pg.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
@@ -277,6 +278,12 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withBtreeIndexesOnArrayColumn() {
         statementsToExecuteInSameTransaction.putIfAbsent(96, new CreateIndexesOnArrayColumn(schemaName));
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withSequenceOverflow() {
+        statementsToExecuteInSameTransaction.putIfAbsent(97, new CreateSequenceStatement(schemaName));
         return this;
     }
 
