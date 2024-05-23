@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 
@@ -102,6 +103,32 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
             assertThatThrownBy(() -> QueryExecutors.executeQueryWithBloatThreshold(pgConnection, context, "select version()", rs -> rs.getString(1)))
                 .isInstanceOf(PgSqlException.class)
                 .hasMessage("bad parameter")
+                .hasCauseInstanceOf(SQLException.class)
+                .hasRootCauseMessage("bad parameter");
+        }
+    }
+
+    @Test
+    void executeQueryWithRemainingPercentageThreshold() throws SQLException {
+        final DataSource dataSource = Mockito.mock(DataSource.class);
+        try (Connection connection = Mockito.mock(Connection.class);
+             PreparedStatement statement = Mockito.mock(PreparedStatement.class)) {
+            Mockito.when(dataSource.getConnection()).thenReturn(connection);
+            Mockito.when(connection.prepareStatement(anyString())).thenReturn(statement);
+            Mockito.doAnswer(invocation -> {
+                throw new SQLException("bad parameter");
+            }).when(statement).setString(anyInt(), anyString());
+            Mockito.doAnswer(invocation -> {
+                throw new SQLException("bad parameter");
+            }).when(statement).setDouble(anyInt(), anyDouble());
+
+            final PgConnection pgConnection = PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:6432"));
+            final PgContext context = PgContext.ofPublic();
+            final String sqlQuery = "SELECT version()";
+
+            assertThatThrownBy(() -> QueryExecutors.executeQueryWithRemainingPercentageThreshold(pgConnection, context, sqlQuery, rs -> rs.getString(1)))
+                .isInstanceOf(PgSqlException.class)
+                .hasMessageContaining("bad parameter")
                 .hasCauseInstanceOf(SQLException.class)
                 .hasRootCauseMessage("bad parameter");
         }

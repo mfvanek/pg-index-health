@@ -74,7 +74,7 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Diagnostic.class, mode = EnumSource.Mode.EXCLUDE, names = {"BLOATED_INDEXES", "BLOATED_TABLES", "FOREIGN_KEYS_WITHOUT_INDEX"})
+    @EnumSource(value = Diagnostic.class, mode = EnumSource.Mode.EXCLUDE, names = {"BLOATED_INDEXES", "BLOATED_TABLES", "FOREIGN_KEYS_WITHOUT_INDEX", "SEQUENCE_OVERFLOW"})
     void onDatabaseWithoutThemCheckShouldReturnNothing(@Nonnull final Diagnostic diagnostic) {
         for (final String schemaName : SCHEMAS) {
             executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(), ctx ->

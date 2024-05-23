@@ -57,7 +57,8 @@ class HealthLoggerTest extends HealthLoggerTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void logAll(final String schemaName) {
-        executeTestOnDatabase(schemaName,
+        executeTestOnDatabase(
+            schemaName,
             dbp -> dbp.withReferences()
                 .withData()
                 .withInvalidIndex()
@@ -70,7 +71,8 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                 .withSerialType()
                 .withFunctions()
                 .withNotValidConstraints()
-                .withBtreeIndexesOnArrayColumn(),
+                .withBtreeIndexesOnArrayColumn()
+                .withSequenceOverflow(),
             ctx -> {
                 collectStatistics(schemaName);
                 assertThat(logger.logAll(Exclusions.empty(), ctx))
@@ -93,8 +95,11 @@ class HealthLoggerTest extends HealthLoggerTestBase {
                         "1999-12-31T23:59:59Z\tdb_indexes_health\tfunctions_without_description\t2",
                         "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_boolean\t1",
                         "1999-12-31T23:59:59Z\tdb_indexes_health\tnot_valid_constraints\t2",
-                        "1999-12-31T23:59:59Z\tdb_indexes_health\tbtree_indexes_on_array_columns\t2");
-            });
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tbtree_indexes_on_array_columns\t2",
+                        "1999-12-31T23:59:59Z\tdb_indexes_health\tsequence_overflow\t8"
+                    );
+            }
+        );
     }
 
     @ParameterizedTest
