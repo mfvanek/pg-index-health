@@ -27,14 +27,17 @@ public class PgContext {
      */
     public static final int DEFAULT_BLOAT_PERCENTAGE_THRESHOLD = 10;
     public static final String DEFAULT_SCHEMA_NAME = "public";
+    public static final double DEFAULT_REMAINING_PERCENTAGE_THRESHOLD = 100.0;
 
     private final String schemaName;
     private final int bloatPercentageThreshold;
+    private final double remainingPercentageThreshold;
 
-    private PgContext(@Nonnull final String schemaName, final int bloatPercentageThreshold) {
+    private PgContext(@Nonnull final String schemaName, final int bloatPercentageThreshold, final double remainingPercentageThreshold) {
         this.schemaName = Validators.notBlank(schemaName, "schemaName").toLowerCase(Locale.ROOT);
         this.bloatPercentageThreshold = Validators.argumentNotNegative(
             bloatPercentageThreshold, "bloatPercentageThreshold");
+        this.remainingPercentageThreshold = remainingPercentageThreshold;
     }
 
     /**
@@ -63,6 +66,15 @@ public class PgContext {
      */
     public int getBloatPercentageThreshold() {
         return bloatPercentageThreshold;
+    }
+
+    /**
+     * Returns the specified remaining percentage threshold.
+     *
+     * @return remaining percentage threshold
+     */
+    public double getRemainingPercentageThreshold() {
+        return remainingPercentageThreshold;
     }
 
     /**
@@ -107,8 +119,8 @@ public class PgContext {
      * @return {@code PgContext}
      */
     @Nonnull
-    public static PgContext of(@Nonnull final String schemaName, final int bloatPercentageThreshold) {
-        return new PgContext(schemaName, bloatPercentageThreshold);
+    public static PgContext of(@Nonnull final String schemaName, final int bloatPercentageThreshold, final double remainingPercentageThreshold) {
+        return new PgContext(schemaName, bloatPercentageThreshold, remainingPercentageThreshold);
     }
 
     /**
@@ -120,7 +132,7 @@ public class PgContext {
      */
     @Nonnull
     public static PgContext of(@Nonnull final String schemaName) {
-        return of(schemaName, DEFAULT_BLOAT_PERCENTAGE_THRESHOLD);
+        return of(schemaName, DEFAULT_BLOAT_PERCENTAGE_THRESHOLD, DEFAULT_REMAINING_PERCENTAGE_THRESHOLD);
     }
 
     /**
