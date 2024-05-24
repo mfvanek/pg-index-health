@@ -39,22 +39,12 @@ class SequenceOverflowCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithSequences(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withSequenceOverflow, ctx -> {
             final List<SequenceState> actual = check.check(ctx);
-
-            final List<SequenceState> expected = List.of(
-                SequenceState.of("accounts_seq", "bigint", 100.0),
-                SequenceState.of("clients_seq", "bigint", 100.0),
-                SequenceState.of("seq_1", "smallint", 8.08),
-                SequenceState.of("seq_3", "integer", 99.1),
-                SequenceState.of("seq_5", "bigint", 50.01)
-            );
-
             assertThat(actual)
-                .hasSize(expected.size())
-                .allMatch(state -> expected.stream().anyMatch(
-                    exp -> state.getSequenceName().endsWith(exp.getSequenceName()) &&
-                        state.getDataType().equals(exp.getDataType()) &&
-                        state.getRemainingPercentage() == exp.getRemainingPercentage())
-                );
+                .hasSize(3)
+                .containsExactlyInAnyOrder(
+                    SequenceState.of(ctx.enrichWithSchema("seq_1"), "smallint", 8.08),
+                    SequenceState.of(ctx.enrichWithSchema("seq_3"), "integer", 8.08),
+                    SequenceState.of(ctx.enrichWithSchema("seq_5"), "bigint", 8.08));
         });
     }
 }

@@ -41,7 +41,6 @@ class SequenceStateTest {
             .isEqualTo(100.0);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
         assertThatThrownBy(() -> SequenceState.of(null, null, 100.0))
@@ -50,15 +49,25 @@ class SequenceStateTest {
         assertThatThrownBy(() -> SequenceState.of("accounts_seq", null, 100.0))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("dataType cannot be null");
+        assertThatThrownBy(() -> SequenceState.of("", "bigint", 100.0))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("sequenceName cannot be blank");
+        assertThatThrownBy(() -> SequenceState.of("accounts_seq", "", 100.0))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("dataType cannot be blank");
+        assertThatThrownBy(() -> SequenceState.of("accounts_seq", "bigint", -1.0))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("remainingPercentage should be in the range from 0.0 to 100.0 inclusive");
+        assertThatThrownBy(() -> SequenceState.of("accounts_seq", "bigint", 101.0))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("remainingPercentage should be in the range from 0.0 to 100.0 inclusive");
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
         final SequenceState first = SequenceState.of("accounts_seq", "bigint", 100.0);
         final SequenceState theSame = SequenceState.of("accounts_seq", "bigint", 100.0);
         final SequenceState different = SequenceState.of("clients_seq", "bigint", 100.0);
-        final SequenceState differentType = SequenceState.of("accounts_seq", "integer", 100.0);
 
         assertThat(first.equals(null)).isFalse();
         assertThat(first.equals(Integer.MAX_VALUE)).isFalse();
@@ -74,16 +83,21 @@ class SequenceStateTest {
         assertThat(different)
             .isNotEqualTo(first)
             .doesNotHaveSameHashCodeAs(first);
-
-        assertThat(differentType)
-            .isNotEqualTo(first)
-            .doesNotHaveSameHashCodeAs(first);
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
+    void gettersShouldReturnCorrectValues() {
+        final SequenceState sequenceState = SequenceState.of("clients_seq", "integer", 50.0);
+        assertThat(sequenceState.getSequenceName()).isEqualTo("clients_seq");
+        assertThat(sequenceState.getDataType()).isEqualTo("integer");
+        assertThat(sequenceState.getRemainingPercentage()).isEqualTo(50.0);
+    }
+
+    @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(SequenceState.class)
+            .withIgnoredFields("dataType")
+            .withIgnoredFields("remainingPercentage")
             .verify();
     }
 }

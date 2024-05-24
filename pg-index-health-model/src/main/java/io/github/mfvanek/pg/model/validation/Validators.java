@@ -81,4 +81,11 @@ public final class Validators {
             throw new IllegalArgumentException("columnsInConstraint cannot be empty");
         }
     }
+
+    public static double validPercent(final double percentValue, @Nonnull final String argumentName) {
+        if (percentValue < 0.0 || percentValue > 100.0) {
+            throw new IllegalArgumentException(argumentName + " should be in the range from 0.0 to 100.0 inclusive");
+        }
+        return percentValue;
+    }
 }
