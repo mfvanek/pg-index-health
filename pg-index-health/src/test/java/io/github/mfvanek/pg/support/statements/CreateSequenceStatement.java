@@ -24,14 +24,18 @@ public class CreateSequenceStatement extends AbstractDbStatement {
     public void execute(@Nonnull final Statement statement) throws SQLException {
         statement.execute(String.format(
             "drop sequence if exists %1$s.seq_1; " +
-                "create sequence %1$s.seq_1 as smallint increment by 1 maxvalue 100 start with 92;", schemaName));
+                "create sequence %1$s.seq_1 as smallint increment by 1 maxvalue 100 start 92;", schemaName));
 
         statement.execute(String.format(
             "drop sequence if exists %1$s.seq_3; " +
-                "create sequence %1$s.seq_3 as integer increment by 2 maxvalue 1000 start with 10;", schemaName));
+                "create sequence %1$s.seq_3 as integer increment by 2 maxvalue 100 start 92;", schemaName));
 
         statement.execute(String.format(
             "drop sequence if exists %1$s.seq_5; " +
-                "create sequence %1$s.seq_5 as bigint increment by 10 maxvalue 10000 start with 5000;", schemaName));
+                "create sequence %1$s.seq_5 as bigint increment by 10 maxvalue 100 start 92;", schemaName));
+
+        statement.execute(String.format(
+            "drop sequence if exists %1$s.seq_cycle; " +
+                "create sequence %1$s.seq_cycle as bigint increment by 10 maxvalue 100 start 92 cycle;", schemaName));
     }
 }

@@ -22,7 +22,7 @@ import javax.annotation.concurrent.Immutable;
  * This class encapsulates the details of a database sequence, including its name, data type,
  * and the percentage of remaining values before it overflows.
  *
- * @since 0.11.0
+ * @since 0.11.2
  */
 @Immutable
 public class SequenceState implements DbObject {
@@ -45,7 +45,7 @@ public class SequenceState implements DbObject {
     ) {
         this.sequenceName = Validators.notBlank(sequenceName, "sequenceName");
         this.dataType = Validators.notBlank(dataType, "dataType");
-        this.remainingPercentage = remainingPercentage;
+        this.remainingPercentage = Validators.validPercent(remainingPercentage, "remainingPercentage");
     }
 
     /**
@@ -100,9 +100,7 @@ public class SequenceState implements DbObject {
         }
 
         final SequenceState that = (SequenceState) other;
-        return Double.compare(that.remainingPercentage, remainingPercentage) == 0 &&
-            Objects.equals(sequenceName, that.sequenceName) &&
-            Objects.equals(dataType, that.dataType);
+        return Objects.equals(sequenceName, that.sequenceName);
     }
 
     /**
@@ -110,7 +108,7 @@ public class SequenceState implements DbObject {
      */
     @Override
     public final int hashCode() {
-        return Objects.hash(sequenceName, dataType, remainingPercentage);
+        return Objects.hash(sequenceName);
     }
 
     /**

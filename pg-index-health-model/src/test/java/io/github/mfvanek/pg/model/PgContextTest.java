@@ -41,9 +41,9 @@ class PgContextTest {
     @Test
     void getBloatPercentageThreshold() {
         assertThat(PgContext.of("s").getBloatPercentageThreshold()).isEqualTo(10);
-        assertThat(PgContext.of("s", 22, 100.0).getBloatPercentageThreshold()).isEqualTo(22);
+        assertThat(PgContext.of("s", 22).getBloatPercentageThreshold()).isEqualTo(22);
         assertThat(PgContext.ofPublic().getBloatPercentageThreshold()).isEqualTo(10);
-        assertThat(PgContext.of("s").getRemainingPercentageThreshold()).isEqualTo(100.0);
+        assertThat(PgContext.of("s").getRemainingPercentageThreshold()).isEqualTo(10.0);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -58,19 +58,24 @@ class PgContextTest {
         assertThatThrownBy(() -> PgContext.of("   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("schemaName cannot be blank");
-        assertThatThrownBy(() -> PgContext.of("s", -1, 100.0))
+        assertThatThrownBy(() -> PgContext.of("s", -1))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("bloatPercentageThreshold cannot be less than zero");
+        assertThatThrownBy(() -> PgContext.of("s", 1, -1))  // Here is the change
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("remainingPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
     }
 
     @Test
     void testToString() {
         assertThat(PgContext.of("s"))
-            .hasToString("PgContext{schemaName='s', bloatPercentageThreshold=10}");
-        assertThat(PgContext.of("s", 11, 100.0))
-            .hasToString("PgContext{schemaName='s', bloatPercentageThreshold=11}");
+            .hasToString("PgContext{schemaName='s', bloatPercentageThreshold=10, remainingPercentageThreshold=10.0}");
+        assertThat(PgContext.of("s", 11))
+            .hasToString("PgContext{schemaName='s', bloatPercentageThreshold=11, remainingPercentageThreshold=10.0}");
         assertThat(PgContext.ofPublic())
-            .hasToString("PgContext{schemaName='public', bloatPercentageThreshold=10}");
+            .hasToString("PgContext{schemaName='public', bloatPercentageThreshold=10, remainingPercentageThreshold=10.0}");
+        assertThat(PgContext.of("s", 11, 15.0))
+            .hasToString("PgContext{schemaName='s', bloatPercentageThreshold=11, remainingPercentageThreshold=15.0}");
     }
 
     @Test

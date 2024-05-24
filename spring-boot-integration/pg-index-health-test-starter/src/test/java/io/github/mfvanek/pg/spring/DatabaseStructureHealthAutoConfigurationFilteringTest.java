@@ -23,7 +23,7 @@ import io.github.mfvanek.pg.checks.host.IndexesWithNullValuesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.IntersectedIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.InvalidIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.NotValidConstraintsCheckOnHost;
-import io.github.mfvanek.pg.checks.host.SequenceOverflowCheckHost;
+import io.github.mfvanek.pg.checks.host.SequenceOverflowCheckOnHost;
 import io.github.mfvanek.pg.checks.host.TablesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.TablesWithoutDescriptionCheckOnHost;
@@ -112,6 +112,6 @@ class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigur
             BtreeIndexesOnArrayColumnsCheckOnHost.class,
             StatisticsMaintenanceOnHost.class,
             ConfigurationMaintenanceOnHost.class,
-            SequenceOverflowCheckHost.class);
+            SequenceOverflowCheckOnHost.class);
     }
 }

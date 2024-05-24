@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.host.SequenceOverflowCheckHost;
+import io.github.mfvanek.pg.checks.host.SequenceOverflowCheckOnHost;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 
@@ -25,6 +25,6 @@ import javax.annotation.Nonnull;
 public class SequenceOverflowCheckOnCluster extends AbstractCheckOnCluster<SequenceState> {
 
     public SequenceOverflowCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
-        super(haPgConnection, SequenceOverflowCheckHost::new);
+        super(haPgConnection, SequenceOverflowCheckOnHost::new);
     }
 }
