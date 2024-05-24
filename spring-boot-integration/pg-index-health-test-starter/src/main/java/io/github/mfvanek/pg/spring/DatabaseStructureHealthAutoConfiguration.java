@@ -244,7 +244,7 @@ public class DatabaseStructureHealthAutoConfiguration {
     @ConditionalOnClass(SequenceOverflowCheckOnHost.class)
     @ConditionalOnBean(PgConnection.class)
     @ConditionalOnMissingBean
-    public SequenceOverflowCheckOnHost sequenceOverflowCheckHost(final PgConnection pgConnection) {
+    public SequenceOverflowCheckOnHost sequenceOverflowCheckOnHost(final PgConnection pgConnection) {
         return new SequenceOverflowCheckOnHost(pgConnection);
     }
 
