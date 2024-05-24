@@ -61,7 +61,7 @@ class PgContextTest {
         assertThatThrownBy(() -> PgContext.of("s", -1))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("bloatPercentageThreshold cannot be less than zero");
-        assertThatThrownBy(() -> PgContext.of("s", 1, -1))  // Here is the change
+        assertThatThrownBy(() -> PgContext.of("s", 1, -1))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("remainingPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
     }

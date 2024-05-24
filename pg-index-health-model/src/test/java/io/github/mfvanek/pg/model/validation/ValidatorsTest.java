@@ -45,4 +45,24 @@ class ValidatorsTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("indexName cannot be blank");
     }
+
+    @Test
+    void validPercentTest() {
+        assertThat(Validators.validPercent(50.0, "remainingPercentageThreshold"))
+            .isEqualTo(50.0);
+
+        assertThat(Validators.validPercent(0.0, "remainingPercentageThreshold"))
+            .isEqualTo(0.0);
+
+        assertThat(Validators.validPercent(100.0, "remainingPercentageThreshold"))
+            .isEqualTo(100.0);
+
+        assertThatThrownBy(() -> Validators.validPercent(-0.1, "remainingPercentageThreshold"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("remainingPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
+
+        assertThatThrownBy(() -> Validators.validPercent(100.1, "remainingPercentageThreshold"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("remainingPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
+    }
 }

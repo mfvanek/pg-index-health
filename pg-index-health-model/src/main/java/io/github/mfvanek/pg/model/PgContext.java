@@ -112,11 +112,12 @@ public class PgContext {
     }
 
     /**
-     * Creates {@code PgContext} for given schema with given bloat percentage threshold.
+     * Creates a {@code PgContext} for the given schema with the specified bloat percentage threshold
+     * and remaining percentage threshold.
      *
-     * @param schemaName               given database schema
-     * @param bloatPercentageThreshold given bloat percentage threshold; should be greater or equals to zero
-     * @param remainingPercentageThreshold given remaining percentage threshold;
+     * @param schemaName                    the given database schema name
+     * @param bloatPercentageThreshold      the specified bloat percentage threshold; should be greater than or equal to zero
+     * @param remainingPercentageThreshold  the specified remaining percentage threshold
      * @return {@code PgContext}
      */
     @Nonnull
@@ -130,6 +131,7 @@ public class PgContext {
      * @param schemaName               given database schema
      * @param bloatPercentageThreshold given bloat percentage threshold; should be greater or equals to zero
      * @return {@code PgContext}
+     * @see PgContext#DEFAULT_REMAINING_PERCENTAGE_THRESHOLD
      */
     @Nonnull
     public static PgContext of(@Nonnull final String schemaName, final int bloatPercentageThreshold) {
