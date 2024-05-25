@@ -36,6 +36,7 @@ import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.sequence.SequenceState;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
@@ -99,6 +100,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         logResult.add(logIndexesWithBoolean(databaseChecks, pgContext));
         logResult.add(logNotValidConstraints(databaseChecks, pgContext));
         logResult.add(logBtreeIndexesOnArrayColumns(databaseChecks, exclusions, pgContext));
+        logResult.add(logSequenceOverflow(databaseChecks, pgContext));
         return logResult;
     }
 
@@ -246,6 +248,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                           @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.NOT_VALID_CONSTRAINTS, Constraint.class),
             c -> true, pgContext, SimpleLoggingKey.NOT_VALID_CONSTRAINTS);
+    }
+
+    @Nonnull
+    private String logSequenceOverflow(@Nonnull final DatabaseChecks databaseChecks,
+                                          @Nonnull final PgContext pgContext) {
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.SEQUENCE_OVERFLOW, SequenceState.class),
+            c -> true, pgContext, SimpleLoggingKey.SEQUENCE_OVERFLOW);
     }
 
     @Nonnull

@@ -26,7 +26,13 @@ import javax.annotation.Nonnull;
  */
 abstract class AbstractDbMigrationGenerator<T extends TableNameAware> implements DbMigrationGenerator<T> {
 
+    /**
+     * The delimiter used in the generation of migration scripts.
+     */
     protected static final String DELIMITER = "_";
+    /**
+     * The length of the delimiter.
+     */
     protected static final int DELIMITER_LENGTH = DELIMITER.length();
 
     /**
@@ -44,6 +50,13 @@ abstract class AbstractDbMigrationGenerator<T extends TableNameAware> implements
         return migrations;
     }
 
+    /**
+     * Generates a migration script for a single row.
+     * This method must be implemented by subclasses to provide the actual generation logic for a single row.
+     *
+     * @param row the row from which to generate a migration script, must not be null
+     * @return the generated migration script
+     */
     @Nonnull
     protected abstract String generate(@Nonnull T row);
 }

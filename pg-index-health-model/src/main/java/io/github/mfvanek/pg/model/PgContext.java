@@ -26,15 +26,24 @@ public class PgContext {
      * Default bloat percentage threshold.
      */
     public static final int DEFAULT_BLOAT_PERCENTAGE_THRESHOLD = 10;
+    /**
+     * Default schema name.
+     */
     public static final String DEFAULT_SCHEMA_NAME = "public";
+    /**
+     * Default sequence remaining values percentage threshold.
+     */
+    public static final double DEFAULT_REMAINING_PERCENTAGE_THRESHOLD = 10.0;
 
     private final String schemaName;
     private final int bloatPercentageThreshold;
+    private final double remainingPercentageThreshold;
 
-    private PgContext(@Nonnull final String schemaName, final int bloatPercentageThreshold) {
+    private PgContext(@Nonnull final String schemaName, final int bloatPercentageThreshold, final double remainingPercentageThreshold) {
         this.schemaName = Validators.notBlank(schemaName, "schemaName").toLowerCase(Locale.ROOT);
         this.bloatPercentageThreshold = Validators.argumentNotNegative(
             bloatPercentageThreshold, "bloatPercentageThreshold");
+        this.remainingPercentageThreshold = Validators.validPercent(remainingPercentageThreshold, "remainingPercentageThreshold");
     }
 
     /**
@@ -66,6 +75,15 @@ public class PgContext {
     }
 
     /**
+     * Returns the specified remaining percentage threshold.
+     *
+     * @return remaining percentage threshold
+     */
+    public double getRemainingPercentageThreshold() {
+        return remainingPercentageThreshold;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Nonnull
@@ -74,6 +92,7 @@ public class PgContext {
         return PgContext.class.getSimpleName() + '{' +
             "schemaName='" + schemaName + '\'' +
             ", bloatPercentageThreshold=" + bloatPercentageThreshold +
+            ", remainingPercentageThreshold=" + remainingPercentageThreshold +
             '}';
     }
 
@@ -100,15 +119,30 @@ public class PgContext {
     }
 
     /**
+     * Creates a {@code PgContext} for the given schema with the specified bloat percentage threshold
+     * and remaining percentage threshold.
+     *
+     * @param schemaName                   the given database schema name
+     * @param bloatPercentageThreshold     the specified bloat percentage threshold; should be greater than or equal to zero
+     * @param remainingPercentageThreshold the specified remaining percentage threshold
+     * @return {@code PgContext}
+     */
+    @Nonnull
+    public static PgContext of(@Nonnull final String schemaName, final int bloatPercentageThreshold, final double remainingPercentageThreshold) {
+        return new PgContext(schemaName, bloatPercentageThreshold, remainingPercentageThreshold);
+    }
+
+    /**
      * Creates {@code PgContext} for given schema with given bloat percentage threshold.
      *
      * @param schemaName               given database schema
      * @param bloatPercentageThreshold given bloat percentage threshold; should be greater or equals to zero
      * @return {@code PgContext}
+     * @see PgContext#DEFAULT_REMAINING_PERCENTAGE_THRESHOLD
      */
     @Nonnull
     public static PgContext of(@Nonnull final String schemaName, final int bloatPercentageThreshold) {
-        return new PgContext(schemaName, bloatPercentageThreshold);
+        return new PgContext(schemaName, bloatPercentageThreshold, DEFAULT_REMAINING_PERCENTAGE_THRESHOLD);
     }
 
     /**

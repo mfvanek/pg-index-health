@@ -140,11 +140,24 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
             '}';
     }
 
+    /**
+     * Constructs an {@code DuplicatedIndexes} object from given list of indexes.
+     *
+     * @param duplicatedIndexes list of duplicated indexes; should be non-null.
+     * @return {@code DuplicatedIndexes}
+     */
     @Nonnull
     public static DuplicatedIndexes of(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
         return new DuplicatedIndexes(duplicatedIndexes);
     }
 
+    /**
+     * Constructs an {@code DuplicatedIndexes} object from given table name and raw string queried from database.
+     *
+     * @param tableName          table name; should be non-blank.
+     * @param duplicatedAsString duplicated indexes as a raw string; should be non-blank.
+     * @return {@code DuplicatedIndexes}
+     */
     @Nonnull
     public static DuplicatedIndexes of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
         Validators.tableNameNotBlank(tableName);
@@ -156,6 +169,14 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
         return new DuplicatedIndexes(duplicatedIndexes);
     }
 
+    /**
+     * Constructs an {@code DuplicatedIndexes} object from given indexes.
+     *
+     * @param firstIndex   first index; should be non-null.
+     * @param secondIndex  second index; should be non-null.
+     * @param otherIndexes other indexes
+     * @return {@code DuplicatedIndexes}
+     */
     @Nonnull
     public static DuplicatedIndexes of(@Nonnull final IndexWithSize firstIndex,
                                        @Nonnull final IndexWithSize secondIndex,
