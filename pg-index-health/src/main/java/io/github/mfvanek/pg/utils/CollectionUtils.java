@@ -16,6 +16,9 @@ import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
 
+/**
+ * Utility class providing various collection-related utility methods.
+ */
 public final class CollectionUtils {
 
     private CollectionUtils() {

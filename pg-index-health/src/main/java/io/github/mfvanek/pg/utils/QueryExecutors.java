@@ -29,6 +29,9 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
+/**
+ * Utility class for executing SQL queries with various context parameters.
+ */
 public final class QueryExecutors {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryExecutors.class);
@@ -37,6 +40,17 @@ public final class QueryExecutors {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Executes a given SQL query and extracts results using the provided {@link ResultSetExtractor}.
+     *
+     * @param pgConnection the PostgreSQL connection, cannot be null
+     * @param sqlQuery     the SQL query to execute, cannot be null
+     * @param rse          the result set extractor to process the {@link ResultSet}, cannot be null
+     * @param <T>          the type of the result
+     * @return a list of results extracted by the {@link ResultSetExtractor}
+     * @throws NullPointerException if any of the parameters are null
+     * @throws PgSqlException       if a database access error occurs
+     */
     @Nonnull
     public static <T> List<T> executeQuery(@Nonnull final PgConnection pgConnection,
                                            @Nonnull final String sqlQuery,
@@ -59,6 +73,18 @@ public final class QueryExecutors {
         }
     }
 
+    /**
+     * Executes a given SQL query within the context of the provided schema name.
+     *
+     * @param pgConnection the PostgreSQL connection, cannot be null
+     * @param pgContext    the context containing the schema name, cannot be null
+     * @param sqlQuery     the SQL query to execute, cannot be null
+     * @param rse          the result set extractor to process the {@link ResultSet}, cannot be null
+     * @param <T>          the type of the result
+     * @return a list of results extracted by the {@link ResultSetExtractor}
+     * @throws NullPointerException if any of the parameters are null
+     * @throws PgSqlException       if a database access error occurs
+     */
     @Nonnull
     public static <T> List<T> executeQueryWithSchema(@Nonnull final PgConnection pgConnection,
                                                      @Nonnull final PgContext pgContext,
@@ -73,6 +99,18 @@ public final class QueryExecutors {
         });
     }
 
+    /**
+     * Executes a given SQL query within the context of the provided schema name and bloat threshold.
+     *
+     * @param pgConnection the PostgreSQL connection, cannot be null
+     * @param pgContext    the context containing the schema name and bloat threshold, cannot be null
+     * @param sqlQuery     the SQL query to execute, cannot be null
+     * @param rse          the result set extractor to process the {@link ResultSet}, cannot be null
+     * @param <T>          the type of the result
+     * @return a list of results extracted by the {@link ResultSetExtractor}
+     * @throws NullPointerException if any of the parameters are null
+     * @throws PgSqlException       if a database access error occurs
+     */
     @Nonnull
     public static <T> List<T> executeQueryWithBloatThreshold(@Nonnull final PgConnection pgConnection,
                                                              @Nonnull final PgContext pgContext,
@@ -88,6 +126,18 @@ public final class QueryExecutors {
         });
     }
 
+    /**
+     * Executes a given SQL query within the context of the provided schema name and remaining percentage threshold.
+     *
+     * @param pgConnection the PostgreSQL connection, cannot be null
+     * @param pgContext    the context containing the schema name and remaining percentage threshold, cannot be null
+     * @param sqlQuery     the SQL query to execute, cannot be null
+     * @param rse          the result set extractor to process the {@link ResultSet}, cannot be null
+     * @param <T>          the type of the result
+     * @return a list of results extracted by the {@link ResultSetExtractor}
+     * @throws NullPointerException if any of the parameters are null
+     * @throws PgSqlException       if a database access error occurs
+     */
     @Nonnull
     public static <T> List<T> executeQueryWithRemainingPercentageThreshold(@Nonnull final PgConnection pgConnection,
                                                                            @Nonnull final PgContext pgContext,

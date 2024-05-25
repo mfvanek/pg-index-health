@@ -57,8 +57,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void logAll(final String schemaName) {
-        executeTestOnDatabase(
-            schemaName,
+        executeTestOnDatabase(schemaName,
             dbp -> dbp.withReferences()
                 .withData()
                 .withInvalidIndex()

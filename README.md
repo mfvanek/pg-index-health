@@ -55,6 +55,7 @@ For **Java 8** compatible version take a look at release [0.7.0](https://github.
 16. Indexes [with boolean](https://habr.com/ru/companies/tensor/articles/488104/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_boolean.sql)).
 17. Tables with [not valid constraints](https://habr.com/ru/articles/800121/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/check_not_valid_constraints.sql)).
 18. B-tree indexes [on array columns](https://habr.com/ru/articles/800121/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/btree_indexes_on_array_columns.sql)).
+19. [Sequence overflow](https://habr.com/ru/articles/800121/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/sequence_overflow.sql)).
 
 For raw sql queries see [pg-index-health-sql](https://github.com/mfvanek/pg-index-health-sql) project.
 
