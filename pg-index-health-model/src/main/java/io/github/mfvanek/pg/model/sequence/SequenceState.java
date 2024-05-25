@@ -83,7 +83,7 @@ public class SequenceState implements DbObject {
     @Nonnull
     @Override
     public final String getName() {
-        return sequenceName;
+        return getSequenceName();
     }
 
     /**
