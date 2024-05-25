@@ -41,6 +41,7 @@ class SequenceStateTest {
             .isEqualTo(100.0);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Test
     void withInvalidArguments() {
         assertThatThrownBy(() -> SequenceState.of(null, null, 100.0))
@@ -63,6 +64,7 @@ class SequenceStateTest {
             .hasMessage("remainingPercentage should be in the range from 0.0 to 100.0 inclusive");
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
         final SequenceState first = SequenceState.of("accounts_seq", "bigint", 100.0);
@@ -70,6 +72,7 @@ class SequenceStateTest {
         final SequenceState different = SequenceState.of("clients_seq", "bigint", 100.0);
 
         assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
         assertThat(first.equals(Integer.MAX_VALUE)).isFalse();
 
         assertThat(first)

@@ -22,6 +22,7 @@ import javax.annotation.concurrent.Immutable;
  * This class encapsulates the details of a database sequence, including its name, data type,
  * and the percentage of remaining values before it overflows.
  *
+ * @author Blohny
  * @since 0.11.2
  */
 @Immutable
@@ -34,14 +35,13 @@ public class SequenceState implements DbObject {
     /**
      * Constructs a {@code SequenceState} object.
      *
-     * @param sequenceName       sequence name; should be non-blank.
-     * @param dataType           data type; should be non-blank.
-     * @param remainingPercentage remaining percentage; should be non-null.
+     * @param sequenceName        sequence name; should be non-blank.
+     * @param dataType            data type; should be non-blank.
+     * @param remainingPercentage remaining percentage; in the range from 0 to 100 inclusive.
      */
-    protected SequenceState(
-        @Nonnull final String sequenceName,
-        @Nonnull final String dataType,
-        final double remainingPercentage
+    private SequenceState(@Nonnull final String sequenceName,
+                          @Nonnull final String dataType,
+                          final double remainingPercentage
     ) {
         this.sequenceName = Validators.notBlank(sequenceName, "sequenceName");
         this.dataType = Validators.notBlank(dataType, "dataType");
@@ -126,16 +126,15 @@ public class SequenceState implements DbObject {
     /**
      * Constructs a {@code SequenceState} object.
      *
-     * @param sequenceName       sequence name; should be non-blank.
-     * @param dataType           data type; should be non-blank.
-     * @param remainingPercentage remaining percentage; should be non-null.
+     * @param sequenceName        sequence name; should be non-blank.
+     * @param dataType            data type; should be non-blank.
+     * @param remainingPercentage remaining percentage; in the range from 0 to 100 inclusive.
      * @return {@code SequenceState}
      */
     @Nonnull
-    public static SequenceState of(
-        @Nonnull final String sequenceName,
-        @Nonnull final String dataType,
-        final double remainingPercentage) {
+    public static SequenceState of(@Nonnull final String sequenceName,
+                                   @Nonnull final String dataType,
+                                   final double remainingPercentage) {
         return new SequenceState(sequenceName, dataType, remainingPercentage);
     }
 }

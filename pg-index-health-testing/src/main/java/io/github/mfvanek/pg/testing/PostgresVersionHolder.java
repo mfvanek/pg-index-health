@@ -79,6 +79,19 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
         return "16.2";
     }
 
+    /**
+     * Converts a standard PostgreSQL version string to a Bitnami version string.
+     * <p>
+     * This method takes a standard PostgreSQL version string, which may include a dash followed by additional
+     * identifiers (e.g., "13.3-1"), and converts it to a format suitable for Bitnami images.
+     * Bitnami uses semantic versioning with three digits, so this method ensures the version string
+     * ends with ".0".
+     * </p>
+     *
+     * @param pgVersion The PostgreSQL version string to be converted. Must not be null.
+     * @return The Bitnami-compatible version string, ensuring it has three digits.
+     * @throws NullPointerException if {@code pgVersion} is null.
+     */
     @Nonnull
     public static String toBitnamiVersion(@Nonnull final String pgVersion) {
         final int index = pgVersion.indexOf('-');
