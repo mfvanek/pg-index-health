@@ -39,7 +39,7 @@ class SequenceOverflowCheckOnHostTest extends DatabaseAwareTestBase {
     void onDatabaseWithSequences(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withSequenceOverflow, ctx ->
             assertThat(check)
-                .executing()
+                .executing(ctx)
                 .hasSize(3)
                 .containsExactlyInAnyOrder(
                     SequenceState.of(ctx.enrichWithSchema("seq_1"), "smallint", 8.08),
