@@ -36,35 +36,53 @@ For **Java 8** compatible version take a look at release [0.7.0](https://github.
 
 ## Available checks
 
+All checks can be divided into 2 groups:
+
+1. Runtime checks (those that make sense to perform only on a production database with real data and statistics).  
+   Runtime checks usually [require aggregating data from all nodes in the cluster](https://github.com/mfvanek/pg-index-health/blob/1af316152ed192d1e093491f709fe9bf4946e174/pg-index-health/src/main/java/io/github/mfvanek/pg/common/maintenance/Diagnostic.java#L111).
+   This necessitated creating [our own abstraction over the database connection](https://github.com/mfvanek/pg-index-health/tree/master/pg-index-health-jdbc-connection).
+2. Static checks (those can be run in tests on an empty database).  
+   All static checks can be performed at runtime as well.
+
 **pg-index-health** allows you to detect the following problems:
-1. Invalid (broken) indexes ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/invalid_indexes.sql)).
-2. Duplicated (completely identical) indexes ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/duplicated_indexes.sql)).
-3. Intersected (partially identical) indexes ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/intersected_indexes.sql)).
-4. Unused indexes ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/unused_indexes.sql)).
-5. Foreign keys without associated indexes ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/foreign_keys_without_index.sql)).
-6. Indexes with null values ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_null_values.sql)).
-7. Tables with missing indexes ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_missing_indexes.sql)).
-8. Tables without primary key ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_without_primary_key.sql)).
-9. Indexes [bloat](https://www.percona.com/blog/2018/08/06/basic-understanding-bloat-vacuum-postgresql-mvcc/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/bloated_indexes.sql)).
-10. Tables [bloat](https://www.percona.com/blog/2018/08/06/basic-understanding-bloat-vacuum-postgresql-mvcc/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/bloated_tables.sql)).
-11. Tables without [description](https://www.postgresql.org/docs/current/sql-comment.html) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_without_description.sql)).
-12. Columns without [description](https://www.postgresql.org/docs/current/sql-comment.html) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_without_description.sql)).
-13. Columns with [json](https://www.postgresql.org/docs/current/datatype-json.html) type ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_json_type.sql)).
-14. Columns of [serial types](https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL) that are not primary keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/non_primary_key_columns_with_serial_types.sql)).
-15. Functions without [description](https://www.postgresql.org/docs/current/sql-comment.html) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/functions_without_description.sql)).
-16. Indexes [with boolean](https://habr.com/ru/companies/tensor/articles/488104/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_boolean.sql)).
-17. Tables with [not valid constraints](https://habr.com/ru/articles/800121/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/check_not_valid_constraints.sql)).
-18. B-tree indexes [on array columns](https://habr.com/ru/articles/800121/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/btree_indexes_on_array_columns.sql)).
-19. [Sequence overflow](https://habr.com/ru/articles/800121/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/sequence_overflow.sql)).
+
+| №  | Description                                                                                                                        | Type               | SQL query                                                                                                           |
+|----|------------------------------------------------------------------------------------------------------------------------------------|--------------------|---------------------------------------------------------------------------------------------------------------------|
+| 1  | Invalid (broken) indexes                                                                                                           | **runtime**/static | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/invalid_indexes.sql)                           |
+| 1  | Duplicated (completely identical) indexes                                                                                          | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/duplicated_indexes.sql)                        |
+| 3  | Intersected (partially identical) indexes                                                                                          | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/intersected_indexes.sql)                       |
+| 4  | Unused indexes                                                                                                                     | **runtime**        | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/unused_indexes.sql)                            |
+| 5  | Foreign keys without associated indexes                                                                                            | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/foreign_keys_without_index.sql)                |
+| 6  | Indexes with null values                                                                                                           | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_null_values.sql)                  |
+| 7  | Tables with missing indexes                                                                                                        | **runtime**        | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_missing_indexes.sql)               |
+| 8  | Tables without primary key                                                                                                         | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_without_primary_key.sql)                |
+| 9  | Indexes [bloat](https://www.percona.com/blog/2018/08/06/basic-understanding-bloat-vacuum-postgresql-mvcc/)                         | **runtime**        | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/bloated_indexes.sql)                           |
+| 10 | Tables [bloat](https://www.percona.com/blog/2018/08/06/basic-understanding-bloat-vacuum-postgresql-mvcc/)                          | **runtime**        | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/bloated_tables.sql)                            |
+| 11 | Tables without [description](https://www.postgresql.org/docs/current/sql-comment.html)                                             | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_without_description.sql)                |
+| 12 | Columns without [description](https://www.postgresql.org/docs/current/sql-comment.html)                                            | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_without_description.sql)               |
+| 13 | Columns with [json](https://www.postgresql.org/docs/current/datatype-json.html) type                                               | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_json_type.sql)                    |
+| 14 | Columns of [serial types](https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL) that are not primary keys | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/non_primary_key_columns_with_serial_types.sql) |
+| 15 | Functions without [description](https://www.postgresql.org/docs/current/sql-comment.html)                                          | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/functions_without_description.sql)             |
+| 16 | Indexes [with boolean](https://habr.com/ru/companies/tensor/articles/488104/)                                                      | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_boolean.sql)                      |
+| 17 | Tables with [not valid constraints](https://habr.com/ru/articles/800121/)                                                          | **runtime**/static | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/check_not_valid_constraints.sql)               |
+| 18 | B-tree indexes [on array columns](https://habr.com/ru/articles/800121/)                                                            | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/btree_indexes_on_array_columns.sql)            |
+| 19 | [Sequence overflow](https://habr.com/ru/articles/800121/)                                                                          | **runtime**        | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/sequence_overflow.sql)                         |
 
 For raw sql queries see [pg-index-health-sql](https://github.com/mfvanek/pg-index-health-sql) project.
 
 ## How does it work?
 
+### Static checks
+
+Static checks are based on [information schema](https://www.postgresql.org/docs/current/information-schema.html)/[system catalogs](https://www.postgresql.org/docs/current/catalogs.html).
+
+### Runtime checks
+
 **pg_index_health** utilizes [the Cumulative Statistics System](https://www.postgresql.org/docs/current/monitoring-stats.html) 
-(formerly known as [PostgreSQL's statistics collector](https://www.postgresql.org/docs/14/monitoring-stats.html)).  
+(formerly known as [PostgreSQL's statistics collector](https://www.postgresql.org/docs/14/monitoring-stats.html)).
+
 You can call `pg_stat_reset()` on each host to reset all statistics counters for the current database to zero
-but the best way to do it is to use [DatabaseManagement::resetStatistics()](https://github.com/mfvanek/pg-index-health/blob/1b999374ebc4850ac60e70712399336175348f81/src/main/java/io/github/mfvanek/pg/common/management/DatabaseManagement.java#L32) method.
+but the best way to do it is to use [DatabaseManagement::resetStatistics()](https://github.com/mfvanek/pg-index-health/blob/1af316152ed192d1e093491f709fe9bf4946e174/pg-index-health/src/main/java/io/github/mfvanek/pg/common/management/DatabaseManagement.java#L33) method.
 
 ## Installation
 
