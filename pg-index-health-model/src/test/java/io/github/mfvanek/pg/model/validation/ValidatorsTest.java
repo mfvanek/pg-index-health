@@ -52,7 +52,7 @@ class ValidatorsTest {
             .isEqualTo(50.0);
 
         assertThat(Validators.validPercent(0.0, "remainingPercentageThreshold"))
-            .isEqualTo(0.0);
+            .isZero();
 
         assertThat(Validators.validPercent(100.0, "remainingPercentageThreshold"))
             .isEqualTo(100.0);
@@ -72,7 +72,7 @@ class ValidatorsTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("arg cannot be less than zero");
         assertThat(Validators.argumentNotNegative(0, "arg"))
-            .isEqualTo(0);
+            .isZero();
         assertThat(Validators.argumentNotNegative(11, "arg"))
             .isEqualTo(11);
     }
