@@ -23,7 +23,7 @@ import javax.annotation.concurrent.Immutable;
  * and the percentage of remaining values before it overflows.
  *
  * @author Blohny
- * @since 0.11.2
+ * @since 0.12.0
  */
 @Immutable
 public class SequenceState implements DbObject {
