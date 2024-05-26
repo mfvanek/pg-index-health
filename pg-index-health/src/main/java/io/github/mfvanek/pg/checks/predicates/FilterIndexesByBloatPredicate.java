@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  */
 public class FilterIndexesByBloatPredicate extends AbstractFilterByBloat implements Predicate<IndexBloatAware> {
 
-    private FilterIndexesByBloatPredicate(final long sizeThresholdInBytes, final int percentageThreshold) {
+    private FilterIndexesByBloatPredicate(final long sizeThresholdInBytes, final double percentageThreshold) {
         super(sizeThresholdInBytes, percentageThreshold);
     }
 
@@ -33,7 +33,7 @@ public class FilterIndexesByBloatPredicate extends AbstractFilterByBloat impleme
     }
 
     @Nonnull
-    public static Predicate<IndexBloatAware> of(final long sizeThresholdInBytes, final int percentageThreshold) {
+    public static Predicate<IndexBloatAware> of(final long sizeThresholdInBytes, final double percentageThreshold) {
         return new FilterIndexesByBloatPredicate(sizeThresholdInBytes, percentageThreshold);
     }
 }

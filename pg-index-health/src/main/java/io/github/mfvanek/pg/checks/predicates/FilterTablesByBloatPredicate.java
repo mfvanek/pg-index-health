@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  */
 public class FilterTablesByBloatPredicate extends AbstractFilterByBloat implements Predicate<TableBloatAware> {
 
-    private FilterTablesByBloatPredicate(final long sizeThresholdInBytes, final int percentageThreshold) {
+    private FilterTablesByBloatPredicate(final long sizeThresholdInBytes, final double percentageThreshold) {
         super(sizeThresholdInBytes, percentageThreshold);
     }
 
@@ -33,7 +33,7 @@ public class FilterTablesByBloatPredicate extends AbstractFilterByBloat implemen
     }
 
     @Nonnull
-    public static Predicate<TableBloatAware> of(final long sizeThresholdInBytes, final int percentageThreshold) {
+    public static Predicate<TableBloatAware> of(final long sizeThresholdInBytes, final double percentageThreshold) {
         return new FilterTablesByBloatPredicate(sizeThresholdInBytes, percentageThreshold);
     }
 }

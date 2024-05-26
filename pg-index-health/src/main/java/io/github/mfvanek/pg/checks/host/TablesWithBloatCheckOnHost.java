@@ -47,7 +47,7 @@ public class TablesWithBloatCheckOnHost extends AbstractCheckOnHost<TableWithBlo
             final String tableName = rs.getString(TABLE_NAME);
             final long tableSize = rs.getLong(TABLE_SIZE);
             final long bloatSize = rs.getLong(BLOAT_SIZE);
-            final int bloatPercentage = rs.getInt(BLOAT_PERCENTAGE);
+            final double bloatPercentage = rs.getDouble(BLOAT_PERCENTAGE);
             return TableWithBloat.of(tableName, tableSize, bloatSize, bloatPercentage);
         });
     }

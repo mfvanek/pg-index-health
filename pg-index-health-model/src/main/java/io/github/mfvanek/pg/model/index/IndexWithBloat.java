@@ -24,16 +24,16 @@ import javax.annotation.concurrent.Immutable;
 public class IndexWithBloat extends IndexWithSize implements IndexBloatAware {
 
     private final long bloatSizeInBytes;
-    private final int bloatPercentage;
+    private final double bloatPercentage;
 
     private IndexWithBloat(@Nonnull final String tableName,
                            @Nonnull final String indexName,
                            final long indexSizeInBytes,
                            final long bloatSizeInBytes,
-                           final int bloatPercentage) {
+                           final double bloatPercentage) {
         super(tableName, indexName, indexSizeInBytes);
         this.bloatSizeInBytes = Validators.sizeNotNegative(bloatSizeInBytes, "bloatSizeInBytes");
-        this.bloatPercentage = Validators.argumentNotNegative(bloatPercentage, "bloatPercentage");
+        this.bloatPercentage = Validators.validPercent(bloatPercentage, "bloatPercentage");
     }
 
     /**
@@ -48,7 +48,7 @@ public class IndexWithBloat extends IndexWithSize implements IndexBloatAware {
      * {@inheritDoc}
      */
     @Override
-    public int getBloatPercentage() {
+    public double getBloatPercentage() {
         return bloatPercentage;
     }
 
@@ -86,7 +86,7 @@ public class IndexWithBloat extends IndexWithSize implements IndexBloatAware {
                                     @Nonnull final String indexName,
                                     final long indexSizeInBytes,
                                     final long bloatSizeInBytes,
-                                    final int bloatPercentage) {
+                                    final double bloatPercentage) {
         return new IndexWithBloat(tableName, indexName, indexSizeInBytes, bloatSizeInBytes, bloatPercentage);
     }
 }

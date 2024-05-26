@@ -37,7 +37,7 @@ class IndexWithBloatTest {
     @Test
     void testToString() {
         assertThat(IndexWithBloat.of("t", "i", 2L, 1L, 50))
-            .hasToString("IndexWithBloat{tableName='t', indexName='i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}");
+            .hasToString("IndexWithBloat{tableName='t', indexName='i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50.0}");
     }
 
     @Test
@@ -47,7 +47,7 @@ class IndexWithBloatTest {
             .hasMessage("bloatSizeInBytes cannot be less than zero");
         assertThatThrownBy(() -> IndexWithBloat.of("t", "i", 0L, 0L, -1))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("bloatPercentage cannot be less than zero");
+            .hasMessage("bloatPercentage should be in the range from 0.0 to 100.0 inclusive");
         assertThatThrownBy(() -> IndexWithBloat.of("t", "i", -1L, 0L, 0))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("indexSizeInBytes cannot be less than zero");

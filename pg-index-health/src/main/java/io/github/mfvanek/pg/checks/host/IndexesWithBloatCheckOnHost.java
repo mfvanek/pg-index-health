@@ -48,7 +48,7 @@ public class IndexesWithBloatCheckOnHost extends AbstractCheckOnHost<IndexWithBl
             final String indexName = rs.getString(INDEX_NAME);
             final long indexSize = rs.getLong(INDEX_SIZE);
             final long bloatSize = rs.getLong(BLOAT_SIZE);
-            final int bloatPercentage = rs.getInt(BLOAT_PERCENTAGE);
+            final double bloatPercentage = rs.getDouble(BLOAT_PERCENTAGE);
             return IndexWithBloat.of(tableName, indexName, indexSize, bloatSize, bloatPercentage);
         });
     }

@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.model.validation.Validators;
-import io.github.mfvanek.pg.validation.AdditionalValidators;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -38,9 +37,9 @@ public class ExclusionsBuilder {
     private long indexSizeThresholdInBytes;
     private long tableSizeThresholdInBytes;
     private long indexBloatSizeThresholdInBytes;
-    private int indexBloatPercentageThreshold;
+    private double indexBloatPercentageThreshold;
     private long tableBloatSizeThresholdInBytes;
-    private int tableBloatPercentageThreshold;
+    private double tableBloatPercentageThreshold;
 
     ExclusionsBuilder() {
     }
@@ -103,8 +102,7 @@ public class ExclusionsBuilder {
     }
 
     public ExclusionsBuilder withIndexSizeThreshold(final long indexSizeThresholdInBytes) {
-        this.indexSizeThresholdInBytes = Validators.sizeNotNegative(
-            indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
+        this.indexSizeThresholdInBytes = Validators.sizeNotNegative(indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
         return this;
     }
 
@@ -115,8 +113,7 @@ public class ExclusionsBuilder {
     }
 
     public ExclusionsBuilder withTableSizeThreshold(final long tableSizeThresholdInBytes) {
-        this.tableSizeThresholdInBytes = Validators.sizeNotNegative(
-            tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
+        this.tableSizeThresholdInBytes = Validators.sizeNotNegative(tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
         return this;
     }
 
@@ -127,8 +124,7 @@ public class ExclusionsBuilder {
     }
 
     public ExclusionsBuilder withIndexBloatSizeThreshold(final long indexBloatSizeThresholdInBytes) {
-        this.indexBloatSizeThresholdInBytes = Validators.sizeNotNegative(indexBloatSizeThresholdInBytes,
-            "indexBloatSizeThresholdInBytes");
+        this.indexBloatSizeThresholdInBytes = Validators.sizeNotNegative(indexBloatSizeThresholdInBytes, "indexBloatSizeThresholdInBytes");
         return this;
     }
 
@@ -138,15 +134,13 @@ public class ExclusionsBuilder {
         return withIndexBloatSizeThreshold(indexBloatSizeInBytes);
     }
 
-    public ExclusionsBuilder withIndexBloatPercentageThreshold(final int indexBloatPercentageThreshold) {
-        this.indexBloatPercentageThreshold = AdditionalValidators.validPercent(
-            indexBloatPercentageThreshold, "indexBloatPercentageThreshold");
+    public ExclusionsBuilder withIndexBloatPercentageThreshold(final double indexBloatPercentageThreshold) {
+        this.indexBloatPercentageThreshold = Validators.validPercent(indexBloatPercentageThreshold, "indexBloatPercentageThreshold");
         return this;
     }
 
     public ExclusionsBuilder withTableBloatSizeThreshold(final long tableBloatSizeThresholdInBytes) {
-        this.tableBloatSizeThresholdInBytes = Validators.sizeNotNegative(
-            tableBloatSizeThresholdInBytes, "tableBloatSizeThresholdInBytes");
+        this.tableBloatSizeThresholdInBytes = Validators.sizeNotNegative(tableBloatSizeThresholdInBytes, "tableBloatSizeThresholdInBytes");
         return this;
     }
 
@@ -156,9 +150,8 @@ public class ExclusionsBuilder {
         return withTableBloatSizeThreshold(tableBloatSizeInBytes);
     }
 
-    public ExclusionsBuilder withTableBloatPercentageThreshold(final int tableBloatPercentageThreshold) {
-        this.tableBloatPercentageThreshold = AdditionalValidators.validPercent(
-            tableBloatPercentageThreshold, "tableBloatPercentageThreshold");
+    public ExclusionsBuilder withTableBloatPercentageThreshold(final double tableBloatPercentageThreshold) {
+        this.tableBloatPercentageThreshold = Validators.validPercent(tableBloatPercentageThreshold, "tableBloatPercentageThreshold");
         return this;
     }
 

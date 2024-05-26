@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
  * Check for sequence overflow on all hosts in the cluster.
  *
  * @author Blohny
- * @since 0.11.2
+ * @since 0.12.0
  */
 public class SequenceOverflowCheckOnCluster extends AbstractCheckOnCluster<SequenceState> {
 

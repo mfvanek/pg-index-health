@@ -29,5 +29,5 @@ public interface BloatAware {
      *
      * @return bloat percentage
      */
-    int getBloatPercentage();
+    double getBloatPercentage();
 }

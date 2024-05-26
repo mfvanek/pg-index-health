@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.checks.predicates;
 
 import io.github.mfvanek.pg.model.BloatAware;
 import io.github.mfvanek.pg.model.validation.Validators;
-import io.github.mfvanek.pg.validation.AdditionalValidators;
 
 import javax.annotation.Nonnull;
 
@@ -25,11 +24,11 @@ import javax.annotation.Nonnull;
 abstract class AbstractFilterByBloat {
 
     private final long sizeThresholdInBytes;
-    private final int percentageThreshold;
+    private final double percentageThreshold;
 
-    protected AbstractFilterByBloat(final long sizeThresholdInBytes, final int percentageThreshold) {
+    protected AbstractFilterByBloat(final long sizeThresholdInBytes, final double percentageThreshold) {
         this.sizeThresholdInBytes = Validators.sizeNotNegative(sizeThresholdInBytes, "sizeThresholdInBytes");
-        this.percentageThreshold = AdditionalValidators.validPercent(percentageThreshold, "percentageThreshold");
+        this.percentageThreshold = Validators.validPercent(percentageThreshold, "percentageThreshold");
     }
 
     protected boolean isOk(@Nonnull final BloatAware bloatAware) {

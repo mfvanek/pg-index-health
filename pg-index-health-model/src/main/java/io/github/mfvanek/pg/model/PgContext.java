@@ -25,7 +25,7 @@ public class PgContext {
     /**
      * Default bloat percentage threshold.
      */
-    public static final int DEFAULT_BLOAT_PERCENTAGE_THRESHOLD = 10;
+    public static final double DEFAULT_BLOAT_PERCENTAGE_THRESHOLD = 10.0;
     /**
      * Default schema name.
      */
@@ -36,13 +36,12 @@ public class PgContext {
     public static final double DEFAULT_REMAINING_PERCENTAGE_THRESHOLD = 10.0;
 
     private final String schemaName;
-    private final int bloatPercentageThreshold;
+    private final double bloatPercentageThreshold;
     private final double remainingPercentageThreshold;
 
-    private PgContext(@Nonnull final String schemaName, final int bloatPercentageThreshold, final double remainingPercentageThreshold) {
+    private PgContext(@Nonnull final String schemaName, final double bloatPercentageThreshold, final double remainingPercentageThreshold) {
         this.schemaName = Validators.notBlank(schemaName, "schemaName").toLowerCase(Locale.ROOT);
-        this.bloatPercentageThreshold = Validators.argumentNotNegative(
-            bloatPercentageThreshold, "bloatPercentageThreshold");
+        this.bloatPercentageThreshold = Validators.validPercent(bloatPercentageThreshold, "bloatPercentageThreshold");
         this.remainingPercentageThreshold = Validators.validPercent(remainingPercentageThreshold, "remainingPercentageThreshold");
     }
 
@@ -70,7 +69,7 @@ public class PgContext {
      *
      * @return bloat percentage threshold
      */
-    public int getBloatPercentageThreshold() {
+    public double getBloatPercentageThreshold() {
         return bloatPercentageThreshold;
     }
 
@@ -128,7 +127,9 @@ public class PgContext {
      * @return {@code PgContext}
      */
     @Nonnull
-    public static PgContext of(@Nonnull final String schemaName, final int bloatPercentageThreshold, final double remainingPercentageThreshold) {
+    public static PgContext of(@Nonnull final String schemaName,
+                               final double bloatPercentageThreshold,
+                               final double remainingPercentageThreshold) {
         return new PgContext(schemaName, bloatPercentageThreshold, remainingPercentageThreshold);
     }
 
@@ -141,7 +142,8 @@ public class PgContext {
      * @see PgContext#DEFAULT_REMAINING_PERCENTAGE_THRESHOLD
      */
     @Nonnull
-    public static PgContext of(@Nonnull final String schemaName, final int bloatPercentageThreshold) {
+    public static PgContext of(@Nonnull final String schemaName,
+                               final double bloatPercentageThreshold) {
         return new PgContext(schemaName, bloatPercentageThreshold, DEFAULT_REMAINING_PERCENTAGE_THRESHOLD);
     }
 

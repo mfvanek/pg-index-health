@@ -35,7 +35,7 @@ class TableWithBloatTest {
     @Test
     void testToString() {
         assertThat(TableWithBloat.of("t", 2L, 1L, 50))
-            .hasToString("TableWithBloat{tableName='t', tableSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50}");
+            .hasToString("TableWithBloat{tableName='t', tableSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50.0}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -52,7 +52,7 @@ class TableWithBloatTest {
             .hasMessage("bloatSizeInBytes cannot be less than zero");
         assertThatThrownBy(() -> TableWithBloat.of("t", 0L, 0L, -1))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("bloatPercentage cannot be less than zero");
+            .hasMessage("bloatPercentage should be in the range from 0.0 to 100.0 inclusive");
         assertThatThrownBy(() -> TableWithBloat.of("t", -1L, 0L, 0))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("tableSizeInBytes cannot be less than zero");

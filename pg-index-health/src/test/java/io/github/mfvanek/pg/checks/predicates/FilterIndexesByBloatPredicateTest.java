@@ -30,10 +30,10 @@ class FilterIndexesByBloatPredicateTest {
             .hasMessage("sizeThresholdInBytes cannot be less than zero");
         assertThatThrownBy(() -> FilterIndexesByBloatPredicate.of(1L, -1))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("percentageThreshold should be in the range from 0 to 100 inclusive");
+            .hasMessage("percentageThreshold should be in the range from 0.0 to 100.0 inclusive");
         assertThatThrownBy(() -> FilterIndexesByBloatPredicate.of(1L, 101))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("percentageThreshold should be in the range from 0 to 100 inclusive");
+            .hasMessage("percentageThreshold should be in the range from 0.0 to 100.0 inclusive");
     }
 
     @Test

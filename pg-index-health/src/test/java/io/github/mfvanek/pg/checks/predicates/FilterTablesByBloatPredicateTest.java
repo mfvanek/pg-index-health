@@ -18,9 +18,23 @@ import org.junit.jupiter.api.Test;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("fast")
 class FilterTablesByBloatPredicateTest {
+
+    @Test
+    void shouldValidateArguments() {
+        assertThatThrownBy(() -> FilterTablesByBloatPredicate.of(-1L, -1))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("sizeThresholdInBytes cannot be less than zero");
+        assertThatThrownBy(() -> FilterTablesByBloatPredicate.of(1L, -1))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("percentageThreshold should be in the range from 0.0 to 100.0 inclusive");
+        assertThatThrownBy(() -> FilterTablesByBloatPredicate.of(1L, 101))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("percentageThreshold should be in the range from 0.0 to 100.0 inclusive");
+    }
 
     @Test
     void shouldBeInclusive() {

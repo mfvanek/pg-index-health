@@ -24,7 +24,7 @@ class ExclusionsBuilderTest {
             .hasToString("ExclusionsBuilder{duplicatedIndexesExclusions='', intersectedIndexesExclusions='', " +
                 "unusedIndexesExclusions='', tablesWithMissingIndexesExclusions='', tablesWithoutPrimaryKeyExclusions='', " +
                 "indexesWithNullValuesExclusions='', btreeIndexesOnArrayColumnsExclusions='', " +
-                "indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " + "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0, " +
-                "tableBloatSizeThresholdInBytes=0, tableBloatPercentageThreshold=0}");
+                "indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " + "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0.0, " +
+                "tableBloatSizeThresholdInBytes=0, tableBloatPercentageThreshold=0.0}");
     }
 }
