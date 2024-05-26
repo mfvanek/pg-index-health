@@ -40,13 +40,6 @@ They should include enough information to generate corrective SQL migrations via
 
 ### Add the code for the new check
 
-All checks can be divided into 2 parts:
-1. Runtime checks (those that make sense to run only on a production database)
-2. Static checks (which can be run in tests on an empty database)
-
-Runtime checks usually require aggregation of data from all nodes in the cluster.
-Because of this, it became necessary to create [our own abstraction over the database connection](https://github.com/mfvanek/pg-index-health/tree/master/pg-index-health-jdbc-connection).
-
 #### Execution on a specific host
 
 * Checks on a specific host https://github.com/mfvanek/pg-index-health/tree/master/pg-index-health/src/main/java/io/github/mfvanek/pg/checks/host
