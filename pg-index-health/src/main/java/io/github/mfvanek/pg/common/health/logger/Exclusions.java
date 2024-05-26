@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.model.validation.Validators;
-import io.github.mfvanek.pg.validation.AdditionalValidators;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -38,9 +37,9 @@ public class Exclusions {
     private final long indexSizeThresholdInBytes;
     private final long tableSizeThresholdInBytes;
     private final long indexBloatSizeThresholdInBytes;
-    private final int indexBloatPercentageThreshold;
+    private final double indexBloatPercentageThreshold;
     private final long tableBloatSizeThresholdInBytes;
-    private final int tableBloatPercentageThreshold;
+    private final double tableBloatPercentageThreshold;
 
     @SuppressWarnings("PMD.ExcessiveParameterList")
     Exclusions(@Nonnull final String duplicatedIndexesExclusions,
@@ -53,9 +52,9 @@ public class Exclusions {
                final long indexSizeThresholdInBytes,
                final long tableSizeThresholdInBytes,
                final long indexBloatSizeThresholdInBytes,
-               final int indexBloatPercentageThreshold,
+               final double indexBloatPercentageThreshold,
                final long tableBloatSizeThresholdInBytes,
-               final int tableBloatPercentageThreshold) {
+               final double tableBloatPercentageThreshold) {
         this.duplicatedIndexesExclusions = prepareExclusions(duplicatedIndexesExclusions);
         this.intersectedIndexesExclusions = prepareExclusions(intersectedIndexesExclusions);
         this.unusedIndexesExclusions = prepareExclusions(unusedIndexesExclusions);
@@ -63,18 +62,12 @@ public class Exclusions {
         this.tablesWithoutPrimaryKeyExclusions = prepareExclusions(tablesWithoutPrimaryKeyExclusions);
         this.indexesWithNullValuesExclusions = prepareExclusions(indexesWithNullValuesExclusions);
         this.btreeIndexesOnArrayColumnsExclusions = prepareExclusions(btreeIndexesOnArrayColumnsExclusions);
-        this.indexSizeThresholdInBytes = Validators.sizeNotNegative(
-            indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
-        this.tableSizeThresholdInBytes = Validators.sizeNotNegative(
-            tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
-        this.indexBloatSizeThresholdInBytes = Validators.sizeNotNegative(
-            indexBloatSizeThresholdInBytes, "indexBloatSizeThresholdInBytes");
-        this.indexBloatPercentageThreshold = AdditionalValidators.validPercent(
-            indexBloatPercentageThreshold, "indexBloatPercentageThreshold");
-        this.tableBloatSizeThresholdInBytes = Validators.sizeNotNegative(
-            tableBloatSizeThresholdInBytes, "tableBloatSizeThresholdInBytes");
-        this.tableBloatPercentageThreshold = AdditionalValidators.validPercent(
-            tableBloatPercentageThreshold, "tableBloatPercentageThreshold");
+        this.indexSizeThresholdInBytes = Validators.sizeNotNegative(indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
+        this.tableSizeThresholdInBytes = Validators.sizeNotNegative(tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
+        this.indexBloatSizeThresholdInBytes = Validators.sizeNotNegative(indexBloatSizeThresholdInBytes, "indexBloatSizeThresholdInBytes");
+        this.indexBloatPercentageThreshold = Validators.validPercent(indexBloatPercentageThreshold, "indexBloatPercentageThreshold");
+        this.tableBloatSizeThresholdInBytes = Validators.sizeNotNegative(tableBloatSizeThresholdInBytes, "tableBloatSizeThresholdInBytes");
+        this.tableBloatPercentageThreshold = Validators.validPercent(tableBloatPercentageThreshold, "tableBloatPercentageThreshold");
     }
 
     private static Set<String> prepareExclusions(@Nonnull final String rawExclusions) {
@@ -138,15 +131,15 @@ public class Exclusions {
         return indexBloatSizeThresholdInBytes;
     }
 
-    int getIndexBloatPercentageThreshold() {
+    double getIndexBloatPercentageThreshold() {
         return indexBloatPercentageThreshold;
     }
 
-    public long getTableBloatSizeThresholdInBytes() {
+    long getTableBloatSizeThresholdInBytes() {
         return tableBloatSizeThresholdInBytes;
     }
 
-    public int getTableBloatPercentageThreshold() {
+    double getTableBloatPercentageThreshold() {
         return tableBloatPercentageThreshold;
     }
 

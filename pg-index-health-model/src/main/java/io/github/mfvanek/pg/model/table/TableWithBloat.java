@@ -25,14 +25,14 @@ import javax.annotation.concurrent.Immutable;
 public class TableWithBloat extends AbstractTableAware implements TableBloatAware, Comparable<TableWithBloat> {
 
     private final long bloatSizeInBytes;
-    private final int bloatPercentage;
+    private final double bloatPercentage;
 
     private TableWithBloat(@Nonnull final Table table,
                            final long bloatSizeInBytes,
-                           final int bloatPercentage) {
+                           final double bloatPercentage) {
         super(table);
         this.bloatSizeInBytes = Validators.sizeNotNegative(bloatSizeInBytes, "bloatSizeInBytes");
-        this.bloatPercentage = Validators.argumentNotNegative(bloatPercentage, "bloatPercentage");
+        this.bloatPercentage = Validators.validPercent(bloatPercentage, "bloatPercentage");
     }
 
     /**
@@ -47,7 +47,7 @@ public class TableWithBloat extends AbstractTableAware implements TableBloatAwar
      * {@inheritDoc}
      */
     @Override
-    public int getBloatPercentage() {
+    public double getBloatPercentage() {
         return bloatPercentage;
     }
 
@@ -109,7 +109,7 @@ public class TableWithBloat extends AbstractTableAware implements TableBloatAwar
     public static TableWithBloat of(@Nonnull final String tableName,
                                     final long tableSizeInBytes,
                                     final long bloatSizeInBytes,
-                                    final int bloatPercentage) {
+                                    final double bloatPercentage) {
         final Table table = Table.of(tableName, tableSizeInBytes);
         return of(table, bloatSizeInBytes, bloatPercentage);
     }
@@ -125,7 +125,7 @@ public class TableWithBloat extends AbstractTableAware implements TableBloatAwar
      */
     public static TableWithBloat of(@Nonnull final Table table,
                                     final long bloatSizeInBytes,
-                                    final int bloatPercentage) {
+                                    final double bloatPercentage) {
         return new TableWithBloat(table, bloatSizeInBytes, bloatPercentage);
     }
 }

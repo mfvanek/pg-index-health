@@ -65,4 +65,15 @@ class ValidatorsTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("remainingPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
     }
+
+    @Test
+    void argumentNotNegative() {
+        assertThatThrownBy(() -> Validators.argumentNotNegative(-1, "arg"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("arg cannot be less than zero");
+        assertThat(Validators.argumentNotNegative(0, "arg"))
+            .isEqualTo(0);
+        assertThat(Validators.argumentNotNegative(11, "arg"))
+            .isEqualTo(11);
+    }
 }

@@ -119,7 +119,7 @@ public final class QueryExecutors {
         return executeQuery(pgConnection, pgContext, sqlQuery, rse, statement -> {
             try {
                 statement.setString(1, pgContext.getSchemaName());
-                statement.setInt(2, pgContext.getBloatPercentageThreshold());
+                statement.setDouble(2, pgContext.getBloatPercentageThreshold());
             } catch (SQLException e) {
                 throw new PgSqlException(e);
             }

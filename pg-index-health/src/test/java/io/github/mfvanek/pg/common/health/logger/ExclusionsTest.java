@@ -144,7 +144,7 @@ class ExclusionsTest {
                 "tablesWithMissingIndexesExclusions=[], tablesWithoutPrimaryKeyExclusions=[], " +
                 "indexesWithNullValuesExclusions=[], btreeIndexesOnArrayColumnsExclusions=[], " +
                 "indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " +
-                "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0, " + "tableBloatSizeThresholdInBytes=0, tableBloatPercentageThreshold=0}");
+                "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0.0, " + "tableBloatSizeThresholdInBytes=0, tableBloatPercentageThreshold=0.0}");
     }
 
     @Test
@@ -223,15 +223,15 @@ class ExclusionsTest {
         final ExclusionsBuilder builder = Exclusions.builder();
         assertThatThrownBy(() -> builder.withIndexBloatPercentageThreshold(-1))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("indexBloatPercentageThreshold should be in the range from 0 to 100 inclusive");
+            .hasMessage("indexBloatPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
         assertThatThrownBy(() -> builder.withIndexBloatPercentageThreshold(101))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("indexBloatPercentageThreshold should be in the range from 0 to 100 inclusive");
+            .hasMessage("indexBloatPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
         assertThatThrownBy(() -> builder.withTableBloatPercentageThreshold(-1))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("tableBloatPercentageThreshold should be in the range from 0 to 100 inclusive");
+            .hasMessage("tableBloatPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
         assertThatThrownBy(() -> builder.withTableBloatPercentageThreshold(101))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("tableBloatPercentageThreshold should be in the range from 0 to 100 inclusive");
+            .hasMessage("tableBloatPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
     }
 }
