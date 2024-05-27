@@ -1,5 +1,5 @@
 [versions]
-spring-boot = "2.7.18"
+spring-boot = "3.3.0"
 detekt = "1.23.6"
 commons-lang3 = "3.14.0"
 slf4j = "1.7.36" # to be compatible with Spring Boot 2.7.X
