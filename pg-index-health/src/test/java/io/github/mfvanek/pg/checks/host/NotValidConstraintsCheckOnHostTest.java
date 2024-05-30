@@ -49,12 +49,12 @@ class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
                     Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_chk_client_id_not_validated_yet", ConstraintType.CHECK),
                     Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
 
-            ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {
+            ExecuteUtils.executeOnDatabase(getDataSource(), (statement, sName) -> {
                 for (final Constraint constraint : notValidConstraints) {
                     statement.execute(String.format("alter table %s validate constraint %s;",
                         constraint.getTableName(), constraint.getConstraintName()));
                 }
-            });
+            }, schemaName);
 
             assertThat(check)
                 .executing(ctx)

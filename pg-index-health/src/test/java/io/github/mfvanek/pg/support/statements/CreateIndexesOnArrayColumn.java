@@ -10,22 +10,19 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateIndexesOnArrayColumn extends AbstractDbStatement {
 
-    public CreateIndexesOnArrayColumn(final String schemaName) {
-        super(schemaName);
-    }
-
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("alter table %s.accounts add column if not exists roles text[]", schemaName));
-        statement.execute(String.format("create index if not exists accounts_roles_btree_idx on %s.accounts(roles) where roles is not null", schemaName));
-        statement.execute(String.format("create index if not exists accounts_account_number_roles_btree_idx on %s.accounts(account_number, roles)", schemaName));
-        statement.execute(String.format("create index if not exists accounts_account_number_including_roles_idx on %s.accounts(account_number) include (roles)", schemaName));
-        statement.execute(String.format("create index if not exists accounts_roles_gin_idx on %s.accounts using gin(roles) where roles is not null", schemaName));
+    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+        return List.of(
+            String.format("alter table %s.accounts add column if not exists roles text[]", schemaName),
+            String.format("create index if not exists accounts_roles_btree_idx on %s.accounts(roles) where roles is not null", schemaName),
+            String.format("create index if not exists accounts_account_number_roles_btree_idx on %s.accounts(account_number, roles)", schemaName),
+            String.format("create index if not exists accounts_account_number_including_roles_idx on %s.accounts(account_number) include (roles)", schemaName),
+            String.format("create index if not exists accounts_roles_gin_idx on %s.accounts using gin(roles) where roles is not null", schemaName)
+        );
     }
 }

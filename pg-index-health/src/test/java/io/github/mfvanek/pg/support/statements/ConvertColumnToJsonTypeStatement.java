@@ -10,18 +10,13 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class ConvertColumnToJsonTypeStatement extends AbstractDbStatement {
 
-    public ConvertColumnToJsonTypeStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("alter table if exists %s.clients alter column info type json using info::json", schemaName));
+    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+        return List.of(String.format("alter table if exists %s.clients alter column info type json using info::json", schemaName));
     }
 }

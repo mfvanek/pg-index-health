@@ -27,22 +27,24 @@ public final class ExecuteUtils {
     }
 
     public static void executeOnDatabase(@Nonnull final DataSource dataSource,
-                                         @Nonnull final DbStatement callback) {
+                                         @Nonnull final DbStatement callback,
+                                         @Nonnull final String schemaName) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            callback.execute(statement);
+            callback.execute(statement, schemaName);
         } catch (SQLException e) {
             throw new PgSqlException(e);
         }
     }
 
     public static void executeInTransaction(@Nonnull final DataSource dataSource,
-                                            @Nonnull final Collection<? extends DbStatement> dbStatements) {
+                                            @Nonnull final Collection<? extends DbStatement> dbStatements,
+                                            @Nonnull final String schemaName) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             connection.setAutoCommit(false);
             for (final DbStatement dbStatement : dbStatements) {
-                dbStatement.execute(statement);
+                dbStatement.execute(statement, schemaName);
             }
             connection.commit();
         } catch (SQLException e) {

@@ -10,32 +10,26 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateSequenceStatement extends AbstractDbStatement {
 
-    public CreateSequenceStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format(
-            "drop sequence if exists %1$s.seq_1; " +
-                "create sequence %1$s.seq_1 as smallint increment by 1 maxvalue 100 start 92;", schemaName));
-
-        statement.execute(String.format(
-            "drop sequence if exists %1$s.seq_3; " +
-                "create sequence %1$s.seq_3 as integer increment by 2 maxvalue 100 start 92;", schemaName));
-
-        statement.execute(String.format(
-            "drop sequence if exists %1$s.seq_5; " +
-                "create sequence %1$s.seq_5 as bigint increment by 10 maxvalue 100 start 92;", schemaName));
-
-        statement.execute(String.format(
-            "drop sequence if exists %1$s.seq_cycle; " +
-                "create sequence %1$s.seq_cycle as bigint increment by 10 maxvalue 100 start 92 cycle;", schemaName));
+    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+        return List.of(
+            String.format(
+                "drop sequence if exists %1$s.seq_1; " +
+                    "create sequence %1$s.seq_1 as smallint increment by 1 maxvalue 100 start 92;", schemaName),
+            String.format(
+                "drop sequence if exists %1$s.seq_3; " +
+                    "create sequence %1$s.seq_3 as integer increment by 2 maxvalue 100 start 92;", schemaName),
+            String.format(
+                "drop sequence if exists %1$s.seq_5; " +
+                    "create sequence %1$s.seq_5 as bigint increment by 10 maxvalue 100 start 92;", schemaName),
+            String.format(
+                "drop sequence if exists %1$s.seq_cycle; " +
+                    "create sequence %1$s.seq_cycle as bigint increment by 10 maxvalue 100 start 92 cycle;", schemaName)
+        );
     }
 }

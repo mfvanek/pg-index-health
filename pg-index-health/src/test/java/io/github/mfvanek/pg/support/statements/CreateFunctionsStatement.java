@@ -10,27 +10,24 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateFunctionsStatement extends AbstractDbStatement {
 
-    public CreateFunctionsStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("create or replace function %s.add(a integer, b integer) returns integer " +
-            "as 'select $1 + $2;' " +
-            "language sql " +
-            "immutable " +
-            "returns null on null input;", schemaName));
-        statement.execute(String.format("create or replace function %s.add(a int, b int, c int) returns int " +
-            "as 'select $1 + $2 + $3;' " +
-            "language sql " +
-            "immutable " +
-            "returns null on null input;", schemaName));
+    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+        return List.of(
+            String.format("create or replace function %s.add(a integer, b integer) returns integer " +
+                "as 'select $1 + $2;' " +
+                "language sql " +
+                "immutable " +
+                "returns null on null input;", schemaName),
+            String.format("create or replace function %s.add(a int, b int, c int) returns int " +
+                "as 'select $1 + $2 + $3;' " +
+                "language sql " +
+                "immutable " +
+                "returns null on null input;", schemaName)
+        );
     }
 }

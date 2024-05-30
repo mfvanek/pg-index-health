@@ -10,21 +10,18 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateIndexWithBooleanValues extends AbstractDbStatement {
 
-    public CreateIndexWithBooleanValues(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("create index if not exists i_accounts_deleted " +
-            "on %s.accounts (deleted)", schemaName));
-        statement.execute(String.format("create unique index if not exists i_accounts_account_number_deleted " +
-            "on %s.accounts (account_number, deleted)", schemaName));
+    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+        return List.of(
+            String.format("create index if not exists i_accounts_deleted " +
+                "on %s.accounts (deleted)", schemaName),
+            String.format("create unique index if not exists i_accounts_account_number_deleted " +
+                "on %s.accounts (account_number, deleted)", schemaName)
+        );
     }
 }

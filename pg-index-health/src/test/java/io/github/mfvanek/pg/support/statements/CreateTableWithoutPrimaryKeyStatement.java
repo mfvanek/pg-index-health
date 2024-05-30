@@ -12,20 +12,22 @@ package io.github.mfvanek.pg.support.statements;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateTableWithoutPrimaryKeyStatement extends AbstractDbStatement {
 
-    public CreateTableWithoutPrimaryKeyStatement(@Nonnull final String schemaName) {
-        super(schemaName);
+    @Override
+    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+        return List.of();
     }
 
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
+    public void postExecute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
         statement.execute(String.format("create table if not exists %s.bad_clients (" +
             "id bigint not null, " +
             "name varchar(255) not null," +
             "real_client_id bigint)", schemaName));
-        throwExceptionIfTableDoesNotExist(statement, "bad_clients");
+        throwExceptionIfTableDoesNotExist(statement, "bad_clients", schemaName);
     }
 }

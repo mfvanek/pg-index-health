@@ -10,23 +10,20 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class AddInvalidForeignKeyStatement extends AbstractDbStatement {
 
-    public AddInvalidForeignKeyStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("alter table if exists %1$s.accounts " +
+    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+        return List.of(
+            String.format("alter table if exists %1$s.accounts " +
                 "add constraint c_accounts_fk_client_id_not_validated_yet foreign key (client_id) references %1$s.clients (id) not valid;",
-            schemaName));
-        statement.execute(String.format("alter table if exists %1$s.accounts " +
+            schemaName),
+            String.format("alter table if exists %1$s.accounts " +
                 "add constraint c_accounts_chk_client_id_not_validated_yet check (client_id > 0) not valid;",
-            schemaName));
+            schemaName)
+        );
     }
 }

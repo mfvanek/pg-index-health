@@ -12,22 +12,24 @@ package io.github.mfvanek.pg.support.statements;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateTableWithColumnOfBigSerialTypeStatement extends AbstractDbStatement {
 
-    public CreateTableWithColumnOfBigSerialTypeStatement(@Nonnull final String schemaName) {
-        super(schemaName);
+    @Override
+    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+        return List.of();
     }
 
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
+    public void postExecute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
         statement.execute(String.format("create table if not exists %s.bad_accounts (" +
             "id bigserial not null primary key, " +
             "name varchar(255) not null," +
             // not null constraint will be added for all serial columns
             "real_client_id bigserial," +
             "real_account_id bigserial)", schemaName));
-        throwExceptionIfTableDoesNotExist(statement, "bad_accounts");
+        throwExceptionIfTableDoesNotExist(statement, "bad_accounts", schemaName);
     }
 }

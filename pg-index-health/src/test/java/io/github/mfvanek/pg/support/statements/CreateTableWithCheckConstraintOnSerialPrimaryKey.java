@@ -10,19 +10,14 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateTableWithCheckConstraintOnSerialPrimaryKey extends AbstractDbStatement {
 
-    public CreateTableWithCheckConstraintOnSerialPrimaryKey(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("create table if not exists %1$s.another_table(" +
+    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+        return List.of(String.format("create table if not exists %1$s.another_table(" +
                 "id bigserial primary key, " +
                 "constraint not_reserved_id check (id > 1000), " +
                 "constraint less_than_million check (id < 1000000));",

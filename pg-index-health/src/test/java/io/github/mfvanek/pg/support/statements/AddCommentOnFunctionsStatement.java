@@ -10,19 +10,14 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class AddCommentOnFunctionsStatement extends AbstractDbStatement {
 
-    public AddCommentOnFunctionsStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("comment on function %1$s.add(a integer, b integer) is 'Sums two given arguments';" +
+    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+        return List.of(String.format("comment on function %1$s.add(a integer, b integer) is 'Sums two given arguments';" +
             "comment on function %1$s.add(a int, b int, c int) is 'Sums three given arguments';", schemaName));
     }
 }

@@ -10,19 +10,14 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateTableWithSerialPrimaryKeyReferencesToAnotherTable extends AbstractDbStatement {
 
-    public CreateTableWithSerialPrimaryKeyReferencesToAnotherTable(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("create table if not exists %1$s.test_table(" +
+    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+        return List.of(String.format("create table if not exists %1$s.test_table(" +
                 "id bigserial, " +
                 "num bigserial, " +
                 "constraint test_table_pkey_id primary key (id), " +

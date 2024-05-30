@@ -17,5 +17,5 @@ import javax.annotation.Nonnull;
 @FunctionalInterface
 public interface DbStatement {
 
-    void execute(@Nonnull Statement statement) throws SQLException;
+    void execute(@Nonnull Statement statement, @Nonnull String schemaName) throws SQLException;
 }

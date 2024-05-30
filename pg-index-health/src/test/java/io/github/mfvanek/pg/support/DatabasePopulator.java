@@ -70,9 +70,9 @@ public final class DatabasePopulator implements AutoCloseable {
         this.dataSource = Objects.requireNonNull(dataSource);
         this.schemaName = Validators.notBlank(schemaName, "schemaName");
         this.supportsProcedures = supportsProcedures;
-        this.statementsToExecuteInSameTransaction.putIfAbsent(1, new CreateSchemaStatement(schemaName));
-        this.statementsToExecuteInSameTransaction.putIfAbsent(2, new CreateClientsTableStatement(schemaName));
-        this.statementsToExecuteInSameTransaction.putIfAbsent(3, new CreateAccountsTableStatement(schemaName));
+        this.statementsToExecuteInSameTransaction.putIfAbsent(1, new CreateSchemaStatement());
+        this.statementsToExecuteInSameTransaction.putIfAbsent(2, new CreateClientsTableStatement());
+        this.statementsToExecuteInSameTransaction.putIfAbsent(3, new CreateAccountsTableStatement());
     }
 
     static DatabasePopulator builder(@Nonnull final DataSource dataSource, @Nonnull final String schemaName, final boolean supportsProcedures) {
@@ -81,13 +81,13 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Nonnull
     public DatabasePopulator withCustomCollation() {
-        statementsToExecuteInSameTransaction.putIfAbsent(4, new CreateCustomCollationStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(4, new CreateCustomCollationStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withReferences() {
-        statementsToExecuteInSameTransaction.putIfAbsent(5, new AddLinksBetweenAccountsAndClientsStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(5, new AddLinksBetweenAccountsAndClientsStatement());
         return this;
     }
 
@@ -105,190 +105,190 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Nonnull
     public DatabasePopulator withDuplicatedIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(40, new CreateDuplicatedIndexStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(40, new CreateDuplicatedIndexStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withDuplicatedHashIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(41, new CreateDuplicatedHashIndexStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(41, new CreateDuplicatedHashIndexStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withNonSuitableIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(43, new CreateNotSuitableIndexForForeignKeyStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(43, new CreateNotSuitableIndexForForeignKeyStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withSuitableIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(44, new CreateSuitableIndexForForeignKeyStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(44, new CreateSuitableIndexForForeignKeyStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withTableWithoutPrimaryKey() {
-        statementsToExecuteInSameTransaction.putIfAbsent(47, new CreateTableWithoutPrimaryKeyStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(47, new CreateTableWithoutPrimaryKeyStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withNullValuesInIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(48, new CreateIndexWithNullValues(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(48, new CreateIndexWithNullValues());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withBooleanValuesInIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(49, new CreateIndexWithBooleanValues(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(49, new CreateIndexWithBooleanValues());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withDifferentOpclassIndexes() {
-        statementsToExecuteInSameTransaction.putIfAbsent(50, new CreateIndexesWithDifferentOpclassStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(50, new CreateIndexesWithDifferentOpclassStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withMaterializedView() {
-        statementsToExecuteInSameTransaction.putIfAbsent(55, new CreateMaterializedViewStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(55, new CreateMaterializedViewStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withDuplicatedCustomCollationIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(58, new CreateDuplicatedCustomCollationIndexStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(58, new CreateDuplicatedCustomCollationIndexStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withForeignKeyOnNullableColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(60, new CreateForeignKeyOnNullableColumnStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(60, new CreateForeignKeyOnNullableColumnStatement());
         return withTableWithoutPrimaryKey();
     }
 
     @Nonnull
     public DatabasePopulator withCommentOnTables() {
-        statementsToExecuteInSameTransaction.putIfAbsent(64, new AddCommentOnTablesStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(64, new AddCommentOnTablesStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withBlankCommentOnTables() {
-        statementsToExecuteInSameTransaction.putIfAbsent(65, new AddBlankCommentOnTablesStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(65, new AddBlankCommentOnTablesStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withCommentOnColumns() {
-        statementsToExecuteInSameTransaction.putIfAbsent(66, new AddCommentOnColumnsStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(66, new AddCommentOnColumnsStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withBlankCommentOnColumns() {
-        statementsToExecuteInSameTransaction.putIfAbsent(67, new AddBlankCommentOnColumnsStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(67, new AddBlankCommentOnColumnsStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withJsonType() {
-        statementsToExecuteInSameTransaction.putIfAbsent(25, new ConvertColumnToJsonTypeStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(25, new ConvertColumnToJsonTypeStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withDroppedInfoColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(70, new DropColumnStatement(schemaName, "clients", "info"));
+        statementsToExecuteInSameTransaction.putIfAbsent(70, new DropColumnStatement("clients", "info"));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withSerialType() {
-        statementsToExecuteInSameTransaction.putIfAbsent(75, new CreateTableWithColumnOfBigSerialTypeStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(75, new CreateTableWithColumnOfBigSerialTypeStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withDroppedSerialColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(76, new DropColumnStatement(schemaName, "bad_accounts", "real_account_id"));
+        statementsToExecuteInSameTransaction.putIfAbsent(76, new DropColumnStatement("bad_accounts", "real_account_id"));
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withCheckConstraintOnSerialPrimaryKey() {
-        statementsToExecuteInSameTransaction.putIfAbsent(80, new CreateTableWithCheckConstraintOnSerialPrimaryKey(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(80, new CreateTableWithCheckConstraintOnSerialPrimaryKey());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withUniqueConstraintOnSerialColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(81, new CreateTableWithUniqueSerialColumn(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(81, new CreateTableWithUniqueSerialColumn());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withSerialPrimaryKeyReferencesToAnotherTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(82, new CreateTableWithSerialPrimaryKeyReferencesToAnotherTable(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(82, new CreateTableWithSerialPrimaryKeyReferencesToAnotherTable());
         return withCheckConstraintOnSerialPrimaryKey()
             .withUniqueConstraintOnSerialColumn();
     }
 
     @Nonnull
     public DatabasePopulator withFunctions() {
-        statementsToExecuteInSameTransaction.putIfAbsent(90, new CreateFunctionsStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(90, new CreateFunctionsStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withProcedures() {
         if (supportsProcedures) {
-            statementsToExecuteInSameTransaction.putIfAbsent(91, new CreateProceduresStatement(schemaName));
+            statementsToExecuteInSameTransaction.putIfAbsent(91, new CreateProceduresStatement());
         }
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withBlankCommentOnFunctions() {
-        statementsToExecuteInSameTransaction.putIfAbsent(92, new AddBlankCommentOnFunctionsStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(92, new AddBlankCommentOnFunctionsStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withCommentOnFunctions() {
-        statementsToExecuteInSameTransaction.putIfAbsent(93, new AddCommentOnFunctionsStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(93, new AddCommentOnFunctionsStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withCommentOnProcedures() {
         if (supportsProcedures) {
-            statementsToExecuteInSameTransaction.putIfAbsent(94, new AddCommentOnProceduresStatement(schemaName));
+            statementsToExecuteInSameTransaction.putIfAbsent(94, new AddCommentOnProceduresStatement());
         }
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withNotValidConstraints() {
-        statementsToExecuteInSameTransaction.putIfAbsent(95, new AddInvalidForeignKeyStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(95, new AddInvalidForeignKeyStatement());
         return this;
     }
 
     public DatabasePopulator withBtreeIndexesOnArrayColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(96, new CreateIndexesOnArrayColumn(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(96, new CreateIndexesOnArrayColumn());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withSequenceOverflow() {
-        statementsToExecuteInSameTransaction.putIfAbsent(97, new CreateSequenceStatement(schemaName));
+        statementsToExecuteInSameTransaction.putIfAbsent(97, new CreateSequenceStatement());
         return this;
     }
 
     public void populate() {
-        ExecuteUtils.executeInTransaction(dataSource, statementsToExecuteInSameTransaction.values());
+        ExecuteUtils.executeInTransaction(dataSource, statementsToExecuteInSameTransaction.values(), schemaName);
         actionsToExecuteOutsideTransaction.forEach((k, v) -> v.run());
     }
 
@@ -304,6 +304,6 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Override
     public void close() {
-        ExecuteUtils.executeOnDatabase(dataSource, statement -> statement.execute(String.format("drop schema if exists %s cascade", schemaName)));
+        ExecuteUtils.executeOnDatabase(dataSource, (statement, schemaName) -> statement.execute(String.format("drop schema if exists %s cascade", schemaName)), schemaName);
     }
 }

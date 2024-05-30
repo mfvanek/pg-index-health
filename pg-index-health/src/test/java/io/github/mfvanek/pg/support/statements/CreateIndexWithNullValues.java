@@ -10,19 +10,14 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateIndexWithNullValues extends AbstractDbStatement {
 
-    public CreateIndexWithNullValues(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("create index if not exists i_clients_middle_name " +
+    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+        return List.of(String.format("create index if not exists i_clients_middle_name " +
             "on %s.clients (middle_name)", schemaName));
     }
 }
