@@ -13,18 +13,17 @@ package io.github.mfvanek.pg.support.statements;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Objects;
+import java.util.List;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 abstract class AbstractDbStatement implements DbStatement {
 
-    protected final String schemaName;
-
-    protected AbstractDbStatement(@Nonnull final String schemaName) {
-        this.schemaName = Objects.requireNonNull(schemaName);
-    }
-
-    protected void throwExceptionIfTableDoesNotExist(@Nonnull final Statement statement, @Nonnull final String tableName) throws SQLException {
+    protected void throwExceptionIfTableDoesNotExist(
+        @Nonnull final Statement statement,
+        @Nonnull final String tableName,
+        @Nonnull final String schemaName
+    ) throws SQLException {
         final String checkQuery = String.format("select exists (%n" +
             "   select 1 %n" +
             "   from pg_catalog.pg_class c%n" +
@@ -42,5 +41,19 @@ abstract class AbstractDbStatement implements DbStatement {
             }
             throw new IllegalStateException(String.format("Table with name '%s' in schema '%s' wasn't created", tableName, schemaName));
         }
+    }
+
+    protected abstract List<String> getSqlToExecute(@Nonnull String schemaName);
+
+    @Override
+    public void execute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
+        postExecute(statement, schemaName);
+        for (final String sql : getSqlToExecute(schemaName)) {
+            statement.execute(sql);
+        }
+    }
+
+    protected void postExecute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
+        Logger.getLogger(schemaName);
     }
 }
