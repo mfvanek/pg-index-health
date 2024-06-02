@@ -11,25 +11,20 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class CreateSequenceStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+    protected List<String> getSqlToExecute() {
         return List.of(
-            String.format(
-                "drop sequence if exists %1$s.seq_1; " +
-                    "create sequence %1$s.seq_1 as smallint increment by 1 maxvalue 100 start 92;", schemaName),
-            String.format(
-                "drop sequence if exists %1$s.seq_3; " +
-                    "create sequence %1$s.seq_3 as integer increment by 2 maxvalue 100 start 92;", schemaName),
-            String.format(
-                "drop sequence if exists %1$s.seq_5; " +
-                    "create sequence %1$s.seq_5 as bigint increment by 10 maxvalue 100 start 92;", schemaName),
-            String.format(
-                "drop sequence if exists %1$s.seq_cycle; " +
-                    "create sequence %1$s.seq_cycle as bigint increment by 10 maxvalue 100 start 92 cycle;", schemaName)
+            "drop sequence if exists {schemaName}.seq_1; " +
+                "create sequence {schemaName}.seq_1 as smallint increment by 1 maxvalue 100 start 92;",
+            "drop sequence if exists {schemaName}.seq_3; " +
+                "create sequence {schemaName}.seq_3 as integer increment by 2 maxvalue 100 start 92;",
+            "drop sequence if exists {schemaName}.seq_5; " +
+                "create sequence {schemaName}.seq_5 as bigint increment by 10 maxvalue 100 start 92;",
+            "drop sequence if exists {schemaName}.seq_cycle; " +
+                "create sequence {schemaName}.seq_cycle as bigint increment by 10 maxvalue 100 start 92 cycle;"
         );
     }
 }

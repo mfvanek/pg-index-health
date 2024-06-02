@@ -11,13 +11,12 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class CreateDuplicatedCustomCollationIndexStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of(String.format("create index if not exists i_accounts_account_number " +
-            "on %1$s.accounts (account_number collate %1$s.\"C.UTF-8\")", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of("create index if not exists i_accounts_account_number " +
+            "on {schemaName}.accounts (account_number collate {schemaName}.\"C.UTF-8\")");
     }
 }

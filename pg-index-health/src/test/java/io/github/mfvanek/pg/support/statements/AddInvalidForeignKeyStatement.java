@@ -11,19 +11,16 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class AddInvalidForeignKeyStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+    protected List<String> getSqlToExecute() {
         return List.of(
-            String.format("alter table if exists %1$s.accounts " +
-                "add constraint c_accounts_fk_client_id_not_validated_yet foreign key (client_id) references %1$s.clients (id) not valid;",
-            schemaName),
-            String.format("alter table if exists %1$s.accounts " +
-                "add constraint c_accounts_chk_client_id_not_validated_yet check (client_id > 0) not valid;",
-            schemaName)
+            "alter table if exists {schemaName}.accounts " +
+                "add constraint c_accounts_fk_client_id_not_validated_yet foreign key (client_id) references {schemaName}.clients (id) not valid;",
+            "alter table if exists {schemaName}.accounts " +
+                "add constraint c_accounts_chk_client_id_not_validated_yet check (client_id > 0) not valid;"
         );
     }
 }

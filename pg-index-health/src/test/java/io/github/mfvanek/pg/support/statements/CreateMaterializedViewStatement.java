@@ -11,13 +11,14 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class CreateMaterializedViewStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of(String.format("create materialized view if not exists %1$s.accounts_mat_view as (" +
-            "select client_id, account_number from %1$s.accounts);", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of(
+            "create materialized view if not exists {schemaName}.accounts_mat_view as (" +
+                "select client_id, account_number from {schemaName}.accounts);"
+        );
     }
 }

@@ -11,17 +11,17 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class CreateTableWithUniqueSerialColumn extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of(String.format("create table if not exists %1$s.one_more_table(" +
+    protected List<String> getSqlToExecute() {
+        return List.of(
+            "create table if not exists {schemaName}.one_more_table(" +
                 "id bigserial, " +
                 "constraint unique_id unique (id), " +
                 "constraint not_reserved_id check (id > 1000), " +
-                "constraint less_than_million check (id < 1000000));",
-            schemaName));
+                "constraint less_than_million check (id < 1000000));"
+        );
     }
 }

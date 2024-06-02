@@ -11,13 +11,12 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class AddCommentOnProceduresStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of(String.format("comment on procedure %1$s.insert_data(a integer, b integer) is 'Inserts two rows into clients';" +
-            "comment on procedure %1$s.insert_data(a int, b int, c int) is 'Inserts three rows into clients';", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of("comment on procedure {schemaName}.insert_data(a integer, b integer) is 'Inserts two rows into clients';",
+            "comment on procedure {schemaName}.insert_data(a int, b int, c int) is 'Inserts three rows into clients';");
     }
 }

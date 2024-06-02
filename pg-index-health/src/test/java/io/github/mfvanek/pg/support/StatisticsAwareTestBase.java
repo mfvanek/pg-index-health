@@ -92,12 +92,12 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
     }
 
     protected void collectStatistics(@Nonnull final String schemaName) {
-        collectStatisticsWith(schemaName);
+        collectStatisticsWith();
         waitForStatisticsCollector(schemaName);
     }
 
-    protected void collectStatisticsWith(@Nonnull final String schemaName) {
-        ExecuteUtils.executeOnDatabase(getDataSource(), (statement, schema) -> statement.execute("VACUUM ANALYZE"), schemaName);
+    protected void collectStatisticsWith() {
+        ExecuteUtils.executeOnDatabase(getDataSource(), statement -> statement.execute("VACUUM ANALYZE"));
         waitForStatisticsCollector(null);
     }
 }

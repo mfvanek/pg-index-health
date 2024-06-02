@@ -19,8 +19,8 @@ import javax.annotation.Nonnull;
 public class CreateSchemaStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of();
+    protected List<String> getSqlToExecute() {
+        return List.of("create schema if not exists " + getSchemaName());
     }
 
     @Override

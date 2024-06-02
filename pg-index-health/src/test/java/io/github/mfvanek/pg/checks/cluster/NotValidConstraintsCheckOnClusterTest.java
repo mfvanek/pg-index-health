@@ -50,12 +50,12 @@ class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
                 .isEmpty();
 
-            ExecuteUtils.executeOnDatabase(getDataSource(), (statement, sName) -> {
+            ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {
                 for (final Constraint constraint : notValidConstraints) {
                     statement.execute(String.format("alter table %s validate constraint %s;",
                         constraint.getTableName(), constraint.getConstraintName()));
                 }
-            }, schemaName);
+            });
 
             assertThat(check.check(ctx))
                 .isEmpty();

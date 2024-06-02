@@ -11,25 +11,25 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class CreateDuplicatedIndexStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+    protected List<String> getSqlToExecute() {
         return List.of(
-            String.format("create index if not exists i_accounts_account_number " +
-                "on %s.accounts (account_number)", schemaName),
-            String.format("create index if not exists i_accounts_account_number_not_deleted " +
-                "on %s.accounts (account_number) where not deleted", schemaName),
-            String.format("create index if not exists i_accounts_number_balance_not_deleted " +
-                "on %s.accounts (account_number, account_balance) where not deleted", schemaName),
-            String.format("create index if not exists i_clients_last_first " +
-                "on %s.clients (last_name, first_name)", schemaName),
-            String.format("create index if not exists i_clients_last_name " +
-                "on %s.clients (last_name)", schemaName),
-            String.format("create index if not exists i_accounts_id_account_number_not_deleted " +
-                "on %s.accounts (id, account_number) where not deleted", schemaName)
+            "create index if not exists i_accounts_account_number " +
+                "on {schemaName}.accounts (account_number)",
+            "create index if not exists i_accounts_account_number_not_deleted " +
+                "on {schemaName}.accounts (account_number) where not deleted",
+            "create index if not exists i_accounts_number_balance_not_deleted " +
+                "on {schemaName}.accounts (account_number, account_balance) where not deleted",
+            "create index if not exists i_clients_last_first " +
+                "on {schemaName}.clients (last_name, first_name)",
+            "create index if not exists i_clients_last_name " +
+                "on {schemaName}.clients (last_name)",
+            "create index if not exists i_accounts_id_account_number_not_deleted " +
+                "on {schemaName}.accounts (id, account_number) where not deleted"
         );
     }
+
 }

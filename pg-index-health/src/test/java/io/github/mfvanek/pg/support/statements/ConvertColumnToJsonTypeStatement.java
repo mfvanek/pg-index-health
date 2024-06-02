@@ -11,12 +11,11 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class ConvertColumnToJsonTypeStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of(String.format("alter table if exists %s.clients alter column info type json using info::json", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of("alter table if exists {schemaName}.clients alter column info type json using info::json");
     }
 }

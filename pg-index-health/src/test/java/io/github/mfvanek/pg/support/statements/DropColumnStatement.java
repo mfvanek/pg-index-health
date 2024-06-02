@@ -26,7 +26,7 @@ public class DropColumnStatement extends AbstractDbStatement {
     }
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of(String.format("alter table if exists %s.%s drop column %s", schemaName, tableName, columnName));
+    protected List<String> getSqlToExecute() {
+        return List.of("alter table if exists {schemaName}." + tableName + " drop column " + columnName);
     }
 }

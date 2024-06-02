@@ -11,13 +11,12 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class CreateForeignKeyOnNullableColumnStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of(String.format("alter table if exists %1$s.bad_clients " +
-            "add constraint c_bad_clients_fk_real_client_id foreign key (real_client_id) references %1$s.clients (id);", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of("alter table if exists {schemaName}.bad_clients " +
+            "add constraint c_bad_clients_fk_real_client_id foreign key (real_client_id) references {schemaName}.clients (id);");
     }
 }

@@ -11,13 +11,12 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class CreateNotSuitableIndexForForeignKeyStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of(String.format("create index if not exists " +
-            "i_accounts_account_number_client_id on %s.accounts (account_number, client_id)", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of("create index if not exists " +
+            "i_accounts_account_number_client_id on {schemaName}.accounts (account_number, client_id)");
     }
 }

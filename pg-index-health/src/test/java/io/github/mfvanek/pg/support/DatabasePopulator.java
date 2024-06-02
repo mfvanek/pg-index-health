@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.validation.Validators;
+import io.github.mfvanek.pg.support.statements.AbstractDbStatement;
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnColumnsStatement;
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnTablesStatement;
@@ -288,7 +289,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     public void populate() {
-        ExecuteUtils.executeInTransaction(dataSource, statementsToExecuteInSameTransaction.values(), schemaName);
+        final String oldSchemaName = AbstractDbStatement.setSchemaName(schemaName);
+        try {
+            ExecuteUtils.executeInTransaction(dataSource, statementsToExecuteInSameTransaction.values());
+        } finally {
+            AbstractDbStatement.setSchemaName(oldSchemaName);
+        }
         actionsToExecuteOutsideTransaction.forEach((k, v) -> v.run());
     }
 
@@ -304,6 +310,6 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Override
     public void close() {
-        ExecuteUtils.executeOnDatabase(dataSource, (statement, schemaName) -> statement.execute(String.format("drop schema if exists %s cascade", schemaName)), schemaName);
+        ExecuteUtils.executeOnDatabase(dataSource, statement -> statement.execute(String.format("drop schema if exists %s cascade", schemaName)));
     }
 }

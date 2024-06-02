@@ -11,13 +11,12 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class AddBlankCommentOnFunctionsStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of(String.format("comment on function %1$s.add(a integer, b integer) is '   ';" +
-            "comment on function %1$s.add(a int, b int, c int) is '';", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of("comment on function {schemaName}.add(a integer, b integer) is '   ';",
+            "comment on function {schemaName}.add(a int, b int, c int) is '';");
     }
 }

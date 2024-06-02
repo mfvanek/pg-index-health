@@ -14,10 +14,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nonnull;
 
-abstract class AbstractDbStatement implements DbStatement {
+import static io.github.mfvanek.pg.model.PgContext.DEFAULT_SCHEMA_NAME;
+
+public abstract class AbstractDbStatement implements DbStatement {
+
+    private static final AtomicReference<String> SCHEMA_NAME_HOLDER = new AtomicReference<>(DEFAULT_SCHEMA_NAME);
+
+    @Nonnull
+    protected static String getSchemaName() {
+        return SCHEMA_NAME_HOLDER.get();
+    }
+
+    public static String setSchemaName(@Nonnull final String schemaName) {
+        return SCHEMA_NAME_HOLDER.getAndSet(schemaName);
+    }
 
     protected void throwExceptionIfTableDoesNotExist(
         @Nonnull final Statement statement,
@@ -43,17 +56,18 @@ abstract class AbstractDbStatement implements DbStatement {
         }
     }
 
-    protected abstract List<String> getSqlToExecute(@Nonnull String schemaName);
+    protected abstract List<String> getSqlToExecute();
 
     @Override
-    public void execute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
-        postExecute(statement, schemaName);
-        for (final String sql : getSqlToExecute(schemaName)) {
-            statement.execute(sql);
+    public void execute(@Nonnull final Statement statement) throws SQLException {
+        final String schemaName = getSchemaName();
+        for (final String sql : getSqlToExecute()) {
+            statement.execute(sql.replace("{schemaName}", schemaName));
         }
+        postExecute(statement, schemaName);
     }
 
     protected void postExecute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
-        Logger.getLogger(schemaName);
+        //This method is intended to be overridden by subclasses to perform any post-execution logic.
     }
 }

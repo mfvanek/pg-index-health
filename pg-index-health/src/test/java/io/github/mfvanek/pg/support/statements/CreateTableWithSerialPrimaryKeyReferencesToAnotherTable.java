@@ -11,18 +11,18 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class CreateTableWithSerialPrimaryKeyReferencesToAnotherTable extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of(String.format("create table if not exists %1$s.test_table(" +
+    protected List<String> getSqlToExecute() {
+        return List.of(
+            "create table if not exists {schemaName}.test_table(" +
                 "id bigserial, " +
                 "num bigserial, " +
                 "constraint test_table_pkey_id primary key (id), " +
-                "constraint test_table_fkey_other_id foreign key (id) references %1$s.another_table (id), " +
-                "constraint test_table_fkey_one_more_id foreign key (id) references %1$s.one_more_table (id));",
-            schemaName));
+                "constraint test_table_fkey_other_id foreign key (id) references {schemaName}.another_table (id), " +
+                "constraint test_table_fkey_one_more_id foreign key (id) references {schemaName}.one_more_table (id));"
+        );
     }
 }

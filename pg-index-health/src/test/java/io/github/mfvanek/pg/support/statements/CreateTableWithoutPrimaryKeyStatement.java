@@ -18,16 +18,15 @@ import javax.annotation.Nonnull;
 public class CreateTableWithoutPrimaryKeyStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of();
+    protected List<String> getSqlToExecute() {
+        return List.of("create table if not exists {schemaName}.bad_clients (" +
+            "id bigint not null, " +
+            "name varchar(255) not null," +
+            "real_client_id bigint)");
     }
 
     @Override
     public void postExecute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
-        statement.execute(String.format("create table if not exists %s.bad_clients (" +
-            "id bigint not null, " +
-            "name varchar(255) not null," +
-            "real_client_id bigint)", schemaName));
         throwExceptionIfTableDoesNotExist(statement, "bad_clients", schemaName);
     }
 }

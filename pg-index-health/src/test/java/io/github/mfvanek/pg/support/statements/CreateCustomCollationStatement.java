@@ -23,17 +23,17 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
     private static final String ICU_COLLATION = "en-US-x-icu";
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
+    protected List<String> getSqlToExecute() {
         return List.of();
     }
 
     @Override
-    public void postExecute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
+    public void execute(@Nonnull final Statement statement) throws SQLException {
         final String customCollation = "C.UTF-8";
         if (isCollationExist(statement, customCollation)) {
             return;
         }
-        createCustomCollation(statement, customCollation, schemaName);
+        createCustomCollation(statement, customCollation);
     }
 
     private boolean isCollationExist(@Nonnull final Statement statement, @Nonnull final String collation) {
@@ -47,12 +47,11 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
     }
 
     private void createCustomCollation(@Nonnull final Statement statement,
-                                       @Nonnull final String customCollation,
-                                       @Nonnull final String schemaName) throws SQLException {
+                                       @Nonnull final String customCollation) throws SQLException {
         if (!isCollationExist(statement, ICU_COLLATION)) {
             throw new IllegalStateException(String.format("System collation '%s' not found", ICU_COLLATION));
         }
         final String query = "create collation %s.\"%s\" from \"%s\";";
-        statement.execute(String.format(query, schemaName, customCollation, ICU_COLLATION));
+        statement.execute(String.format(query, getSchemaName(), customCollation, ICU_COLLATION));
     }
 }

@@ -11,14 +11,13 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class AddLinksBetweenAccountsAndClientsStatement extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of(String.format("alter table if exists %1$s.accounts " +
-                "add constraint c_accounts_fk_client_id foreign key (client_id) references %1$s.clients (id);",
-            schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of("alter table if exists {schemaName}.accounts " +
+                "add constraint c_accounts_fk_client_id foreign key (client_id) references {schemaName}.clients (id);"
+            );
     }
 }

@@ -11,13 +11,14 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class CreateIndexWithNullValues extends AbstractDbStatement {
 
     @Override
-    protected List<String> getSqlToExecute(@Nonnull final String schemaName) {
-        return List.of(String.format("create index if not exists i_clients_middle_name " +
-            "on %s.clients (middle_name)", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of(
+            "create index if not exists i_clients_middle_name " +
+                "on {schemaName}.clients (middle_name)"
+        );
     }
 }
