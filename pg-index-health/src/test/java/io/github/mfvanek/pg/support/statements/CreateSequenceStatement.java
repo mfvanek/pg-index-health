@@ -11,9 +11,11 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 
 public class CreateSequenceStatement extends AbstractDbStatement {
 
+    @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(

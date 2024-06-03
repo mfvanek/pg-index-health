@@ -11,9 +11,11 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 
 public class AddCommentOnProceduresStatement extends AbstractDbStatement {
 
+    @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("comment on procedure {schemaName}.insert_data(a integer, b integer) is 'Inserts two rows into clients';",

@@ -18,14 +18,14 @@ import javax.annotation.Nonnull;
 
 public class CreateSchemaStatement extends AbstractDbStatement {
 
+    @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("create schema if not exists " + getSchemaName());
+        return List.of("create schema if not exists {schemaName}");
     }
 
     @Override
     public void postExecute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
-        statement.execute("create schema if not exists " + schemaName);
         final String checkQuery = String.format(
             "select exists(select 1 from information_schema.schemata where schema_name = '%s')", schemaName);
         try (ResultSet rs = statement.executeQuery(checkQuery)) {

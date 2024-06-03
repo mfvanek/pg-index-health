@@ -25,6 +25,7 @@ public class DropColumnStatement extends AbstractDbStatement {
         this.columnName = Validators.notBlank(columnName, "columnName");
     }
 
+    @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("alter table if exists {schemaName}." + tableName + " drop column " + columnName);

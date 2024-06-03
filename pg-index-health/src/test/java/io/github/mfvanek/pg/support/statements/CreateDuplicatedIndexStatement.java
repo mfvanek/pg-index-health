@@ -11,9 +11,11 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 
 public class CreateDuplicatedIndexStatement extends AbstractDbStatement {
 
+    @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
@@ -31,5 +33,4 @@ public class CreateDuplicatedIndexStatement extends AbstractDbStatement {
                 "on {schemaName}.accounts (id, account_number) where not deleted"
         );
     }
-
 }

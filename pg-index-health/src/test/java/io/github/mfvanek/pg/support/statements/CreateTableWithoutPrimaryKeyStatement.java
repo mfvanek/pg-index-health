@@ -17,6 +17,7 @@ import javax.annotation.Nonnull;
 
 public class CreateTableWithoutPrimaryKeyStatement extends AbstractDbStatement {
 
+    @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("create table if not exists {schemaName}.bad_clients (" +

@@ -11,9 +11,11 @@
 package io.github.mfvanek.pg.support.statements;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 
 public class AddCommentOnTablesStatement extends AbstractDbStatement {
 
+    @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("comment on table {schemaName}.clients is 'Customer Information';",

@@ -22,6 +22,7 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
 
     private static final String ICU_COLLATION = "en-US-x-icu";
 
+    @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of();

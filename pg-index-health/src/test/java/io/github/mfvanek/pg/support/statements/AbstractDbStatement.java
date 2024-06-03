@@ -56,8 +56,16 @@ public abstract class AbstractDbStatement implements DbStatement {
         }
     }
 
+    @Nonnull
     protected abstract List<String> getSqlToExecute();
 
+    /**
+     * Executes a series of SQL statements on the given {@link Statement} object, replacing placeholders
+     * with the actual schema name, and performs post-execution logic.
+     *
+     * @param statement the {@link Statement} object used to execute the SQL statements. Must not be null.
+     * @throws SQLException if a database access error occurs or the SQL statement is invalid.
+     */
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
         final String schemaName = getSchemaName();

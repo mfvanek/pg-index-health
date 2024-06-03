@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.model.validation.Validators;
-import io.github.mfvanek.pg.support.statements.AbstractDbStatement;
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnColumnsStatement;
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.support.statements.AddBlankCommentOnTablesStatement;
@@ -57,6 +56,8 @@ import java.util.Objects;
 import java.util.TreeMap;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
+
+import static io.github.mfvanek.pg.support.statements.AbstractDbStatement.setSchemaName;
 
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessiveImports"})
 public final class DatabasePopulator implements AutoCloseable {
@@ -289,11 +290,11 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     public void populate() {
-        final String oldSchemaName = AbstractDbStatement.setSchemaName(schemaName);
+        final String oldSchemaName = setSchemaName(schemaName);
         try {
             ExecuteUtils.executeInTransaction(dataSource, statementsToExecuteInSameTransaction.values());
         } finally {
-            AbstractDbStatement.setSchemaName(oldSchemaName);
+            setSchemaName(oldSchemaName);
         }
         actionsToExecuteOutsideTransaction.forEach((k, v) -> v.run());
     }
