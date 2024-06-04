@@ -97,7 +97,7 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
     }
 
     protected void collectStatistics() {
-        ExecuteUtils.executeOnDatabase(getDataSource(), statement -> statement.execute("VACUUM ANALYZE"));
+        ExecuteUtils.executeOnDatabase(getDataSource(), statement -> statement.execute("vacuum analyze"));
         waitForStatisticsCollector(null);
     }
 }
