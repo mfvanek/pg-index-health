@@ -10,27 +10,25 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class AddCommentOnColumnsStatement extends AbstractDbStatement {
 
-    public AddCommentOnColumnsStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
+    @Nonnull
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("comment on column %1$s.clients.id is 'Unique record ID';" +
-            "comment on column %1$s.clients.last_name is 'Customer''s last name';" +
-            "comment on column %1$s.clients.first_name is 'Customer''s given name';" +
-            "comment on column %1$s.clients.middle_name is 'Patronymic of the customer';" +
-            "comment on column %1$s.clients.info is 'Raw client data';" +
-            "comment on column %1$s.accounts.id is 'Unique record ID';" +
-            "comment on column %1$s.accounts.client_id is 'Customer record ID';" +
-            "comment on column %1$s.accounts.account_number is 'Customer''s account number';" +
-            "comment on column %1$s.accounts.account_balance is 'The balance on the customer''s account';" +
-            "comment on column %1$s.accounts.deleted is 'Indicates that the account has been deleted';", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of(
+            "comment on column {schemaName}.clients.id is 'Unique record ID';",
+            "comment on column {schemaName}.clients.last_name is 'Customer''s last name';",
+            "comment on column {schemaName}.clients.first_name is 'Customer''s given name';",
+            "comment on column {schemaName}.clients.middle_name is 'Patronymic of the customer';",
+            "comment on column {schemaName}.clients.info is 'Raw client data';",
+            "comment on column {schemaName}.accounts.id is 'Unique record ID';",
+            "comment on column {schemaName}.accounts.client_id is 'Customer record ID';",
+            "comment on column {schemaName}.accounts.account_number is 'Customer''s account number';",
+            "comment on column {schemaName}.accounts.account_balance is 'The balance on the customer''s account';",
+            "comment on column {schemaName}.accounts.deleted is 'Indicates that the account has been deleted';"
+        );
     }
 }

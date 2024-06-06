@@ -11,18 +11,22 @@
 package io.github.mfvanek.pg.support.statements;
 
 import io.github.mfvanek.pg.connection.PgSqlException;
+import io.github.mfvanek.pg.support.SchemaNameHolder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateCustomCollationStatement extends AbstractDbStatement {
 
     private static final String ICU_COLLATION = "en-US-x-icu";
 
-    public CreateCustomCollationStatement(@Nonnull final String schemaName) {
-        super(schemaName);
+    @Nonnull
+    @Override
+    protected List<String> getSqlToExecute() {
+        return List.of();
     }
 
     @Override
@@ -50,6 +54,6 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
             throw new IllegalStateException(String.format("System collation '%s' not found", ICU_COLLATION));
         }
         final String query = "create collation %s.\"%s\" from \"%s\";";
-        statement.execute(String.format(query, schemaName, customCollation, ICU_COLLATION));
+        statement.execute(String.format(query, SchemaNameHolder.getSchemaName(), customCollation, ICU_COLLATION));
     }
 }

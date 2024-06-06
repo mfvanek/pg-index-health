@@ -105,4 +105,8 @@
     <Match>
         <Bug pattern="FCBL_FIELD_COULD_BE_LOCAL,SEC_SIDE_EFFECT_CONSTRUCTOR"/>
     </Match>
+    <Match>
+        <Bug pattern="ACEM_ABSTRACT_CLASS_EMPTY_METHODS"/>
+        <Class name="io.github.mfvanek.pg.support.statements.AbstractDbStatement"/>
+    </Match>
 </FindBugsFilter>

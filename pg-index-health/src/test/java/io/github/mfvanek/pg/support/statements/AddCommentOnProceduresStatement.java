@@ -10,19 +10,17 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class AddCommentOnProceduresStatement extends AbstractDbStatement {
 
-    public AddCommentOnProceduresStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
+    @Nonnull
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("comment on procedure %1$s.insert_data(a integer, b integer) is 'Inserts two rows into clients';" +
-            "comment on procedure %1$s.insert_data(a int, b int, c int) is 'Inserts three rows into clients';", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of(
+            "comment on procedure {schemaName}.insert_data(a integer, b integer) is 'Inserts two rows into clients';",
+            "comment on procedure {schemaName}.insert_data(a int, b int, c int) is 'Inserts three rows into clients';"
+        );
     }
 }

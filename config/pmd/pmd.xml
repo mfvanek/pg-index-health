@@ -21,6 +21,7 @@
         <exclude name="LongVariable"/>
         <exclude name="ShortVariable"/>
         <exclude name="CallSuperInConstructor"/>
+        <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
     </rule>
 
     <rule ref="category/java/codestyle.xml/ClassNamingConventions">

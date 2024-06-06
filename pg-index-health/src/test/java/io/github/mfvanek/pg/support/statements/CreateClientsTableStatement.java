@@ -10,24 +10,22 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateClientsTableStatement extends AbstractDbStatement {
 
-    public CreateClientsTableStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
+    @Nonnull
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("create sequence if not exists %s.clients_seq", schemaName));
-        statement.execute(String.format("create table if not exists %1$s.clients (" +
-            "id bigint not null primary key default nextval('%1$s.clients_seq')," +
-            "last_name varchar(255) not null," +
-            "first_name varchar(255) not null," +
-            "middle_name varchar(255)," +
-            "info jsonb)", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of(
+            "create sequence if not exists {schemaName}.clients_seq",
+            "create table if not exists {schemaName}.clients (" +
+                "id bigint not null primary key default nextval('{schemaName}.clients_seq')," +
+                "last_name varchar(255) not null," +
+                "first_name varchar(255) not null," +
+                "middle_name varchar(255)," +
+                "info jsonb)"
+        );
     }
 }

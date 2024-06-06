@@ -10,19 +10,16 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateSuitableIndexForForeignKeyStatement extends AbstractDbStatement {
 
-    public CreateSuitableIndexForForeignKeyStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
+    @Nonnull
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("create index if not exists " +
-            "i_accounts_client_id_account_number on %s.accounts (client_id, account_number)", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of("create index if not exists " +
+            "i_accounts_client_id_account_number on {schemaName}.accounts (client_id, account_number)"
+        );
     }
 }

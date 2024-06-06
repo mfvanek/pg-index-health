@@ -10,20 +10,18 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateDuplicatedHashIndexStatement extends AbstractDbStatement {
 
-    public CreateDuplicatedHashIndexStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
+    @Nonnull
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("create index if not exists i_accounts_account_number on %s.accounts using hash(account_number)", schemaName));
-        statement.execute(String.format("create index if not exists i_clients_last_first on %s.clients (last_name, first_name)", schemaName));
-        statement.execute(String.format("create index if not exists i_clients_last_name on %s.clients using hash(last_name)", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of(
+            "create index if not exists i_accounts_account_number on {schemaName}.accounts using hash(account_number)",
+            "create index if not exists i_clients_last_first on {schemaName}.clients (last_name, first_name)",
+            "create index if not exists i_clients_last_name on {schemaName}.clients using hash(last_name)"
+        );
     }
 }

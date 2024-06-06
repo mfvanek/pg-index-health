@@ -10,21 +10,21 @@
 
 package io.github.mfvanek.pg.support.statements;
 
+import io.github.mfvanek.pg.support.SchemaNameHolder;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Objects;
+import java.util.List;
 import javax.annotation.Nonnull;
 
-abstract class AbstractDbStatement implements DbStatement {
+public abstract class AbstractDbStatement implements DbStatement {
 
-    protected final String schemaName;
-
-    protected AbstractDbStatement(@Nonnull final String schemaName) {
-        this.schemaName = Objects.requireNonNull(schemaName);
-    }
-
-    protected void throwExceptionIfTableDoesNotExist(@Nonnull final Statement statement, @Nonnull final String tableName) throws SQLException {
+    protected void throwExceptionIfTableDoesNotExist(
+        @Nonnull final Statement statement,
+        @Nonnull final String tableName,
+        @Nonnull final String schemaName
+    ) throws SQLException {
         final String checkQuery = String.format("select exists (%n" +
             "   select 1 %n" +
             "   from pg_catalog.pg_class c%n" +
@@ -42,5 +42,28 @@ abstract class AbstractDbStatement implements DbStatement {
             }
             throw new IllegalStateException(String.format("Table with name '%s' in schema '%s' wasn't created", tableName, schemaName));
         }
+    }
+
+    @Nonnull
+    protected abstract List<String> getSqlToExecute();
+
+    /**
+     * Executes a series of SQL statements on the given {@link Statement} object, replacing placeholders
+     * with the actual schema name, and performs post-execution logic.
+     *
+     * @param statement the {@link Statement} object used to execute the SQL statements. Must not be null.
+     * @throws SQLException if a database access error occurs or the SQL statement is invalid.
+     */
+    @Override
+    public void execute(@Nonnull final Statement statement) throws SQLException {
+        final String schemaName = SchemaNameHolder.getSchemaName();
+        for (final String sql : getSqlToExecute()) {
+            statement.execute(sql.replace("{schemaName}", schemaName));
+        }
+        postExecute(statement, schemaName);
+    }
+
+    protected void postExecute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
+        //This method is intended to be overridden by subclasses to perform any post-execution logic.
     }
 }

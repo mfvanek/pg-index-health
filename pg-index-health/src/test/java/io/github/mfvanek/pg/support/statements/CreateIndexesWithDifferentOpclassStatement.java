@@ -10,21 +10,19 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateIndexesWithDifferentOpclassStatement extends AbstractDbStatement {
 
-    public CreateIndexesWithDifferentOpclassStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
+    @Nonnull
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("create index if not exists i_clients_last_name " +
-            "on %s.clients using btree(lower(last_name))", schemaName));
-        statement.execute(String.format("create index if not exists i_clients_last_name_ops " +
-            "on %s.clients using btree(lower(last_name) text_pattern_ops)", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of(
+            "create index if not exists i_clients_last_name " +
+                "on {schemaName}.clients using btree(lower(last_name))",
+            "create index if not exists i_clients_last_name_ops " +
+                "on {schemaName}.clients using btree(lower(last_name) text_pattern_ops)"
+        );
     }
 }

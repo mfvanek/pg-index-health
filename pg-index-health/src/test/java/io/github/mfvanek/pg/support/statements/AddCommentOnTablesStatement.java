@@ -10,19 +10,17 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class AddCommentOnTablesStatement extends AbstractDbStatement {
 
-    public AddCommentOnTablesStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
+    @Nonnull
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("comment on table %1$s.clients is 'Customer Information';" +
-            "comment on table %1$s.accounts is 'Information about customer accounts';", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of(
+            "comment on table {schemaName}.clients is 'Customer Information';",
+            "comment on table {schemaName}.accounts is 'Information about customer accounts';"
+        );
     }
 }

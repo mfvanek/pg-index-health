@@ -13,17 +13,19 @@ package io.github.mfvanek.pg.support.statements;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateSchemaStatement extends AbstractDbStatement {
 
-    public CreateSchemaStatement(@Nonnull final String schemaName) {
-        super(schemaName);
+    @Nonnull
+    @Override
+    protected List<String> getSqlToExecute() {
+        return List.of("create schema if not exists {schemaName}");
     }
 
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute("create schema if not exists " + schemaName);
+    public void postExecute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
         final String checkQuery = String.format(
             "select exists(select 1 from information_schema.schemata where schema_name = '%s')", schemaName);
         try (ResultSet rs = statement.executeQuery(checkQuery)) {

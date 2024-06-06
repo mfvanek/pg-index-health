@@ -10,30 +10,28 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateProceduresStatement extends AbstractDbStatement {
 
-    public CreateProceduresStatement(@Nonnull final String schemaName) {
-        super(schemaName);
-    }
-
+    @Nonnull
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("create or replace procedure %1$s.insert_data(a integer, b integer) " +
-            " language sql " +
-            "as $$ " +
-            "insert into %1$s.clients values (a); " +
-            "insert into %1$s.clients values (b); " +
-            "$$;", schemaName));
-        statement.execute(String.format("create or replace procedure %1$s.insert_data(a int, b int, c int) " +
-            "language sql " +
-            "as $$ " +
-            "insert into %1$s.clients values (a); " +
-            "insert into %1$s.clients values (b); " +
-            "insert into %1$s.clients values (c); " +
-            "$$;", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of(
+            "create or replace procedure {schemaName}.insert_data(a integer, b integer) " +
+                "language sql " +
+                "as $$ " +
+                "insert into {schemaName}.clients values (a); " +
+                "insert into {schemaName}.clients values (b); " +
+                "$$;",
+            "create or replace procedure {schemaName}.insert_data(a int, b int, c int) " +
+                "language sql " +
+                "as $$ " +
+                "insert into {schemaName}.clients values (a); " +
+                "insert into {schemaName}.clients values (b); " +
+                "insert into {schemaName}.clients values (c); " +
+                "$$;"
+        );
     }
 }

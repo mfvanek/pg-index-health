@@ -12,8 +12,7 @@ package io.github.mfvanek.pg.support.statements;
 
 import io.github.mfvanek.pg.model.validation.Validators;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class DropColumnStatement extends AbstractDbStatement {
@@ -21,14 +20,14 @@ public class DropColumnStatement extends AbstractDbStatement {
     private final String tableName;
     private final String columnName;
 
-    public DropColumnStatement(@Nonnull final String schemaName, @Nonnull final String tableName, @Nonnull final String columnName) {
-        super(schemaName);
+    public DropColumnStatement(@Nonnull final String tableName, @Nonnull final String columnName) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.columnName = Validators.notBlank(columnName, "columnName");
     }
 
+    @Nonnull
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("alter table if exists %s.%s drop column %s", schemaName, tableName, columnName));
+    protected List<String> getSqlToExecute() {
+        return List.of("alter table if exists {schemaName}." + tableName + " drop column " + columnName);
     }
 }

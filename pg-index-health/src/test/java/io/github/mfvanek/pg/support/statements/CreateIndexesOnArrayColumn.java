@@ -10,22 +10,20 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CreateIndexesOnArrayColumn extends AbstractDbStatement {
 
-    public CreateIndexesOnArrayColumn(final String schemaName) {
-        super(schemaName);
-    }
-
+    @Nonnull
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
-        statement.execute(String.format("alter table %s.accounts add column if not exists roles text[]", schemaName));
-        statement.execute(String.format("create index if not exists accounts_roles_btree_idx on %s.accounts(roles) where roles is not null", schemaName));
-        statement.execute(String.format("create index if not exists accounts_account_number_roles_btree_idx on %s.accounts(account_number, roles)", schemaName));
-        statement.execute(String.format("create index if not exists accounts_account_number_including_roles_idx on %s.accounts(account_number) include (roles)", schemaName));
-        statement.execute(String.format("create index if not exists accounts_roles_gin_idx on %s.accounts using gin(roles) where roles is not null", schemaName));
+    protected List<String> getSqlToExecute() {
+        return List.of(
+            "alter table {schemaName}.accounts add column if not exists roles text[]",
+            "create index if not exists accounts_roles_btree_idx on {schemaName}.accounts(roles) where roles is not null",
+            "create index if not exists accounts_account_number_roles_btree_idx on {schemaName}.accounts(account_number, roles)",
+            "create index if not exists accounts_account_number_including_roles_idx on {schemaName}.accounts(account_number) include (roles)",
+            "create index if not exists accounts_roles_gin_idx on {schemaName}.accounts using gin(roles) where roles is not null"
+        );
     }
 }
