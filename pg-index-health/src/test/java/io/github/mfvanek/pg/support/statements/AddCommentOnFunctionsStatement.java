@@ -18,7 +18,9 @@ public class AddCommentOnFunctionsStatement extends AbstractDbStatement {
     @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("comment on function {schemaName}.add(a integer, b integer) is 'Sums two given arguments';",
-            "comment on function {schemaName}.add(a int, b int, c int) is 'Sums three given arguments';");
+        return List.of(
+            "comment on function {schemaName}.add(a integer, b integer) is 'Sums two given arguments';",
+            "comment on function {schemaName}.add(a int, b int, c int) is 'Sums three given arguments';"
+        );
     }
 }

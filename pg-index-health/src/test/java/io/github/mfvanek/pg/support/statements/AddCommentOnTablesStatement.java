@@ -18,7 +18,9 @@ public class AddCommentOnTablesStatement extends AbstractDbStatement {
     @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("comment on table {schemaName}.clients is 'Customer Information';",
-            "comment on table {schemaName}.accounts is 'Information about customer accounts';");
+        return List.of(
+            "comment on table {schemaName}.clients is 'Customer Information';",
+            "comment on table {schemaName}.accounts is 'Information about customer accounts';"
+        );
     }
 }

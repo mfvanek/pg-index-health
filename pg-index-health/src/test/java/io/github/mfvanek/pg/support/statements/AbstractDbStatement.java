@@ -10,27 +10,15 @@
 
 package io.github.mfvanek.pg.support.statements;
 
+import io.github.mfvanek.pg.support.SchemaNameHolder;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nonnull;
 
-import static io.github.mfvanek.pg.model.PgContext.DEFAULT_SCHEMA_NAME;
-
 public abstract class AbstractDbStatement implements DbStatement {
-
-    private static final AtomicReference<String> SCHEMA_NAME_HOLDER = new AtomicReference<>(DEFAULT_SCHEMA_NAME);
-
-    @Nonnull
-    protected static String getSchemaName() {
-        return SCHEMA_NAME_HOLDER.get();
-    }
-
-    public static String setSchemaName(@Nonnull final String schemaName) {
-        return SCHEMA_NAME_HOLDER.getAndSet(schemaName);
-    }
 
     protected void throwExceptionIfTableDoesNotExist(
         @Nonnull final Statement statement,
@@ -68,7 +56,7 @@ public abstract class AbstractDbStatement implements DbStatement {
      */
     @Override
     public void execute(@Nonnull final Statement statement) throws SQLException {
-        final String schemaName = getSchemaName();
+        final String schemaName = SchemaNameHolder.getSchemaName();
         for (final String sql : getSqlToExecute()) {
             statement.execute(sql.replace("{schemaName}", schemaName));
         }

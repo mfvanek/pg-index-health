@@ -19,7 +19,7 @@ public class AddLinksBetweenAccountsAndClientsStatement extends AbstractDbStatem
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("alter table if exists {schemaName}.accounts " +
-                "add constraint c_accounts_fk_client_id foreign key (client_id) references {schemaName}.clients (id);"
-            );
+            "add constraint c_accounts_fk_client_id foreign key (client_id) references {schemaName}.clients (id);"
+        );
     }
 }

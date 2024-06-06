@@ -57,8 +57,6 @@ import java.util.TreeMap;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-import static io.github.mfvanek.pg.support.statements.AbstractDbStatement.setSchemaName;
-
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessiveImports"})
 public final class DatabasePopulator implements AutoCloseable {
 
@@ -290,11 +288,8 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     public void populate() {
-        final String oldSchemaName = setSchemaName(schemaName);
-        try {
+        try (SchemaNameHolder ignored = SchemaNameHolder.with(schemaName)) {
             ExecuteUtils.executeInTransaction(dataSource, statementsToExecuteInSameTransaction.values());
-        } finally {
-            setSchemaName(oldSchemaName);
         }
         actionsToExecuteOutsideTransaction.forEach((k, v) -> v.run());
     }

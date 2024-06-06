@@ -18,7 +18,9 @@ public class AddBlankCommentOnColumnsStatement extends AbstractDbStatement {
     @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("comment on column {schemaName}.clients.id is '';",
-            "comment on column {schemaName}.accounts.id is '   ';");
+        return List.of(
+            "comment on column {schemaName}.clients.id is '';",
+            "comment on column {schemaName}.accounts.id is '   ';"
+        );
     }
 }

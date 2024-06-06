@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.support.statements;
 
 import io.github.mfvanek.pg.connection.PgSqlException;
+import io.github.mfvanek.pg.support.SchemaNameHolder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,6 +54,6 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
             throw new IllegalStateException(String.format("System collation '%s' not found", ICU_COLLATION));
         }
         final String query = "create collation %s.\"%s\" from \"%s\";";
-        statement.execute(String.format(query, getSchemaName(), customCollation, ICU_COLLATION));
+        statement.execute(String.format(query, SchemaNameHolder.getSchemaName(), customCollation, ICU_COLLATION));
     }
 }
