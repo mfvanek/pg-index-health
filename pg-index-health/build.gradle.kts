@@ -19,8 +19,12 @@ dependencies {
     testImplementation(libs.logback.classic)
     testImplementation("org.mockito:mockito-core")
     testImplementation(libs.awaitility)
-    testImplementation(libs.apache.commons.lang3)
     testImplementation(libs.postgresql)
+
+    testFixturesImplementation(libs.jsr305)
+    testFixturesImplementation(libs.apache.commons.lang3)
+    testFixturesImplementation(libs.postgresql)
+    testFixturesImplementation(project(":pg-index-health-testing"))
 }
 
 tasks {
