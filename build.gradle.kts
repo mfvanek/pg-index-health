@@ -5,6 +5,7 @@ plugins {
     id("jacoco-report-aggregation")
     id("org.sonarqube")
     id("com.github.ben-manes.versions") version "0.51.0"
+    id("de.thetaphi.forbiddenapis") version "3.7"
 }
 
 description = "pg-index-health build"
@@ -66,5 +67,25 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     checkConstraints = true
     rejectVersionIf {
         isNonStable(candidate.version)
+    }
+}
+
+forbiddenApis {
+    bundledSignatures = setOf("jdk-deprecated", "jdk-non-portable")
+    signaturesFiles = files("/config/forbidden-apis/forbidden-apis.txt")
+    ignoreFailures = false
+}
+
+subprojects {
+    apply(plugin = "de.thetaphi.forbiddenapis")
+
+    forbiddenApis {
+        bundledSignatures = setOf("jdk-deprecated", "jdk-non-portable")
+        signaturesFiles = files("${rootDir}/config/forbidden-apis/forbidden-apis.txt")
+        ignoreFailures = false
+    }
+
+    tasks.named("check") {
+        dependsOn("forbiddenApis")
     }
 }
