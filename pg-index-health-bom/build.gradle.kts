@@ -15,6 +15,7 @@ dependencies {
         api(project(":pg-index-health-testing"))
         api(project(":spring-boot-integration:pg-index-health-test-starter"))
         api(project(":pg-index-health-logger"))
+        api(project(":pg-index-health-core"))
     }
 }
 
