@@ -5,26 +5,23 @@ plugins {
     id("pg-index-health.publish")
 }
 
-description = "pg-index-health is a Java library for analyzing and maintaining indexes health in PostgreSQL databases."
+description = "pg-index-health is a Java library for analyzing and maintaining indexes and tables health in PostgreSQL databases on all hosts in the cluster."
 
 dependencies {
     api(project(":pg-index-health-model"))
     api(project(":pg-index-health-jdbc-connection"))
+    api(project(":pg-index-health-core"))
     implementation(libs.slf4j.api)
 
     testImplementation(project(":pg-index-health-testing"))
     testImplementation(testFixtures(project(":pg-index-health-model")))
     testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
+    testImplementation(testFixtures(project(":pg-index-health-core")))
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation(libs.logback.classic)
     testImplementation("org.mockito:mockito-core")
     testImplementation(libs.awaitility)
     testImplementation(libs.postgresql)
-
-    testFixturesImplementation(libs.jsr305)
-    testFixturesImplementation(libs.apache.commons.lang3)
-    testFixturesImplementation(libs.postgresql)
-    testFixturesImplementation(project(":pg-index-health-testing"))
 }
 
 tasks {

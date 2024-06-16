@@ -17,3 +17,4 @@ include("spring-boot-integration:kotlin-demo-app")
 findProject(":spring-boot-integration:kotlin-demo-app")?.name = "kotlin-demo-app"
 include("pg-index-health-bom")
 include("pg-index-health-logger")
+include("pg-index-health-core")

@@ -54,8 +54,7 @@ class DiagnosticTest {
                 assertThat(d.getQueryExecutor()).isNotNull();
                 assertThat(d.getExecutionTopology()).isNotNull();
             })
-            .filter(d -> d.getExecutionTopology() == Diagnostic.ExecutionTopology.ACROSS_CLUSTER)
-            .peek(d -> assertThat(d.isAcrossCluster()).isTrue())
+            .filter(Diagnostic::isAcrossCluster)
             .count();
         assertThat(countOfChecksAcrossTheCluster).isEqualTo(2);
     }

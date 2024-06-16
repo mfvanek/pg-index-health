@@ -34,23 +34,23 @@ Each database structure check starts with an SQL query to the pg_catalog.
 ### Extend domain model (if needed)
 
 pg-index-health is a [multimodule Gradle](https://docs.gradle.org/current/userguide/multi_project_builds.html) project.  
-Domain model is located in a [pg-index-health-model](https://github.com/mfvanek/pg-index-health/tree/master/pg-index-health-model).
+Domain model is located in a [pg-index-health-model](pg-index-health-model).
 All domain classes should be minimalistic and well-defined.
-They should include enough information to generate corrective SQL migrations via [pg-index-health-generator](https://github.com/mfvanek/pg-index-health/tree/master/pg-index-health-generator).
+They should include enough information to generate corrective SQL migrations via [pg-index-health-generator](pg-index-health-generator).
 
 ### Add the code for the new check
 
 #### Execution on a specific host
 
-* Checks on a specific host https://github.com/mfvanek/pg-index-health/tree/master/pg-index-health/src/main/java/io/github/mfvanek/pg/checks/host
+* [Checks on a specific host](pg-index-health-core%2Fsrc%2Fmain%2Fjava%2Fio%2Fgithub%2Fmfvanek%2Fpg%2Fchecks%2Fhost)
 
-Implement a new class extending [AbstractCheckOnHost](https://github.com/mfvanek/pg-index-health/blob/master/pg-index-health/src/main/java/io/github/mfvanek/pg/checks/host/AbstractCheckOnHost.java).
+Implement a new class extending [AbstractCheckOnHost](pg-index-health-core%2Fsrc%2Fmain%2Fjava%2Fio%2Fgithub%2Fmfvanek%2Fpg%2Fchecks%2Fhost%2FAbstractCheckOnHost.java).
 
 #### Execution on the cluster
 
-* Checks on the cluster https://github.com/mfvanek/pg-index-health/tree/master/pg-index-health/src/main/java/io/github/mfvanek/pg/checks/cluster
+* [Checks on the cluster](pg-index-health%2Fsrc%2Fmain%2Fjava%2Fio%2Fgithub%2Fmfvanek%2Fpg%2Fchecks%2Fcluster)
 
-Implement a new class extending [AbstractCheckOnCluster](https://github.com/mfvanek/pg-index-health/blob/master/pg-index-health/src/main/java/io/github/mfvanek/pg/checks/cluster/AbstractCheckOnCluster.java).
+Implement a new class extending [AbstractCheckOnCluster](pg-index-health%2Fsrc%2Fmain%2Fjava%2Fio%2Fgithub%2Fmfvanek%2Fpg%2Fchecks%2Fcluster%2FAbstractCheckOnCluster.java).
 
 ### Write proper tests
 
