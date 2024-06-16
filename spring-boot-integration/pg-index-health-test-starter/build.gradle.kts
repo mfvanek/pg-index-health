@@ -9,6 +9,8 @@ plugins {
 description = "Spring Boot Starter for pg-index-health-core library"
 
 dependencies {
+    api(project(":pg-index-health-model"))
+    api(project(":pg-index-health-jdbc-connection"))
     api(project(":pg-index-health-core"))
     implementation(libs.spring.boot.starter.root)
     annotationProcessor(libs.spring.boot.autoconfigure.processor)
