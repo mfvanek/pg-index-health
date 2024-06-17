@@ -27,6 +27,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -86,8 +87,7 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
         final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
         if (statsResetTimestamp.isPresent()) {
             final long daysBetween = ChronoUnit.DAYS.between(statsResetTimestamp.get(), OffsetDateTime.now(ClockHolder.clock()));
-            return String.format("Last statistics reset on this host was %d days ago (%s)",
-                daysBetween, statsResetTimestamp.get());
+            return String.format(Locale.ROOT, "Last statistics reset on this host was %d days ago (%s)", daysBetween, statsResetTimestamp.get());
         }
         return "Statistics have never been reset on this host";
     }

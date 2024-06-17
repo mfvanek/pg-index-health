@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
+import java.util.Locale;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -51,6 +53,6 @@ class PgConnectionHelperTest {
 
     @Nonnull
     private String getWriteUrl() {
-        return String.format("jdbc:postgresql://localhost:%d/postgres?prepareThreshold=0&preparedStatementCacheQueries=0", 6432);
+        return String.format(Locale.ROOT, "jdbc:postgresql://localhost:%d/postgres?prepareThreshold=0&preparedStatementCacheQueries=0", 6432);
     }
 }

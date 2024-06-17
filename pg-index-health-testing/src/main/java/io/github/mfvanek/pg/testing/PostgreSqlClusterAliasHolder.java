@@ -15,6 +15,7 @@ import org.testcontainers.containers.wait.strategy.WaitStrategy;
 
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -32,8 +33,8 @@ final class PostgreSqlClusterAliasHolder {
         // REPMGR_NODE_NAME must end with a number, so aliases must also
         // To avoid a ConflictException when starting the container, aliases must be unique if there is more than one instance of PostgresSqlClusterWrapper
         final UUID uuid = UUID.randomUUID();
-        this.primaryAlias = String.format("pg-%s-0", uuid);
-        this.standbyAlias = String.format("pg-%s-1", uuid);
+        this.primaryAlias = String.format(Locale.ROOT, "pg-%s-0", uuid);
+        this.standbyAlias = String.format(Locale.ROOT, "pg-%s-1", uuid);
     }
 
     @Nonnull
@@ -92,7 +93,7 @@ final class PostgreSqlClusterAliasHolder {
         envVarsMap.put("REPMGR_PASSWORD", "repmgrpassword");
         envVarsMap.put("REPMGR_PRIMARY_HOST", primaryAlias);
         envVarsMap.put("REPMGR_PRIMARY_PORT", "5432");
-        envVarsMap.put("REPMGR_PARTNER_NODES", String.format("%s,%s:5432", primaryAlias, standbyAlias));
+        envVarsMap.put("REPMGR_PARTNER_NODES", String.format(Locale.ROOT, "%s,%s:5432", primaryAlias, standbyAlias));
         envVarsMap.put("REPMGR_PORT_NUMBER", "5432");
         envVarsMap.put("REPMGR_CONNECT_TIMEOUT", "1");
         envVarsMap.put("REPMGR_RECONNECT_ATTEMPTS", "1");

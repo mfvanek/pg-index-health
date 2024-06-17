@@ -20,9 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,13 +49,9 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     }
 
     @Test
-    void shouldThrowExceptionIfCheckNotFound() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    void shouldThrowExceptionIfCheckNotFound() {
         final DatabaseChecks databaseChecks = new DatabaseChecks(getHaPgConnection());
-        final Field field = databaseChecks.getClass().getDeclaredField("checks");
-        field.setAccessible(true);
-        final Object fieldValue = field.get(databaseChecks);
-        final Method clearMethod = fieldValue.getClass().getDeclaredMethod("clear");
-        clearMethod.invoke(fieldValue);
+        databaseChecks.clearChecks();
 
         assertThatThrownBy(() -> databaseChecks.getCheck(Diagnostic.INVALID_INDEXES, Index.class))
             .isInstanceOf(IllegalStateException.class)

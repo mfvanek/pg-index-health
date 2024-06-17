@@ -17,6 +17,8 @@ import org.mockito.Mockito;
 
 import javax.sql.DataSource;
 
+import java.util.Locale;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -34,7 +36,7 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
     @Test
     void isPrimaryForAnyHost() {
         final int port = getPort();
-        final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
+        final String readUrl = String.format(Locale.ROOT, "jdbc:postgresql://localhost:%d/postgres?" +
             "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=preferSecondary", port);
         final PgConnection any = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl(readUrl));
         assertThat(any).isNotNull();

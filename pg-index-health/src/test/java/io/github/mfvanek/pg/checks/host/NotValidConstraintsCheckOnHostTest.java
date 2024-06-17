@@ -23,6 +23,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
+import java.util.Locale;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
@@ -51,7 +52,7 @@ class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
 
             ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {
                 for (final Constraint constraint : notValidConstraints) {
-                    statement.execute(String.format("alter table %s validate constraint %s;",
+                    statement.execute(String.format(Locale.ROOT, "alter table %s validate constraint %s;",
                         constraint.getTableName(), constraint.getConstraintName()));
                 }
             });
