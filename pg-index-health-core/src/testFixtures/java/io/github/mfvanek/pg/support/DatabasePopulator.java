@@ -41,6 +41,7 @@ import io.github.mfvanek.pg.support.statements.CreateSequenceStatement;
 import io.github.mfvanek.pg.support.statements.CreateSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKey;
 import io.github.mfvanek.pg.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
+import io.github.mfvanek.pg.support.statements.CreateTableWithIdentityPrimaryKey;
 import io.github.mfvanek.pg.support.statements.CreateTableWithSerialPrimaryKeyReferencesToAnotherTable;
 import io.github.mfvanek.pg.support.statements.CreateTableWithUniqueSerialColumn;
 import io.github.mfvanek.pg.support.statements.CreateTableWithoutPrimaryKeyStatement;
@@ -284,6 +285,12 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withSequenceOverflow() {
         statementsToExecuteInSameTransaction.putIfAbsent(97, new CreateSequenceStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withIdentityPrimaryKey() {
+        statementsToExecuteInSameTransaction.putIfAbsent(98, new CreateTableWithIdentityPrimaryKey());
         return this;
     }
 

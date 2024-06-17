@@ -101,6 +101,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         logResult.add(logNotValidConstraints(databaseChecks, pgContext));
         logResult.add(logBtreeIndexesOnArrayColumns(databaseChecks, exclusions, pgContext));
         logResult.add(logSequenceOverflow(databaseChecks, pgContext));
+        logResult.add(logPrimaryKeysWithSerialTypes(databaseChecks, pgContext));
         return logResult;
     }
 
@@ -255,6 +256,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                           @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.SEQUENCE_OVERFLOW, SequenceState.class),
             c -> true, pgContext, SimpleLoggingKey.SEQUENCE_OVERFLOW);
+    }
+
+    @Nonnull
+    private String logPrimaryKeysWithSerialTypes(@Nonnull final DatabaseChecks databaseChecks,
+                                                 @Nonnull final PgContext pgContext) {
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.PRIMARY_KEYS_WITH_SERIAL_TYPES, ColumnWithSerialType.class),
+            c -> true, pgContext, SimpleLoggingKey.PRIMARY_KEYS_WITH_SERIAL_TYPES);
     }
 
     @Nonnull
