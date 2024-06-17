@@ -15,10 +15,9 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
-
-import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
