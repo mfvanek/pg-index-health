@@ -272,5 +272,4 @@ public class DatabaseStructureHealthAutoConfiguration {
     public ConfigurationMaintenanceOnHost configurationMaintenanceOnHost(final PgConnection pgConnection) {
         return new ConfigurationMaintenanceOnHostImpl(pgConnection);
     }
-
 }
