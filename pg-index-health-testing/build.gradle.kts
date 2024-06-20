@@ -3,6 +3,7 @@ plugins {
     id("pg-index-health.java-compilation")
     id("pg-index-health.java-conventions")
     id("pg-index-health.publish")
+    id("pg-index-health.forbidden-apis")
 }
 
 description = "pg-index-health-testing is an auxiliary library that allows you to run a PostgreSQL cluster in tests."

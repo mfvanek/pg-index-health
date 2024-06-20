@@ -4,6 +4,7 @@ plugins {
     id("pg-index-health.java-conventions")
     id("pg-index-health.publish")
     id("pg-index-health.pitest")
+    id("pg-index-health.forbidden-apis")
 }
 
 description = "Spring Boot Starter for pg-index-health-core library"

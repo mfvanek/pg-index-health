@@ -51,7 +51,6 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     @Test
     void shouldThrowExceptionIfCheckNotFound() {
         final DatabaseChecks databaseChecks = new DatabaseChecks(getHaPgConnection());
-        databaseChecks.clearChecks();
 
         assertThatThrownBy(() -> databaseChecks.getCheck(Diagnostic.INVALID_INDEXES, Index.class))
             .isInstanceOf(IllegalStateException.class)

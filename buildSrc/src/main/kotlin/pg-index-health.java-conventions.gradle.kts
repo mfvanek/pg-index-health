@@ -14,12 +14,9 @@ plugins {
     id("java-test-fixtures")
     id("net.ltgt.errorprone")
     id("org.gradle.test-retry")
-    id("de.thetaphi.forbiddenapis")
 }
 
 dependencies {
-    implementation("de.thetaphi:forbiddenapis:3.7")
-
     errorprone("com.google.errorprone:error_prone_core:2.27.1")
     errorprone("jp.skypencil.errorprone.slf4j:errorprone-slf4j:0.1.24")
 
@@ -37,7 +34,7 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks {
     test {
-        dependsOn(checkstyleMain, checkstyleTest, pmdMain, pmdTest, spotbugsMain, spotbugsTest, forbiddenApisMain, forbiddenApisTest)
+        dependsOn(checkstyleMain, checkstyleTest, pmdMain, pmdTest, spotbugsMain, spotbugsTest)
     }
 
     withType<Test>().configureEach {
@@ -95,10 +92,4 @@ spotbugs {
     effort.set(Effort.MAX)
     reportLevel.set(Confidence.LOW)
     excludeFilter.set(file("../config/spotbugs/exclude.xml"))
-}
-
-forbiddenApis {
-    bundledSignatures = setOf("jdk-unsafe", "jdk-deprecated", "jdk-internal", "jdk-non-portable", "jdk-system-out", "jdk-reflection")
-    signaturesFiles = files("${rootDir}/config/forbidden-apis/forbidden-apis.txt")
-    ignoreFailures = false
 }

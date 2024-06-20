@@ -82,8 +82,4 @@ public class DatabaseChecks {
         }
         return (DatabaseCheckOnCluster<T>) check;
     }
-
-    public void clearChecks() {
-        checks.clear();
-    }
 }

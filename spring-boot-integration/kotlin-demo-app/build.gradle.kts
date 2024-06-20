@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.spring.boot.gradlePlugin)
     alias(libs.plugins.spring.dependency.management)
     alias(libs.plugins.detekt)
+    id("pg-index-health.forbidden-apis")
 }
 
 ext["commons-lang3.version"] = libs.versions.commons.lang3.get()

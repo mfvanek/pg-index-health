@@ -4,6 +4,7 @@ plugins {
     id("pg-index-health.java-conventions")
     id("pg-index-health.publish")
     id("pg-index-health.pitest")
+    id("pg-index-health.forbidden-apis")
 }
 
 description = "pg-index-health-generator is an extension for generating database migrations in sql format based on pg-index-health diagnostics."
