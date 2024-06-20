@@ -23,6 +23,7 @@ import io.github.mfvanek.pg.checks.host.IndexesWithNullValuesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.IntersectedIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.InvalidIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.NotValidConstraintsCheckOnHost;
+import io.github.mfvanek.pg.checks.host.PrimaryKeysWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.SequenceOverflowCheckOnHost;
 import io.github.mfvanek.pg.checks.host.TablesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.checks.host.TablesWithMissingIndexesCheckOnHost;
@@ -246,6 +247,14 @@ public class DatabaseStructureHealthAutoConfiguration {
     @ConditionalOnMissingBean
     public SequenceOverflowCheckOnHost sequenceOverflowCheckOnHost(final PgConnection pgConnection) {
         return new SequenceOverflowCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(PrimaryKeysWithSerialTypesCheckOnHost.class)
+    @ConditionalOnBean(PgConnection.class)
+    @ConditionalOnMissingBean
+    public PrimaryKeysWithSerialTypesCheckOnHost primaryKeysWithSerialTypesCheckOnHost(final PgConnection pgConnection) {
+        return new PrimaryKeysWithSerialTypesCheckOnHost(pgConnection);
     }
 
     @Bean

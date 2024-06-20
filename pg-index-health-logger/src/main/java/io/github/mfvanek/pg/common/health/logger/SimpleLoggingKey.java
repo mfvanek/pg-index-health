@@ -33,7 +33,8 @@ public enum SimpleLoggingKey implements LoggingKey {
     INDEXES_WITH_BOOLEAN("indexes_with_boolean"),
     NOT_VALID_CONSTRAINTS("not_valid_constraints"),
     BTREE_INDEXES_ON_ARRAY_COLUMNS("btree_indexes_on_array_columns"),
-    SEQUENCE_OVERFLOW("sequence_overflow");
+    SEQUENCE_OVERFLOW("sequence_overflow"),
+    PRIMARY_KEYS_WITH_SERIAL_TYPES("primary_keys_with_serial_types");
 
     private final String subKeyName;
 

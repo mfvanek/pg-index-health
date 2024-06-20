@@ -67,6 +67,7 @@ All checks can be divided into 2 groups:
 | 17 | Tables with [not valid constraints](https://habr.com/ru/articles/800121/)                                                          | **runtime**/static | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/check_not_valid_constraints.sql)               |
 | 18 | B-tree indexes [on array columns](https://habr.com/ru/articles/800121/)                                                            | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/btree_indexes_on_array_columns.sql)            |
 | 19 | [Sequence overflow](https://habr.com/ru/articles/800121/)                                                                          | **runtime**        | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/sequence_overflow.sql)                         |
+| 20 | Primary keys with [serial types](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_serial)                                | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_with_serial_types.sql)            |                                                                                                                     |
 
 For raw sql queries see [pg-index-health-sql](https://github.com/mfvanek/pg-index-health-sql) project.
 

@@ -42,7 +42,8 @@ public enum Diagnostic {
     INDEXES_WITH_BOOLEAN(ExecutionTopology.ON_PRIMARY, "indexes_with_boolean.sql", QueryExecutors::executeQueryWithSchema),
     NOT_VALID_CONSTRAINTS(ExecutionTopology.ON_PRIMARY, "check_not_valid_constraints.sql", QueryExecutors::executeQueryWithSchema),
     BTREE_INDEXES_ON_ARRAY_COLUMNS(ExecutionTopology.ON_PRIMARY, "btree_indexes_on_array_columns.sql", QueryExecutors::executeQueryWithSchema),
-    SEQUENCE_OVERFLOW(ExecutionTopology.ON_PRIMARY, "sequence_overflow.sql", QueryExecutors::executeQueryWithRemainingPercentageThreshold);
+    SEQUENCE_OVERFLOW(ExecutionTopology.ON_PRIMARY, "sequence_overflow.sql", QueryExecutors::executeQueryWithRemainingPercentageThreshold),
+    PRIMARY_KEYS_WITH_SERIAL_TYPES(ExecutionTopology.ON_PRIMARY, "primary_keys_with_serial_types.sql", QueryExecutors::executeQueryWithSchema);
 
     private final ExecutionTopology executionTopology;
     private final String sqlQueryFileName;

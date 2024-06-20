@@ -23,6 +23,7 @@ import io.github.mfvanek.pg.checks.cluster.IndexesWithNullValuesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.IntersectedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.InvalidIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.NotValidConstraintsCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.PrimaryKeysWithSerialTypesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.SequenceOverflowCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.TablesWithBloatCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.TablesWithMissingIndexesCheckOnCluster;
@@ -65,7 +66,8 @@ public class DatabaseChecks {
             new IndexesWithBooleanCheckOnCluster(haPgConnection),
             new NotValidConstraintsCheckOnCluster(haPgConnection),
             new BtreeIndexesOnArrayColumnsCheckOnCluster(haPgConnection),
-            new SequenceOverflowCheckOnCluster(haPgConnection)
+            new SequenceOverflowCheckOnCluster(haPgConnection),
+            new PrimaryKeysWithSerialTypesCheckOnCluster(haPgConnection)
         );
         allChecks.forEach(check -> this.checks.putIfAbsent(check.getDiagnostic(), check));
     }
