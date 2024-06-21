@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Locale;
 import javax.annotation.Nonnull;
 
 public class CreateSchemaStatement extends AbstractDbStatement {
@@ -27,7 +28,7 @@ public class CreateSchemaStatement extends AbstractDbStatement {
     @Override
     public void postExecute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
         final String checkQuery = String.format(
-            "select exists(select 1 from information_schema.schemata where schema_name = '%s')", schemaName);
+            Locale.ROOT, "select exists(select 1 from information_schema.schemata where schema_name = '%s')", schemaName);
         try (ResultSet rs = statement.executeQuery(checkQuery)) {
             if (rs.next()) {
                 final boolean schemaExists = rs.getBoolean(1);

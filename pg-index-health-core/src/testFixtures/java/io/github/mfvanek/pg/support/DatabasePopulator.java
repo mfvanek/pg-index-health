@@ -52,6 +52,7 @@ import io.github.mfvanek.pg.support.statements.InsertDataIntoTablesAction;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -304,7 +305,7 @@ public final class DatabasePopulator implements AutoCloseable {
     private void createInvalidIndex() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute(String.format("create unique index concurrently if not exists " +
+            statement.execute(String.format(Locale.ROOT, "create unique index concurrently if not exists " +
                 "i_clients_last_name_first_name on %s.clients (last_name, first_name)", schemaName));
         } catch (SQLException ignored) {
             // do nothing, just skip error
@@ -313,6 +314,6 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Override
     public void close() {
-        ExecuteUtils.executeOnDatabase(dataSource, statement -> statement.execute(String.format("drop schema if exists %s cascade", schemaName)));
+        ExecuteUtils.executeOnDatabase(dataSource, statement -> statement.execute(String.format(Locale.ROOT, "drop schema if exists %s cascade", schemaName)));
     }
 }
