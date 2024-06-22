@@ -10,6 +10,8 @@
 
 package io.github.mfvanek.pg.support;
 
+import de.thetaphi.forbiddenapis.SuppressForbidden;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nonnull;
@@ -21,6 +23,7 @@ public final class TestUtils {
     }
 
     @SuppressWarnings("checkstyle:IllegalThrows")
+    @SuppressForbidden
     public static <T> void invokePrivateConstructor(@Nonnull final Class<T> type)
         throws Throwable {
         final Constructor<T> constructor = type.getDeclaredConstructor();

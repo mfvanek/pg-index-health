@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
 import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,7 +62,7 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
 
     @Test
     void isPrimaryForSecondaryHost() {
-        final String readUrl = String.format("jdbc:postgresql://localhost:%d/postgres?" +
+        final String readUrl = String.format(Locale.ROOT, "jdbc:postgresql://localhost:%d/postgres?" +
             "prepareThreshold=0&preparedStatementCacheQueries=0&targetServerType=secondary", getPort());
         final PgConnection secondary = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl(readUrl));
         assertThat(secondary).isNotNull();

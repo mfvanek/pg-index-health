@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Locale;
 import javax.annotation.Nonnull;
 
 public abstract class AbstractDbStatement implements DbStatement {
@@ -25,7 +26,7 @@ public abstract class AbstractDbStatement implements DbStatement {
         @Nonnull final String tableName,
         @Nonnull final String schemaName
     ) throws SQLException {
-        final String checkQuery = String.format("select exists (%n" +
+        final String checkQuery = String.format(Locale.ROOT, "select exists (%n" +
             "   select 1 %n" +
             "   from pg_catalog.pg_class c%n" +
             "   join pg_catalog.pg_namespace n on n.oid = c.relnamespace%n" +
@@ -40,7 +41,7 @@ public abstract class AbstractDbStatement implements DbStatement {
                     return;
                 }
             }
-            throw new IllegalStateException(String.format("Table with name '%s' in schema '%s' wasn't created", tableName, schemaName));
+            throw new IllegalStateException(String.format(Locale.ROOT, "Table with name '%s' in schema '%s' wasn't created", tableName, schemaName));
         }
     }
 

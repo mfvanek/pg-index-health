@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
+import de.thetaphi.forbiddenapis.SuppressForbidden;
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
@@ -52,6 +53,7 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     }
 
     @Test
+    @SuppressForbidden
     void shouldThrowExceptionIfCheckNotFound() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         final DatabaseChecks databaseChecks = new DatabaseChecks(getHaPgConnection());
         final Field field = databaseChecks.getClass().getDeclaredField("checks");

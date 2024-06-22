@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -64,7 +65,7 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         try (Connection connection = getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
             for (int counter = 0; counter < AMOUNT_OF_TRIES; ++counter) {
-                statement.execute(String.format("select count(*) from %s.accounts where client_id = 1::bigint", schemaName));
+                statement.execute(String.format(Locale.ROOT, "select count(*) from %s.accounts where client_id = 1::bigint", schemaName));
             }
         } catch (SQLException e) {
             throw new PgSqlException(e);

@@ -1,8 +1,5 @@
 plugins {
-    id("java-library")
-    id("pg-index-health.java-compilation")
-    id("pg-index-health.java-conventions")
-    id("pg-index-health.publish")
+    id("pg-index-health.java-library")
     id("pg-index-health.pitest")
 }
 

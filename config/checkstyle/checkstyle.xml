@@ -302,10 +302,5 @@
         <module name="CommentsIndentation">
             <property name="tokens" value="SINGLE_LINE_COMMENT, BLOCK_COMMENT_BEGIN"/>
         </module>
-        <module name="IllegalMethodCall">
-            <property name="illegalMethodNames"
-                      value="emptyList,emptyMap,emptySet,emptyNavigableMap,emptyNavigableSet,emptySortedMap,emptySortedSet,singleton,singletonList,singletonMap,asList,unmodifiableList,unmodifiableSet"/>
-            <property name="excludedQualifiers" value=""/>
-        </module>
     </module>
 </module>

@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Locale;
 import javax.annotation.Nonnull;
 
 public class CreateCustomCollationStatement extends AbstractDbStatement {
@@ -40,7 +41,7 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
 
     private boolean isCollationExist(@Nonnull final Statement statement, @Nonnull final String collation) {
         final String sqlQuery = "select exists(select 1 from pg_catalog.pg_collation as pgc where pgc.collname = '%s'::text)";
-        try (ResultSet rs = statement.executeQuery(String.format(sqlQuery, collation))) {
+        try (ResultSet rs = statement.executeQuery(String.format(Locale.ROOT, sqlQuery, collation))) {
             rs.next();
             return rs.getBoolean(1);
         } catch (SQLException e) {
@@ -51,9 +52,9 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
     private void createCustomCollation(@Nonnull final Statement statement,
                                        @Nonnull final String customCollation) throws SQLException {
         if (!isCollationExist(statement, ICU_COLLATION)) {
-            throw new IllegalStateException(String.format("System collation '%s' not found", ICU_COLLATION));
+            throw new IllegalStateException(String.format(Locale.ROOT, "System collation '%s' not found", ICU_COLLATION));
         }
         final String query = "create collation %s.\"%s\" from \"%s\";";
-        statement.execute(String.format(query, SchemaNameHolder.getSchemaName(), customCollation, ICU_COLLATION));
+        statement.execute(String.format(Locale.ROOT, query, SchemaNameHolder.getSchemaName(), customCollation, ICU_COLLATION));
     }
 }

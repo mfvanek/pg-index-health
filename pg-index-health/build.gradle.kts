@@ -1,8 +1,5 @@
 plugins {
-    id("java-library")
-    id("pg-index-health.java-compilation")
-    id("pg-index-health.java-conventions")
-    id("pg-index-health.publish")
+    id("pg-index-health.java-library")
 }
 
 description = "pg-index-health is a Java library for analyzing and maintaining indexes and tables health in PostgreSQL databases on all hosts in the cluster."

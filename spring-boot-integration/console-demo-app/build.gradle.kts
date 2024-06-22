@@ -1,6 +1,5 @@
 plugins {
-    id("pg-index-health.java-compilation")
-    id("pg-index-health.java-conventions")
+    id("pg-index-health.java-application")
     alias(libs.plugins.spring.boot.gradlePlugin)
     alias(libs.plugins.spring.dependency.management)
 }
@@ -15,18 +14,4 @@ dependencies {
     implementation(libs.spring.boot.starter.root)
 
     testImplementation(libs.spring.boot.starter.test)
-
-    spotbugsSlf4j(libs.slf4j.simple)
-}
-
-checkstyle {
-    configFile = file("../../config/checkstyle/checkstyle.xml")
-}
-
-pmd {
-    ruleSetFiles = files("../../config/pmd/pmd.xml")
-}
-
-spotbugs {
-    excludeFilter.set(file("../../config/spotbugs/exclude.xml"))
 }

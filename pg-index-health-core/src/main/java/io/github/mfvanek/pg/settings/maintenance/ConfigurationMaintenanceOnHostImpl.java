@@ -21,6 +21,7 @@ import io.github.mfvanek.pg.utils.QueryExecutors;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -80,7 +81,7 @@ public class ConfigurationMaintenanceOnHostImpl implements ConfigurationMaintena
 
     @Nonnull
     private PgParam getCurrentValue(@Nonnull final String paramName) {
-        final String sqlQuery = String.format("show %s;", paramName);
+        final String sqlQuery = String.format(Locale.ROOT, "show %s;", paramName);
         final List<PgParam> params = QueryExecutors.executeQuery(pgConnection, sqlQuery, rs -> {
             final String currentValue = rs.getString(paramName);
             return PgParamImpl.of(paramName, currentValue);

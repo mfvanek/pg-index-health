@@ -33,6 +33,7 @@ import io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.model.DbObject;
 
+import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Stream;
@@ -76,7 +77,7 @@ public class DatabaseChecks {
     public <T extends DbObject> DatabaseCheckOnCluster<T> getCheck(@Nonnull final Diagnostic diagnostic, @Nonnull final Class<T> type) {
         final DatabaseCheckOnCluster<?> check = checks.get(diagnostic);
         if (check == null) {
-            throw new IllegalStateException(String.format("Check for diagnostic %s not found", diagnostic));
+            throw new IllegalStateException(String.format(Locale.ROOT, "Check for diagnostic %s not found", diagnostic));
         }
         if (!type.isAssignableFrom(check.getType())) {
             throw new IllegalArgumentException("Illegal type: " + type);

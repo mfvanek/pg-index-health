@@ -15,6 +15,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
@@ -51,6 +52,6 @@ class PgConnectionHelperTest {
 
     @Nonnull
     private String getWriteUrl() {
-        return String.format("jdbc:postgresql://localhost:%d/postgres?prepareThreshold=0&preparedStatementCacheQueries=0", 6432);
+        return String.format(Locale.ROOT, "jdbc:postgresql://localhost:%d/postgres?prepareThreshold=0&preparedStatementCacheQueries=0", 6432);
     }
 }

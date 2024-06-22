@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.column;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -78,7 +79,7 @@ public enum SerialType {
         Objects.requireNonNull(pgColumnType, "pgColumnType cannot be null");
         final SerialType serialType = VALUES.get(pgColumnType);
         if (serialType == null) {
-            throw new IllegalArgumentException(String.format("pgColumnType = '%s'", pgColumnType));
+            throw new IllegalArgumentException(String.format(Locale.ROOT, "pgColumnType = '%s'", pgColumnType));
         }
         return serialType;
     }

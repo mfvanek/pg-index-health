@@ -21,6 +21,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.Locale;
+
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
 class PrimaryKeysWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
@@ -43,7 +45,7 @@ class PrimaryKeysWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
             .hasSize(1)
             .containsExactlyInAnyOrder(
                 ColumnWithSerialType.of(
-                    Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "id"), SerialType.BIG_SERIAL, String.format("%s.bad_accounts_id_seq", schemaName)
+                    Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "id"), SerialType.BIG_SERIAL, String.format(Locale.ROOT, "%s.bad_accounts_id_seq", schemaName)
             )));
     }
 

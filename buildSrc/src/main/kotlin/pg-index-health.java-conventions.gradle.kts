@@ -17,8 +17,6 @@ plugins {
 }
 
 dependencies {
-    checkstyle("com.thomasjensen.checkstyle.addons:checkstyle-addons:7.0.1")
-
     errorprone("com.google.errorprone:error_prone_core:2.27.1")
     errorprone("jp.skypencil.errorprone.slf4j:errorprone-slf4j:0.1.24")
 
@@ -75,17 +73,17 @@ tasks {
 }
 
 checkstyle {
-    toolVersion = "10.16.0"
-    configFile = file("../config/checkstyle/checkstyle.xml")
+    toolVersion = "10.17.0"
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     maxWarnings = 0
     maxErrors = 0
 }
 
 pmd {
-    toolVersion = "7.1.0"
+    toolVersion = "7.2.0"
     isConsoleOutput = true
-    ruleSetFiles = files("../config/pmd/pmd.xml")
+    ruleSetFiles = files("${rootDir}/config/pmd/pmd.xml")
     ruleSets = listOf()
 }
 
@@ -93,5 +91,5 @@ spotbugs {
     showProgress.set(true)
     effort.set(Effort.MAX)
     reportLevel.set(Confidence.LOW)
-    excludeFilter.set(file("../config/spotbugs/exclude.xml"))
+    excludeFilter.set(file("${rootDir}/config/spotbugs/exclude.xml"))
 }

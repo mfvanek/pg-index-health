@@ -1,7 +1,7 @@
 import info.solidsoft.gradle.pitest.PitestTask
 
 plugins {
-    id("java-library")
+    id("java")
     id("info.solidsoft.pitest")
 }
 
@@ -11,7 +11,7 @@ dependencies {
 
 pitest {
     junit5PluginVersion.set("1.2.1")
-    pitestVersion.set("1.15.8")
+    pitestVersion.set("1.16.1")
     threads.set(4)
     if (System.getenv("STRYKER_DASHBOARD_API_KEY") != null) {
         outputFormats.set(setOf("stryker-dashboard"))

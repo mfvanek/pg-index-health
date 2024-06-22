@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -38,9 +39,9 @@ public class InsertDataIntoTablesAction implements Runnable {
     public void run() {
         final int clientsCountToCreate = 1_000;
         final String insertClientSql = String.format(
-            "insert into %s.clients (id, first_name, last_name, info) values (?, ?, ?, ?)", schemaName);
+            Locale.ROOT, "insert into %s.clients (id, first_name, last_name, info) values (?, ?, ?, ?)", schemaName);
         final String insertAccountSql = String.format(
-            "insert into %s.accounts (client_id, account_number) values (?, ?)", schemaName);
+            Locale.ROOT, "insert into %s.accounts (client_id, account_number) values (?, ?)", schemaName);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement insertClientStatement = connection.prepareStatement(insertClientSql);
              PreparedStatement insertAccountStatement = connection.prepareStatement(insertAccountSql)) {
@@ -83,7 +84,7 @@ public class InsertDataIntoTablesAction implements Runnable {
     }
 
     private long getNextClientIdFromSequence(@Nonnull final Connection connection) {
-        final String selectClientIdSql = String.format("select nextval('%s.clients_seq')", schemaName);
+        final String selectClientIdSql = String.format(Locale.ROOT, "select nextval('%s.clients_seq')", schemaName);
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(selectClientIdSql)) {
             if (resultSet.next()) {

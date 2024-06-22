@@ -7,6 +7,7 @@ assertj = "3.25.3"
 testcontainers = "1.19.8"
 junit = "5.10.2"
 mockito = "5.12.0"
+forbiddenapis = "3.7"
 
 [libraries]
 jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
@@ -26,6 +27,7 @@ spring-boot-starter-data-jdbc = { group = "org.springframework.boot", name = "sp
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 detekt-libraries = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-libraries", version.ref = "detekt" }
 testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
+forbiddenapis = { group = "de.thetaphi", name = "forbiddenapis", version.ref = "forbiddenapis" }
 
 [plugins]
 spring-boot-gradlePlugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
