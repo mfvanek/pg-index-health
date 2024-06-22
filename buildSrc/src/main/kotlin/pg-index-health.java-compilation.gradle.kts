@@ -3,7 +3,7 @@ plugins {
     id("jacoco")
 }
 
-val versionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
+private val versionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
 dependencies {
     versionCatalog.findLibrary("jsr305").ifPresent {

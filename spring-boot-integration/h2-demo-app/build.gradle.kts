@@ -1,9 +1,7 @@
 plugins {
-    id("pg-index-health.java-compilation")
-    id("pg-index-health.java-conventions")
+    id("pg-index-health.java-application")
     alias(libs.plugins.spring.boot.gradlePlugin)
     alias(libs.plugins.spring.dependency.management)
-    id("pg-index-health.forbidden-apis")
 }
 
 ext["commons-lang3.version"] = libs.versions.commons.lang3.get()
@@ -18,6 +16,4 @@ dependencies {
     runtimeOnly("com.h2database:h2")
 
     testImplementation(libs.spring.boot.starter.test)
-
-    spotbugsSlf4j(libs.slf4j.simple)
 }
