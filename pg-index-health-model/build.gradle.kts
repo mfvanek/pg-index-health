@@ -14,5 +14,5 @@ dependencies {
     testImplementation("org.mockito:mockito-core")
 
     testFixturesImplementation(libs.jsr305)
-    testFixturesImplementation("de.thetaphi:forbiddenapis:3.1")
+    testFixturesCompileOnly(libs.forbiddenapis)
 }

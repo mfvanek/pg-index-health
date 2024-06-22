@@ -1,12 +1,8 @@
 import de.thetaphi.forbiddenapis.gradle.CheckForbiddenApis
 
 plugins {
-    id("java-library")
+    id("java")
     id("de.thetaphi.forbiddenapis")
-}
-
-dependencies {
-    implementation("de.thetaphi:forbiddenapis:3.7")
 }
 
 forbiddenApis {
@@ -15,10 +11,8 @@ forbiddenApis {
     ignoreFailures = false
 }
 
-tasks.withType<CheckForbiddenApis>().configureEach {
-    mustRunAfter(tasks.test)
-}
-
-tasks.build {
-    dependsOn("forbiddenApis")
+tasks {
+    test {
+        dependsOn(withType<CheckForbiddenApis>())
+    }
 }

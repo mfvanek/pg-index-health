@@ -20,4 +20,6 @@ dependencies {
     testImplementation(libs.logback.classic)
     testImplementation("org.mockito:mockito-core")
     testImplementation(libs.postgresql)
+
+    testCompileOnly(libs.forbiddenapis)
 }
