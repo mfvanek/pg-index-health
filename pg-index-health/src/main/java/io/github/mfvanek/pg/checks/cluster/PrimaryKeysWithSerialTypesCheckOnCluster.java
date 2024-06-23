@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  * New "generated as identity" syntax should be used instead.
  *
  * @author Vadim Khizhin
- * @since 0.12.1
+ * @since 0.13.0
  */
 public class PrimaryKeysWithSerialTypesCheckOnCluster extends AbstractCheckOnCluster<ColumnWithSerialType> {
 
