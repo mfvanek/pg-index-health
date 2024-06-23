@@ -89,14 +89,14 @@ but the best way to do it is to use [DatabaseManagement::resetStatistics()](http
 
 Using Gradle:
 ```groovy
-implementation 'io.github.mfvanek:pg-index-health:0.12.0'
+implementation 'io.github.mfvanek:pg-index-health:0.13.0'
 ```
 
 <details>
 <summary>with Kotlin DSL</summary>
 
 ```kotlin
-implementation("io.github.mfvanek:pg-index-health:0.12.0")
+implementation("io.github.mfvanek:pg-index-health:0.13.0")
 ```
 </details>
 
@@ -105,7 +105,7 @@ Using Maven:
 <dependency>
   <groupId>io.github.mfvanek</groupId>
   <artifactId>pg-index-health</artifactId>
-  <version>0.12.0</version>
+  <version>0.13.0</version>
 </dependency>
 ```
 
@@ -133,14 +133,14 @@ More examples you can find in [pg-index-health-spring-boot-demo](https://github.
 Using Gradle:
 
 ```groovy
-testImplementation 'io.github.mfvanek:pg-index-health-test-starter:0.12.0'
+testImplementation 'io.github.mfvanek:pg-index-health-test-starter:0.13.0'
 ```
 
 <details>
 <summary>with Kotlin DSL</summary>
 
 ```kotlin
-testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.12.0")
+testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.13.0")
 ```
 
 </details>
@@ -151,7 +151,7 @@ Using Maven:
 <dependency>
     <groupId>io.github.mfvanek</groupId>
     <artifactId>pg-index-health-test-starter</artifactId>
-    <version>0.12.0</version>
+    <version>0.13.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -163,7 +163,7 @@ Using Maven:
 | 2.4.x       | 8       | 0.3.x — 0.4.x                |
 | 2.5.x       | 8       | 0.5.x — 0.6.x                |
 | 2.6.x       | 8       | 0.7.x                        |
-| 2.7.x       | 11      | 0.8.x — 0.12.x               |
+| 2.7.x       | 11      | 0.8.x — 0.13.x               |
 
 #### Spring Boot 3 compatibility
 
