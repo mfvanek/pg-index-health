@@ -73,11 +73,11 @@ class ConstraintTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
-        final Constraint first = new Constraint("t", "not_valid_id", ConstraintType.CHECK);
-        final Constraint theSame = new Constraint("t", "not_valid_id", ConstraintType.CHECK);
-        final Constraint different = new Constraint("t", "valid_id", ConstraintType.CHECK);
-        final Constraint constraintTypeDoesntMatter = new Constraint("t", "not_valid_id", ConstraintType.FOREIGN_KEY);
-        final Constraint third = new Constraint("t1", "not_valid_id", ConstraintType.FOREIGN_KEY);
+        final Constraint first = Constraint.ofType("t", "not_valid_id", ConstraintType.CHECK);
+        final Constraint theSame = Constraint.ofType("t", "not_valid_id", ConstraintType.CHECK);
+        final Constraint different = Constraint.ofType("t", "valid_id", ConstraintType.CHECK);
+        final Constraint constraintTypeDoesntMatter = Constraint.ofType("t", "not_valid_id", ConstraintType.FOREIGN_KEY);
+        final Constraint third = Constraint.ofType("t1", "not_valid_id", ConstraintType.FOREIGN_KEY);
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -112,5 +112,13 @@ class ConstraintTest {
         EqualsVerifier.forClass(Constraint.class)
             .withIgnoredFields("constraintType")
             .verify();
+    }
+
+    @Test
+    void getValidateSqlShouldWork() {
+        assertThat(Constraint.ofType("t", "not_valid_id", ConstraintType.CHECK).getValidateSql())
+            .isEqualTo("alter table t validate constraint not_valid_id;");
+        assertThat(Constraint.ofType("custom_schema.t", "not_valid_id", ConstraintType.CHECK).getValidateSql())
+            .isEqualTo("alter table custom_schema.t validate constraint not_valid_id;");
     }
 }

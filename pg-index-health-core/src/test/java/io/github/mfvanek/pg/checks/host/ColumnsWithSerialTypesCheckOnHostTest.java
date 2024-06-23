@@ -21,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Locale;
-
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
 class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
@@ -46,9 +44,9 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_account_id"), String.format(Locale.ROOT, "%s.bad_accounts_real_account_id_seq", schemaName)),
+                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_account_id"), ctx.enrichSequenceWithSchema("bad_accounts_real_account_id_seq")),
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), String.format(Locale.ROOT, "%s.bad_accounts_real_client_id_seq", schemaName))
+                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), ctx.enrichSequenceWithSchema("bad_accounts_real_client_id_seq"))
                 ));
     }
 
@@ -61,7 +59,7 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), String.format(Locale.ROOT, "%s.bad_accounts_real_client_id_seq", schemaName))
+                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), ctx.enrichSequenceWithSchema("bad_accounts_real_client_id_seq"))
                 ));
     }
 
@@ -83,7 +81,7 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("one_more_table"), "id"), String.format(Locale.ROOT, "%s.one_more_table_id_seq", schemaName))
+                        Column.ofNotNull(ctx.enrichWithSchema("one_more_table"), "id"), ctx.enrichSequenceWithSchema("one_more_table_id_seq"))
                 ));
     }
 
@@ -96,11 +94,11 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(3)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("one_more_table"), "id"), String.format(Locale.ROOT, "%s.one_more_table_id_seq", schemaName)),
+                        Column.ofNotNull(ctx.enrichWithSchema("one_more_table"), "id"), ctx.enrichSequenceWithSchema("one_more_table_id_seq")),
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("test_table"), "id"), String.format(Locale.ROOT, "%s.test_table_id_seq", schemaName)),
+                        Column.ofNotNull(ctx.enrichWithSchema("test_table"), "id"), ctx.enrichSequenceWithSchema("test_table_id_seq")),
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("test_table"), "num"), String.format(Locale.ROOT, "%s.test_table_num_seq", schemaName))
+                        Column.ofNotNull(ctx.enrichWithSchema("test_table"), "num"), ctx.enrichSequenceWithSchema("test_table_num_seq"))
                 ));
     }
 }

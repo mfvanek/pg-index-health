@@ -96,10 +96,11 @@ public class PgContext {
     }
 
     /**
-     * Complement the given object name with the specified schema name if it is necessary.
+     * Complement the given object (table or index) name with the specified schema name if it is necessary.
      *
      * @param objectName given object name
      * @return object name with schema for non default schemas
+     * @see #enrichSequenceWithSchema
      */
     @Nonnull
     public String enrichWithSchema(@Nonnull final String objectName) {
@@ -109,6 +110,25 @@ public class PgContext {
             return objectName;
         }
 
+        return enrichWithSchemaIfNeed(objectName);
+    }
+
+    /**
+     * Complement the given sequence name with the specified schema name if it is necessary.
+     *
+     * @param sequenceName given sequence name
+     * @return sequence name with schema for all schemas
+     * @see #enrichWithSchema
+     */
+    @Nonnull
+    public String enrichSequenceWithSchema(@Nonnull final String sequenceName) {
+        Validators.notBlank(sequenceName, "sequenceName");
+
+        return enrichWithSchemaIfNeed(sequenceName);
+    }
+
+    @Nonnull
+    private String enrichWithSchemaIfNeed(@Nonnull final String objectName) {
         final String prefix = schemaName + ".";
         if (objectName.toLowerCase(Locale.ROOT).startsWith(prefix)) {
             return objectName;
