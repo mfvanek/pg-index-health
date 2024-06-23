@@ -85,19 +85,41 @@ class PgContextTest {
     @Test
     void complementWithCustomSchema() {
         final PgContext pgContext = PgContext.of("TEST");
-        assertThat(pgContext.enrichWithSchema("table1")).isEqualTo("test.table1");
-        assertThat(pgContext.enrichWithSchema("index1")).isEqualTo("test.index1");
-        assertThat(pgContext.enrichWithSchema("test.table2")).isEqualTo("test.table2");
-        assertThat(pgContext.enrichWithSchema("TEST.table2")).isEqualTo("TEST.table2");
+        assertThat(pgContext.enrichWithSchema("table1"))
+            .isEqualTo("test.table1");
+        assertThat(pgContext.enrichWithSchema("index1"))
+            .isEqualTo("test.index1");
+        assertThat(pgContext.enrichWithSchema("test.table2"))
+            .isEqualTo("test.table2");
+        assertThat(pgContext.enrichWithSchema("TEST.table2"))
+            .isEqualTo("TEST.table2");
+
+        assertThat(pgContext.enrichSequenceWithSchema("id_seq"))
+            .isEqualTo("test.id_seq");
+        assertThat(pgContext.enrichSequenceWithSchema("test.id_seq"))
+            .isEqualTo("test.id_seq");
+        assertThat(pgContext.enrichSequenceWithSchema("TEST.id_seq"))
+            .isEqualTo("TEST.id_seq");
     }
 
     @Test
     void complementWithPublicSchema() {
         final PgContext pgContext = PgContext.ofPublic();
-        assertThat(pgContext.enrichWithSchema("table1")).isEqualTo("table1");
-        assertThat(pgContext.enrichWithSchema("index1")).isEqualTo("index1");
-        assertThat(pgContext.enrichWithSchema("public.table2")).isEqualTo("public.table2");
-        assertThat(pgContext.enrichWithSchema("PUBLIC.table2")).isEqualTo("PUBLIC.table2");
+        assertThat(pgContext.enrichWithSchema("table1"))
+            .isEqualTo("table1");
+        assertThat(pgContext.enrichWithSchema("index1"))
+            .isEqualTo("index1");
+        assertThat(pgContext.enrichWithSchema("public.table2"))
+            .isEqualTo("public.table2");
+        assertThat(pgContext.enrichWithSchema("PUBLIC.table2"))
+            .isEqualTo("PUBLIC.table2");
+
+        assertThat(pgContext.enrichSequenceWithSchema("id_seq"))
+            .isEqualTo("public.id_seq");
+        assertThat(pgContext.enrichSequenceWithSchema("public.id_seq"))
+            .isEqualTo("public.id_seq");
+        assertThat(pgContext.enrichSequenceWithSchema("PUBLIC.id_seq"))
+            .isEqualTo("PUBLIC.id_seq");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -113,5 +135,15 @@ class PgContextTest {
         assertThatThrownBy(() -> pgContext.enrichWithSchema("   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("objectName cannot be blank");
+
+        assertThatThrownBy(() -> pgContext.enrichSequenceWithSchema(null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("sequenceName cannot be null");
+        assertThatThrownBy(() -> pgContext.enrichSequenceWithSchema(""))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("sequenceName cannot be blank");
+        assertThatThrownBy(() -> pgContext.enrichSequenceWithSchema("   "))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("sequenceName cannot be blank");
     }
 }

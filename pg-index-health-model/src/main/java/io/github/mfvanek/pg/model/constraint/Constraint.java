@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
+import java.util.Locale;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -133,6 +134,17 @@ public class Constraint implements DbObject, TableNameAware {
             innerToString() +
             ", constraintType=" + constraintType +
             '}';
+    }
+
+    /**
+     * Builds and returns sql query to validate current constraint.
+     *
+     * @return sql query to validate current constraint
+     * @see <a href="https://www.postgresql.org/docs/current/sql-altertable.html#SQL-ALTERTABLE-DESC-VALIDATE-CONSTRAINT">VALIDATE CONSTRAINT</a>
+     */
+    @Nonnull
+    public String getValidateSql() {
+        return String.format(Locale.ROOT, "alter table %s validate constraint %s;", tableName, constraintName);
     }
 
     /**
