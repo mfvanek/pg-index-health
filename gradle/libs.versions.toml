@@ -2,7 +2,7 @@
 spring-boot = "2.7.18"
 detekt = "1.23.6"
 commons-lang3 = "3.15.0"
-slf4j = "1.7.36" # to be compatible with Spring Boot 2.7.X
+slf4j = "2.0.16" # to be compatible with Spring Boot 2.7.X
 assertj = "3.25.3"
 testcontainers = "1.20.1"
 junit = "5.10.2"
