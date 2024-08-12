@@ -16,7 +16,7 @@ logback-classic = "ch.qos.logback:logback-classic:1.2.12"
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 apache-commons-dbcp2 = "org.apache.commons:commons-dbcp2:2.12.0"
-awaitility = "org.awaitility:awaitility:4.2.1"
+awaitility = "org.awaitility:awaitility:4.2.2"
 apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commons-lang3" }
 equalsverifier = "nl.jqno.equalsverifier:equalsverifier:3.16.1"
 spring-boot-starter-root = { group = "org.springframework.boot", name = "spring-boot-starter", version.ref = "spring-boot" }
