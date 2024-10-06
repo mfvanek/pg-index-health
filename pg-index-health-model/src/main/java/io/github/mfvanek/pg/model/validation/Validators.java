@@ -155,7 +155,7 @@ public final class Validators {
 
     @Nonnull
     private static <T extends TableNameAware & DbObject> List<T> validateThatContainsAtLeastTwoRows(@Nonnull final List<T> rows) {
-        final int size = Objects.requireNonNull(rows).size();
+        final int size = Objects.requireNonNull(rows, "rows cannot be null").size();
         if (0 == size) {
             throw new IllegalArgumentException("rows cannot be empty");
         }
