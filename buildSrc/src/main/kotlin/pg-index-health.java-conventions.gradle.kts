@@ -39,7 +39,7 @@ tasks {
 
     withType<Test>().configureEach {
         retry {
-            maxRetries.set(3)
+            maxRetries.set(2)
             maxFailures.set(10)
             failOnPassedAfterRetry.set(false)
         }

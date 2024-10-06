@@ -10,12 +10,16 @@
 
 package io.github.mfvanek.pg.model.index.utils;
 
+import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 
 public final class DuplicatedIndexesParser {
@@ -35,6 +39,30 @@ public final class DuplicatedIndexesParser {
                 final String sizeAsString = a[1].trim().substring("size=".length());
                 return Map.entry(indexName, Long.valueOf(sizeAsString));
             })
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    /**
+     * Combines given database objects into list.
+     *
+     * @param firstObject  first database object; should be non-null.
+     * @param secondObject second database object; should be non-null.
+     * @param otherObjects other database objects.
+     * @param <T>          the type of the list elements
+     * @return combined list of database objects
+     */
+    @SafeVarargs
+    @Nonnull
+    public static <T extends TableNameAware & DbObject> List<T> combine(@Nonnull final T firstObject,
+                                                                        @Nonnull final T secondObject,
+                                                                        @Nonnull final T... otherObjects) {
+        Objects.requireNonNull(firstObject, "firstObject cannot be null");
+        Objects.requireNonNull(secondObject, "secondObject cannot be null");
+        if (Stream.of(otherObjects).anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("otherObjects cannot contain nulls");
+        }
+        final Stream<T> basePart = Stream.of(firstObject, secondObject);
+        return Stream.concat(basePart, Stream.of(otherObjects))
             .collect(Collectors.toUnmodifiableList());
     }
 }

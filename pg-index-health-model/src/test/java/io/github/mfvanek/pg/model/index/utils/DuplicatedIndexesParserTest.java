@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index.utils;
 
+import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Test;
 
@@ -83,5 +84,35 @@ class DuplicatedIndexesParserTest {
         assertThatThrownBy(() -> DuplicatedIndexesParser.parseAsIndexNameAndSize("idx=i2, size=AB3"))
             .isInstanceOf(NumberFormatException.class)
             .hasMessage("For input string: \"AB3\"");
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void combineShouldThrowExceptionOnInvalidArguments() {
+        assertThatThrownBy(() -> DuplicatedIndexesParser.combine(null, null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("firstObject cannot be null");
+
+        final Table first = Table.of("t1", 1L);
+        assertThatThrownBy(() -> DuplicatedIndexesParser.combine(first, null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("secondObject cannot be null");
+
+        final Table second = Table.of("t2", 1L);
+        final Table third = Table.of("t3", 1L);
+        assertThatThrownBy(() -> DuplicatedIndexesParser.combine(first, second, third, null))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("otherObjects cannot contain nulls");
+    }
+
+    @Test
+    void combineShouldWork() {
+        final Table first = Table.of("t1", 1L);
+        final Table second = Table.of("t2", 1L);
+        final Table third = Table.of("t3", 1L);
+
+        assertThat(DuplicatedIndexesParser.combine(first, second, third))
+            .hasSize(3)
+            .containsExactly(first, second, third);
     }
 }
