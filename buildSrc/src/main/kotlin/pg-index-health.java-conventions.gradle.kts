@@ -17,12 +17,12 @@ plugins {
 }
 
 dependencies {
-    errorprone("com.google.errorprone:error_prone_core:2.27.1")
-    errorprone("jp.skypencil.errorprone.slf4j:errorprone-slf4j:0.1.24")
+    errorprone("com.google.errorprone:error_prone_core:2.33.0")
+    errorprone("jp.skypencil.errorprone.slf4j:errorprone-slf4j:0.1.28")
 
     spotbugsPlugins("jp.skypencil.findbugs.slf4j:bug-pattern:1.5.0")
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.4")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.5")
 }
 
 tasks.withType<JavaCompile>().configureEach {
