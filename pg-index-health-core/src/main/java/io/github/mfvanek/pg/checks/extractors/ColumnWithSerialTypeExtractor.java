@@ -39,6 +39,11 @@ public class ColumnWithSerialTypeExtractor implements ResultSetExtractor<ColumnW
         return ColumnWithSerialType.of(column, SerialType.valueFrom(columnType), sequenceName);
     }
 
+    /**
+     * Creates {@code ColumnWithSerialTypeExtractor} instance.
+     *
+     * @return {@code ColumnWithSerialTypeExtractor} instance
+     */
     @Nonnull
     public static ResultSetExtractor<ColumnWithSerialType> of() {
         return new ColumnWithSerialTypeExtractor();
