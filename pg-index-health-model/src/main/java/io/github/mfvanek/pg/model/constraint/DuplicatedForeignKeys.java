@@ -61,6 +61,17 @@ public class DuplicatedForeignKeys implements DbObject, TableNameAware {
     }
 
     /**
+     * Gets duplicated foreign keys.
+     *
+     * @return list of duplicated foreign keys
+     * @see ForeignKey
+     */
+    @Nonnull
+    public List<ForeignKey> getForeignKeys() {
+        return foreignKeys;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
