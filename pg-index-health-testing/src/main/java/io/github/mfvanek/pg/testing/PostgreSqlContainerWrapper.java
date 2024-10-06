@@ -128,7 +128,7 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
     /**
      * Creates {@code PostgreSqlContainerWrapper} with default PostgreSQL version.
      * The default version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
-     * otherwise the default version {@code 16.2} is used.
+     * otherwise the default version {@code 16.4} is used.
      *
      * @return {@code PostgreSqlContainerWrapper}
      */

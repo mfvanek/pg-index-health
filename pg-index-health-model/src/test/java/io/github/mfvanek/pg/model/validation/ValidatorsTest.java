@@ -10,10 +10,14 @@
 
 package io.github.mfvanek.pg.model.validation;
 
+import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ValidatorsTest {
@@ -75,5 +79,35 @@ class ValidatorsTest {
             .isZero();
         assertThat(Validators.argumentNotNegative(11, "arg"))
             .isEqualTo(11);
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void validateThatTableIsTheSameShouldThrowExceptionOnInvalidArgument() {
+        assertThatThrownBy(() -> Validators.validateThatTableIsTheSame(null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("rows cannot be null");
+
+        final List<Table> empty = List.of();
+        assertThatThrownBy(() -> Validators.validateThatTableIsTheSame(empty))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("rows cannot be empty");
+
+        final List<Table> first = List.of(Table.of("t1", 1L));
+        assertThatThrownBy(() -> Validators.validateThatTableIsTheSame(first))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("rows should contains at least two items");
+
+        final List<Table> second = List.of(Table.of("t1", 1L), Table.of("t2", 1L));
+        assertThatThrownBy(() -> Validators.validateThatTableIsTheSame(second))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Table name is not the same within given rows");
+    }
+
+    @Test
+    void validateThatTableIsTheSameShouldWork() {
+        final List<Table> rows = List.of(Table.of("t1", 1L), Table.of("t1", 1L));
+        assertThatCode(() -> Validators.validateThatTableIsTheSame(rows))
+            .doesNotThrowAnyException();
     }
 }

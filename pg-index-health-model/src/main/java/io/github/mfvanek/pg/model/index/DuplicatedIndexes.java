@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
@@ -44,7 +43,7 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
 
     private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
         final List<IndexWithSize> defensiveCopy = List.copyOf(Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes cannot be null"));
-        validateThatTableIsTheSame(defensiveCopy);
+        Validators.validateThatTableIsTheSame(defensiveCopy);
         this.indexes = defensiveCopy.stream()
             .sorted(INDEX_WITH_SIZE_COMPARATOR)
             .collect(Collectors.toUnmodifiableList());
@@ -174,37 +173,13 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
      *
      * @param firstIndex   first index; should be non-null.
      * @param secondIndex  second index; should be non-null.
-     * @param otherIndexes other indexes
+     * @param otherIndexes other indexes.
      * @return {@code DuplicatedIndexes}
      */
     @Nonnull
     public static DuplicatedIndexes of(@Nonnull final IndexWithSize firstIndex,
                                        @Nonnull final IndexWithSize secondIndex,
                                        @Nonnull final IndexWithSize... otherIndexes) {
-        Objects.requireNonNull(firstIndex, "firstIndex cannot be null");
-        Objects.requireNonNull(secondIndex, "secondIndex cannot be null");
-        if (Stream.of(otherIndexes).anyMatch(Objects::isNull)) {
-            throw new IllegalArgumentException("otherIndexes cannot contain nulls");
-        }
-        final Stream<IndexWithSize> basePart = Stream.of(firstIndex, secondIndex);
-        return new DuplicatedIndexes(Stream.concat(basePart, Stream.of(otherIndexes))
-            .collect(Collectors.toUnmodifiableList()));
-    }
-
-    private static void validateThatTableIsTheSame(@Nonnull final List<? extends TableNameAware> duplicatedIndexes) {
-        final String tableName = validateThatContainsAtLeastTwoRows(duplicatedIndexes).get(0).getTableName();
-        Validators.validateThatTableIsTheSame(tableName, duplicatedIndexes);
-    }
-
-    @Nonnull
-    private static <T> List<T> validateThatContainsAtLeastTwoRows(@Nonnull final List<T> duplicatedIndexes) {
-        final int size = Objects.requireNonNull(duplicatedIndexes).size();
-        if (0 == size) {
-            throw new IllegalArgumentException("duplicatedIndexes cannot be empty");
-        }
-        if (size < 2) {
-            throw new IllegalArgumentException("duplicatedIndexes should contains at least two rows");
-        }
-        return duplicatedIndexes;
+        return new DuplicatedIndexes(DuplicatedIndexesParser.combine(firstIndex, secondIndex, otherIndexes));
     }
 }

@@ -13,7 +13,7 @@ Java >= 11 is required.
     
    This will build the project and run tests.
     
-By default, [PostgreSQL 16.2 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
+By default, [PostgreSQL 16.4 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
 Set `TEST_PG_VERSION` environment variable to use any of other available PostgreSQL version:
 ```
 TEST_PG_VERSION=11.20-alpine

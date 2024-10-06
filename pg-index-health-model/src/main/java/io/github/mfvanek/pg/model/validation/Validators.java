@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.validation;
 
+import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.List;
@@ -139,6 +140,29 @@ public final class Validators {
         if (!tableIsTheSame) {
             throw new IllegalArgumentException("Table name is not the same within given rows");
         }
+    }
+
+    /**
+     * Validates that all rows have the same table name.
+     *
+     * @param rows the rows to check
+     * @param <T> the type of the list elements
+     */
+    public static <T extends TableNameAware & DbObject> void validateThatTableIsTheSame(@Nonnull final List<T> rows) {
+        final String tableName = validateThatContainsAtLeastTwoRows(rows).get(0).getTableName();
+        validateThatTableIsTheSame(tableName, rows);
+    }
+
+    @Nonnull
+    private static <T extends TableNameAware & DbObject> List<T> validateThatContainsAtLeastTwoRows(@Nonnull final List<T> rows) {
+        final int size = Objects.requireNonNull(rows, "rows cannot be null").size();
+        if (0 == size) {
+            throw new IllegalArgumentException("rows cannot be empty");
+        }
+        if (size < 2) {
+            throw new IllegalArgumentException("rows should contains at least two items");
+        }
+        return rows;
     }
 
     /**
