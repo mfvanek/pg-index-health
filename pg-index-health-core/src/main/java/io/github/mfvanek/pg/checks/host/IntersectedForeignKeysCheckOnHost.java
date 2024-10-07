@@ -20,27 +20,29 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Check for duplicated (completely identical) foreign keys on a specific host.
+ * Check for intersected (partially identical) foreign keys on a specific host.
  *
  * @author Ivan Vahrushev
+ * @see DuplicatedForeignKeysCheckOnHost
  * @since 0.13.1
  */
-public class DuplicatedForeignKeysCheckOnHost extends AbstractCheckOnHost<DuplicatedForeignKeys> {
+public class IntersectedForeignKeysCheckOnHost extends AbstractCheckOnHost<DuplicatedForeignKeys> {
 
     /**
-     * Creates a new {@code DuplicatedForeignKeysCheckOnHost} object.
+     * Creates a new {@code IntersectedForeignKeysCheckOnHost} object.
      *
      * @param pgConnection connection to the PostgreSQL database, must not be null
      */
-    public DuplicatedForeignKeysCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.DUPLICATED_FOREIGN_KEYS);
+    public IntersectedForeignKeysCheckOnHost(@Nonnull final PgConnection pgConnection) {
+        super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.INTERSECTED_FOREIGN_KEYS);
     }
 
     /**
-     * Returns duplicated (completely identical) foreign keys in the specified schema.
+     * Returns intersected (partially identical) foreign keys in the specified schema (except completely identical).
      *
      * @param pgContext check's context with the specified schema
-     * @return list of duplicated foreign keys
+     * @return list of intersected foreign keys
+     * @see DuplicatedForeignKeysCheckOnHost
      */
     @Nonnull
     @Override
