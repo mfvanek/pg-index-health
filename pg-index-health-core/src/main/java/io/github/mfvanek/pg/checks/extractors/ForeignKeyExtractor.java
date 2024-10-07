@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2019-2024. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health
+ *
+ * This file is a part of "pg-index-health" - a Java library for
+ * analyzing and maintaining indexes health in PostgreSQL databases.
+ *
+ * Licensed under the Apache License 2.0
+ */
+
 package io.github.mfvanek.pg.checks.extractors;
 
 import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
@@ -9,7 +19,6 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.checks.extractors.TableExtractor.TABLE_NAME;
@@ -24,10 +33,10 @@ public class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey> {
 
     public static final String CONSTRAINT_NAME = "constraint_name";
 
-    private final String prefix;
+    private final boolean forDuplicate;
 
-    private ForeignKeyExtractor(@Nonnull final String prefix) {
-        this.prefix = Objects.requireNonNull(prefix, "prefix cannot be null");
+    private ForeignKeyExtractor(final boolean forDuplicate) {
+        this.forDuplicate = forDuplicate;
     }
 
     /**
@@ -35,23 +44,29 @@ public class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey> {
      */
     @Nonnull
     @Override
-    public ForeignKey extractData(@Nonnull ResultSet resultSet) throws SQLException {
+    public ForeignKey extractData(@Nonnull final ResultSet resultSet) throws SQLException {
         final String tableName = resultSet.getString(TABLE_NAME);
-        final String constraintName = resultSet.getString(decoratedColumnName(CONSTRAINT_NAME));
-        final Array columnsArray = resultSet.getArray(decoratedColumnName("columns"));
+        final String constraintName = resultSet.getString(getConstraintNameField());
+        final Array columnsArray = resultSet.getArray(getColumnsField());
         final String[] rawColumns = (String[]) columnsArray.getArray();
         final List<Column> columns = ColumnsInForeignKeyParser.parseRawColumnData(tableName, rawColumns);
         return ForeignKey.of(tableName, constraintName, columns);
     }
 
-    private String decoratedColumnName(@Nonnull final String columnName) {
-        if (prefix.isBlank()) {
-            return columnName;
+    @Nonnull
+    private String getConstraintNameField() {
+        if (forDuplicate) {
+            return "duplicate_" + CONSTRAINT_NAME;
         }
-        if (prefix.endsWith("_")) {
-            return prefix + columnName;
+        return CONSTRAINT_NAME;
+    }
+
+    @Nonnull
+    private String getColumnsField() {
+        if (forDuplicate) {
+            return "duplicate_constraint_columns";
         }
-        return prefix + "_" + columnName;
+        return "columns";
     }
 
     /**
@@ -61,17 +76,16 @@ public class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey> {
      */
     @Nonnull
     public static ResultSetExtractor<ForeignKey> ofDefault() {
-        return new ForeignKeyExtractor("");
+        return new ForeignKeyExtractor(false);
     }
 
     /**
-     * Creates {@code ForeignKeyExtractor} instance with given prefix.
+     * Creates {@code ForeignKeyExtractor} instance for duplicated constraint fields.
      *
-     * @param prefix prefix for foreign key column; must be non-null.
      * @return {@code ForeignKeyExtractor} instance
      */
     @Nonnull
-    public static ResultSetExtractor<ForeignKey> withPrefix(@Nonnull final String prefix) {
-        return new ForeignKeyExtractor(prefix);
+    public static ResultSetExtractor<ForeignKey> ofDuplicate() {
+        return new ForeignKeyExtractor(true);
     }
 }
