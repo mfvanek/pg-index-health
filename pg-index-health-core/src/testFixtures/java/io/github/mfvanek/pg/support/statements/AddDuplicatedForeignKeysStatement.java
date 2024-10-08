@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.support.statements;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class AddDuplicatedForeignKeyStatement extends AbstractDbStatement {
+public class AddDuplicatedForeignKeysStatement extends AbstractDbStatement {
 
     @Nonnull
     @Override

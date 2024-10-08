@@ -13,11 +13,15 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
+import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
@@ -36,11 +40,27 @@ class IntersectedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldIgnoreCompletelyIdenticalForeignKeys(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withDuplicatedForeignKey(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withDuplicatedForeignKeys(), ctx ->
             assertThat(check)
                 .executing(ctx)
                 .isEmpty());
     }
 
-    // TODO add tests
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void onDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withIntersectedForeignKeys(), ctx -> {
+            final String expectedTableName = ctx.enrichWithSchema("client_preferences");
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    DuplicatedForeignKeys.of(
+                        ForeignKey.of(expectedTableName, "c_client_preferences_email_phone_fk",
+                            List.of(Column.ofNotNull(expectedTableName, "email"), Column.ofNotNull(expectedTableName, "phone"))),
+                        ForeignKey.of(expectedTableName, "c_client_preferences_phone_email_fk",
+                            List.of(Column.ofNotNull(expectedTableName, "phone"), Column.ofNotNull(expectedTableName, "email"))))
+                );
+        });
+    }
 }

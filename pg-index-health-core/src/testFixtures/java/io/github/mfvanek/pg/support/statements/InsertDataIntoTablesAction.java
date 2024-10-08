@@ -39,7 +39,7 @@ public class InsertDataIntoTablesAction implements Runnable {
     public void run() {
         final int clientsCountToCreate = 1_000;
         final String insertClientSql = String.format(
-            Locale.ROOT, "insert into %s.clients (id, first_name, last_name, info) values (?, ?, ?, ?)", schemaName);
+            Locale.ROOT, "insert into %s.clients (id, first_name, last_name, info, email, phone) values (?, ?, ?, ?, ?, ?)", schemaName);
         final String insertAccountSql = String.format(
             Locale.ROOT, "insert into %s.accounts (client_id, account_number) values (?, ?)", schemaName);
         try (Connection connection = dataSource.getConnection();
@@ -50,10 +50,14 @@ public class InsertDataIntoTablesAction implements Runnable {
                 final long clientId = getNextClientIdFromSequence(connection);
                 final String lastName = RandomStringUtils.randomAlphabetic(10);
                 final String firstName = RandomStringUtils.randomAlphabetic(10);
+                final String email = lastName + "_" + firstName + "@example.com";
+                final String phone = RandomStringUtils.randomAlphanumeric(11);
                 insertClientStatement.setLong(1, clientId);
                 insertClientStatement.setString(2, firstName);
                 insertClientStatement.setString(3, lastName);
                 insertClientStatement.setObject(4, prepareClientInfo());
+                insertClientStatement.setString(5, email);
+                insertClientStatement.setString(6, phone);
                 insertClientStatement.executeUpdate();
 
                 final String accountNumber = generateAccountNumber(clientId);

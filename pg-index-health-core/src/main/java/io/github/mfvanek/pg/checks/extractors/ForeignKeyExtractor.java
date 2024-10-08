@@ -19,6 +19,7 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.checks.extractors.TableExtractor.TABLE_NAME;
@@ -33,10 +34,10 @@ public class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey> {
 
     public static final String CONSTRAINT_NAME = "constraint_name";
 
-    private final boolean forDuplicate;
+    private final String prefix;
 
-    private ForeignKeyExtractor(final boolean forDuplicate) {
-        this.forDuplicate = forDuplicate;
+    private ForeignKeyExtractor(@Nonnull final String prefix) {
+        this.prefix = Objects.requireNonNull(prefix, "prefix cannot be null");
     }
 
     /**
@@ -55,16 +56,16 @@ public class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey> {
 
     @Nonnull
     private String getConstraintNameField() {
-        if (forDuplicate) {
-            return "duplicate_" + CONSTRAINT_NAME;
+        if (!prefix.isBlank()) {
+            return prefix + "_" + CONSTRAINT_NAME;
         }
         return CONSTRAINT_NAME;
     }
 
     @Nonnull
     private String getColumnsField() {
-        if (forDuplicate) {
-            return "duplicate_constraint_columns";
+        if (!prefix.isBlank()) {
+            return prefix + "_constraint_columns";
         }
         return "columns";
     }
@@ -76,16 +77,17 @@ public class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey> {
      */
     @Nonnull
     public static ResultSetExtractor<ForeignKey> ofDefault() {
-        return new ForeignKeyExtractor(false);
+        return new ForeignKeyExtractor("");
     }
 
     /**
-     * Creates {@code ForeignKeyExtractor} instance for duplicated constraint fields.
+     * Creates {@code ForeignKeyExtractor} instance for duplicated/intersected constraint fields with given prefix.
      *
+     * @param prefix given prefix; must be non-null
      * @return {@code ForeignKeyExtractor} instance
      */
     @Nonnull
-    public static ResultSetExtractor<ForeignKey> ofDuplicate() {
-        return new ForeignKeyExtractor(true);
+    public static ResultSetExtractor<ForeignKey> withPrefix(@Nonnull final String prefix) {
+        return new ForeignKeyExtractor(prefix);
     }
 }

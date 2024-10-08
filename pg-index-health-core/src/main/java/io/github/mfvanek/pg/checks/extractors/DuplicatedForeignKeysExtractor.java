@@ -30,9 +30,9 @@ public class DuplicatedForeignKeysExtractor implements ResultSetExtractor<Duplic
     private final ResultSetExtractor<ForeignKey> defaultExtractor;
     private final ResultSetExtractor<ForeignKey> duplicateKeyExtractor;
 
-    private DuplicatedForeignKeysExtractor() {
+    private DuplicatedForeignKeysExtractor(@Nonnull final String prefix) {
         this.defaultExtractor = ForeignKeyExtractor.ofDefault();
-        this.duplicateKeyExtractor = ForeignKeyExtractor.ofDuplicate();
+        this.duplicateKeyExtractor = ForeignKeyExtractor.withPrefix(prefix);
     }
 
     /**
@@ -49,10 +49,11 @@ public class DuplicatedForeignKeysExtractor implements ResultSetExtractor<Duplic
     /**
      * Creates {@code DuplicatedForeignKeysExtractor} instance.
      *
+     * @param prefix given prefix; must be non-null
      * @return {@code DuplicatedForeignKeysExtractor} instance
      */
     @Nonnull
-    public static ResultSetExtractor<DuplicatedForeignKeys> of() {
-        return new DuplicatedForeignKeysExtractor();
+    public static ResultSetExtractor<DuplicatedForeignKeys> of(@Nonnull final String prefix) {
+        return new DuplicatedForeignKeysExtractor(prefix);
     }
 }

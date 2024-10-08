@@ -38,16 +38,18 @@ class DuplicatedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withDuplicatedForeignKey(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withDuplicatedForeignKeys(), ctx -> {
+            final String expectedTableName = ctx.enrichWithSchema("accounts");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
                     DuplicatedForeignKeys.of(
-                        ForeignKey.ofColumn(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id",
-                            Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id")),
-                        ForeignKey.ofColumn(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_duplicate",
-                            Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id")))
-                ));
+                        ForeignKey.ofColumn(expectedTableName, "c_accounts_fk_client_id",
+                            Column.ofNotNull(expectedTableName, "client_id")),
+                        ForeignKey.ofColumn(expectedTableName, "c_accounts_fk_client_id_duplicate",
+                            Column.ofNotNull(expectedTableName, "client_id")))
+                );
+        });
     }
 }

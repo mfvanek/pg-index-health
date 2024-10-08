@@ -19,7 +19,7 @@ public class CreateTableWithIdentityPrimaryKey extends AbstractDbStatement {
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("create table if not exists {schemaName}.test_table_with_identity_pk(" +
-            "id bigint not null generated always as identity, " +
+            "id bigint not null generated always as identity," +
             "num bigserial);"
         );
     }

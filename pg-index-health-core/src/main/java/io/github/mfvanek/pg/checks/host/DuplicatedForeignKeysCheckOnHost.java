@@ -45,6 +45,6 @@ public class DuplicatedForeignKeysCheckOnHost extends AbstractCheckOnHost<Duplic
     @Nonnull
     @Override
     public List<DuplicatedForeignKeys> check(@Nonnull final PgContext pgContext) {
-        return executeQuery(pgContext, DuplicatedForeignKeysExtractor.of());
+        return executeQuery(pgContext, DuplicatedForeignKeysExtractor.of("duplicate"));
     }
 }
