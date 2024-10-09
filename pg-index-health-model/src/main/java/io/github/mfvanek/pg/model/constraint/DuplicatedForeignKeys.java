@@ -26,6 +26,7 @@ import javax.annotation.concurrent.Immutable;
  *
  * @author Ivan Vakhrushev
  * @see TableNameAware
+ * @since 0.13.1
  */
 @Immutable
 public class DuplicatedForeignKeys implements DbObject, TableNameAware {

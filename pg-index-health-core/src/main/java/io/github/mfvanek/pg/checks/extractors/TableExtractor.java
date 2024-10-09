@@ -42,6 +42,11 @@ public class TableExtractor implements ResultSetExtractor<Table> {
         return Table.of(tableName, tableSize);
     }
 
+    /**
+     * Creates {@code TableExtractor} instance.
+     *
+     * @return {@code TableExtractor} instance
+     */
     @Nonnull
     public static ResultSetExtractor<Table> of() {
         return new TableExtractor();

@@ -13,15 +13,13 @@ package io.github.mfvanek.pg.support.statements;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-public class CreateTableWithIdentityPrimaryKey extends AbstractDbStatement {
+public class AddDuplicatedForeignKeysStatement extends AbstractDbStatement {
 
     @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("create table if not exists {schemaName}.test_table_with_identity_pk(" +
-            "id bigint not null generated always as identity," +
-            "num bigserial);"
+        return List.of("alter table if exists {schemaName}.accounts " +
+            "add constraint c_accounts_fk_client_id_duplicate foreign key (client_id) references {schemaName}.clients (id);"
         );
     }
-
 }

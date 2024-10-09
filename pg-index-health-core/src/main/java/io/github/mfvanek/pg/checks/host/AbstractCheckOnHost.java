@@ -40,7 +40,6 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
     protected static final String INDEX_SIZE = IndexWithSingleColumnExtractor.INDEX_SIZE;
     protected static final String BLOAT_SIZE = "bloat_size";
     protected static final String BLOAT_PERCENTAGE = "bloat_percentage";
-    protected static final String CONSTRAINT_NAME = "constraint_name";
 
     /**
      * An original java type representing database object.

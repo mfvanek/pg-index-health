@@ -45,6 +45,11 @@ public class ColumnExtractor implements ResultSetExtractor<Column> {
         return Column.ofNullable(tableName, columnName);
     }
 
+    /**
+     * Creates {@code ColumnExtractor} instance.
+     *
+     * @return {@code ColumnExtractor} instance
+     */
     @Nonnull
     public static ResultSetExtractor<Column> of() {
         return new ColumnExtractor();
