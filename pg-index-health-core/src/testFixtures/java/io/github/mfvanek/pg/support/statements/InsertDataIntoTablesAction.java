@@ -48,10 +48,11 @@ public class InsertDataIntoTablesAction implements Runnable {
             connection.setAutoCommit(false);
             for (int counter = 0; counter < clientsCountToCreate; ++counter) {
                 final long clientId = getNextClientIdFromSequence(connection);
-                final String lastName = RandomStringUtils.randomAlphabetic(10);
-                final String firstName = RandomStringUtils.randomAlphabetic(10);
-                final String email = lastName + "_" + firstName + "@example.com";
-                final String phone = RandomStringUtils.randomAlphanumeric(11);
+                final String lastName = RandomStringUtils.secureStrong().nextAlphabetic(15);
+                final String firstName = RandomStringUtils.secureStrong().nextAlphabetic(10);
+                final String domainName = RandomStringUtils.secureStrong().nextAlphabetic(8);
+                final String email = lastName + "_" + firstName + "@" + domainName + ".com";
+                final String phone = RandomStringUtils.secureStrong().nextAlphanumeric(10);
                 insertClientStatement.setLong(1, clientId);
                 insertClientStatement.setString(2, firstName);
                 insertClientStatement.setString(3, lastName);
@@ -68,6 +69,7 @@ public class InsertDataIntoTablesAction implements Runnable {
             // Insert at least one duplicated client row
             final long clientId = getNextClientIdFromSequence(connection);
             insertClientStatement.setLong(1, clientId);
+            insertClientStatement.setString(6, clientId + "unique_phone");
             insertClientStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
