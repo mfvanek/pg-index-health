@@ -48,6 +48,7 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
         });
     }
 
+    @SuppressWarnings("checkstyle:LambdaBodyLength")
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
@@ -56,22 +57,26 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
             assertThat(existsStatisticsForTable(schemaName, "accounts"))
                 .isTrue();
 
+            final String accountsTableName = ctx.enrichWithSchema("accounts");
+            final String clientsTableName = ctx.enrichWithSchema("clients");
             assertThat(check.check(ctx))
-                .hasSize(3)
+                .hasSize(4)
                 .containsExactlyInAnyOrder(
-                    IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
-                    IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_pkey"), 0L, 0L, 0),
-                    IndexWithBloat.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("clients_pkey"), 0L, 0L, 0))
+                    IndexWithBloat.of(accountsTableName, ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
+                    IndexWithBloat.of(accountsTableName, ctx.enrichWithSchema("accounts_pkey"), 0L, 0L, 0),
+                    IndexWithBloat.of(clientsTableName, ctx.enrichWithSchema("clients_pkey"), 0L, 0L, 0),
+                    IndexWithBloat.of(clientsTableName, ctx.enrichWithSchema("i_clients_email_phone"), 0L, 0L, 0))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L)
                 .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
 
             final Predicate<IndexSizeAware> predicate = FilterIndexesBySizePredicate.of(1L)
                 .and(FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("accounts_pkey")));
             assertThat(check.check(ctx, predicate))
-                .hasSize(2)
+                .hasSize(3)
                 .containsExactlyInAnyOrder(
-                    IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
-                    IndexWithBloat.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("clients_pkey"), 0L, 0L, 0))
+                    IndexWithBloat.of(accountsTableName, ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
+                    IndexWithBloat.of(clientsTableName, ctx.enrichWithSchema("clients_pkey"), 0L, 0L, 0),
+                    IndexWithBloat.of(clientsTableName, ctx.enrichWithSchema("i_clients_email_phone"), 0L, 0L, 0))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L)
                 .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
 

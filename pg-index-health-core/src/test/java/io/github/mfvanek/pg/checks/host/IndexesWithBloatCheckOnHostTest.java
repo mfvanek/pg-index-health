@@ -42,13 +42,16 @@ class IndexesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
             Assertions.assertThat(existsStatisticsForTable(schemaName, "accounts"))
                 .isTrue();
 
+            final String accountsTableName = ctx.enrichWithSchema("accounts");
+            final String clientsTableName = ctx.enrichWithSchema("clients");
             assertThat(check)
                 .executing(ctx)
-                .hasSize(3)
+                .hasSize(4)
                 .containsExactlyInAnyOrder(
-                    IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
-                    IndexWithBloat.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_pkey"), 0L, 0L, 0),
-                    IndexWithBloat.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("clients_pkey"), 0L, 0L, 0))
+                    IndexWithBloat.of(accountsTableName, ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
+                    IndexWithBloat.of(accountsTableName, ctx.enrichWithSchema("accounts_pkey"), 0L, 0L, 0),
+                    IndexWithBloat.of(clientsTableName, ctx.enrichWithSchema("clients_pkey"), 0L, 0L, 0),
+                    IndexWithBloat.of(clientsTableName, ctx.enrichWithSchema("i_clients_email_phone"), 0L, 0L, 0))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L)
                 .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
         });

@@ -14,12 +14,14 @@ import io.github.mfvanek.pg.checks.cluster.BtreeIndexesOnArrayColumnsCheckOnClus
 import io.github.mfvanek.pg.checks.cluster.ColumnsWithJsonTypeCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ColumnsWithSerialTypesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ColumnsWithoutDescriptionCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.DuplicatedForeignKeysCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.DuplicatedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ForeignKeysNotCoveredWithIndexCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.FunctionsWithoutDescriptionCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.IndexesWithBloatCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.IndexesWithBooleanCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.IndexesWithNullValuesCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.IntersectedForeignKeysCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.IntersectedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.InvalidIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.NotValidConstraintsCheckOnCluster;
@@ -67,7 +69,9 @@ public class DatabaseChecks {
             new NotValidConstraintsCheckOnCluster(haPgConnection),
             new BtreeIndexesOnArrayColumnsCheckOnCluster(haPgConnection),
             new SequenceOverflowCheckOnCluster(haPgConnection),
-            new PrimaryKeysWithSerialTypesCheckOnCluster(haPgConnection)
+            new PrimaryKeysWithSerialTypesCheckOnCluster(haPgConnection),
+            new DuplicatedForeignKeysCheckOnCluster(haPgConnection),
+            new IntersectedForeignKeysCheckOnCluster(haPgConnection)
         );
         allChecks.forEach(check -> this.checks.putIfAbsent(check.getDiagnostic(), check));
     }
