@@ -50,6 +50,11 @@ public class IndexWithSingleColumnExtractor implements ResultSetExtractor<IndexW
         return IndexWithColumns.ofSingle(tableName, indexName, indexSize, column);
     }
 
+    /**
+     * Creates {@code IndexWithSingleColumnExtractor} instance.
+     *
+     * @return {@code IndexWithSingleColumnExtractor} instance
+     */
     @Nonnull
     public static ResultSetExtractor<IndexWithColumns> of() {
         return new IndexWithSingleColumnExtractor();

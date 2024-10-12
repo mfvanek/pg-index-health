@@ -34,7 +34,9 @@ public enum SimpleLoggingKey implements LoggingKey {
     NOT_VALID_CONSTRAINTS("not_valid_constraints"),
     BTREE_INDEXES_ON_ARRAY_COLUMNS("btree_indexes_on_array_columns"),
     SEQUENCE_OVERFLOW("sequence_overflow"),
-    PRIMARY_KEYS_WITH_SERIAL_TYPES("primary_keys_with_serial_types");
+    PRIMARY_KEYS_WITH_SERIAL_TYPES("primary_keys_with_serial_types"),
+    DUPLICATED_FOREIGN_KEYS("duplicated_foreign_keys"),
+    INTERSECTED_FOREIGN_KEYS("intersected_foreign_keys");
 
     private final String subKeyName;
 

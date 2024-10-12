@@ -39,7 +39,7 @@ public class InsertDataIntoTablesAction implements Runnable {
     public void run() {
         final int clientsCountToCreate = 1_000;
         final String insertClientSql = String.format(
-            Locale.ROOT, "insert into %s.clients (id, first_name, last_name, info) values (?, ?, ?, ?)", schemaName);
+            Locale.ROOT, "insert into %s.clients (id, first_name, last_name, info, email, phone) values (?, ?, ?, ?, ?, ?)", schemaName);
         final String insertAccountSql = String.format(
             Locale.ROOT, "insert into %s.accounts (client_id, account_number) values (?, ?)", schemaName);
         try (Connection connection = dataSource.getConnection();
@@ -48,12 +48,17 @@ public class InsertDataIntoTablesAction implements Runnable {
             connection.setAutoCommit(false);
             for (int counter = 0; counter < clientsCountToCreate; ++counter) {
                 final long clientId = getNextClientIdFromSequence(connection);
-                final String lastName = RandomStringUtils.randomAlphabetic(10);
-                final String firstName = RandomStringUtils.randomAlphabetic(10);
+                final String lastName = RandomStringUtils.secureStrong().nextAlphabetic(15);
+                final String firstName = RandomStringUtils.secureStrong().nextAlphabetic(10);
+                final String domainName = RandomStringUtils.secureStrong().nextAlphabetic(8);
+                final String email = lastName + "_" + firstName + "@" + domainName + ".com";
+                final String phone = RandomStringUtils.secureStrong().nextAlphanumeric(10);
                 insertClientStatement.setLong(1, clientId);
                 insertClientStatement.setString(2, firstName);
                 insertClientStatement.setString(3, lastName);
                 insertClientStatement.setObject(4, prepareClientInfo());
+                insertClientStatement.setString(5, email);
+                insertClientStatement.setString(6, phone);
                 insertClientStatement.executeUpdate();
 
                 final String accountNumber = generateAccountNumber(clientId);
@@ -64,6 +69,7 @@ public class InsertDataIntoTablesAction implements Runnable {
             // Insert at least one duplicated client row
             final long clientId = getNextClientIdFromSequence(connection);
             insertClientStatement.setLong(1, clientId);
+            insertClientStatement.setString(6, clientId + "unique_phone");
             insertClientStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {

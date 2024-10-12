@@ -47,7 +47,9 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                 .withJsonType()
                 .withSerialType()
                 .withFunctions()
-                .withNotValidConstraints(),
+                .withNotValidConstraints()
+                .withDuplicatedForeignKeys()
+                .withIntersectedForeignKeys(),
             ctx -> {
                 collectStatistics(schemaName);
                 final List<String> logs = logger.logAll(Exclusions.empty(), ctx);
@@ -56,16 +58,16 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                     .containsExactlyInAnyOrder(
                         "invalid_indexes:1",
                         "duplicated_indexes:2",
-                        "foreign_keys_without_index:2",
-                        "tables_without_primary_key:1",
+                        "foreign_keys_without_index:5",
+                        "tables_without_primary_key:2",
                         "indexes_with_null_values:1",
-                        "indexes_with_bloat:16",
+                        "indexes_with_bloat:17",
                         "tables_with_bloat:2",
                         "intersected_indexes:11",
                         "unused_indexes:12",
                         "tables_with_missing_indexes:0",
-                        "tables_without_description:4",
-                        "columns_without_description:18",
+                        "tables_without_description:5",
+                        "columns_without_description:23",
                         "columns_with_json_type:1",
                         "columns_with_serial_types:2",
                         "functions_without_description:2",
@@ -73,7 +75,9 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
                         "not_valid_constraints:2",
                         "btree_indexes_on_array_columns:2",
                         "sequence_overflow:0",
-                        "primary_keys_with_serial_types:1");
+                        "primary_keys_with_serial_types:1",
+                        "duplicated_foreign_keys:3",
+                        "intersected_foreign_keys:1");
             });
     }
 

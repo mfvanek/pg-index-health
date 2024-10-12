@@ -10,14 +10,12 @@
 
 package io.github.mfvanek.pg.checks.host;
 
+import io.github.mfvanek.pg.checks.extractors.ForeignKeyExtractor;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
-import io.github.mfvanek.pg.utils.ColumnsInForeignKeyParser;
 
-import java.sql.Array;
 import java.util.List;
 import javax.annotation.Nonnull;
 
@@ -42,13 +40,6 @@ public class ForeignKeysNotCoveredWithIndexCheckOnHost extends AbstractCheckOnHo
     @Nonnull
     @Override
     public List<ForeignKey> check(@Nonnull final PgContext pgContext) {
-        return executeQuery(pgContext, rs -> {
-            final String tableName = rs.getString(TABLE_NAME);
-            final String constraintName = rs.getString(CONSTRAINT_NAME);
-            final Array columnsArray = rs.getArray("columns");
-            final String[] rawColumns = (String[]) columnsArray.getArray();
-            final List<Column> columns = ColumnsInForeignKeyParser.parseRawColumnData(tableName, rawColumns);
-            return ForeignKey.of(tableName, constraintName, columns);
-        });
+        return executeQuery(pgContext, ForeignKeyExtractor.ofDefault());
     }
 }

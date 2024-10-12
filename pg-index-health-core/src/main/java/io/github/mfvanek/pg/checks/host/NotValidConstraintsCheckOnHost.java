@@ -19,6 +19,8 @@ import io.github.mfvanek.pg.model.constraint.ConstraintType;
 import java.util.List;
 import javax.annotation.Nonnull;
 
+import static io.github.mfvanek.pg.checks.extractors.ForeignKeyExtractor.CONSTRAINT_NAME;
+
 /**
  * Check for not valid constraints on a specific host.
  *

@@ -18,6 +18,8 @@ import io.github.mfvanek.pg.support.statements.AddCommentOnColumnsStatement;
 import io.github.mfvanek.pg.support.statements.AddCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.support.statements.AddCommentOnTablesStatement;
+import io.github.mfvanek.pg.support.statements.AddDuplicatedForeignKeysStatement;
+import io.github.mfvanek.pg.support.statements.AddIntersectedForeignKeysStatement;
 import io.github.mfvanek.pg.support.statements.AddInvalidForeignKeyStatement;
 import io.github.mfvanek.pg.support.statements.AddLinksBetweenAccountsAndClientsStatement;
 import io.github.mfvanek.pg.support.statements.ConvertColumnToJsonTypeStatement;
@@ -292,6 +294,18 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withIdentityPrimaryKey() {
         statementsToExecuteInSameTransaction.putIfAbsent(98, new CreateTableWithIdentityPrimaryKey());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withDuplicatedForeignKeys() {
+        statementsToExecuteInSameTransaction.putIfAbsent(105, new AddDuplicatedForeignKeysStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withIntersectedForeignKeys() {
+        statementsToExecuteInSameTransaction.putIfAbsent(106, new AddIntersectedForeignKeysStatement());
         return this;
     }
 

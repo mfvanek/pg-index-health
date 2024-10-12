@@ -28,6 +28,7 @@ import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.constraint.Constraint;
+import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.function.StoredFunction;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
@@ -102,6 +103,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         logResult.add(logBtreeIndexesOnArrayColumns(databaseChecks, exclusions, pgContext));
         logResult.add(logSequenceOverflow(databaseChecks, pgContext));
         logResult.add(logPrimaryKeysWithSerialTypes(databaseChecks, pgContext));
+        logResult.add(logDuplicatedForeignKeys(databaseChecks, pgContext));
+        logResult.add(logIntersectedForeignKeys(databaseChecks, pgContext));
         return logResult;
     }
 
@@ -253,7 +256,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
 
     @Nonnull
     private String logSequenceOverflow(@Nonnull final DatabaseChecks databaseChecks,
-                                          @Nonnull final PgContext pgContext) {
+                                       @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.SEQUENCE_OVERFLOW, SequenceState.class),
             c -> true, pgContext, SimpleLoggingKey.SEQUENCE_OVERFLOW);
     }
@@ -263,6 +266,20 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                                  @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.PRIMARY_KEYS_WITH_SERIAL_TYPES, ColumnWithSerialType.class),
             c -> true, pgContext, SimpleLoggingKey.PRIMARY_KEYS_WITH_SERIAL_TYPES);
+    }
+
+    @Nonnull
+    private String logDuplicatedForeignKeys(@Nonnull final DatabaseChecks databaseChecks,
+                                            @Nonnull final PgContext pgContext) {
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.DUPLICATED_FOREIGN_KEYS, DuplicatedForeignKeys.class),
+            c -> true, pgContext, SimpleLoggingKey.DUPLICATED_FOREIGN_KEYS);
+    }
+
+    @Nonnull
+    private String logIntersectedForeignKeys(@Nonnull final DatabaseChecks databaseChecks,
+                                             @Nonnull final PgContext pgContext) {
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.INTERSECTED_FOREIGN_KEYS, DuplicatedForeignKeys.class),
+            c -> true, pgContext, SimpleLoggingKey.INTERSECTED_FOREIGN_KEYS);
     }
 
     @Nonnull

@@ -67,7 +67,9 @@ All checks can be divided into 2 groups:
 | 17 | Tables with [not valid constraints](https://habr.com/ru/articles/800121/)                                                          | **runtime**/static | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/check_not_valid_constraints.sql)               |
 | 18 | B-tree indexes [on array columns](https://habr.com/ru/articles/800121/)                                                            | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/btree_indexes_on_array_columns.sql)            |
 | 19 | [Sequence overflow](https://habr.com/ru/articles/800121/)                                                                          | **runtime**        | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/sequence_overflow.sql)                         |
-| 20 | Primary keys with [serial types](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_serial)                                | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_with_serial_types.sql)            |                                                                                                                     |
+| 20 | Primary keys with [serial types](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_serial)                                | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_with_serial_types.sql)            |
+| 21 | Duplicated ([completely identical](https://habr.com/ru/articles/803841/)) foreign keys                                             | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/duplicated_foreign_keys.sql)                   |
+| 22 | Intersected ([partially identical](https://habr.com/ru/articles/803841/)) foreign keys                                             | static             | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/intersected_foreign_keys.sql)                  |
 
 For raw sql queries see [pg-index-health-sql](https://github.com/mfvanek/pg-index-health-sql) project.
 
@@ -126,7 +128,7 @@ All these cases are covered with examples in the [pg-index-health-demo](https://
 
 There is a Spring Boot starter [pg-index-health-test-starter](spring-boot-integration%2Fpg-index-health-test-starter)
 for unit/integration testing as well.  
-More examples you can find in [pg-index-health-spring-boot-demo](https://github.com/mfvanek/pg-index-health-spring-boot-demo) project.
+More examples you can find in [pg-index-health-demo](https://github.com/mfvanek/pg-index-health-demo) project.
 
 ### Starter installation
 
