@@ -11,7 +11,10 @@
 package io.github.mfvanek.pg.spring.postgres.kt
 
 import com.zaxxer.hikari.HikariDataSource
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost
+import io.github.mfvanek.pg.common.maintenance.Diagnostic
 import io.github.mfvanek.pg.connection.PgConnection
+import io.github.mfvanek.pg.model.DbObject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,6 +33,9 @@ class PostgresDemoApplicationKtTest {
     @Autowired
     private lateinit var environment: Environment
 
+    @Autowired
+    private lateinit var checks: List<DatabaseCheckOnHost<out DbObject?>>
+
     @Test
     fun contextLoadsAndDoesNotContainPgIndexHealthBeans() {
         assertThat(applicationContext.getBean("dataSource"))
@@ -42,5 +48,12 @@ class PostgresDemoApplicationKtTest {
             .isNotBlank()
             .startsWith("jdbc:postgresql://localhost:")
             .endsWith("/demo_for_pg_index_health_starter?loggerLevel=OFF")
+    }
+
+    @Test
+    fun checksShouldWork() {
+        assertThat(checks)
+            .hasSameSizeAs(Diagnostic.entries.toTypedArray())
+        checks.forEach { c -> assertThat(c.check()).isEmpty() }
     }
 }

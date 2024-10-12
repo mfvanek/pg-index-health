@@ -128,7 +128,7 @@ All these cases are covered with examples in the [pg-index-health-demo](https://
 
 There is a Spring Boot starter [pg-index-health-test-starter](spring-boot-integration%2Fpg-index-health-test-starter)
 for unit/integration testing as well.  
-More examples you can find in [pg-index-health-spring-boot-demo](https://github.com/mfvanek/pg-index-health-spring-boot-demo) project.
+More examples you can find in [pg-index-health-demo](https://github.com/mfvanek/pg-index-health-demo) project.
 
 ### Starter installation
 

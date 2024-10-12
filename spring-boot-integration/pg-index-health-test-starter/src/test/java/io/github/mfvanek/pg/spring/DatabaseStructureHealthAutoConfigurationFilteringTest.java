@@ -14,12 +14,14 @@ import io.github.mfvanek.pg.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
 import io.github.mfvanek.pg.checks.host.ColumnsWithJsonTypeCheckOnHost;
 import io.github.mfvanek.pg.checks.host.ColumnsWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.ColumnsWithoutDescriptionCheckOnHost;
+import io.github.mfvanek.pg.checks.host.DuplicatedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.checks.host.DuplicatedIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.ForeignKeysNotCoveredWithIndexCheckOnHost;
 import io.github.mfvanek.pg.checks.host.FunctionsWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.checks.host.IndexesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.checks.host.IndexesWithBooleanCheckOnHost;
 import io.github.mfvanek.pg.checks.host.IndexesWithNullValuesCheckOnHost;
+import io.github.mfvanek.pg.checks.host.IntersectedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.checks.host.IntersectedIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.InvalidIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.NotValidConstraintsCheckOnHost;
@@ -114,7 +116,9 @@ class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigur
             StatisticsMaintenanceOnHost.class,
             ConfigurationMaintenanceOnHost.class,
             SequenceOverflowCheckOnHost.class,
-            PrimaryKeysWithSerialTypesCheckOnHost.class
+            PrimaryKeysWithSerialTypesCheckOnHost.class,
+            DuplicatedForeignKeysCheckOnHost.class,
+            IntersectedForeignKeysCheckOnHost.class
         );
     }
 }
