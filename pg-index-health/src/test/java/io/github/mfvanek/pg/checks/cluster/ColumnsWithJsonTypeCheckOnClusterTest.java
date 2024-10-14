@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -28,20 +28,24 @@ class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(Column.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.COLUMNS_WITH_JSON_TYPE);
+        assertThat(check)
+            .hasType(Column.class)
+            .hasDiagnostic(Diagnostic.COLUMNS_WITH_JSON_TYPE)
+            .isStaticOnly();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withJsonType(), ctx -> {
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
                     Column.ofNullable(ctx.enrichWithSchema("clients"), "info"));
 
-            assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("clients"))))
+            assertThat(check)
+                .executing(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("clients")))
                 .isEmpty();
         });
     }
@@ -51,7 +55,8 @@ class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
     void shouldIgnoreDroppedColumns(final String schemaName) {
         // withData - skipped here below
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withJsonType().withDroppedInfoColumn(), ctx ->
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .isEmpty());
     }
 }

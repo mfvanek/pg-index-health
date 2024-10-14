@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * @see QueryExecutor
  * @see QueryExecutors
  */
-public enum Diagnostic {
+public enum Diagnostic implements CheckTypeAware {
 
     BLOATED_INDEXES(ExecutionTopology.ON_PRIMARY, "bloated_indexes.sql", QueryExecutors::executeQueryWithBloatThreshold, EnumSet.of(CheckType.RUNTIME)),
     BLOATED_TABLES(ExecutionTopology.ON_PRIMARY, "bloated_tables.sql", QueryExecutors::executeQueryWithBloatThreshold, EnumSet.of(CheckType.RUNTIME)),
@@ -68,7 +68,7 @@ public enum Diagnostic {
         this.executionTopology = Objects.requireNonNull(executionTopology, "executionTopology cannot be null");
         this.sqlQueryFileName = Objects.requireNonNull(sqlQueryFileName, "sqlQueryFileName cannot be null");
         this.queryExecutor = Objects.requireNonNull(queryExecutor, "queryExecutor cannot be null");
-        this.checkTypes = EnumSet.copyOf(validateCheckTypes(checkTypes));
+        this.checkTypes = EnumSet.copyOf(Objects.requireNonNull(checkTypes, "checkTypes cannot be null"));
     }
 
     /**
@@ -111,30 +111,19 @@ public enum Diagnostic {
     }
 
     /**
-     * Defines whether this diagnostic is {@link CheckType#STATIC} (can be run in unit/integration tests on an empty database).
-     *
-     * @return true if this is a static check
+     * {@inheritDoc}
      */
+    @Override
     public boolean isStatic() {
         return checkTypes.contains(CheckType.STATIC);
     }
 
     /**
-     * Defines whether this diagnostic is {@link CheckType#RUNTIME} (make sense to perform only on a production database with real data and statistics).
-     *
-     * @return true if this is a runtime check
+     * {@inheritDoc}
      */
+    @Override
     public boolean isRuntime() {
         return checkTypes.contains(CheckType.RUNTIME);
-    }
-
-    @Nonnull
-    private static Set<CheckType> validateCheckTypes(@Nonnull final Set<CheckType> checkTypes) {
-        Objects.requireNonNull(checkTypes, "checkTypes cannot be null");
-        if (checkTypes.isEmpty()) {
-            throw new IllegalArgumentException("checkTypes cannot be empty");
-        }
-        return checkTypes;
     }
 
     /**
@@ -152,26 +141,5 @@ public enum Diagnostic {
          * Across the entire database cluster.
          */
         ACROSS_CLUSTER
-    }
-
-    /**
-     * Defines a type of database check.
-     *
-     * @author Ivan Vakhrushev
-     * @since 0.13.2
-     */
-    public enum CheckType {
-        /**
-         * Static check is a check that can be run in unit/integration tests on an empty database.
-         * All static checks can be performed at runtime as well.
-         */
-        STATIC,
-        /**
-         * Runtime check is a check that make sense to perform only on a production database with real data and statistics.
-         * Runtime checks usually require aggregating data from all nodes in the cluster.
-         *
-         * @see ExecutionTopology#ACROSS_CLUSTER
-         */
-        RUNTIME
     }
 }

@@ -48,6 +48,13 @@ class DiagnosticTest {
     }
 
     @Test
+    void checkTypeMustBeSet() {
+        for (final Diagnostic diagnostic : Diagnostic.values()) {
+            assertThat(diagnostic.isStatic() || diagnostic.isRuntime()).isTrue();
+        }
+    }
+
+    @Test
     void shouldBeAtLeastTwoChecksAcrossTheCluster() {
         final long countOfChecksAcrossTheCluster = Arrays.stream(Diagnostic.values())
             .peek(d -> {

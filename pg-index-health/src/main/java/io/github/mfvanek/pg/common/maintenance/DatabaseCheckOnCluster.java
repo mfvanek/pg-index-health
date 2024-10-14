@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * @see DbObject
  * @since 0.6.0
  */
-public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAware, RawTypeAware<T> {
+public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAware, CheckTypeAware, RawTypeAware<T> {
 
     /**
      * Executes the check in the specified schema.
@@ -76,5 +76,21 @@ public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAw
             .map(ctx -> check(ctx, exclusionsFilter))
             .flatMap(List::stream)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    default boolean isStatic() {
+        return getDiagnostic().isStatic();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    default boolean isRuntime() {
+        return getDiagnostic().isRuntime();
     }
 }

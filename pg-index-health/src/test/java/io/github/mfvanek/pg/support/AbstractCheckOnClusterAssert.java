@@ -10,9 +10,8 @@
 
 package io.github.mfvanek.pg.support;
 
-import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import org.assertj.core.api.AbstractAssert;
@@ -20,16 +19,17 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ListAssert;
 import org.assertj.core.util.CheckReturnValue;
 
+import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
 @SuppressWarnings({"PMD.LinguisticNaming", "checkstyle:AbstractClassName"})
-public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAssert<AbstractCheckOnHostAssert<E>, DatabaseCheckOnHost<E>> {
+public class AbstractCheckOnClusterAssert<E extends DbObject> extends AbstractAssert<AbstractCheckOnClusterAssert<E>, DatabaseCheckOnCluster<E>> {
 
-    protected AbstractCheckOnHostAssert(@Nonnull final DatabaseCheckOnHost<E> abstractCheckOnHost) {
-        super(abstractCheckOnHost, AbstractCheckOnHostAssert.class);
+    protected AbstractCheckOnClusterAssert(@Nonnull final DatabaseCheckOnCluster<E> abstractCheckOnCluster) {
+        super(abstractCheckOnCluster, AbstractCheckOnClusterAssert.class);
     }
 
-    public <T> AbstractCheckOnHostAssert<E> hasType(@Nonnull final Class<T> type) {
+    public <T> AbstractCheckOnClusterAssert<E> hasType(@Nonnull final Class<T> type) {
         isNotNull();
         if (!actual.getType().isAssignableFrom(type)) {
             failWithMessage("Expected type %s but was %s", type, actual.getType());
@@ -37,7 +37,7 @@ public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAsser
         return this;
     }
 
-    public AbstractCheckOnHostAssert<E> hasDiagnostic(@Nonnull final Diagnostic diagnostic) {
+    public AbstractCheckOnClusterAssert<E> hasDiagnostic(@Nonnull final Diagnostic diagnostic) {
         isNotNull();
         if (actual.getDiagnostic() != diagnostic) {
             failWithMessage("Expected diagnostic %s but was %s", diagnostic, actual.getDiagnostic());
@@ -45,15 +45,7 @@ public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAsser
         return this;
     }
 
-    public AbstractCheckOnHostAssert<E> hasHost(@Nonnull final PgHost host) {
-        isNotNull();
-        if (!actual.getHost().equals(host)) {
-            failWithMessage("Expected host %s but was %s", host, actual.getHost());
-        }
-        return this;
-    }
-
-    public AbstractCheckOnHostAssert<E> isStaticOnly() {
+    public AbstractCheckOnClusterAssert<E> isStaticOnly() {
         isNotNull();
         final boolean result = actual.isStatic() && !actual.isRuntime();
         if (!result) {
@@ -62,7 +54,7 @@ public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAsser
         return this;
     }
 
-    public AbstractCheckOnHostAssert<E> isRuntimeOnly() {
+    public AbstractCheckOnClusterAssert<E> isRuntimeOnly() {
         isNotNull();
         final boolean result = actual.isRuntime() && !actual.isStatic();
         if (!result) {
@@ -71,7 +63,7 @@ public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAsser
         return this;
     }
 
-    public AbstractCheckOnHostAssert<E> isBothRuntimeAndStatic() {
+    public AbstractCheckOnClusterAssert<E> isBothRuntimeAndStatic() {
         isNotNull();
         final boolean result = actual.isRuntime() && actual.isStatic();
         if (!result) {
@@ -93,7 +85,13 @@ public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAsser
     }
 
     @CheckReturnValue
-    public static <T extends DbObject> AbstractCheckOnHostAssert<T> assertThat(@Nonnull final DatabaseCheckOnHost<T> actual) {
-        return new AbstractCheckOnHostAssert<>(actual);
+    public ListAssert<E> executing(@Nonnull final PgContext pgContext, @Nonnull Predicate<? super E> exclusionsFilter) {
+        isNotNull();
+        return Assertions.assertThat(actual.check(pgContext, exclusionsFilter));
+    }
+
+    @CheckReturnValue
+    public static <T extends DbObject> AbstractCheckOnClusterAssert<T> assertThat(@Nonnull final DatabaseCheckOnCluster<T> actual) {
+        return new AbstractCheckOnClusterAssert<>(actual);
     }
 }
