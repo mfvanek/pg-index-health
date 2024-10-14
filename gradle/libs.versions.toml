@@ -7,7 +7,7 @@ assertj = "3.26.3"
 testcontainers = "1.20.2"
 junit = "5.11.2"
 mockito = "5.14.1"
-forbiddenapis = "3.7"
+forbiddenapis = "3.8"
 
 [libraries]
 jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
