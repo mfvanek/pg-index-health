@@ -32,7 +32,8 @@ class FunctionsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(StoredFunction.class)
             .hasDiagnostic(Diagnostic.FUNCTIONS_WITHOUT_DESCRIPTION)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isStaticOnly();
     }
 
     @ParameterizedTest

@@ -30,7 +30,8 @@ class InvalidIndexesCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(Index.class)
             .hasDiagnostic(Diagnostic.INVALID_INDEXES)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isBothRuntimeAndStatic();
     }
 
     @ParameterizedTest

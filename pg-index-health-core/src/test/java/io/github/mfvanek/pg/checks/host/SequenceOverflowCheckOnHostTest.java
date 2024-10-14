@@ -31,7 +31,8 @@ class SequenceOverflowCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(SequenceState.class)
             .hasDiagnostic(Diagnostic.SEQUENCE_OVERFLOW)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isRuntimeOnly();
     }
 
     @ParameterizedTest

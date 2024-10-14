@@ -32,7 +32,8 @@ class PrimaryKeysWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(ColumnWithSerialType.class)
             .hasDiagnostic(Diagnostic.PRIMARY_KEYS_WITH_SERIAL_TYPES)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isStaticOnly();
     }
 
     @ParameterizedTest

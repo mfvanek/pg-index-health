@@ -30,7 +30,8 @@ class TablesWithMissingIndexesCheckOnHostTest extends StatisticsAwareTestBase {
         assertThat(check)
             .hasType(TableWithMissingIndex.class)
             .hasDiagnostic(Diagnostic.TABLES_WITH_MISSING_INDEXES)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isRuntimeOnly();
     }
 
     @ParameterizedTest

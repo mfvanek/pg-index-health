@@ -31,7 +31,8 @@ class IndexesWithBooleanCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(IndexWithColumns.class)
             .hasDiagnostic(Diagnostic.INDEXES_WITH_BOOLEAN)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isStaticOnly();
     }
 
     @ParameterizedTest

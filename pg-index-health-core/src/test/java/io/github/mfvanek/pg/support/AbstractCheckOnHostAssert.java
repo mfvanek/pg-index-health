@@ -53,6 +53,33 @@ public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAsser
         return this;
     }
 
+    public AbstractCheckOnHostAssert<E> isStaticOnly() {
+        isNotNull();
+        final boolean result = actual.getDiagnostic().isStatic() && !actual.getDiagnostic().isRuntime();
+        if (!result) {
+            failWithMessage("Expected diagnostic should be STATIC but was %s", actual.getDiagnostic());
+        }
+        return this;
+    }
+
+    public AbstractCheckOnHostAssert<E> isRuntimeOnly() {
+        isNotNull();
+        final boolean result = actual.getDiagnostic().isRuntime() && !actual.getDiagnostic().isStatic();
+        if (!result) {
+            failWithMessage("Expected diagnostic should be RUNTIME but was %s", actual.getDiagnostic());
+        }
+        return this;
+    }
+
+    public AbstractCheckOnHostAssert<E> isBothRuntimeAndStatic() {
+        isNotNull();
+        final boolean result = actual.getDiagnostic().isRuntime() && actual.getDiagnostic().isStatic();
+        if (!result) {
+            failWithMessage("Expected diagnostic should be both RUNTIME and STATIC but was %s", actual.getDiagnostic());
+        }
+        return this;
+    }
+
     @CheckReturnValue
     public ListAssert<E> executing() {
         isNotNull();

@@ -34,7 +34,8 @@ class IntersectedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(DuplicatedForeignKeys.class)
             .hasDiagnostic(Diagnostic.INTERSECTED_FOREIGN_KEYS)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isStaticOnly();
     }
 
     @ParameterizedTest

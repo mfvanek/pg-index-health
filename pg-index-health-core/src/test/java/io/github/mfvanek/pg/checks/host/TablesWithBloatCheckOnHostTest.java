@@ -31,7 +31,8 @@ class TablesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
         assertThat(check)
             .hasType(TableWithBloat.class)
             .hasDiagnostic(Diagnostic.BLOATED_TABLES)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isRuntimeOnly();
     }
 
     @ParameterizedTest

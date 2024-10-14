@@ -115,7 +115,7 @@ public enum Diagnostic {
      *
      * @return true if this is a static check
      */
-    public boolean isStaticCheck() {
+    public boolean isStatic() {
         return checkTypes.contains(CheckType.STATIC);
     }
 
@@ -124,7 +124,7 @@ public enum Diagnostic {
      *
      * @return true if this is a runtime check
      */
-    public boolean isRuntimeCheck() {
+    public boolean isRuntime() {
         return checkTypes.contains(CheckType.RUNTIME);
     }
 

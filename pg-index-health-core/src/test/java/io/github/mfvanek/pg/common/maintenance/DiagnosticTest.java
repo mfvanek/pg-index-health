@@ -62,7 +62,7 @@ class DiagnosticTest {
     @Test
     void shouldBeAtLeastTwoChecksBothRuntimeAndStatic() {
         final long countOfChecksBothRuntimeAndStatic = Arrays.stream(Diagnostic.values())
-            .filter(d -> d.isStaticCheck() && d.isRuntimeCheck())
+            .filter(d -> d.isStatic() && d.isRuntime())
             .count();
         assertThat(countOfChecksBothRuntimeAndStatic).isGreaterThanOrEqualTo(2);
     }
@@ -70,7 +70,7 @@ class DiagnosticTest {
     @Test
     void shouldBeAtLeastFiveRuntimeChecks() {
         final long countOfRuntimeChecks = Arrays.stream(Diagnostic.values())
-            .filter(d -> d.isRuntimeCheck() && !d.isStaticCheck())
+            .filter(d -> d.isRuntime() && !d.isStatic())
             .count();
         assertThat(countOfRuntimeChecks).isGreaterThanOrEqualTo(5);
     }
@@ -79,7 +79,7 @@ class DiagnosticTest {
     void allAcrossClusterChecksShouldBeRuntime() {
         Arrays.stream(Diagnostic.values())
             .filter(Diagnostic::isAcrossCluster)
-            .forEach(d -> assertThat(d.isRuntimeCheck())
+            .forEach(d -> assertThat(d.isRuntime())
                 .isTrue());
     }
 
