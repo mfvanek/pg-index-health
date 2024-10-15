@@ -19,17 +19,19 @@ package io.github.mfvanek.pg.common.maintenance;
 public interface CheckTypeAware {
 
     /**
-     * Defines whether this check/diagnostic is {@link CheckType#STATIC} (can be run in unit/integration tests on an empty database).
-     *
-     * @return true if this is a static check
-     */
-    boolean isStatic();
-
-    /**
-     * Defines whether this check/diagnostic is {@link CheckType#RUNTIME} (make sense to perform only on a production database with real data and statistics).
+     * Defines whether this check/diagnostic is runtime (make sense to perform only on a production database with real data and statistics).
      *
      * @return true if this is a runtime check
      * @see Diagnostic.ExecutionTopology#ACROSS_CLUSTER
      */
     boolean isRuntime();
+
+    /**
+     * Defines whether this check/diagnostic is static (can be run in unit/integration tests on an empty database).
+     *
+     * @return true if this is a static check
+     */
+    default boolean isStatic() {
+        return !isRuntime();
+    }
 }

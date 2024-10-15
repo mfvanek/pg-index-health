@@ -52,14 +52,6 @@ public interface DatabaseCheckOnHost<T extends DbObject> extends DiagnosticAware
      * {@inheritDoc}
      */
     @Override
-    default boolean isStatic() {
-        return getDiagnostic().isStatic();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     default boolean isRuntime() {
         return getDiagnostic().isRuntime();
     }

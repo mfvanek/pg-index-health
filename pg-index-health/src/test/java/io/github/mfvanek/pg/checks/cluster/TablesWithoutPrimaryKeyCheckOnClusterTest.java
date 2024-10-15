@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -28,20 +28,24 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(Table.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY);
+        assertThat(check)
+            .hasType(Table.class)
+            .hasDiagnostic(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY)
+            .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withTableWithoutPrimaryKey(), ctx -> {
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(1)
                 .containsExactly(Table.of(ctx.enrichWithSchema("bad_clients"), 0L))
                 .allMatch(t -> t.getTableSizeInBytes() == 0L);
 
-            assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients"))))
+            assertThat(check)
+                .executing(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients")))
                 .isEmpty();
         });
     }
@@ -50,7 +54,8 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldReturnNothingForMaterializedViews(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withMaterializedView(), ctx ->
-            assertThat(check.check())
+            assertThat(check)
+                .executing(ctx)
                 .isEmpty());
     }
 }

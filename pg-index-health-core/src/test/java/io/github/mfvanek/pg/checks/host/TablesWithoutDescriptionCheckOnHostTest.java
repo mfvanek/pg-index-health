@@ -32,7 +32,7 @@ class TablesWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
             .hasType(Table.class)
             .hasDiagnostic(Diagnostic.TABLES_WITHOUT_DESCRIPTION)
             .hasHost(getHost())
-            .isStaticOnly();
+            .isStatic();
     }
 
     @ParameterizedTest

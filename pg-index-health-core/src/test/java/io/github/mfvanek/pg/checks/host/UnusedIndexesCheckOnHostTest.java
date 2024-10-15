@@ -31,7 +31,7 @@ class UnusedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
             .hasType(UnusedIndex.class)
             .hasDiagnostic(Diagnostic.UNUSED_INDEXES)
             .hasHost(getHost())
-            .isRuntimeOnly();
+            .isRuntime();
     }
 
     @ParameterizedTest

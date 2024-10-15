@@ -31,7 +31,7 @@ class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase
         assertThat(check)
             .hasType(IndexWithColumns.class)
             .hasDiagnostic(Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS)
-            .isStaticOnly();
+            .isStatic();
     }
 
     @ParameterizedTest

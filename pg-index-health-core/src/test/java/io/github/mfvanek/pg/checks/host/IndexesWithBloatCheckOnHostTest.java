@@ -32,7 +32,7 @@ class IndexesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
             .hasType(IndexWithBloat.class)
             .hasDiagnostic(Diagnostic.BLOATED_INDEXES)
             .hasHost(getHost())
-            .isRuntimeOnly();
+            .isRuntime();
     }
 
     @ParameterizedTest

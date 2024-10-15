@@ -32,7 +32,7 @@ class DuplicatedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
             .hasType(DuplicatedIndexes.class)
             .hasDiagnostic(Diagnostic.DUPLICATED_INDEXES)
             .hasHost(getHost())
-            .isStaticOnly();
+            .isStatic();
     }
 
     @ParameterizedTest

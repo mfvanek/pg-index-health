@@ -31,7 +31,7 @@ class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
             .hasType(Table.class)
             .hasDiagnostic(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY)
             .hasHost(getHost())
-            .isStaticOnly();
+            .isStatic();
     }
 
     @ParameterizedTest

@@ -24,7 +24,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class IntersectedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -32,15 +32,18 @@ class IntersectedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(DuplicatedForeignKeys.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.INTERSECTED_FOREIGN_KEYS);
+        assertThat(check)
+            .hasType(DuplicatedForeignKeys.class)
+            .hasDiagnostic(Diagnostic.INTERSECTED_FOREIGN_KEYS)
+            .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldIgnoreCompletelyIdenticalForeignKeys(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withDuplicatedForeignKeys(), ctx ->
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .isEmpty());
     }
 
@@ -49,7 +52,8 @@ class IntersectedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withIntersectedForeignKeys(), ctx -> {
             final String expectedTableName = ctx.enrichWithSchema("client_preferences");
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
                     DuplicatedForeignKeys.of(
@@ -59,7 +63,8 @@ class IntersectedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                             List.of(Column.ofNotNull(expectedTableName, "phone"), Column.ofNotNull(expectedTableName, "email"))))
                 );
 
-            assertThat(check.check(ctx, FilterTablesByNamePredicate.of(expectedTableName)))
+            assertThat(check)
+                .executing(ctx, FilterTablesByNamePredicate.of(expectedTableName))
                 .isEmpty();
         });
     }

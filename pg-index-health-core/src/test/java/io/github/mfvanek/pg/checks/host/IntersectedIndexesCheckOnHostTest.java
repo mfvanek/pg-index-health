@@ -32,7 +32,7 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
             .hasType(DuplicatedIndexes.class)
             .hasDiagnostic(Diagnostic.INTERSECTED_INDEXES)
             .hasHost(getHost())
-            .isStaticOnly();
+            .isStatic();
     }
 
     @ParameterizedTest

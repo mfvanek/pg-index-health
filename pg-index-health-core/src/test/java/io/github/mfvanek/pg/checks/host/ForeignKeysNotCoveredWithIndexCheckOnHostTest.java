@@ -32,7 +32,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
             .hasType(ForeignKey.class)
             .hasDiagnostic(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX)
             .hasHost(getHost())
-            .isStaticOnly();
+            .isStatic();
     }
 
     @ParameterizedTest

@@ -67,14 +67,6 @@ class DiagnosticTest {
     }
 
     @Test
-    void shouldBeAtLeastTwoChecksBothRuntimeAndStatic() {
-        final long countOfChecksBothRuntimeAndStatic = Arrays.stream(Diagnostic.values())
-            .filter(d -> d.isStatic() && d.isRuntime())
-            .count();
-        assertThat(countOfChecksBothRuntimeAndStatic).isGreaterThanOrEqualTo(2);
-    }
-
-    @Test
     void shouldBeAtLeastFiveRuntimeChecks() {
         final long countOfRuntimeChecks = Arrays.stream(Diagnostic.values())
             .filter(d -> d.isRuntime() && !d.isStatic())

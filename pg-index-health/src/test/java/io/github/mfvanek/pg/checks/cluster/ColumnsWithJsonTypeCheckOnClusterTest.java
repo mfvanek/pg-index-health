@@ -31,7 +31,7 @@ class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(Column.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_JSON_TYPE)
-            .isStaticOnly();
+            .isStatic();
     }
 
     @ParameterizedTest

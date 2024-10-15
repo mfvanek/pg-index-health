@@ -12,9 +12,7 @@ package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.utils.QueryExecutors;
 
-import java.util.EnumSet;
 import java.util.Objects;
-import java.util.Set;
 import javax.annotation.Nonnull;
 
 /**
@@ -26,33 +24,33 @@ import javax.annotation.Nonnull;
  */
 public enum Diagnostic implements CheckTypeAware {
 
-    BLOATED_INDEXES(ExecutionTopology.ON_PRIMARY, "bloated_indexes.sql", QueryExecutors::executeQueryWithBloatThreshold, EnumSet.of(CheckType.RUNTIME)),
-    BLOATED_TABLES(ExecutionTopology.ON_PRIMARY, "bloated_tables.sql", QueryExecutors::executeQueryWithBloatThreshold, EnumSet.of(CheckType.RUNTIME)),
-    DUPLICATED_INDEXES(ExecutionTopology.ON_PRIMARY, "duplicated_indexes.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    FOREIGN_KEYS_WITHOUT_INDEX(ExecutionTopology.ON_PRIMARY, "foreign_keys_without_index.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    INDEXES_WITH_NULL_VALUES(ExecutionTopology.ON_PRIMARY, "indexes_with_null_values.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    INTERSECTED_INDEXES(ExecutionTopology.ON_PRIMARY, "intersected_indexes.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    INVALID_INDEXES(ExecutionTopology.ON_PRIMARY, "invalid_indexes.sql", QueryExecutors::executeQueryWithSchema, EnumSet.allOf(CheckType.class)),
-    TABLES_WITH_MISSING_INDEXES(ExecutionTopology.ACROSS_CLUSTER, "tables_with_missing_indexes.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.RUNTIME)),
-    TABLES_WITHOUT_PRIMARY_KEY(ExecutionTopology.ON_PRIMARY, "tables_without_primary_key.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    UNUSED_INDEXES(ExecutionTopology.ACROSS_CLUSTER, "unused_indexes.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.RUNTIME)),
-    TABLES_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "tables_without_description.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    COLUMNS_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "columns_without_description.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    COLUMNS_WITH_JSON_TYPE(ExecutionTopology.ON_PRIMARY, "columns_with_json_type.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    COLUMNS_WITH_SERIAL_TYPES(ExecutionTopology.ON_PRIMARY, "non_primary_key_columns_with_serial_types.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    FUNCTIONS_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "functions_without_description.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    INDEXES_WITH_BOOLEAN(ExecutionTopology.ON_PRIMARY, "indexes_with_boolean.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    NOT_VALID_CONSTRAINTS(ExecutionTopology.ON_PRIMARY, "check_not_valid_constraints.sql", QueryExecutors::executeQueryWithSchema, EnumSet.allOf(CheckType.class)),
-    BTREE_INDEXES_ON_ARRAY_COLUMNS(ExecutionTopology.ON_PRIMARY, "btree_indexes_on_array_columns.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    SEQUENCE_OVERFLOW(ExecutionTopology.ON_PRIMARY, "sequence_overflow.sql", QueryExecutors::executeQueryWithRemainingPercentageThreshold, EnumSet.of(CheckType.RUNTIME)),
-    PRIMARY_KEYS_WITH_SERIAL_TYPES(ExecutionTopology.ON_PRIMARY, "primary_keys_with_serial_types.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    DUPLICATED_FOREIGN_KEYS(ExecutionTopology.ON_PRIMARY, "duplicated_foreign_keys.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC)),
-    INTERSECTED_FOREIGN_KEYS(ExecutionTopology.ON_PRIMARY, "intersected_foreign_keys.sql", QueryExecutors::executeQueryWithSchema, EnumSet.of(CheckType.STATIC));
+    BLOATED_INDEXES(ExecutionTopology.ON_PRIMARY, "bloated_indexes.sql", QueryExecutors::executeQueryWithBloatThreshold, true),
+    BLOATED_TABLES(ExecutionTopology.ON_PRIMARY, "bloated_tables.sql", QueryExecutors::executeQueryWithBloatThreshold, true),
+    DUPLICATED_INDEXES(ExecutionTopology.ON_PRIMARY, "duplicated_indexes.sql", QueryExecutors::executeQueryWithSchema, false),
+    FOREIGN_KEYS_WITHOUT_INDEX(ExecutionTopology.ON_PRIMARY, "foreign_keys_without_index.sql", QueryExecutors::executeQueryWithSchema, false),
+    INDEXES_WITH_NULL_VALUES(ExecutionTopology.ON_PRIMARY, "indexes_with_null_values.sql", QueryExecutors::executeQueryWithSchema, false),
+    INTERSECTED_INDEXES(ExecutionTopology.ON_PRIMARY, "intersected_indexes.sql", QueryExecutors::executeQueryWithSchema, false),
+    INVALID_INDEXES(ExecutionTopology.ON_PRIMARY, "invalid_indexes.sql", QueryExecutors::executeQueryWithSchema, false),
+    TABLES_WITH_MISSING_INDEXES(ExecutionTopology.ACROSS_CLUSTER, "tables_with_missing_indexes.sql", QueryExecutors::executeQueryWithSchema, true),
+    TABLES_WITHOUT_PRIMARY_KEY(ExecutionTopology.ON_PRIMARY, "tables_without_primary_key.sql", QueryExecutors::executeQueryWithSchema, false),
+    UNUSED_INDEXES(ExecutionTopology.ACROSS_CLUSTER, "unused_indexes.sql", QueryExecutors::executeQueryWithSchema, true),
+    TABLES_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "tables_without_description.sql", QueryExecutors::executeQueryWithSchema, false),
+    COLUMNS_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "columns_without_description.sql", QueryExecutors::executeQueryWithSchema, false),
+    COLUMNS_WITH_JSON_TYPE(ExecutionTopology.ON_PRIMARY, "columns_with_json_type.sql", QueryExecutors::executeQueryWithSchema, false),
+    COLUMNS_WITH_SERIAL_TYPES(ExecutionTopology.ON_PRIMARY, "non_primary_key_columns_with_serial_types.sql", QueryExecutors::executeQueryWithSchema, false),
+    FUNCTIONS_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "functions_without_description.sql", QueryExecutors::executeQueryWithSchema, false),
+    INDEXES_WITH_BOOLEAN(ExecutionTopology.ON_PRIMARY, "indexes_with_boolean.sql", QueryExecutors::executeQueryWithSchema, false),
+    NOT_VALID_CONSTRAINTS(ExecutionTopology.ON_PRIMARY, "check_not_valid_constraints.sql", QueryExecutors::executeQueryWithSchema, false),
+    BTREE_INDEXES_ON_ARRAY_COLUMNS(ExecutionTopology.ON_PRIMARY, "btree_indexes_on_array_columns.sql", QueryExecutors::executeQueryWithSchema, false),
+    SEQUENCE_OVERFLOW(ExecutionTopology.ON_PRIMARY, "sequence_overflow.sql", QueryExecutors::executeQueryWithRemainingPercentageThreshold, true),
+    PRIMARY_KEYS_WITH_SERIAL_TYPES(ExecutionTopology.ON_PRIMARY, "primary_keys_with_serial_types.sql", QueryExecutors::executeQueryWithSchema, false),
+    DUPLICATED_FOREIGN_KEYS(ExecutionTopology.ON_PRIMARY, "duplicated_foreign_keys.sql", QueryExecutors::executeQueryWithSchema, false),
+    INTERSECTED_FOREIGN_KEYS(ExecutionTopology.ON_PRIMARY, "intersected_foreign_keys.sql", QueryExecutors::executeQueryWithSchema, false);
 
     private final ExecutionTopology executionTopology;
     private final String sqlQueryFileName;
     private final QueryExecutor queryExecutor;
-    private final Set<CheckType> checkTypes;
+    private final boolean runtimeCheck;
 
     /**
      * Creates a {@code Diagnostic} instance.
@@ -64,11 +62,11 @@ public enum Diagnostic implements CheckTypeAware {
     Diagnostic(@Nonnull final ExecutionTopology executionTopology,
                @Nonnull final String sqlQueryFileName,
                @Nonnull final QueryExecutor queryExecutor,
-               @Nonnull final Set<CheckType> checkTypes) {
+               final boolean runtimeCheck) {
         this.executionTopology = Objects.requireNonNull(executionTopology, "executionTopology cannot be null");
         this.sqlQueryFileName = Objects.requireNonNull(sqlQueryFileName, "sqlQueryFileName cannot be null");
         this.queryExecutor = Objects.requireNonNull(queryExecutor, "queryExecutor cannot be null");
-        this.checkTypes = EnumSet.copyOf(Objects.requireNonNull(checkTypes, "checkTypes cannot be null"));
+        this.runtimeCheck = runtimeCheck;
     }
 
     /**
@@ -114,16 +112,8 @@ public enum Diagnostic implements CheckTypeAware {
      * {@inheritDoc}
      */
     @Override
-    public boolean isStatic() {
-        return checkTypes.contains(CheckType.STATIC);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean isRuntime() {
-        return checkTypes.contains(CheckType.RUNTIME);
+        return runtimeCheck;
     }
 
     /**

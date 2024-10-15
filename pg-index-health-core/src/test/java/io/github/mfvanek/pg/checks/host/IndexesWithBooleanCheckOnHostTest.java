@@ -32,7 +32,7 @@ class IndexesWithBooleanCheckOnHostTest extends DatabaseAwareTestBase {
             .hasType(IndexWithColumns.class)
             .hasDiagnostic(Diagnostic.INDEXES_WITH_BOOLEAN)
             .hasHost(getHost())
-            .isStaticOnly();
+            .isStatic();
     }
 
     @ParameterizedTest

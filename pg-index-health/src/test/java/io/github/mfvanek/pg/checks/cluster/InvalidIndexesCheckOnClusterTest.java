@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class InvalidIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -28,20 +28,24 @@ class InvalidIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(Index.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.INVALID_INDEXES);
+        assertThat(check)
+            .hasType(Index.class)
+            .hasDiagnostic(Diagnostic.INVALID_INDEXES)
+            .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withInvalidIndex(), ctx -> {
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
                     Index.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name_first_name")));
 
-            assertThat(check.check(ctx, FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_name_first_name"))))
+            assertThat(check)
+                .executing(ctx, FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_name_first_name")))
                 .isEmpty();
         });
     }

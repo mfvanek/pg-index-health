@@ -32,7 +32,7 @@ class TablesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
             .hasType(TableWithBloat.class)
             .hasDiagnostic(Diagnostic.BLOATED_TABLES)
             .hasHost(getHost())
-            .isRuntimeOnly();
+            .isRuntime();
     }
 
     @ParameterizedTest

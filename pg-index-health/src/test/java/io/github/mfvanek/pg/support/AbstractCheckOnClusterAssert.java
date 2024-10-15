@@ -45,29 +45,18 @@ public class AbstractCheckOnClusterAssert<E extends DbObject> extends AbstractAs
         return this;
     }
 
-    public AbstractCheckOnClusterAssert<E> isStaticOnly() {
+    public AbstractCheckOnClusterAssert<E> isStatic() {
         isNotNull();
-        final boolean result = actual.isStatic() && !actual.isRuntime();
-        if (!result) {
+        if (!actual.isStatic()) {
             failWithMessage("Expected diagnostic should be STATIC but was %s", actual.getDiagnostic());
         }
         return this;
     }
 
-    public AbstractCheckOnClusterAssert<E> isRuntimeOnly() {
+    public AbstractCheckOnClusterAssert<E> isRuntime() {
         isNotNull();
-        final boolean result = actual.isRuntime() && !actual.isStatic();
-        if (!result) {
+        if (!actual.isRuntime()) {
             failWithMessage("Expected diagnostic should be RUNTIME but was %s", actual.getDiagnostic());
-        }
-        return this;
-    }
-
-    public AbstractCheckOnClusterAssert<E> isBothRuntimeAndStatic() {
-        isNotNull();
-        final boolean result = actual.isRuntime() && actual.isStatic();
-        if (!result) {
-            failWithMessage("Expected diagnostic should be both RUNTIME and STATIC but was %s", actual.getDiagnostic());
         }
         return this;
     }
@@ -85,7 +74,7 @@ public class AbstractCheckOnClusterAssert<E extends DbObject> extends AbstractAs
     }
 
     @CheckReturnValue
-    public ListAssert<E> executing(@Nonnull final PgContext pgContext, @Nonnull Predicate<? super E> exclusionsFilter) {
+    public ListAssert<E> executing(@Nonnull final PgContext pgContext, @Nonnull final Predicate<? super E> exclusionsFilter) {
         isNotNull();
         return Assertions.assertThat(actual.check(pgContext, exclusionsFilter));
     }

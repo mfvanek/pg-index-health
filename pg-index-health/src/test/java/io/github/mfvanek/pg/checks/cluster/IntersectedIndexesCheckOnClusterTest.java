@@ -24,7 +24,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -32,15 +32,18 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(DuplicatedIndexes.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.INTERSECTED_INDEXES);
+        assertThat(check)
+            .hasType(DuplicatedIndexes.class)
+            .hasDiagnostic(Diagnostic.INTERSECTED_INDEXES)
+            .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx -> {
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
                     DuplicatedIndexes.of(
@@ -54,7 +57,8 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
             final Predicate<DuplicatedIndexes> predicate = FilterDuplicatedIndexesByNamePredicate.of(
                 List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted")));
-            assertThat(check.check(ctx, predicate))
+            assertThat(check)
+                .executing(ctx, predicate)
                 .isEmpty();
         });
     }
@@ -63,7 +67,8 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldFindHashIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedHashIndex(), ctx -> {
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
                     DuplicatedIndexes.of(
@@ -71,10 +76,12 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                         IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
                 .allMatch(d -> d.getTotalSize() >= 106_496L);
 
-            assertThat(check.check(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_first"))))
+            assertThat(check)
+                .executing(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_first")))
                 .isEmpty();
 
-            assertThat(check.check(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_name"))))
+            assertThat(check)
+                .executing(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_name")))
                 .isEmpty();
         });
     }
@@ -83,7 +90,8 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void withDifferentOpclassShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDifferentOpclassIndexes(), ctx ->
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .isEmpty());
     }
 }

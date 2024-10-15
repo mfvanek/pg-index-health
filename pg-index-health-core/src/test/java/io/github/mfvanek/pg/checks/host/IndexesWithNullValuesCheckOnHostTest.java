@@ -31,7 +31,7 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
             .hasType(IndexWithNulls.class)
             .hasDiagnostic(Diagnostic.INDEXES_WITH_NULL_VALUES)
             .hasHost(getHost())
-            .isStaticOnly();
+            .isStatic();
     }
 
     @ParameterizedTest
