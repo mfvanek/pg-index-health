@@ -20,6 +20,7 @@ import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.LogsCaptor;
 import io.github.mfvanek.pg.utils.ClockHolder;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -32,8 +33,7 @@ import java.util.function.Predicate;
 
 import static io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster.getLastStatsResetDateLogMessage;
 import static io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster.getResultAsIntersection;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -41,17 +41,20 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(UnusedIndex.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.UNUSED_INDEXES);
+        assertThat(check)
+            .hasType(UnusedIndex.class)
+            .hasDiagnostic(Diagnostic.UNUSED_INDEXES)
+            .isRuntime();
     }
 
     @Test
     void checkOnClusterShouldLogResetStatisticsData() {
         try (LogsCaptor logsCaptor = new LogsCaptor(UnusedIndexesCheckOnCluster.class)) {
-            assertThat(check.check())
+            assertThat(check)
+                .executing()
                 .isEmpty();
 
-            assertThat(logsCaptor.getLogs())
+            Assertions.assertThat(logsCaptor.getLogs())
                 .hasSize(1)
                 .allMatch(l -> l.getFormattedMessage().contains("reset"));
         }
@@ -61,7 +64,8 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx -> {
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(6)
                 .containsExactlyInAnyOrder(
                     UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L, 0),
@@ -75,7 +79,8 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
             final Predicate<IndexNameAware> predicate = FilterIndexesByNamePredicate.of(
                 List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_accounts_account_number")));
-            assertThat(check.check(ctx, predicate))
+            assertThat(check)
+                .executing(ctx, predicate)
                 .hasSize(4)
                 .containsExactlyInAnyOrder(
                     UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L, 0),
@@ -98,7 +103,7 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
             List.of(i5, i4, i1, i3),
             List.of(i2, i1, i5),
             List.of(i2, i5, i1, i4));
-        assertThat(getResultAsIntersection(potentiallyUnusedIndexesFromAllHosts))
+        Assertions.assertThat(getResultAsIntersection(potentiallyUnusedIndexesFromAllHosts))
             .hasSize(2)
             .containsExactlyInAnyOrder(i1, i5)
             .isUnmodifiable();
@@ -106,7 +111,7 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void getResultAsIntersectionWithEmptyInput() {
-        assertThat(getResultAsIntersection(List.of()))
+        Assertions.assertThat(getResultAsIntersection(List.of()))
             .isUnmodifiable()
             .isEmpty();
     }
@@ -114,7 +119,7 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @SuppressWarnings("ConstantConditions")
     @Test
     void getLastStatsResetDateLogMessageWithWrongArguments() {
-        assertThatThrownBy(() -> getLastStatsResetDateLogMessage(null))
+        Assertions.assertThatThrownBy(() -> getLastStatsResetDateLogMessage(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("statisticsMaintenance cannot be null");
     }
@@ -124,7 +129,7 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
         final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
         Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.empty());
         final String logMessage = getLastStatsResetDateLogMessage(statisticsMaintenance);
-        assertThat(logMessage)
+        Assertions.assertThat(logMessage)
             .isEqualTo("Statistics have never been reset on this host");
     }
 
@@ -134,7 +139,7 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
         final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
         Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.of(resetDate.minusDays(123L)));
         final String logMessage = getLastStatsResetDateLogMessage(statisticsMaintenance);
-        assertThat(logMessage)
+        Assertions.assertThat(logMessage)
             .startsWith("Last statistics reset on this host was 123 days ago (");
     }
 }

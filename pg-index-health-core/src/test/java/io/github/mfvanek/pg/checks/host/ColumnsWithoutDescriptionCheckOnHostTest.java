@@ -31,7 +31,8 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(Column.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITHOUT_DESCRIPTION)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isStatic();
     }
 
     @ParameterizedTest

@@ -32,7 +32,8 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(ColumnWithSerialType.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_SERIAL_TYPES)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isStatic();
     }
 
     @ParameterizedTest

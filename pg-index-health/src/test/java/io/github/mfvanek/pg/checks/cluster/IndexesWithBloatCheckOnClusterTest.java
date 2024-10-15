@@ -20,13 +20,14 @@ import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.support.DatabasePopulator;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.function.Predicate;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
 
@@ -34,8 +35,10 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(IndexWithBloat.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.BLOATED_INDEXES);
+        assertThat(check)
+            .hasType(IndexWithBloat.class)
+            .hasDiagnostic(Diagnostic.BLOATED_INDEXES)
+            .isRuntime();
     }
 
     @ParameterizedTest
@@ -43,7 +46,8 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
             collectStatistics(schemaName);
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .isEmpty();
         });
     }
@@ -54,12 +58,13 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             collectStatistics(schemaName);
-            assertThat(existsStatisticsForTable(schemaName, "accounts"))
+            Assertions.assertThat(existsStatisticsForTable(schemaName, "accounts"))
                 .isTrue();
 
             final String accountsTableName = ctx.enrichWithSchema("accounts");
             final String clientsTableName = ctx.enrichWithSchema("clients");
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(4)
                 .containsExactlyInAnyOrder(
                     IndexWithBloat.of(accountsTableName, ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
@@ -71,7 +76,8 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
 
             final Predicate<IndexSizeAware> predicate = FilterIndexesBySizePredicate.of(1L)
                 .and(FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("accounts_pkey")));
-            assertThat(check.check(ctx, predicate))
+            assertThat(check)
+                .executing(ctx, predicate)
                 .hasSize(3)
                 .containsExactlyInAnyOrder(
                     IndexWithBloat.of(accountsTableName, ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
@@ -80,7 +86,8 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L)
                 .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
 
-            assertThat(check.check(ctx, FilterIndexesByBloatPredicate.of(1_000_000L, 50)))
+            assertThat(check)
+                .executing(ctx, FilterIndexesByBloatPredicate.of(1_000_000L, 50))
                 .isEmpty();
         });
     }

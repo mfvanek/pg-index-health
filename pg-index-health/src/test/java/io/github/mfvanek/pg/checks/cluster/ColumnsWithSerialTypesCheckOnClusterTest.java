@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -30,15 +30,18 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(ColumnWithSerialType.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.COLUMNS_WITH_SERIAL_TYPES);
+        assertThat(check)
+            .hasType(ColumnWithSerialType.class)
+            .hasDiagnostic(Diagnostic.COLUMNS_WITH_SERIAL_TYPES)
+            .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withSerialType, ctx -> {
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
@@ -46,7 +49,8 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                     ColumnWithSerialType.ofBigSerial(
                         Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), ctx.enrichSequenceWithSchema("bad_accounts_real_client_id_seq")));
 
-            assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_accounts"))))
+            assertThat(check)
+                .executing(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_accounts")))
                 .isEmpty();
         });
     }
@@ -55,7 +59,8 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldIgnoreDroppedColumns(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withSerialType().withDroppedSerialColumn(), ctx ->
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
@@ -67,7 +72,8 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldIgnoreCheckConstraintsOnSerialPrimaryKey(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withCheckConstraintOnSerialPrimaryKey, ctx ->
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .isEmpty());
     }
 
@@ -75,7 +81,8 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldDetectSerialColumnsWithUniqueConstraints(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withUniqueConstraintOnSerialColumn, ctx ->
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
@@ -87,7 +94,8 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldDetectPrimaryKeysThatAreForeignKeysAsWell(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withSerialPrimaryKeyReferencesToAnotherTable, ctx ->
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(3)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(

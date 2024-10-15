@@ -31,7 +31,8 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(DuplicatedIndexes.class)
             .hasDiagnostic(Diagnostic.INTERSECTED_INDEXES)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isStatic();
     }
 
     @ParameterizedTest

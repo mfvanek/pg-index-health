@@ -35,7 +35,8 @@ class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(Constraint.class)
             .hasDiagnostic(Diagnostic.NOT_VALID_CONSTRAINTS)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isStatic();
     }
 
     @ParameterizedTest

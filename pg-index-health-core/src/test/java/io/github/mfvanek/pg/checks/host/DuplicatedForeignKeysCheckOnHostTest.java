@@ -32,7 +32,8 @@ class DuplicatedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(DuplicatedForeignKeys.class)
             .hasDiagnostic(Diagnostic.DUPLICATED_FOREIGN_KEYS)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isStatic();
     }
 
     @ParameterizedTest

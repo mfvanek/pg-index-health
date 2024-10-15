@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class DuplicatedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -30,8 +30,10 @@ class DuplicatedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(DuplicatedForeignKeys.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.DUPLICATED_FOREIGN_KEYS);
+        assertThat(check)
+            .hasType(DuplicatedForeignKeys.class)
+            .hasDiagnostic(Diagnostic.DUPLICATED_FOREIGN_KEYS)
+            .isStatic();
     }
 
     @ParameterizedTest
@@ -39,7 +41,8 @@ class DuplicatedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withDuplicatedForeignKeys(), ctx -> {
             final String expectedTableName = ctx.enrichWithSchema("accounts");
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
                     DuplicatedForeignKeys.of(
@@ -49,7 +52,8 @@ class DuplicatedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                             Column.ofNotNull(expectedTableName, "client_id")))
                 );
 
-            assertThat(check.check(ctx, FilterTablesByNamePredicate.of(expectedTableName)))
+            assertThat(check)
+                .executing(ctx, FilterTablesByNamePredicate.of(expectedTableName))
                 .isEmpty();
         });
     }

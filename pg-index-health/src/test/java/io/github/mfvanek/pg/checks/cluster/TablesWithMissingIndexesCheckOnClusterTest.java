@@ -17,13 +17,14 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase {
 
@@ -31,8 +32,10 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(TableWithMissingIndex.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.TABLES_WITH_MISSING_INDEXES);
+        assertThat(check)
+            .hasType(TableWithMissingIndex.class)
+            .hasDiagnostic(Diagnostic.TABLES_WITH_MISSING_INDEXES)
+            .isRuntime();
     }
 
     @ParameterizedTest
@@ -40,7 +43,8 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             tryToFindAccountByClientId(schemaName);
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
                     TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))
@@ -48,10 +52,12 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
                 .allMatch(t -> t.getIndexScans() == 0)
                 .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
-            assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
+            assertThat(check)
+                .executing(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts")))
                 .isEmpty();
 
-            assertThat(check.check(ctx, FilterTablesBySizePredicate.of(1L)))
+            assertThat(check)
+                .executing(ctx, FilterTablesBySizePredicate.of(1L))
                 .hasSize(1)
                 .containsExactly(
                     TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))
@@ -59,7 +65,8 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
                 .allMatch(t -> t.getIndexScans() == 0)
                 .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
-            assertThat(check.check(ctx, FilterTablesBySizePredicate.of(1_000_000L)))
+            assertThat(check)
+                .executing(ctx, FilterTablesBySizePredicate.of(1_000_000L))
                 .isEmpty();
         });
     }
@@ -77,7 +84,7 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
         );
         final List<TableWithMissingIndex> tablesWithMissingIndexes = TablesWithMissingIndexesCheckOnCluster.getResultAsUnion(
             tablesWithMissingIndexesFromAllHosts);
-        assertThat(tablesWithMissingIndexes)
+        Assertions.assertThat(tablesWithMissingIndexes)
             .hasSize(3)
             .containsExactlyInAnyOrder(t1, t2, t3);
     }

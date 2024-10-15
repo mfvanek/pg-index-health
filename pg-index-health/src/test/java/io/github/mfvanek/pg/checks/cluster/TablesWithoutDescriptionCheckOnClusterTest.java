@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class TablesWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -30,21 +30,25 @@ class TablesWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(Table.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.TABLES_WITHOUT_DESCRIPTION);
+        assertThat(check)
+            .hasType(Table.class)
+            .hasDiagnostic(Diagnostic.TABLES_WITHOUT_DESCRIPTION)
+            .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
                     Table.of(ctx.enrichWithSchema("accounts"), 0L),
                     Table.of(ctx.enrichWithSchema("clients"), 0L));
 
-            assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
+            assertThat(check)
+                .executing(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts")))
                 .hasSize(1)
                 .containsExactly(
                     Table.of(ctx.enrichWithSchema("clients"), 0L))
@@ -56,13 +60,15 @@ class TablesWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldNotTakingIntoAccountBlankComments(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnTables(), ctx -> {
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
                     Table.of(ctx.enrichWithSchema("accounts"), 0L),
                     Table.of(ctx.enrichWithSchema("clients"), 0L));
 
-            assertThat(check.check(ctx, FilterTablesBySizePredicate.of(1_234L)))
+            assertThat(check)
+                .executing(ctx, FilterTablesBySizePredicate.of(1_234L))
                 .hasSize(1)
                 .containsExactly(
                     Table.of(ctx.enrichWithSchema("clients"), 0L))

@@ -20,9 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class SequenceOverflowCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -30,21 +28,22 @@ class SequenceOverflowCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(SequenceState.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.SEQUENCE_OVERFLOW);
+        assertThat(check)
+            .hasType(SequenceState.class)
+            .hasDiagnostic(Diagnostic.SEQUENCE_OVERFLOW)
+            .isRuntime();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithSequences(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withSequenceOverflow, ctx -> {
-            final List<SequenceState> actual = check.check(ctx);
-            assertThat(actual)
+        executeTestOnDatabase(schemaName, DatabasePopulator::withSequenceOverflow, ctx ->
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(3)
                 .containsExactlyInAnyOrder(
                     SequenceState.of(ctx.enrichWithSchema("seq_1"), "smallint", 8.08),
                     SequenceState.of(ctx.enrichWithSchema("seq_3"), "integer", 8.08),
-                    SequenceState.of(ctx.enrichWithSchema("seq_5"), "bigint", 8.08));
-        });
+                    SequenceState.of(ctx.enrichWithSchema("seq_5"), "bigint", 8.08)));
     }
 }

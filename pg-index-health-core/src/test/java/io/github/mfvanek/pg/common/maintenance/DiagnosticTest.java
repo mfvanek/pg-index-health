@@ -29,21 +29,40 @@ class DiagnosticTest {
         for (final Diagnostic diagnostic : Diagnostic.values()) {
             fileNames.add(diagnostic.getSqlQueryFileName());
         }
-        assertThat(fileNames).hasSize(Diagnostic.values().length);
+        assertThat(fileNames)
+            .hasSize(Diagnostic.values().length);
     }
 
     @Test
     void sqlQueryFileNameShouldBeInLowerCase() {
         for (final Diagnostic diagnostic : Diagnostic.values()) {
             final String lower = diagnostic.getSqlQueryFileName().toLowerCase(Locale.ROOT);
-            assertThat(diagnostic.getSqlQueryFileName()).isEqualTo(lower);
+            assertThat(diagnostic.getSqlQueryFileName())
+                .isEqualTo(lower);
         }
     }
 
     @Test
     void sqlQueryFileNameShouldHaveSqlExtension() {
         for (final Diagnostic diagnostic : Diagnostic.values()) {
-            assertThat(diagnostic.getSqlQueryFileName()).endsWith(".sql");
+            assertThat(diagnostic.getSqlQueryFileName())
+                .endsWith(".sql");
+        }
+    }
+
+    @Test
+    void sqlQueryFileNameShouldCorrespondToDiagnosticName() {
+        for (final Diagnostic diagnostic : Diagnostic.values()) {
+            assertThat(diagnostic.getSqlQueryFileName())
+                .startsWith(diagnostic.name().toLowerCase(Locale.ROOT) + ".");
+        }
+    }
+
+    @Test
+    void checkTypeMustBeSet() {
+        for (final Diagnostic diagnostic : Diagnostic.values()) {
+            assertThat(diagnostic.isStatic() || diagnostic.isRuntime())
+                .isTrue();
         }
     }
 
@@ -56,7 +75,25 @@ class DiagnosticTest {
             })
             .filter(Diagnostic::isAcrossCluster)
             .count();
-        assertThat(countOfChecksAcrossTheCluster).isEqualTo(2);
+        assertThat(countOfChecksAcrossTheCluster)
+            .isGreaterThanOrEqualTo(2);
+    }
+
+    @Test
+    void shouldBeAtLeastFiveRuntimeChecks() {
+        final long countOfRuntimeChecks = Arrays.stream(Diagnostic.values())
+            .filter(d -> d.isRuntime() && !d.isStatic())
+            .count();
+        assertThat(countOfRuntimeChecks)
+            .isGreaterThanOrEqualTo(5);
+    }
+
+    @Test
+    void allAcrossClusterChecksShouldBeRuntime() {
+        Arrays.stream(Diagnostic.values())
+            .filter(Diagnostic::isAcrossCluster)
+            .forEach(d -> assertThat(d.isRuntime())
+                .isTrue());
     }
 
     @Test

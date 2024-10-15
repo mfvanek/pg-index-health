@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class PrimaryKeysWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -29,26 +29,32 @@ class PrimaryKeysWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(ColumnWithSerialType.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.PRIMARY_KEYS_WITH_SERIAL_TYPES);
+        assertThat(check)
+            .hasType(ColumnWithSerialType.class)
+            .hasDiagnostic(Diagnostic.PRIMARY_KEYS_WITH_SERIAL_TYPES)
+            .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withSerialType(), ctx -> assertThat(check.check(ctx))
-            .hasSize(1)
-            .containsExactlyInAnyOrder(
-                ColumnWithSerialType.of(
-                    Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "id"), SerialType.BIG_SERIAL, ctx.enrichSequenceWithSchema("bad_accounts_id_seq")
-                )));
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withSerialType(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactlyInAnyOrder(
+                    ColumnWithSerialType.of(
+                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "id"), SerialType.BIG_SERIAL, ctx.enrichSequenceWithSchema("bad_accounts_id_seq")
+                    )));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withIdentityPrimaryKey(), ctx -> assertThat(check.check(ctx))
-            .isEmpty()
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withIdentityPrimaryKey(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .isEmpty()
         );
     }
 }

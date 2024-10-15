@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -29,15 +29,18 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(Column.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.COLUMNS_WITHOUT_DESCRIPTION);
+        assertThat(check)
+            .hasType(Column.class)
+            .hasDiagnostic(Diagnostic.COLUMNS_WITHOUT_DESCRIPTION)
+            .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(10)
                 .containsExactly(
                     Column.ofNotNull(ctx.enrichWithSchema("accounts"), "account_balance"),
@@ -56,7 +59,8 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
                     Column.ofNullable(ctx.enrichWithSchema("clients"), "info"),
                     Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name"));
 
-            assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
+            assertThat(check)
+                .executing(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts")))
                 .hasSize(5)
                 .allMatch(c -> c.getTableName().equals(ctx.enrichWithSchema("clients")));
         });
@@ -66,7 +70,8 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldNotTakingIntoAccountBlankComments(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnColumns(), ctx ->
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(10)
                 .filteredOn(c -> "id".equalsIgnoreCase(c.getColumnName()))
                 .hasSize(2)
@@ -79,7 +84,8 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldIgnoreDroppedColumns(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDroppedInfoColumn(), ctx ->
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(9)
                 .filteredOn(Column::isNullable)
                 .hasSize(1)

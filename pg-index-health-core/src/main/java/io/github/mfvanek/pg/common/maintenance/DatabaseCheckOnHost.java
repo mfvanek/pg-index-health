@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @see DbObject
  * @since 0.6.0
  */
-public interface DatabaseCheckOnHost<T extends DbObject> extends DiagnosticAware, RawTypeAware<T>, HostAware {
+public interface DatabaseCheckOnHost<T extends DbObject> extends DiagnosticAware, CheckTypeAware, RawTypeAware<T>, HostAware {
 
     /**
      * Executes the check in the specified schema.
@@ -46,5 +46,13 @@ public interface DatabaseCheckOnHost<T extends DbObject> extends DiagnosticAware
     @Nonnull
     default List<T> check() {
         return check(PgContext.ofPublic());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    default boolean isRuntime() {
+        return getDiagnostic().isRuntime();
     }
 }

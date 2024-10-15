@@ -30,7 +30,8 @@ class ColumnsWithJsonTypeCheckOnHostTest extends DatabaseAwareTestBase {
         assertThat(check)
             .hasType(Column.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_JSON_TYPE)
-            .hasHost(getHost());
+            .hasHost(getHost())
+            .isStatic();
     }
 
     @ParameterizedTest

@@ -18,13 +18,14 @@ import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.ConstraintType;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.ExecuteUtils;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -32,8 +33,10 @@ class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(Constraint.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.NOT_VALID_CONSTRAINTS);
+        assertThat(check)
+            .hasType(Constraint.class)
+            .hasDiagnostic(Diagnostic.NOT_VALID_CONSTRAINTS)
+            .isStatic();
     }
 
     @ParameterizedTest
@@ -41,13 +44,14 @@ class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withNotValidConstraints().withUniqueConstraintOnSerialColumn(), ctx -> {
             final List<Constraint> notValidConstraints = check.check(ctx);
-            assertThat(notValidConstraints)
+            Assertions.assertThat(notValidConstraints)
                 .hasSize(2)
                 .containsExactly(
                     Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_chk_client_id_not_validated_yet", ConstraintType.CHECK),
                     Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
 
-            assertThat(check.check(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))))
+            assertThat(check)
+                .executing(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts")))
                 .isEmpty();
 
             ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {
@@ -56,7 +60,8 @@ class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
                 }
             });
 
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .isEmpty();
         });
     }

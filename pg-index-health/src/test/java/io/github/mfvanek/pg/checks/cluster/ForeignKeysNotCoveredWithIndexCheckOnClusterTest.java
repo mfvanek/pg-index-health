@@ -24,7 +24,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.function.Predicate;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
 class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -32,15 +32,18 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
 
     @Test
     void shouldSatisfyContract() {
-        assertThat(check.getType()).isEqualTo(ForeignKey.class);
-        assertThat(check.getDiagnostic()).isEqualTo(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX);
+        assertThat(check)
+            .hasType(ForeignKey.class)
+            .hasDiagnostic(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX)
+            .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp, ctx ->
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .isEmpty());
     }
 
@@ -48,7 +51,8 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn(), ctx -> {
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(2)
                 .containsExactlyInAnyOrder(
                     ForeignKey.ofColumn(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id",
@@ -63,7 +67,8 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
 
             final Predicate<TableNameAware> predicate = FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))
                 .and(FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients")));
-            assertThat(check.check(ctx, predicate))
+            assertThat(check)
+                .executing(ctx, predicate)
                 .isEmpty();
         });
     }
@@ -72,7 +77,8 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithNotSuitableIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withNonSuitableIndex(), ctx -> {
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .hasSize(2)
                 .containsExactlyInAnyOrder(
                     ForeignKey.ofColumn(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id",
@@ -87,7 +93,8 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
 
             final Predicate<TableNameAware> predicate = FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts"))
                 .and(FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients")));
-            assertThat(check.check(ctx, predicate))
+            assertThat(check)
+                .executing(ctx, predicate)
                 .isEmpty();
         });
     }
@@ -96,7 +103,8 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithSuitableIndex(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withSuitableIndex(), ctx ->
-            assertThat(check.check(ctx))
+            assertThat(check)
+                .executing(ctx)
                 .isEmpty());
     }
 }
