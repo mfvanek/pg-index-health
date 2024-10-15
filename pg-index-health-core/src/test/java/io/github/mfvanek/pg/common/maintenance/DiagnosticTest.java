@@ -53,9 +53,6 @@ class DiagnosticTest {
     @Test
     void sqlQueryFileNameShouldCorrespondToDiagnosticName() {
         for (final Diagnostic diagnostic : Diagnostic.values()) {
-            if (diagnostic == Diagnostic.COLUMNS_WITH_SERIAL_TYPES || diagnostic == Diagnostic.NOT_VALID_CONSTRAINTS) {
-                continue; // TODO
-            }
             assertThat(diagnostic.getSqlQueryFileName())
                 .startsWith(diagnostic.name().toLowerCase(Locale.ROOT) + ".");
         }
