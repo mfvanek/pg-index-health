@@ -163,7 +163,7 @@
         </module>
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround"/>
-        <module name="ArrayTrailingComma"/>
+        <!--<module name="ArrayTrailingComma"/> invalid due to NoArrayTrailingComma-->
         <module name="NoArrayTrailingComma"/>
         <module name="NoEnumTrailingComma"/>
         <module name="AvoidDoubleBraceInitialization"/>
