@@ -42,7 +42,7 @@ public class IndexesWithBloatCheckOnHost extends AbstractCheckOnHost<IndexWithBl
      */
     @Nonnull
     @Override
-    public List<IndexWithBloat> check(@Nonnull final PgContext pgContext) {
+    protected List<IndexWithBloat> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);

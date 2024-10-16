@@ -34,7 +34,7 @@ public class PrimaryKeysWithSerialTypesCheckOnHost extends AbstractCheckOnHost<C
 
     @Nonnull
     @Override
-    public List<ColumnWithSerialType> check(@Nonnull final PgContext pgContext) {
+    protected List<ColumnWithSerialType> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, ColumnWithSerialTypeExtractor.of());
     }
 }

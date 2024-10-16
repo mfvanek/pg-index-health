@@ -38,26 +38,34 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
+            final String accountsTableName = ctx.enrichWithSchema("accounts");
+            final String clientsTableName = ctx.enrichWithSchema("clients");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(10)
                 .containsExactly(
-                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "account_balance"),
-                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "account_number"),
-                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "client_id"),
-                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "deleted"),
-                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "id"),
-                    Column.ofNotNull(ctx.enrichWithSchema("clients"), "first_name"),
-                    Column.ofNotNull(ctx.enrichWithSchema("clients"), "id"),
-                    Column.ofNullable(ctx.enrichWithSchema("clients"), "info"),
-                    Column.ofNotNull(ctx.enrichWithSchema("clients"), "last_name"),
-                    Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name"))
+                    Column.ofNotNull(accountsTableName, "account_balance"),
+                    Column.ofNotNull(accountsTableName, "account_number"),
+                    Column.ofNotNull(accountsTableName, "client_id"),
+                    Column.ofNotNull(accountsTableName, "deleted"),
+                    Column.ofNotNull(accountsTableName, "id"),
+                    Column.ofNotNull(clientsTableName, "first_name"),
+                    Column.ofNotNull(clientsTableName, "id"),
+                    Column.ofNullable(clientsTableName, "info"),
+                    Column.ofNotNull(clientsTableName, "last_name"),
+                    Column.ofNullable(clientsTableName, "middle_name"))
                 .filteredOn(Column::isNullable)
                 .hasSize(2)
                 .containsExactly(
-                    Column.ofNullable(ctx.enrichWithSchema("clients"), "info"),
-                    Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name")));
+                    Column.ofNullable(clientsTableName, "info"),
+                    Column.ofNullable(clientsTableName, "middle_name"));
+
+            assertThat(check)
+                .executing(ctx, c -> !c.getTableName().equals(accountsTableName))
+                .hasSize(5)
+                .allMatch(c -> c.getTableName().equals(clientsTableName));
+        });
     }
 
     @ParameterizedTest

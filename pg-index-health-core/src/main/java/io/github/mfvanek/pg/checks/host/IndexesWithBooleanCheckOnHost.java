@@ -39,7 +39,7 @@ public class IndexesWithBooleanCheckOnHost extends AbstractCheckOnHost<IndexWith
      */
     @Nonnull
     @Override
-    public List<IndexWithColumns> check(@Nonnull final PgContext pgContext) {
+    protected List<IndexWithColumns> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, IndexWithSingleColumnExtractor.of());
     }
 }

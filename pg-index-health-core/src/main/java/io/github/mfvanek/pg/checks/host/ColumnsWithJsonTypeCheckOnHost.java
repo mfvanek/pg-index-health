@@ -41,7 +41,7 @@ public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<Column> 
      */
     @Nonnull
     @Override
-    public List<Column> check(@Nonnull final PgContext pgContext) {
+    protected List<Column> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, ColumnExtractor.of());
     }
 }

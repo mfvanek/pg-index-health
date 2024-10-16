@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -114,9 +113,7 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
     private List<T> executeOnPrimary(@Nonnull final PgContext pgContext, @Nonnull final Predicate<? super T> exclusionsFilter) {
         final DatabaseCheckOnHost<T> checkOnPrimary = computeCheckForPrimaryIfNeed();
         LOGGER.debug("Going to execute on primary host {}", checkOnPrimary.getHost().getName());
-        return checkOnPrimary.check(pgContext).stream()
-            .filter(exclusionsFilter)
-            .collect(Collectors.toList());
+        return checkOnPrimary.check(pgContext, exclusionsFilter);
     }
 
     @Nonnull
@@ -124,18 +121,17 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
         final List<List<T>> acrossClusterResults = new ArrayList<>();
         for (final PgConnection pgConnection : haPgConnection.getConnectionsToAllHostsInCluster()) {
             doBeforeExecuteOnHost(pgConnection);
-            final List<T> resultsFromHost = executeOnHost(pgConnection, pgContext);
+            final List<T> resultsFromHost = executeOnHost(pgConnection, pgContext, exclusionsFilter);
             acrossClusterResults.add(resultsFromHost);
         }
-        return acrossClusterResultsMapper.apply(acrossClusterResults)
-            .stream()
-            .filter(exclusionsFilter)
-            .collect(Collectors.toList());
+        return acrossClusterResultsMapper.apply(acrossClusterResults);
     }
 
     @Nonnull
-    private List<T> executeOnHost(@Nonnull final PgConnection connectionToHost, @Nonnull final PgContext pgContext) {
+    private List<T> executeOnHost(@Nonnull final PgConnection connectionToHost,
+                                  @Nonnull final PgContext pgContext,
+                                  @Nonnull final Predicate<? super T> exclusionsFilter) {
         final DatabaseCheckOnHost<T> checkOnHost = computeCheckForHostIfNeed(connectionToHost);
-        return checkOnHost.check(pgContext);
+        return checkOnHost.check(pgContext, exclusionsFilter);
     }
 }

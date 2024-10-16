@@ -38,7 +38,7 @@ public class DuplicatedIndexesCheckOnHost extends AbstractCheckOnHost<Duplicated
      */
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> check(@Nonnull final PgContext pgContext) {
+    protected List<DuplicatedIndexes> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String duplicatedAsString = rs.getString("duplicated_indexes");

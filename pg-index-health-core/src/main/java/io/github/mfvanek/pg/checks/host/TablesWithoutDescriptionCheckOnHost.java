@@ -40,7 +40,7 @@ public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Tab
      */
     @Nonnull
     @Override
-    public List<Table> check(@Nonnull final PgContext pgContext) {
+    protected List<Table> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, TableExtractor.of());
     }
 }

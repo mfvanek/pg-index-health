@@ -38,7 +38,7 @@ public class TablesWithMissingIndexesCheckOnHost extends AbstractCheckOnHost<Tab
      */
     @Nonnull
     @Override
-    public List<TableWithMissingIndex> check(@Nonnull final PgContext pgContext) {
+    protected List<TableWithMissingIndex> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final long tableSize = rs.getLong(TABLE_SIZE);
