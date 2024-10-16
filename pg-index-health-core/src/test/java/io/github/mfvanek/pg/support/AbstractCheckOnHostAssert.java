@@ -20,6 +20,7 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ListAssert;
 import org.assertj.core.util.CheckReturnValue;
 
+import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
 @SuppressWarnings({"PMD.LinguisticNaming", "checkstyle:AbstractClassName"})
@@ -79,6 +80,12 @@ public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAsser
     public ListAssert<E> executing(@Nonnull final PgContext pgContext) {
         isNotNull();
         return Assertions.assertThat(actual.check(pgContext));
+    }
+
+    @CheckReturnValue
+    public ListAssert<E> executing(@Nonnull final PgContext pgContext, @Nonnull final Predicate<? super E> exclusionsFilter) {
+        isNotNull();
+        return Assertions.assertThat(actual.check(pgContext, exclusionsFilter));
     }
 
     @CheckReturnValue

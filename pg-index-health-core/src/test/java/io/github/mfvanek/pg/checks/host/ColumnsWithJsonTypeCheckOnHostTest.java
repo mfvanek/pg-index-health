@@ -37,12 +37,17 @@ class ColumnsWithJsonTypeCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withJsonType(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withJsonType(), ctx -> {
+            final String tableName = ctx.enrichWithSchema("clients");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(
-                    Column.ofNullable(ctx.enrichWithSchema("clients"), "info")));
+                .containsExactly(Column.ofNullable(tableName, "info"));
+
+            assertThat(check)
+                .executing(ctx, t -> !t.getTableName().equals(tableName))
+                .isEmpty();
+        });
     }
 
     @ParameterizedTest
