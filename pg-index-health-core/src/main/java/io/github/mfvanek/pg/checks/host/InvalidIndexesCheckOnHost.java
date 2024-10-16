@@ -39,7 +39,7 @@ public class InvalidIndexesCheckOnHost extends AbstractCheckOnHost<Index> {
      */
     @Nonnull
     @Override
-    public List<Index> check(@Nonnull final PgContext pgContext) {
+    protected List<Index> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);

@@ -38,7 +38,7 @@ public class IntersectedIndexesCheckOnHost extends AbstractCheckOnHost<Duplicate
      */
     @Nonnull
     @Override
-    public List<DuplicatedIndexes> check(@Nonnull final PgContext pgContext) {
+    protected List<DuplicatedIndexes> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String duplicatedAsString = rs.getString("intersected_indexes");

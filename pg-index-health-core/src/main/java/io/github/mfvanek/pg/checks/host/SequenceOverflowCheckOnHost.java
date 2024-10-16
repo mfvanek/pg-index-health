@@ -39,7 +39,7 @@ public class SequenceOverflowCheckOnHost extends AbstractCheckOnHost<SequenceSta
      */
     @Nonnull
     @Override
-    public List<SequenceState> check(@Nonnull final PgContext pgContext) {
+    protected List<SequenceState> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String sequenceName = rs.getString("sequence_name");
             final String dataType = rs.getString("data_type");

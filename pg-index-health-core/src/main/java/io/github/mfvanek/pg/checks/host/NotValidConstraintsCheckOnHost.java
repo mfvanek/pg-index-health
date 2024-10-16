@@ -42,7 +42,7 @@ public class NotValidConstraintsCheckOnHost extends AbstractCheckOnHost<Constrai
      */
     @Nonnull
     @Override
-    public List<Constraint> check(@Nonnull final PgContext pgContext) {
+    protected List<Constraint> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String constraintName = rs.getString(CONSTRAINT_NAME);

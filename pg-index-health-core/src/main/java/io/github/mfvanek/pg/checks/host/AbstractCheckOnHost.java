@@ -21,8 +21,11 @@ import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.utils.SqlQueryReader;
 
+import java.sql.ResultSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 /**
@@ -89,9 +92,37 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
         return pgConnection.getHost();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
-    protected List<T> executeQuery(@Nonnull final PgContext pgContext,
-                                   @Nonnull final ResultSetExtractor<T> rse) {
+    @Override
+    public final List<T> check(@Nonnull final PgContext pgContext, @Nonnull final Predicate<? super T> exclusionsFilter) {
+        return doCheck(pgContext).stream()
+            .filter(exclusionsFilter)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Executes the check in the specified schema.
+     * All child classes must implement this method.
+     *
+     * @param pgContext check's context with the specified schema; must not be null
+     * @return list of deviations from the specified rule
+     */
+    @Nonnull
+    protected abstract List<T> doCheck(@Nonnull PgContext pgContext);
+
+    /**
+     * Executes query associated with diagnostic and extracts result.
+     *
+     * @param pgContext check's context with the specified schema; must not be null
+     * @param rse       the extractor used to extract results from the {@link ResultSet}; must not be null
+     * @return list of deviations from the specified rule
+     */
+    @Nonnull
+    protected final List<T> executeQuery(@Nonnull final PgContext pgContext,
+                                         @Nonnull final ResultSetExtractor<T> rse) {
         final String sqlQuery = SqlQueryReader.getQueryFromFile(diagnostic.getSqlQueryFileName());
         return diagnostic.getQueryExecutor().executeQuery(pgConnection, pgContext, sqlQuery, rse);
     }

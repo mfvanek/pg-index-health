@@ -38,7 +38,7 @@ public class FunctionsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<
      */
     @Nonnull
     @Override
-    public List<StoredFunction> check(@Nonnull final PgContext pgContext) {
+    protected List<StoredFunction> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String functionName = rs.getString("function_name");
             final String functionSignature = rs.getString("function_signature");

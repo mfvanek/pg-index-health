@@ -42,7 +42,7 @@ public class TablesWithBloatCheckOnHost extends AbstractCheckOnHost<TableWithBlo
      */
     @Nonnull
     @Override
-    public List<TableWithBloat> check(@Nonnull final PgContext pgContext) {
+    protected List<TableWithBloat> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final long tableSize = rs.getLong(TABLE_SIZE);

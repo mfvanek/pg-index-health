@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 
 import java.util.List;
+import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
 /**
@@ -30,12 +31,25 @@ public interface DatabaseCheckOnHost<T extends DbObject> extends DiagnosticAware
     /**
      * Executes the check in the specified schema.
      *
+     * @param pgContext        check's context with the specified schema
+     * @param exclusionsFilter predicate to filter out unnecessary results
+     * @return list of deviations from the specified rule
+     * @see PgContext
+     */
+    @Nonnull
+    List<T> check(@Nonnull PgContext pgContext, @Nonnull Predicate<? super T> exclusionsFilter);
+
+    /**
+     * Executes the check in the specified schema.
+     *
      * @param pgContext check's context with the specified schema
      * @return list of deviations from the specified rule
      * @see PgContext
      */
     @Nonnull
-    List<T> check(@Nonnull PgContext pgContext);
+    default List<T> check(@Nonnull final PgContext pgContext) {
+        return check(pgContext, item -> true);
+    }
 
     /**
      * Executes the check in the public schema.
@@ -45,7 +59,7 @@ public interface DatabaseCheckOnHost<T extends DbObject> extends DiagnosticAware
      */
     @Nonnull
     default List<T> check() {
-        return check(PgContext.ofPublic());
+        return check(PgContext.ofPublic(), item -> true);
     }
 
     /**

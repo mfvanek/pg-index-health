@@ -38,7 +38,7 @@ public class UnusedIndexesCheckOnHost extends AbstractCheckOnHost<UnusedIndex> {
      */
     @Nonnull
     @Override
-    public List<UnusedIndex> check(@Nonnull final PgContext pgContext) {
+    protected List<UnusedIndex> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);

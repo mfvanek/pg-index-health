@@ -39,7 +39,7 @@ public class ForeignKeysNotCoveredWithIndexCheckOnHost extends AbstractCheckOnHo
      */
     @Nonnull
     @Override
-    public List<ForeignKey> check(@Nonnull final PgContext pgContext) {
+    protected List<ForeignKey> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, ForeignKeyExtractor.ofDefault());
     }
 }
