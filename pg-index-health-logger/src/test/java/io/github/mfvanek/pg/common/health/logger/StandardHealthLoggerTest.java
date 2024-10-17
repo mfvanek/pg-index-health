@@ -44,7 +44,7 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
             "indexes_with_boolean:1",
             "not_valid_constraints:2",
             "btree_indexes_on_array_columns:2",
-            "sequence_overflow:0",
+            "sequence_overflow:3",
             "primary_keys_with_serial_types:1",
             "duplicated_foreign_keys:3",
             "intersected_foreign_keys:1"
