@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.column;
 
 import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
@@ -47,6 +48,15 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Co
     @Override
     public String getName() {
         return column.getName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public PgObjectType getObjectType() {
+        return column.getObjectType();
     }
 
     /**

@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.function;
 
 import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
@@ -42,6 +43,15 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
     @Override
     public final String getName() {
         return getFunctionName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public PgObjectType getObjectType() {
+        return PgObjectType.FUNCTION;
     }
 
     /**

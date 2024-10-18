@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.index.utils.DuplicatedIndexesParser;
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
@@ -62,6 +63,15 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
     @Override
     public final String getName() {
         return String.join(",", indexesNames);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public PgObjectType getObjectType() {
+        return PgObjectType.INDEX;
     }
 
     /**

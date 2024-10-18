@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.sequence;
 
 import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
@@ -84,6 +85,15 @@ public class SequenceState implements DbObject {
     @Override
     public final String getName() {
         return getSequenceName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public PgObjectType getObjectType() {
+        return PgObjectType.SEQUENCE;
     }
 
     /**
