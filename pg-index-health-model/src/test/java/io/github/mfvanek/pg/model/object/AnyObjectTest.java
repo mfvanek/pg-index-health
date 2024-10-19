@@ -106,7 +106,7 @@ class AnyObjectTest {
     void compareToTest() {
         final AnyObject first = AnyObject.ofType("t", PgObjectType.TABLE);
         final AnyObject theSame = AnyObject.ofRaw("t", "table");
-        final AnyObject second = AnyObject.ofRaw("v", "View");
+        final AnyObject second = AnyObject.ofRaw("s", "Table");
         final AnyObject third = AnyObject.ofType("t", PgObjectType.MATERIALIZED_VIEW);
 
         assertThatThrownBy(() -> first.compareTo(null))
@@ -116,11 +116,11 @@ class AnyObjectTest {
         assertThat(first)
             .isEqualByComparingTo(first) // self
             .isEqualByComparingTo(theSame) // the same
-            .isLessThan(second)
+            .isGreaterThan(second)
             .isLessThan(third);
 
         assertThat(second)
-            .isGreaterThan(first)
+            .isLessThan(first)
             .isLessThan(third);
 
         assertThat(third)
