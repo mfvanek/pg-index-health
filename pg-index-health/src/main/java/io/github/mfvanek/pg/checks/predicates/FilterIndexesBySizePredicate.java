@@ -27,6 +27,9 @@ public class FilterIndexesBySizePredicate extends AbstractFilterBySize implement
         super(thresholdInBytes);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean test(@Nonnull final IndexSizeAware indexSizeAware) {
         return indexSizeAware.getIndexSizeInBytes() >= thresholdInBytes;

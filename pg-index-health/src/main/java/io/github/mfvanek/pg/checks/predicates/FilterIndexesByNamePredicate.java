@@ -33,6 +33,9 @@ public class FilterIndexesByNamePredicate extends AbstractFilterByName implement
         super(indexName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean test(@Nonnull final IndexNameAware indexNameAware) {
         if (exclusions.isEmpty()) {

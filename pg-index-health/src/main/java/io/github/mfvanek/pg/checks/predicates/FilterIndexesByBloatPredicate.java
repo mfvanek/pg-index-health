@@ -27,6 +27,9 @@ public class FilterIndexesByBloatPredicate extends AbstractFilterByBloat impleme
         super(sizeThresholdInBytes, percentageThreshold);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean test(@Nonnull final IndexBloatAware indexBloatAware) {
         return isOk(indexBloatAware);

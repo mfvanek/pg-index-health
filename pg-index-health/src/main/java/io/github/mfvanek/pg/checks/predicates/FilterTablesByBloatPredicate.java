@@ -27,6 +27,9 @@ public class FilterTablesByBloatPredicate extends AbstractFilterByBloat implemen
         super(sizeThresholdInBytes, percentageThreshold);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean test(@Nonnull final TableBloatAware tableBloatAware) {
         return isOk(tableBloatAware);

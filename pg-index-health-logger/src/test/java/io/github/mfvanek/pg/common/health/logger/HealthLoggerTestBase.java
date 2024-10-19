@@ -108,6 +108,9 @@ abstract class HealthLoggerTestBase extends StatisticsAwareTestBase {
             this.key = Objects.requireNonNull(key);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean test(final String str) {
             return str.contains(key.getSubKeyName());
