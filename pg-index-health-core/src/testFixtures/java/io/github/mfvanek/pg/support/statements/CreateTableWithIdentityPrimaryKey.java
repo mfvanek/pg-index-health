@@ -18,10 +18,12 @@ public class CreateTableWithIdentityPrimaryKey extends AbstractDbStatement {
     @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("create table if not exists {schemaName}.test_table_with_identity_pk(" +
-            "id bigint not null generated always as identity," +
-            "num bigserial);"
+        return List.of(
+            "create table if not exists {schemaName}.test_table_with_identity_pk(" +
+                "id bigint not null generated always as identity," +
+                "num bigserial," +
+                "constraint primary_key_length_62_for_test_table_with_identity_pk_12345678 primary key(id)," +
+                "constraint num_less_than_million_constraint_with_length_63_1234567890_1234 check (num < 1000000));"
         );
     }
-
 }

@@ -33,7 +33,7 @@ public class SequenceOverflowCheckOnHost extends AbstractCheckOnHost<SequenceSta
     /**
      * Returns sequences that are close to overflow in the specified schema.
      *
-     * @param pgContext check's context with the specified schema
+     * @param pgContext check's context with the specified schema; must not be null
      * @return list of sequences close to overflow
      * @see SequenceState
      */
