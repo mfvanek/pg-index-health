@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -26,8 +27,12 @@ class IndexWithNullsTest {
         assertThat(index.getIndexName())
             .isEqualTo("i")
             .isEqualTo(index.getName());
-        assertThat(index.getIndexSizeInBytes()).isEqualTo(11L);
-        assertThat(index.getNullableColumn()).isEqualTo(Column.ofNullable("t", "f"));
+        assertThat(index.getIndexSizeInBytes())
+            .isEqualTo(11L);
+        assertThat(index.getNullableColumn())
+            .isEqualTo(Column.ofNullable("t", "f"));
+        assertThat(index.getObjectType())
+            .isEqualTo(PgObjectType.INDEX);
     }
 
     @SuppressWarnings("ConstantConditions")

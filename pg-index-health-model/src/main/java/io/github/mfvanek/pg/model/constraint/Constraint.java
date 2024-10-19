@@ -64,7 +64,7 @@ public class Constraint implements DbObject, TableNameAware {
      */
     @Nonnull
     @Override
-    public PgObjectType getObjectType() {
+    public final PgObjectType getObjectType() {
         return PgObjectType.CONSTRAINT;
     }
 

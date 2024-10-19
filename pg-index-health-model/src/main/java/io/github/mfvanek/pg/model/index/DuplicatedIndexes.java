@@ -70,7 +70,7 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
      */
     @Nonnull
     @Override
-    public PgObjectType getObjectType() {
+    public final PgObjectType getObjectType() {
         return PgObjectType.INDEX;
     }
 

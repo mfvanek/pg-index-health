@@ -50,7 +50,7 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
      */
     @Nonnull
     @Override
-    public PgObjectType getObjectType() {
+    public final PgObjectType getObjectType() {
         return PgObjectType.FUNCTION;
     }
 

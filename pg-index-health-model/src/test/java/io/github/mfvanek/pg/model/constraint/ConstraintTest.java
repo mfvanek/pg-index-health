@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +31,7 @@ class ConstraintTest {
     }
 
     @Test
-    void constraint() {
+    void gettersShouldWorkForCheckConstraint() {
         final Constraint constraintWithCheck = Constraint.ofType("t", "not_valid_id", ConstraintType.CHECK);
         assertThat(constraintWithCheck.getTableName())
             .isNotBlank()
@@ -42,7 +43,12 @@ class ConstraintTest {
         assertThat(constraintWithCheck.getConstraintType())
             .isNotNull()
             .isEqualTo(ConstraintType.CHECK);
+        assertThat(constraintWithCheck.getObjectType())
+            .isEqualTo(PgObjectType.CONSTRAINT);
+    }
 
+    @Test
+    void gettersShouldWorkForForeignKeyConstraint() {
         final Constraint constraintWithForeignKey = Constraint.ofType("t", "not_valid_id", ConstraintType.FOREIGN_KEY);
         assertThat(constraintWithForeignKey.getTableName())
             .isNotBlank()
@@ -54,6 +60,8 @@ class ConstraintTest {
         assertThat(constraintWithForeignKey.getConstraintType())
             .isNotNull()
             .isEqualTo(ConstraintType.FOREIGN_KEY);
+        assertThat(constraintWithForeignKey.getObjectType())
+            .isEqualTo(PgObjectType.CONSTRAINT);
     }
 
     @SuppressWarnings("ConstantConditions")

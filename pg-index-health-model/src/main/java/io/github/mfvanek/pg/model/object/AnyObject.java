@@ -25,7 +25,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.13.2
  */
 @Immutable
-public class AnyObject implements DbObject, Comparable<AnyObject> {
+public final class AnyObject implements DbObject, Comparable<AnyObject> {
 
     private final String objectName;
     private final PgObjectType objectType;
@@ -67,7 +67,8 @@ public class AnyObject implements DbObject, Comparable<AnyObject> {
         }
 
         final AnyObject that = (AnyObject) other;
-        return objectType == that.objectType && Objects.equals(objectName, that.objectName);
+        return Objects.equals(objectName, that.objectName) &&
+            Objects.equals(objectType, that.objectType);
     }
 
     /**
@@ -95,6 +96,9 @@ public class AnyObject implements DbObject, Comparable<AnyObject> {
     @Override
     public int compareTo(@Nonnull final AnyObject other) {
         Objects.requireNonNull(other, "other cannot be null");
+        if (objectType != other.objectType) {
+            return objectType.compareTo(other.objectType);
+        }
         return objectName.compareTo(other.objectName);
     }
 

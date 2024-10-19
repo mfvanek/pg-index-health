@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +35,8 @@ class IndexWithColumnsTest {
             .hasSize(1)
             .isUnmodifiable()
             .containsExactly(Column.ofNullable("t", "f"));
+        assertThat(index.getObjectType())
+            .isEqualTo(PgObjectType.INDEX);
     }
 
     @SuppressWarnings("ConstantConditions")

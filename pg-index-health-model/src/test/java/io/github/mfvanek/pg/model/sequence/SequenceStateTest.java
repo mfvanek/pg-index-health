@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.sequence;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -39,6 +40,8 @@ class SequenceStateTest {
             .isEqualTo("accounts_seq");
         assertThat(sequenceState.getRemainingPercentage())
             .isEqualTo(100.0);
+        assertThat(sequenceState.getObjectType())
+            .isEqualTo(PgObjectType.SEQUENCE);
     }
 
     @SuppressWarnings("DataFlowIssue")

@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +36,8 @@ class DuplicatedIndexesTest {
             .isUnmodifiable();
         assertThat(index.getName())
             .isEqualTo("i1,i2");
+        assertThat(index.getObjectType())
+            .isEqualTo(PgObjectType.INDEX);
     }
 
     @Test

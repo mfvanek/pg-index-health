@@ -92,7 +92,7 @@ public class SequenceState implements DbObject {
      */
     @Nonnull
     @Override
-    public PgObjectType getObjectType() {
+    public final PgObjectType getObjectType() {
         return PgObjectType.SEQUENCE;
     }
 

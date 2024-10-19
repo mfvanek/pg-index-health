@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.function;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class StoredFunctionTest {
 
     @Test
-    void gettersShouldWork() {
+    void gettersShouldWorkForNoArgFunction() {
         final StoredFunction noArgsFunction = StoredFunction.ofNoArgs("f1");
         assertThat(noArgsFunction)
             .isNotNull();
@@ -28,7 +29,12 @@ class StoredFunctionTest {
             .isEqualTo(noArgsFunction.getName());
         assertThat(noArgsFunction.getFunctionSignature())
             .isEmpty();
+        assertThat(noArgsFunction.getObjectType())
+            .isEqualTo(PgObjectType.FUNCTION);
+    }
 
+    @Test
+    void gettersShouldWorkForFunctionWithArgs() {
         final StoredFunction function = StoredFunction.of("f2", "IN a integer, IN b integer, IN c integer");
         assertThat(function)
             .isNotNull();
@@ -37,6 +43,8 @@ class StoredFunctionTest {
             .isEqualTo(function.getName());
         assertThat(function.getFunctionSignature())
             .isEqualTo("IN a integer, IN b integer, IN c integer");
+        assertThat(function.getObjectType())
+            .isEqualTo(PgObjectType.FUNCTION);
     }
 
     @Test

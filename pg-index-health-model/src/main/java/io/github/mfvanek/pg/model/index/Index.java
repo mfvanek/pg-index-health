@@ -52,7 +52,7 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
      */
     @Nonnull
     @Override
-    public PgObjectType getObjectType() {
+    public final PgObjectType getObjectType() {
         return PgObjectType.INDEX;
     }
 

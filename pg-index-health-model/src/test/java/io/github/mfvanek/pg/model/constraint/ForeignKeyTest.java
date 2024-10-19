@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.constraint;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -47,6 +48,8 @@ class ForeignKeyTest {
             .hasSize(1)
             .containsExactly(Column.ofNotNull("t", "order_id"))
             .isUnmodifiable();
+        assertThat(foreignKey.getObjectType())
+            .isEqualTo(PgObjectType.CONSTRAINT);
     }
 
     @Test

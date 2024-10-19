@@ -84,7 +84,7 @@ public enum PgObjectType {
     public static PgObjectType valueFrom(@Nonnull final String objectType) {
         Objects.requireNonNull(objectType, "objectType cannot be null");
         for (final PgObjectType pgObjectType : values()) {
-            if (pgObjectType.objectType.equals(objectType)) {
+            if (pgObjectType.objectType.equalsIgnoreCase(objectType)) {
                 return pgObjectType;
             }
         }

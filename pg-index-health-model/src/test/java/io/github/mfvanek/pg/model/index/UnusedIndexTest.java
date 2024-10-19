@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,8 @@ class UnusedIndexTest {
             .isEqualTo(index.getName());
         assertThat(index.getIndexSizeInBytes()).isEqualTo(1L);
         assertThat(index.getIndexScans()).isEqualTo(2L);
+        assertThat(index.getObjectType())
+            .isEqualTo(PgObjectType.INDEX);
     }
 
     @Test

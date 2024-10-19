@@ -60,7 +60,7 @@ public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
      */
     @Nonnull
     @Override
-    public PgObjectType getObjectType() {
+    public final PgObjectType getObjectType() {
         return PgObjectType.TABLE;
     }
 
