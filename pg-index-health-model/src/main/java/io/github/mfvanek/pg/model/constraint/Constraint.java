@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.constraint;
 
 import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
@@ -56,6 +57,15 @@ public class Constraint implements DbObject, TableNameAware {
     @Override
     public final String getName() {
         return getConstraintName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public final PgObjectType getObjectType() {
+        return PgObjectType.CONSTRAINT;
     }
 
     /**

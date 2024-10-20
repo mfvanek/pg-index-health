@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -26,6 +27,8 @@ class IndexWithBloatTest {
             .isEqualTo(bloat.getName());
         assertThat(bloat.getBloatSizeInBytes())
             .isEqualTo(2L);
+        assertThat(bloat.getObjectType())
+            .isEqualTo(PgObjectType.INDEX);
     }
 
     @Test

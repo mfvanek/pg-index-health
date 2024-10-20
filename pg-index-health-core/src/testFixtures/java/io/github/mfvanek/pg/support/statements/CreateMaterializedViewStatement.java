@@ -19,7 +19,8 @@ public class CreateMaterializedViewStatement extends AbstractDbStatement {
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create materialized view if not exists {schemaName}.accounts_mat_view as (" +
+            "create materialized view if not exists " +
+                "{schemaName}.accounts_materialized_view_with_length_63_1234567890_1234567890 as (" +
                 "select client_id, account_number from {schemaName}.accounts);"
         );
     }

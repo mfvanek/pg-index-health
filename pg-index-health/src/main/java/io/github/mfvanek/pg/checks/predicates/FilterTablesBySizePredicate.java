@@ -28,6 +28,9 @@ public class FilterTablesBySizePredicate extends AbstractFilterBySize implements
         super(thresholdInBytes);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean test(@Nonnull final TableSizeAware tableSizeAware) {
         return tableSizeAware.getTableSizeInBytes() >= thresholdInBytes;

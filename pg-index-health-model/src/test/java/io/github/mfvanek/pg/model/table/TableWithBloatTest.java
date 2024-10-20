@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,8 @@ class TableWithBloatTest {
             .isEqualTo(2L);
         assertThat(bloat.getBloatPercentage())
             .isEqualTo(25);
+        assertThat(bloat.getObjectType())
+            .isEqualTo(PgObjectType.TABLE);
     }
 
     @Test

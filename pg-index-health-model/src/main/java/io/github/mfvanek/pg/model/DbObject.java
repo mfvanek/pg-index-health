@@ -10,6 +10,8 @@
 
 package io.github.mfvanek.pg.model;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -28,4 +30,13 @@ public interface DbObject {
      */
     @Nonnull
     String getName();
+
+    /**
+     * Gets database object type.
+     *
+     * @return database object type
+     * @since 0.13.2
+     */
+    @Nonnull
+    PgObjectType getObjectType();
 }

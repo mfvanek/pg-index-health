@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.column;
 
 import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
@@ -52,6 +53,15 @@ public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
     @Override
     public final String getName() {
         return getColumnName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public final PgObjectType getObjectType() {
+        return PgObjectType.TABLE;
     }
 
     /**

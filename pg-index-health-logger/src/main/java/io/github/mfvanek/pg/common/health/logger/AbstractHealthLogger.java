@@ -37,6 +37,7 @@ import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.object.AnyObject;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
@@ -105,6 +106,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         logResult.add(logPrimaryKeysWithSerialTypes(databaseChecks, pgContext));
         logResult.add(logDuplicatedForeignKeys(databaseChecks, pgContext));
         logResult.add(logIntersectedForeignKeys(databaseChecks, pgContext));
+        logResult.add(logPossibleObjectNameOverflow(databaseChecks, pgContext));
         return logResult;
     }
 
@@ -280,6 +282,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
                                              @Nonnull final PgContext pgContext) {
         return logCheckResult(databaseChecks.getCheck(Diagnostic.INTERSECTED_FOREIGN_KEYS, DuplicatedForeignKeys.class),
             c -> true, pgContext, SimpleLoggingKey.INTERSECTED_FOREIGN_KEYS);
+    }
+
+    @Nonnull
+    private String logPossibleObjectNameOverflow(@Nonnull final DatabaseChecks databaseChecks,
+                                                 @Nonnull final PgContext pgContext) {
+        return logCheckResult(databaseChecks.getCheck(Diagnostic.POSSIBLE_OBJECT_NAME_OVERFLOW, AnyObject.class),
+            c -> true, pgContext, SimpleLoggingKey.POSSIBLE_OBJECT_NAME_OVERFLOW);
     }
 
     @Nonnull

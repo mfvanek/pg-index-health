@@ -25,6 +25,7 @@ import io.github.mfvanek.pg.checks.host.IntersectedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.checks.host.IntersectedIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.InvalidIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.NotValidConstraintsCheckOnHost;
+import io.github.mfvanek.pg.checks.host.PossibleObjectNameOverflowCheckOnHost;
 import io.github.mfvanek.pg.checks.host.PrimaryKeysWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.SequenceOverflowCheckOnHost;
 import io.github.mfvanek.pg.checks.host.TablesWithBloatCheckOnHost;
@@ -273,6 +274,14 @@ public class DatabaseStructureHealthAutoConfiguration {
     @ConditionalOnMissingBean
     public IntersectedForeignKeysCheckOnHost intersectedForeignKeysCheckOnHost(final PgConnection pgConnection) {
         return new IntersectedForeignKeysCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(PossibleObjectNameOverflowCheckOnHost.class)
+    @ConditionalOnBean(PgConnection.class)
+    @ConditionalOnMissingBean
+    public PossibleObjectNameOverflowCheckOnHost possibleObjectNameOverflowCheckOnHost(final PgConnection pgConnection) {
+        return new PossibleObjectNameOverflowCheckOnHost(pgConnection);
     }
 
     @Bean

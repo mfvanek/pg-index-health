@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
@@ -44,6 +45,15 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
     @Override
     public final String getName() {
         return getIndexName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public final PgObjectType getObjectType() {
+        return PgObjectType.INDEX;
     }
 
     /**

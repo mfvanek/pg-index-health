@@ -33,6 +33,9 @@ public class FilterTablesByNamePredicate extends AbstractFilterByName implements
         super(tableName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean test(@Nonnull final TableNameAware tableNameAware) {
         if (exclusions.isEmpty()) {

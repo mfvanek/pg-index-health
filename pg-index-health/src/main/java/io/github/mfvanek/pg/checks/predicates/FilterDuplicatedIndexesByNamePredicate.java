@@ -33,6 +33,9 @@ public class FilterDuplicatedIndexesByNamePredicate extends AbstractFilterByName
         super(indexName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean test(@Nonnull final DuplicatedIndexes duplicatedIndexes) {
         if (exclusions.isEmpty()) {

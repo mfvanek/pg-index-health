@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.table;
 
 import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
@@ -40,6 +41,15 @@ public class Table implements DbObject, TableSizeAware, Comparable<Table> {
     @Override
     public final String getName() {
         return getTableName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public final PgObjectType getObjectType() {
+        return PgObjectType.TABLE;
     }
 
     /**

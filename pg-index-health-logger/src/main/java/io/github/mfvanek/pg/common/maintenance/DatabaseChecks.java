@@ -25,6 +25,7 @@ import io.github.mfvanek.pg.checks.cluster.IntersectedForeignKeysCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.IntersectedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.InvalidIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.NotValidConstraintsCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.PossibleObjectNameOverflowCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.PrimaryKeysWithSerialTypesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.SequenceOverflowCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.TablesWithBloatCheckOnCluster;
@@ -35,6 +36,7 @@ import io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.model.DbObject;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -71,7 +73,8 @@ public class DatabaseChecks {
             new SequenceOverflowCheckOnCluster(haPgConnection),
             new PrimaryKeysWithSerialTypesCheckOnCluster(haPgConnection),
             new DuplicatedForeignKeysCheckOnCluster(haPgConnection),
-            new IntersectedForeignKeysCheckOnCluster(haPgConnection)
+            new IntersectedForeignKeysCheckOnCluster(haPgConnection),
+            new PossibleObjectNameOverflowCheckOnCluster(haPgConnection)
         );
         allChecks.forEach(check -> this.checks.putIfAbsent(check.getDiagnostic(), check));
     }
@@ -87,5 +90,10 @@ public class DatabaseChecks {
             throw new IllegalArgumentException("Illegal type: " + type);
         }
         return (DatabaseCheckOnCluster<T>) check;
+    }
+
+    @Nonnull
+    public List<DatabaseCheckOnCluster<? extends DbObject>> getAllChecks() {
+        return List.copyOf(checks.values());
     }
 }

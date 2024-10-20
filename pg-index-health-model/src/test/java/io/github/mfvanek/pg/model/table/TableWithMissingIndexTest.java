@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,8 @@ class TableWithMissingIndexTest {
             .isEqualTo(2L);
         assertThat(table.getIndexScans())
             .isEqualTo(3L);
+        assertThat(table.getObjectType())
+            .isEqualTo(PgObjectType.TABLE);
     }
 
     @SuppressWarnings("ConstantConditions")

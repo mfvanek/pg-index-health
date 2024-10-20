@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -51,6 +52,8 @@ class IndexTest {
         assertThat(index.getIndexName())
             .isEqualTo("i")
             .isEqualTo(index.getName());
+        assertThat(index.getObjectType())
+            .isEqualTo(PgObjectType.INDEX);
     }
 
     @Test

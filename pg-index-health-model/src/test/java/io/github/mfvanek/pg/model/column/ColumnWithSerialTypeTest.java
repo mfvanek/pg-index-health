@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.column;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -39,6 +40,8 @@ class ColumnWithSerialTypeTest {
                     .isEqualTo(SerialType.SERIAL);
                 assertThat(c.getSequenceName())
                     .isEqualTo("s1");
+                assertThat(c.getObjectType())
+                    .isEqualTo(PgObjectType.TABLE);
             });
 
         final ColumnWithSerialType theSameButNullable = prepareNullable();

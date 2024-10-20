@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +21,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class DuplicatedForeignKeysTest {
+
+    @Test
+    void objectTypeShouldBeConstraint() {
+        final DuplicatedForeignKeys foreignKeys = prepare();
+        assertThat(foreignKeys.getObjectType())
+            .isEqualTo(PgObjectType.CONSTRAINT);
+    }
 
     @Test
     void testToString() {

@@ -8,59 +8,65 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.table;
+package io.github.mfvanek.pg.model.object;
 
-import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class TableTest {
+class AnyObjectTest {
 
     @Test
-    void getTableName() {
-        final Table table = Table.of("t", 1L);
-        assertThat(table.getTableName())
-            .isEqualTo("t")
-            .isEqualTo(table.getName());
-        assertThat(table.getTableSizeInBytes())
-            .isEqualTo(1L);
-        assertThat(table.getObjectType())
+    void getObjectNameShouldWork() {
+        final AnyObject first = AnyObject.ofType("t", PgObjectType.TABLE);
+        assertThat(first.getName())
+            .isEqualTo("t");
+        assertThat(first.getObjectType())
             .isEqualTo(PgObjectType.TABLE);
+
+        final AnyObject second = AnyObject.ofRaw("v", "View");
+        assertThat(second.getName())
+            .isEqualTo("v");
+        assertThat(second.getObjectType())
+            .isEqualTo(PgObjectType.VIEW);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidValues() {
-        assertThatThrownBy(() -> Table.of(null, 1L))
+        assertThatThrownBy(() -> AnyObject.ofType(null, null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("tableName cannot be null");
-        assertThatThrownBy(() -> Table.of("", 1L))
+            .hasMessage("objectName cannot be null");
+        assertThatThrownBy(() -> AnyObject.ofType("", null))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("tableName cannot be blank");
-        assertThatThrownBy(() -> Table.of("  ", 1L))
+            .hasMessage("objectName cannot be blank");
+        assertThatThrownBy(() -> AnyObject.ofType("  ", null))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("tableName cannot be blank");
-        assertThatThrownBy(() -> Table.of("t", -1L))
+            .hasMessage("objectName cannot be blank");
+        assertThatThrownBy(() -> AnyObject.ofType("t", null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("objectType cannot be null");
+
+        assertThatThrownBy(() -> AnyObject.ofRaw("t", "qwerty"))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("tableSizeInBytes cannot be less than zero");
+            .hasMessage("Unknown objectType: qwerty");
     }
 
     @Test
     void testToString() {
-        assertThat(Table.of("t", 2L))
-            .hasToString("Table{tableName='t', tableSizeInBytes=2}");
+        assertThat(AnyObject.ofRaw("mv", "Materialized View"))
+            .hasToString("AnyObject{objectName='mv', objectType=MATERIALIZED_VIEW}");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
-        final Table first = Table.of("t1", 22L);
-        final Table theSame = Table.of("t1", 0L); // different size!
-        final Table second = Table.of("t2", 30L);
-        final Table third = Table.of("t3", 22L);
+        final AnyObject first = AnyObject.ofType("t", PgObjectType.TABLE);
+        final AnyObject theSame = AnyObject.ofRaw("t", "table");
+        final AnyObject second = AnyObject.ofRaw("v", "View");
+        final AnyObject third = AnyObject.ofType("t", PgObjectType.MATERIALIZED_VIEW);
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -86,30 +92,22 @@ class TableTest {
             .doesNotHaveSameHashCodeAs(first)
             .isNotEqualTo(second)
             .doesNotHaveSameHashCodeAs(second);
-
-        // another implementation of Table
-        final TableWithBloat another = TableWithBloat.of("t1", 23L, 11L, 50);
-        //noinspection AssertBetweenInconvertibleTypes
-        assertThat(another)
-            .isNotEqualTo(first)
-            .doesNotHaveSameHashCodeAs(first);
     }
 
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
-        EqualsVerifier.forClass(Table.class)
-            .withIgnoredFields("tableSizeInBytes")
+        EqualsVerifier.forClass(AnyObject.class)
             .verify();
     }
 
-    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings("ConstantConditions")
     @Test
     void compareToTest() {
-        final Table first = Table.of("t1", 22L);
-        final Table theSame = Table.of("t1", 0L); // different size!
-        final Table second = Table.of("t2", 30L);
-        final Table third = Table.of("t3", 22L);
+        final AnyObject first = AnyObject.ofType("t", PgObjectType.TABLE);
+        final AnyObject theSame = AnyObject.ofRaw("t", "table");
+        final AnyObject second = AnyObject.ofRaw("s", "Table");
+        final AnyObject third = AnyObject.ofType("t", PgObjectType.MATERIALIZED_VIEW);
 
         assertThatThrownBy(() -> first.compareTo(null))
             .isInstanceOf(NullPointerException.class)
@@ -118,11 +116,11 @@ class TableTest {
         assertThat(first)
             .isEqualByComparingTo(first) // self
             .isEqualByComparingTo(theSame) // the same
-            .isLessThan(second)
+            .isGreaterThan(second)
             .isLessThan(third);
 
         assertThat(second)
-            .isGreaterThan(first)
+            .isLessThan(first)
             .isLessThan(third);
 
         assertThat(third)

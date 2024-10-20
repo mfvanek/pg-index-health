@@ -46,7 +46,9 @@ abstract class HealthLoggerTestBase extends StatisticsAwareTestBase {
         .withBtreeIndexesOnArrayColumn()
         .withSequenceOverflow()
         .withDuplicatedForeignKeys()
-        .withIntersectedForeignKeys();
+        .withIntersectedForeignKeys()
+        .withMaterializedView()
+        .withIdentityPrimaryKey();
 
     @Nonnull
     protected static Predicate<String> ofKey(@Nonnull final LoggingKey key) {
@@ -108,6 +110,9 @@ abstract class HealthLoggerTestBase extends StatisticsAwareTestBase {
             this.key = Objects.requireNonNull(key);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean test(final String str) {
             return str.contains(key.getSubKeyName());

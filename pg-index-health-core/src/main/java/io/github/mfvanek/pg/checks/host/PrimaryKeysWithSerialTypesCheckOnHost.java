@@ -32,6 +32,9 @@ public class PrimaryKeysWithSerialTypesCheckOnHost extends AbstractCheckOnHost<C
         super(ColumnWithSerialType.class, pgConnection, Diagnostic.PRIMARY_KEYS_WITH_SERIAL_TYPES);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     protected List<ColumnWithSerialType> doCheck(@Nonnull final PgContext pgContext) {

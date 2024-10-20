@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.column;
 
+import io.github.mfvanek.pg.model.object.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ColumnTest {
 
     @Test
-    void gettersShouldWork() {
+    void gettersShouldWorkForNotNullColumn() {
         final Column column = Column.ofNotNull("t1", "c1");
         assertThat(column.getTableName())
             .isNotBlank()
@@ -30,7 +31,12 @@ class ColumnTest {
             .isEqualTo(column.getName());
         assertThat(column.isNotNull()).isTrue();
         assertThat(column.isNullable()).isFalse();
+        assertThat(column.getObjectType())
+            .isEqualTo(PgObjectType.TABLE);
+    }
 
+    @Test
+    void gettersShouldWorkForNullableColumn() {
         final Column nullableColumn = Column.ofNullable("t2", "c2");
         assertThat(nullableColumn.getTableName())
             .isNotBlank()
@@ -41,6 +47,8 @@ class ColumnTest {
             .isEqualTo(nullableColumn.getName());
         assertThat(nullableColumn.isNotNull()).isFalse();
         assertThat(nullableColumn.isNullable()).isTrue();
+        assertThat(nullableColumn.getObjectType())
+            .isEqualTo(PgObjectType.TABLE);
     }
 
     @SuppressWarnings("ConstantConditions")
