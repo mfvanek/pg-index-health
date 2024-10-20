@@ -53,6 +53,12 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     }
 
     @Test
+    void getAllChecksShouldWork() {
+        assertThat(checks.getAllChecks())
+            .hasSameSizeAs(Diagnostic.values());
+    }
+
+    @Test
     @SuppressForbidden
     void shouldThrowExceptionIfCheckNotFound() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         final DatabaseChecks databaseChecks = new DatabaseChecks(getHaPgConnection());
