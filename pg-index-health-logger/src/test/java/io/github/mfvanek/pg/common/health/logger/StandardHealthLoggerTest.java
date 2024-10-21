@@ -48,7 +48,8 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
             "primary_keys_with_serial_types:1",
             "duplicated_foreign_keys:3",
             "intersected_foreign_keys:1",
-            "possible_object_name_overflow:2"
+            "possible_object_name_overflow:2",
+            "tables_not_linked_to_others:3"
         };
     }
 
