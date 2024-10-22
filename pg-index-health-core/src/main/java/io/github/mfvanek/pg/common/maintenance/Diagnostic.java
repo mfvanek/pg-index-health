@@ -46,7 +46,8 @@ public enum Diagnostic implements CheckTypeAware {
     PRIMARY_KEYS_WITH_SERIAL_TYPES(ExecutionTopology.ON_PRIMARY, "primary_keys_with_serial_types.sql", QueryExecutors::executeQueryWithSchema, false),
     DUPLICATED_FOREIGN_KEYS(ExecutionTopology.ON_PRIMARY, "duplicated_foreign_keys.sql", QueryExecutors::executeQueryWithSchema, false),
     INTERSECTED_FOREIGN_KEYS(ExecutionTopology.ON_PRIMARY, "intersected_foreign_keys.sql", QueryExecutors::executeQueryWithSchema, false),
-    POSSIBLE_OBJECT_NAME_OVERFLOW(ExecutionTopology.ON_PRIMARY, "possible_object_name_overflow.sql", QueryExecutors::executeQueryWithSchema, false);
+    POSSIBLE_OBJECT_NAME_OVERFLOW(ExecutionTopology.ON_PRIMARY, "possible_object_name_overflow.sql", QueryExecutors::executeQueryWithSchema, false),
+    TABLES_NOT_LINKED_TO_OTHERS(ExecutionTopology.ON_PRIMARY, "tables_not_linked_to_others.sql", QueryExecutors::executeQueryWithSchema, false);
 
     private final ExecutionTopology executionTopology;
     private final String sqlQueryFileName;

@@ -77,7 +77,8 @@ class HealthLoggerTest extends HealthLoggerTestBase {
             "1999-12-31T23:59:59Z\tdb_indexes_health\tprimary_keys_with_serial_types\t1",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tduplicated_foreign_keys\t3",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tintersected_foreign_keys\t1",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tpossible_object_name_overflow\t2"
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tpossible_object_name_overflow\t2",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_not_linked_to_others\t3"
         };
     }
 

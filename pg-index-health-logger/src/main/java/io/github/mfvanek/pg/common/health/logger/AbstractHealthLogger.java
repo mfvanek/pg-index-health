@@ -48,11 +48,12 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
-@SuppressWarnings("PMD.ExcessiveImports")
+@SuppressWarnings({"PMD.ExcessiveImports", "checkstyle:ExecutableStatementCount"})
 public abstract class AbstractHealthLogger implements HealthLogger {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHealthLogger.class);
@@ -60,6 +61,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     private final ConnectionCredentials credentials;
     private final HighAvailabilityPgConnectionFactory connectionFactory;
     private final Function<HighAvailabilityPgConnection, DatabaseChecks> databaseChecksFactory;
+    private final AtomicReference<DatabaseChecks> databaseChecksHolder = new AtomicReference<>();
+    private final AtomicReference<PgContext> pgContextHolder = new AtomicReference<>();
 
     @SuppressWarnings("WeakerAccess")
     protected AbstractHealthLogger(@Nonnull final ConnectionCredentials credentials,
@@ -82,32 +85,39 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         // The main idea here is to create haPgConnection for a short period of time.
         // This helps to avoid dealing with failover/switch-over situations that occur in real clusters.
         final HighAvailabilityPgConnection haPgConnection = connectionFactory.of(credentials);
-        final DatabaseChecks databaseChecks = databaseChecksFactory.apply(haPgConnection);
-        final List<String> logResult = new ArrayList<>();
-        logResult.add(logInvalidIndexes(databaseChecks, pgContext));
-        logResult.add(logDuplicatedIndexes(databaseChecks, exclusions, pgContext));
-        logResult.add(logIntersectedIndexes(databaseChecks, exclusions, pgContext));
-        logResult.add(logUnusedIndexes(databaseChecks, exclusions, pgContext));
-        logResult.add(logForeignKeysNotCoveredWithIndex(databaseChecks, pgContext));
-        logResult.add(logTablesWithMissingIndexes(databaseChecks, exclusions, pgContext));
-        logResult.add(logTablesWithoutPrimaryKey(databaseChecks, exclusions, pgContext));
-        logResult.add(logIndexesWithNullValues(databaseChecks, exclusions, pgContext));
-        logResult.add(logIndexesBloat(databaseChecks, exclusions, pgContext));
-        logResult.add(logTablesBloat(databaseChecks, exclusions, pgContext));
-        logResult.add(logTablesWithoutDescription(databaseChecks, pgContext));
-        logResult.add(logColumnsWithoutDescription(databaseChecks, pgContext));
-        logResult.add(logColumnsWithJsonType(databaseChecks, pgContext));
-        logResult.add(logColumnsWithSerialTypes(databaseChecks, pgContext));
-        logResult.add(logFunctionsWithoutDescription(databaseChecks, pgContext));
-        logResult.add(logIndexesWithBoolean(databaseChecks, pgContext));
-        logResult.add(logNotValidConstraints(databaseChecks, pgContext));
-        logResult.add(logBtreeIndexesOnArrayColumns(databaseChecks, exclusions, pgContext));
-        logResult.add(logSequenceOverflow(databaseChecks, pgContext));
-        logResult.add(logPrimaryKeysWithSerialTypes(databaseChecks, pgContext));
-        logResult.add(logDuplicatedForeignKeys(databaseChecks, pgContext));
-        logResult.add(logIntersectedForeignKeys(databaseChecks, pgContext));
-        logResult.add(logPossibleObjectNameOverflow(databaseChecks, pgContext));
-        return logResult;
+        try {
+            pgContextHolder.set(pgContext);
+            databaseChecksHolder.set(databaseChecksFactory.apply(haPgConnection));
+            final List<String> logResult = new ArrayList<>();
+            logResult.add(logCheckResult(Diagnostic.INVALID_INDEXES, Index.class, SimpleLoggingKey.INVALID_INDEXES));
+            logResult.add(logDuplicatedIndexes(exclusions));
+            logResult.add(logIntersectedIndexes(exclusions));
+            logResult.add(logUnusedIndexes(exclusions));
+            logResult.add(logCheckResult(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX, ForeignKey.class, SimpleLoggingKey.FOREIGN_KEYS_WITHOUT_INDEX));
+            logResult.add(logTablesWithMissingIndexes(exclusions));
+            logResult.add(logTablesWithoutPrimaryKey(exclusions));
+            logResult.add(logIndexesWithNullValues(exclusions));
+            logResult.add(logIndexesBloat(exclusions));
+            logResult.add(logTablesBloat(exclusions));
+            logResult.add(logCheckResult(Diagnostic.TABLES_WITHOUT_DESCRIPTION, Table.class, SimpleLoggingKey.TABLES_WITHOUT_DESCRIPTION));
+            logResult.add(logCheckResult(Diagnostic.COLUMNS_WITHOUT_DESCRIPTION, Column.class, SimpleLoggingKey.COLUMNS_WITHOUT_DESCRIPTION));
+            logResult.add(logCheckResult(Diagnostic.COLUMNS_WITH_JSON_TYPE, Column.class, SimpleLoggingKey.COLUMNS_WITH_JSON_TYPE));
+            logResult.add(logCheckResult(Diagnostic.COLUMNS_WITH_SERIAL_TYPES, ColumnWithSerialType.class, SimpleLoggingKey.COLUMNS_WITH_SERIAL_TYPES));
+            logResult.add(logCheckResult(Diagnostic.FUNCTIONS_WITHOUT_DESCRIPTION, StoredFunction.class, SimpleLoggingKey.FUNCTIONS_WITHOUT_DESCRIPTION));
+            logResult.add(logCheckResult(Diagnostic.INDEXES_WITH_BOOLEAN, IndexWithColumns.class, SimpleLoggingKey.INDEXES_WITH_BOOLEAN));
+            logResult.add(logCheckResult(Diagnostic.NOT_VALID_CONSTRAINTS, Constraint.class, SimpleLoggingKey.NOT_VALID_CONSTRAINTS));
+            logResult.add(logBtreeIndexesOnArrayColumns(exclusions));
+            logResult.add(logCheckResult(Diagnostic.SEQUENCE_OVERFLOW, SequenceState.class, SimpleLoggingKey.SEQUENCE_OVERFLOW));
+            logResult.add(logCheckResult(Diagnostic.PRIMARY_KEYS_WITH_SERIAL_TYPES, ColumnWithSerialType.class, SimpleLoggingKey.PRIMARY_KEYS_WITH_SERIAL_TYPES));
+            logResult.add(logCheckResult(Diagnostic.DUPLICATED_FOREIGN_KEYS, DuplicatedForeignKeys.class, SimpleLoggingKey.DUPLICATED_FOREIGN_KEYS));
+            logResult.add(logCheckResult(Diagnostic.INTERSECTED_FOREIGN_KEYS, DuplicatedForeignKeys.class, SimpleLoggingKey.INTERSECTED_FOREIGN_KEYS));
+            logResult.add(logCheckResult(Diagnostic.POSSIBLE_OBJECT_NAME_OVERFLOW, AnyObject.class, SimpleLoggingKey.POSSIBLE_OBJECT_NAME_OVERFLOW));
+            logResult.add(logCheckResult(Diagnostic.TABLES_NOT_LINKED_TO_OTHERS, Table.class, SimpleLoggingKey.TABLES_NOT_LINKED_TO_OTHERS));
+            return logResult;
+        } finally {
+            databaseChecksHolder.set(null);
+            pgContextHolder.set(null);
+        }
     }
 
     protected abstract String writeToLog(@Nonnull LoggingKey key, int value);
@@ -118,185 +128,76 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     }
 
     @Nonnull
-    private String logInvalidIndexes(@Nonnull final DatabaseChecks databaseChecks,
-                                     @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.INVALID_INDEXES, Index.class),
-            c -> true, pgContext, SimpleLoggingKey.INVALID_INDEXES);
+    private String logDuplicatedIndexes(@Nonnull final Exclusions exclusions) {
+        return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.DUPLICATED_INDEXES, DuplicatedIndexes.class),
+            FilterDuplicatedIndexesByNamePredicate.of(exclusions.getDuplicatedIndexesExclusions()), SimpleLoggingKey.DUPLICATED_INDEXES);
     }
 
     @Nonnull
-    private String logDuplicatedIndexes(@Nonnull final DatabaseChecks databaseChecks,
-                                        @Nonnull final Exclusions exclusions,
-                                        @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.DUPLICATED_INDEXES, DuplicatedIndexes.class),
-            FilterDuplicatedIndexesByNamePredicate.of(exclusions.getDuplicatedIndexesExclusions()), pgContext, SimpleLoggingKey.DUPLICATED_INDEXES);
+    private String logIntersectedIndexes(@Nonnull final Exclusions exclusions) {
+        return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.INTERSECTED_INDEXES, DuplicatedIndexes.class),
+            FilterDuplicatedIndexesByNamePredicate.of(exclusions.getIntersectedIndexesExclusions()), SimpleLoggingKey.INTERSECTED_INDEXES);
     }
 
     @Nonnull
-    private String logIntersectedIndexes(@Nonnull final DatabaseChecks databaseChecks,
-                                         @Nonnull final Exclusions exclusions,
-                                         @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.INTERSECTED_INDEXES, DuplicatedIndexes.class),
-            FilterDuplicatedIndexesByNamePredicate.of(exclusions.getIntersectedIndexesExclusions()), pgContext, SimpleLoggingKey.INTERSECTED_INDEXES);
-    }
-
-    @Nonnull
-    private String logUnusedIndexes(@Nonnull final DatabaseChecks databaseChecks,
-                                    @Nonnull final Exclusions exclusions,
-                                    @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.UNUSED_INDEXES, UnusedIndex.class),
+    private String logUnusedIndexes(@Nonnull final Exclusions exclusions) {
+        return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.UNUSED_INDEXES, UnusedIndex.class),
             FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())
-                .and(FilterIndexesByNamePredicate.of(exclusions.getUnusedIndexesExclusions())), pgContext, SimpleLoggingKey.UNUSED_INDEXES);
+                .and(FilterIndexesByNamePredicate.of(exclusions.getUnusedIndexesExclusions())), SimpleLoggingKey.UNUSED_INDEXES);
     }
 
     @Nonnull
-    private String logForeignKeysNotCoveredWithIndex(@Nonnull final DatabaseChecks databaseChecks,
-                                                     @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX, ForeignKey.class),
-            c -> true, pgContext, SimpleLoggingKey.FOREIGN_KEYS_WITHOUT_INDEX);
-    }
-
-    @Nonnull
-    private String logTablesWithMissingIndexes(@Nonnull final DatabaseChecks databaseChecks,
-                                               @Nonnull final Exclusions exclusions,
-                                               @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.TABLES_WITH_MISSING_INDEXES, TableWithMissingIndex.class),
+    private String logTablesWithMissingIndexes(@Nonnull final Exclusions exclusions) {
+        return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.TABLES_WITH_MISSING_INDEXES, TableWithMissingIndex.class),
             FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
-                .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithMissingIndexesExclusions())), pgContext, SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES);
+                .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithMissingIndexesExclusions())), SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES);
     }
 
     @Nonnull
-    private String logTablesWithoutPrimaryKey(@Nonnull final DatabaseChecks databaseChecks,
-                                              @Nonnull final Exclusions exclusions,
-                                              @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, Table.class),
+    private String logTablesWithoutPrimaryKey(@Nonnull final Exclusions exclusions) {
+        return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, Table.class),
             FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
-                .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithoutPrimaryKeyExclusions())), pgContext, SimpleLoggingKey.TABLES_WITHOUT_PRIMARY_KEY);
+                .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithoutPrimaryKeyExclusions())), SimpleLoggingKey.TABLES_WITHOUT_PRIMARY_KEY);
     }
 
     @Nonnull
-    private String logIndexesWithNullValues(@Nonnull final DatabaseChecks databaseChecks,
-                                            @Nonnull final Exclusions exclusions,
-                                            @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.INDEXES_WITH_NULL_VALUES, IndexWithNulls.class),
-            FilterIndexesByNamePredicate.of(exclusions.getIndexesWithNullValuesExclusions()), pgContext, SimpleLoggingKey.INDEXES_WITH_NULL_VALUES);
+    private String logIndexesWithNullValues(@Nonnull final Exclusions exclusions) {
+        return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.INDEXES_WITH_NULL_VALUES, IndexWithNulls.class),
+            FilterIndexesByNamePredicate.of(exclusions.getIndexesWithNullValuesExclusions()), SimpleLoggingKey.INDEXES_WITH_NULL_VALUES);
     }
 
     @Nonnull
-    private String logIndexesBloat(@Nonnull final DatabaseChecks databaseChecks,
-                                   @Nonnull final Exclusions exclusions,
-                                   @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.BLOATED_INDEXES, IndexWithBloat.class),
+    private String logIndexesBloat(@Nonnull final Exclusions exclusions) {
+        return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.BLOATED_INDEXES, IndexWithBloat.class),
             FilterIndexesByBloatPredicate.of(exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold())
-                .and(FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())), pgContext, SimpleLoggingKey.BLOATED_INDEXES);
+                .and(FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())), SimpleLoggingKey.BLOATED_INDEXES);
     }
 
     @Nonnull
-    private String logTablesBloat(@Nonnull final DatabaseChecks databaseChecks,
-                                  @Nonnull final Exclusions exclusions,
-                                  @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.BLOATED_TABLES, TableWithBloat.class),
+    private String logTablesBloat(@Nonnull final Exclusions exclusions) {
+        return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.BLOATED_TABLES, TableWithBloat.class),
             FilterTablesByBloatPredicate.of(exclusions.getTableBloatSizeThresholdInBytes(), exclusions.getTableBloatPercentageThreshold())
-                .and(FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())), pgContext, SimpleLoggingKey.BLOATED_TABLES);
+                .and(FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())), SimpleLoggingKey.BLOATED_TABLES);
+    }
+
+    private String logBtreeIndexesOnArrayColumns(@Nonnull final Exclusions exclusions) {
+        return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS, Index.class),
+            FilterIndexesByNamePredicate.of(exclusions.getBtreeIndexesOnArrayColumnsExclusions()), SimpleLoggingKey.BTREE_INDEXES_ON_ARRAY_COLUMNS);
     }
 
     @Nonnull
-    private String logTablesWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
-                                               @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.TABLES_WITHOUT_DESCRIPTION, Table.class),
-            c -> true, pgContext, SimpleLoggingKey.TABLES_WITHOUT_DESCRIPTION);
-    }
-
-    @Nonnull
-    private String logColumnsWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
-                                                @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.COLUMNS_WITHOUT_DESCRIPTION, Column.class),
-            c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITHOUT_DESCRIPTION);
-    }
-
-    @Nonnull
-    private String logColumnsWithJsonType(@Nonnull final DatabaseChecks databaseChecks,
-                                          @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.COLUMNS_WITH_JSON_TYPE, Column.class),
-            c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITH_JSON_TYPE);
-    }
-
-    @Nonnull
-    private String logColumnsWithSerialTypes(@Nonnull final DatabaseChecks databaseChecks,
-                                             @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.COLUMNS_WITH_SERIAL_TYPES, ColumnWithSerialType.class),
-            c -> true, pgContext, SimpleLoggingKey.COLUMNS_WITH_SERIAL_TYPES);
-    }
-
-    @Nonnull
-    private String logFunctionsWithoutDescription(@Nonnull final DatabaseChecks databaseChecks,
-                                                  @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.FUNCTIONS_WITHOUT_DESCRIPTION, StoredFunction.class),
-            c -> true, pgContext, SimpleLoggingKey.FUNCTIONS_WITHOUT_DESCRIPTION);
-    }
-
-    @Nonnull
-    private String logIndexesWithBoolean(@Nonnull final DatabaseChecks databaseChecks,
-                                         @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.INDEXES_WITH_BOOLEAN, IndexWithColumns.class),
-            c -> true, pgContext, SimpleLoggingKey.INDEXES_WITH_BOOLEAN);
-    }
-
-    private String logBtreeIndexesOnArrayColumns(@Nonnull final DatabaseChecks databaseChecks,
-                                                 @Nonnull final Exclusions exclusions,
-                                                 @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS, Index.class),
-            FilterIndexesByNamePredicate.of(exclusions.getBtreeIndexesOnArrayColumnsExclusions()), pgContext, SimpleLoggingKey.BTREE_INDEXES_ON_ARRAY_COLUMNS);
-    }
-
-    @Nonnull
-    private String logNotValidConstraints(@Nonnull final DatabaseChecks databaseChecks,
-                                          @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.NOT_VALID_CONSTRAINTS, Constraint.class),
-            c -> true, pgContext, SimpleLoggingKey.NOT_VALID_CONSTRAINTS);
-    }
-
-    @Nonnull
-    private String logSequenceOverflow(@Nonnull final DatabaseChecks databaseChecks,
-                                       @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.SEQUENCE_OVERFLOW, SequenceState.class),
-            c -> true, pgContext, SimpleLoggingKey.SEQUENCE_OVERFLOW);
-    }
-
-    @Nonnull
-    private String logPrimaryKeysWithSerialTypes(@Nonnull final DatabaseChecks databaseChecks,
-                                                 @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.PRIMARY_KEYS_WITH_SERIAL_TYPES, ColumnWithSerialType.class),
-            c -> true, pgContext, SimpleLoggingKey.PRIMARY_KEYS_WITH_SERIAL_TYPES);
-    }
-
-    @Nonnull
-    private String logDuplicatedForeignKeys(@Nonnull final DatabaseChecks databaseChecks,
-                                            @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.DUPLICATED_FOREIGN_KEYS, DuplicatedForeignKeys.class),
-            c -> true, pgContext, SimpleLoggingKey.DUPLICATED_FOREIGN_KEYS);
-    }
-
-    @Nonnull
-    private String logIntersectedForeignKeys(@Nonnull final DatabaseChecks databaseChecks,
-                                             @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.INTERSECTED_FOREIGN_KEYS, DuplicatedForeignKeys.class),
-            c -> true, pgContext, SimpleLoggingKey.INTERSECTED_FOREIGN_KEYS);
-    }
-
-    @Nonnull
-    private String logPossibleObjectNameOverflow(@Nonnull final DatabaseChecks databaseChecks,
-                                                 @Nonnull final PgContext pgContext) {
-        return logCheckResult(databaseChecks.getCheck(Diagnostic.POSSIBLE_OBJECT_NAME_OVERFLOW, AnyObject.class),
-            c -> true, pgContext, SimpleLoggingKey.POSSIBLE_OBJECT_NAME_OVERFLOW);
+    private <T extends DbObject> String logCheckResult(@Nonnull final Diagnostic diagnostic,
+                                                       @Nonnull final Class<T> type,
+                                                       @Nonnull final LoggingKey key) {
+        final DatabaseCheckOnCluster<T> check = databaseChecksHolder.get().getCheck(diagnostic, type);
+        return logCheckResult(check, c -> true, key);
     }
 
     @Nonnull
     private <T extends DbObject> String logCheckResult(@Nonnull final DatabaseCheckOnCluster<T> check,
                                                        @Nonnull final Predicate<? super T> exclusionsFilter,
-                                                       @Nonnull final PgContext pgContext,
                                                        @Nonnull final LoggingKey key) {
-        final List<T> checkResult = check.check(pgContext, exclusionsFilter);
+        final List<T> checkResult = check.check(pgContextHolder.get(), exclusionsFilter);
         if (!checkResult.isEmpty()) {
             LOGGER.warn("There are {} in the database {}", key.getDescription(), checkResult);
             return writeToLog(key, checkResult.size());
