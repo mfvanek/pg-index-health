@@ -28,6 +28,7 @@ import io.github.mfvanek.pg.checks.host.NotValidConstraintsCheckOnHost;
 import io.github.mfvanek.pg.checks.host.PossibleObjectNameOverflowCheckOnHost;
 import io.github.mfvanek.pg.checks.host.PrimaryKeysWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.SequenceOverflowCheckOnHost;
+import io.github.mfvanek.pg.checks.host.TablesNotLinkedToOthersCheckOnHost;
 import io.github.mfvanek.pg.checks.host.TablesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.TablesWithoutDescriptionCheckOnHost;
@@ -282,6 +283,14 @@ public class DatabaseStructureHealthAutoConfiguration {
     @ConditionalOnMissingBean
     public PossibleObjectNameOverflowCheckOnHost possibleObjectNameOverflowCheckOnHost(final PgConnection pgConnection) {
         return new PossibleObjectNameOverflowCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(TablesNotLinkedToOthersCheckOnHost.class)
+    @ConditionalOnBean(PgConnection.class)
+    @ConditionalOnMissingBean
+    public TablesNotLinkedToOthersCheckOnHost tablesNotLinkedToOthersCheckOnHost(final PgConnection pgConnection) {
+        return new TablesNotLinkedToOthersCheckOnHost(pgConnection);
     }
 
     @Bean
