@@ -92,6 +92,7 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
      * @return The Bitnami-compatible version string, ensuring it has three digits.
      * @throws NullPointerException if {@code pgVersion} is null.
      */
+    @ExcludeFromJacocoGeneratedReport // TODO https://github.com/bitnami/containers/issues/73230
     @Nonnull
     public static String toBitnamiVersion(@Nonnull final String pgVersion) {
         if (pgVersion.startsWith("17.")) {
