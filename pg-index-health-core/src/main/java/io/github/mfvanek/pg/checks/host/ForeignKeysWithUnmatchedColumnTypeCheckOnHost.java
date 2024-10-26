@@ -39,6 +39,8 @@ public class ForeignKeysWithUnmatchedColumnTypeCheckOnHost extends AbstractCheck
 
     /**
      * Returns foreign keys where the type of the constrained column does not match the type in the referenced table.
+     *<p>
+     * For multi-column constraints returns only columns with differences.
      *
      * @param pgContext check's context with the specified schema; must not be null
      * @return list of foreign keys where the type of the constrained column does not match the type in the referenced table
