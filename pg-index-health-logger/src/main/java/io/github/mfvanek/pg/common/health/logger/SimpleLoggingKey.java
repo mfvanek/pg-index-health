@@ -38,7 +38,8 @@ public enum SimpleLoggingKey implements LoggingKey {
     DUPLICATED_FOREIGN_KEYS("duplicated_foreign_keys"),
     INTERSECTED_FOREIGN_KEYS("intersected_foreign_keys"),
     POSSIBLE_OBJECT_NAME_OVERFLOW("possible_object_name_overflow"),
-    TABLES_NOT_LINKED_TO_OTHERS("tables_not_linked_to_others");
+    TABLES_NOT_LINKED_TO_OTHERS("tables_not_linked_to_others"),
+    FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE("foreign_keys_with_unmatched_column_type");
 
     private final String subKeyName;
 

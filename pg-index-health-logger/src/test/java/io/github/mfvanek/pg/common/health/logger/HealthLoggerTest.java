@@ -57,7 +57,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
         return new String[]{
             "1999-12-31T23:59:59Z\tdb_indexes_health\tinvalid_indexes\t1",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tduplicated_indexes\t2",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t5",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t7",
             "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_primary_key\t2",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_null_values\t1",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_bloat\t17",
@@ -66,7 +66,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
             "1999-12-31T23:59:59Z\tdb_indexes_health\tunused_indexes\t12",
             "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t0",
             "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_description\t6",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_without_description\t25",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_without_description\t27",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_json_type\t1",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_serial_types\t3",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tfunctions_without_description\t2",
@@ -78,7 +78,8 @@ class HealthLoggerTest extends HealthLoggerTestBase {
             "1999-12-31T23:59:59Z\tdb_indexes_health\tduplicated_foreign_keys\t3",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tintersected_foreign_keys\t1",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tpossible_object_name_overflow\t2",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_not_linked_to_others\t3"
+            "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_not_linked_to_others\t2",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_with_unmatched_column_type\t2"
         };
     }
 
