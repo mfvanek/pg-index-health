@@ -1,1 +1,2 @@
 io.github.mfvanek.pg.spring.DatabaseStructureHealthAutoConfiguration
+io.github.mfvanek.pg.spring.DatabaseStructureChecksAutoConfiguration

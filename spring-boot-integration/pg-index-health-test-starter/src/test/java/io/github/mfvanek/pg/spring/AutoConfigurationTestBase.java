@@ -68,7 +68,7 @@ abstract class AutoConfigurationTestBase {
 
     @Nonnull
     protected ApplicationContextRunner assertWithTestConfig() {
-        return contextRunner.withUserConfiguration(DatabaseStructureHealthAutoConfiguration.class);
+        return contextRunner.withUserConfiguration(DatabaseStructureHealthAutoConfiguration.class, DatabaseStructureChecksAutoConfiguration.class);
     }
 
     protected static <C extends ConfigurableApplicationContext> void initialize(@Nonnull final C applicationContext) {
