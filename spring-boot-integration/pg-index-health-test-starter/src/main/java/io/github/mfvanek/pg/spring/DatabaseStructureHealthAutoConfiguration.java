@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.checks.host.ColumnsWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.checks.host.DuplicatedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.checks.host.DuplicatedIndexesCheckOnHost;
 import io.github.mfvanek.pg.checks.host.ForeignKeysNotCoveredWithIndexCheckOnHost;
+import io.github.mfvanek.pg.checks.host.ForeignKeysWithUnmatchedColumnTypeCheckOnHost;
 import io.github.mfvanek.pg.checks.host.FunctionsWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.checks.host.IndexesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.checks.host.IndexesWithBooleanCheckOnHost;
@@ -46,7 +47,6 @@ import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostIm
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -55,6 +55,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -68,12 +69,11 @@ import javax.sql.DataSource;
  * @since 0.3.1
  */
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
-@AutoConfiguration
+@AutoConfiguration(after = DataSourceAutoConfiguration.class)
 @EnableConfigurationProperties(DatabaseStructureHealthProperties.class)
 @ConditionalOnClass(value = DataSource.class, name = "org.postgresql.Driver")
 @Conditional(DatabaseStructureHealthCondition.class)
 @ConditionalOnProperty(name = "pg.index.health.test.enabled", matchIfMissing = true, havingValue = "true")
-@AutoConfigureAfter(DataSourceAutoConfiguration.class)
 public class DatabaseStructureHealthAutoConfiguration {
 
     /**
@@ -101,211 +101,197 @@ public class DatabaseStructureHealthAutoConfiguration {
         return PgConnectionImpl.of(dataSource, host);
     }
 
-    @Bean
-    @ConditionalOnClass(DuplicatedIndexesCheckOnHost.class)
+    @Configuration(proxyBeanMethods = false)
     @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public DuplicatedIndexesCheckOnHost duplicatedIndexesCheckOnHost(final PgConnection pgConnection) {
-        return new DuplicatedIndexesCheckOnHost(pgConnection);
-    }
+    static class DatabaseStructureChecksConfiguration {
 
-    @Bean
-    @ConditionalOnClass(ForeignKeysNotCoveredWithIndexCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public ForeignKeysNotCoveredWithIndexCheckOnHost foreignKeysNotCoveredWithIndexCheckOnHost(final PgConnection pgConnection) {
-        return new ForeignKeysNotCoveredWithIndexCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(DuplicatedIndexesCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public DuplicatedIndexesCheckOnHost duplicatedIndexesCheckOnHost(final PgConnection pgConnection) {
+            return new DuplicatedIndexesCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(IndexesWithBloatCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public IndexesWithBloatCheckOnHost indexesWithBloatCheckOnHost(final PgConnection pgConnection) {
-        return new IndexesWithBloatCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(ForeignKeysNotCoveredWithIndexCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public ForeignKeysNotCoveredWithIndexCheckOnHost foreignKeysNotCoveredWithIndexCheckOnHost(final PgConnection pgConnection) {
+            return new ForeignKeysNotCoveredWithIndexCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(IndexesWithNullValuesCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public IndexesWithNullValuesCheckOnHost indexesWithNullValuesCheckOnHost(final PgConnection pgConnection) {
-        return new IndexesWithNullValuesCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(IndexesWithBloatCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public IndexesWithBloatCheckOnHost indexesWithBloatCheckOnHost(final PgConnection pgConnection) {
+            return new IndexesWithBloatCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(IntersectedIndexesCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public IntersectedIndexesCheckOnHost intersectedIndexesCheckOnHost(final PgConnection pgConnection) {
-        return new IntersectedIndexesCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(IndexesWithNullValuesCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public IndexesWithNullValuesCheckOnHost indexesWithNullValuesCheckOnHost(final PgConnection pgConnection) {
+            return new IndexesWithNullValuesCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(InvalidIndexesCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public InvalidIndexesCheckOnHost invalidIndexesCheckOnHost(final PgConnection pgConnection) {
-        return new InvalidIndexesCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(IntersectedIndexesCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public IntersectedIndexesCheckOnHost intersectedIndexesCheckOnHost(final PgConnection pgConnection) {
+            return new IntersectedIndexesCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(TablesWithBloatCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public TablesWithBloatCheckOnHost tablesWithBloatCheckOnHost(final PgConnection pgConnection) {
-        return new TablesWithBloatCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(InvalidIndexesCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public InvalidIndexesCheckOnHost invalidIndexesCheckOnHost(final PgConnection pgConnection) {
+            return new InvalidIndexesCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(TablesWithMissingIndexesCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public TablesWithMissingIndexesCheckOnHost tablesWithMissingIndexesCheckOnHost(final PgConnection pgConnection) {
-        return new TablesWithMissingIndexesCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(TablesWithBloatCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public TablesWithBloatCheckOnHost tablesWithBloatCheckOnHost(final PgConnection pgConnection) {
+            return new TablesWithBloatCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(TablesWithoutPrimaryKeyCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public TablesWithoutPrimaryKeyCheckOnHost tablesWithoutPrimaryKeyCheckOnHost(final PgConnection pgConnection) {
-        return new TablesWithoutPrimaryKeyCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(TablesWithMissingIndexesCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public TablesWithMissingIndexesCheckOnHost tablesWithMissingIndexesCheckOnHost(final PgConnection pgConnection) {
+            return new TablesWithMissingIndexesCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(UnusedIndexesCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public UnusedIndexesCheckOnHost unusedIndexesCheckOnHost(final PgConnection pgConnection) {
-        return new UnusedIndexesCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(TablesWithoutPrimaryKeyCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public TablesWithoutPrimaryKeyCheckOnHost tablesWithoutPrimaryKeyCheckOnHost(final PgConnection pgConnection) {
+            return new TablesWithoutPrimaryKeyCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(TablesWithoutDescriptionCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public TablesWithoutDescriptionCheckOnHost tablesWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
-        return new TablesWithoutDescriptionCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(UnusedIndexesCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public UnusedIndexesCheckOnHost unusedIndexesCheckOnHost(final PgConnection pgConnection) {
+            return new UnusedIndexesCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(ColumnsWithoutDescriptionCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public ColumnsWithoutDescriptionCheckOnHost columnsWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
-        return new ColumnsWithoutDescriptionCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(TablesWithoutDescriptionCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public TablesWithoutDescriptionCheckOnHost tablesWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
+            return new TablesWithoutDescriptionCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(ColumnsWithJsonTypeCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public ColumnsWithJsonTypeCheckOnHost columnsWithJsonTypeCheckOnHost(final PgConnection pgConnection) {
-        return new ColumnsWithJsonTypeCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(ColumnsWithoutDescriptionCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public ColumnsWithoutDescriptionCheckOnHost columnsWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
+            return new ColumnsWithoutDescriptionCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(ColumnsWithSerialTypesCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public ColumnsWithSerialTypesCheckOnHost columnsWithSerialTypesCheckOnHost(final PgConnection pgConnection) {
-        return new ColumnsWithSerialTypesCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(ColumnsWithJsonTypeCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public ColumnsWithJsonTypeCheckOnHost columnsWithJsonTypeCheckOnHost(final PgConnection pgConnection) {
+            return new ColumnsWithJsonTypeCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(FunctionsWithoutDescriptionCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public FunctionsWithoutDescriptionCheckOnHost functionsWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
-        return new FunctionsWithoutDescriptionCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(ColumnsWithSerialTypesCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public ColumnsWithSerialTypesCheckOnHost columnsWithSerialTypesCheckOnHost(final PgConnection pgConnection) {
+            return new ColumnsWithSerialTypesCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(IndexesWithBooleanCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public IndexesWithBooleanCheckOnHost indexesWithBooleanCheckOnHost(final PgConnection pgConnection) {
-        return new IndexesWithBooleanCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(FunctionsWithoutDescriptionCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public FunctionsWithoutDescriptionCheckOnHost functionsWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
+            return new FunctionsWithoutDescriptionCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(NotValidConstraintsCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public NotValidConstraintsCheckOnHost notValidConstraintsCheckOnHost(final PgConnection pgConnection) {
-        return new NotValidConstraintsCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(IndexesWithBooleanCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public IndexesWithBooleanCheckOnHost indexesWithBooleanCheckOnHost(final PgConnection pgConnection) {
+            return new IndexesWithBooleanCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(BtreeIndexesOnArrayColumnsCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public BtreeIndexesOnArrayColumnsCheckOnHost btreeIndexesOnArrayColumnsCheckOnHost(final PgConnection pgConnection) {
-        return new BtreeIndexesOnArrayColumnsCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(NotValidConstraintsCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public NotValidConstraintsCheckOnHost notValidConstraintsCheckOnHost(final PgConnection pgConnection) {
+            return new NotValidConstraintsCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(SequenceOverflowCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public SequenceOverflowCheckOnHost sequenceOverflowCheckOnHost(final PgConnection pgConnection) {
-        return new SequenceOverflowCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(BtreeIndexesOnArrayColumnsCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public BtreeIndexesOnArrayColumnsCheckOnHost btreeIndexesOnArrayColumnsCheckOnHost(final PgConnection pgConnection) {
+            return new BtreeIndexesOnArrayColumnsCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(PrimaryKeysWithSerialTypesCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public PrimaryKeysWithSerialTypesCheckOnHost primaryKeysWithSerialTypesCheckOnHost(final PgConnection pgConnection) {
-        return new PrimaryKeysWithSerialTypesCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(SequenceOverflowCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public SequenceOverflowCheckOnHost sequenceOverflowCheckOnHost(final PgConnection pgConnection) {
+            return new SequenceOverflowCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(DuplicatedForeignKeysCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public DuplicatedForeignKeysCheckOnHost duplicatedForeignKeysCheckOnHost(final PgConnection pgConnection) {
-        return new DuplicatedForeignKeysCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(PrimaryKeysWithSerialTypesCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public PrimaryKeysWithSerialTypesCheckOnHost primaryKeysWithSerialTypesCheckOnHost(final PgConnection pgConnection) {
+            return new PrimaryKeysWithSerialTypesCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(IntersectedForeignKeysCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public IntersectedForeignKeysCheckOnHost intersectedForeignKeysCheckOnHost(final PgConnection pgConnection) {
-        return new IntersectedForeignKeysCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(DuplicatedForeignKeysCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public DuplicatedForeignKeysCheckOnHost duplicatedForeignKeysCheckOnHost(final PgConnection pgConnection) {
+            return new DuplicatedForeignKeysCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(PossibleObjectNameOverflowCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public PossibleObjectNameOverflowCheckOnHost possibleObjectNameOverflowCheckOnHost(final PgConnection pgConnection) {
-        return new PossibleObjectNameOverflowCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(IntersectedForeignKeysCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public IntersectedForeignKeysCheckOnHost intersectedForeignKeysCheckOnHost(final PgConnection pgConnection) {
+            return new IntersectedForeignKeysCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(TablesNotLinkedToOthersCheckOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public TablesNotLinkedToOthersCheckOnHost tablesNotLinkedToOthersCheckOnHost(final PgConnection pgConnection) {
-        return new TablesNotLinkedToOthersCheckOnHost(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(PossibleObjectNameOverflowCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public PossibleObjectNameOverflowCheckOnHost possibleObjectNameOverflowCheckOnHost(final PgConnection pgConnection) {
+            return new PossibleObjectNameOverflowCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(StatisticsMaintenanceOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public StatisticsMaintenanceOnHost statisticsMaintenanceOnHost(final PgConnection pgConnection) {
-        return new StatisticsMaintenanceOnHostImpl(pgConnection);
-    }
+        @Bean
+        @ConditionalOnClass(TablesNotLinkedToOthersCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public TablesNotLinkedToOthersCheckOnHost tablesNotLinkedToOthersCheckOnHost(final PgConnection pgConnection) {
+            return new TablesNotLinkedToOthersCheckOnHost(pgConnection);
+        }
 
-    @Bean
-    @ConditionalOnClass(ConfigurationMaintenanceOnHost.class)
-    @ConditionalOnBean(PgConnection.class)
-    @ConditionalOnMissingBean
-    public ConfigurationMaintenanceOnHost configurationMaintenanceOnHost(final PgConnection pgConnection) {
-        return new ConfigurationMaintenanceOnHostImpl(pgConnection);
+        @Bean
+        @ConditionalOnClass(ForeignKeysWithUnmatchedColumnTypeCheckOnHost.class)
+        @ConditionalOnMissingBean
+        public ForeignKeysWithUnmatchedColumnTypeCheckOnHost foreignKeysWithUnmatchedColumnTypeCheckOnHost(final PgConnection pgConnection) {
+            return new ForeignKeysWithUnmatchedColumnTypeCheckOnHost(pgConnection);
+        }
+
+        @Bean
+        @ConditionalOnClass(StatisticsMaintenanceOnHost.class)
+        @ConditionalOnMissingBean
+        public StatisticsMaintenanceOnHost statisticsMaintenanceOnHost(final PgConnection pgConnection) {
+            return new StatisticsMaintenanceOnHostImpl(pgConnection);
+        }
+
+        @Bean
+        @ConditionalOnClass(ConfigurationMaintenanceOnHost.class)
+        @ConditionalOnMissingBean
+        public ConfigurationMaintenanceOnHost configurationMaintenanceOnHost(final PgConnection pgConnection) {
+            return new ConfigurationMaintenanceOnHostImpl(pgConnection);
+        }
     }
 }
