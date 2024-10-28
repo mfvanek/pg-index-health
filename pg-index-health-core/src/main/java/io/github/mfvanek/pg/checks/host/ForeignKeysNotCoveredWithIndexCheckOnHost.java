@@ -33,7 +33,7 @@ public class ForeignKeysNotCoveredWithIndexCheckOnHost extends AbstractCheckOnHo
 
     /**
      * Returns foreign keys without associated indexes in the specified schema.
-     *<p>
+     * <p>
      * For multi-column constraints returns all columns.
      *
      * @param pgContext check's context with the specified schema
