@@ -44,9 +44,7 @@ class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(
-                    Table.of(ctx.enrichWithSchema("bad_clients"), 0L))
-                .allMatch(t -> t.getTableSizeInBytes() == 0L));
+                .containsExactly(Table.of(ctx.enrichWithSchema("bad_clients"), 0L)));
     }
 
     @ParameterizedTest
