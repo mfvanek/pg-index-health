@@ -123,7 +123,6 @@ class StoredFunctionTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(StoredFunction.class)
             .verify();

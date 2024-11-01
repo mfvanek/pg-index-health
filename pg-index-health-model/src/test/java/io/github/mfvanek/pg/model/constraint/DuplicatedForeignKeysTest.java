@@ -101,7 +101,6 @@ class DuplicatedForeignKeysTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(DuplicatedForeignKeys.class)
             .withIgnoredFields("foreignKeysNames")

@@ -95,7 +95,6 @@ class AnyObjectTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(AnyObject.class)
             .verify();

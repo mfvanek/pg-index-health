@@ -139,7 +139,6 @@ class ColumnWithSerialTypeTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(ColumnWithSerialType.class)
             .verify();

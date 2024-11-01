@@ -46,7 +46,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 
-// TODO javadoc
+/**
+ * Autoconfiguration for database checks.
+ *
+ * @author Ivan Vakhrushev
+ * @since 0.13.2
+ */
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
 @AutoConfiguration(after = DatabaseStructureHealthAutoConfiguration.class)
 @ConditionalOnBean(PgConnection.class)

@@ -125,7 +125,6 @@ class IndexWithColumnsTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(IndexWithColumns.class)
             .withIgnoredFields("indexSizeInBytes", "columns")
