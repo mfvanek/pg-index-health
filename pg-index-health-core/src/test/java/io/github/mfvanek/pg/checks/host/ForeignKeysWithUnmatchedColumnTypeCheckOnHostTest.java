@@ -13,7 +13,8 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.table.Table;
+import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,15 +22,15 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
-class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
+class ForeignKeysWithUnmatchedColumnTypeCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<Table> check = new TablesWithoutPrimaryKeyCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<ForeignKey> check = new ForeignKeysWithUnmatchedColumnTypeCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(Table.class)
-            .hasDiagnostic(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY)
+            .hasType(ForeignKey.class)
+            .hasDiagnostic(Diagnostic.FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE)
             .hasHost(getHost())
             .isStatic();
     }
@@ -37,22 +38,17 @@ class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences()
-            .withData()
-            .withTableWithoutPrimaryKey()
-            .withIdentityPrimaryKey(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn(), ctx -> {
+            final String badClientsTableName = ctx.enrichWithSchema("bad_clients");
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
-                .containsExactly(Table.of(ctx.enrichWithSchema("bad_clients"), 0L)));
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldReturnNothingForMaterializedViews(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withMaterializedView(), ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .isEmpty());
+                .hasSize(2)
+                .containsExactlyInAnyOrder(
+                    ForeignKey.ofColumn(badClientsTableName, "c_bad_clients_fk_real_client_id",
+                        Column.ofNullable(badClientsTableName, "real_client_id")),
+                    ForeignKey.ofColumn(badClientsTableName, "c_bad_clients_fk_email_phone",
+                        Column.ofNullable(badClientsTableName, "phone"))
+                );
+        });
     }
 }

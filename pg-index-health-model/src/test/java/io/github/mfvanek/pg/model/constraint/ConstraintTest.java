@@ -115,7 +115,6 @@ class ConstraintTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(Constraint.class)
             .withIgnoredFields("constraintType")

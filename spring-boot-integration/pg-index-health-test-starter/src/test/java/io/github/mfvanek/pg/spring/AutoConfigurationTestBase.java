@@ -56,7 +56,8 @@ abstract class AutoConfigurationTestBase {
         "duplicatedForeignKeysCheckOnHost",
         "intersectedForeignKeysCheckOnHost",
         "possibleObjectNameOverflowCheckOnHost",
-        "tablesNotLinkedToOthersCheckOnHost"
+        "tablesNotLinkedToOthersCheckOnHost",
+        "foreignKeysWithUnmatchedColumnTypeCheckOnHost"
     );
     protected static final Class<?>[] EXPECTED_TYPES = {PgConnection.class, DatabaseCheckOnHost.class, StatisticsMaintenanceOnHost.class, ConfigurationMaintenanceOnHost.class};
     protected static final DataSource DATA_SOURCE_MOCK = Mockito.mock(DataSource.class);
@@ -67,7 +68,7 @@ abstract class AutoConfigurationTestBase {
 
     @Nonnull
     protected ApplicationContextRunner assertWithTestConfig() {
-        return contextRunner.withUserConfiguration(DatabaseStructureHealthAutoConfiguration.class);
+        return contextRunner.withUserConfiguration(DatabaseStructureHealthAutoConfiguration.class, DatabaseStructureChecksAutoConfiguration.class);
     }
 
     protected static <C extends ConfigurableApplicationContext> void initialize(@Nonnull final C applicationContext) {

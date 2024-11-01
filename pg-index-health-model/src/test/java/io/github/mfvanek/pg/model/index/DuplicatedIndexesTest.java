@@ -190,7 +190,6 @@ class DuplicatedIndexesTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(DuplicatedIndexes.class)
             .withIgnoredFields("totalSize", "indexesNames")

@@ -176,7 +176,6 @@ class ForeignKeyTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(ForeignKey.class)
             .withIgnoredFields("constraintType", "columnsInConstraint")

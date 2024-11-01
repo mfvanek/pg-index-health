@@ -113,6 +113,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
             logResult.add(logCheckResult(Diagnostic.INTERSECTED_FOREIGN_KEYS, DuplicatedForeignKeys.class, SimpleLoggingKey.INTERSECTED_FOREIGN_KEYS));
             logResult.add(logCheckResult(Diagnostic.POSSIBLE_OBJECT_NAME_OVERFLOW, AnyObject.class, SimpleLoggingKey.POSSIBLE_OBJECT_NAME_OVERFLOW));
             logResult.add(logCheckResult(Diagnostic.TABLES_NOT_LINKED_TO_OTHERS, Table.class, SimpleLoggingKey.TABLES_NOT_LINKED_TO_OTHERS));
+            logResult.add(logCheckResult(Diagnostic.FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE, ForeignKey.class, SimpleLoggingKey.FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE));
             return logResult;
         } finally {
             databaseChecksHolder.set(null);

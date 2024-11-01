@@ -39,14 +39,14 @@ public class ColumnsInForeignKeyParser {
 
     @Nonnull
     private static Column toColumn(@Nonnull final String tableName, @Nonnull final String rawColumnInfo) {
-        final String[] columnInfo = rawColumnInfo.split(", ");
+        final String[] columnInfo = rawColumnInfo.split(",");
         if (columnInfo.length != 2) {
             throw new IllegalArgumentException("Cannot parse column info from " + rawColumnInfo);
         }
-        final boolean notNullColumn = Boolean.parseBoolean(columnInfo[1]);
+        final boolean notNullColumn = Boolean.parseBoolean(columnInfo[1].trim());
         if (notNullColumn) {
-            return Column.ofNotNull(tableName, columnInfo[0]);
+            return Column.ofNotNull(tableName, columnInfo[0].trim());
         }
-        return Column.ofNullable(tableName, columnInfo[0]);
+        return Column.ofNullable(tableName, columnInfo[0].trim());
     }
 }
