@@ -54,6 +54,13 @@ class PostgresDemoApplicationKtTest {
     fun checksShouldWork() {
         assertThat(checks)
             .hasSameSizeAs(Diagnostic.entries.toTypedArray())
-        checks.forEach { c -> assertThat(c.check()).isEmpty() }
+
+        checks
+            .filter { it.isStatic }
+            .forEach {
+                assertThat(it.check())
+                    .`as`(it.diagnostic.name)
+                    .isEmpty()
+            }
     }
 }

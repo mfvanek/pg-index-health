@@ -47,6 +47,9 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .containsExactly(
                     IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name"));
+
+            assertThat(check.check(t -> !"clients".equalsIgnoreCase(t.getTableName())))
+                .isEmpty();
         });
     }
 
