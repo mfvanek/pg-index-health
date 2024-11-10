@@ -12,12 +12,9 @@ package io.github.mfvanek.pg.model.predicates;
 
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -37,7 +34,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @Immutable
 @ThreadSafe
-public final class SkipLiquibaseTablesPredicate implements Predicate<DbObject> {
+public final class SkipLiquibaseTablesPredicate extends AbstractSkipTablesPredicate {
 
     /**
      * The list of raw Liquibase table names.
@@ -47,40 +44,8 @@ public final class SkipLiquibaseTablesPredicate implements Predicate<DbObject> {
      */
     private static final List<String> RAW_LIQUIBASE_TABLES = List.of("databasechangelog", "databasechangeloglock");
 
-    /**
-     * The list of fully qualified Liquibase table names enriched with schema from {@link PgContext}.
-     */
-    private final List<String> liquibaseTables;
-
     private SkipLiquibaseTablesPredicate(@Nonnull final PgContext pgContext) {
-        Objects.requireNonNull(pgContext, "pgContext cannot be null");
-        this.liquibaseTables = RAW_LIQUIBASE_TABLES.stream()
-            .map(pgContext::enrichWithSchema)
-            .collect(Collectors.toUnmodifiableList());
-    }
-
-    /**
-     * Evaluates this predicate on the given {@code DbObject}.
-     * <p>
-     * Returns {@code false} if the {@code DbObject} is a {@link TableNameAware} instance
-     * with a table name matching any of the Liquibase table names in the enriched schema.
-     * Otherwise, returns {@code true}.
-     * </p>
-     *
-     * @param dbObject the object to be tested
-     * @return {@code false} if the {@code DbObject} is a Liquibase-related table, {@code true} otherwise
-     */
-    @Override
-    public boolean test(@Nonnull final DbObject dbObject) {
-        if (dbObject instanceof TableNameAware) {
-            final TableNameAware t = (TableNameAware) dbObject;
-            for (final String liquibaseTable : liquibaseTables) {
-                if (t.getTableName().equalsIgnoreCase(liquibaseTable)) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        super(pgContext, RAW_LIQUIBASE_TABLES);
     }
 
     /**
