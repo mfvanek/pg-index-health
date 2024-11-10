@@ -28,7 +28,8 @@ class AbstractSkipTablesPredicateTest {
             .isInstanceOf(NullPointerException.class)
             .hasMessage("pgContext cannot be null");
 
-        assertThatThrownBy(() -> new SkipTablesPredicate(PgContext.ofPublic(), null))
+        final PgContext ctx = PgContext.ofPublic();
+        assertThatThrownBy(() -> new SkipTablesPredicate(ctx, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawTableNamesToSkip cannot be null");
     }
