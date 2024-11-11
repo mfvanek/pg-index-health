@@ -10,20 +10,18 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
-import io.github.mfvanek.pg.model.table.TableNameAware;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
@@ -74,10 +72,8 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
                     Column.ofNullable(badClientsTableName, "email"),
                     Column.ofNullable(badClientsTableName, "phone"));
 
-            final Predicate<TableNameAware> predicate = FilterTablesByNamePredicate.of(accountsTableName)
-                .and(FilterTablesByNamePredicate.of(badClientsTableName));
             assertThat(check)
-                .executing(ctx, predicate)
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "bad_clients")))
                 .isEmpty();
         });
     }
@@ -95,7 +91,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
                         Column.ofNotNull(accountsTableName, "client_id")));
 
             assertThat(check)
-                .executing(ctx, FilterTablesByNamePredicate.of(accountsTableName))
+                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "accounts"))
                 .isEmpty();
         });
     }

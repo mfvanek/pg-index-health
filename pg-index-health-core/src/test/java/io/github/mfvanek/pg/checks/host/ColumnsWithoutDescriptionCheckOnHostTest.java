@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.DatabasePopulator;
 import org.junit.jupiter.api.Test;
@@ -62,7 +63,7 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                     Column.ofNullable(clientsTableName, "middle_name"));
 
             assertThat(check)
-                .executing(ctx, c -> !c.getTableName().equals(accountsTableName))
+                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "accounts"))
                 .hasSize(5)
                 .allMatch(c -> c.getTableName().equals(clientsTableName));
         });

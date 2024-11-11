@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
@@ -38,14 +38,13 @@ class TablesNotLinkedToOthersCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withMaterializedView().withTableWithoutPrimaryKey(), ctx -> {
-            final String tableName = ctx.enrichWithSchema("bad_clients");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(Table.of(tableName, 0L));
+                .containsExactly(Table.of(ctx.enrichWithSchema("bad_clients"), 0L));
 
             assertThat(check)
-                .executing(ctx, FilterTablesByNamePredicate.of(tableName))
+                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "bad_clients"))
                 .isEmpty();
         });
     }

@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
                 .containsExactly(Table.of(ctx.enrichWithSchema("bad_clients"), 0L));
 
             assertThat(check)
-                .executing(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_clients")))
+                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "bad_clients"))
                 .isEmpty();
         });
     }

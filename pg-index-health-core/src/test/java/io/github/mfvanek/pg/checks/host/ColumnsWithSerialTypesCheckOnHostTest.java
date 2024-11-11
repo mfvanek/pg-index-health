@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.DatabasePopulator;
 import org.junit.jupiter.api.Test;
@@ -39,16 +40,22 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialType, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialType, ctx -> {
+            final String tableName = ctx.enrichWithSchema("bad_accounts");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_account_id"), ctx.enrichSequenceWithSchema("bad_accounts_real_account_id_seq")),
+                        Column.ofNotNull(tableName, "real_account_id"), ctx.enrichSequenceWithSchema("bad_accounts_real_account_id_seq")),
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), ctx.enrichSequenceWithSchema("bad_accounts_real_client_id_seq"))
-                ));
+                        Column.ofNotNull(tableName, "real_client_id"), ctx.enrichSequenceWithSchema("bad_accounts_real_client_id_seq"))
+                );
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "bad_accounts"))
+                .isEmpty();
+        });
     }
 
     @ParameterizedTest

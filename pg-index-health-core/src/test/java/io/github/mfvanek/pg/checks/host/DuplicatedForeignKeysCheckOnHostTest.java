@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -51,6 +52,10 @@ class DuplicatedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
                         ForeignKey.ofColumn(expectedTableName, "c_accounts_fk_client_id_duplicate",
                             Column.ofNotNull(expectedTableName, "client_id")))
                 );
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "accounts"))
+                .isEmpty();
         });
     }
 }

@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
@@ -37,14 +38,16 @@ class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences()
-            .withData()
-            .withTableWithoutPrimaryKey()
-            .withIdentityPrimaryKey(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withTableWithoutPrimaryKey().withIdentityPrimaryKey(), ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(Table.of(ctx.enrichWithSchema("bad_clients"), 0L)));
+                .containsExactly(Table.of(ctx.enrichWithSchema("bad_clients"), 0L));
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "bad_clients"))
+                .isEmpty();
+        });
     }
 
     @ParameterizedTest

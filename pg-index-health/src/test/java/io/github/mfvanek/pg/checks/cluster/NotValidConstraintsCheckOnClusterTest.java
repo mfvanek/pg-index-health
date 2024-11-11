@@ -10,12 +10,12 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.ConstraintType;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.ExecuteUtils;
 import org.assertj.core.api.Assertions;
@@ -51,7 +51,7 @@ class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
                     Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
 
             assertThat(check)
-                .executing(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts")))
+                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "accounts"))
                 .isEmpty();
 
             ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {
