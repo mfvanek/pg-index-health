@@ -79,14 +79,14 @@ class SkipBySequenceNamePredicateTest {
 
     @Test
     void shouldWorkForSingleSequence() {
-        assertThat(SkipBySequenceNamePredicate.ofName("PUBLIC.s2"))
+        assertThat(SkipBySequenceNamePredicate.ofName("s2"))
             .accepts(Table.of("t", 0L))
-            .accepts(SequenceState.of("public.s1", "int", 80.0))
-            .rejects(SequenceState.of("public.s2", "int", 80.0))
-            .rejects(SequenceState.of("public.S2", "int", 80.0));
+            .accepts(SequenceState.of("s1", "int", 80.0))
+            .rejects(SequenceState.of("s2", "int", 80.0))
+            .rejects(SequenceState.of("S2", "int", 80.0));
 
         final PgContext ctx = PgContext.of("CUSTOM");
-        assertThat(SkipBySequenceNamePredicate.ofName(ctx, "custom.S2"))
+        assertThat(SkipBySequenceNamePredicate.ofName(ctx, "S2"))
             .accepts(Table.of("custom.t", 0L))
             .accepts(SequenceState.of("custom.s1", "int", 80.0))
             .rejects(SequenceState.of("custom.s2", "int", 80.0))
@@ -95,23 +95,23 @@ class SkipBySequenceNamePredicateTest {
 
     @Test
     void shouldWorkForMultipleSequences() {
-        assertThat(SkipBySequenceNamePredicate.of(Set.of("PUBLIC.s1", "public.S2")))
+        assertThat(SkipBySequenceNamePredicate.of(Set.of("s1", "S2")))
             .accepts(Table.of("t", 0L))
-            .accepts(SequenceState.of("public.s11", "int", 80.0))
-            .rejects(SequenceState.of("public.s1", "int", 80.0))
-            .rejects(SequenceState.of("public.s2", "int", 80.0))
-            .rejects(SequenceState.of("PUBLIC.S2", "int", 80.0))
-            .rejects(ColumnWithSerialType.ofSerial(Column.ofNullable("t", "c"), "public.s1"));
+            .accepts(SequenceState.of("s11", "int", 80.0))
+            .rejects(SequenceState.of("s1", "int", 80.0))
+            .rejects(SequenceState.of("s2", "int", 80.0))
+            .rejects(SequenceState.of("S2", "int", 80.0))
+            .rejects(ColumnWithSerialType.ofSerial(Column.ofNullable("t", "c"), "s1"));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithCustomSchema(final String schemaName) {
         final PgContext ctx = PgContext.of(schemaName);
-        assertThat(SkipBySequenceNamePredicate.of(ctx, Set.of(ctx.enrichSequenceWithSchema("s1"))))
+        assertThat(SkipBySequenceNamePredicate.of(ctx, Set.of("s1", "s2")))
             .accepts(Table.of(ctx.enrichWithSchema("t"), 0L))
-            .accepts(SequenceState.of(ctx.enrichSequenceWithSchema("s11"), "int", 80.0))
-            .rejects(SequenceState.of(ctx.enrichSequenceWithSchema("s1"), "int", 80.0))
-            .rejects(ColumnWithSerialType.ofSerial(Column.ofNullable(ctx.enrichWithSchema("t"), "c"), ctx.enrichSequenceWithSchema("s1")));
+            .accepts(SequenceState.of(ctx.enrichWithSchema("s11"), "int", 80.0))
+            .rejects(SequenceState.of(ctx.enrichWithSchema("s1"), "int", 80.0))
+            .rejects(ColumnWithSerialType.ofSerial(Column.ofNullable(ctx.enrichWithSchema("t"), "c"), ctx.enrichWithSchema("s1")));
     }
 }

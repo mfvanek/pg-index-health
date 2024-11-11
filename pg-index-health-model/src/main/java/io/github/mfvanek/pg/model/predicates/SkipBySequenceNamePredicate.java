@@ -43,7 +43,7 @@ public final class SkipBySequenceNamePredicate implements Predicate<DbObject> {
         Objects.requireNonNull(pgContext, "pgContext cannot be null");
         this.fullyQualifiedSequenceNamesToSkip = Objects.requireNonNull(rawSequenceNamesToSkip, "rawSequenceNamesToSkip cannot be null")
             .stream()
-            .map(pgContext::enrichSequenceWithSchema)
+            .map(pgContext::enrichWithSchema)
             .map(s -> s.toLowerCase(Locale.ROOT))
             .collect(Collectors.toUnmodifiableSet());
     }
