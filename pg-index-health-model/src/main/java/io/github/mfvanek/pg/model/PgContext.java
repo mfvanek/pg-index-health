@@ -100,7 +100,6 @@ public class PgContext {
      *
      * @param objectName given object name
      * @return object name with schema for non default schemas
-     * @see #enrichSequenceWithSchema
      */
     @Nonnull
     public String enrichWithSchema(@Nonnull final String objectName) {
@@ -119,7 +118,9 @@ public class PgContext {
      * @param sequenceName given sequence name
      * @return sequence name with schema for all schemas
      * @see #enrichWithSchema
+     * @deprecated This method has been replaced by {@link #enrichWithSchema}
      */
+    @Deprecated(since = "0.13.3", forRemoval = true)
     @Nonnull
     public String enrichSequenceWithSchema(@Nonnull final String sequenceName) {
         Validators.notBlank(sequenceName, "sequenceName");

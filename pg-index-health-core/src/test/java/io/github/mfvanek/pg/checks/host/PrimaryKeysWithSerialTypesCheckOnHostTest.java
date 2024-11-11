@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.column.SerialType;
+import io.github.mfvanek.pg.model.predicates.SkipBySequenceNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
@@ -46,11 +47,15 @@ class PrimaryKeysWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .containsExactlyInAnyOrder(
                     ColumnWithSerialType.of(
-                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "id"), SerialType.BIG_SERIAL, ctx.enrichSequenceWithSchema("bad_accounts_id_seq")
+                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "id"), SerialType.BIG_SERIAL, ctx.enrichWithSchema("bad_accounts_id_seq")
                     ));
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_accounts"))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipBySequenceNamePredicate.ofName(ctx, "bad_accounts_id_seq"))
                 .isEmpty();
         });
     }
