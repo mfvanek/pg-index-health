@@ -13,12 +13,15 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.DatabasePopulator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
@@ -38,13 +41,18 @@ class TablesWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
                     Table.of(ctx.enrichWithSchema("accounts"), 0L),
-                    Table.of(ctx.enrichWithSchema("clients"), 0L)));
+                    Table.of(ctx.enrichWithSchema("clients"), 0L));
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .isEmpty();
+        });
     }
 
     @ParameterizedTest

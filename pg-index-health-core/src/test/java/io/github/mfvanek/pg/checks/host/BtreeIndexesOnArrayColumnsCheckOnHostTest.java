@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,16 +39,21 @@ class BtreeIndexesOnArrayColumnsCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withBtreeIndexesOnArrayColumn(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withBtreeIndexesOnArrayColumn(), ctx -> {
+            final String accountsTableName = ctx.enrichWithSchema("accounts");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactlyInAnyOrder(
-                    IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_roles_btree_idx"), 0L,
-                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles")),
-                    IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_roles_btree_idx"), 0L,
-                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "roles"))
-                )
-        );
+                    IndexWithColumns.ofSingle(accountsTableName, ctx.enrichWithSchema("accounts_roles_btree_idx"), 0L,
+                        Column.ofNotNull(accountsTableName, "roles")),
+                    IndexWithColumns.ofSingle(accountsTableName, ctx.enrichWithSchema("accounts_account_number_roles_btree_idx"), 0L,
+                        Column.ofNotNull(accountsTableName, "roles"))
+                );
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "accounts"))
+                .isEmpty();
+        });
     }
 }

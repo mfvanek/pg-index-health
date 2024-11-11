@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,11 +38,16 @@ class InvalidIndexesCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withInvalidIndex(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withInvalidIndex(), ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
-                    Index.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name_first_name"))));
+                    Index.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name_first_name")));
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "clients"))
+                .isEmpty();
+        });
     }
 }

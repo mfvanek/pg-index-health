@@ -53,7 +53,7 @@ class SkipLiquibaseTablesPredicateTest {
         final PgContext ctx = PgContext.of(schemaName);
         assertThat(SkipLiquibaseTablesPredicate.of(ctx))
             .accepts(Table.of(ctx.enrichWithSchema("t"), 0L))
-            .accepts(Index.of(ctx.enrichWithSchema("t"), "i"))
+            .accepts(Index.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i")))
             .accepts(SequenceState.of(ctx.enrichSequenceWithSchema("s"), "int", 100.0))
             .rejects(Table.of(ctx.enrichWithSchema("databasechangelog"), 0L))
             .rejects(Table.of(ctx.enrichWithSchema("DATABASECHANGELOG"), 0L))

@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -45,6 +46,15 @@ class AbstractSkipTablesPredicateTest {
             .accepts(Table.of("t", 0L))
             .rejects(Table.of("databasechangelog", 1L))
             .rejects(Table.of("flyway_schema_history", 1L));
+    }
+
+    @Test
+    void shouldNotCastObjectsWhenExclusionsIsEmpty() {
+        final Predicate<DbObject> composite = new SkipTablesPredicate(PgContext.ofPublic(), List.of());
+        final Table mockTable = Mockito.mock(Table.class);
+        assertThat(composite)
+            .accepts(mockTable);
+        Mockito.verify(mockTable, Mockito.never()).getTableName();
     }
 
     private static class SkipTablesPredicate extends AbstractSkipTablesPredicate {

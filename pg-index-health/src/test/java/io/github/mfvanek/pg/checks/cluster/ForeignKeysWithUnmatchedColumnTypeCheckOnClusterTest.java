@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -48,6 +49,10 @@ class ForeignKeysWithUnmatchedColumnTypeCheckOnClusterTest extends DatabaseAware
                     ForeignKey.ofColumn(badClientsTableName, "c_bad_clients_fk_email_phone",
                         Column.ofNullable(badClientsTableName, "phone"))
                 );
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "bad_clients"))
+                .isEmpty();
         });
     }
 }

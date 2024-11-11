@@ -15,10 +15,13 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.IndexWithSize;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
@@ -38,7 +41,7 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
@@ -50,7 +53,12 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                     DuplicatedIndexes.of(
                         IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L),
                         IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
-                .allMatch(d -> d.getTotalSize() >= 106_496L));
+                .allMatch(d -> d.getTotalSize() >= 106_496L);
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .isEmpty();
+        });
     }
 
     @ParameterizedTest
