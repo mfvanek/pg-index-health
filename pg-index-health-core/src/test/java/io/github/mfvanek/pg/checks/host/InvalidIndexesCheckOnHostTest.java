@@ -46,7 +46,7 @@ class InvalidIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                     Index.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name_first_name")));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
                 .isEmpty();
         });
     }

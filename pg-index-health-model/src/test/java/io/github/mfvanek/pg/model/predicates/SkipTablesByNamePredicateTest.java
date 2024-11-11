@@ -28,15 +28,15 @@ class SkipTablesByNamePredicateTest {
     @SuppressWarnings("DataFlowIssue")
     @Test
     void shouldThrowExceptionWhenInvalidDataPassed() {
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofTable(null))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawTableNameToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofTable(""))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName(""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawTableNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofTable("   "))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName("   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawTableNameToSkip cannot be blank");
 
@@ -53,28 +53,28 @@ class SkipTablesByNamePredicateTest {
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawTableNamesToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofTable(ctx, null))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName(ctx, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawTableNameToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofTable(ctx, ""))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName(ctx, ""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawTableNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofTable(ctx, "   "))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName(ctx, "   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawTableNameToSkip cannot be blank");
     }
 
     @Test
     void shouldWorkForSingleTable() {
-        assertThat(SkipTablesByNamePredicate.ofTable("t"))
+        assertThat(SkipTablesByNamePredicate.ofName("t"))
             .accepts(Index.of("t1", "i1"))
             .rejects(Index.of("t", "i"))
             .rejects(Index.of("T", "I"));
 
         final PgContext ctx = PgContext.of("custom");
-        assertThat(SkipTablesByNamePredicate.ofTable(ctx, "t"))
+        assertThat(SkipTablesByNamePredicate.ofName(ctx, "t"))
             .accepts(Index.of("custom.t1", "custom.i1"))
             .rejects(Index.of("custom.t", "custom.i"))
             .rejects(Index.of("custom.T", "custom.I"));

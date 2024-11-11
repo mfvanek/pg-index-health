@@ -53,7 +53,7 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "bad_accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_accounts"))
                 .isEmpty();
         });
     }

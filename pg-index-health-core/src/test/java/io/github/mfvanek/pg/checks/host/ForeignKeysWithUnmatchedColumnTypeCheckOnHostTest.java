@@ -52,7 +52,7 @@ class ForeignKeysWithUnmatchedColumnTypeCheckOnHostTest extends DatabaseAwareTes
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "bad_clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_clients"))
                 .isEmpty();
         });
     }

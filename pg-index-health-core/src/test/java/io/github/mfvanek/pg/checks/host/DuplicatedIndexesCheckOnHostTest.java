@@ -50,7 +50,7 @@ class DuplicatedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .allMatch(d -> d.getTotalSize() >= 16_384L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
                 .isEmpty();
         });
     }

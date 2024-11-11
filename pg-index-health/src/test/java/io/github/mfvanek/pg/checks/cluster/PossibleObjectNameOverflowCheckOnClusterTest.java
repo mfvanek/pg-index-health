@@ -10,12 +10,12 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterObjectsByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.object.AnyObject;
 import io.github.mfvanek.pg.model.object.PgObjectType;
+import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -51,7 +51,7 @@ class PossibleObjectNameOverflowCheckOnClusterTest extends DatabaseAwareTestBase
                     AnyObject.ofType(constraintName, PgObjectType.CONSTRAINT));
 
             assertThat(check)
-                .executing(ctx, FilterObjectsByNamePredicate.of(List.of(matViewName, constraintName)))
+                .executing(ctx, SkipDbObjectsByNamePredicate.of(List.of(matViewName, constraintName)))
                 .isEmpty();
         });
     }
