@@ -60,7 +60,8 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      */
     AbstractSkipTablesPredicate(@Nonnull final PgContext pgContext, @Nonnull final Collection<String> rawTableNamesToSkip) {
         Objects.requireNonNull(pgContext, "pgContext cannot be null");
-        this.fullyQualifiedTableNamesToSkip = Objects.requireNonNull(rawTableNamesToSkip, "rawTableNamesToSkip cannot be null").stream()
+        this.fullyQualifiedTableNamesToSkip = Objects.requireNonNull(rawTableNamesToSkip, "rawTableNamesToSkip cannot be null")
+            .stream()
             .map(pgContext::enrichWithSchema)
             .map(s -> s.toLowerCase(Locale.ROOT))
             .collect(Collectors.toUnmodifiableSet());

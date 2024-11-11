@@ -54,7 +54,7 @@ class SkipFlywayTablesPredicateTest {
         assertThat(SkipFlywayTablesPredicate.of(ctx))
             .accepts(Table.of(ctx.enrichWithSchema("t"), 0L))
             .accepts(Index.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i")))
-            .accepts(SequenceState.of(ctx.enrichSequenceWithSchema("s"), "int", 100.0))
+            .accepts(SequenceState.of(ctx.enrichWithSchema("s"), "int", 100.0))
             .rejects(Table.of(ctx.enrichWithSchema("flyway_schema_history"), 0L))
             .rejects(Table.of(ctx.enrichWithSchema("FLYWAY_SCHEMA_HISTORY"), 0L));
     }

@@ -50,9 +50,8 @@ class AbstractSkipTablesPredicateTest {
 
     @Test
     void shouldNotCastObjectsWhenExclusionsIsEmpty() {
-        final Predicate<DbObject> composite = new SkipTablesPredicate(PgContext.ofPublic(), List.of());
         final Table mockTable = Mockito.mock(Table.class);
-        assertThat(composite)
+        assertThat(new SkipTablesPredicate(PgContext.ofPublic(), List.of()))
             .accepts(mockTable);
         Mockito.verify(mockTable, Mockito.never()).getTableName();
     }
