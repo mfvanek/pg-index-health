@@ -86,7 +86,6 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
         return new SkipDbObjectsByNamePredicate(fullyQualifiedObjectNameToSkip);
     }
 
-
     /**
      * Creates a predicate to skip multiple fully qualified object names.
      *
