@@ -15,9 +15,20 @@ import io.github.mfvanek.pg.model.validation.Validators;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+/**
+ * Represents an unused database index with information about its usage and size.
+ * <p>
+ * This class extends {@link IndexWithSize} to include additional details on the
+ * number of scans (or accesses) the index has had, providing insight into whether
+ * the index is actively used or potentially redundant.
+ * </p>
+ */
 @Immutable
 public final class UnusedIndex extends IndexWithSize {
 
+    /**
+     * The number of scans performed on this index.
+     */
     private final long indexScans;
 
     private UnusedIndex(@Nonnull final String tableName,
@@ -28,6 +39,11 @@ public final class UnusedIndex extends IndexWithSize {
         this.indexScans = Validators.countNotNegative(indexScans, "indexScans");
     }
 
+    /**
+     * Returns the number of scans performed on this index.
+     *
+     * @return the scan count, never negative
+     */
     public long getIndexScans() {
         return indexScans;
     }
@@ -44,6 +60,17 @@ public final class UnusedIndex extends IndexWithSize {
             '}';
     }
 
+    /**
+     * Creates a new {@code UnusedIndex} instance with the specified parameters.
+     *
+     * @param tableName        the name of the table associated with the index, must be non-null
+     * @param indexName        the name of the index, must be non-null
+     * @param indexSizeInBytes the size of the index in bytes
+     * @param indexScans       the number of times the index has been scanned, must be non-negative
+     * @return a new {@code UnusedIndex} instance
+     * @throws NullPointerException     if {@code tableName} or {@code indexName} is null
+     * @throws IllegalArgumentException if {@code indexScans} is negative
+     */
     public static UnusedIndex of(@Nonnull final String tableName,
                                  @Nonnull final String indexName,
                                  final long indexSizeInBytes,
