@@ -22,12 +22,30 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 
+/**
+ * Utility class for parsing duplicated index information from a formatted string and combining database objects into lists.
+ * This class is not instantiable.
+ */
 public final class DuplicatedIndexesParser {
 
     private DuplicatedIndexesParser() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Parses a formatted string containing duplicated index information and returns a list of entries with index names
+     * and their corresponding sizes.
+     * <p>
+     * Each entry in the list represents a duplicated index, with the index name as the key and the index size as the value.
+     * The input string should follow a format where each duplicated index entry is separated by a semicolon and space ("; "),
+     * with individual attributes of each entry (e.g., "idx=" and "size=") separated by commas.
+     * </p>
+     *
+     * @param duplicatedAsString a non-blank string containing duplicated index details; must be non-null
+     * @return an unmodifiable list of index name and size pairs
+     * @throws NullPointerException     if {@code duplicatedAsString} is null
+     * @throws IllegalArgumentException if {@code duplicatedAsString} is blank
+     */
     public static List<Map.Entry<String, Long>> parseAsIndexNameAndSize(@Nonnull final String duplicatedAsString) {
         Validators.notBlank(duplicatedAsString, "duplicatedAsString");
         final String[] indexes = duplicatedAsString.split("; ");
