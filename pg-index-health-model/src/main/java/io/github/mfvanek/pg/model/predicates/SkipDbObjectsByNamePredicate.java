@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.model.predicates;
 
 import io.github.mfvanek.pg.model.DbObject;
-import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Collection;
 import java.util.Locale;
@@ -53,7 +52,7 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
     }
 
     private SkipDbObjectsByNamePredicate(@Nonnull final String fullyQualifiedObjectNameToSkip) {
-        this(Set.of(Validators.notBlank(fullyQualifiedObjectNameToSkip, "fullyQualifiedObjectNameToSkip")));
+        this(AbstractSkipTablesPredicate.prepareSingleNameToSkip(fullyQualifiedObjectNameToSkip, "fullyQualifiedObjectNameToSkip"));
     }
 
     /**

@@ -12,10 +12,8 @@ package io.github.mfvanek.pg.model.predicates;
 
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Collection;
-import java.util.Set;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -42,7 +40,7 @@ public final class SkipTablesByNamePredicate extends AbstractSkipTablesPredicate
     }
 
     private SkipTablesByNamePredicate(@Nonnull final PgContext pgContext, @Nonnull final String rawTableNameToSkip) {
-        this(pgContext, Set.of(Validators.notBlank(rawTableNameToSkip, "rawTableNameToSkip")));
+        this(pgContext, prepareSingleNameToSkip(rawTableNameToSkip, "rawTableNameToSkip"));
     }
 
     /**

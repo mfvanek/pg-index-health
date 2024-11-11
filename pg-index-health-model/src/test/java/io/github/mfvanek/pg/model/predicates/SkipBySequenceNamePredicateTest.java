@@ -45,7 +45,7 @@ class SkipBySequenceNamePredicateTest {
 
         assertThatThrownBy(() -> SkipBySequenceNamePredicate.of(null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("rawSequenceNamesToSkip cannot be null");
+            .hasMessage("rawNamesToSkip cannot be null");
 
         assertThatThrownBy(() -> SkipBySequenceNamePredicate.of(null, null))
             .isInstanceOf(NullPointerException.class)
@@ -54,7 +54,7 @@ class SkipBySequenceNamePredicateTest {
         final PgContext ctx = PgContext.ofPublic();
         assertThatThrownBy(() -> SkipBySequenceNamePredicate.of(ctx, null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("rawSequenceNamesToSkip cannot be null");
+            .hasMessage("rawNamesToSkip cannot be null");
 
         assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofName(ctx, null))
             .isInstanceOf(NullPointerException.class)
