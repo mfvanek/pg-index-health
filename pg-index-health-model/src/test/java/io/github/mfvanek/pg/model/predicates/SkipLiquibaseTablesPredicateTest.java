@@ -56,6 +56,8 @@ class SkipLiquibaseTablesPredicateTest {
             .accepts(Index.of(ctx.enrichWithSchema("t"), "i"))
             .accepts(SequenceState.of(ctx.enrichSequenceWithSchema("s"), "int", 100.0))
             .rejects(Table.of(ctx.enrichWithSchema("databasechangelog"), 0L))
-            .rejects(Table.of(ctx.enrichWithSchema("databasechangeloglock"), 0L));
+            .rejects(Table.of(ctx.enrichWithSchema("DATABASECHANGELOG"), 0L))
+            .rejects(Table.of(ctx.enrichWithSchema("databasechangeloglock"), 0L))
+            .rejects(Table.of(ctx.enrichWithSchema("DATABASECHANGELOGLOCK"), 0L));
     }
 }
