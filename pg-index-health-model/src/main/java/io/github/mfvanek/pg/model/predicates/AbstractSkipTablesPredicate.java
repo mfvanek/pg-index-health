@@ -14,8 +14,10 @@ import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -26,7 +28,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * Abstract base class for predicates that skip specific database tables.
  * <p>
  * This class provides a mechanism to test whether a {@link DbObject} represents
- * a table that should be skipped, based on a list of fully qualified table names.
+ * a table that should be skipped, based on a set of fully qualified table names.
  * Subclasses can define specific sets of table names to be skipped by providing
  * them at instantiation.
  * </p>
@@ -40,27 +42,28 @@ import javax.annotation.concurrent.ThreadSafe;
 abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
 
     /**
-     * A list of fully qualified table names that should be skipped.
+     * A set of fully qualified table names that should be skipped.
      */
-    private final List<String> fullyQualifiedTableNamesToSkip;
+    private final Set<String> fullyQualifiedTableNamesToSkip;
 
     /**
      * Constructs an {@code AbstractSkipTablesPredicate} with the given schema context
-     * and a list of raw table names to skip.
+     * and a collection of raw table names to skip.
      * <p>
      * The provided table names are enriched with the schema from {@link PgContext}
      * to ensure that fully qualified names are used for comparison.
      * </p>
      *
      * @param pgContext           the schema context used to enrich table names
-     * @param rawTableNamesToSkip the list of raw table names to skip, without schema enrichment
+     * @param rawTableNamesToSkip the collection of raw table names to skip, without schema enrichment
      * @throws NullPointerException if {@code pgContext} or {@code rawTableNamesToSkip} is null
      */
-    AbstractSkipTablesPredicate(@Nonnull final PgContext pgContext, @Nonnull final List<String> rawTableNamesToSkip) {
+    AbstractSkipTablesPredicate(@Nonnull final PgContext pgContext, @Nonnull final Collection<String> rawTableNamesToSkip) {
         Objects.requireNonNull(pgContext, "pgContext cannot be null");
         this.fullyQualifiedTableNamesToSkip = Objects.requireNonNull(rawTableNamesToSkip, "rawTableNamesToSkip cannot be null").stream()
             .map(pgContext::enrichWithSchema)
-            .collect(Collectors.toUnmodifiableList());
+            .map(s -> s.toLowerCase(Locale.ROOT))
+            .collect(Collectors.toUnmodifiableSet());
     }
 
     /**
@@ -72,17 +75,13 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      * </p>
      *
      * @param dbObject the object to be tested
-     * @return {@code false} if the {@code DbObject} matches a table name in the skip list, {@code true} otherwise
+     * @return {@code false} if the {@code DbObject} matches a table name in the skip set, {@code true} otherwise
      */
     @Override
     public boolean test(@Nonnull final DbObject dbObject) {
-        if (dbObject instanceof TableNameAware) {
+        if (!fullyQualifiedTableNamesToSkip.isEmpty() && dbObject instanceof TableNameAware) {
             final TableNameAware t = (TableNameAware) dbObject;
-            for (final String tableToSkip : fullyQualifiedTableNamesToSkip) {
-                if (t.getTableName().equalsIgnoreCase(tableToSkip)) {
-                    return false;
-                }
-            }
+            return !fullyQualifiedTableNamesToSkip.contains(t.getTableName().toLowerCase(Locale.ROOT));
         }
         return true;
     }

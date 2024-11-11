@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.model.predicates;
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 
-import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -37,12 +37,12 @@ import javax.annotation.concurrent.ThreadSafe;
 public final class SkipLiquibaseTablesPredicate extends AbstractSkipTablesPredicate {
 
     /**
-     * The list of raw Liquibase table names.
+     * The set of raw Liquibase table names.
      *
      * @see <a href="https://docs.liquibase.com/concepts/tracking-tables/databasechangelog-table.html">databasechangelog documentation</a>
      * @see <a href="https://docs.liquibase.com/concepts/tracking-tables/databasechangeloglock-table.html">databasechangeloglock documentation</a>
      */
-    private static final List<String> RAW_LIQUIBASE_TABLES = List.of("databasechangelog", "databasechangeloglock");
+    private static final Set<String> RAW_LIQUIBASE_TABLES = Set.of("databasechangelog", "databasechangeloglock");
 
     private SkipLiquibaseTablesPredicate(@Nonnull final PgContext pgContext) {
         super(pgContext, RAW_LIQUIBASE_TABLES);

@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.model.predicates;
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 
-import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -37,11 +37,11 @@ import javax.annotation.concurrent.ThreadSafe;
 public final class SkipFlywayTablesPredicate extends AbstractSkipTablesPredicate {
 
     /**
-     * The list of raw Flyway table names.
+     * The set of raw Flyway table names.
      *
      * @see <a href="https://www.red-gate.com/hub/product-learning/flyway/exploring-the-flyway-schema-history-table">flyway_schema_history documentation</a>
      */
-    private static final List<String> RAW_FLYWAY_TABLES = List.of("flyway_schema_history");
+    private static final Set<String> RAW_FLYWAY_TABLES = Set.of("flyway_schema_history");
 
     private SkipFlywayTablesPredicate(@Nonnull final PgContext pgContext) {
         super(pgContext, RAW_FLYWAY_TABLES);
