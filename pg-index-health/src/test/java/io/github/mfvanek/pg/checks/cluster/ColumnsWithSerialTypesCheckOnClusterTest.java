@@ -51,7 +51,7 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                         Column.ofNotNull(tableName, "real_client_id"), ctx.enrichSequenceWithSchema("bad_accounts_real_client_id_seq")));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "bad_accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_accounts"))
                 .isEmpty();
         });
     }

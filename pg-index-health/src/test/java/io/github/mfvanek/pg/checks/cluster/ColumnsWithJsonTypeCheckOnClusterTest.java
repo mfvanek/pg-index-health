@@ -44,7 +44,7 @@ class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
                 .containsExactly(Column.ofNullable(ctx.enrichWithSchema("clients"), "info"));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
                 .isEmpty();
         });
     }

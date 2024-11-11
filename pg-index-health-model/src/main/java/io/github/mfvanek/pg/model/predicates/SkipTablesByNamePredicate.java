@@ -53,7 +53,7 @@ public final class SkipTablesByNamePredicate extends AbstractSkipTablesPredicate
      * @throws NullPointerException     if {@code tableName} is null
      * @throws IllegalArgumentException if {@code tableName} is blank
      */
-    public static Predicate<DbObject> ofTable(@Nonnull final String rawTableNameToSkip) {
+    public static Predicate<DbObject> ofName(@Nonnull final String rawTableNameToSkip) {
         return new SkipTablesByNamePredicate(PgContext.ofPublic(), rawTableNameToSkip);
     }
 
@@ -77,7 +77,7 @@ public final class SkipTablesByNamePredicate extends AbstractSkipTablesPredicate
      * @throws NullPointerException     if {@code pgContext} or {@code tableName} is null
      * @throws IllegalArgumentException if {@code tableName} is blank
      */
-    public static Predicate<DbObject> ofTable(@Nonnull final PgContext pgContext, @Nonnull final String rawTableNameToSkip) {
+    public static Predicate<DbObject> ofName(@Nonnull final PgContext pgContext, @Nonnull final String rawTableNameToSkip) {
         return new SkipTablesByNamePredicate(pgContext, rawTableNameToSkip);
     }
 

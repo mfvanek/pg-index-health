@@ -15,10 +15,13 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.object.AnyObject;
 import io.github.mfvanek.pg.model.object.PgObjectType;
+import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
@@ -49,7 +52,7 @@ class PossibleObjectNameOverflowCheckOnHostTest extends DatabaseAwareTestBase {
                     AnyObject.ofType(constraintName, PgObjectType.CONSTRAINT));
 
             assertThat(check)
-                .executing(ctx, t -> !(t.getName().equals(matViewName) || t.getName().equals(constraintName)))
+                .executing(ctx, SkipDbObjectsByNamePredicate.of(List.of(matViewName, constraintName)))
                 .isEmpty();
         });
     }

@@ -22,7 +22,9 @@ import javax.annotation.Nonnull;
  *
  * @author Ivan Vakhrushev
  * @since 0.13.2
+ * @deprecated This class has been replaced by {@link io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate}
  */
+@Deprecated(since = "0.13.3", forRemoval = true)
 public class FilterObjectsByNamePredicate extends AbstractFilterByName implements Predicate<DbObject> {
 
     private FilterObjectsByNamePredicate(@Nonnull final Collection<String> exclusions) {

@@ -52,7 +52,7 @@ class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
                     Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
                 .isEmpty();
 
             ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {

@@ -47,7 +47,7 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
                 .allMatch(i -> i.getNullableColumn().isNullable());
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
                 .isEmpty();
         });
     }

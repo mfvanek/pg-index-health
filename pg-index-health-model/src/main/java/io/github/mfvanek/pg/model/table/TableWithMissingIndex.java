@@ -24,9 +24,16 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class TableWithMissingIndex extends AbstractTableAware implements Comparable<TableWithMissingIndex> {
 
-    // Normally, indexes should be used primarily when accessing a table.
-    // If there are few or no indexes in the table, then seqScans will be larger than indexScans.
+    /**
+     * The number of sequential scans performed on the table.
+     * Normally, indexes should be used primarily when accessing a table.
+     * If there are few or no indexes in the table, then seqScans will be larger than indexScans.
+     */
     private final long seqScans;
+
+    /**
+     * The number of index scans performed on the table.
+     */
     private final long indexScans;
 
     private TableWithMissingIndex(@Nonnull final Table table,
@@ -37,10 +44,20 @@ public class TableWithMissingIndex extends AbstractTableAware implements Compara
         this.indexScans = Validators.countNotNegative(indexScans, "indexScans");
     }
 
+    /**
+     * Gets the number of sequential scans performed on this table.
+     *
+     * @return the sequential scan count
+     */
     public long getSeqScans() {
         return seqScans;
     }
 
+    /**
+     * Gets the number of index scans performed on this table.
+     *
+     * @return the index scan count
+     */
     public long getIndexScans() {
         return indexScans;
     }

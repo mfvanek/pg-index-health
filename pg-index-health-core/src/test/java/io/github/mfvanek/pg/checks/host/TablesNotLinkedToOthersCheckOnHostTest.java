@@ -45,7 +45,7 @@ class TablesNotLinkedToOthersCheckOnHostTest extends DatabaseAwareTestBase {
                 .containsExactly(Table.of(ctx.enrichWithSchema("bad_clients"), 0L));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "bad_clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_clients"))
                 .isEmpty();
         });
     }

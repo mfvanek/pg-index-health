@@ -62,7 +62,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
                     Column.ofNullable(clientsTableName, "middle_name"));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofTable(ctx, "accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
                 .hasSize(5)
                 .allMatch(c -> c.getTableName().equals(clientsTableName));
         });
