@@ -46,7 +46,8 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
     private final Set<String> fullyQualifiedNamesToSkip;
 
     private SkipDbObjectsByNamePredicate(@Nonnull final Collection<String> fullyQualifiedObjectNamesToSkip) {
-        this.fullyQualifiedNamesToSkip = Objects.requireNonNull(fullyQualifiedObjectNamesToSkip, "fullyQualifiedObjectNamesToSkip cannot be null").stream()
+        this.fullyQualifiedNamesToSkip = Objects.requireNonNull(fullyQualifiedObjectNamesToSkip, "fullyQualifiedObjectNamesToSkip cannot be null")
+            .stream()
             .map(s -> s.toLowerCase(Locale.ROOT))
             .collect(Collectors.toUnmodifiableSet());
     }
