@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.model.predicates;
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.table.TableNameAware;
+import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Collection;
 import java.util.Locale;
@@ -59,12 +60,7 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      * @throws NullPointerException if {@code pgContext} or {@code rawTableNamesToSkip} is null
      */
     AbstractSkipTablesPredicate(@Nonnull final PgContext pgContext, @Nonnull final Collection<String> rawTableNamesToSkip) {
-        Objects.requireNonNull(pgContext, "pgContext cannot be null");
-        this.fullyQualifiedTableNamesToSkip = Objects.requireNonNull(rawTableNamesToSkip, "rawTableNamesToSkip cannot be null")
-            .stream()
-            .map(pgContext::enrichWithSchema)
-            .map(s -> s.toLowerCase(Locale.ROOT))
-            .collect(Collectors.toUnmodifiableSet());
+        this.fullyQualifiedTableNamesToSkip = prepareFullyQualifiedNamesToSkip(pgContext, rawTableNamesToSkip);
     }
 
     /**
@@ -75,7 +71,7 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      * Otherwise, returns {@code true}.
      * </p>
      *
-     * @param dbObject the object to be tested
+     * @param dbObject the database object to test; must be non-null
      * @return {@code false} if the {@code DbObject} matches a table name in the skip set, {@code true} otherwise
      */
     @Override
@@ -85,5 +81,39 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
             return !fullyQualifiedTableNamesToSkip.contains(t.getTableName().toLowerCase(Locale.ROOT));
         }
         return true;
+    }
+
+    /**
+     * Prepares a set of fully qualified names to skip by enriching each raw name with schema information from the provided
+     * PostgreSQL context and converting it to lowercase for case-insensitive matching.
+     *
+     * @param pgContext      the PostgreSQL context used to enrich each raw name with schema information; must be non-null
+     * @param rawNamesToSkip the collection of raw names to skip; must be non-null
+     * @return an unmodifiable {@link Set} of fully qualified names to skip, in lowercase
+     * @throws NullPointerException if {@code pgContext} or {@code rawNamesToSkip} is null
+     */
+    @Nonnull
+    static Set<String> prepareFullyQualifiedNamesToSkip(@Nonnull final PgContext pgContext,
+                                                        @Nonnull final Collection<String> rawNamesToSkip) {
+        Objects.requireNonNull(pgContext, "pgContext cannot be null");
+        return Objects.requireNonNull(rawNamesToSkip, "rawNamesToSkip cannot be null")
+            .stream()
+            .map(pgContext::enrichWithSchema)
+            .map(s -> s.toLowerCase(Locale.ROOT))
+            .collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
+     * Prepares a set containing a single name to skip, after validating that it is non-blank.
+     *
+     * @param rawNameToSkip the raw name to skip; must be non-null and non-blank
+     * @param argumentName  the name of the argument being checked
+     * @return a {@link Set} containing the single validated name to skip
+     * @throws IllegalArgumentException if {@code rawNameToSkip} is blank
+     * @throws NullPointerException     if {@code rawNameToSkip} is null
+     */
+    @Nonnull
+    static Set<String> prepareSingleNameToSkip(@Nonnull final String rawNameToSkip, @Nonnull final String argumentName) {
+        return Set.of(Validators.notBlank(rawNameToSkip, argumentName));
     }
 }

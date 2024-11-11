@@ -42,7 +42,7 @@ class SkipTablesByNamePredicateTest {
 
         assertThatThrownBy(() -> SkipTablesByNamePredicate.of(null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("rawTableNamesToSkip cannot be null");
+            .hasMessage("rawNamesToSkip cannot be null");
 
         assertThatThrownBy(() -> SkipTablesByNamePredicate.of(null, null))
             .isInstanceOf(NullPointerException.class)
@@ -51,7 +51,7 @@ class SkipTablesByNamePredicateTest {
         final PgContext ctx = PgContext.ofPublic();
         assertThatThrownBy(() -> SkipTablesByNamePredicate.of(ctx, null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("rawTableNamesToSkip cannot be null");
+            .hasMessage("rawNamesToSkip cannot be null");
 
         assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName(ctx, null))
             .isInstanceOf(NullPointerException.class)

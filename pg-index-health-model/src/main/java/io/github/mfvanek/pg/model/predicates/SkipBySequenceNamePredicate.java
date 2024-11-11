@@ -13,17 +13,16 @@ package io.github.mfvanek.pg.model.predicates;
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
-import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Collection;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
+
+import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.prepareFullyQualifiedNamesToSkip;
 
 /**
  * A predicate that filters out database objects based on a specified set of sequence names.
@@ -40,16 +39,11 @@ public final class SkipBySequenceNamePredicate implements Predicate<DbObject> {
     private final Set<String> fullyQualifiedSequenceNamesToSkip;
 
     private SkipBySequenceNamePredicate(@Nonnull final PgContext pgContext, @Nonnull final Collection<String> rawSequenceNamesToSkip) {
-        Objects.requireNonNull(pgContext, "pgContext cannot be null");
-        this.fullyQualifiedSequenceNamesToSkip = Objects.requireNonNull(rawSequenceNamesToSkip, "rawSequenceNamesToSkip cannot be null")
-            .stream()
-            .map(pgContext::enrichWithSchema)
-            .map(s -> s.toLowerCase(Locale.ROOT))
-            .collect(Collectors.toUnmodifiableSet());
+        this.fullyQualifiedSequenceNamesToSkip = prepareFullyQualifiedNamesToSkip(pgContext, rawSequenceNamesToSkip);
     }
 
     private SkipBySequenceNamePredicate(@Nonnull final PgContext pgContext, @Nonnull final String rawSequenceNameToSkip) {
-        this(pgContext, Set.of(Validators.notBlank(rawSequenceNameToSkip, "rawSequenceNameToSkip")));
+        this(pgContext, AbstractSkipTablesPredicate.prepareSingleNameToSkip(rawSequenceNameToSkip, "rawSequenceNameToSkip"));
     }
 
     /**
