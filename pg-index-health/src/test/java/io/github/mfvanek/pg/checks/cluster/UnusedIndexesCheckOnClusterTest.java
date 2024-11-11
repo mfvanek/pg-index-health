@@ -10,12 +10,13 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterIndexesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
-import io.github.mfvanek.pg.model.index.IndexNameAware;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
+import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.LogsCaptor;
@@ -29,7 +30,6 @@ import org.mockito.Mockito;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import static io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster.getLastStatsResetDateLogMessage;
 import static io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster.getResultAsIntersection;
@@ -77,18 +77,15 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .allMatch(i -> i.getIndexSizeInBytes() > 0L)
                 .allMatch(i -> i.getIndexScans() == 0);
 
-            final Predicate<IndexNameAware> predicate = FilterIndexesByNamePredicate.of(
-                List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_accounts_account_number")));
             assertThat(check)
-                .executing(ctx, predicate)
-                .hasSize(4)
-                .containsExactlyInAnyOrder(
-                    UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L, 0),
-                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), 0L, 0),
-                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), 0L, 0),
-                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_id_account_number_not_deleted"), 0L, 0))
-                .allMatch(i -> i.getIndexSizeInBytes() > 0L)
-                .allMatch(i -> i.getIndexScans() == 0);
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts")
+                    .and(SkipIndexesByNamePredicate.of(ctx, List.of("i_clients_last_first", "i_clients_last_name"))))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts")
+                    .and(SkipDbObjectsByNamePredicate.of(List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_clients_last_name")))))
+                .isEmpty();
         });
     }
 

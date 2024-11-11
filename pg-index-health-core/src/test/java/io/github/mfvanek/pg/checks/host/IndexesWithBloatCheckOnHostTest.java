@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
+import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
 import org.assertj.core.api.Assertions;
@@ -61,6 +62,10 @@ class IndexesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipIndexesByNamePredicate.of(ctx, List.of("accounts_account_number_key", "accounts_pkey", "clients_pkey", "i_clients_email_phone")))
                 .isEmpty();
         });
     }

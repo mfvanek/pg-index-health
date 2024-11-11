@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,10 @@ class InvalidIndexesCheckOnHostTest extends DatabaseAwareTestBase {
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_last_name_first_name"))
                 .isEmpty();
         });
     }
