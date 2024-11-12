@@ -20,7 +20,9 @@ import javax.annotation.Nonnull;
  *
  * @author Ivan Vakhrushev
  * @since 0.6.0
+ * @deprecated This class has been replaced by {@link io.github.mfvanek.pg.model.predicates.SkipBloatUnderThresholdPredicate}
  */
+@Deprecated(since = "0.13.3", forRemoval = true)
 public class FilterIndexesByBloatPredicate extends AbstractFilterByBloat implements Predicate<IndexBloatAware> {
 
     private FilterIndexesByBloatPredicate(final long sizeThresholdInBytes, final double percentageThreshold) {
