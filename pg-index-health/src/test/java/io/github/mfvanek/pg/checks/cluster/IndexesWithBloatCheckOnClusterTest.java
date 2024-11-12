@@ -10,11 +10,11 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterIndexesByBloatPredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
+import io.github.mfvanek.pg.model.predicates.SkipBloatUnderThresholdPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabasePopulator;
@@ -82,7 +82,7 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, FilterIndexesByBloatPredicate.of(1_000_000L, 50))
+                .executing(ctx, SkipBloatUnderThresholdPredicate.of(10_000L, 25.0))
                 .isEmpty();
         });
     }
