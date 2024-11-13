@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipSmallTablesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
@@ -51,6 +52,10 @@ class TablesWithMissingIndexesCheckOnHostTest extends StatisticsAwareTestBase {
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipSmallTablesPredicate.of(1_000_000L))
                 .isEmpty();
         });
     }

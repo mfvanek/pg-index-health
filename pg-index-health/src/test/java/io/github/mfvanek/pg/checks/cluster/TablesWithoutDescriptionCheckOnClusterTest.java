@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterTablesBySizePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipSmallTablesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
@@ -69,10 +69,9 @@ class TablesWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
                     Table.of(ctx.enrichWithSchema("clients"), 0L));
 
             assertThat(check)
-                .executing(ctx, FilterTablesBySizePredicate.of(1_234L))
+                .executing(ctx, SkipSmallTablesPredicate.of(1_234L))
                 .hasSize(1)
-                .containsExactly(
-                    Table.of(ctx.enrichWithSchema("clients"), 0L))
+                .containsExactly(Table.of(ctx.enrichWithSchema("clients"), 0L))
                 .allMatch(t -> t.getTableSizeInBytes() > 1_234L);
         });
     }
