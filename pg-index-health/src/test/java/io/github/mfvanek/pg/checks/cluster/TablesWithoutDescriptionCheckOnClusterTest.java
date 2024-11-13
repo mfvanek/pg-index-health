@@ -10,17 +10,19 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.checks.predicates.FilterTablesBySizePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.DatabasePopulator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
@@ -48,10 +50,9 @@ class TablesWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
                     Table.of(ctx.enrichWithSchema("clients"), 0L));
 
             assertThat(check)
-                .executing(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts")))
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts")))
                 .hasSize(1)
-                .containsExactly(
-                    Table.of(ctx.enrichWithSchema("clients"), 0L))
+                .containsExactly(Table.of(ctx.enrichWithSchema("clients"), 0L))
                 .allMatch(t -> t.getTableSizeInBytes() > 0L);
         });
     }

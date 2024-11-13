@@ -96,7 +96,6 @@ class TableTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(Table.class)
             .withIgnoredFields("tableSizeInBytes")

@@ -54,4 +54,25 @@ class ColumnsInForeignKeyParserTest {
                 Column.ofNullable("t", "c3"))
             .isUnmodifiable();
     }
+
+    @Test
+    void shouldWorkWithoutSpaces() {
+        assertThat(ColumnsInForeignKeyParser.parseRawColumnData("t", "c1,true", "c2,false", "c3,abracadabra"))
+            .hasSize(3)
+            .containsExactly(
+                Column.ofNotNull("t", "c1"),
+                Column.ofNullable("t", "c2"),
+                Column.ofNullable("t", "c3"))
+            .isUnmodifiable();
+    }
+
+    @Test
+    void shouldWorkWithExtraSpaces() {
+        assertThat(ColumnsInForeignKeyParser.parseRawColumnData("t", "  c1,  true  ", "   c2,   false   "))
+            .hasSize(2)
+            .containsExactly(
+                Column.ofNotNull("t", "c1"),
+                Column.ofNullable("t", "c2"))
+            .isUnmodifiable();
+    }
 }

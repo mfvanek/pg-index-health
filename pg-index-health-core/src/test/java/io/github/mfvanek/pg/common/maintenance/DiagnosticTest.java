@@ -76,7 +76,7 @@ class DiagnosticTest {
             .filter(Diagnostic::isAcrossCluster)
             .count();
         assertThat(countOfChecksAcrossTheCluster)
-            .isGreaterThanOrEqualTo(2);
+            .isEqualTo(2);
     }
 
     @Test
@@ -85,7 +85,7 @@ class DiagnosticTest {
             .filter(d -> d.isRuntime() && !d.isStatic())
             .count();
         assertThat(countOfRuntimeChecks)
-            .isGreaterThanOrEqualTo(5);
+            .isEqualTo(5);
     }
 
     @Test

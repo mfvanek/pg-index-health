@@ -10,13 +10,13 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -53,7 +53,7 @@ class DuplicatedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, FilterTablesByNamePredicate.of(expectedTableName))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
                 .isEmpty();
         });
     }

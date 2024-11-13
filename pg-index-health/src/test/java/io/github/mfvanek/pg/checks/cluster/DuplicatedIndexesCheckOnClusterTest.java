@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.IndexWithSize;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -47,6 +48,10 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                         IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L),
                         IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number"), 0L)))
                 .allMatch(d -> d.getTotalSize() >= 16_384L);
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .isEmpty();
 
             assertThat(check)
                 .executing(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("accounts_account_number_key")))

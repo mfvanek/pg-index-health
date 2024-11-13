@@ -17,13 +17,16 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 /**
- * Abstract class to reduce code duplication.
+ * Abstract base class for database objects that are associated with a specific table.
  *
  * @author Ivan Vahrushev
  * @since 0.7.0
  */
 abstract class AbstractTableAware implements DbObject, TableSizeAware {
 
+    /**
+     * The {@link Table} instance associated with this object.
+     */
     protected final Table table;
 
     AbstractTableAware(@Nonnull final Table table) {

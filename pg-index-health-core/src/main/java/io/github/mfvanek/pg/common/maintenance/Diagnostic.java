@@ -24,30 +24,31 @@ import javax.annotation.Nonnull;
  */
 public enum Diagnostic implements CheckTypeAware {
 
-    BLOATED_INDEXES(ExecutionTopology.ON_PRIMARY, "bloated_indexes.sql", QueryExecutors::executeQueryWithBloatThreshold, true),
-    BLOATED_TABLES(ExecutionTopology.ON_PRIMARY, "bloated_tables.sql", QueryExecutors::executeQueryWithBloatThreshold, true),
-    DUPLICATED_INDEXES(ExecutionTopology.ON_PRIMARY, "duplicated_indexes.sql", QueryExecutors::executeQueryWithSchema, false),
-    FOREIGN_KEYS_WITHOUT_INDEX(ExecutionTopology.ON_PRIMARY, "foreign_keys_without_index.sql", QueryExecutors::executeQueryWithSchema, false),
-    INDEXES_WITH_NULL_VALUES(ExecutionTopology.ON_PRIMARY, "indexes_with_null_values.sql", QueryExecutors::executeQueryWithSchema, false),
-    INTERSECTED_INDEXES(ExecutionTopology.ON_PRIMARY, "intersected_indexes.sql", QueryExecutors::executeQueryWithSchema, false),
-    INVALID_INDEXES(ExecutionTopology.ON_PRIMARY, "invalid_indexes.sql", QueryExecutors::executeQueryWithSchema, false),
-    TABLES_WITH_MISSING_INDEXES(ExecutionTopology.ACROSS_CLUSTER, "tables_with_missing_indexes.sql", QueryExecutors::executeQueryWithSchema, true),
-    TABLES_WITHOUT_PRIMARY_KEY(ExecutionTopology.ON_PRIMARY, "tables_without_primary_key.sql", QueryExecutors::executeQueryWithSchema, false),
-    UNUSED_INDEXES(ExecutionTopology.ACROSS_CLUSTER, "unused_indexes.sql", QueryExecutors::executeQueryWithSchema, true),
-    TABLES_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "tables_without_description.sql", QueryExecutors::executeQueryWithSchema, false),
-    COLUMNS_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "columns_without_description.sql", QueryExecutors::executeQueryWithSchema, false),
-    COLUMNS_WITH_JSON_TYPE(ExecutionTopology.ON_PRIMARY, "columns_with_json_type.sql", QueryExecutors::executeQueryWithSchema, false),
-    COLUMNS_WITH_SERIAL_TYPES(ExecutionTopology.ON_PRIMARY, "columns_with_serial_types.sql", QueryExecutors::executeQueryWithSchema, false),
-    FUNCTIONS_WITHOUT_DESCRIPTION(ExecutionTopology.ON_PRIMARY, "functions_without_description.sql", QueryExecutors::executeQueryWithSchema, false),
-    INDEXES_WITH_BOOLEAN(ExecutionTopology.ON_PRIMARY, "indexes_with_boolean.sql", QueryExecutors::executeQueryWithSchema, false),
-    NOT_VALID_CONSTRAINTS(ExecutionTopology.ON_PRIMARY, "not_valid_constraints.sql", QueryExecutors::executeQueryWithSchema, false),
-    BTREE_INDEXES_ON_ARRAY_COLUMNS(ExecutionTopology.ON_PRIMARY, "btree_indexes_on_array_columns.sql", QueryExecutors::executeQueryWithSchema, false),
-    SEQUENCE_OVERFLOW(ExecutionTopology.ON_PRIMARY, "sequence_overflow.sql", QueryExecutors::executeQueryWithRemainingPercentageThreshold, true),
-    PRIMARY_KEYS_WITH_SERIAL_TYPES(ExecutionTopology.ON_PRIMARY, "primary_keys_with_serial_types.sql", QueryExecutors::executeQueryWithSchema, false),
-    DUPLICATED_FOREIGN_KEYS(ExecutionTopology.ON_PRIMARY, "duplicated_foreign_keys.sql", QueryExecutors::executeQueryWithSchema, false),
-    INTERSECTED_FOREIGN_KEYS(ExecutionTopology.ON_PRIMARY, "intersected_foreign_keys.sql", QueryExecutors::executeQueryWithSchema, false),
-    POSSIBLE_OBJECT_NAME_OVERFLOW(ExecutionTopology.ON_PRIMARY, "possible_object_name_overflow.sql", QueryExecutors::executeQueryWithSchema, false),
-    TABLES_NOT_LINKED_TO_OTHERS(ExecutionTopology.ON_PRIMARY, "tables_not_linked_to_others.sql", QueryExecutors::executeQueryWithSchema, false);
+    BLOATED_INDEXES("bloated_indexes.sql", QueryExecutors::executeQueryWithBloatThreshold, true),
+    BLOATED_TABLES("bloated_tables.sql", QueryExecutors::executeQueryWithBloatThreshold, true),
+    DUPLICATED_INDEXES("duplicated_indexes.sql"),
+    FOREIGN_KEYS_WITHOUT_INDEX("foreign_keys_without_index.sql"),
+    INDEXES_WITH_NULL_VALUES("indexes_with_null_values.sql"),
+    INTERSECTED_INDEXES("intersected_indexes.sql"),
+    INVALID_INDEXES("invalid_indexes.sql"),
+    TABLES_WITH_MISSING_INDEXES(ExecutionTopology.ACROSS_CLUSTER, "tables_with_missing_indexes.sql"),
+    TABLES_WITHOUT_PRIMARY_KEY("tables_without_primary_key.sql"),
+    UNUSED_INDEXES(ExecutionTopology.ACROSS_CLUSTER, "unused_indexes.sql"),
+    TABLES_WITHOUT_DESCRIPTION("tables_without_description.sql"),
+    COLUMNS_WITHOUT_DESCRIPTION("columns_without_description.sql"),
+    COLUMNS_WITH_JSON_TYPE("columns_with_json_type.sql"),
+    COLUMNS_WITH_SERIAL_TYPES("columns_with_serial_types.sql"),
+    FUNCTIONS_WITHOUT_DESCRIPTION("functions_without_description.sql"),
+    INDEXES_WITH_BOOLEAN("indexes_with_boolean.sql"),
+    NOT_VALID_CONSTRAINTS("not_valid_constraints.sql"),
+    BTREE_INDEXES_ON_ARRAY_COLUMNS("btree_indexes_on_array_columns.sql"),
+    SEQUENCE_OVERFLOW("sequence_overflow.sql", QueryExecutors::executeQueryWithRemainingPercentageThreshold, true),
+    PRIMARY_KEYS_WITH_SERIAL_TYPES("primary_keys_with_serial_types.sql"),
+    DUPLICATED_FOREIGN_KEYS("duplicated_foreign_keys.sql"),
+    INTERSECTED_FOREIGN_KEYS("intersected_foreign_keys.sql"),
+    POSSIBLE_OBJECT_NAME_OVERFLOW("possible_object_name_overflow.sql"),
+    TABLES_NOT_LINKED_TO_OTHERS("tables_not_linked_to_others.sql"),
+    FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE("foreign_keys_with_unmatched_column_type.sql");
 
     private final ExecutionTopology executionTopology;
     private final String sqlQueryFileName;
@@ -58,8 +59,9 @@ public enum Diagnostic implements CheckTypeAware {
      * Creates a {@code Diagnostic} instance.
      *
      * @param executionTopology the place where the diagnostic should be executed
-     * @param sqlQueryFileName  the associated sql query file name
+     * @param sqlQueryFileName  the associated sql query file name; must be non-null
      * @param queryExecutor     the lambda which executes the associated sql query
+     * @param runtimeCheck      whether this is a runtime diagnostic or static
      */
     Diagnostic(@Nonnull final ExecutionTopology executionTopology,
                @Nonnull final String sqlQueryFileName,
@@ -69,6 +71,39 @@ public enum Diagnostic implements CheckTypeAware {
         this.sqlQueryFileName = Objects.requireNonNull(sqlQueryFileName, "sqlQueryFileName cannot be null");
         this.queryExecutor = Objects.requireNonNull(queryExecutor, "queryExecutor cannot be null");
         this.runtimeCheck = runtimeCheck;
+    }
+
+    /**
+     * Creates a {@code Diagnostic} instance.
+     *
+     * @param sqlQueryFileName the associated sql query file name; must be non-null
+     * @param queryExecutor    the lambda which executes the associated sql query
+     * @param runtimeCheck     whether this is a runtime diagnostic or static
+     */
+    Diagnostic(@Nonnull final String sqlQueryFileName,
+               @Nonnull final QueryExecutor queryExecutor,
+               final boolean runtimeCheck) {
+        this(ExecutionTopology.ON_PRIMARY, sqlQueryFileName, queryExecutor, runtimeCheck);
+    }
+
+    /**
+     * Creates a schema-aware runtime {@code Diagnostic} instance.
+     *
+     * @param executionTopology the place where the diagnostic should be executed
+     * @param sqlQueryFileName  the associated sql query file name; must be non-null
+     */
+    Diagnostic(@Nonnull final ExecutionTopology executionTopology,
+               @Nonnull final String sqlQueryFileName) {
+        this(executionTopology, sqlQueryFileName, QueryExecutors::executeQueryWithSchema, true);
+    }
+
+    /**
+     * Creates a schema-aware static {@code Diagnostic} instance with ExecutionTopology.ON_PRIMARY.
+     *
+     * @param sqlQueryFileName the associated sql query file name; must be non-null
+     */
+    Diagnostic(@Nonnull final String sqlQueryFileName) {
+        this(ExecutionTopology.ON_PRIMARY, sqlQueryFileName, QueryExecutors::executeQueryWithSchema, false);
     }
 
     /**

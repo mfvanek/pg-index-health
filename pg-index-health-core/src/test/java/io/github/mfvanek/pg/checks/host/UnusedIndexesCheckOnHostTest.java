@@ -14,10 +14,15 @@ import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
+import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
@@ -37,7 +42,7 @@ class UnusedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(6)
@@ -49,6 +54,17 @@ class UnusedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                     UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), 0L, 0),
                     UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_id_account_number_not_deleted"), 0L, 0))
                 .allMatch(i -> i.getIndexSizeInBytes() > 0L)
-                .allMatch(i -> i.getIndexScans() == 0));
+                .allMatch(i -> i.getIndexScans() == 0);
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts")
+                    .and(SkipIndexesByNamePredicate.of(ctx, List.of("i_clients_last_first", "i_clients_last_name"))))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts")
+                    .and(SkipDbObjectsByNamePredicate.of(List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_clients_last_name")))))
+                .isEmpty();
+        });
     }
 }

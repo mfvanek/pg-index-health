@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.checks.cluster.ColumnsWithoutDescriptionCheckOnClust
 import io.github.mfvanek.pg.checks.cluster.DuplicatedForeignKeysCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.DuplicatedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ForeignKeysNotCoveredWithIndexCheckOnCluster;
+import io.github.mfvanek.pg.checks.cluster.ForeignKeysWithUnmatchedColumnTypeCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.FunctionsWithoutDescriptionCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.IndexesWithBloatCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.IndexesWithBooleanCheckOnCluster;
@@ -76,7 +77,8 @@ public class DatabaseChecks {
             new DuplicatedForeignKeysCheckOnCluster(haPgConnection),
             new IntersectedForeignKeysCheckOnCluster(haPgConnection),
             new PossibleObjectNameOverflowCheckOnCluster(haPgConnection),
-            new TablesNotLinkedToOthersCheckOnCluster(haPgConnection)
+            new TablesNotLinkedToOthersCheckOnCluster(haPgConnection),
+            new ForeignKeysWithUnmatchedColumnTypeCheckOnCluster(haPgConnection)
         );
         allChecks.forEach(check -> this.checks.putIfAbsent(check.getDiagnostic(), check));
     }

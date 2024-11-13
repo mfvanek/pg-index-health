@@ -10,11 +10,12 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterIndexesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
+import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -55,7 +56,11 @@ class IndexesWithNullValuesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .allMatch(i -> i.getNullableColumn().isNullable());
 
             assertThat(check)
-                .executing(ctx, FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_middle_name")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_middle_name"))
                 .isEmpty();
         });
     }

@@ -10,11 +10,11 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.checks.predicates.FilterTablesBySizePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
 import org.assertj.core.api.Assertions;
@@ -53,7 +53,7 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
                 .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("accounts")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
                 .isEmpty();
 
             assertThat(check)

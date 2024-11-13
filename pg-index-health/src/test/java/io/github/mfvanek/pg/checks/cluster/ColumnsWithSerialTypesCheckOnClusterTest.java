@@ -10,17 +10,20 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.predicates.SkipBySequenceNamePredicate;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.DatabasePopulator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
@@ -40,17 +43,22 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withSerialType, ctx -> {
+            final String tableName = ctx.enrichWithSchema("bad_accounts");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_account_id"), ctx.enrichSequenceWithSchema("bad_accounts_real_account_id_seq")),
+                        Column.ofNotNull(tableName, "real_account_id"), ctx.enrichWithSchema("bad_accounts_real_account_id_seq")),
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), ctx.enrichSequenceWithSchema("bad_accounts_real_client_id_seq")));
+                        Column.ofNotNull(tableName, "real_client_id"), ctx.enrichWithSchema("bad_accounts_real_client_id_seq")));
 
             assertThat(check)
-                .executing(ctx, FilterTablesByNamePredicate.of(ctx.enrichWithSchema("bad_accounts")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_accounts"))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipBySequenceNamePredicate.of(ctx, List.of("bad_accounts_real_account_id_seq", "bad_accounts_real_client_id_seq")))
                 .isEmpty();
         });
     }
@@ -58,14 +66,23 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldIgnoreDroppedColumns(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withSerialType().withDroppedSerialColumn(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withSerialType().withDroppedSerialColumn(), ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), ctx.enrichSequenceWithSchema("bad_accounts_real_client_id_seq"))
-                ));
+                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), ctx.enrichWithSchema("bad_accounts_real_client_id_seq"))
+                );
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_accounts"))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipBySequenceNamePredicate.ofName(ctx, "bad_accounts_real_client_id_seq"))
+                .isEmpty();
+        });
     }
 
     @ParameterizedTest
@@ -86,7 +103,7 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("one_more_table"), "id"), ctx.enrichSequenceWithSchema("one_more_table_id_seq"))
+                        Column.ofNotNull(ctx.enrichWithSchema("one_more_table"), "id"), ctx.enrichWithSchema("one_more_table_id_seq"))
                 ));
     }
 
@@ -99,11 +116,11 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(3)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("one_more_table"), "id"), ctx.enrichSequenceWithSchema("one_more_table_id_seq")),
+                        Column.ofNotNull(ctx.enrichWithSchema("one_more_table"), "id"), ctx.enrichWithSchema("one_more_table_id_seq")),
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("test_table"), "id"), ctx.enrichSequenceWithSchema("test_table_id_seq")),
+                        Column.ofNotNull(ctx.enrichWithSchema("test_table"), "id"), ctx.enrichWithSchema("test_table_id_seq")),
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("test_table"), "num"), ctx.enrichSequenceWithSchema("test_table_num_seq"))
+                        Column.ofNotNull(ctx.enrichWithSchema("test_table"), "num"), ctx.enrichWithSchema("test_table_num_seq"))
                 ));
     }
 }

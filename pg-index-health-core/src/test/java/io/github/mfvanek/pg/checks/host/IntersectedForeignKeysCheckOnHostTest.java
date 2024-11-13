@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -62,6 +63,10 @@ class IntersectedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
                         ForeignKey.of(expectedTableName, "c_client_preferences_phone_email_fk",
                             List.of(Column.ofNotNull(expectedTableName, "phone"), Column.ofNotNull(expectedTableName, "email"))))
                 );
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "client_preferences"))
+                .isEmpty();
         });
     }
 }

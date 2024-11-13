@@ -10,12 +10,13 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterIndexesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
+import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -47,7 +48,11 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
                         Column.ofNotNull(ctx.enrichWithSchema("accounts"), "deleted")));
 
             assertThat(check)
-                .executing(ctx, FilterIndexesByNamePredicate.of(ctx.enrichWithSchema("i_accounts_deleted")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_accounts_deleted"))
                 .isEmpty();
         });
     }

@@ -23,7 +23,9 @@ public class CreateTableWithoutPrimaryKeyStatement extends AbstractDbStatement {
         return List.of("create table if not exists {schemaName}.bad_clients (" +
             "id bigint not null, " +
             "name varchar(255) not null," +
-            "real_client_id bigint)");
+            "real_client_id integer," +
+            "email varchar(200)," +
+            "phone varchar(51))");
     }
 
     @Override

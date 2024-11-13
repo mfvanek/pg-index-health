@@ -27,7 +27,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.12.0
  */
 @Immutable
-public class SequenceState implements DbObject {
+public class SequenceState implements DbObject, SequenceNameAware {
 
     private final String sequenceName;
     private final String dataType;
@@ -55,6 +55,7 @@ public class SequenceState implements DbObject {
      * @return the name of the sequence.
      */
     @Nonnull
+    @Override
     public String getSequenceName() {
         return sequenceName;
     }

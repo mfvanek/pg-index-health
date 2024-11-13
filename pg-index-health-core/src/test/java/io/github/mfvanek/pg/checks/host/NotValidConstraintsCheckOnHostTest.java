@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.ConstraintType;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.ExecuteUtils;
 import org.assertj.core.api.Assertions;
@@ -49,6 +50,10 @@ class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
                 .containsExactly(
                     Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_chk_client_id_not_validated_yet", ConstraintType.CHECK),
                     Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .isEmpty();
 
             ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {
                 for (final Constraint constraint : notValidConstraints) {

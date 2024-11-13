@@ -17,7 +17,7 @@ plugins {
 }
 
 dependencies {
-    errorprone("com.google.errorprone:error_prone_core:2.33.0")
+    errorprone("com.google.errorprone:error_prone_core:2.35.1")
     errorprone("jp.skypencil.errorprone.slf4j:errorprone-slf4j:0.1.28")
 
     spotbugsPlugins("jp.skypencil.findbugs.slf4j:bug-pattern:1.5.0")
@@ -81,7 +81,7 @@ checkstyle {
 }
 
 pmd {
-    toolVersion = "7.6.0"
+    toolVersion = "7.7.0"
     isConsoleOutput = true
     ruleSetFiles = files("${rootDir}/config/pmd/pmd.xml")
     ruleSets = listOf()

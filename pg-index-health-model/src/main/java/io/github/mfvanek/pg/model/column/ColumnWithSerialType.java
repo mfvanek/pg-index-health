@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model.column;
 
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.object.PgObjectType;
+import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
@@ -27,7 +28,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.6.2
  */
 @Immutable
-public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Comparable<ColumnWithSerialType> {
+public final class ColumnWithSerialType implements DbObject, ColumnNameAware, SequenceNameAware, Comparable<ColumnWithSerialType> {
 
     private final Column column;
     private final SerialType serialType;
@@ -101,6 +102,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Co
      * @return name of the associated sequence
      */
     @Nonnull
+    @Override
     public String getSequenceName() {
         return sequenceName;
     }

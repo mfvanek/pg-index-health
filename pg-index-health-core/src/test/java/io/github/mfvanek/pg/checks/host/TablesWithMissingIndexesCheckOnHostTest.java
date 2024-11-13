@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,10 @@ class TablesWithMissingIndexesCheckOnHostTest extends StatisticsAwareTestBase {
                 .allMatch(t -> t.getSeqScans() >= AMOUNT_OF_TRIES)
                 .allMatch(t -> t.getIndexScans() == 0)
                 .allMatch(t -> t.getTableSizeInBytes() > 1L);
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .isEmpty();
         });
     }
 }

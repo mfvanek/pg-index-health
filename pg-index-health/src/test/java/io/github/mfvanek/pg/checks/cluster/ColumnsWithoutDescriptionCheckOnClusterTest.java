@@ -10,11 +10,11 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.DatabasePopulator;
 import org.junit.jupiter.api.Test;
@@ -62,7 +62,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
                     Column.ofNullable(clientsTableName, "middle_name"));
 
             assertThat(check)
-                .executing(ctx, FilterTablesByNamePredicate.of(accountsTableName))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
                 .hasSize(5)
                 .allMatch(c -> c.getTableName().equals(clientsTableName));
         });

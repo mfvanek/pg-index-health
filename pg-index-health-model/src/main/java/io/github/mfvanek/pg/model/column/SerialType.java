@@ -26,15 +26,15 @@ import javax.annotation.Nonnull;
 public enum SerialType {
 
     /**
-     * Constant for smallserial.
+     * Constant for the PostgreSQL "smallserial" type.
      */
     SMALL_SERIAL("smallserial"),
     /**
-     * Constant for serial.
+     * Constant for the PostgreSQL "serial" type.
      */
     SERIAL("serial"),
     /**
-     * Constant for bigserial.
+     * Constant for the PostgreSQL "bigserial" type.
      */
     BIG_SERIAL("bigserial");
 
@@ -52,6 +52,11 @@ public enum SerialType {
         this.columnType = Objects.requireNonNull(columnType);
     }
 
+    /**
+     * Returns the string representation of this PostgreSQL serial type.
+     *
+     * @return the column type as a string, never {@code null}
+     */
     @Nonnull
     public String getColumnType() {
         return columnType;

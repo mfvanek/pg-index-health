@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.function.StoredFunction;
+import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.DatabasePopulator;
 import org.junit.jupiter.api.Test;
@@ -39,30 +40,42 @@ class FunctionsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withFunctions, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withFunctions, ctx -> {
+            final String functionName = ctx.enrichWithSchema("add");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
-                    StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer"),
-                    StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer, c integer")
-                ));
+                    StoredFunction.of(functionName, "a integer, b integer"),
+                    StoredFunction.of(functionName, "a integer, b integer, c integer")
+                );
+
+            assertThat(check)
+                .executing(ctx, SkipDbObjectsByNamePredicate.ofName(functionName))
+                .isEmpty();
+        });
     }
 
     @DisabledIf("isProceduresNotSupported")
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThemForProcedures(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withProcedures, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withProcedures, ctx -> {
+            final String functionName = ctx.enrichWithSchema("insert_data");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
-                    StoredFunction.of(ctx.enrichWithSchema("insert_data"),
+                    StoredFunction.of(functionName,
                         isOutParametersInProcedureSupported() ? "IN a integer, IN b integer" : "a integer, b integer"),
-                    StoredFunction.of(ctx.enrichWithSchema("insert_data"),
+                    StoredFunction.of(functionName,
                         isOutParametersInProcedureSupported() ? "IN a integer, IN b integer, IN c integer" : "a integer, b integer, c integer")
-                ));
+                );
+
+            assertThat(check)
+                .executing(ctx, SkipDbObjectsByNamePredicate.ofName(functionName))
+                .isEmpty();
+        });
     }
 
     @ParameterizedTest

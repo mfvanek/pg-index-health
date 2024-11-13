@@ -13,12 +13,15 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipBySequenceNamePredicate;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.DatabasePopulator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
@@ -38,13 +41,18 @@ class SequenceOverflowCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithSequences(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withSequenceOverflow, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withSequenceOverflow, ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(3)
                 .containsExactlyInAnyOrder(
                     SequenceState.of(ctx.enrichWithSchema("seq_1"), "smallint", 8.08),
                     SequenceState.of(ctx.enrichWithSchema("seq_3"), "integer", 8.08),
-                    SequenceState.of(ctx.enrichWithSchema("seq_5"), "bigint", 8.08)));
+                    SequenceState.of(ctx.enrichWithSchema("seq_5"), "bigint", 8.08));
+
+            assertThat(check)
+                .executing(ctx, SkipBySequenceNamePredicate.of(ctx, List.of("seq_1", "seq_3", "seq_5")))
+                .isEmpty();
+        });
     }
 }

@@ -14,11 +14,16 @@ import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
+import io.github.mfvanek.pg.model.predicates.SkipBloatUnderThresholdPredicate;
+import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
 
@@ -55,6 +60,18 @@ class IndexesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
                     IndexWithBloat.of(clientsTableName, ctx.enrichWithSchema("i_clients_email_phone"), 0L, 0L, 0))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L)
                 .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipIndexesByNamePredicate.of(ctx, List.of("accounts_account_number_key", "accounts_pkey", "clients_pkey", "i_clients_email_phone")))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipBloatUnderThresholdPredicate.of(100_000L, 50.0))
+                .isEmpty();
         });
     }
 }

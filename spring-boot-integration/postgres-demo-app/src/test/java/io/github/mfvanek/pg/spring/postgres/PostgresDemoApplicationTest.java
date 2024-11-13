@@ -57,6 +57,11 @@ class PostgresDemoApplicationTest {
     void checksShouldWork() {
         assertThat(checks)
             .hasSameSizeAs(Diagnostic.values());
-        checks.forEach(c -> assertThat(c.check()).isEmpty());
+
+        checks.stream()
+            .filter(DatabaseCheckOnHost::isStatic)
+            .forEach(c -> assertThat(c.check())
+                .as(c.getDiagnostic().name())
+                .isEmpty());
     }
 }

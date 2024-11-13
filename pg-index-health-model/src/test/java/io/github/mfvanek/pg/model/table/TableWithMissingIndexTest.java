@@ -104,7 +104,6 @@ class TableWithMissingIndexTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(TableWithMissingIndex.class)
             .withIgnoredFields("seqScans", "indexScans")
