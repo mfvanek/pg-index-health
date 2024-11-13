@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipBloatUnderThresholdPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
@@ -57,6 +58,10 @@ class TablesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipBloatUnderThresholdPredicate.of(0L, 0.1))
                 .isEmpty();
         });
     }

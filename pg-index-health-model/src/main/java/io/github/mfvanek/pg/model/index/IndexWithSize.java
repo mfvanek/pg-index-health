@@ -26,6 +26,13 @@ public class IndexWithSize extends Index implements IndexSizeAware {
 
     private final long indexSizeInBytes;
 
+    /**
+     * Constructs an {@code IndexWithSize} object with the specified table name, index name, and index size.
+     *
+     * @param tableName        name of the table associated with the index; must be non-blank.
+     * @param indexName        name of the index; must be non-blank.
+     * @param indexSizeInBytes size of the index in bytes; must be non-negative.
+     */
     @SuppressWarnings("WeakerAccess")
     protected IndexWithSize(@Nonnull final String tableName,
                             @Nonnull final String indexName,
