@@ -43,7 +43,7 @@ class SkipBySequenceNamePredicateTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawSequenceNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipBySequenceNamePredicate.of(null))
+        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofPublic(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawNamesToSkip cannot be null");
 
@@ -72,7 +72,7 @@ class SkipBySequenceNamePredicateTest {
     @Test
     void shouldNotCastObjectsWhenExclusionsIsEmpty() {
         final SequenceState mockSequence = Mockito.mock(SequenceState.class);
-        assertThat(SkipBySequenceNamePredicate.of(List.of()))
+        assertThat(SkipBySequenceNamePredicate.ofPublic(List.of()))
             .accepts(mockSequence);
         Mockito.verify(mockSequence, Mockito.never()).getSequenceName();
     }
@@ -95,7 +95,7 @@ class SkipBySequenceNamePredicateTest {
 
     @Test
     void shouldWorkForMultipleSequences() {
-        assertThat(SkipBySequenceNamePredicate.of(Set.of("s1", "S2")))
+        assertThat(SkipBySequenceNamePredicate.ofPublic(Set.of("s1", "S2")))
             .accepts(Table.of("t", 0L))
             .accepts(SequenceState.of("s11", "int", 80.0))
             .rejects(SequenceState.of("s1", "int", 80.0))

@@ -44,7 +44,7 @@ class SkipIndexesByNamePredicateTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawIndexNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipIndexesByNamePredicate.of(null))
+        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofPublic(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawNamesToSkip cannot be null");
 
@@ -73,7 +73,7 @@ class SkipIndexesByNamePredicateTest {
     @Test
     void shouldNotCastObjectsWhenExclusionsIsEmpty() {
         final Index mockIndex = Mockito.mock(Index.class);
-        assertThat(SkipIndexesByNamePredicate.of(List.of()))
+        assertThat(SkipIndexesByNamePredicate.ofPublic(List.of()))
             .accepts(mockIndex);
         Mockito.verify(mockIndex, Mockito.never()).getIndexName();
     }
@@ -96,7 +96,7 @@ class SkipIndexesByNamePredicateTest {
 
     @Test
     void shouldWorkForMultipleIndexes() {
-        assertThat(SkipIndexesByNamePredicate.of(Set.of("i1", "I2")))
+        assertThat(SkipIndexesByNamePredicate.ofPublic(Set.of("i1", "I2")))
             .accepts(Table.of("t", 0L))
             .accepts(SequenceState.of("s11", "int", 80.0))
             .accepts(ColumnWithSerialType.ofSerial(Column.ofNullable("t", "c"), "s1"))

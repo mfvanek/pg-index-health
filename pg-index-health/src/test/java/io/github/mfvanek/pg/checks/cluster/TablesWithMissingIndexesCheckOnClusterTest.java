@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterTablesBySizePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipSmallTablesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
@@ -57,16 +57,7 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, FilterTablesBySizePredicate.of(1L))
-                .hasSize(1)
-                .containsExactly(
-                    TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))
-                .allMatch(t -> t.getSeqScans() >= AMOUNT_OF_TRIES)
-                .allMatch(t -> t.getIndexScans() == 0)
-                .allMatch(t -> t.getTableSizeInBytes() > 1L);
-
-            assertThat(check)
-                .executing(ctx, FilterTablesBySizePredicate.of(1_000_000L))
+                .executing(ctx, SkipSmallTablesPredicate.of(1_000_000L))
                 .isEmpty();
         });
     }

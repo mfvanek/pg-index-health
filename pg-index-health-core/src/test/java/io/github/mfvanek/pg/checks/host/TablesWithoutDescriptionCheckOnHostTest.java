@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipSmallTablesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
@@ -58,12 +59,19 @@ class TablesWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldNotTakingIntoAccountBlankComments(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnTables(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnTables(), ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
                     Table.of(ctx.enrichWithSchema("accounts"), 0L),
-                    Table.of(ctx.enrichWithSchema("clients"), 0L)));
+                    Table.of(ctx.enrichWithSchema("clients"), 0L));
+
+            assertThat(check)
+                .executing(ctx, SkipSmallTablesPredicate.of(1_234L))
+                .hasSize(1)
+                .containsExactly(Table.of(ctx.enrichWithSchema("clients"), 0L))
+                .allMatch(t -> t.getTableSizeInBytes() > 1_234L);
+        });
     }
 }

@@ -40,7 +40,7 @@ class SkipTablesByNamePredicateTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawTableNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.of(null))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofPublic(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawNamesToSkip cannot be null");
 
@@ -82,7 +82,7 @@ class SkipTablesByNamePredicateTest {
 
     @Test
     void shouldWorkForMultipleTables() {
-        assertThat(SkipTablesByNamePredicate.of(Set.of("t", "T2")))
+        assertThat(SkipTablesByNamePredicate.ofPublic(Set.of("t", "T2")))
             .accepts(Index.of("t1", "i1"))
             .rejects(Index.of("t", "i"))
             .rejects(Index.of("T", "I"))

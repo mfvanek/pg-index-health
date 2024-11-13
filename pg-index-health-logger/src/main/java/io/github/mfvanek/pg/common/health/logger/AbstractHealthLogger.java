@@ -14,9 +14,6 @@ import io.github.mfvanek.pg.checks.predicates.FilterDuplicatedIndexesByNamePredi
 import io.github.mfvanek.pg.checks.predicates.FilterIndexesByBloatPredicate;
 import io.github.mfvanek.pg.checks.predicates.FilterIndexesByNamePredicate;
 import io.github.mfvanek.pg.checks.predicates.FilterIndexesBySizePredicate;
-import io.github.mfvanek.pg.checks.predicates.FilterTablesByBloatPredicate;
-import io.github.mfvanek.pg.checks.predicates.FilterTablesByNamePredicate;
-import io.github.mfvanek.pg.checks.predicates.FilterTablesBySizePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
@@ -38,6 +35,10 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.object.AnyObject;
+import io.github.mfvanek.pg.model.predicates.SkipBloatUnderThresholdPredicate;
+import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
+import io.github.mfvanek.pg.model.predicates.SkipSmallTablesPredicate;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
@@ -150,21 +151,21 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     @Nonnull
     private String logTablesWithMissingIndexes(@Nonnull final Exclusions exclusions) {
         return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.TABLES_WITH_MISSING_INDEXES, TableWithMissingIndex.class),
-            FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
-                .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithMissingIndexesExclusions())), SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES);
+            SkipSmallTablesPredicate.of(exclusions.getTableSizeThresholdInBytes())
+                .and(SkipTablesByNamePredicate.of(pgContextHolder.get(), exclusions.getTablesWithMissingIndexesExclusions())), SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES);
     }
 
     @Nonnull
     private String logTablesWithoutPrimaryKey(@Nonnull final Exclusions exclusions) {
         return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, Table.class),
-            FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())
-                .and(FilterTablesByNamePredicate.of(exclusions.getTablesWithoutPrimaryKeyExclusions())), SimpleLoggingKey.TABLES_WITHOUT_PRIMARY_KEY);
+            SkipSmallTablesPredicate.of(exclusions.getTableSizeThresholdInBytes())
+                .and(SkipTablesByNamePredicate.of(pgContextHolder.get(), exclusions.getTablesWithoutPrimaryKeyExclusions())), SimpleLoggingKey.TABLES_WITHOUT_PRIMARY_KEY);
     }
 
     @Nonnull
     private String logIndexesWithNullValues(@Nonnull final Exclusions exclusions) {
         return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.INDEXES_WITH_NULL_VALUES, IndexWithNulls.class),
-            FilterIndexesByNamePredicate.of(exclusions.getIndexesWithNullValuesExclusions()), SimpleLoggingKey.INDEXES_WITH_NULL_VALUES);
+            SkipIndexesByNamePredicate.of(pgContextHolder.get(), exclusions.getIndexesWithNullValuesExclusions()), SimpleLoggingKey.INDEXES_WITH_NULL_VALUES);
     }
 
     @Nonnull
@@ -177,13 +178,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     @Nonnull
     private String logTablesBloat(@Nonnull final Exclusions exclusions) {
         return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.BLOATED_TABLES, TableWithBloat.class),
-            FilterTablesByBloatPredicate.of(exclusions.getTableBloatSizeThresholdInBytes(), exclusions.getTableBloatPercentageThreshold())
-                .and(FilterTablesBySizePredicate.of(exclusions.getTableSizeThresholdInBytes())), SimpleLoggingKey.BLOATED_TABLES);
+            SkipBloatUnderThresholdPredicate.of(exclusions.getTableBloatSizeThresholdInBytes(), exclusions.getTableBloatPercentageThreshold())
+                .and(SkipSmallTablesPredicate.of(exclusions.getTableSizeThresholdInBytes())), SimpleLoggingKey.BLOATED_TABLES);
     }
 
     private String logBtreeIndexesOnArrayColumns(@Nonnull final Exclusions exclusions) {
         return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS, Index.class),
-            FilterIndexesByNamePredicate.of(exclusions.getBtreeIndexesOnArrayColumnsExclusions()), SimpleLoggingKey.BTREE_INDEXES_ON_ARRAY_COLUMNS);
+            SkipIndexesByNamePredicate.of(pgContextHolder.get(), exclusions.getBtreeIndexesOnArrayColumnsExclusions()), SimpleLoggingKey.BTREE_INDEXES_ON_ARRAY_COLUMNS);
     }
 
     @Nonnull
