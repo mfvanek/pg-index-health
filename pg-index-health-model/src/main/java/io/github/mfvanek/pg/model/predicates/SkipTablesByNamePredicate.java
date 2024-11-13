@@ -62,7 +62,7 @@ public final class SkipTablesByNamePredicate extends AbstractSkipTablesPredicate
      * @return a predicate that skips the specified tables in the "public" schema
      * @throws NullPointerException if {@code rawTableNamesToSkip} is null
      */
-    public static Predicate<DbObject> of(@Nonnull final Collection<String> rawTableNamesToSkip) {
+    public static Predicate<DbObject> ofPublic(@Nonnull final Collection<String> rawTableNamesToSkip) {
         return new SkipTablesByNamePredicate(PgContext.ofPublic(), rawTableNamesToSkip);
     }
 

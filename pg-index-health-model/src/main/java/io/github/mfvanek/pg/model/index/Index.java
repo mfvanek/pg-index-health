@@ -32,6 +32,12 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
     private final String tableName;
     private final String indexName;
 
+    /**
+     * Constructs an {@code Index} with the specified table and index names.
+     *
+     * @param tableName the name of the table associated with this index; must be non-blank.
+     * @param indexName the name of this index; must be non-blank.
+     */
     @SuppressWarnings("WeakerAccess")
     protected Index(@Nonnull final String tableName, @Nonnull final String indexName) {
         this.tableName = Validators.tableNameNotBlank(tableName);
