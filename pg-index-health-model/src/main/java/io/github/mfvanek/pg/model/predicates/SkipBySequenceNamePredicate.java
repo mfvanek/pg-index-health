@@ -77,7 +77,7 @@ public final class SkipBySequenceNamePredicate implements Predicate<DbObject> {
      * @param rawSequenceNamesToSkip the collection of raw sequence names to skip; must be non-null
      * @return a {@code SkipBySequenceNamePredicate} instance for the specified sequence names
      */
-    public static Predicate<DbObject> of(@Nonnull final Collection<String> rawSequenceNamesToSkip) {
+    public static Predicate<DbObject> ofPublic(@Nonnull final Collection<String> rawSequenceNamesToSkip) {
         return new SkipBySequenceNamePredicate(PgContext.ofPublic(), rawSequenceNamesToSkip);
     }
 
