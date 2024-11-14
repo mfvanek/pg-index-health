@@ -11,9 +11,6 @@
 package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.checks.predicates.FilterDuplicatedIndexesByNamePredicate;
-import io.github.mfvanek.pg.checks.predicates.FilterIndexesByBloatPredicate;
-import io.github.mfvanek.pg.checks.predicates.FilterIndexesByNamePredicate;
-import io.github.mfvanek.pg.checks.predicates.FilterIndexesBySizePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
@@ -37,6 +34,7 @@ import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.object.AnyObject;
 import io.github.mfvanek.pg.model.predicates.SkipBloatUnderThresholdPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
+import io.github.mfvanek.pg.model.predicates.SkipSmallIndexesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipSmallTablesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
@@ -144,8 +142,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     @Nonnull
     private String logUnusedIndexes(@Nonnull final Exclusions exclusions) {
         return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.UNUSED_INDEXES, UnusedIndex.class),
-            FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())
-                .and(FilterIndexesByNamePredicate.of(exclusions.getUnusedIndexesExclusions())), SimpleLoggingKey.UNUSED_INDEXES);
+            SkipSmallIndexesPredicate.of(exclusions.getIndexSizeThresholdInBytes())
+                .and(SkipIndexesByNamePredicate.of(pgContextHolder.get(), exclusions.getUnusedIndexesExclusions())), SimpleLoggingKey.UNUSED_INDEXES);
     }
 
     @Nonnull
@@ -171,8 +169,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     @Nonnull
     private String logIndexesBloat(@Nonnull final Exclusions exclusions) {
         return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.BLOATED_INDEXES, IndexWithBloat.class),
-            FilterIndexesByBloatPredicate.of(exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold())
-                .and(FilterIndexesBySizePredicate.of(exclusions.getIndexSizeThresholdInBytes())), SimpleLoggingKey.BLOATED_INDEXES);
+            SkipBloatUnderThresholdPredicate.of(exclusions.getIndexBloatSizeThresholdInBytes(), exclusions.getIndexBloatPercentageThreshold())
+                .and(SkipSmallIndexesPredicate.of(exclusions.getIndexSizeThresholdInBytes())), SimpleLoggingKey.BLOATED_INDEXES);
     }
 
     @Nonnull
