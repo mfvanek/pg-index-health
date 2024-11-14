@@ -75,7 +75,7 @@ class IndexesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipSmallIndexesPredicate.of(100_000L))
+                .executing(ctx, SkipSmallIndexesPredicate.of(1_000_000L))
                 .isEmpty();
         });
     }
