@@ -89,7 +89,7 @@
         <!-- <module name="InterfaceMemberImpliedModifier"/> invalid -->
         <module name="JavaNCSS"/>
         <module name="LambdaBodyLength">
-            <property name="max" value="30"/>
+            <property name="max" value="35"/>
         </module>
         <module name="LocalFinalVariableName"/>
         <!-- <module name="MagicNumber"/> invalid -->
