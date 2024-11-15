@@ -74,7 +74,7 @@ public enum SerialType {
     }
 
     /**
-     * Gets {@code SerialType} from PostgreSQL serial column type.
+     * Retrieves {@code SerialType} from PostgreSQL serial column type.
      *
      * @param pgColumnType PostgreSQL serial column type; should be non-null.
      * @return {@code SerialType}

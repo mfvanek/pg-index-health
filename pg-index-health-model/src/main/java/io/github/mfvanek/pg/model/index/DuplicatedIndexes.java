@@ -84,7 +84,7 @@ public class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware
     }
 
     /**
-     * Gets raw list of duplicated indexes.
+     * Retrieves raw list of duplicated indexes.
      *
      * @return list of duplicated indexes
      */
@@ -103,7 +103,7 @@ public class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware
     }
 
     /**
-     * Gets total size in bytes of all duplicated indexes.
+     * Retrieves total size in bytes of all duplicated indexes.
      *
      * @return size in bytes
      */
@@ -112,7 +112,7 @@ public class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware
     }
 
     /**
-     * Gets names of all duplicated indexes.
+     * Retrieves names of all duplicated indexes.
      *
      * @return sorted list
      */

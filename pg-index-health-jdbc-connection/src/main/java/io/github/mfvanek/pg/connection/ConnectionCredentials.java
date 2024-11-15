@@ -44,7 +44,7 @@ public class ConnectionCredentials {
     }
 
     /**
-     * Gets a set of connection strings for accessing all hosts in the database cluster.
+     * Retrieves a set of connection strings for accessing all hosts in the database cluster.
      *
      * @return connection urls
      */
@@ -54,7 +54,7 @@ public class ConnectionCredentials {
     }
 
     /**
-     * Gets the name of the user to connect to the database.
+     * Retrieves the name of the user to connect to the database.
      *
      * @return the name of the user
      */
@@ -64,7 +64,7 @@ public class ConnectionCredentials {
     }
 
     /**
-     * Gets the user's password for connecting to the database.
+     * Retrieves the user's password for connecting to the database.
      *
      * @return the user's password
      */

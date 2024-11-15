@@ -42,7 +42,7 @@ public class ForeignKey extends Constraint {
     }
 
     /**
-     * Gets columns of foreign key constraint.
+     * Retrieves columns of foreign key constraint.
      *
      * @return columns of foreign key constraint
      * @see Column

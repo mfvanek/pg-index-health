@@ -87,7 +87,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     }
 
     /**
-     * Gets raw type of serial column.
+     * Retrieves raw type of serial column.
      *
      * @return type of serial column
      */
@@ -97,7 +97,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     }
 
     /**
-     * Gets name of the associated sequence.
+     * Retrieves name of the associated sequence.
      *
      * @return name of the associated sequence
      */

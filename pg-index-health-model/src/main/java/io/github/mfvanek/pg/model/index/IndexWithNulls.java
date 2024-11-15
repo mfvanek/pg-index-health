@@ -34,7 +34,7 @@ public final class IndexWithNulls extends IndexWithColumns {
     }
 
     /**
-     * Gets nullable column in index.
+     * Retrieves nullable column in index.
      *
      * @return nullable column
      */

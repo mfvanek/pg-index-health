@@ -21,7 +21,7 @@ import io.github.mfvanek.pg.model.table.TableSizeAware;
 public interface IndexSizeAware extends IndexNameAware {
 
     /**
-     * Gets index size in bytes.
+     * Retrieves index size in bytes.
      *
      * @return index size in bytes
      */

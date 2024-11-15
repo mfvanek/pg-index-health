@@ -45,7 +45,7 @@ public class TableWithMissingIndex extends AbstractTableAware implements Compara
     }
 
     /**
-     * Gets the number of sequential scans performed on this table.
+     * Retrieves the number of sequential scans performed on this table.
      *
      * @return the sequential scan count
      */
@@ -54,7 +54,7 @@ public class TableWithMissingIndex extends AbstractTableAware implements Compara
     }
 
     /**
-     * Gets the number of index scans performed on this table.
+     * Retrieves the number of index scans performed on this table.
      *
      * @return the index scan count
      */

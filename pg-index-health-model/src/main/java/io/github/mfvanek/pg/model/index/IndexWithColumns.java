@@ -49,7 +49,7 @@ public class IndexWithColumns extends IndexWithSize {
     }
 
     /**
-     * Gets columns in index.
+     * Retrieves columns in index.
      *
      * @return list of columns
      */

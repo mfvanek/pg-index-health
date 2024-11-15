@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 public interface RawTypeAware<T extends DbObject> {
 
     /**
-     * Gets original java type.
+     * Retrieves original java type.
      *
      * @return java type representing database object
      */

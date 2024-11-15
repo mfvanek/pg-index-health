@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 public interface TableNameAware {
 
     /**
-     * Gets table name.
+     * Retrieves table name.
      *
      * @return table name
      */

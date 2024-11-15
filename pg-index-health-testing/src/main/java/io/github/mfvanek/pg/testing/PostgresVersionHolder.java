@@ -36,7 +36,7 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
     }
 
     /**
-     * Gets target PostgreSQL version to run with Testcontainers.
+     * Retrieves target PostgreSQL version to run with Testcontainers.
      *
      * @return PostgreSQL version to run
      */
