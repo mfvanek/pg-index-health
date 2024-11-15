@@ -14,20 +14,20 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Represents an entity that is aware of and can provide a list of index-related information.
- * Classes implementing this interface should provide a list of objects that implement {@link IndexNameAware}.
+ * Represents an entity that is aware of and can provide a list of indexes.
+ * Classes implementing this interface should return a list of objects that extend {@link Index}.
  *
  * @author Ivan Vakhrushev
- * @see IndexNameAware
+ * @see Index
  * @since 0.13.3
  */
 public interface IndexesAware {
 
     /**
-     * Retrieves a list of objects that are aware of their index names.
+     * Retrieves a list of indexes associated with this entity.
      *
-     * @return a non-null list of {@link IndexNameAware} objects. The list may be empty if no indexes are available.
+     * @return a non-null list of {@link Index} or its subclasses. The list may be empty if no indexes are available.
      */
     @Nonnull
-    List<? extends IndexNameAware> getIndexes();
+    List<Index> getIndexes();
 }

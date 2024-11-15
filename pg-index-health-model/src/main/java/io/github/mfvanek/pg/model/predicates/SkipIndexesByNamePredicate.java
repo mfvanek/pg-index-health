@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model.predicates;
 
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexNameAware;
 import io.github.mfvanek.pg.model.index.IndexesAware;
 
@@ -70,7 +71,7 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
         }
         if (dbObject instanceof IndexesAware) {
             final IndexesAware i = (IndexesAware) dbObject;
-            for (final IndexNameAware index : i.getIndexes()) {
+            for (final Index index : i.getIndexes()) {
                 if (fullyQualifiedIndexNamesToSkip.contains(index.getIndexName().toLowerCase(Locale.ROOT))) {
                     return false;
                 }
