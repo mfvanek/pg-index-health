@@ -22,7 +22,9 @@ import javax.annotation.Nonnull;
  *
  * @author Ivan Vakhrushev
  * @since 0.6.0
+ * @deprecated This class has been replaced by {@link io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate}
  */
+@Deprecated(since = "0.13.3", forRemoval = true)
 public class FilterDuplicatedIndexesByNamePredicate extends AbstractFilterByName implements Predicate<DuplicatedIndexes> {
 
     private FilterDuplicatedIndexesByNamePredicate(@Nonnull final Collection<String> exclusions) {

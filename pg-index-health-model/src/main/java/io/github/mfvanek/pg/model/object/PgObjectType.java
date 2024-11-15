@@ -75,7 +75,7 @@ public enum PgObjectType {
     }
 
     /**
-     * Gets {@code PgObjectType} from given literal representation.
+     * Retrieves {@code PgObjectType} from given literal representation.
      *
      * @param objectType literal PostgreSQL object type; should be non-null.
      * @return {@code PgObjectType}

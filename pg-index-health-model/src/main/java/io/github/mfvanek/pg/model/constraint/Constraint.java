@@ -28,7 +28,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.11.0
  */
 @Immutable
-public class Constraint implements DbObject, TableNameAware {
+public class Constraint implements DbObject, TableNameAware, ConstraintNameAware {
 
     private final String tableName;
     private final String constraintName;
@@ -78,17 +78,16 @@ public class Constraint implements DbObject, TableNameAware {
     }
 
     /**
-     * Gets the name of constraint.
-     *
-     * @return the name of constraint
+     * {@inheritDoc}
      */
     @Nonnull
+    @Override
     public String getConstraintName() {
         return constraintName;
     }
 
     /**
-     * Gets type of constraint.
+     * Retrieves type of constraint.
      *
      * @return type of constraint
      * @see ConstraintType

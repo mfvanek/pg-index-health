@@ -39,7 +39,7 @@ public class DatabaseStructureHealthProperties {
     }
 
     /**
-     * Gets the state of autoconfiguration: enabled or disabled.
+     * Retrieves the state of autoconfiguration: enabled or disabled.
      *
      * @return true if starter enabled otherwise false
      */

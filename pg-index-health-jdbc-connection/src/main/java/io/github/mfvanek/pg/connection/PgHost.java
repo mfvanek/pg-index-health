@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 public interface PgHost {
 
     /**
-     * Gets a valid connection string to this host.
+     * Retrieves a valid connection string to this host.
      *
      * @return connection url to the host
      */
@@ -31,7 +31,7 @@ public interface PgHost {
     String getPgUrl();
 
     /**
-     * Gets the name of this host.
+     * Retrieves the name of this host.
      *
      * @return host name
      */
@@ -39,7 +39,7 @@ public interface PgHost {
     String getName();
 
     /**
-     * Gets the port of this host.
+     * Retrieves the port of this host.
      *
      * @return port
      */

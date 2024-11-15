@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 public interface ColumnNameAware extends TableNameAware {
 
     /**
-     * Gets column name in the table.
+     * Retrieves column name in the table.
      *
      * @return column name
      */

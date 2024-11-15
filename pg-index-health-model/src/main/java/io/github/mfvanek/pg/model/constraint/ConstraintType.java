@@ -38,7 +38,7 @@ public enum ConstraintType {
     }
 
     /**
-     * Gets internal PostgreSQL constraint type.
+     * Retrieves internal PostgreSQL constraint type.
      *
      * @return pgConType
      */
@@ -48,7 +48,7 @@ public enum ConstraintType {
     }
 
     /**
-     * Gets {@code ConstraintType} from internal PostgreSQL constraint type.
+     * Retrieves {@code ConstraintType} from internal PostgreSQL constraint type.
      *
      * @param pgConType internal PostgreSQL constraint type; should be non-null.
      * @return {@code ConstraintType}

@@ -32,7 +32,7 @@ public interface StatisticsAware {
     boolean resetStatistics();
 
     /**
-     * Gets time at which database statistics were last reset.
+     * Retrieves the time at which database statistics were last reset.
      *
      * @return {@code Optional} of null or time at which database statistics were last reset.
      */

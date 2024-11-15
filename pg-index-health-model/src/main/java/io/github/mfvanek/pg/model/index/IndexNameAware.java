@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 public interface IndexNameAware {
 
     /**
-     * Gets index name.
+     * Retrieves index name.
      *
      * @return index name
      */

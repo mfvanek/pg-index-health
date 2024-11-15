@@ -33,7 +33,7 @@ public interface DatabaseManagement extends StatisticsAware, ConfigurationAware 
     boolean resetStatistics();
 
     /**
-     * Gets time at which database statistics were last reset on the primary host.
+     * Retrieves the time at which database statistics were last reset on the primary host.
      *
      * @return {@code Optional} of null or time at which database statistics were last reset.
      */

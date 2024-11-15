@@ -30,7 +30,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.13.1
  */
 @Immutable
-public class DuplicatedForeignKeys implements DbObject, TableNameAware {
+public class DuplicatedForeignKeys implements DbObject, TableNameAware, ConstraintsAware {
 
     private final List<ForeignKey> foreignKeys;
     private final List<String> foreignKeysNames;
@@ -72,7 +72,7 @@ public class DuplicatedForeignKeys implements DbObject, TableNameAware {
     }
 
     /**
-     * Gets duplicated foreign keys.
+     * Retrieves duplicated foreign keys.
      *
      * @return list of duplicated foreign keys
      * @see ForeignKey
@@ -80,6 +80,15 @@ public class DuplicatedForeignKeys implements DbObject, TableNameAware {
     @Nonnull
     public List<ForeignKey> getForeignKeys() {
         return foreignKeys;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Nonnull
+    public List<Constraint> getConstraints() {
+        return List.copyOf(getForeignKeys());
     }
 
     /**

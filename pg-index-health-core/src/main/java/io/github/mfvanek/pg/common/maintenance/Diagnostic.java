@@ -107,7 +107,7 @@ public enum Diagnostic implements CheckTypeAware {
     }
 
     /**
-     * Gets the place where the diagnostic should be executed.
+     * Retrieves the place where the diagnostic should be executed.
      *
      * @return {@code ExecutionTopology}
      */
@@ -117,7 +117,7 @@ public enum Diagnostic implements CheckTypeAware {
     }
 
     /**
-     * Gets the associated sql query file name.
+     * Retrieves the associated sql query file name.
      *
      * @return sql query file name
      */
@@ -127,7 +127,7 @@ public enum Diagnostic implements CheckTypeAware {
     }
 
     /**
-     * Gets the lambda which executes the associated sql query.
+     * Retrieves the lambda which executes the associated sql query.
      *
      * @return {@code QueryExecutor}
      */
