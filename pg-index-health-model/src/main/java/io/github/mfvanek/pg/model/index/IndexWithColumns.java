@@ -29,6 +29,14 @@ public class IndexWithColumns extends IndexWithSize {
 
     private final List<Column> columns;
 
+    /**
+     * Constructs an {@code IndexWithColumns} with the specified table name, index name, size in bytes, and list of columns.
+     *
+     * @param tableName        the name of the table associated with this index; must be non-blank.
+     * @param indexName        the name of the index; must be non-blank.
+     * @param indexSizeInBytes the size of the index in bytes; must be zero or positive.
+     * @param columns          the list of columns associated with the index; cannot be null.
+     */
     @SuppressWarnings("WeakerAccess")
     protected IndexWithColumns(@Nonnull final String tableName,
                                @Nonnull final String indexName,

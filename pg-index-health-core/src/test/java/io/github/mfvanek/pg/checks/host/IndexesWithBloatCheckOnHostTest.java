@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.predicates.SkipBloatUnderThresholdPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
+import io.github.mfvanek.pg.model.predicates.SkipSmallIndexesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
 import org.assertj.core.api.Assertions;
@@ -71,6 +72,10 @@ class IndexesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
 
             assertThat(check)
                 .executing(ctx, SkipBloatUnderThresholdPredicate.of(100_000L, 50.0))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipSmallIndexesPredicate.of(1_000_000L))
                 .isEmpty();
         });
     }

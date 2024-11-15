@@ -20,7 +20,9 @@ import javax.annotation.Nonnull;
  *
  * @author Ivan Vakhrushev
  * @since 0.6.0
+ * @deprecated This class has been replaced by {@link io.github.mfvanek.pg.model.predicates.SkipSmallIndexesPredicate}
  */
+@Deprecated(since = "0.13.3", forRemoval = true)
 public class FilterIndexesBySizePredicate extends AbstractFilterBySize implements Predicate<IndexSizeAware> {
 
     private FilterIndexesBySizePredicate(final long thresholdInBytes) {
