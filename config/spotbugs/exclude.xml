@@ -109,4 +109,8 @@
         <Bug pattern="ACEM_ABSTRACT_CLASS_EMPTY_METHODS"/>
         <Class name="io.github.mfvanek.pg.support.statements.AbstractDbStatement"/>
     </Match>
+    <Match>
+        <Bug pattern="ITC_INHERITANCE_TYPE_CHECKING"/>
+        <Class name="io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate"/>
+    </Match>
 </FindBugsFilter>

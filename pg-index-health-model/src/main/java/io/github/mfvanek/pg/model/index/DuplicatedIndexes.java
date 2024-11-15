@@ -31,7 +31,7 @@ import javax.annotation.concurrent.Immutable;
  * @see TableNameAware
  */
 @Immutable
-public class DuplicatedIndexes implements DbObject, TableNameAware {
+public class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware {
 
     private static final Comparator<IndexWithSize> INDEX_WITH_SIZE_COMPARATOR =
         Comparator.comparing(IndexWithSize::getTableName)
@@ -87,9 +87,22 @@ public class DuplicatedIndexes implements DbObject, TableNameAware {
      * Gets raw list of duplicated indexes.
      *
      * @return list of duplicated indexes
+     * @deprecated This method has been replaced by {@link #getIndexes}
      */
+    @Deprecated(since = "0.13.3", forRemoval = true)
     @Nonnull
     public List<IndexWithSize> getDuplicatedIndexes() {
+        return indexes;
+    }
+
+    /**
+     * Gets raw list of duplicated indexes.
+     *
+     * @return list of duplicated indexes
+     */
+    @Nonnull
+    @Override
+    public List<IndexWithSize> getIndexes() {
         return indexes;
     }
 

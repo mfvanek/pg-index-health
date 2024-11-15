@@ -78,6 +78,11 @@ class DuplicatedIndexesTest {
             .doesNotContain(fourth)
             .isUnmodifiable();
 
+        assertThat(indexes.getIndexes())
+            .hasSize(3)
+            .doesNotContain(fourth)
+            .isUnmodifiable();
+
         assertThat(indexes.getIndexNames())
             .hasSize(3)
             .doesNotContain("i4")
