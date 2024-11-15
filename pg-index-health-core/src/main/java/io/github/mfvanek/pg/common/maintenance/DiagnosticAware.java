@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 public interface DiagnosticAware {
 
     /**
-     * Gets the diagnostic - a rule related to the check.
+     * Retrieves the diagnostic - a rule related to the check.
      *
      * @return diagnostic
      * @see Diagnostic

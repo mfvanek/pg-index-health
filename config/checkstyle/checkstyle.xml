@@ -120,7 +120,7 @@
         <module name="RecordComponentNumber"/>
         <module name="RequireThis"/>
         <module name="ReturnCount">
-            <property name="max" value="3"/>
+            <property name="max" value="4"/>
         </module>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>

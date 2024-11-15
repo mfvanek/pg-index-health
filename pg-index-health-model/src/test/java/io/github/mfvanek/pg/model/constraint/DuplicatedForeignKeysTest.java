@@ -48,6 +48,9 @@ class DuplicatedForeignKeysTest {
         assertThat(foreignKeys.getForeignKeys())
             .hasSize(2)
             .isUnmodifiable();
+        assertThat(foreignKeys.getConstraints())
+            .hasSize(2)
+            .isUnmodifiable();
     }
 
     @SuppressWarnings("DataFlowIssue")

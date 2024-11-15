@@ -10,19 +10,19 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.predicates.FilterDuplicatedIndexesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.IndexWithSize;
+import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 import static io.github.mfvanek.pg.support.AbstractCheckOnClusterAssert.assertThat;
 
@@ -55,10 +55,12 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                         IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
                 .allMatch(d -> d.getTotalSize() >= 106_496L);
 
-            final Predicate<DuplicatedIndexes> predicate = FilterDuplicatedIndexesByNamePredicate.of(
-                List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted")));
             assertThat(check)
-                .executing(ctx, predicate)
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipIndexesByNamePredicate.of(ctx, List.of("i_clients_last_first", "i_accounts_number_balance_not_deleted")))
                 .isEmpty();
         });
     }
@@ -77,11 +79,11 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .allMatch(d -> d.getTotalSize() >= 106_496L);
 
             assertThat(check)
-                .executing(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_first")))
+                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_last_first"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, FilterDuplicatedIndexesByNamePredicate.of(ctx.enrichWithSchema("i_clients_last_name")))
+                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_last_name"))
                 .isEmpty();
         });
     }

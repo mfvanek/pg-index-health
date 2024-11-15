@@ -12,7 +12,9 @@ package io.github.mfvanek.pg.model.predicates;
 
 import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexNameAware;
+import io.github.mfvanek.pg.model.index.IndexesAware;
 
 import java.util.Collection;
 import java.util.Locale;
@@ -60,9 +62,20 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
      */
     @Override
     public boolean test(@Nonnull final DbObject dbObject) {
-        if (!fullyQualifiedIndexNamesToSkip.isEmpty() && dbObject instanceof IndexNameAware) {
+        if (fullyQualifiedIndexNamesToSkip.isEmpty()) {
+            return true;
+        }
+        if (dbObject instanceof IndexNameAware) {
             final IndexNameAware i = (IndexNameAware) dbObject;
             return !fullyQualifiedIndexNamesToSkip.contains(i.getIndexName().toLowerCase(Locale.ROOT));
+        }
+        if (dbObject instanceof IndexesAware) {
+            final IndexesAware i = (IndexesAware) dbObject;
+            for (final Index index : i.getIndexes()) {
+                if (fullyQualifiedIndexNamesToSkip.contains(index.getIndexName().toLowerCase(Locale.ROOT))) {
+                    return false;
+                }
+            }
         }
         return true;
     }

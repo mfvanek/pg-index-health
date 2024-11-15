@@ -55,7 +55,7 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
     }
 
     /**
-     * Gets procedure/function name.
+     * Retrieves procedure/function name.
      *
      * @return returns procedure/function name
      */
@@ -65,7 +65,7 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
     }
 
     /**
-     * Gets procedure/function arguments.
+     * Retrieves procedure/function arguments.
      *
      * @return returns procedure/function arguments or empty string
      */

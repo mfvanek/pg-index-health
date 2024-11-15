@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.checks.predicates.FilterDuplicatedIndexesByNamePredicate;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
@@ -130,13 +129,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     @Nonnull
     private String logDuplicatedIndexes(@Nonnull final Exclusions exclusions) {
         return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.DUPLICATED_INDEXES, DuplicatedIndexes.class),
-            FilterDuplicatedIndexesByNamePredicate.of(exclusions.getDuplicatedIndexesExclusions()), SimpleLoggingKey.DUPLICATED_INDEXES);
+            SkipIndexesByNamePredicate.of(pgContextHolder.get(), exclusions.getDuplicatedIndexesExclusions()), SimpleLoggingKey.DUPLICATED_INDEXES);
     }
 
     @Nonnull
     private String logIntersectedIndexes(@Nonnull final Exclusions exclusions) {
         return logCheckResult(databaseChecksHolder.get().getCheck(Diagnostic.INTERSECTED_INDEXES, DuplicatedIndexes.class),
-            FilterDuplicatedIndexesByNamePredicate.of(exclusions.getIntersectedIndexesExclusions()), SimpleLoggingKey.INTERSECTED_INDEXES);
+            SkipIndexesByNamePredicate.of(pgContextHolder.get(), exclusions.getIntersectedIndexesExclusions()), SimpleLoggingKey.INTERSECTED_INDEXES);
     }
 
     @Nonnull

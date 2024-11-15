@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 public interface HostAware {
 
     /**
-     * Gets information about host in the cluster.
+     * Retrieves information about host in the cluster.
      *
      * @return {@code PgHost}
      * @see PgHost

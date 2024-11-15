@@ -18,14 +18,14 @@ package io.github.mfvanek.pg.model;
 public interface BloatAware {
 
     /**
-     * Gets bloat amount in bytes.
+     * Retrieves bloat amount in bytes.
      *
      * @return bloat amount
      */
     long getBloatSizeInBytes();
 
     /**
-     * Gets bloat percentage (in the range from 0 to 100 inclusive).
+     * Retrieves bloat percentage (in the range from 0 to 100 inclusive).
      *
      * @return bloat percentage
      */

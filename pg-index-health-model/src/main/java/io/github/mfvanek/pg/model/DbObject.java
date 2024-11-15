@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 public interface DbObject {
 
     /**
-     * Gets database object name.
+     * Retrieves database object name.
      *
      * @return database object name
      */
@@ -32,7 +32,7 @@ public interface DbObject {
     String getName();
 
     /**
-     * Gets database object type.
+     * Retrieves database object type.
      *
      * @return database object type
      * @since 0.13.2

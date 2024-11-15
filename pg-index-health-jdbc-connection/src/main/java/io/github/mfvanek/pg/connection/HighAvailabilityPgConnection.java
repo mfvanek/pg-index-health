@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 public interface HighAvailabilityPgConnection {
 
     /**
-     * Gets connection to a primary host in the cluster.
+     * Retrieves connection to a primary host in the cluster.
      *
      * @return {@code PgConnection} to a primary host in the cluster
      */
@@ -30,7 +30,7 @@ public interface HighAvailabilityPgConnection {
     PgConnection getConnectionToPrimary();
 
     /**
-     * Gets connections to all hosts in the cluster (including a connection to a primary host).
+     * Retrieves connections to all hosts in the cluster (including a connection to a primary host).
      *
      * @return {@code Set} of connections to all hosts in target cluster
      */

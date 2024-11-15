@@ -37,7 +37,7 @@ public interface StatisticsMaintenanceOnHost extends StatisticsAware, HostAware 
     boolean resetStatistics();
 
     /**
-     * Gets time at which database statistics were last reset on current host.
+     * Retrieves the time at which database statistics were last reset on current host.
      *
      * @return {@code Optional} of null or time at which database statistics were last reset.
      */

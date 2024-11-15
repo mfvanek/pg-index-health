@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 public interface PgConnection extends HostAware {
 
     /**
-     * Gets a standard {@code DataSource} object to access the database.
+     * Retrieves a standard {@code DataSource} object to access the database.
      *
      * @return {@code DataSource}
      */
