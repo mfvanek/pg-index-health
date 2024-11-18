@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.object.AnyObject;
+import io.github.mfvanek.pg.model.dbobject.AnyObject;
 
 import java.util.List;
 import javax.annotation.Nonnull;

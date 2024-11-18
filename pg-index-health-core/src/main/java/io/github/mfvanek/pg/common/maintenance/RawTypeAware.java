@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
-import io.github.mfvanek.pg.model.object.DbObject;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import javax.annotation.Nonnull;
 

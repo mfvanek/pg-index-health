@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
-import io.github.mfvanek.pg.model.object.DbObject;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.Collection;
 import java.util.Locale;

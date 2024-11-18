@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
-import io.github.mfvanek.pg.model.object.PgObjectType;
+import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 

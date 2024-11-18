@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.model.object.DbObject;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.context.PgContext;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;

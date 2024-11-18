@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.common.maintenance;
 
 import de.thetaphi.forbiddenapis.SuppressForbidden;
-import io.github.mfvanek.pg.model.object.DbObject;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.table.Table;
