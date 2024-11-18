@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.support;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nonnull;
 
-import static io.github.mfvanek.pg.model.PgContext.DEFAULT_SCHEMA_NAME;
+import static io.github.mfvanek.pg.model.context.PgContext.DEFAULT_SCHEMA_NAME;
 
 public final class SchemaNameHolder implements AutoCloseable {
 

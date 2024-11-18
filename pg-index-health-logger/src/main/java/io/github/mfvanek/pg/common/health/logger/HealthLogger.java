@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
 import javax.annotation.Nonnull;

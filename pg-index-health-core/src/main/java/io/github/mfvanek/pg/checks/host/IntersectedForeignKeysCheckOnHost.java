@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.checks.host;
 import io.github.mfvanek.pg.checks.extractors.DuplicatedForeignKeysExtractor;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 
 import java.util.List;

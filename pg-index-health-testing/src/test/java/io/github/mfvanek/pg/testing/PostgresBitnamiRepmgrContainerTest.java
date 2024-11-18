@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.testing;
 
-import io.github.mfvanek.pg.model.MemoryUnit;
+import io.github.mfvanek.pg.units.MemoryUnit;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.Network;

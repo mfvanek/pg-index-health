@@ -14,7 +14,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.object.DbObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

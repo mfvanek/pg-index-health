@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
-import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.object.DbObject;
 import io.github.mfvanek.pg.model.object.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
 

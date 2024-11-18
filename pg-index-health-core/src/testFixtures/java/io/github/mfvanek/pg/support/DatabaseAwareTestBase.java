@@ -17,7 +17,7 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgHost;
 import io.github.mfvanek.pg.connection.PgHostImpl;
-import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.testing.PostgreSqlContainerWrapper;
 
 import java.util.function.Consumer;

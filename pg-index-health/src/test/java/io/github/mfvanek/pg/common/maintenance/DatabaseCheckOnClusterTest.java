@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
-import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

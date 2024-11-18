@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.model.object;
 
-import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;

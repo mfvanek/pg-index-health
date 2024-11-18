@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.testing;
 
 import io.github.mfvanek.pg.connection.PgUrlParser;
-import io.github.mfvanek.pg.model.MemoryUnit;
+import io.github.mfvanek.pg.units.MemoryUnit;
 import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.awaitility.Awaitility;

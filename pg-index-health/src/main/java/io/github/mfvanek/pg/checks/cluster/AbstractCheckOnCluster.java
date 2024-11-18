@@ -16,8 +16,8 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
-import io.github.mfvanek.pg.model.DbObject;
-import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.object.DbObject;
+import io.github.mfvanek.pg.model.context.PgContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

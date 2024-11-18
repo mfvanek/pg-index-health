@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.common.management;
 
-import io.github.mfvanek.pg.model.MemoryUnit;
-import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.units.MemoryUnit;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.ServerSpecification;
