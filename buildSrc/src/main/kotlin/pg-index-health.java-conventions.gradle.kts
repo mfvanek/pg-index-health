@@ -22,7 +22,7 @@ dependencies {
 
     spotbugsPlugins("jp.skypencil.findbugs.slf4j:bug-pattern:1.5.0")
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.5")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.8")
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -73,7 +73,7 @@ tasks {
 }
 
 checkstyle {
-    toolVersion = "10.18.2"
+    toolVersion = "10.20.1"
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     maxWarnings = 0
