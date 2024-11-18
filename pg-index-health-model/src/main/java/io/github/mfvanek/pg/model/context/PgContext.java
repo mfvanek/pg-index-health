@@ -112,22 +112,6 @@ public class PgContext {
         return enrichWithSchemaIfNeed(objectName);
     }
 
-    /**
-     * Complement the given sequence name with the specified schema name if it is necessary.
-     *
-     * @param sequenceName given sequence name
-     * @return sequence name with schema for all schemas
-     * @see #enrichWithSchema
-     * @deprecated This method has been replaced by {@link #enrichWithSchema}
-     */
-    @Deprecated(since = "0.13.3", forRemoval = true)
-    @Nonnull
-    public String enrichSequenceWithSchema(@Nonnull final String sequenceName) {
-        Validators.notBlank(sequenceName, "sequenceName");
-
-        return enrichWithSchemaIfNeed(sequenceName);
-    }
-
     @Nonnull
     private String enrichWithSchemaIfNeed(@Nonnull final String objectName) {
         final String prefix = schemaName + ".";
