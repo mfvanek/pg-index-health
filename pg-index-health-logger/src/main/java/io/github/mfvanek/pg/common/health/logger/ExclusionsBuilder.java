@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.units.MemoryUnit;
 import io.github.mfvanek.pg.model.validation.Validators;
+import io.github.mfvanek.pg.units.MemoryUnit;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;
