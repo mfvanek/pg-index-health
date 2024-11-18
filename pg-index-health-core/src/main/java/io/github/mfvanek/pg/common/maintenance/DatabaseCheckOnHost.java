@@ -11,8 +11,8 @@
 package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.connection.HostAware;
-import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.List;
 import java.util.function.Predicate;

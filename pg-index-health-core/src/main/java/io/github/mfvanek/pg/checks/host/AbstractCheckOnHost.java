@@ -17,8 +17,8 @@ import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgHost;
-import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.utils.SqlQueryReader;
 
 import java.sql.ResultSet;

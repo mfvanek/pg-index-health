@@ -12,9 +12,9 @@ package io.github.mfvanek.pg.checks.host;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.ConstraintType;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.ExecuteUtils;

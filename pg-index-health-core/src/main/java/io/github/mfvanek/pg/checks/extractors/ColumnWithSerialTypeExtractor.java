@@ -11,10 +11,10 @@
 package io.github.mfvanek.pg.checks.extractors;
 
 import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.column.SerialType;
+import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
