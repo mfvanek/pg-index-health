@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
-import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexNameAware;
 import io.github.mfvanek.pg.model.index.IndexesAware;

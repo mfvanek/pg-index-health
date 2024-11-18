@@ -11,8 +11,8 @@
 package io.github.mfvanek.pg.model.constraint;
 
 import io.github.mfvanek.pg.model.dbobject.DbObject;
-import io.github.mfvanek.pg.model.index.utils.DuplicatedIndexesParser;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
+import io.github.mfvanek.pg.model.index.utils.DuplicatedIndexesParser;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 

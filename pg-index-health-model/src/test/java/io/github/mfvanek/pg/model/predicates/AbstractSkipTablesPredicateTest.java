@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
-import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
