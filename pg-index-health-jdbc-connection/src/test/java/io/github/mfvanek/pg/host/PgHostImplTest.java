@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.connection;
+package io.github.mfvanek.pg.host;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Tag;
@@ -54,13 +54,13 @@ class PgHostImplTest {
             .hasMessage("pgUrl cannot be null");
         assertThatThrownBy(() -> PgHostImpl.ofUrl(""))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("pgUrl cannot be blank or empty");
+            .hasMessage("pgUrl cannot be blank");
         assertThatThrownBy(() -> PgHostImpl.ofUrl("host"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("pgUrl has invalid format");
         assertThatThrownBy(() -> PgHostImpl.ofUrl("jdbc:postgresql://:6432"))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("hostName cannot be blank or empty");
+            .hasMessage("hostName cannot be blank");
         assertThatThrownBy(() -> PgHostImpl.ofUrl("jdbc:postgresql://localhost:1023"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("the port number must be in the range from 1024 to 65535");

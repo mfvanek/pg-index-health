@@ -10,6 +10,9 @@
 
 package io.github.mfvanek.pg.connection;
 
+import io.github.mfvanek.pg.exception.PgSqlException;
+import io.github.mfvanek.pg.host.PgHost;
+import io.github.mfvanek.pg.host.PgHostImpl;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

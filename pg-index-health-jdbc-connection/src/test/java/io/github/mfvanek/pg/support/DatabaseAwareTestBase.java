@@ -12,8 +12,8 @@ package io.github.mfvanek.pg.support;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.connection.PgHost;
-import io.github.mfvanek.pg.connection.PgHostImpl;
+import io.github.mfvanek.pg.host.PgHost;
+import io.github.mfvanek.pg.host.PgHostImpl;
 import io.github.mfvanek.pg.testing.PostgreSqlContainerWrapper;
 
 import javax.annotation.Nonnull;

@@ -8,7 +8,13 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.connection;
+package io.github.mfvanek.pg.connection.factory;
+
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
+import io.github.mfvanek.pg.connection.PgConnection;
+import io.github.mfvanek.pg.connection.PrimaryHostDeterminer;
+import io.github.mfvanek.pg.host.PgUrlParser;
 
 import java.util.LinkedHashMap;
 import java.util.List;

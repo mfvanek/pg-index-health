@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.support.statements;
 
-import io.github.mfvanek.pg.connection.PgSqlException;
+import io.github.mfvanek.pg.exception.PgSqlException;
 import io.github.mfvanek.pg.support.SchemaNameHolder;
 
 import java.sql.ResultSet;

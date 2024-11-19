@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.e2e;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.connection.PgHostImpl;
+import io.github.mfvanek.pg.host.PgHostImpl;
 import io.github.mfvanek.pg.testing.PostgreSqlClusterWrapper;
 
 import java.time.Duration;

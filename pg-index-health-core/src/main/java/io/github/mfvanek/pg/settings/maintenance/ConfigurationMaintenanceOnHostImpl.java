@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.settings.maintenance;
 
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.connection.PgHost;
+import io.github.mfvanek.pg.host.PgHost;
 import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.ParamNameAware;
 import io.github.mfvanek.pg.settings.PgParam;

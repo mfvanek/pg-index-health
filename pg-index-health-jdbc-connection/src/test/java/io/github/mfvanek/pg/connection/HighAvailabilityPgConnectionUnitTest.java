@@ -11,6 +11,8 @@
 package io.github.mfvanek.pg.connection;
 
 import ch.qos.logback.classic.Level;
+import io.github.mfvanek.pg.host.PgHost;
+import io.github.mfvanek.pg.host.PgHostImpl;
 import io.github.mfvanek.pg.support.LogsCaptor;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Tag;

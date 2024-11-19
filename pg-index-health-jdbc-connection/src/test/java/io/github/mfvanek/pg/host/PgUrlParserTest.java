@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.connection;
+package io.github.mfvanek.pg.host;
 
 import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Tag;
@@ -50,7 +50,7 @@ class PgUrlParserTest {
             .hasMessage("pgUrl cannot be null");
         assertThatThrownBy(() -> PgUrlParser.extractNameWithPortAndUrlForEachHost(""))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("pgUrl cannot be blank or empty");
+            .hasMessage("pgUrl cannot be blank");
         assertThatThrownBy(() -> PgUrlParser.extractNameWithPortAndUrlForEachHost("host-name:5432"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("pgUrl has invalid format");
@@ -128,7 +128,7 @@ class PgUrlParserTest {
             .hasMessage("pgUrl cannot be null");
         assertThatThrownBy(() -> PgUrlParser.extractHostNames(""))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("pgUrl cannot be blank or empty");
+            .hasMessage("pgUrl cannot be blank");
         assertThatThrownBy(() -> PgUrlParser.extractHostNames("host-name:5432"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("pgUrl has invalid format");
@@ -158,7 +158,7 @@ class PgUrlParserTest {
             .hasMessage("pgUrl cannot be null");
         assertThatThrownBy(() -> PgUrlParser.isReplicaUrl(""))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("pgUrl cannot be blank or empty");
+            .hasMessage("pgUrl cannot be blank");
         assertThatThrownBy(() -> PgUrlParser.isReplicaUrl("host-name:5432"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("pgUrl has invalid format");

@@ -8,7 +8,9 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.connection;
+package io.github.mfvanek.pg.connection.factory;
+
+import io.github.mfvanek.pg.host.PgUrlValidators;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +29,7 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class ConnectionCredentials {
+public final class ConnectionCredentials {
 
     private final SortedSet<String> connectionUrls;
     private final String userName;
@@ -77,7 +79,7 @@ public class ConnectionCredentials {
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -96,7 +98,7 @@ public class ConnectionCredentials {
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(connectionUrls, userName, password);
     }
 
@@ -113,6 +115,14 @@ public class ConnectionCredentials {
             '}';
     }
 
+    /**
+     * Creates a {@link ConnectionCredentials} object with multiple connection URLs.
+     *
+     * @param connectionUrls the collection of connection URLs; must not be null or empty, and all URLs must be valid.
+     * @param userName       the username for authentication; must not be null or blank.
+     * @param password       the password for authentication; must not be null or blank.
+     * @return a new {@link ConnectionCredentials} instance.
+     */
     @Nonnull
     public static ConnectionCredentials of(@Nonnull final Collection<String> connectionUrls,
                                            @Nonnull final String userName,
@@ -120,11 +130,19 @@ public class ConnectionCredentials {
         return new ConnectionCredentials(connectionUrls, userName, password);
     }
 
+    /**
+     * Creates a {@link ConnectionCredentials} object for a single connection URL.
+     *
+     * @param writeUrl the write connection URL; must not be null, blank, or have an invalid format.
+     * @param userName the username for authentication; must not be null or blank.
+     * @param password the password for authentication; must not be null or blank.
+     * @return a new {@link ConnectionCredentials} instance containing the validated URL.
+     */
     @Nonnull
     public static ConnectionCredentials ofUrl(@Nonnull final String writeUrl,
                                               @Nonnull final String userName,
                                               @Nonnull final String password) {
-        final Set<String> connectionUrls = Set.of(PgConnectionValidators.pgUrlNotBlankAndValid(writeUrl, "writeUrl"));
+        final Set<String> connectionUrls = Set.of(PgUrlValidators.pgUrlNotBlankAndValid(writeUrl, "writeUrl"));
         return new ConnectionCredentials(connectionUrls, userName, password);
     }
 }

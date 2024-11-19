@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.testing;
 
-import io.github.mfvanek.pg.connection.PgUrlParser;
+import io.github.mfvanek.pg.host.PgUrlParser;
 import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport;
 import io.github.mfvanek.pg.units.MemoryUnit;
 import org.apache.commons.dbcp2.BasicDataSource;

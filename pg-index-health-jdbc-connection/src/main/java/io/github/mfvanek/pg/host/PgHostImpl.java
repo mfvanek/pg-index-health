@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.connection;
+package io.github.mfvanek.pg.host;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +23,7 @@ import javax.annotation.concurrent.Immutable;
  * @see PgHost
  */
 @Immutable
-public class PgHostImpl implements PgHost {
+public final class PgHostImpl implements PgHost {
 
     private final String pgUrl;
     private final String hostName;
@@ -34,9 +34,9 @@ public class PgHostImpl implements PgHost {
                        @Nonnull final String hostName,
                        final int port,
                        final boolean maybePrimary) {
-        this.pgUrl = PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
-        this.hostName = PgConnectionValidators.hostNameNotBlank(hostName);
-        this.port = PgConnectionValidators.portInAcceptableRange(port);
+        this.pgUrl = PgUrlValidators.pgUrlNotBlankAndValid(pgUrl);
+        this.hostName = PgUrlValidators.hostNameNotBlank(hostName);
+        this.port = PgUrlValidators.portInAcceptableRange(port);
         this.maybePrimary = maybePrimary;
     }
 
@@ -75,27 +75,10 @@ public class PgHostImpl implements PgHost {
     }
 
     /**
-     * Constructs a {@code PgHost} object from given JDBC connection string.
-     *
-     * @param pgUrl connection string to a database in JDBC format
-     * @return {@code PgHost}
-     */
-    @Nonnull
-    public static PgHost ofUrl(@Nonnull final String pgUrl) {
-        final List<Map.Entry<String, Integer>> extractHostNames = PgUrlParser.extractHostNames(pgUrl);
-        if (extractHostNames.size() > 1) {
-            throw new IllegalArgumentException("pgUrl couldn't contain multiple hosts");
-        }
-
-        final Map.Entry<String, Integer> host = extractHostNames.get(0);
-        return new PgHostImpl(pgUrl, host.getKey(), host.getValue(), !PgUrlParser.isReplicaUrl(pgUrl));
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -113,7 +96,7 @@ public class PgHostImpl implements PgHost {
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(hostName, port);
     }
 
@@ -129,5 +112,22 @@ public class PgHostImpl implements PgHost {
             ", port=" + port +
             ", maybePrimary=" + maybePrimary +
             '}';
+    }
+
+    /**
+     * Constructs a {@code PgHost} object from given JDBC connection string.
+     *
+     * @param pgUrl connection string to a database in JDBC format
+     * @return {@code PgHost}
+     */
+    @Nonnull
+    public static PgHost ofUrl(@Nonnull final String pgUrl) {
+        final List<Map.Entry<String, Integer>> extractHostNames = PgUrlParser.extractHostNames(pgUrl);
+        if (extractHostNames.size() > 1) {
+            throw new IllegalArgumentException("pgUrl couldn't contain multiple hosts");
+        }
+
+        final Map.Entry<String, Integer> host = extractHostNames.get(0);
+        return new PgHostImpl(pgUrl, host.getKey(), host.getValue(), !PgUrlParser.isReplicaUrl(pgUrl));
     }
 }
