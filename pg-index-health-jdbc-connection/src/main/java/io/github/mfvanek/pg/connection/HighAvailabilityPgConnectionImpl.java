@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.connection.validation.PgConnectionValidators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +45,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
         this.primaryHostDeterminer = Objects.requireNonNull(primaryHostDeterminer);
         Objects.requireNonNull(connectionToPrimary, "connectionToPrimary");
         final Set<PgConnection> defensiveCopy = Set.copyOf(Objects.requireNonNull(connectionsToAllHostsInCluster, "connectionsToAllHostsInCluster"));
-        PgConnectionValidators.shouldContainsConnectionToPrimary(connectionToPrimary, defensiveCopy);
+        shouldContainsConnectionToPrimary(connectionToPrimary, defensiveCopy);
         this.cachedConnectionToPrimary.set(connectionToPrimary);
         this.connectionsToAllHostsInCluster = defensiveCopy;
     }
@@ -131,5 +130,12 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
                 LOGGER.warn("Exception during primary detection for host {}", pgConnection.getHost(), e);
             }
         });
+    }
+
+    private static void shouldContainsConnectionToPrimary(@Nonnull final PgConnection connectionToPrimary,
+                                                          @Nonnull final Set<PgConnection> connectionsToAllHostsInCluster) {
+        if (!connectionsToAllHostsInCluster.contains(connectionToPrimary)) {
+            throw new IllegalArgumentException("connectionsToAllHostsInCluster have to contain a connection to the primary");
+        }
     }
 }

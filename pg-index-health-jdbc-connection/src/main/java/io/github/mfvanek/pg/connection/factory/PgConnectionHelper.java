@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.connection.factory;
 
-import io.github.mfvanek.pg.connection.validation.PgConnectionValidators;
+import io.github.mfvanek.pg.host.PgUrlValidators;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.annotation.Nonnull;
@@ -26,7 +26,7 @@ final class PgConnectionHelper {
     static DataSource createDataSource(@Nonnull final String pgUrl,
                                        @Nonnull final String userName,
                                        @Nonnull final String password) {
-        PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
+        PgUrlValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
         PgConnectionValidators.userNameNotBlank(userName);
         PgConnectionValidators.passwordNotBlank(password);
         final BasicDataSource dataSource = new BasicDataSource();

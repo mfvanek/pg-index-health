@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.host;
 
-import io.github.mfvanek.pg.connection.validation.PgConnectionValidators;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +18,8 @@ import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+
+import static io.github.mfvanek.pg.host.PgUrlValidators.pgUrlNotBlankAndValid;
 
 /**
  * Utility class for parsing and manipulating PostgreSQL connection URLs.
@@ -31,7 +31,6 @@ public final class PgUrlParser {
      */
     public static final String URL_HEADER = "jdbc:postgresql://";
 
-    private static final String PG_URL = "pgUrl";
     private static final Map<String, String> DEFAULT_URL_PARAMETERS = Map.ofEntries(
         Map.entry("targetServerType", "primary"),
         Map.entry("hostRecheckSeconds", "2"),
@@ -50,7 +49,7 @@ public final class PgUrlParser {
      * @return {@code true} if the URL specifies a replica as the target server type.
      */
     static boolean isReplicaUrl(@Nonnull final String pgUrl) {
-        PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
+        pgUrlNotBlankAndValid(pgUrl);
         return pgUrl.contains("targetServerType=slave") ||
             pgUrl.contains("targetServerType=secondary");
     }
@@ -64,7 +63,7 @@ public final class PgUrlParser {
     @Nonnull
     public static List<Map.Entry<String, String>> extractNameWithPortAndUrlForEachHost(@Nonnull final String pgUrl) {
         // For example, jdbc:postgresql://host-1:6432/db_name?param=value
-        PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
+        pgUrlNotBlankAndValid(pgUrl);
         final int lastIndex = pgUrl.lastIndexOf('/');
         final String dbNameWithParams = pgUrl.substring(lastIndex);
         final String dbNameWithParamsForReplica = convertToReplicaConnectionString(dbNameWithParams);
@@ -101,8 +100,7 @@ public final class PgUrlParser {
      */
     @Nonnull
     static List<Map.Entry<String, Integer>> extractHostNames(@Nonnull final String pgUrl) {
-        PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
-        final String allHostsWithPort = extractAllHostsWithPort(pgUrl);
+        final String allHostsWithPort = extractAllHostsWithPort(pgUrlNotBlankAndValid(pgUrl));
         return Arrays.stream(allHostsWithPort.split(","))
             .filter(Predicate.not(String::isBlank))
             .map(h -> {

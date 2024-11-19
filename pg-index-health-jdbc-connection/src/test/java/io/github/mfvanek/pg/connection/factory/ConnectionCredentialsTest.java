@@ -130,25 +130,25 @@ class ConnectionCredentialsTest {
             .hasMessage("password cannot be null");
         assertThatThrownBy(() -> ConnectionCredentials.ofUrl("", "u", "p"))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("writeUrl cannot be blank or empty");
+            .hasMessage("writeUrl cannot be blank");
         assertThatThrownBy(() -> ConnectionCredentials.ofUrl("  ", "u", "p"))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("writeUrl cannot be blank or empty");
+            .hasMessage("writeUrl cannot be blank");
         assertThatThrownBy(() -> ConnectionCredentials.ofUrl("url", "u", "p"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("writeUrl has invalid format");
         assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "", "p"))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("userName cannot be blank or empty");
+            .hasMessage("userName cannot be blank");
         assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "  ", "p"))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("userName cannot be blank or empty");
+            .hasMessage("userName cannot be blank");
         assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", ""))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("password cannot be blank or empty");
+            .hasMessage("password cannot be blank");
         assertThatThrownBy(() -> ConnectionCredentials.ofUrl(DEFAULT_URL, "u", "  "))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("password cannot be blank or empty");
+            .hasMessage("password cannot be blank");
 
         assertThatThrownBy(() -> ConnectionCredentials.of(null, null, null))
             .isInstanceOf(NullPointerException.class)

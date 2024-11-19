@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.host;
 
-import io.github.mfvanek.pg.connection.validation.PgConnectionValidators;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,9 +34,9 @@ public final class PgHostImpl implements PgHost {
                        @Nonnull final String hostName,
                        final int port,
                        final boolean maybePrimary) {
-        this.pgUrl = PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
-        this.hostName = PgConnectionValidators.hostNameNotBlank(hostName);
-        this.port = PgConnectionValidators.portInAcceptableRange(port);
+        this.pgUrl = PgUrlValidators.pgUrlNotBlankAndValid(pgUrl);
+        this.hostName = PgUrlValidators.hostNameNotBlank(hostName);
+        this.port = PgUrlValidators.portInAcceptableRange(port);
         this.maybePrimary = maybePrimary;
     }
 
