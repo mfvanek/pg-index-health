@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.utils;
 
 import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.connection.PgSqlException;
+import io.github.mfvanek.pg.exception.PgSqlException;
 import io.github.mfvanek.pg.model.context.PgContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

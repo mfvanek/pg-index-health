@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.common.management;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.connection.PgHost;
+import io.github.mfvanek.pg.host.PgHost;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.ServerSpecification;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;

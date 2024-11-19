@@ -11,9 +11,9 @@
 package io.github.mfvanek.pg.common.health.logger;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
-import io.github.mfvanek.pg.connection.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionFactory;
+import io.github.mfvanek.pg.connection.factory.ConnectionCredentials;
+import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFactory;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

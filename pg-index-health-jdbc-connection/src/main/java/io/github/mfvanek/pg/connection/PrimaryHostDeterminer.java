@@ -12,6 +12,9 @@ package io.github.mfvanek.pg.connection;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Represents a service that determines if a given database connection is established with a primary host.
+ */
 public interface PrimaryHostDeterminer {
 
     /**

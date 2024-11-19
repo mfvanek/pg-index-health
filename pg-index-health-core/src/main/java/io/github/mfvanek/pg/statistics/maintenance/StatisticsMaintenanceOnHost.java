@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.statistics.maintenance;
 
-import io.github.mfvanek.pg.connection.HostAware;
+import io.github.mfvanek.pg.host.HostAware;
 import io.github.mfvanek.pg.statistics.StatisticsAware;
 
 import java.time.OffsetDateTime;

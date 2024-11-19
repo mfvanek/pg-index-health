@@ -12,8 +12,8 @@ package io.github.mfvanek.pg.utils;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.connection.PgHostImpl;
-import io.github.mfvanek.pg.connection.PgSqlException;
+import io.github.mfvanek.pg.exception.PgSqlException;
+import io.github.mfvanek.pg.host.PgHostImpl;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.TestUtils;

@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.connection;
+package io.github.mfvanek.pg.connection.validation;
 
 import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Tag;

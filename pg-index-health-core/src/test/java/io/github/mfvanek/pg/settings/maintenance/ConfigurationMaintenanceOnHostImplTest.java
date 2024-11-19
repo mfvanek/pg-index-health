@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.settings.maintenance;
 
-import io.github.mfvanek.pg.connection.PgSqlException;
+import io.github.mfvanek.pg.exception.PgSqlException;
 import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.PgParamImpl;

@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.connection;
+package io.github.mfvanek.pg.host;
 
 import javax.annotation.Nonnull;
 
@@ -52,6 +52,11 @@ public interface PgHost {
      */
     boolean canBePrimary();
 
+    /**
+     * Determines whether this host cannot act as a primary host.
+     *
+     * @return {@code true} if this host cannot be a primary host; {@code false} otherwise.
+     */
     default boolean cannotBePrimary() {
         return !canBePrimary();
     }

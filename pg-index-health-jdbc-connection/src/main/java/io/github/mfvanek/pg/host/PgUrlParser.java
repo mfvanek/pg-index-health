@@ -8,7 +8,9 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.connection;
+package io.github.mfvanek.pg.host;
+
+import io.github.mfvanek.pg.connection.validation.PgConnectionValidators;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,9 +21,16 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
+/**
+ * Utility class for parsing and manipulating PostgreSQL connection URLs.
+ */
 public final class PgUrlParser {
 
+    /**
+     * Header prefix for PostgreSQL JDBC URLs.
+     */
     public static final String URL_HEADER = "jdbc:postgresql://";
+
     private static final String PG_URL = "pgUrl";
     private static final Map<String, String> DEFAULT_URL_PARAMETERS = Map.ofEntries(
         Map.entry("targetServerType", "primary"),
@@ -34,15 +43,27 @@ public final class PgUrlParser {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Checks if the given PostgreSQL URL points to a replica.
+     *
+     * @param pgUrl the PostgreSQL connection URL; must be valid and non-blank.
+     * @return {@code true} if the URL specifies a replica as the target server type.
+     */
     static boolean isReplicaUrl(@Nonnull final String pgUrl) {
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
         return pgUrl.contains("targetServerType=slave") ||
             pgUrl.contains("targetServerType=secondary");
     }
 
-    // For example, jdbc:postgresql://host-1:6432/db_name?param=value
+    /**
+     * Extracts host-port pairs and builds replica-compatible connection URLs for each host.
+     *
+     * @param pgUrl the PostgreSQL connection URL; must be valid and non-blank.
+     * @return a list of host-port pairs and corresponding replica-compatible URLs.
+     */
     @Nonnull
-    static List<Map.Entry<String, String>> extractNameWithPortAndUrlForEachHost(@Nonnull final String pgUrl) {
+    public static List<Map.Entry<String, String>> extractNameWithPortAndUrlForEachHost(@Nonnull final String pgUrl) {
+        // For example, jdbc:postgresql://host-1:6432/db_name?param=value
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
         final int lastIndex = pgUrl.lastIndexOf('/');
         final String dbNameWithParams = pgUrl.substring(lastIndex);
@@ -55,6 +76,12 @@ public final class PgUrlParser {
             .collect(Collectors.toUnmodifiableList());
     }
 
+    /**
+     * Converts a given part of connection string to a replica-compatible connection string.
+     *
+     * @param dbNameWithParams the database name and parameters from the URL.
+     * @return the replica-compatible connection string.
+     */
     @Nonnull
     private static String convertToReplicaConnectionString(@Nonnull final String dbNameWithParams) {
         final List<String> primaryServerTypes = List.of("targetServerType=primary", "targetServerType=master");
@@ -66,6 +93,12 @@ public final class PgUrlParser {
         return dbNameWithParams;
     }
 
+    /**
+     * Extracts host names and ports from a PostgreSQL connection URL.
+     *
+     * @param pgUrl the PostgreSQL connection URL; must be valid and non-blank.
+     * @return a list of host-port pairs.
+     */
     @Nonnull
     static List<Map.Entry<String, Integer>> extractHostNames(@Nonnull final String pgUrl) {
         PgConnectionValidators.pgUrlNotBlankAndValid(pgUrl, PG_URL);
@@ -81,6 +114,13 @@ public final class PgUrlParser {
             .collect(Collectors.toUnmodifiableList());
     }
 
+    /**
+     * Extracts the database name from a set of PostgreSQL connection URLs.
+     *
+     * @param pgUrls a set of PostgreSQL connection URLs; must contain at least one valid URL.
+     * @return the database name extracted from the URLs.
+     * @throws IllegalArgumentException if the connection string is invalid.
+     */
     @Nonnull
     static String extractDatabaseName(@Nonnull final Set<String> pgUrls) {
         final String pgUrl = pgUrls.iterator().next();
@@ -95,6 +135,12 @@ public final class PgUrlParser {
         return dbNameWithParams;
     }
 
+    /**
+     * Extracts all host and port pairs from a PostgreSQL connection URL.
+     *
+     * @param pgUrl the PostgreSQL connection URL; must be valid and non-blank.
+     * @return a string containing all host and port pairs.
+     */
     @Nonnull
     private static String extractAllHostsWithPort(@Nonnull final String pgUrl) {
         final int lastIndex = pgUrl.lastIndexOf('/');
@@ -104,12 +150,27 @@ public final class PgUrlParser {
         return pgUrl.substring(URL_HEADER.length());
     }
 
+    /**
+     * Constructs a common (joint) PostgreSQL URL for a primary server.
+     *
+     * @param firstPgUrl  a first PostgreSQL connection URL.
+     * @param secondPgUrl a second PostgreSQL connection URL.
+     * @return the constructed primary connection URL.
+     */
     @Nonnull
     public static String buildCommonUrlToPrimary(@Nonnull final String firstPgUrl,
                                                  @Nonnull final String secondPgUrl) {
         return buildCommonUrlToPrimary(Set.of(firstPgUrl, secondPgUrl));
     }
 
+    /**
+     * Constructs a common (joint) PostgreSQL URL for a primary server.
+     *
+     * @param firstPgUrl    a first PostgreSQL connection URL.
+     * @param secondPgUrl   a second PostgreSQL connection URL.
+     * @param urlParameters optional additional parameters to include in the URL.
+     * @return the constructed primary connection URL.
+     */
     @Nonnull
     public static String buildCommonUrlToPrimary(@Nonnull final String firstPgUrl,
                                                  @Nonnull final String secondPgUrl,
@@ -117,11 +178,24 @@ public final class PgUrlParser {
         return buildCommonUrlToPrimary(Set.of(firstPgUrl, secondPgUrl), urlParameters);
     }
 
+    /**
+     * Constructs a common (joint) PostgreSQL URL for a primary server.
+     *
+     * @param pgUrls a set of PostgreSQL connection URLs.
+     * @return the constructed primary connection URL.
+     */
     @Nonnull
     public static String buildCommonUrlToPrimary(@Nonnull final Set<String> pgUrls) {
         return buildCommonUrlToPrimary(pgUrls, Map.of());
     }
 
+    /**
+     * Constructs a common (joint) PostgreSQL URL for a primary server.
+     *
+     * @param pgUrls        a set of PostgreSQL connection URLs.
+     * @param urlParameters optional additional parameters to include in the URL.
+     * @return the constructed primary connection URL.
+     */
     @Nonnull
     public static String buildCommonUrlToPrimary(@Nonnull final Set<String> pgUrls,
                                                  @Nonnull final Map<String, String> urlParameters) {
@@ -133,6 +207,12 @@ public final class PgUrlParser {
             extractDatabaseName(pgUrls) + additionalUrlParams;
     }
 
+    /**
+     * Constructs a query string from default and provided URL parameters.
+     *
+     * @param urlParameters a map of additional URL parameters.
+     * @return the constructed query string, prefixed by {@code ?}.
+     */
     @Nonnull
     static String constructUrlParameters(@Nonnull final Map<String, String> urlParameters) {
         final Map<String, String> jointUrlParameters = new TreeMap<>(urlParameters);

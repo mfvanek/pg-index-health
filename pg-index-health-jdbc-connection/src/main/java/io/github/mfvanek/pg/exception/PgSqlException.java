@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.connection;
+package io.github.mfvanek.pg.exception;
 
 import java.sql.SQLException;
 import javax.annotation.Nonnull;
@@ -23,6 +23,11 @@ public class PgSqlException extends RuntimeException {
 
     private static final long serialVersionUID = -6917248037245766939L;
 
+    /**
+     * Constructs a new {@code PgSqlException} with the specified cause.
+     *
+     * @param cause the {@link SQLException} that caused this exception; must not be {@code null}.
+     */
     public PgSqlException(@Nonnull final SQLException cause) {
         super(cause.getMessage(), cause);
     }

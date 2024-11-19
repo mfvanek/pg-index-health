@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.connection;
 
+import io.github.mfvanek.pg.connection.validation.PgConnectionValidators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

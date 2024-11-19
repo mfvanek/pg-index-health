@@ -8,8 +8,11 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.connection;
+package io.github.mfvanek.pg.connection.factory;
 
+import io.github.mfvanek.pg.connection.PgConnection;
+import io.github.mfvanek.pg.connection.PgConnectionImpl;
+import io.github.mfvanek.pg.host.PgHostImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

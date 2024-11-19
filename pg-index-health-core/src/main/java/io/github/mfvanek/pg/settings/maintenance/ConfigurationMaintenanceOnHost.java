@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.settings.maintenance;
 
-import io.github.mfvanek.pg.connection.HostAware;
+import io.github.mfvanek.pg.host.HostAware;
 import io.github.mfvanek.pg.settings.ConfigurationAware;
 import io.github.mfvanek.pg.settings.ParamNameAware;
 import io.github.mfvanek.pg.settings.PgParam;

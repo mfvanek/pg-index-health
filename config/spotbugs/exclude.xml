@@ -92,7 +92,7 @@
     </Match>
     <Match>
         <Bug pattern="IMC_IMMATURE_CLASS_BAD_SERIALVERSIONUID"/>
-        <Class name="io.github.mfvanek.pg.connection.PgSqlException"/>
+        <Class name="io.github.mfvanek.pg.exception.PgSqlException"/>
     </Match>
     <Match>
         <Bug pattern="STT_STRING_PARSING_A_FIELD"/>
