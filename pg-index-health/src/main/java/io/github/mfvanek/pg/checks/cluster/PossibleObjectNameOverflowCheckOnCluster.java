@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.checks.cluster;
 
 import io.github.mfvanek.pg.checks.host.PossibleObjectNameOverflowCheckOnHost;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.model.object.AnyObject;
+import io.github.mfvanek.pg.model.dbobject.AnyObject;
 
 import javax.annotation.Nonnull;
 

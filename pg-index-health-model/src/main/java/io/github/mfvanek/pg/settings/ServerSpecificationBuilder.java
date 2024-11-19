@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.settings;
 
-import io.github.mfvanek.pg.model.MemoryUnit;
 import io.github.mfvanek.pg.model.validation.Validators;
+import io.github.mfvanek.pg.units.MemoryUnit;
 
 import javax.annotation.Nonnull;
 

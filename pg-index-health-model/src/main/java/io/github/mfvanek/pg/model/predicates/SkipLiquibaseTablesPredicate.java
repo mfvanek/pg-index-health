@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
-import io.github.mfvanek.pg.model.DbObject;
-import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.Set;
 import java.util.function.Predicate;

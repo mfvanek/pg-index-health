@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model;
+package io.github.mfvanek.pg.model.context;
 
 import org.junit.jupiter.api.Test;
 
@@ -93,13 +93,6 @@ class PgContextTest {
             .isEqualTo("test.table2");
         assertThat(pgContext.enrichWithSchema("TEST.table2"))
             .isEqualTo("TEST.table2");
-
-        assertThat(pgContext.enrichSequenceWithSchema("id_seq"))
-            .isEqualTo("test.id_seq");
-        assertThat(pgContext.enrichSequenceWithSchema("test.id_seq"))
-            .isEqualTo("test.id_seq");
-        assertThat(pgContext.enrichSequenceWithSchema("TEST.id_seq"))
-            .isEqualTo("TEST.id_seq");
     }
 
     @Test
@@ -113,13 +106,6 @@ class PgContextTest {
             .isEqualTo("public.table2");
         assertThat(pgContext.enrichWithSchema("PUBLIC.table2"))
             .isEqualTo("PUBLIC.table2");
-
-        assertThat(pgContext.enrichSequenceWithSchema("id_seq"))
-            .isEqualTo("public.id_seq");
-        assertThat(pgContext.enrichSequenceWithSchema("public.id_seq"))
-            .isEqualTo("public.id_seq");
-        assertThat(pgContext.enrichSequenceWithSchema("PUBLIC.id_seq"))
-            .isEqualTo("PUBLIC.id_seq");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -135,15 +121,5 @@ class PgContextTest {
         assertThatThrownBy(() -> pgContext.enrichWithSchema("   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("objectName cannot be blank");
-
-        assertThatThrownBy(() -> pgContext.enrichSequenceWithSchema(null))
-            .isInstanceOf(NullPointerException.class)
-            .hasMessage("sequenceName cannot be null");
-        assertThatThrownBy(() -> pgContext.enrichSequenceWithSchema(""))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("sequenceName cannot be blank");
-        assertThatThrownBy(() -> pgContext.enrichSequenceWithSchema("   "))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("sequenceName cannot be blank");
     }
 }

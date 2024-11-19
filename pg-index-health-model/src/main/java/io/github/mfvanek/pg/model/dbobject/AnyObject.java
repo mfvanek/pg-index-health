@@ -8,9 +8,8 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.object;
+package io.github.mfvanek.pg.model.dbobject;
 
-import io.github.mfvanek.pg.model.DbObject;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;

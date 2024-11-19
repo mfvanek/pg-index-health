@@ -11,8 +11,8 @@
 package io.github.mfvanek.pg.common.maintenance;
 
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.model.DbObject;
-import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.sql.ResultSet;
 import java.util.List;

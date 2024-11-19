@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.settings;
 
-import io.github.mfvanek.pg.model.MemoryUnit;
+import io.github.mfvanek.pg.units.MemoryUnit;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

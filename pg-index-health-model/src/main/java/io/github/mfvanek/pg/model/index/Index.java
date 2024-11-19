@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model.index;
 
-import io.github.mfvanek.pg.model.DbObject;
-import io.github.mfvanek.pg.model.object.PgObjectType;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
+import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 

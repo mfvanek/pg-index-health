@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model.sequence;
 
-import io.github.mfvanek.pg.model.DbObject;
-import io.github.mfvanek.pg.model.object.PgObjectType;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
+import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;

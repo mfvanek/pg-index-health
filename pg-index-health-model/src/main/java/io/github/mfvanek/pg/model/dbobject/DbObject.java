@@ -8,9 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model;
-
-import io.github.mfvanek.pg.model.object.PgObjectType;
+package io.github.mfvanek.pg.model.dbobject;
 
 import javax.annotation.Nonnull;
 

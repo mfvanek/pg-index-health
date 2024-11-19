@@ -12,9 +12,9 @@ package io.github.mfvanek.pg.checks.host;
 
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.model.PgContext;
 import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.ConstraintType;
+import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
 import javax.annotation.Nonnull;

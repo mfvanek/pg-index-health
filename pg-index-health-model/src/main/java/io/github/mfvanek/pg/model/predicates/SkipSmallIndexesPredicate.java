@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
-import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.index.IndexSizeAware;
 
 import java.util.function.Predicate;

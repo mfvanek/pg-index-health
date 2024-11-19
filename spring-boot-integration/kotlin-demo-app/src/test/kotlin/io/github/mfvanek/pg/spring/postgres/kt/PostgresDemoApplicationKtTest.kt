@@ -14,7 +14,7 @@ import com.zaxxer.hikari.HikariDataSource
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost
 import io.github.mfvanek.pg.common.maintenance.Diagnostic
 import io.github.mfvanek.pg.connection.PgConnection
-import io.github.mfvanek.pg.model.DbObject
+import io.github.mfvanek.pg.model.dbobject.DbObject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -10,14 +10,14 @@
 
 package io.github.mfvanek.pg.common.management;
 
-import io.github.mfvanek.pg.model.MemoryUnit;
-import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.settings.ImportantParam;
 import io.github.mfvanek.pg.settings.PgParam;
 import io.github.mfvanek.pg.settings.ServerSpecification;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
+import io.github.mfvanek.pg.units.MemoryUnit;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

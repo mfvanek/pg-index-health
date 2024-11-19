@@ -36,7 +36,7 @@ import io.github.mfvanek.pg.checks.cluster.TablesWithoutDescriptionCheckOnCluste
 import io.github.mfvanek.pg.checks.cluster.TablesWithoutPrimaryKeyCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.List;
 import java.util.Locale;

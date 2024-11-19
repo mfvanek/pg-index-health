@@ -14,7 +14,7 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgHostImpl;
 import io.github.mfvanek.pg.connection.PgSqlException;
-import io.github.mfvanek.pg.model.PgContext;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Test;

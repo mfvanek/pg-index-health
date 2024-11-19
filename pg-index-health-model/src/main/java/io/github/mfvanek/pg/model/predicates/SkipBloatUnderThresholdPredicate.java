@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
-import io.github.mfvanek.pg.model.BloatAware;
-import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.bloat.BloatAware;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.function.Predicate;
