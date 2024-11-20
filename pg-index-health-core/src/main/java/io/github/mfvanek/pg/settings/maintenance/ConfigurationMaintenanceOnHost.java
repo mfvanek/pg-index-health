@@ -10,11 +10,11 @@
 
 package io.github.mfvanek.pg.settings.maintenance;
 
-import io.github.mfvanek.pg.host.HostAware;
+import io.github.mfvanek.pg.connection.host.HostAware;
+import io.github.mfvanek.pg.model.settings.ParamNameAware;
+import io.github.mfvanek.pg.model.settings.PgParam;
+import io.github.mfvanek.pg.model.settings.ServerSpecification;
 import io.github.mfvanek.pg.settings.ConfigurationAware;
-import io.github.mfvanek.pg.settings.ParamNameAware;
-import io.github.mfvanek.pg.settings.PgParam;
-import io.github.mfvanek.pg.settings.ServerSpecification;
 
 import java.util.Set;
 import javax.annotation.Nonnull;

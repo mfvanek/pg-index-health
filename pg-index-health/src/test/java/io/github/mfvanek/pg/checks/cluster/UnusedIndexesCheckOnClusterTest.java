@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.checks.cluster;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.connection.support.LogsCaptor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
@@ -19,7 +20,6 @@ import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.support.LogsCaptor;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

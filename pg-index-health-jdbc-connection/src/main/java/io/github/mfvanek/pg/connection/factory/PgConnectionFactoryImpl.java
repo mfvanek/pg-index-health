@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.connection.factory;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.host.PgHostImpl;
+import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

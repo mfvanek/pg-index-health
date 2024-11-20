@@ -12,9 +12,9 @@ package io.github.mfvanek.pg.spring;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.exception.PgSqlException;
-import io.github.mfvanek.pg.host.PgHost;
-import io.github.mfvanek.pg.host.PgHostImpl;
+import io.github.mfvanek.pg.connection.exception.PgSqlException;
+import io.github.mfvanek.pg.connection.host.PgHost;
+import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;

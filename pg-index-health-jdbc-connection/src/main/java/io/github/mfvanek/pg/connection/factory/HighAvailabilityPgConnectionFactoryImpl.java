@@ -14,7 +14,7 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminer;
-import io.github.mfvanek.pg.host.PgUrlParser;
+import io.github.mfvanek.pg.connection.host.PgUrlParser;
 
 import java.util.LinkedHashMap;
 import java.util.List;

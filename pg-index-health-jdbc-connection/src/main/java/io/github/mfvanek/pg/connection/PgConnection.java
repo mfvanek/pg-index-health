@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.host.HostAware;
-import io.github.mfvanek.pg.host.PgHost;
+import io.github.mfvanek.pg.connection.host.HostAware;
+import io.github.mfvanek.pg.connection.host.PgHost;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;

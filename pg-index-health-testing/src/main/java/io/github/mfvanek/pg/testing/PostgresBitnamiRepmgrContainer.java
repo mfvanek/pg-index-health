@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.testing;
 
-import io.github.mfvanek.pg.host.PgUrlParser;
+import io.github.mfvanek.pg.connection.host.PgUrlParser;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.utility.DockerImageName;
 

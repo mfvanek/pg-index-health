@@ -83,7 +83,7 @@
         <Bug pattern="NSE_NON_SYMMETRIC_EQUALS"/>
         <Or>
             <Class name="io.github.mfvanek.pg.connection.PgConnectionImpl"/>
-            <Class name="io.github.mfvanek.pg.settings.PgParamImpl"/>
+            <Class name="io.github.mfvanek.pg.model.settings.PgParamImpl"/>
         </Or>
     </Match>
     <Match>
@@ -92,7 +92,7 @@
     </Match>
     <Match>
         <Bug pattern="IMC_IMMATURE_CLASS_BAD_SERIALVERSIONUID"/>
-        <Class name="io.github.mfvanek.pg.exception.PgSqlException"/>
+        <Class name="io.github.mfvanek.pg.connection.exception.PgSqlException"/>
     </Match>
     <Match>
         <Bug pattern="STT_STRING_PARSING_A_FIELD"/>
@@ -100,7 +100,7 @@
     </Match>
     <Match>
         <Bug pattern="LO_SUSPECT_LOG_CLASS"/>
-        <Class name="io.github.mfvanek.pg.common.health.logger.KeyValueFileHealthLogger"/>
+        <Class name="io.github.mfvanek.pg.health.logger.KeyValueFileHealthLogger"/>
     </Match>
     <Match>
         <Bug pattern="FCBL_FIELD_COULD_BE_LOCAL,SEC_SIDE_EFFECT_CONSTRUCTOR"/>

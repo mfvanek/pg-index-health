@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.connection.factory;
 
-import io.github.mfvanek.pg.host.PgUrlValidators;
+import io.github.mfvanek.pg.connection.host.PgUrlValidators;
 
 import java.util.ArrayList;
 import java.util.Collection;

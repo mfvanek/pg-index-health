@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.host.PgHost;
+import io.github.mfvanek.pg.connection.host.PgHost;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;

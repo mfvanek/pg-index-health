@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.statistics.maintenance;
 
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.host.PgHost;
+import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.utils.QueryExecutors;
 
 import java.time.OffsetDateTime;
