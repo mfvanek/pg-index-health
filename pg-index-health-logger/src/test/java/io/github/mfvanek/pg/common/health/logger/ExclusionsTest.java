@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.common.health.logger;
 
-import io.github.mfvanek.pg.units.MemoryUnit;
+import io.github.mfvanek.pg.model.units.MemoryUnit;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 

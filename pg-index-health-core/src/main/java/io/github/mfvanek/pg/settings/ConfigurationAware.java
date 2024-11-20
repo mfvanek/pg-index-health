@@ -10,6 +10,9 @@
 
 package io.github.mfvanek.pg.settings;
 
+import io.github.mfvanek.pg.model.settings.PgParam;
+import io.github.mfvanek.pg.model.settings.ServerSpecification;
+
 import java.util.Set;
 import javax.annotation.Nonnull;
 

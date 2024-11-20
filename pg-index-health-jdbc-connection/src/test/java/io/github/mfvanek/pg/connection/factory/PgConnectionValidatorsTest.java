@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.connection.factory;
 
-import io.github.mfvanek.pg.support.TestUtils;
+import io.github.mfvanek.pg.model.support.TestUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 

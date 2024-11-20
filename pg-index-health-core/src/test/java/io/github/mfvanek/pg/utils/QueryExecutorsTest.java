@@ -12,11 +12,11 @@ package io.github.mfvanek.pg.utils;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.exception.PgSqlException;
-import io.github.mfvanek.pg.host.PgHostImpl;
+import io.github.mfvanek.pg.connection.exception.PgSqlException;
+import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.support.TestUtils;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

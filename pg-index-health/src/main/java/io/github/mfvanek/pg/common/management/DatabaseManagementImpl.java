@@ -12,9 +12,9 @@ package io.github.mfvanek.pg.common.management;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.host.PgHost;
-import io.github.mfvanek.pg.settings.PgParam;
-import io.github.mfvanek.pg.settings.ServerSpecification;
+import io.github.mfvanek.pg.connection.host.PgHost;
+import io.github.mfvanek.pg.model.settings.PgParam;
+import io.github.mfvanek.pg.model.settings.ServerSpecification;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import org.slf4j.Logger;

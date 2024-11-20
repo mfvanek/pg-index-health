@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.connection;
 
-import io.github.mfvanek.pg.host.PgHostImpl;
-import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.connection.host.PgHostImpl;
+import io.github.mfvanek.pg.connection.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

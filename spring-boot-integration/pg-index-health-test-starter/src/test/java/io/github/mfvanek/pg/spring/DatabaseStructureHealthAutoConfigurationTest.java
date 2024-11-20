@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.spring;
 
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.host.PgHostImpl;
+import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -142,7 +142,7 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Unstarted application context org.springframework.boot.test.context.assertj.AssertableApplicationContext[" +
                     "startupFailure=org.springframework.beans.factory.BeanCreationException] failed to start")
-                .hasStackTraceContaining("Factory method 'pgConnection' threw exception; nested exception is io.github.mfvanek.pg.exception.PgSqlException");
+                .hasStackTraceContaining("Factory method 'pgConnection' threw exception; nested exception is io.github.mfvanek.pg.connection.exception.PgSqlException");
         }
     }
 

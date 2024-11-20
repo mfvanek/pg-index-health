@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.utils;
 
+import io.github.mfvanek.pg.connection.support.PostgresVersionReader;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.support.PostgresVersionReader;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

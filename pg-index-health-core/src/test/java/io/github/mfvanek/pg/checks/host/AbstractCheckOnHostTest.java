@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.checks.host;
 
-import io.github.mfvanek.pg.exception.PgSqlException;
+import io.github.mfvanek.pg.connection.exception.PgSqlException;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.support.DatabaseAwareTestBase;

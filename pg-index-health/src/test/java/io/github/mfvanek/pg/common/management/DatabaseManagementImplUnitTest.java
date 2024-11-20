@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.common.management;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.host.PgHostImpl;
+import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
 import org.junit.jupiter.api.Tag;
