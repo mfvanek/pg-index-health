@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.common.health.logger;
+package io.github.mfvanek.pg.health.logger;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;

@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.common.maintenance;
+package io.github.mfvanek.pg.health.logger;
 
 import io.github.mfvanek.pg.checks.cluster.BtreeIndexesOnArrayColumnsCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.ColumnsWithJsonTypeCheckOnCluster;
@@ -35,6 +35,8 @@ import io.github.mfvanek.pg.checks.cluster.TablesWithMissingIndexesCheckOnCluste
 import io.github.mfvanek.pg.checks.cluster.TablesWithoutDescriptionCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.TablesWithoutPrimaryKeyCheckOnCluster;
 import io.github.mfvanek.pg.checks.cluster.UnusedIndexesCheckOnCluster;
+import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
+import io.github.mfvanek.pg.common.maintenance.Diagnostic;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 

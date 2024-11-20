@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.common.health.logger;
+package io.github.mfvanek.pg.health.logger;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

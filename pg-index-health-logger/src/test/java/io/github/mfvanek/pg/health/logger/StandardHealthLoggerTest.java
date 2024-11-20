@@ -8,9 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.common.health.logger;
-
-import io.github.mfvanek.pg.common.maintenance.DatabaseChecks;
+package io.github.mfvanek.pg.health.logger;
 
 import javax.annotation.Nonnull;
 

@@ -100,7 +100,7 @@
     </Match>
     <Match>
         <Bug pattern="LO_SUSPECT_LOG_CLASS"/>
-        <Class name="io.github.mfvanek.pg.common.health.logger.KeyValueFileHealthLogger"/>
+        <Class name="io.github.mfvanek.pg.health.logger.KeyValueFileHealthLogger"/>
     </Match>
     <Match>
         <Bug pattern="FCBL_FIELD_COULD_BE_LOCAL,SEC_SIDE_EFFECT_CONSTRUCTOR"/>
