@@ -10,20 +10,7 @@
         <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2,CT_CONSTRUCTOR_THROW"/>
     </Match>
     <Match>
-        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
-        <Or>
-            <Class name="io.github.mfvanek.pg.core.maintenance.settings.ConfigurationMaintenanceOnHostImpl"/>
-            <Class name="~.*TestBase"/>
-            <Class name="~io.github.mfvanek.pg.support.*"/>
-            <Class name="~.*Test"/>
-        </Or>
-    </Match>
-    <Match>
-        <Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
-        <Or>
-            <Class name="~io.github.mfvanek.pg.support.*"/>
-            <Class name="io.github.mfvanek.pg.core.utils.QueryExecutorsTest"/>
-        </Or>
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE,SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
     </Match>
     <Match>
         <Bug pattern="EC_NULL_ARG,EC_UNRELATED_TYPES,EC_UNRELATED_CLASS_AND_INTERFACE,NM_CONFUSING,NP_NONNULL_PARAM_VIOLATION,DP_DO_INSIDE_DO_PRIVILEGED"/>
