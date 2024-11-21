@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.host.DuplicatedForeignKeysCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.DuplicatedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 
