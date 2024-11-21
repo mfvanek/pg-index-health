@@ -10,14 +10,14 @@
 
 package io.github.mfvanek.pg.health.logger;
 
-import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
 import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFactory;
 import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.factory.PgConnectionFactoryImpl;
-import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseConfigurer;
 import io.github.mfvanek.pg.core.fixtures.support.StatisticsAwareTestBase;
+import io.github.mfvanek.pg.model.context.PgContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.core.statistics;
 
-import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.connection.PgConnection;
+import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 
 import java.util.List;
 import javax.annotation.Nonnull;

@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.spring;
 
+import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithSerialTypesCheckOnHost;
@@ -35,7 +36,6 @@ import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
-import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;

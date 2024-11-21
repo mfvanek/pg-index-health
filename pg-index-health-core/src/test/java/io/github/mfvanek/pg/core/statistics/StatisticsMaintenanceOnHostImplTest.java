@@ -11,10 +11,8 @@
 package io.github.mfvanek.pg.core.statistics;
 
 import io.github.mfvanek.pg.core.fixtures.support.StatisticsAwareTestBase;
-import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
-import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHostImpl;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.core.utils.ClockHolder;
+import io.github.mfvanek.pg.model.context.PgContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

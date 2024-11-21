@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.spring;
 
-import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.connection.PgConnection;
+import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import org.apache.commons.lang3.StringUtils;

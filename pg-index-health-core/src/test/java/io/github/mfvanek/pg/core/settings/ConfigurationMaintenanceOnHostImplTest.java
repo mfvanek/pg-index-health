@@ -12,8 +12,6 @@ package io.github.mfvanek.pg.core.settings;
 
 import io.github.mfvanek.pg.connection.exception.PgSqlException;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHost;
-import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.model.settings.ImportantParam;
 import io.github.mfvanek.pg.model.settings.PgParam;
 import io.github.mfvanek.pg.model.settings.PgParamImpl;

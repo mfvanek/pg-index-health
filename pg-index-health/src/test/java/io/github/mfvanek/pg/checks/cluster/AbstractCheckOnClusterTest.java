@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;

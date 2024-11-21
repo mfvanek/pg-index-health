@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.core.checks.extractors;
 
-import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 

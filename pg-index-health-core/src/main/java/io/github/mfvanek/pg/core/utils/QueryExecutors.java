@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.core.utils;
 
-import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.exception.PgSqlException;
+import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

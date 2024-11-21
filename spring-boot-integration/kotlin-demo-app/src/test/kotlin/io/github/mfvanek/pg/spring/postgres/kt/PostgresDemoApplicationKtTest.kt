@@ -11,9 +11,9 @@
 package io.github.mfvanek.pg.spring.postgres.kt
 
 import com.zaxxer.hikari.HikariDataSource
+import io.github.mfvanek.pg.connection.PgConnection
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost
 import io.github.mfvanek.pg.core.checks.common.Diagnostic
-import io.github.mfvanek.pg.connection.PgConnection
 import io.github.mfvanek.pg.model.dbobject.DbObject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

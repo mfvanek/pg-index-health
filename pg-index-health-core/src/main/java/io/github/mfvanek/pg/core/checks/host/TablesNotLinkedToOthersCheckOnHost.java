@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.core.checks.host;
 
-import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
-import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
 

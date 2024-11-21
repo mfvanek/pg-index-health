@@ -11,9 +11,6 @@
 package io.github.mfvanek.pg.core.statistics;
 
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
-import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHostImpl;
-import io.github.mfvanek.pg.core.statistics.StatisticsQueryExecutor;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

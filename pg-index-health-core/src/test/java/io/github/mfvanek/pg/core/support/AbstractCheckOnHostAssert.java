@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.core.support;
 
+import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
-import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import org.assertj.core.api.AbstractAssert;

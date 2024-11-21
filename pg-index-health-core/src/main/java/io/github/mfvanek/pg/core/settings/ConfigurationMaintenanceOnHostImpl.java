@@ -12,12 +12,12 @@ package io.github.mfvanek.pg.core.settings;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.host.PgHost;
+import io.github.mfvanek.pg.core.utils.QueryExecutors;
 import io.github.mfvanek.pg.model.settings.ImportantParam;
 import io.github.mfvanek.pg.model.settings.ParamNameAware;
 import io.github.mfvanek.pg.model.settings.PgParam;
 import io.github.mfvanek.pg.model.settings.PgParamImpl;
 import io.github.mfvanek.pg.model.settings.ServerSpecification;
-import io.github.mfvanek.pg.core.utils.QueryExecutors;
 
 import java.util.HashSet;
 import java.util.List;

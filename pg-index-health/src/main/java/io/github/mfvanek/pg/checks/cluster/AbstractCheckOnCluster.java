@@ -11,11 +11,11 @@
 package io.github.mfvanek.pg.checks.cluster;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
-import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
-import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.host.PgHost;
+import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import org.slf4j.Logger;
