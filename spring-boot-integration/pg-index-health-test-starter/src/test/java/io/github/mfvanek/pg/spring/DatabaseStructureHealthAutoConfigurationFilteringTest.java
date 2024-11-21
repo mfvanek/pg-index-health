@@ -35,9 +35,9 @@ import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
-import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;
-import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHost;
+import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.health.logger;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
-import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.factory.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFactory;

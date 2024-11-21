@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.health.logger;
 
-import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
 import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFactory;
 import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFactoryImpl;

@@ -12,14 +12,14 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.core.checks.extractors.IndexWithSingleColumnExtractor;
 import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
-import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
-import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
+import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
-import io.github.mfvanek.pg.utils.SqlQueryReader;
+import io.github.mfvanek.pg.core.utils.SqlQueryReader;
 
 import java.sql.ResultSet;
 import java.util.List;

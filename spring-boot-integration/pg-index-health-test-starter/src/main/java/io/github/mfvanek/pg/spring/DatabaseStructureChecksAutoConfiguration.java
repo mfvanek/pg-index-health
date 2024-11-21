@@ -36,10 +36,10 @@ import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.connection.PgConnection;
-import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHost;
-import io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl;
-import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
-import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostImpl;
+import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHost;
+import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHostImpl;
+import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
+import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHostImpl;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

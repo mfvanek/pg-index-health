@@ -10,6 +10,9 @@
 
 package io.github.mfvanek.pg.common.maintenance;
 
+import io.github.mfvanek.pg.core.checks.common.CheckTypeAware;
+import io.github.mfvanek.pg.core.checks.common.DiagnosticAware;
+import io.github.mfvanek.pg.core.checks.common.RawTypeAware;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 

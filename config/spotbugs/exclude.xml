@@ -12,7 +12,7 @@
     <Match>
         <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
         <Or>
-            <Class name="io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl"/>
+            <Class name="io.github.mfvanek.pg.core.maintenance.settings.ConfigurationMaintenanceOnHostImpl"/>
             <Class name="~.*TestBase"/>
             <Class name="~io.github.mfvanek.pg.support.*"/>
             <Class name="~.*Test"/>
@@ -22,7 +22,7 @@
         <Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
         <Or>
             <Class name="~io.github.mfvanek.pg.support.*"/>
-            <Class name="io.github.mfvanek.pg.utils.QueryExecutorsTest"/>
+            <Class name="io.github.mfvanek.pg.core.utils.QueryExecutorsTest"/>
         </Or>
     </Match>
     <Match>
@@ -47,7 +47,7 @@
             <Class name="io.github.mfvanek.pg.model.table.Table"/>
             <Class name="io.github.mfvanek.pg.generator.utils.StringUtils"/>
             <Class name="io.github.mfvanek.pg.generator.GeneratingOptions$Builder"/>
-            <Class name="io.github.mfvanek.pg.common.maintenance.Diagnostic"/>
+            <Class name="io.github.mfvanek.pg.core.checks.common.Diagnostic"/>
         </Or>
     </Match>
     <Match>

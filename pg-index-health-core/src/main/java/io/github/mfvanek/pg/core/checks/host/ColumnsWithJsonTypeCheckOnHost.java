@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.core.checks.extractors.ColumnExtractor;
-import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;

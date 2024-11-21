@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.core.checks.host;
 
-import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
-import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -23,7 +23,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
-import static io.github.mfvanek.pg.support.AbstractCheckOnHostAssert.assertThat;
+import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class SequenceOverflowCheckOnHostTest extends DatabaseAwareTestBase {
 

@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.core.checks.extractors;
 
-import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
+import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
-import io.github.mfvanek.pg.utils.ColumnsInForeignKeyParser;
+import io.github.mfvanek.pg.core.utils.ColumnsInForeignKeyParser;
 
 import java.sql.Array;
 import java.sql.ResultSet;

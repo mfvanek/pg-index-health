@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.core.checks.extractors;
 
-import io.github.mfvanek.pg.common.maintenance.ResultSetExtractor;
+import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.column.SerialType;
