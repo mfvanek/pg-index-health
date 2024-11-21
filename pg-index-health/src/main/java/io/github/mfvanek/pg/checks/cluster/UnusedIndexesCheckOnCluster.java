@@ -10,14 +10,14 @@
 
 package io.github.mfvanek.pg.checks.cluster;
 
-import io.github.mfvanek.pg.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.host.PgHost;
+import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
+import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
+import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHostImpl;
+import io.github.mfvanek.pg.core.utils.ClockHolder;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
-import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
-import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHostImpl;
-import io.github.mfvanek.pg.utils.ClockHolder;
 import io.github.mfvanek.pg.utils.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

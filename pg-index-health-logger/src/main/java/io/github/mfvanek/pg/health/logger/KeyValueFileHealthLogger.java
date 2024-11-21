@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.health.logger;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.factory.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFactory;
-import io.github.mfvanek.pg.utils.ClockHolder;
+import io.github.mfvanek.pg.core.utils.ClockHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

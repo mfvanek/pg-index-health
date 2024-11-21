@@ -11,8 +11,8 @@
 package io.github.mfvanek.pg.generator.utils;
 
 import ch.qos.logback.classic.Level;
-import io.github.mfvanek.pg.connection.support.LogsCaptor;
-import io.github.mfvanek.pg.model.support.TestUtils;
+import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
+import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

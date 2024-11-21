@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.health.logger;
 
-import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.utils.ClockHolder;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.common.management;
 
-import io.github.mfvanek.pg.settings.ConfigurationAware;
-import io.github.mfvanek.pg.statistics.StatisticsAware;
-import io.github.mfvanek.pg.statistics.maintenance.StatisticsMaintenanceOnHost;
+import io.github.mfvanek.pg.core.settings.ConfigurationAware;
+import io.github.mfvanek.pg.core.statistics.StatisticsAware;
+import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;

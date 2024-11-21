@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.health.logger;
 
-import io.github.mfvanek.pg.common.maintenance.Diagnostic;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 

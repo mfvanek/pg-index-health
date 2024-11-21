@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.model.settings.validation;
 
-import io.github.mfvanek.pg.model.support.TestUtils;
+import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
