@@ -11,9 +11,7 @@
 package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.exception.PgSqlException;
-import io.github.mfvanek.pg.core.checks.host.AbstractCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.IndexesWithNullValuesCheckOnHost;
-import io.github.mfvanek.pg.core.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import org.junit.jupiter.params.ParameterizedTest;

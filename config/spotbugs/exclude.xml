@@ -107,7 +107,7 @@
     </Match>
     <Match>
         <Bug pattern="ACEM_ABSTRACT_CLASS_EMPTY_METHODS"/>
-        <Class name="io.github.mfvanek.pg.core.support.statements.AbstractDbStatement"/>
+        <Class name="io.github.mfvanek.pg.core.fixtures.support.statements.AbstractDbStatement"/>
     </Match>
     <Match>
         <Bug pattern="ITC_INHERITANCE_TYPE_CHECKING"/>

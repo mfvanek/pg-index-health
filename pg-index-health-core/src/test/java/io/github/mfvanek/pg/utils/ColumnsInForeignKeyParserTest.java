@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.utils;
 
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.support.TestUtils;
+import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 

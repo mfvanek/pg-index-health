@@ -12,8 +12,7 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
-import io.github.mfvanek.pg.core.support.StatisticsAwareTestBase;
+import io.github.mfvanek.pg.core.fixtures.support.StatisticsAwareTestBase;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipBloatUnderThresholdPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;

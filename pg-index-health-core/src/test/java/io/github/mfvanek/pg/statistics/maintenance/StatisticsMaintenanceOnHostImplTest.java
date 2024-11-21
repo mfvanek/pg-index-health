@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.statistics.maintenance;
 
-import io.github.mfvanek.pg.core.support.StatisticsAwareTestBase;
+import io.github.mfvanek.pg.core.fixtures.support.StatisticsAwareTestBase;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.utils.ClockHolder;
 import org.junit.jupiter.api.Test;

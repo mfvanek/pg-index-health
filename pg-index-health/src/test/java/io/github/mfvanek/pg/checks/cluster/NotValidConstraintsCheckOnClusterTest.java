@@ -12,8 +12,8 @@ package io.github.mfvanek.pg.checks.cluster;
 
 import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.common.maintenance.Diagnostic;
-import io.github.mfvanek.pg.core.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.core.support.ExecuteUtils;
+import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.core.fixtures.support.ExecuteUtils;
 import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.ConstraintType;
 import io.github.mfvanek.pg.model.context.PgContext;
