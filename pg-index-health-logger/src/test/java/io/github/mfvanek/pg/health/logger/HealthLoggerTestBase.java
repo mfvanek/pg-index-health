@@ -16,8 +16,8 @@ import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFacto
 import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.factory.PgConnectionFactoryImpl;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.support.DatabaseConfigurer;
-import io.github.mfvanek.pg.support.StatisticsAwareTestBase;
+import io.github.mfvanek.pg.core.support.DatabaseConfigurer;
+import io.github.mfvanek.pg.core.support.StatisticsAwareTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
