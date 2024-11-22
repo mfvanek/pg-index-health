@@ -10,6 +10,8 @@
 
 package io.github.mfvanek.pg.health.logger;
 
+import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.health.checks.cluster.BtreeIndexesOnArrayColumnsCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithJsonTypeCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithSerialTypesCheckOnCluster;
@@ -36,8 +38,6 @@ import io.github.mfvanek.pg.health.checks.cluster.TablesWithoutDescriptionCheckO
 import io.github.mfvanek.pg.health.checks.cluster.TablesWithoutPrimaryKeyCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.UnusedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
-import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.List;

@@ -10,11 +10,11 @@
 
 package io.github.mfvanek.pg.health.logger;
 
-import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.factory.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFactory;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.constraint.Constraint;
