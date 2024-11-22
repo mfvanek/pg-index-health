@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.health.logger;
 
-import io.github.mfvanek.pg.common.maintenance.DatabaseCheckOnCluster;
+import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.factory.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFactory;
