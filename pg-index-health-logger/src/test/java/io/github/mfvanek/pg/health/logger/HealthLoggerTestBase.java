@@ -52,8 +52,8 @@ abstract class HealthLoggerTestBase extends StatisticsAwareTestBase {
         .withForeignKeyOnNullableColumn();
 
     @Nonnull
-    protected static Predicate<String> ofKey(@Nonnull final LoggingKey key) {
-        return new SimpleLoggingKeyPredicate(key);
+    protected static Predicate<String> ofKey(@Nonnull final Diagnostic diagnostic) {
+        return new SimpleLoggingKeyPredicate(SimpleLoggingKeyAdapter.of(diagnostic));
     }
 
     @Nonnull
@@ -65,7 +65,7 @@ abstract class HealthLoggerTestBase extends StatisticsAwareTestBase {
     protected abstract HealthLogger getHealthLogger();
 
     @Nonnull
-    protected abstract String getExpectedValueForDefaultSchema(@Nonnull LoggingKey key);
+    protected abstract String getExpectedValueForDefaultSchema(@Nonnull Diagnostic diagnostic);
 
     @Nonnull
     protected abstract String[] getExpectedValue();
@@ -82,11 +82,11 @@ abstract class HealthLoggerTestBase extends StatisticsAwareTestBase {
         final List<String> logs = getHealthLogger().logAll(Exclusions.empty());
         assertThat(logs)
             .hasSameSizeAs(Diagnostic.values());
-        for (final LoggingKey key : SimpleLoggingKey.values()) {
+        for (final Diagnostic diagnostic : Diagnostic.values()) {
             assertThat(logs)
-                .filteredOn(ofKey(key))
+                .filteredOn(ofKey(diagnostic))
                 .hasSize(1)
-                .containsExactly(getExpectedValueForDefaultSchema(key));
+                .containsExactly(getExpectedValueForDefaultSchema(diagnostic));
         }
     }
 

@@ -10,6 +10,8 @@
 
 package io.github.mfvanek.pg.health.logger;
 
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+
 import javax.annotation.Nonnull;
 
 class StandardHealthLoggerTest extends HealthLoggerTestBase {
@@ -29,8 +31,8 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
             "foreign_keys_without_index:7",
             "tables_without_primary_key:2",
             "indexes_with_null_values:1",
-            "indexes_with_bloat:17",
-            "tables_with_bloat:2",
+            "bloated_indexes:17",
+            "bloated_tables:2",
             "intersected_indexes:11",
             "unused_indexes:12",
             "tables_with_missing_indexes:0",
@@ -54,7 +56,8 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
 
     @Nonnull
     @Override
-    protected String getExpectedValueForDefaultSchema(@Nonnull final LoggingKey key) {
+    protected String getExpectedValueForDefaultSchema(@Nonnull final Diagnostic diagnostic) {
+        final LoggingKey key = SimpleLoggingKeyAdapter.of(diagnostic);
         return key.getSubKeyName() + ":0";
     }
 }

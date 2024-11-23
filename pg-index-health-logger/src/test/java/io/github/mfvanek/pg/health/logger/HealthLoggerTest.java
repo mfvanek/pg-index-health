@@ -59,8 +59,8 @@ class HealthLoggerTest extends HealthLoggerTestBase {
             "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t7",
             "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_primary_key\t2",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_null_values\t1",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_bloat\t17",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_bloat\t2",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tbloated_indexes\t17",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tbloated_tables\t2",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tintersected_indexes\t11",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tunused_indexes\t12",
             "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t0",
@@ -84,7 +84,8 @@ class HealthLoggerTest extends HealthLoggerTestBase {
 
     @Nonnull
     @Override
-    protected String getExpectedValueForDefaultSchema(@Nonnull final LoggingKey key) {
+    protected String getExpectedValueForDefaultSchema(@Nonnull final Diagnostic diagnostic) {
+        final LoggingKey key = SimpleLoggingKeyAdapter.of(diagnostic);
         return "1999-12-31T23:59:59Z\tdb_indexes_health\t" + key.getSubKeyName() + "\t0";
     }
 
@@ -96,7 +97,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
 
             assertThat(getHealthLogger().logAll(Exclusions.empty(), ctx))
                 .hasSameSizeAs(Diagnostic.values())
-                .filteredOn(ofKey(SimpleLoggingKey.TABLES_WITH_MISSING_INDEXES))
+                .filteredOn(ofKey(Diagnostic.TABLES_WITH_MISSING_INDEXES))
                 .hasSize(1)
                 .containsExactly("1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t1");
         });
