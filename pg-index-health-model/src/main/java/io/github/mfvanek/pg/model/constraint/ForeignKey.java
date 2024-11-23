@@ -27,7 +27,7 @@ import javax.annotation.concurrent.Immutable;
  * @see Constraint
  */
 @Immutable
-public class ForeignKey extends Constraint {
+public final class ForeignKey extends Constraint {
 
     private final List<Column> columnsInConstraint;
 

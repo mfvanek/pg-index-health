@@ -22,7 +22,7 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class IndexWithBloat extends IndexWithSize implements BloatAware {
+public final class IndexWithBloat extends IndexWithSize implements BloatAware {
 
     private final long bloatSizeInBytes;
     private final double bloatPercentage;

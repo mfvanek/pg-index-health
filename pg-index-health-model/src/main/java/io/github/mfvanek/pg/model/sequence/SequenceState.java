@@ -27,7 +27,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.12.0
  */
 @Immutable
-public class SequenceState implements DbObject, SequenceNameAware {
+public final class SequenceState implements DbObject, SequenceNameAware {
 
     private final String sequenceName;
     private final String dataType;
@@ -84,7 +84,7 @@ public class SequenceState implements DbObject, SequenceNameAware {
      */
     @Nonnull
     @Override
-    public final String getName() {
+    public String getName() {
         return getSequenceName();
     }
 
@@ -93,7 +93,7 @@ public class SequenceState implements DbObject, SequenceNameAware {
      */
     @Nonnull
     @Override
-    public final PgObjectType getObjectType() {
+    public PgObjectType getObjectType() {
         return PgObjectType.SEQUENCE;
     }
 
@@ -101,7 +101,7 @@ public class SequenceState implements DbObject, SequenceNameAware {
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -118,7 +118,7 @@ public class SequenceState implements DbObject, SequenceNameAware {
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(sequenceName);
     }
 

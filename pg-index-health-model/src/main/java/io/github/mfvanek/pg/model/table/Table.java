@@ -24,7 +24,7 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class Table implements DbObject, TableSizeAware, Comparable<Table> {
+public final class Table implements DbObject, TableSizeAware, Comparable<Table> {
 
     private final String tableName;
     private final long tableSizeInBytes;
@@ -39,7 +39,7 @@ public class Table implements DbObject, TableSizeAware, Comparable<Table> {
      */
     @Nonnull
     @Override
-    public final String getName() {
+    public String getName() {
         return getTableName();
     }
 
@@ -48,7 +48,7 @@ public class Table implements DbObject, TableSizeAware, Comparable<Table> {
      */
     @Nonnull
     @Override
-    public final PgObjectType getObjectType() {
+    public PgObjectType getObjectType() {
         return PgObjectType.TABLE;
     }
 
@@ -75,7 +75,7 @@ public class Table implements DbObject, TableSizeAware, Comparable<Table> {
      * @return string representation of the internal fields of this class
      */
     @Nonnull
-    final String innerToString() {
+    String innerToString() {
         return "tableName='" + tableName + '\'' +
             ", tableSizeInBytes=" + tableSizeInBytes;
     }
@@ -93,7 +93,7 @@ public class Table implements DbObject, TableSizeAware, Comparable<Table> {
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -110,7 +110,7 @@ public class Table implements DbObject, TableSizeAware, Comparable<Table> {
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(tableName);
     }
 

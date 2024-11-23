@@ -22,7 +22,7 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class TableWithMissingIndex extends AbstractTableAware implements Comparable<TableWithMissingIndex> {
+public final class TableWithMissingIndex extends AbstractTableAware implements Comparable<TableWithMissingIndex> {
 
     /**
      * The number of sequential scans performed on the table.
@@ -79,7 +79,7 @@ public class TableWithMissingIndex extends AbstractTableAware implements Compara
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -96,7 +96,7 @@ public class TableWithMissingIndex extends AbstractTableAware implements Compara
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(table);
     }
 

@@ -14,13 +14,17 @@ import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Locale;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Represents a context for running maintenance queries.
  *
  * @author Ivan Vakhrushev
  */
-public class PgContext {
+@Immutable
+@ThreadSafe
+public final class PgContext {
 
     /**
      * Default bloat percentage threshold.
