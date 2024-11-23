@@ -31,7 +31,7 @@ import javax.annotation.concurrent.Immutable;
  * @see TableNameAware
  */
 @Immutable
-public class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware {
+public final class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware {
 
     private static final Comparator<IndexWithSize> INDEX_WITH_SIZE_COMPARATOR =
         Comparator.comparing(IndexWithSize::getTableName)
@@ -61,7 +61,7 @@ public class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware
      */
     @Nonnull
     @Override
-    public final String getName() {
+    public String getName() {
         return String.join(",", indexesNames);
     }
 
@@ -70,7 +70,7 @@ public class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware
      */
     @Nonnull
     @Override
-    public final PgObjectType getObjectType() {
+    public PgObjectType getObjectType() {
         return PgObjectType.INDEX;
     }
 
@@ -124,7 +124,7 @@ public class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -141,7 +141,7 @@ public class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(indexes);
     }
 

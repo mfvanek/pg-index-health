@@ -23,7 +23,7 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public class TableWithBloat extends AbstractTableAware implements BloatAware, Comparable<TableWithBloat> {
+public final class TableWithBloat extends AbstractTableAware implements BloatAware, Comparable<TableWithBloat> {
 
     private final long bloatSizeInBytes;
     private final double bloatPercentage;
@@ -68,7 +68,7 @@ public class TableWithBloat extends AbstractTableAware implements BloatAware, Co
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -85,7 +85,7 @@ public class TableWithBloat extends AbstractTableAware implements BloatAware, Co
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(table);
     }
 
