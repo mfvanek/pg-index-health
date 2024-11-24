@@ -57,14 +57,14 @@ public abstract class AbstractHealthLogger implements HealthLogger {
 
     private final ConnectionCredentials credentials;
     private final HighAvailabilityPgConnectionFactory connectionFactory;
-    private final Function<HighAvailabilityPgConnection, DatabaseChecks> databaseChecksFactory;
-    private final AtomicReference<DatabaseChecks> databaseChecksHolder = new AtomicReference<>();
+    private final Function<HighAvailabilityPgConnection, DatabaseChecksOnCluster> databaseChecksFactory;
+    private final AtomicReference<DatabaseChecksOnCluster> databaseChecksHolder = new AtomicReference<>();
     private final AtomicReference<PgContext> pgContextHolder = new AtomicReference<>();
 
     @SuppressWarnings("WeakerAccess")
     protected AbstractHealthLogger(@Nonnull final ConnectionCredentials credentials,
                                    @Nonnull final HighAvailabilityPgConnectionFactory connectionFactory,
-                                   @Nonnull final Function<HighAvailabilityPgConnection, DatabaseChecks> databaseChecksFactory) {
+                                   @Nonnull final Function<HighAvailabilityPgConnection, DatabaseChecksOnCluster> databaseChecksFactory) {
         this.credentials = Objects.requireNonNull(credentials, "credentials cannot be null");
         this.connectionFactory = Objects.requireNonNull(connectionFactory, "connectionFactory cannot be null");
         this.databaseChecksFactory = Objects.requireNonNull(databaseChecksFactory, "databaseChecksFactory cannot be null");

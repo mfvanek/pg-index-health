@@ -30,11 +30,11 @@ import javax.annotation.Nonnull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class DatabaseChecksTest extends DatabaseAwareTestBase {
+class DatabaseChecksOnClusterTest extends DatabaseAwareTestBase {
 
     private static final String[] SCHEMAS = {PgContext.DEFAULT_SCHEMA_NAME, "custom"};
 
-    private final DatabaseChecks checks = new DatabaseChecks(getHaPgConnection());
+    private final DatabaseChecksOnCluster checks = new DatabaseChecksOnCluster(getHaPgConnection());
 
     @Test
     void shouldThrowExceptionForInvalidType() {
@@ -62,7 +62,7 @@ class DatabaseChecksTest extends DatabaseAwareTestBase {
     @Test
     @SuppressForbidden
     void shouldThrowExceptionIfCheckNotFound() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        final DatabaseChecks databaseChecks = new DatabaseChecks(getHaPgConnection());
+        final DatabaseChecksOnCluster databaseChecks = new DatabaseChecksOnCluster(getHaPgConnection());
         final Field field = databaseChecks.getClass().getDeclaredField("checks");
         field.setAccessible(true);
         final Object fieldValue = field.get(databaseChecks);

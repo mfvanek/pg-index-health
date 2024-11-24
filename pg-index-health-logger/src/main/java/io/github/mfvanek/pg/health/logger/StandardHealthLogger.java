@@ -26,7 +26,7 @@ public class StandardHealthLogger extends AbstractHealthLogger {
 
     public StandardHealthLogger(@Nonnull final ConnectionCredentials credentials,
                                 @Nonnull final HighAvailabilityPgConnectionFactory connectionFactory,
-                                @Nonnull final Function<HighAvailabilityPgConnection, DatabaseChecks> databaseChecksFactory) {
+                                @Nonnull final Function<HighAvailabilityPgConnection, DatabaseChecksOnCluster> databaseChecksFactory) {
         super(credentials, connectionFactory, databaseChecksFactory);
     }
 
