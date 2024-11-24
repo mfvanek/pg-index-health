@@ -55,8 +55,21 @@ tasks {
     }
 
     javadoc {
-        if (JavaVersion.current().isJava9Compatible) {
-            (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
+        val groupId = project.group
+        val projectVersion = project.version
+        val doclet = options as StandardJavadocDocletOptions
+        doclet.addBooleanOption("html5", true)
+        configurations.findByName("api")?.let { cfg ->
+            cfg.dependencies
+                .filterIsInstance<ProjectDependency>()
+                .map {
+                    val link = "https://javadoc.io/doc/$groupId/${it.name}/$projectVersion/"
+                    val dependencyProject = rootProject.project(it.path)
+                    val javadocTask = dependencyProject.tasks.named<Javadoc>("javadoc")
+                    val javadocOutputDir = javadocTask.get().destinationDir
+                    doclet.linksOffline(link, javadocOutputDir?.absolutePath)
+                    dependsOn(javadocTask)
+                }
         }
     }
 
