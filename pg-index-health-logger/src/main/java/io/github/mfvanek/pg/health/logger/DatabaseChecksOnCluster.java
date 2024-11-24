@@ -50,11 +50,11 @@ import javax.annotation.concurrent.ThreadSafe;
 
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
 @ThreadSafe
-public class DatabaseChecks {
+public final class DatabaseChecksOnCluster {
 
     private final ConcurrentMap<Diagnostic, DatabaseCheckOnCluster<? extends DbObject>> checks = new ConcurrentHashMap<>();
 
-    public DatabaseChecks(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public DatabaseChecksOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         final Stream<DatabaseCheckOnCluster<? extends DbObject>> allChecks = Stream.of(
             new TablesWithBloatCheckOnCluster(haPgConnection),
             new TablesWithMissingIndexesCheckOnCluster(haPgConnection),

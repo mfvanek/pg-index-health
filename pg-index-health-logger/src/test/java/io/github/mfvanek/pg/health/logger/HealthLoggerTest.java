@@ -47,7 +47,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
     @Nonnull
     @Override
     protected HealthLogger getHealthLogger() {
-        return new KeyValueFileHealthLogger(getConnectionCredentials(), getConnectionFactory(), DatabaseChecks::new);
+        return new KeyValueFileHealthLogger(getConnectionCredentials(), getConnectionFactory(), DatabaseChecksOnCluster::new);
     }
 
     @Nonnull

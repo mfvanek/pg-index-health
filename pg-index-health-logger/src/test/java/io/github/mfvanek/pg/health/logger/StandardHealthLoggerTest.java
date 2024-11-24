@@ -19,7 +19,7 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
     @Nonnull
     @Override
     protected HealthLogger getHealthLogger() {
-        return new StandardHealthLogger(getConnectionCredentials(), getConnectionFactory(), DatabaseChecks::new);
+        return new StandardHealthLogger(getConnectionCredentials(), getConnectionFactory(), DatabaseChecksOnCluster::new);
     }
 
     @Nonnull
