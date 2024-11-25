@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.health.logger;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.health.checks.cluster.BtreeIndexesOnArrayColumnsCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithJsonTypeCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithSerialTypesCheckOnCluster;
@@ -41,21 +40,37 @@ import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+/**
+ * A thread-safe class that aggregates various database checks on a PostgreSQL cluster.
+ * <p>
+ * This class initializes a list of database checks to be performed on the cluster,
+ * such as checks for bloat, missing indexes, unused indexes, invalid constraints,
+ * and other structural and metadata issues.
+ * <p>
+ * Each check is represented by an instance of {@link DatabaseCheckOnCluster} or its subclasses,
+ * and they are executed against the database cluster using a shared {@link HighAvailabilityPgConnection}.
+ *
+ * @author Ivan Vakhrushev
+ * @see DatabaseCheckOnCluster
+ */
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
 @ThreadSafe
 public final class DatabaseChecksOnCluster {
 
-    private final ConcurrentMap<Diagnostic, DatabaseCheckOnCluster<? extends DbObject>> checks = new ConcurrentHashMap<>();
+    private final List<DatabaseCheckOnCluster<? extends DbObject>> checks;
 
+    /**
+     * Constructs an instance of {@code DatabaseChecksOnCluster} and initializes
+     * a predefined list of checks to be performed on the PostgreSQL cluster.
+     *
+     * @param haPgConnection a high-availability PostgreSQL connection used for performing the checks
+     * @throws NullPointerException if {@code haPgConnection} is null
+     */
     public DatabaseChecksOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
-        final Stream<DatabaseCheckOnCluster<? extends DbObject>> allChecks = Stream.of(
+        this.checks = List.of(
             new TablesWithBloatCheckOnCluster(haPgConnection),
             new TablesWithMissingIndexesCheckOnCluster(haPgConnection),
             new TablesWithoutPrimaryKeyCheckOnCluster(haPgConnection),
@@ -82,24 +97,15 @@ public final class DatabaseChecksOnCluster {
             new TablesNotLinkedToOthersCheckOnCluster(haPgConnection),
             new ForeignKeysWithUnmatchedColumnTypeCheckOnCluster(haPgConnection)
         );
-        allChecks.forEach(check -> this.checks.putIfAbsent(check.getDiagnostic(), check));
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Returns the list of all configured database checks.
+     *
+     * @return an immutable list of {@link DatabaseCheckOnCluster} instances
+     */
     @Nonnull
-    public <T extends DbObject> DatabaseCheckOnCluster<T> getCheck(@Nonnull final Diagnostic diagnostic, @Nonnull final Class<T> type) {
-        final DatabaseCheckOnCluster<?> check = checks.get(diagnostic);
-        if (check == null) {
-            throw new IllegalStateException(String.format(Locale.ROOT, "Check for diagnostic %s not found", diagnostic));
-        }
-        if (!type.isAssignableFrom(check.getType())) {
-            throw new IllegalArgumentException("Illegal type: " + type);
-        }
-        return (DatabaseCheckOnCluster<T>) check;
-    }
-
-    @Nonnull
-    public List<DatabaseCheckOnCluster<? extends DbObject>> getAllChecks() {
-        return List.copyOf(checks.values());
+    public List<DatabaseCheckOnCluster<? extends DbObject>> getAll() {
+        return checks;
     }
 }

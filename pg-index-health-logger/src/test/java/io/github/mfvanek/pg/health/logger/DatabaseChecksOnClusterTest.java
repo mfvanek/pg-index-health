@@ -10,85 +10,61 @@
 
 package io.github.mfvanek.pg.health.logger;
 
-import de.thetaphi.forbiddenapis.SuppressForbidden;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
-import io.github.mfvanek.pg.model.index.Index;
-import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import javax.annotation.Nonnull;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class DatabaseChecksOnClusterTest extends DatabaseAwareTestBase {
 
     private static final String[] SCHEMAS = {PgContext.DEFAULT_SCHEMA_NAME, "custom"};
 
-    private final DatabaseChecksOnCluster checks = new DatabaseChecksOnCluster(getHaPgConnection());
+    private final DatabaseChecksOnCluster checksOnCluster = new DatabaseChecksOnCluster(getHaPgConnection());
 
     @Test
-    void shouldThrowExceptionForInvalidType() {
-        assertThatThrownBy(() -> checks.getCheck(Diagnostic.INVALID_INDEXES, Table.class))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("Illegal type: class io.github.mfvanek.pg.model.table.Table");
-    }
-
-    @ParameterizedTest
-    @EnumSource(Diagnostic.class)
     @DisplayName("For each diagnostic should exist check")
-    void completenessTest(@Nonnull final Diagnostic diagnostic) {
-        assertThat(checks.getCheck(diagnostic, DbObject.class))
-            .isNotNull()
-            .satisfies(c -> assertThat(c.getDiagnostic())
-                .isEqualTo(diagnostic));
-    }
-
-    @Test
-    void getAllChecksShouldWork() {
-        assertThat(checks.getAllChecks())
+    void completenessTest() {
+        final List<DatabaseCheckOnCluster<? extends DbObject>> checks = checksOnCluster.getAll();
+        assertThat(checks)
+            .hasSameSizeAs(Diagnostic.values());
+        final Set<Diagnostic> diagnostics = checks.stream()
+            .map(DatabaseCheckOnCluster::getDiagnostic)
+            .collect(Collectors.toUnmodifiableSet());
+        assertThat(diagnostics)
             .hasSameSizeAs(Diagnostic.values());
     }
 
     @Test
-    @SuppressForbidden
-    void shouldThrowExceptionIfCheckNotFound() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        final DatabaseChecksOnCluster databaseChecks = new DatabaseChecksOnCluster(getHaPgConnection());
-        final Field field = databaseChecks.getClass().getDeclaredField("checks");
-        field.setAccessible(true);
-        final Object fieldValue = field.get(databaseChecks);
-        final Method clearMethod = fieldValue.getClass().getDeclaredMethod("clear");
-        clearMethod.invoke(fieldValue);
-
-        assertThatThrownBy(() -> databaseChecks.getCheck(Diagnostic.INVALID_INDEXES, Index.class))
-            .isInstanceOf(IllegalStateException.class)
-            .hasMessage("Check for diagnostic INVALID_INDEXES not found");
-    }
-
-    @ParameterizedTest
-    @EnumSource(Diagnostic.class)
     @DisplayName("Each check should return nothing on empty database")
-    void onEmptyDatabaseCheckShouldReturnNothing(@Nonnull final Diagnostic diagnostic) {
-        assertThat(checks.getCheck(diagnostic, DbObject.class).check())
-            .isEmpty();
+    void onEmptyDatabaseEachCheckShouldReturnNothing() {
+        for (final DatabaseCheckOnCluster<? extends DbObject> check : checksOnCluster.getAll()) {
+            assertThat(check.check())
+                .isEmpty();
+        }
     }
 
-    @ParameterizedTest
-    @EnumSource(value = Diagnostic.class, mode = EnumSource.Mode.EXCLUDE, names = {"BLOATED_INDEXES", "BLOATED_TABLES", "FOREIGN_KEYS_WITHOUT_INDEX"})
-    void onDatabaseWithoutThemCheckShouldReturnNothing(@Nonnull final Diagnostic diagnostic) {
+    @Test
+    void onDatabaseWithoutThemCheckShouldReturnNothing() {
+        final Set<Diagnostic> exclusions = EnumSet.of(Diagnostic.BLOATED_INDEXES, Diagnostic.BLOATED_TABLES, Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX);
         for (final String schemaName : SCHEMAS) {
-            executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(), ctx ->
-                assertThat(checks.getCheck(diagnostic, DbObject.class).check(ctx))
-                    .isEmpty());
+            for (final DatabaseCheckOnCluster<? extends DbObject> check : checksOnCluster.getAll()) {
+                if (!exclusions.contains(check.getDiagnostic())) {
+                    executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(),
+                        ctx ->
+                            assertThat(check.check(ctx))
+                                .isEmpty());
+                }
+            }
         }
     }
 }
