@@ -21,67 +21,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ExclusionsTest {
 
     @Test
-    void parseTest() {
-        final Exclusions e = Exclusions.builder()
-            .withDuplicatedIndexesExclusions("i1,i2,, i3, , i4 ")
-            .withIntersectedIndexesExclusions(", ,   ,, i5, i6")
-            .withUnusedIndexesExclusions(",i7,i8,,i9")
-            .withTablesWithMissingIndexesExclusions(",  , , s.t1, s.t2")
-            .withTablesWithoutPrimaryKeyExclusions("  , , s.t3, s.t4, s.t5, t6")
-            .withIndexesWithNullValuesExclusions(",,s.i1,  , , ,,,")
-            .withBtreeIndexesOnArrayColumnsExclusions(",s.i2, , ,s.i3")
-            .build();
-        assertThat(e).isNotNull();
-
-        assertThat(e.getDuplicatedIndexesExclusions())
-            .isNotNull()
-            .hasSize(4)
-            .containsExactlyInAnyOrder("i1", "i2", "i3", "i4");
-
-        assertThat(e.getIntersectedIndexesExclusions())
-            .isNotNull()
-            .hasSize(2)
-            .containsExactlyInAnyOrder("i5", "i6");
-
-        assertThat(e.getUnusedIndexesExclusions())
-            .isNotNull()
-            .hasSize(3)
-            .containsExactlyInAnyOrder("i7", "i8", "i9");
-
-        assertThat(e.getTablesWithMissingIndexesExclusions())
-            .isNotNull()
-            .hasSize(2)
-            .containsExactlyInAnyOrder("s.t1", "s.t2");
-
-        assertThat(e.getTablesWithoutPrimaryKeyExclusions())
-            .isNotNull()
-            .hasSize(4)
-            .containsExactlyInAnyOrder("s.t3", "s.t4", "s.t5", "t6");
-
-        assertThat(e.getIndexesWithNullValuesExclusions())
-            .isNotNull()
-            .hasSize(1)
-            .containsExactlyInAnyOrder("s.i1");
-
-        assertThat(e.getBtreeIndexesOnArrayColumnsExclusions())
-            .isNotNull()
-            .hasSize(2)
-            .containsExactlyInAnyOrder("s.i2", "s.i3");
-    }
-
-    @Test
     void sizeInBytesTest() {
         final Exclusions e = Exclusions.builder()
             .withIndexSizeThreshold(11L)
             .withTableSizeThreshold(22L)
-            .withIndexBloatSizeThreshold(33L)
-            .withTableBloatSizeThreshold(44L)
+            .withBloatSizeThreshold(33L)
             .build();
         assertThat(e).isNotNull();
         assertThat(e.getIndexSizeThresholdInBytes()).isEqualTo(11L);
         assertThat(e.getTableSizeThresholdInBytes()).isEqualTo(22L);
-        assertThat(e.getIndexBloatSizeThresholdInBytes()).isEqualTo(33L);
-        assertThat(e.getTableBloatSizeThresholdInBytes()).isEqualTo(44L);
+        assertThat(e.getBloatSizeThresholdInBytes()).isEqualTo(33L);
     }
 
     @Test
@@ -89,14 +38,12 @@ class ExclusionsTest {
         final Exclusions e = Exclusions.builder()
             .withTableSizeThreshold(10, MemoryUnit.MB)
             .withIndexSizeThreshold(2, MemoryUnit.GB)
-            .withIndexBloatSizeThreshold(4, MemoryUnit.KB)
-            .withTableBloatSizeThreshold(8, MemoryUnit.KB)
+            .withBloatSizeThreshold(4, MemoryUnit.KB)
             .build();
         assertThat(e).isNotNull();
         assertThat(e.getIndexSizeThresholdInBytes()).isEqualTo(2_147_483_648L);
         assertThat(e.getTableSizeThresholdInBytes()).isEqualTo(10_485_760L);
-        assertThat(e.getIndexBloatSizeThresholdInBytes()).isEqualTo(4_096L);
-        assertThat(e.getTableBloatSizeThresholdInBytes()).isEqualTo(8_192L);
+        assertThat(e.getBloatSizeThresholdInBytes()).isEqualTo(4_096L);
     }
 
     @Test
@@ -104,36 +51,22 @@ class ExclusionsTest {
         final Exclusions e = Exclusions.empty();
         assertThat(e).isNotNull();
 
-        assertThat(e.getDuplicatedIndexesExclusions())
-            .isNotNull()
+        assertThat(e.getIndexNameExclusions())
+            .isUnmodifiable()
             .isEmpty();
 
-        assertThat(e.getIntersectedIndexesExclusions())
-            .isNotNull()
+        assertThat(e.getTableNameExclusions())
+            .isUnmodifiable()
             .isEmpty();
 
-        assertThat(e.getUnusedIndexesExclusions())
-            .isNotNull()
-            .isEmpty();
-
-        assertThat(e.getTablesWithMissingIndexesExclusions())
-            .isNotNull()
-            .isEmpty();
-
-        assertThat(e.getTablesWithoutPrimaryKeyExclusions())
-            .isNotNull()
-            .isEmpty();
-
-        assertThat(e.getIndexesWithNullValuesExclusions())
-            .isNotNull()
+        assertThat(e.getSequenceNameExclusions())
+            .isUnmodifiable()
             .isEmpty();
 
         assertThat(e.getIndexSizeThresholdInBytes()).isZero();
         assertThat(e.getTableSizeThresholdInBytes()).isZero();
-        assertThat(e.getIndexBloatSizeThresholdInBytes()).isZero();
-        assertThat(e.getIndexBloatPercentageThreshold()).isZero();
-        assertThat(e.getTableBloatSizeThresholdInBytes()).isZero();
-        assertThat(e.getTableBloatPercentageThreshold()).isZero();
+        assertThat(e.getBloatSizeThresholdInBytes()).isZero();
+        assertThat(e.getBloatPercentageThreshold()).isZero();
     }
 
     @Test
@@ -152,14 +85,12 @@ class ExclusionsTest {
         final Exclusions e = Exclusions.builder()
             .withIndexSizeThreshold(0L)
             .withTableSizeThreshold(0L)
-            .withIndexBloatSizeThreshold(0L)
-            .withTableBloatSizeThreshold(0L)
+            .withBloatSizeThreshold(0L)
             .build();
         assertThat(e).isNotNull();
         assertThat(e.getIndexSizeThresholdInBytes()).isZero();
         assertThat(e.getTableSizeThresholdInBytes()).isZero();
-        assertThat(e.getIndexBloatSizeThresholdInBytes()).isZero();
-        assertThat(e.getTableBloatSizeThresholdInBytes()).isZero();
+        assertThat(e.getBloatSizeThresholdInBytes()).isZero();
     }
 
     @Test
@@ -167,19 +98,17 @@ class ExclusionsTest {
         final Exclusions e = Exclusions.builder()
             .withIndexSizeThreshold(0, MemoryUnit.KB)
             .withTableSizeThreshold(0, MemoryUnit.KB)
-            .withIndexBloatSizeThreshold(0, MemoryUnit.KB)
-            .withTableBloatSizeThreshold(0, MemoryUnit.GB)
+            .withBloatSizeThreshold(0, MemoryUnit.KB)
             .build();
         assertThat(e).isNotNull();
         assertThat(e.getIndexSizeThresholdInBytes()).isZero();
         assertThat(e.getTableSizeThresholdInBytes()).isZero();
-        assertThat(e.getIndexBloatSizeThresholdInBytes()).isZero();
-        assertThat(e.getTableBloatSizeThresholdInBytes()).isZero();
+        assertThat(e.getBloatSizeThresholdInBytes()).isZero();
     }
 
     @Test
     void builderWithInvalidSize() {
-        final ExclusionsBuilder builder = Exclusions.builder();
+        final Exclusions.Builder builder = Exclusions.builder();
         assertThatThrownBy(() -> builder.withIndexSizeThreshold(-1L))
             .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> builder.withTableSizeThreshold(-1L))
@@ -199,28 +128,24 @@ class ExclusionsTest {
     @Test
     void zeroPercentageThreshold() {
         final Exclusions e = Exclusions.builder()
-            .withIndexBloatPercentageThreshold(0)
-            .withTableBloatPercentageThreshold(0)
+            .withBloatPercentageThreshold(0)
             .build();
         assertThat(e).isNotNull();
-        assertThat(e.getIndexBloatPercentageThreshold()).isZero();
-        assertThat(e.getTableBloatPercentageThreshold()).isZero();
+        assertThat(e.getBloatPercentageThreshold()).isZero();
     }
 
     @Test
     void maxPercentageThreshold() {
         final Exclusions e = Exclusions.builder()
-            .withIndexBloatPercentageThreshold(100)
-            .withTableBloatPercentageThreshold(100)
+            .withBloatPercentageThreshold(100)
             .build();
         assertThat(e).isNotNull();
-        assertThat(e.getIndexBloatPercentageThreshold()).isEqualTo(100);
-        assertThat(e.getTableBloatPercentageThreshold()).isEqualTo(100);
+        assertThat(e.getBloatPercentageThreshold()).isEqualTo(100);
     }
 
     @Test
     void invalidPercentageThreshold() {
-        final ExclusionsBuilder builder = Exclusions.builder();
+        final Exclusions.Builder builder = Exclusions.builder();
         assertThatThrownBy(() -> builder.withIndexBloatPercentageThreshold(-1))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("indexBloatPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");

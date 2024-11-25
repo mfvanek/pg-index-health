@@ -10,10 +10,11 @@
 
 package io.github.mfvanek.pg.health.logger;
 
+import io.github.mfvanek.pg.model.units.MemoryUnit;
 import io.github.mfvanek.pg.model.validation.Validators;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -25,145 +26,164 @@ import javax.annotation.Nonnull;
  * @see HealthLogger
  * @see AbstractHealthLogger
  */
-public class Exclusions {
+public final class Exclusions {
 
-    private final Set<String> duplicatedIndexesExclusions;
-    private final Set<String> intersectedIndexesExclusions;
-    private final Set<String> unusedIndexesExclusions;
-    private final Set<String> tablesWithMissingIndexesExclusions;
-    private final Set<String> tablesWithoutPrimaryKeyExclusions;
-    private final Set<String> indexesWithNullValuesExclusions;
-    private final Set<String> btreeIndexesOnArrayColumnsExclusions;
-    private final long indexSizeThresholdInBytes;
-    private final long tableSizeThresholdInBytes;
-    private final long indexBloatSizeThresholdInBytes;
-    private final double indexBloatPercentageThreshold;
-    private final long tableBloatSizeThresholdInBytes;
-    private final double tableBloatPercentageThreshold;
+    private final Set<String> indexNameExclusions;
+    private final Set<String> tableNameExclusions;
+    private final Set<String> sequenceNameExclusions;
+    private long indexSizeThresholdInBytes;
+    private long tableSizeThresholdInBytes;
+    private long bloatSizeThresholdInBytes;
+    private double bloatPercentageThreshold;
 
-    @SuppressWarnings("PMD.ExcessiveParameterList")
-    Exclusions(@Nonnull final String duplicatedIndexesExclusions,
-               @Nonnull final String intersectedIndexesExclusions,
-               @Nonnull final String unusedIndexesExclusions,
-               @Nonnull final String tablesWithMissingIndexesExclusions,
-               @Nonnull final String tablesWithoutPrimaryKeyExclusions,
-               @Nonnull final String indexesWithNullValuesExclusions,
-               @Nonnull final String btreeIndexesOnArrayColumnsExclusions,
-               final long indexSizeThresholdInBytes,
-               final long tableSizeThresholdInBytes,
-               final long indexBloatSizeThresholdInBytes,
-               final double indexBloatPercentageThreshold,
-               final long tableBloatSizeThresholdInBytes,
-               final double tableBloatPercentageThreshold) {
-        this.duplicatedIndexesExclusions = prepareExclusions(duplicatedIndexesExclusions);
-        this.intersectedIndexesExclusions = prepareExclusions(intersectedIndexesExclusions);
-        this.unusedIndexesExclusions = prepareExclusions(unusedIndexesExclusions);
-        this.tablesWithMissingIndexesExclusions = prepareExclusions(tablesWithMissingIndexesExclusions);
-        this.tablesWithoutPrimaryKeyExclusions = prepareExclusions(tablesWithoutPrimaryKeyExclusions);
-        this.indexesWithNullValuesExclusions = prepareExclusions(indexesWithNullValuesExclusions);
-        this.btreeIndexesOnArrayColumnsExclusions = prepareExclusions(btreeIndexesOnArrayColumnsExclusions);
-        this.indexSizeThresholdInBytes = Validators.sizeNotNegative(indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
-        this.tableSizeThresholdInBytes = Validators.sizeNotNegative(tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
-        this.indexBloatSizeThresholdInBytes = Validators.sizeNotNegative(indexBloatSizeThresholdInBytes, "indexBloatSizeThresholdInBytes");
-        this.indexBloatPercentageThreshold = Validators.validPercent(indexBloatPercentageThreshold, "indexBloatPercentageThreshold");
-        this.tableBloatSizeThresholdInBytes = Validators.sizeNotNegative(tableBloatSizeThresholdInBytes, "tableBloatSizeThresholdInBytes");
-        this.tableBloatPercentageThreshold = Validators.validPercent(tableBloatPercentageThreshold, "tableBloatPercentageThreshold");
+    private Exclusions() {
+        this.indexNameExclusions = new HashSet<>();
+        this.tableNameExclusions = new HashSet<>();
+        this.sequenceNameExclusions = new HashSet<>();
     }
 
-    private static Set<String> prepareExclusions(@Nonnull final String rawExclusions) {
-        Objects.requireNonNull(rawExclusions, "rawExclusions cannot be null");
-        final Set<String> exclusions = new HashSet<>();
-        if (!rawExclusions.isBlank()) {
-            final String[] tables = rawExclusions.toLowerCase(Locale.ROOT).split(",");
-            for (final String tableName : tables) {
-                if (!tableName.isBlank()) {
-                    exclusions.add(tableName.trim());
-                }
-            }
-        }
-        return exclusions;
+    public double getBloatPercentageThreshold() {
+        return bloatPercentageThreshold;
     }
 
-    @Nonnull
-    Set<String> getDuplicatedIndexesExclusions() {
-        return duplicatedIndexesExclusions;
+    public long getBloatSizeThresholdInBytes() {
+        return bloatSizeThresholdInBytes;
     }
 
-    @Nonnull
-    Set<String> getIntersectedIndexesExclusions() {
-        return intersectedIndexesExclusions;
-    }
-
-    @Nonnull
-    Set<String> getUnusedIndexesExclusions() {
-        return unusedIndexesExclusions;
-    }
-
-    @Nonnull
-    Set<String> getTablesWithMissingIndexesExclusions() {
-        return tablesWithMissingIndexesExclusions;
-    }
-
-    @Nonnull
-    Set<String> getTablesWithoutPrimaryKeyExclusions() {
-        return tablesWithoutPrimaryKeyExclusions;
-    }
-
-    @Nonnull
-    Set<String> getIndexesWithNullValuesExclusions() {
-        return indexesWithNullValuesExclusions;
-    }
-
-    @Nonnull
-    Set<String> getBtreeIndexesOnArrayColumnsExclusions() {
-        return btreeIndexesOnArrayColumnsExclusions;
-    }
-
-    long getIndexSizeThresholdInBytes() {
-        return indexSizeThresholdInBytes;
-    }
-
-    long getTableSizeThresholdInBytes() {
+    public long getTableSizeThresholdInBytes() {
         return tableSizeThresholdInBytes;
     }
 
-    long getIndexBloatSizeThresholdInBytes() {
-        return indexBloatSizeThresholdInBytes;
+    public long getIndexSizeThresholdInBytes() {
+        return indexSizeThresholdInBytes;
     }
 
-    double getIndexBloatPercentageThreshold() {
-        return indexBloatPercentageThreshold;
-    }
-
-    long getTableBloatSizeThresholdInBytes() {
-        return tableBloatSizeThresholdInBytes;
-    }
-
-    double getTableBloatPercentageThreshold() {
-        return tableBloatPercentageThreshold;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Nonnull
+    public Collection<String> getTableNameExclusions() {
+        return Set.copyOf(tableNameExclusions);
+    }
+
+    @Nonnull
+    public Collection<String> getIndexNameExclusions() {
+        return Set.copyOf(indexNameExclusions);
+    }
+
+    @Nonnull
+    public Collection<String> getSequenceNameExclusions() {
+        return Set.copyOf(sequenceNameExclusions);
+    }
+
     @Override
     public String toString() {
         return Exclusions.class.getSimpleName() + '{' +
-            "duplicatedIndexesExclusions=" + duplicatedIndexesExclusions +
-            ", intersectedIndexesExclusions=" + intersectedIndexesExclusions +
-            ", unusedIndexesExclusions=" + unusedIndexesExclusions +
-            ", tablesWithMissingIndexesExclusions=" + tablesWithMissingIndexesExclusions +
-            ", tablesWithoutPrimaryKeyExclusions=" + tablesWithoutPrimaryKeyExclusions +
-            ", indexesWithNullValuesExclusions=" + indexesWithNullValuesExclusions +
-            ", btreeIndexesOnArrayColumnsExclusions=" + btreeIndexesOnArrayColumnsExclusions +
+            "indexNameExclusions=" + indexNameExclusions +
+            ", tableNameExclusions=" + tableNameExclusions +
+            ", sequenceNameExclusions=" + sequenceNameExclusions +
             ", indexSizeThresholdInBytes=" + indexSizeThresholdInBytes +
             ", tableSizeThresholdInBytes=" + tableSizeThresholdInBytes +
-            ", indexBloatSizeThresholdInBytes=" + indexBloatSizeThresholdInBytes +
-            ", indexBloatPercentageThreshold=" + indexBloatPercentageThreshold +
-            ", tableBloatSizeThresholdInBytes=" + tableBloatSizeThresholdInBytes +
-            ", tableBloatPercentageThreshold=" + tableBloatPercentageThreshold +
+            ", bloatSizeThresholdInBytes=" + bloatSizeThresholdInBytes +
+            ", bloatPercentageThreshold=" + bloatPercentageThreshold +
             '}';
+    }
+
+    public static final class Builder {
+
+        private static final String THRESHOLD_UNITS_COUNT = "thresholdUnitsCount";
+
+        private Exclusions template = new Exclusions();
+
+        private Builder() {}
+
+        @Nonnull
+        public Builder withIndexSizeThreshold(final long indexSizeThresholdInBytes) {
+            this.template.indexSizeThresholdInBytes = Validators.sizeNotNegative(indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
+            return this;
+        }
+
+        @Nonnull
+        public Builder withIndexSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
+            final long indexSizeInBytes = unit.convertToBytes(
+                Validators.argumentNotNegative(thresholdUnitsCount, THRESHOLD_UNITS_COUNT));
+            return withIndexSizeThreshold(indexSizeInBytes);
+        }
+
+        @Nonnull
+        public Builder withTableSizeThreshold(final long tableSizeThresholdInBytes) {
+            this.template.tableSizeThresholdInBytes = Validators.sizeNotNegative(tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
+            return this;
+        }
+
+        @Nonnull
+        public Builder withTableSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
+            final long tableSizeInBytes = unit.convertToBytes(
+                Validators.argumentNotNegative(thresholdUnitsCount, THRESHOLD_UNITS_COUNT));
+            return withTableSizeThreshold(tableSizeInBytes);
+        }
+
+        @Nonnull
+        public Builder withBloatSizeThreshold(final long bloatSizeThresholdInBytes) {
+            this.template.bloatSizeThresholdInBytes = Validators.sizeNotNegative(bloatSizeThresholdInBytes, "bloatSizeThresholdInBytes");
+            return this;
+        }
+
+        @Nonnull
+        public Builder withBloatSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
+            final long indexBloatSizeInBytes = unit.convertToBytes(
+                Validators.argumentNotNegative(thresholdUnitsCount, THRESHOLD_UNITS_COUNT));
+            return withBloatSizeThreshold(indexBloatSizeInBytes);
+        }
+
+        @Nonnull
+        public Builder withBloatPercentageThreshold(final double bloatPercentageThreshold) {
+            this.template.bloatPercentageThreshold = Validators.validPercent(bloatPercentageThreshold, "bloatPercentageThreshold");
+            return this;
+        }
+
+        @Nonnull
+        public Builder withIndexes(@Nonnull final Collection<String> indexNameExclusions) {
+            this.template.indexNameExclusions.addAll(Objects.requireNonNull(indexNameExclusions, "indexNameExclusions"));
+            return this;
+        }
+
+        @Nonnull
+        public Builder withIndex(@Nonnull final String indexNameExclusion) {
+            this.template.indexNameExclusions.add(Validators.notBlank(indexNameExclusion, "indexNameExclusion"));
+            return this;
+        }
+
+        @Nonnull
+        public Builder withTables(@Nonnull final Collection<String> tableNameExclusions) {
+            this.template.tableNameExclusions.addAll(Objects.requireNonNull(tableNameExclusions, "tableNameExclusions"));
+            return this;
+        }
+
+        @Nonnull
+        public Builder withTable(@Nonnull final String tableNameExclusion) {
+            this.template.tableNameExclusions.add(Validators.notBlank(tableNameExclusion, "tableNameExclusion"));
+            return this;
+        }
+
+        @Nonnull
+        public Builder withSequences(@Nonnull final Collection<String> sequenceNameExclusions) {
+            this.template.sequenceNameExclusions.addAll(Objects.requireNonNull(sequenceNameExclusions, "sequenceNameExclusions"));
+            return this;
+        }
+
+        @Nonnull
+        public Builder withSequence(@Nonnull final String sequenceNameExclusion) {
+            this.template.sequenceNameExclusions.add(Validators.notBlank(sequenceNameExclusion, "sequenceNameExclusion"));
+            return this;
+        }
+
+        @Nonnull
+        public Exclusions build() {
+            if (template == null) {
+                throw new IllegalStateException("Method build() cannot be called twice");
+            }
+            final Exclusions exclusions = template;
+            template = null;
+            return exclusions;
+        }
     }
 
     /**
@@ -171,6 +191,7 @@ public class Exclusions {
      *
      * @return empty {@code Exclusions} object
      */
+    @Nonnull
     public static Exclusions empty() {
         return builder().build();
     }
@@ -180,7 +201,8 @@ public class Exclusions {
      *
      * @return {@code Builder}
      */
-    public static ExclusionsBuilder builder() {
-        return new ExclusionsBuilder();
+    @Nonnull
+    public static Exclusions.Builder builder() {
+        return new Builder();
     }
 }
