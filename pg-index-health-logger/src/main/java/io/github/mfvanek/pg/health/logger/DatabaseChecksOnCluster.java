@@ -43,12 +43,32 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+/**
+ * A thread-safe class that aggregates various database checks on a PostgreSQL cluster.
+ * <p>
+ * This class initializes a list of database checks to be performed on the cluster,
+ * such as checks for bloat, missing indexes, unused indexes, invalid constraints,
+ * and other structural and metadata issues.
+ * <p>
+ * Each check is represented by an instance of {@link DatabaseCheckOnCluster} or its subclasses,
+ * and they are executed against the database cluster using a shared {@link HighAvailabilityPgConnection}.
+ *
+ * @author Ivan Vakhrushev
+ * @see DatabaseCheckOnCluster
+ */
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
 @ThreadSafe
 public final class DatabaseChecksOnCluster {
 
     private final List<DatabaseCheckOnCluster<? extends DbObject>> checks;
 
+    /**
+     * Constructs an instance of {@code DatabaseChecksOnCluster} and initializes
+     * a predefined list of checks to be performed on the PostgreSQL cluster.
+     *
+     * @param haPgConnection a high-availability PostgreSQL connection used for performing the checks
+     * @throws NullPointerException if {@code haPgConnection} is null
+     */
     public DatabaseChecksOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         this.checks = List.of(
             new TablesWithBloatCheckOnCluster(haPgConnection),
@@ -79,6 +99,11 @@ public final class DatabaseChecksOnCluster {
         );
     }
 
+    /**
+     * Returns the list of all configured database checks.
+     *
+     * @return an immutable list of {@link DatabaseCheckOnCluster} instances
+     */
     @Nonnull
     public List<DatabaseCheckOnCluster<? extends DbObject>> getAll() {
         return checks;

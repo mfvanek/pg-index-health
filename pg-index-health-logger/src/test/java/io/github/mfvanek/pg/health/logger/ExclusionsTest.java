@@ -14,11 +14,31 @@ import io.github.mfvanek.pg.model.units.MemoryUnit;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("fast")
 class ExclusionsTest {
+
+    @Test
+    void cannotBuildTwice() {
+        final Exclusions.Builder builder = Exclusions.builder();
+        assertThatCode(builder::build)
+            .as("First call")
+            .doesNotThrowAnyException();
+        assertThatThrownBy(builder::build)
+            .as("Second call")
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("Exclusions object has already been built");
+
+        assertThatThrownBy(() -> builder.withSequence("s1"))
+            .as("Second call")
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("Exclusions object has already been built");
+    }
 
     @Test
     void sizeInBytesTest() {
@@ -73,11 +93,8 @@ class ExclusionsTest {
     void toStringTest() {
         final Exclusions e = Exclusions.empty();
         assertThat(e)
-            .hasToString("Exclusions{duplicatedIndexesExclusions=[], " + "intersectedIndexesExclusions=[], unusedIndexesExclusions=[], " +
-                "tablesWithMissingIndexesExclusions=[], tablesWithoutPrimaryKeyExclusions=[], " +
-                "indexesWithNullValuesExclusions=[], btreeIndexesOnArrayColumnsExclusions=[], " +
-                "indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, " +
-                "indexBloatSizeThresholdInBytes=0, indexBloatPercentageThreshold=0.0, " + "tableBloatSizeThresholdInBytes=0, tableBloatPercentageThreshold=0.0}");
+            .hasToString("Exclusions{indexNameExclusions=[], tableNameExclusions=[], sequenceNameExclusions=[], " +
+                "indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, bloatSizeThresholdInBytes=0, bloatPercentageThreshold=0.0}");
     }
 
     @Test
@@ -113,15 +130,13 @@ class ExclusionsTest {
             .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> builder.withTableSizeThreshold(-1L))
             .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> builder.withIndexBloatSizeThreshold(-1L))
+        assertThatThrownBy(() -> builder.withBloatSizeThreshold(-1L))
             .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> builder.withIndexSizeThreshold(-1, MemoryUnit.KB))
             .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> builder.withTableSizeThreshold(-1, MemoryUnit.KB))
             .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> builder.withIndexBloatSizeThreshold(-1, MemoryUnit.KB))
-            .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> builder.withTableBloatSizeThreshold(-1, MemoryUnit.MB))
+        assertThatThrownBy(() -> builder.withBloatSizeThreshold(-1, MemoryUnit.KB))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -146,17 +161,74 @@ class ExclusionsTest {
     @Test
     void invalidPercentageThreshold() {
         final Exclusions.Builder builder = Exclusions.builder();
-        assertThatThrownBy(() -> builder.withIndexBloatPercentageThreshold(-1))
+        assertThatThrownBy(() -> builder.withBloatPercentageThreshold(-1))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("indexBloatPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
-        assertThatThrownBy(() -> builder.withIndexBloatPercentageThreshold(101))
+            .hasMessage("bloatPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
+        assertThatThrownBy(() -> builder.withBloatPercentageThreshold(101))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("indexBloatPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
-        assertThatThrownBy(() -> builder.withTableBloatPercentageThreshold(-1))
+            .hasMessage("bloatPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
+    }
+
+    @Test
+    void withIndexesShouldWork() {
+        final Exclusions e = Exclusions.builder()
+            .withIndexes(Set.of("i1", "i2", "i3"))
+            .withIndex("i3")
+            .withIndex("i4")
+            .build();
+        assertThat(e).isNotNull();
+        assertThat(e.getIndexNameExclusions())
+            .hasSize(4)
+            .containsExactlyInAnyOrder("i1", "i2", "i3", "i4");
+
+        final Exclusions.Builder builder = Exclusions.builder();
+        assertThatThrownBy(() -> builder.withIndexes(Set.of("i1", "")))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("tableBloatPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
-        assertThatThrownBy(() -> builder.withTableBloatPercentageThreshold(101))
+            .hasMessage("indexNameExclusions cannot be blank");
+        assertThatThrownBy(() -> builder.withIndex("   "))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("tableBloatPercentageThreshold should be in the range from 0.0 to 100.0 inclusive");
+            .hasMessage("indexNameExclusions cannot be blank");
+    }
+
+    @Test
+    void withTablesShouldWork() {
+        final Exclusions e = Exclusions.builder()
+            .withTables(Set.of("t1", "t2", "t3"))
+            .withTable("t3")
+            .withTable("t4")
+            .build();
+        assertThat(e).isNotNull();
+        assertThat(e.getTableNameExclusions())
+            .hasSize(4)
+            .containsExactlyInAnyOrder("t1", "t2", "t3", "t4");
+
+        final Exclusions.Builder builder = Exclusions.builder();
+        assertThatThrownBy(() -> builder.withTables(Set.of("t1", "")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("tableNameExclusions cannot be blank");
+        assertThatThrownBy(() -> builder.withTable("   "))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("tableNameExclusions cannot be blank");
+    }
+
+    @Test
+    void withSequencesShouldWork() {
+        final Exclusions e = Exclusions.builder()
+            .withSequences(Set.of("s1", "s2", "s3"))
+            .withSequence("s3")
+            .withSequence("s4")
+            .build();
+        assertThat(e).isNotNull();
+        assertThat(e.getSequenceNameExclusions())
+            .hasSize(4)
+            .containsExactlyInAnyOrder("s1", "s2", "s3", "s4");
+
+        final Exclusions.Builder builder = Exclusions.builder();
+        assertThatThrownBy(() -> builder.withSequences(Set.of("t1", "")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("sequenceNameExclusions cannot be blank");
+        assertThatThrownBy(() -> builder.withSequence("   "))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("sequenceNameExclusions cannot be blank");
     }
 }

@@ -64,14 +64,15 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         final DatabaseChecksOnCluster databaseChecksOnCluster = databaseChecksFactory.apply(haPgConnection);
         final Predicate<DbObject> jointFilters = prepareFilters(exclusions, pgContext);
         final List<String> logResult = new ArrayList<>();
-        for (DatabaseCheckOnCluster<? extends DbObject> check : databaseChecksOnCluster.getAll()) {
+        for (final DatabaseCheckOnCluster<? extends DbObject> check : databaseChecksOnCluster.getAll()) {
             final LoggingKey key = SimpleLoggingKeyAdapter.of(check.getDiagnostic());
             final List<? extends DbObject> checkResult = check.check(pgContext, jointFilters);
-            if (!checkResult.isEmpty()) {
+            if (checkResult.isEmpty()) {
+                logResult.add(writeZeroToLog(key));
+            } else {
                 LOGGER.warn("There are {} in the database {}", key.getDescription(), checkResult);
                 logResult.add(writeToLog(key, checkResult.size()));
             }
-            logResult.add(writeZeroToLog(key));
         }
         return logResult;
     }
