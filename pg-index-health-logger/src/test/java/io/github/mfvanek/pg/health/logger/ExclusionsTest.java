@@ -182,7 +182,8 @@ class ExclusionsTest {
             .containsExactlyInAnyOrder("i1", "i2", "i3", "i4");
 
         final Exclusions.Builder builder = Exclusions.builder();
-        assertThatThrownBy(() -> builder.withIndexes(Set.of("i1", "")))
+        final Set<String> indexNameExclusions = Set.of("i1", "");
+        assertThatThrownBy(() -> builder.withIndexes(indexNameExclusions))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("indexNameExclusions cannot be blank");
         assertThatThrownBy(() -> builder.withIndex("   "))
@@ -203,7 +204,8 @@ class ExclusionsTest {
             .containsExactlyInAnyOrder("t1", "t2", "t3", "t4");
 
         final Exclusions.Builder builder = Exclusions.builder();
-        assertThatThrownBy(() -> builder.withTables(Set.of("t1", "")))
+        final Set<String> tableNameExclusions = Set.of("t1", "");
+        assertThatThrownBy(() -> builder.withTables(tableNameExclusions))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("tableNameExclusions cannot be blank");
         assertThatThrownBy(() -> builder.withTable("   "))
@@ -224,7 +226,8 @@ class ExclusionsTest {
             .containsExactlyInAnyOrder("s1", "s2", "s3", "s4");
 
         final Exclusions.Builder builder = Exclusions.builder();
-        assertThatThrownBy(() -> builder.withSequences(Set.of("t1", "")))
+        final Set<String> sequenceNameExclusions = Set.of("t1", "");
+        assertThatThrownBy(() -> builder.withSequences(sequenceNameExclusions))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("sequenceNameExclusions cannot be blank");
         assertThatThrownBy(() -> builder.withSequence("   "))
