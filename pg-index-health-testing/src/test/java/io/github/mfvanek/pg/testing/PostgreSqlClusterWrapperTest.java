@@ -92,9 +92,9 @@ class PostgreSqlClusterWrapperTest {
             .withUsername("user")
             .withPassword("password")
             .withDatabaseName("test_db_with_repmgr")
-            .withPostgresVersion("14.7");
+            .withPostgresVersion("16.6");
         assertThat(builder.getPostgresVersion())
-            .isEqualTo("14.7");
+            .isEqualTo("16.6");
         try (PostgreSqlClusterWrapper cluster = builder.build()) {
             assertThat(cluster)
                 .satisfies(it -> {
@@ -104,7 +104,7 @@ class PostgreSqlClusterWrapperTest {
                     assertThat(it.getSecondContainerJdbcUrl()).contains("/test_db_with_repmgr");
                 });
             final String actualPgVersionString = PostgresVersionReader.readVersion(cluster.getDataSourceForPrimary());
-            assertThat(actualPgVersionString).startsWith("14.7");
+            assertThat(actualPgVersionString).startsWith("16.6");
         }
     }
 
