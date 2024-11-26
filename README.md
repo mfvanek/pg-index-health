@@ -17,15 +17,15 @@
 
 ## Supported PostgreSQL versions
 
-[![PostgreSQL 12](https://img.shields.io/badge/PostgreSQL-12-green.svg)](https://www.postgresql.org/about/news/1976/ "PostgreSQL 12")
 [![PostgreSQL 13](https://img.shields.io/badge/PostgreSQL-13-green.svg)](https://www.postgresql.org/about/news/postgresql-13-released-2077/ "PostgreSQL 13")
 [![PostgreSQL 14](https://img.shields.io/badge/PostgreSQL-14-green.svg)](https://www.postgresql.org/about/news/postgresql-14-released-2318/ "PostgreSQL 14")
 [![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-green.svg)](https://www.postgresql.org/about/news/postgresql-15-released-2526/ "PostgreSQL 15")
 [![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-green.svg)](https://www.postgresql.org/about/news/postgresql-16-released-2715/ "PostgreSQL 16")
+[![PostgreSQL 17](https://img.shields.io/badge/PostgreSQL-17-green.svg)](https://www.postgresql.org/about/news/postgresql-17-released-2936/ "PostgreSQL 17")
 
 ### Support for previous versions of PostgreSQL
 
-Compatibility with PostgreSQL versions **9.6**, **10** and **11** is no longer guaranteed, but it is very likely.  
+Compatibility with PostgreSQL versions **10**, **11** and **12** is no longer guaranteed, but it is very likely.  
 We focus only on the currently maintained versions of PostgreSQL.  
 For more information please see [PostgreSQL Versioning Policy](https://www.postgresql.org/support/versioning/).
 
@@ -168,7 +168,7 @@ Using Maven:
 | 2.4.x       | 8       | 0.3.x — 0.4.x                |
 | 2.5.x       | 8       | 0.5.x — 0.6.x                |
 | 2.6.x       | 8       | 0.7.x                        |
-| 2.7.x       | 11      | 0.8.x — 0.13.x               |
+| 2.7.x       | 11      | 0.8.x — 0.14.x               |
 
 #### Spring Boot 3 compatibility
 

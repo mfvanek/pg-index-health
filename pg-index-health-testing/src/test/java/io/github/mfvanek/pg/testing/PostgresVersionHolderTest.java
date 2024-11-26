@@ -80,7 +80,7 @@ class PostgresVersionHolderTest {
                 .isEqualTo(System.getenv("TEST_PG_VERSION").split("-")[0] + ".0");
         } else {
             assertThat(versionHolder.getVersion())
-                .isEqualTo("16.4.0");
+                .isEqualTo("17.2.0");
         }
     }
 
@@ -110,7 +110,7 @@ class PostgresVersionHolderTest {
                 .isEqualTo(System.getenv("TEST_PG_VERSION"));
         } else {
             assertThat(versionHolder.getVersion())
-                .isEqualTo("16.4");
+                .isEqualTo("17.2");
         }
     }
 

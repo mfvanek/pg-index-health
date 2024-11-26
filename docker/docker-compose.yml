@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
     postgres:
-        image: postgres:16.4
+        image: postgres:17.2
         shm_size: "2gb"
         environment:
             POSTGRES_DB: "pgih-db"
