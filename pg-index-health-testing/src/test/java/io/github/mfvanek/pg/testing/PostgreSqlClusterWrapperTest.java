@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.testing;
 
-import io.github.mfvanek.pg.support.LogsCaptor;
-import io.github.mfvanek.pg.support.PostgresVersionReader;
+import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
+import io.github.mfvanek.pg.connection.fixtures.support.PostgresVersionReader;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.Test;
 

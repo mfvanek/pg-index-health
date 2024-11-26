@@ -10,20 +10,7 @@
         <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2,CT_CONSTRUCTOR_THROW"/>
     </Match>
     <Match>
-        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
-        <Or>
-            <Class name="io.github.mfvanek.pg.settings.maintenance.ConfigurationMaintenanceOnHostImpl"/>
-            <Class name="~.*TestBase"/>
-            <Class name="~io.github.mfvanek.pg.support.*"/>
-            <Class name="~.*Test"/>
-        </Or>
-    </Match>
-    <Match>
-        <Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
-        <Or>
-            <Class name="~io.github.mfvanek.pg.support.*"/>
-            <Class name="io.github.mfvanek.pg.utils.QueryExecutorsTest"/>
-        </Or>
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE,SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
     </Match>
     <Match>
         <Bug pattern="EC_NULL_ARG,EC_UNRELATED_TYPES,EC_UNRELATED_CLASS_AND_INTERFACE,NM_CONFUSING,NP_NONNULL_PARAM_VIOLATION,DP_DO_INSIDE_DO_PRIVILEGED"/>
@@ -47,7 +34,7 @@
             <Class name="io.github.mfvanek.pg.model.table.Table"/>
             <Class name="io.github.mfvanek.pg.generator.utils.StringUtils"/>
             <Class name="io.github.mfvanek.pg.generator.GeneratingOptions$Builder"/>
-            <Class name="io.github.mfvanek.pg.common.maintenance.Diagnostic"/>
+            <Class name="io.github.mfvanek.pg.core.checks.common.Diagnostic"/>
         </Or>
     </Match>
     <Match>
@@ -83,7 +70,7 @@
         <Bug pattern="NSE_NON_SYMMETRIC_EQUALS"/>
         <Or>
             <Class name="io.github.mfvanek.pg.connection.PgConnectionImpl"/>
-            <Class name="io.github.mfvanek.pg.settings.PgParamImpl"/>
+            <Class name="io.github.mfvanek.pg.model.settings.PgParamImpl"/>
         </Or>
     </Match>
     <Match>
@@ -92,7 +79,7 @@
     </Match>
     <Match>
         <Bug pattern="IMC_IMMATURE_CLASS_BAD_SERIALVERSIONUID"/>
-        <Class name="io.github.mfvanek.pg.connection.PgSqlException"/>
+        <Class name="io.github.mfvanek.pg.connection.exception.PgSqlException"/>
     </Match>
     <Match>
         <Bug pattern="STT_STRING_PARSING_A_FIELD"/>
@@ -100,14 +87,14 @@
     </Match>
     <Match>
         <Bug pattern="LO_SUSPECT_LOG_CLASS"/>
-        <Class name="io.github.mfvanek.pg.common.health.logger.KeyValueFileHealthLogger"/>
+        <Class name="io.github.mfvanek.pg.health.logger.KeyValueFileHealthLogger"/>
     </Match>
     <Match>
         <Bug pattern="FCBL_FIELD_COULD_BE_LOCAL,SEC_SIDE_EFFECT_CONSTRUCTOR"/>
     </Match>
     <Match>
         <Bug pattern="ACEM_ABSTRACT_CLASS_EMPTY_METHODS"/>
-        <Class name="io.github.mfvanek.pg.support.statements.AbstractDbStatement"/>
+        <Class name="io.github.mfvanek.pg.core.fixtures.support.statements.AbstractDbStatement"/>
     </Match>
     <Match>
         <Bug pattern="ITC_INHERITANCE_TYPE_CHECKING"/>

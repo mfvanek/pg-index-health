@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model.function;
 
-import io.github.mfvanek.pg.model.DbObject;
-import io.github.mfvanek.pg.model.object.PgObjectType;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
+import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
@@ -25,7 +25,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.7.0
  */
 @Immutable
-public class StoredFunction implements DbObject, Comparable<StoredFunction> {
+public final class StoredFunction implements DbObject, Comparable<StoredFunction> {
 
     private final String functionName;
     private final String functionSignature;
@@ -41,7 +41,7 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
      */
     @Nonnull
     @Override
-    public final String getName() {
+    public String getName() {
         return getFunctionName();
     }
 
@@ -50,7 +50,7 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
      */
     @Nonnull
     @Override
-    public final PgObjectType getObjectType() {
+    public PgObjectType getObjectType() {
         return PgObjectType.FUNCTION;
     }
 
@@ -88,7 +88,7 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -106,7 +106,7 @@ public class StoredFunction implements DbObject, Comparable<StoredFunction> {
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(functionName, functionSignature);
     }
 

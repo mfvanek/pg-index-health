@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.model.validation;
 
-import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.List;

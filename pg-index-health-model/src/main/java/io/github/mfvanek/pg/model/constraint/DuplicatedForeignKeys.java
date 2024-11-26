@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
-import io.github.mfvanek.pg.model.DbObject;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
+import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.index.utils.DuplicatedIndexesParser;
-import io.github.mfvanek.pg.model.object.PgObjectType;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
@@ -30,7 +30,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.13.1
  */
 @Immutable
-public class DuplicatedForeignKeys implements DbObject, TableNameAware, ConstraintsAware {
+public final class DuplicatedForeignKeys implements DbObject, TableNameAware, ConstraintsAware {
 
     private final List<ForeignKey> foreignKeys;
     private final List<String> foreignKeysNames;
@@ -49,7 +49,7 @@ public class DuplicatedForeignKeys implements DbObject, TableNameAware, Constrai
      */
     @Nonnull
     @Override
-    public final String getName() {
+    public String getName() {
         return String.join(",", foreignKeysNames);
     }
 
@@ -58,7 +58,7 @@ public class DuplicatedForeignKeys implements DbObject, TableNameAware, Constrai
      */
     @Nonnull
     @Override
-    public final PgObjectType getObjectType() {
+    public PgObjectType getObjectType() {
         return PgObjectType.CONSTRAINT;
     }
 
@@ -95,7 +95,7 @@ public class DuplicatedForeignKeys implements DbObject, TableNameAware, Constrai
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -112,7 +112,7 @@ public class DuplicatedForeignKeys implements DbObject, TableNameAware, Constrai
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(foreignKeys);
     }
 

@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.generator.utils;
 
+import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

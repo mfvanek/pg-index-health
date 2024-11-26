@@ -40,7 +40,7 @@ For **Java 8** compatible version take a look at release [0.7.0](https://github.
 All checks can be divided into 2 groups:
 
 1. Runtime checks (those that make sense to perform only on a production database with real data and statistics).  
-   Runtime checks usually [require aggregating data from all nodes in the cluster](https://github.com/mfvanek/pg-index-health/blob/1af316152ed192d1e093491f709fe9bf4946e174/pg-index-health/src/main/java/io/github/mfvanek/pg/common/maintenance/Diagnostic.java#L111).
+   Runtime checks usually [require aggregating data from all nodes in the cluster](https://github.com/mfvanek/pg-index-health/blob/d1473dc68975ebe932d92c9e43ceebde657d0cc7/pg-index-health-core/src/main/java/io/github/mfvanek/pg/common/maintenance/Diagnostic.java#L162).
    This necessitated creating [our own abstraction over the database connection](https://github.com/mfvanek/pg-index-health/tree/master/pg-index-health-jdbc-connection).
 2. Static checks (those can be run in tests on an empty database).  
    All static checks can be performed at runtime as well.
@@ -89,7 +89,7 @@ Static checks are based on [information schema](https://www.postgresql.org/docs/
 (formerly known as [PostgreSQL's statistics collector](https://www.postgresql.org/docs/14/monitoring-stats.html)).
 
 You can call `pg_stat_reset()` on each host to reset all statistics counters for the current database to zero
-but the best way to do it is to use [DatabaseManagement::resetStatistics()](https://github.com/mfvanek/pg-index-health/blob/1af316152ed192d1e093491f709fe9bf4946e174/pg-index-health/src/main/java/io/github/mfvanek/pg/common/management/DatabaseManagement.java#L33) method.
+but the best way to do it is to use [DatabaseManagement::resetStatistics()](https://github.com/mfvanek/pg-index-health/blob/d1473dc68975ebe932d92c9e43ceebde657d0cc7/pg-index-health/src/main/java/io/github/mfvanek/pg/common/management/DatabaseManagement.java#L33) method.
 
 ## Installation
 

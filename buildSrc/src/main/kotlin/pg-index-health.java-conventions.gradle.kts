@@ -17,12 +17,12 @@ plugins {
 }
 
 dependencies {
-    errorprone("com.google.errorprone:error_prone_core:2.35.1")
+    errorprone("com.google.errorprone:error_prone_core:2.36.0")
     errorprone("jp.skypencil.errorprone.slf4j:errorprone-slf4j:0.1.28")
 
     spotbugsPlugins("jp.skypencil.findbugs.slf4j:bug-pattern:1.5.0")
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.5")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.8")
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -55,8 +55,21 @@ tasks {
     }
 
     javadoc {
-        if (JavaVersion.current().isJava9Compatible) {
-            (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
+        val groupId = project.group
+        val projectVersion = project.version
+        val doclet = options as StandardJavadocDocletOptions
+        doclet.addBooleanOption("html5", true)
+        configurations.findByName("api")?.let { cfg ->
+            cfg.dependencies
+                .filterIsInstance<ProjectDependency>()
+                .map {
+                    val link = "https://javadoc.io/doc/$groupId/${it.name}/$projectVersion/"
+                    val dependencyProject = rootProject.project(it.path)
+                    val javadocTask = dependencyProject.tasks.named<Javadoc>("javadoc")
+                    val javadocOutputDir = javadocTask.get().destinationDir
+                    doclet.linksOffline(link, javadocOutputDir?.absolutePath)
+                    dependsOn(javadocTask)
+                }
         }
     }
 
@@ -73,7 +86,7 @@ tasks {
 }
 
 checkstyle {
-    toolVersion = "10.18.2"
+    toolVersion = "10.20.1"
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     maxWarnings = 0

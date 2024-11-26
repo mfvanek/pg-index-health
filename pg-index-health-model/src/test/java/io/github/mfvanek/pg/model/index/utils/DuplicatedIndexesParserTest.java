@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model.index.utils;
 
+import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.support.TestUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

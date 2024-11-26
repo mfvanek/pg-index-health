@@ -42,15 +42,15 @@ They should include enough information to generate corrective SQL migrations via
 
 #### Execution on a specific host
 
-* [Checks on a specific host](pg-index-health-core%2Fsrc%2Fmain%2Fjava%2Fio%2Fgithub%2Fmfvanek%2Fpg%2Fchecks%2Fhost)
+* [Checks on a specific host](pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/host)
 
-Implement a new class extending [AbstractCheckOnHost](pg-index-health-core%2Fsrc%2Fmain%2Fjava%2Fio%2Fgithub%2Fmfvanek%2Fpg%2Fchecks%2Fhost%2FAbstractCheckOnHost.java).
+Implement a new class extending [AbstractCheckOnHost](pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/host/AbstractCheckOnHost.java).
 
 #### Execution on the cluster
 
-* [Checks on the cluster](pg-index-health%2Fsrc%2Fmain%2Fjava%2Fio%2Fgithub%2Fmfvanek%2Fpg%2Fchecks%2Fcluster)
+* [Checks on the cluster](pg-index-health/src/main/java/io/github/mfvanek/pg/health/checks/cluster)
 
-Implement a new class extending [AbstractCheckOnCluster](pg-index-health%2Fsrc%2Fmain%2Fjava%2Fio%2Fgithub%2Fmfvanek%2Fpg%2Fchecks%2Fcluster%2FAbstractCheckOnCluster.java).
+Implement a new class extending [AbstractCheckOnCluster](pg-index-health/src/main/java/io/github/mfvanek/pg/health/checks/cluster/AbstractCheckOnCluster.java).
 
 ### Write proper tests
 
@@ -61,5 +61,5 @@ Implement a new class extending [AbstractCheckOnCluster](pg-index-health%2Fsrc%2
 
 1. Update readme and add information about the new check
 2. Update [Spring Boot starter](spring-boot-integration%2Fpg-index-health-test-starter).
-3. Add sample code to the demo apps ([first](https://github.com/mfvanek/pg-index-health-demo), [second](https://github.com/mfvanek/pg-index-health-spring-boot-demo)).
+3. Add sample code to the demo apps ([first](https://github.com/mfvanek/pg-index-health-demo/tree/master/pg-index-health-demo-without-spring), [second](https://github.com/mfvanek/pg-index-health-demo/tree/master/pg-index-health-spring-boot-demo)).
    Use a locally built pg-index-health version and send a draft PR.
