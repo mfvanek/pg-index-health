@@ -30,6 +30,7 @@ import org.springframework.context.annotation.Conditional;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
+import javax.annotation.Nullable;
 import javax.sql.DataSource;
 
 /**
@@ -58,7 +59,7 @@ public class DatabaseStructureHealthAutoConfiguration {
     public PgConnection pgConnection(@Qualifier("dataSource") final DataSource dataSource,
                                      @Value("${spring.datasource.url:#{null}}") final String databaseUrl) {
         final PgHost host;
-        if (Objects.isNull(databaseUrl) || databaseUrl.isBlank()) {
+        if (needToGetUrlFromMetaData(databaseUrl)) {
             try (Connection connection = dataSource.getConnection()) {
                 host = PgHostImpl.ofUrl(connection.getMetaData().getURL());
             } catch (SQLException ex) {
@@ -68,5 +69,11 @@ public class DatabaseStructureHealthAutoConfiguration {
             host = PgHostImpl.ofUrl(databaseUrl);
         }
         return PgConnectionImpl.of(dataSource, host);
+    }
+
+    private static boolean needToGetUrlFromMetaData(@Nullable final String databaseUrl) {
+        return Objects.isNull(databaseUrl) ||
+            databaseUrl.isBlank() ||
+            databaseUrl.startsWith(DatabaseStructureHealthCondition.TESTCONTAINERS_PG_URL_PREFIX);
     }
 }

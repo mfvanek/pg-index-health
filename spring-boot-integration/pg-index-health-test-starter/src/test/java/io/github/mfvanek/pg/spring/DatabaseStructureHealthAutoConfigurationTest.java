@@ -102,6 +102,22 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
     }
 
     @Test
+    void withDataSourceAndTestcontainersConnectionString() throws SQLException {
+        try (Connection connectionMock = Mockito.mock(Connection.class)) {
+            setMocks(connectionMock);
+
+            assertWithTestConfig()
+                .withPropertyValues("spring.datasource.url=jdbc:tc:postgresql:17.2:///test")
+                .withInitializer(AutoConfigurationTestBase::initialize)
+                .run(context -> {
+                    assertThatBeansPresent(context);
+                    assertThatBeansAreNotNullBean(context);
+                    assertThatPgConnectionIsValid(context);
+                });
+        }
+    }
+
+    @Test
     void shouldNotCreateAutoConfigurationWithDisabledProperty() {
         assertWithTestConfig()
             .withPropertyValues("pg.index.health.test.enabled=false")
