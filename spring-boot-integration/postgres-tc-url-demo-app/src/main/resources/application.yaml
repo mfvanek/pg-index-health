@@ -1,0 +1,8 @@
+debug: false
+
+spring:
+    main:
+        banner-mode: off
+    datasource:
+        url: jdbc:tc:postgresql:17.2:///demo_for_pg_index_health_starter
+        driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver

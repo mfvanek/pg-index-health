@@ -11,7 +11,6 @@ ext["assertj.version"] = libs.versions.assertj.get()
 ext["junit-jupiter.version"] = libs.versions.junit.get()
 
 dependencies {
-    implementation(project(":spring-boot-integration:pg-index-health-test-starter"))
     implementation(project(":pg-index-health-testing"))
     implementation(libs.spring.boot.starter.data.jdbc)
     implementation(platform(libs.testcontainers.bom))
@@ -20,6 +19,7 @@ dependencies {
     runtimeOnly(libs.postgresql)
 
     testImplementation(libs.spring.boot.starter.test)
+    testImplementation(project(":spring-boot-integration:pg-index-health-test-starter"))
 }
 
 lombok {
