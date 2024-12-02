@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.connection;
 
+import io.github.mfvanek.pg.connection.exception.PgSqlException;
 import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.connection.support.DatabaseAwareTestBase;
@@ -17,6 +18,8 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Locale;
 import javax.sql.DataSource;
 
@@ -46,10 +49,18 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidArguments() {
+        assertThatThrownBy(() -> PgConnectionImpl.of(null, null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("dataSource cannot be null");
+
         final DataSource dataSource = getDataSource();
         assertThatThrownBy(() -> PgConnectionImpl.of(dataSource, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("host cannot be null");
+
+        assertThatThrownBy(() -> PgConnectionImpl.ofUrl(null, null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("dataSource cannot be null");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -57,7 +68,7 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
     void equalsAndHashCode() {
         final PgHost host = PgHostImpl.ofUrl("jdbc:postgresql://first:6432");
         final PgConnection first = PgConnectionImpl.of(getDataSource(), host);
-        final PgConnection theSame = PgConnectionImpl.of(getDataSource(), host);
+        final PgConnection theSame = PgConnectionImpl.ofUrl(getDataSource(), "jdbc:postgresql://first:6432");
         final PgConnection second = PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl("jdbc:postgresql://second:5432"));
 
         assertThat(first.equals(null)).isFalse();
@@ -106,5 +117,39 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
         final PgConnection secondPgConnection = PgConnectionImpl.of(dataSourceMock, PgHostImpl.ofUrl("jdbc:postgresql://localhost:5431"));
 
         assertThat(firstPgConnection).isNotEqualTo(secondPgConnection);
+    }
+
+    @Test
+    void shouldGetUrlFromConnectionMetadata() {
+        final PgConnection first = PgConnectionImpl.ofUrl(getDataSource(), null);
+        assertThat(first.getHost())
+            .isNotNull()
+            .isEqualTo(getHost());
+
+        final PgConnection second = PgConnectionImpl.ofUrl(getDataSource(), "   ");
+        assertThat(second.getHost())
+            .isNotNull()
+            .isEqualTo(getHost());
+
+        final PgConnection third = PgConnectionImpl.ofUrl(getDataSource(), "jdbc:tc:postgresql:17.2:///demo");
+        assertThat(third.getHost())
+            .isNotNull()
+            .isEqualTo(getHost());
+    }
+
+    @Test
+    void withExceptionWhileObtainingUrlFromMetadata() throws SQLException {
+        final DataSource dataSourceMock = Mockito.mock(DataSource.class);
+        try (Connection connectionMock = Mockito.mock(Connection.class)) {
+            Mockito.when(dataSourceMock.getConnection())
+                .thenReturn(connectionMock);
+            Mockito.when(connectionMock.getMetaData())
+                .thenThrow(new SQLException("Unable to obtain connection from metadata"));
+
+            assertThatThrownBy(() -> PgConnectionImpl.ofUrl(dataSourceMock, null))
+                .isInstanceOf(PgSqlException.class)
+                .hasMessage("Unable to obtain connection from metadata")
+                .hasCauseInstanceOf(SQLException.class);
+        }
     }
 }

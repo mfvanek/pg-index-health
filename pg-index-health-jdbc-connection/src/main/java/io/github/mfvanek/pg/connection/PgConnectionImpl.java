@@ -10,10 +10,16 @@
 
 package io.github.mfvanek.pg.connection;
 
+import io.github.mfvanek.pg.connection.exception.PgSqlException;
 import io.github.mfvanek.pg.connection.host.PgHost;
+import io.github.mfvanek.pg.connection.host.PgHostImpl;
+import io.github.mfvanek.pg.connection.host.PgUrlParser;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.sql.DataSource;
 
 /**
@@ -28,7 +34,7 @@ public class PgConnectionImpl implements PgConnection {
     private final PgHost host;
 
     private PgConnectionImpl(@Nonnull final DataSource dataSource, @Nonnull final PgHost host) {
-        this.dataSource = Objects.requireNonNull(dataSource, "dataSource cannot be null");
+        this.dataSource = validateDataSource(dataSource);
         this.host = Objects.requireNonNull(host, "host cannot be null");
     }
 
@@ -48,20 +54,6 @@ public class PgConnectionImpl implements PgConnection {
     @Override
     public PgHost getHost() {
         return host;
-    }
-
-    /**
-     * Constructs a {@code PgConnection} object with given dataSource and host.
-     *
-     * @param dataSource a factory for connections to the physical database
-     * @param host       information about database host
-     * @return {@code PgConnection}
-     * @see DataSource
-     * @see PgHost
-     */
-    @Nonnull
-    public static PgConnection of(@Nonnull final DataSource dataSource, @Nonnull final PgHost host) {
-        return new PgConnectionImpl(dataSource, host);
     }
 
     /**
@@ -98,5 +90,55 @@ public class PgConnectionImpl implements PgConnection {
         return PgConnectionImpl.class.getSimpleName() + '{' +
             "host=" + host +
             '}';
+    }
+
+    /**
+     * Constructs a {@code PgConnection} object with given dataSource and host.
+     *
+     * @param dataSource a factory for connections to the physical database; should be non-null.
+     * @param host       information about database host; should be non-null.
+     * @return {@code PgConnection}
+     * @see DataSource
+     * @see PgHost
+     */
+    @Nonnull
+    public static PgConnection of(@Nonnull final DataSource dataSource, @Nonnull final PgHost host) {
+        return new PgConnectionImpl(dataSource, host);
+    }
+
+    /**
+     * Constructs a {@code PgConnection} object with given dataSource and connection string.
+     *
+     * @param dataSource  a factory for connections to the physical database; should be non-null.
+     * @param databaseUrl a connection string to the physical database; can be obtained from connection metadata.
+     * @return {@code PgConnection} object
+     * @see Connection#getMetaData()
+     * @see java.sql.DatabaseMetaData
+     * @since 0.14.2
+     */
+    @Nonnull
+    public static PgConnection ofUrl(@Nonnull final DataSource dataSource, @Nullable final String databaseUrl) {
+        final PgHost host;
+        if (needToGetUrlFromMetaData(databaseUrl)) {
+            try (Connection connection = validateDataSource(dataSource).getConnection()) {
+                host = PgHostImpl.ofUrl(connection.getMetaData().getURL());
+            } catch (SQLException ex) {
+                throw new PgSqlException(ex);
+            }
+        } else {
+            host = PgHostImpl.ofUrl(databaseUrl);
+        }
+        return new PgConnectionImpl(dataSource, host);
+    }
+
+    @Nonnull
+    private static DataSource validateDataSource(@Nonnull final DataSource dataSource) {
+        return Objects.requireNonNull(dataSource, "dataSource cannot be null");
+    }
+
+    private static boolean needToGetUrlFromMetaData(@Nullable final String databaseUrl) {
+        return databaseUrl == null ||
+            databaseUrl.isBlank() ||
+            databaseUrl.startsWith(PgUrlParser.TESTCONTAINERS_PG_URL_PREFIX);
     }
 }
