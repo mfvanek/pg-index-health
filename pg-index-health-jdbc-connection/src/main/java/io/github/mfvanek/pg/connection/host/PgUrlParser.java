@@ -31,6 +31,19 @@ public final class PgUrlParser {
      */
     public static final String URL_HEADER = "jdbc:postgresql://";
 
+    /**
+     * The URL prefix used in Testcontainers to initialize PostgreSQL containers.
+     * <p>
+     * Testcontainers provides a special JDBC URL format that allows for on-the-fly creation and management
+     * of PostgreSQL database containers during tests. This prefix is part of the JDBC URL and signals
+     * Testcontainers to handle the lifecycle of the container automatically.
+     * </p>
+     *
+     * @see <a href="https://java.testcontainers.org/modules/databases/jdbc/">Testcontainers JDBC Support</a>
+     * @since 0.14.2
+     */
+    public static final String TESTCONTAINERS_PG_URL_PREFIX = "jdbc:tc:postgresql:";
+
     private static final Map<String, String> DEFAULT_URL_PARAMETERS = Map.ofEntries(
         Map.entry("targetServerType", "primary"),
         Map.entry("hostRecheckSeconds", "2"),

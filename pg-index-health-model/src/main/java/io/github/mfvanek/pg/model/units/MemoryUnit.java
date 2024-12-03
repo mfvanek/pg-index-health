@@ -20,8 +20,19 @@ import javax.annotation.Nonnull;
  */
 public enum MemoryUnit {
 
+    /**
+     * Represents a kilobyte, equivalent to 1,024 bytes.
+     */
     KB(1024L, "kilobyte"),
+
+    /**
+     * Represents a megabyte, equivalent to 1,024 kilobytes or 1,048,576 bytes.
+     */
     MB(1024L * 1024L, "megabyte"),
+
+    /**
+     * Represents a gigabyte, equivalent to 1,024 megabytes or 1,073,741,824 bytes.
+     */
     GB(1024L * 1024L * 1024L, "gigabyte");
 
     private final long dimension;

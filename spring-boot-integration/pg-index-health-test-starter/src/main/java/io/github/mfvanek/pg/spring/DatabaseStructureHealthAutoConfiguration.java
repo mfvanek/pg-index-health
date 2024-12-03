@@ -12,9 +12,6 @@ package io.github.mfvanek.pg.spring;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import io.github.mfvanek.pg.connection.exception.PgSqlException;
-import io.github.mfvanek.pg.connection.host.PgHost;
-import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -27,10 +24,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Objects;
-import javax.annotation.Nullable;
 import javax.sql.DataSource;
 
 /**
@@ -58,22 +51,6 @@ public class DatabaseStructureHealthAutoConfiguration {
     @ConditionalOnMissingBean
     public PgConnection pgConnection(@Qualifier("dataSource") final DataSource dataSource,
                                      @Value("${spring.datasource.url:#{null}}") final String databaseUrl) {
-        final PgHost host;
-        if (needToGetUrlFromMetaData(databaseUrl)) {
-            try (Connection connection = dataSource.getConnection()) {
-                host = PgHostImpl.ofUrl(connection.getMetaData().getURL());
-            } catch (SQLException ex) {
-                throw new PgSqlException(ex);
-            }
-        } else {
-            host = PgHostImpl.ofUrl(databaseUrl);
-        }
-        return PgConnectionImpl.of(dataSource, host);
-    }
-
-    private static boolean needToGetUrlFromMetaData(@Nullable final String databaseUrl) {
-        return Objects.isNull(databaseUrl) ||
-            databaseUrl.isBlank() ||
-            databaseUrl.startsWith(DatabaseStructureHealthCondition.TESTCONTAINERS_PG_URL_PREFIX);
+        return PgConnectionImpl.ofUrl(dataSource, databaseUrl);
     }
 }
