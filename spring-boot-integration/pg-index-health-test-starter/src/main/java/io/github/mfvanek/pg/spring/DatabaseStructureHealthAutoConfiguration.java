@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.spring;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -24,6 +24,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 
+import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 /**
@@ -42,15 +43,17 @@ public class DatabaseStructureHealthAutoConfiguration {
     /**
      * {@link PgConnection} bean.
      *
-     * @param dataSource  {@link DataSource} instance
+     * @param beanFactory {@link BeanFactory} instance
      * @param databaseUrl connection string to database
      * @return {@link PgConnection} instance
      */
     @Bean
-    @ConditionalOnBean(name = "dataSource")
+    @ConditionalOnBean(DataSource.class)
     @ConditionalOnMissingBean
-    public PgConnection pgConnection(@Qualifier("dataSource") final DataSource dataSource,
+    public PgConnection pgConnection(@Nonnull final BeanFactory beanFactory,
                                      @Value("${spring.datasource.url:#{null}}") final String databaseUrl) {
+        // TODO
+        final DataSource dataSource = beanFactory.getBean("dataSource", DataSource.class);
         return PgConnectionImpl.ofUrl(dataSource, databaseUrl);
     }
 }

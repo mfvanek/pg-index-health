@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
  */
 public class DatabaseStructureHealthCondition extends SpringBootCondition {
 
+    // TODO use value from properties
     private static final String PROPERTY_NAME = "spring.datasource.url";
 
     /**
