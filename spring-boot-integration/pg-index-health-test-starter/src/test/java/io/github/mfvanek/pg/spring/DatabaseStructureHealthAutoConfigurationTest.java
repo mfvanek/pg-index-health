@@ -56,12 +56,42 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
     }
 
     @Test
+    void withCustomDataSource() {
+        assertWithTestConfig()
+            .withPropertyValues("custom.datasource.url=jdbc:postgresql://localhost:5432",
+                "pg.index.health.test.datasource-bean-name=customDataSource",
+                "pg.index.health.test.datasource-url-property-name=custom.datasource.url")
+            .withInitializer(AutoConfigurationTestBase::initializeCustom)
+            .run(context -> {
+                assertThatBeansPresent(context);
+                assertThatBeansAreNotNullBean(context);
+            });
+    }
+
+    @Test
     void withDataSourceButWithoutConnectionString() throws SQLException {
         try (Connection connectionMock = Mockito.mock(Connection.class)) {
             setMocks(connectionMock);
 
             assertWithTestConfig()
                 .withInitializer(AutoConfigurationTestBase::initialize)
+                .run(context -> {
+                    assertThatBeansPresent(context);
+                    assertThatBeansAreNotNullBean(context);
+                    assertThatPgConnectionIsValid(context);
+                });
+        }
+    }
+
+    @Test
+    void withCustomDataSourceButWithoutConnectionString() throws SQLException {
+        try (Connection connectionMock = Mockito.mock(Connection.class)) {
+            setMocks(connectionMock);
+
+            assertWithTestConfig()
+                .withInitializer(AutoConfigurationTestBase::initializeCustom)
+                .withPropertyValues("pg.index.health.test.datasource-bean-name=customDataSource",
+                    "pg.index.health.test.datasource-url-property-name=custom.datasource.url")
                 .run(context -> {
                     assertThatBeansPresent(context);
                     assertThatBeansAreNotNullBean(context);
@@ -87,10 +117,45 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
     }
 
     @Test
+    void withCustomDataSourceAndEmptyConnectionString() throws SQLException {
+        try (Connection connectionMock = Mockito.mock(Connection.class)) {
+            setMocks(connectionMock);
+
+            assertWithTestConfig()
+                .withPropertyValues("custom.datasource.url=",
+                    "pg.index.health.test.datasource-bean-name=customDataSource",
+                    "pg.index.health.test.datasource-url-property-name=custom.datasource.url")
+                .withInitializer(AutoConfigurationTestBase::initializeCustom)
+                .run(context -> {
+                    assertThatBeansPresent(context);
+                    assertThatBeansAreNotNullBean(context);
+                    assertThatPgConnectionIsValid(context);
+                });
+        }
+    }
+
+    @Test
     void withDataSourceAndWrongConnectionString() {
         assertWithTestConfig()
             .withPropertyValues("spring.datasource.url=jdbc:mysql://localhost/test")
             .withInitializer(AutoConfigurationTestBase::initialize)
+            .run(context -> {
+                assertThat(context.getBeansOfType(DatabaseStructureHealthProperties.class))
+                    .isEmpty();
+                assertThat(context.getBeanDefinitionNames())
+                    .isNotEmpty()
+                    .filteredOn(beanNamesFilter)
+                    .isEmpty();
+            });
+    }
+
+    @Test
+    void withCustomDataSourceAndWrongConnectionString() {
+        assertWithTestConfig()
+            .withPropertyValues("custom.datasource.url=jdbc:mysql://localhost/test",
+                "pg.index.health.test.datasource-bean-name=customDataSource",
+                "pg.index.health.test.datasource-url-property-name=custom.datasource.url")
+            .withInitializer(AutoConfigurationTestBase::initializeCustom)
             .run(context -> {
                 assertThat(context.getBeansOfType(DatabaseStructureHealthProperties.class))
                     .isEmpty();

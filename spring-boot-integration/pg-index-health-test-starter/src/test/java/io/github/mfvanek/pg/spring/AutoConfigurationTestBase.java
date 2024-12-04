@@ -25,6 +25,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
+import static io.github.mfvanek.pg.spring.DatabaseStructureHealthProperties.STANDARD_DATASOURCE_BEAN_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 abstract class AutoConfigurationTestBase {
@@ -62,8 +63,13 @@ abstract class AutoConfigurationTestBase {
     protected static final Class<?>[] EXPECTED_TYPES = {PgConnection.class, DatabaseCheckOnHost.class, StatisticsMaintenanceOnHost.class, ConfigurationMaintenanceOnHost.class};
     protected static final DataSource DATA_SOURCE_MOCK = Mockito.mock(DataSource.class);
 
-    protected final Predicate<String> beanNamesFilter = b -> !b.startsWith("org.springframework") && !b.startsWith("pg.index.health.test") &&
-        !b.endsWith("AutoConfiguration") && !"dataSource".equals(b);
+    private static final String CUSTOM_DATASOURCE_BEAN_NAME = "customDataSource";
+
+    protected final Predicate<String> beanNamesFilter = b -> !b.startsWith("org.springframework") &&
+        !b.startsWith("pg.index.health.test") &&
+        !b.endsWith("AutoConfiguration") &&
+        !STANDARD_DATASOURCE_BEAN_NAME.equals(b) &&
+        !CUSTOM_DATASOURCE_BEAN_NAME.equals(b);
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner();
 
     @Nonnull
@@ -73,7 +79,12 @@ abstract class AutoConfigurationTestBase {
 
     protected static <C extends ConfigurableApplicationContext> void initialize(@Nonnull final C applicationContext) {
         final GenericApplicationContext context = (GenericApplicationContext) applicationContext;
-        context.registerBean("dataSource", DataSource.class, () -> DATA_SOURCE_MOCK);
+        context.registerBean(STANDARD_DATASOURCE_BEAN_NAME, DataSource.class, () -> DATA_SOURCE_MOCK);
+    }
+
+    protected static <C extends ConfigurableApplicationContext> void initializeCustom(@Nonnull final C applicationContext) {
+        final GenericApplicationContext context = (GenericApplicationContext) applicationContext;
+        context.registerBean(CUSTOM_DATASOURCE_BEAN_NAME, DataSource.class, () -> DATA_SOURCE_MOCK);
     }
 
     @Nonnull

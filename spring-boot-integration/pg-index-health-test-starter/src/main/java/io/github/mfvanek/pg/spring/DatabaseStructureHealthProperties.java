@@ -29,6 +29,24 @@ import javax.annotation.concurrent.Immutable;
 public class DatabaseStructureHealthProperties {
 
     /**
+     * The standard name of the primary {@link javax.sql.DataSource} bean.
+     * <p>
+     * This constant is used as the default name when no custom datasource bean name
+     * is specified in the configuration.
+     * </p>
+     */
+    public static final String STANDARD_DATASOURCE_BEAN_NAME = "dataSource";
+
+    /**
+     * The standard property name for the datasource URL in Spring configuration.
+     * <p>
+     * This constant is used as the default key for retrieving the datasource URL
+     * from the {@link org.springframework.core.env.Environment}.
+     * </p>
+     */
+    public static final String STANDARD_DATASOURCE_URL_PROPERTY_NAME = "spring.datasource.url";
+
+    /**
      * Indicates whether the starter is enabled, even if it is present on the classpath.
      * This allows for manual control over autoconfiguration.
      * <p>
@@ -62,8 +80,8 @@ public class DatabaseStructureHealthProperties {
      * @throws IllegalArgumentException if {@code datasourceBeanName} or {@code datasourceUrlPropertyName} is blank
      */
     public DatabaseStructureHealthProperties(@DefaultValue("true") final boolean enabled,
-                                             @DefaultValue("dataSource") final String datasourceBeanName,
-                                             @DefaultValue("spring.datasource.url") final String datasourceUrlPropertyName) {
+                                             @DefaultValue(STANDARD_DATASOURCE_BEAN_NAME) final String datasourceBeanName,
+                                             @DefaultValue(STANDARD_DATASOURCE_URL_PROPERTY_NAME) final String datasourceUrlPropertyName) {
         this.enabled = enabled;
         this.datasourceBeanName = Validators.notBlank(datasourceBeanName, "datasourceBeanName");
         this.datasourceUrlPropertyName = Validators.notBlank(datasourceUrlPropertyName, "datasourceUrlPropertyName");
