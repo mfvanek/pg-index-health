@@ -10,9 +10,12 @@
 
 package io.github.mfvanek.pg.spring;
 
+import io.github.mfvanek.pg.model.validation.Validators;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
+
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Represents properties for managing pg-index-health-test-starter configuration.
@@ -22,29 +25,93 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
  */
 @ConstructorBinding
 @ConfigurationProperties(prefix = "pg.index.health.test")
+@Immutable
 public class DatabaseStructureHealthProperties {
 
     /**
-     * Allows to manually disable starter even it presents on classpath.
+     * The standard name of the primary {@link javax.sql.DataSource} bean.
+     * <p>
+     * This constant is used as the default name when no custom datasource bean name
+     * is specified in the configuration.
+     * </p>
+     */
+    public static final String STANDARD_DATASOURCE_BEAN_NAME = "dataSource";
+
+    /**
+     * The standard property name for the datasource URL in Spring configuration.
+     * <p>
+     * This constant is used as the default key for retrieving the datasource URL
+     * from the {@link org.springframework.core.env.Environment}.
+     * </p>
+     */
+    public static final String STANDARD_DATASOURCE_URL_PROPERTY_NAME = "spring.datasource.url";
+
+    /**
+     * Indicates whether the starter is enabled, even if it is present on the classpath.
+     * This allows for manual control over autoconfiguration.
+     * <p>
+     * Default value: {@code true}.
+     * </p>
      */
     private final boolean enabled;
 
     /**
-     * Constructs a {@code DatabaseStructureHealthProperties} instance.
-     *
-     * @param enabled enabled or disabled autoconfiguration
+     * The name of the datasource bean to use for health checks.
+     * <p>
+     * Default value: {@code "dataSource"}.
+     * </p>
      */
-    public DatabaseStructureHealthProperties(@DefaultValue("true") final boolean enabled) {
+    private final String datasourceBeanName;
+
+    /**
+     * The name of the datasource URL property used in the configuration.
+     * <p>
+     * Default value: {@code "spring.datasource.url"}.
+     * </p>
+     */
+    private final String datasourceUrlPropertyName;
+
+    /**
+     * Constructs a new {@code DatabaseStructureHealthProperties} instance with the specified values.
+     *
+     * @param enabled                   whether the autoconfiguration is enabled (default: {@code true})
+     * @param datasourceBeanName        the name of the datasource bean (default: {@code "dataSource"}, must not be blank)
+     * @param datasourceUrlPropertyName the name of the datasource URL property (default: {@code "spring.datasource.url"}, must not be blank)
+     * @throws IllegalArgumentException if {@code datasourceBeanName} or {@code datasourceUrlPropertyName} is blank
+     */
+    public DatabaseStructureHealthProperties(@DefaultValue("true") final boolean enabled,
+                                             @DefaultValue(STANDARD_DATASOURCE_BEAN_NAME) final String datasourceBeanName,
+                                             @DefaultValue(STANDARD_DATASOURCE_URL_PROPERTY_NAME) final String datasourceUrlPropertyName) {
         this.enabled = enabled;
+        this.datasourceBeanName = Validators.notBlank(datasourceBeanName, "datasourceBeanName");
+        this.datasourceUrlPropertyName = Validators.notBlank(datasourceUrlPropertyName, "datasourceUrlPropertyName");
     }
 
     /**
-     * Retrieves the state of autoconfiguration: enabled or disabled.
+     * Checks if the autoconfiguration is enabled.
      *
-     * @return true if starter enabled otherwise false
+     * @return {@code true} if the starter is enabled; {@code false} otherwise
      */
     public boolean isEnabled() {
         return enabled;
+    }
+
+    /**
+     * Retrieves the name of the datasource bean to be used.
+     *
+     * @return the name of the datasource bean (default: {@code "dataSource"})
+     */
+    public String getDatasourceBeanName() {
+        return datasourceBeanName;
+    }
+
+    /**
+     * Retrieves the name of the datasource URL property.
+     *
+     * @return the name of the datasource URL property (default: {@code "spring.datasource.url"})
+     */
+    public String getDatasourceUrlPropertyName() {
+        return datasourceUrlPropertyName;
     }
 
     /**
@@ -54,6 +121,8 @@ public class DatabaseStructureHealthProperties {
     public String toString() {
         return DatabaseStructureHealthProperties.class.getSimpleName() + '{' +
             "enabled=" + enabled +
+            ", datasourceBeanName='" + datasourceBeanName + '\'' +
+            ", datasourceUrlPropertyName='" + datasourceUrlPropertyName + '\'' +
             '}';
     }
 }

@@ -1,0 +1,3 @@
+pg.index.health.test:
+    datasource-bean-name: pgihCustomDataSource
+    datasource-url-property-name: pgih.custom.datasource.jdbc-url

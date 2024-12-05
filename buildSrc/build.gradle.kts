@@ -13,4 +13,8 @@ dependencies {
     implementation("info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0")
     implementation("org.gradle:test-retry-gradle-plugin:1.6.0")
     implementation(libs.forbiddenapis)
+    implementation(libs.detekt)
+    val kotlinVersion = "1.9.23"
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion")
 }

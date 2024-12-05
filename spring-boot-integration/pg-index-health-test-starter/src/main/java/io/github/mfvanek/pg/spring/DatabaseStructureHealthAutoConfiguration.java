@@ -12,8 +12,7 @@ package io.github.mfvanek.pg.spring;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -23,7 +22,9 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.core.env.Environment;
 
+import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 /**
@@ -40,17 +41,42 @@ import javax.sql.DataSource;
 public class DatabaseStructureHealthAutoConfiguration {
 
     /**
-     * {@link PgConnection} bean.
+     * Configuration properties for the database structure health check.
+     */
+    private final DatabaseStructureHealthProperties properties;
+
+    /**
+     * Constructs a new instance of {@code DatabaseStructureHealthAutoConfiguration}.
      *
-     * @param dataSource  {@link DataSource} instance
-     * @param databaseUrl connection string to database
-     * @return {@link PgConnection} instance
+     * @param properties the {@link DatabaseStructureHealthProperties} containing
+     *                   the configuration for this auto-configuration (must not be null)
+     */
+    public DatabaseStructureHealthAutoConfiguration(@Nonnull final DatabaseStructureHealthProperties properties) {
+        this.properties = properties;
+    }
+
+    /**
+     * Creates and configures a {@link PgConnection} bean.
+     * <p>
+     * This bean is created only if:
+     * <ul>
+     * <li>A {@link DataSource} bean is available in the application context.</li>
+     * <li>No other {@link PgConnection} bean is already defined.</li>
+     * </ul>
+     * The {@link DataSource} bean and database URL property are resolved dynamically
+     * based on the configured {@link DatabaseStructureHealthProperties}.
+     *
+     * @param beanFactory the {@link BeanFactory} instance used to retrieve the {@link DataSource} bean
+     * @param environment the {@link Environment} instance used to resolve the database URL property
+     * @return a configured {@link PgConnection} instance
      */
     @Bean
-    @ConditionalOnBean(name = "dataSource")
+    @ConditionalOnBean(DataSource.class)
     @ConditionalOnMissingBean
-    public PgConnection pgConnection(@Qualifier("dataSource") final DataSource dataSource,
-                                     @Value("${spring.datasource.url:#{null}}") final String databaseUrl) {
+    public PgConnection pgConnection(@Nonnull final BeanFactory beanFactory,
+                                     @Nonnull final Environment environment) {
+        final DataSource dataSource = beanFactory.getBean(properties.getDatasourceBeanName(), DataSource.class);
+        final String databaseUrl = environment.getProperty(properties.getDatasourceUrlPropertyName());
         return PgConnectionImpl.ofUrl(dataSource, databaseUrl);
     }
 }

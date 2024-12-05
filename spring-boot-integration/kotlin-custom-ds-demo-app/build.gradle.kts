@@ -10,10 +10,11 @@ ext["assertj.version"] = libs.versions.assertj.get()
 ext["junit-jupiter.version"] = libs.versions.junit.get()
 
 dependencies {
-    implementation(project(":pg-index-health-testing"))
-    implementation(libs.spring.boot.starter.data.jdbc)
     implementation(platform(libs.testcontainers.bom))
     implementation("org.testcontainers:postgresql")
+    implementation(libs.spring.boot.starter.data.jdbc)
+    implementation("org.liquibase:liquibase-core:4.30.0")
+    implementation("com.github.blagerweij:liquibase-sessionlock:1.6.9")
 
     runtimeOnly(libs.postgresql)
 

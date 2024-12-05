@@ -28,8 +28,8 @@ detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-form
 detekt-libraries = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-libraries", version.ref = "detekt" }
 testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
 forbiddenapis = { group = "de.thetaphi", name = "forbiddenapis", version.ref = "forbiddenapis" }
+detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 
 [plugins]
 spring-boot-gradlePlugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.6" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
