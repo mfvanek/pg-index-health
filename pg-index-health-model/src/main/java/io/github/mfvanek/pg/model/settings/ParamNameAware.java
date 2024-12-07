@@ -12,9 +12,17 @@ package io.github.mfvanek.pg.model.settings;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Represents an entity that is aware of its parameter name.
+ */
 @SuppressWarnings("WeakerAccess")
 public interface ParamNameAware {
 
+    /**
+     * Retrieves the name of the parameter.
+     *
+     * @return the name of the parameter, never {@code null}
+     */
     @Nonnull
     String getName();
 }

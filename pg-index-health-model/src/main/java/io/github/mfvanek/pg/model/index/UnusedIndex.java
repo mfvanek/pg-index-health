@@ -85,6 +85,7 @@ public final class UnusedIndex extends IndexWithSize {
      * @param tableName the name of the table associated with the index, must be non-null
      * @param indexName the name of the index, must be non-null
      * @return a new {@code UnusedIndex} instance
+     * @since 0.14.3
      */
     @Nonnull
     public static UnusedIndex of(@Nonnull final String tableName,
