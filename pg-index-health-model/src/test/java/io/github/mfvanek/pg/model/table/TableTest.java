@@ -58,7 +58,7 @@ class TableTest {
     @Test
     void testEqualsAndHashCode() {
         final Table first = Table.of("t1", 22L);
-        final Table theSame = Table.of("t1", 0L); // different size!
+        final Table theSame = Table.of("t1"); // different size!
         final Table second = Table.of("t2", 30L);
         final Table third = Table.of("t3", 22L);
 
@@ -106,7 +106,7 @@ class TableTest {
     @Test
     void compareToTest() {
         final Table first = Table.of("t1", 22L);
-        final Table theSame = Table.of("t1", 0L); // different size!
+        final Table theSame = Table.of("t1"); // different size!
         final Table second = Table.of("t2", 30L);
         final Table third = Table.of("t3", 22L);
 

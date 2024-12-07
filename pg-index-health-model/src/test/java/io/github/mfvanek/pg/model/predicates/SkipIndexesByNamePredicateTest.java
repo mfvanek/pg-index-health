@@ -83,7 +83,7 @@ class SkipIndexesByNamePredicateTest {
     @Test
     void shouldWorkForSingleIndex() {
         assertThat(SkipIndexesByNamePredicate.ofName("i2"))
-            .accepts(Table.of("t", 0L))
+            .accepts(Table.of("t"))
             .accepts(Index.of("t1", "i1"))
             .accepts(DuplicatedIndexes.of(
                 IndexWithSize.of("t1", "i1", 1L),
@@ -96,7 +96,7 @@ class SkipIndexesByNamePredicateTest {
 
         final PgContext ctx = PgContext.of("CUSTOM");
         assertThat(SkipIndexesByNamePredicate.ofName(ctx, "I2"))
-            .accepts(Table.of("custom.t", 0L))
+            .accepts(Table.of("custom.t"))
             .accepts(Index.of("custom.t1", "custom.i1"))
             .accepts(DuplicatedIndexes.of(
                 IndexWithSize.of("custom.t1", "custom.i1", 1L),
@@ -111,7 +111,7 @@ class SkipIndexesByNamePredicateTest {
     @Test
     void shouldWorkForMultipleIndexes() {
         assertThat(SkipIndexesByNamePredicate.ofPublic(Set.of("i1", "I2")))
-            .accepts(Table.of("t", 0L))
+            .accepts(Table.of("t"))
             .accepts(SequenceState.of("s11", "int", 80.0))
             .accepts(ColumnWithSerialType.ofSerial(Column.ofNullable("t", "c"), "s1"))
             .accepts(DuplicatedIndexes.of(
@@ -130,7 +130,7 @@ class SkipIndexesByNamePredicateTest {
     void shouldWorkWithCustomSchema(final String schemaName) {
         final PgContext ctx = PgContext.of(schemaName);
         assertThat(SkipIndexesByNamePredicate.of(ctx, Set.of("i1", "i2")))
-            .accepts(Table.of(ctx.enrichWithSchema("t"), 0L))
+            .accepts(Table.of(ctx.enrichWithSchema("t")))
             .accepts(Index.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i11")))
             .rejects(Index.of(ctx.enrichWithSchema("t2"), ctx.enrichWithSchema("i2")));
     }

@@ -38,13 +38,13 @@ class SkipLiquibaseTablesPredicateTest {
     @Test
     void shouldWorkWithDbObjectsList() {
         final List<? extends DbObject> objects = List.of(
-            Table.of("t", 0L),
-            Table.of("databasechangelog", 0L)
+            Table.of("t"),
+            Table.of("databasechangelog")
         );
         assertThat(objects.stream().filter(SkipLiquibaseTablesPredicate.ofPublic()))
             .hasSize(1)
             .asInstanceOf(list(Table.class))
-            .containsExactly(Table.of("t", 0L));
+            .containsExactly(Table.of("t"));
     }
 
     @ParameterizedTest
@@ -52,12 +52,12 @@ class SkipLiquibaseTablesPredicateTest {
     void shouldWorkWithCustomSchema(final String schemaName) {
         final PgContext ctx = PgContext.of(schemaName);
         assertThat(SkipLiquibaseTablesPredicate.of(ctx))
-            .accepts(Table.of(ctx.enrichWithSchema("t"), 0L))
+            .accepts(Table.of(ctx.enrichWithSchema("t")))
             .accepts(Index.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i")))
             .accepts(SequenceState.of(ctx.enrichWithSchema("s"), "int", 100.0))
-            .rejects(Table.of(ctx.enrichWithSchema("databasechangelog"), 0L))
-            .rejects(Table.of(ctx.enrichWithSchema("DATABASECHANGELOG"), 0L))
-            .rejects(Table.of(ctx.enrichWithSchema("databasechangeloglock"), 0L))
-            .rejects(Table.of(ctx.enrichWithSchema("DATABASECHANGELOGLOCK"), 0L));
+            .rejects(Table.of(ctx.enrichWithSchema("databasechangelog")))
+            .rejects(Table.of(ctx.enrichWithSchema("DATABASECHANGELOG")))
+            .rejects(Table.of(ctx.enrichWithSchema("databasechangeloglock")))
+            .rejects(Table.of(ctx.enrichWithSchema("DATABASECHANGELOGLOCK")));
     }
 }

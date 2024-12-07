@@ -43,7 +43,7 @@ class AbstractSkipTablesPredicateTest {
     void canCombinePredicatesIntoChain() {
         final Predicate<DbObject> composite = SkipLiquibaseTablesPredicate.ofPublic().and(SkipFlywayTablesPredicate.ofPublic());
         assertThat(composite)
-            .accepts(Table.of("t", 0L))
+            .accepts(Table.of("t"))
             .rejects(Table.of("databasechangelog", 1L))
             .rejects(Table.of("flyway_schema_history", 1L));
     }

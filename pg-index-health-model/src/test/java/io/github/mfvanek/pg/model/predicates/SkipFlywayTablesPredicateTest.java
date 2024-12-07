@@ -38,13 +38,13 @@ class SkipFlywayTablesPredicateTest {
     @Test
     void shouldWorkWithDbObjectsList() {
         final List<? extends DbObject> objects = List.of(
-            Table.of("t", 0L),
-            Table.of("flyway_schema_history", 0L)
+            Table.of("t"),
+            Table.of("flyway_schema_history")
         );
         assertThat(objects.stream().filter(SkipFlywayTablesPredicate.ofPublic()))
             .hasSize(1)
             .asInstanceOf(list(Table.class))
-            .containsExactly(Table.of("t", 0L));
+            .containsExactly(Table.of("t"));
     }
 
     @ParameterizedTest
@@ -52,10 +52,10 @@ class SkipFlywayTablesPredicateTest {
     void shouldWorkWithCustomSchema(final String schemaName) {
         final PgContext ctx = PgContext.of(schemaName);
         assertThat(SkipFlywayTablesPredicate.of(ctx))
-            .accepts(Table.of(ctx.enrichWithSchema("t"), 0L))
+            .accepts(Table.of(ctx.enrichWithSchema("t")))
             .accepts(Index.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i")))
             .accepts(SequenceState.of(ctx.enrichWithSchema("s"), "int", 100.0))
-            .rejects(Table.of(ctx.enrichWithSchema("flyway_schema_history"), 0L))
-            .rejects(Table.of(ctx.enrichWithSchema("FLYWAY_SCHEMA_HISTORY"), 0L));
+            .rejects(Table.of(ctx.enrichWithSchema("flyway_schema_history")))
+            .rejects(Table.of(ctx.enrichWithSchema("FLYWAY_SCHEMA_HISTORY")));
     }
 }

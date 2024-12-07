@@ -80,14 +80,14 @@ class SkipBySequenceNamePredicateTest {
     @Test
     void shouldWorkForSingleSequence() {
         assertThat(SkipBySequenceNamePredicate.ofName("s2"))
-            .accepts(Table.of("t", 0L))
+            .accepts(Table.of("t"))
             .accepts(SequenceState.of("s1", "int", 80.0))
             .rejects(SequenceState.of("s2", "int", 80.0))
             .rejects(SequenceState.of("S2", "int", 80.0));
 
         final PgContext ctx = PgContext.of("CUSTOM");
         assertThat(SkipBySequenceNamePredicate.ofName(ctx, "S2"))
-            .accepts(Table.of("custom.t", 0L))
+            .accepts(Table.of("custom.t"))
             .accepts(SequenceState.of("custom.s1", "int", 80.0))
             .rejects(SequenceState.of("custom.s2", "int", 80.0))
             .rejects(SequenceState.of("custom.S2", "int", 80.0));
@@ -96,7 +96,7 @@ class SkipBySequenceNamePredicateTest {
     @Test
     void shouldWorkForMultipleSequences() {
         assertThat(SkipBySequenceNamePredicate.ofPublic(Set.of("s1", "S2")))
-            .accepts(Table.of("t", 0L))
+            .accepts(Table.of("t"))
             .accepts(SequenceState.of("s11", "int", 80.0))
             .rejects(SequenceState.of("s1", "int", 80.0))
             .rejects(SequenceState.of("s2", "int", 80.0))
@@ -109,7 +109,7 @@ class SkipBySequenceNamePredicateTest {
     void shouldWorkWithCustomSchema(final String schemaName) {
         final PgContext ctx = PgContext.of(schemaName);
         assertThat(SkipBySequenceNamePredicate.of(ctx, Set.of("s1", "s2")))
-            .accepts(Table.of(ctx.enrichWithSchema("t"), 0L))
+            .accepts(Table.of(ctx.enrichWithSchema("t")))
             .accepts(SequenceState.of(ctx.enrichWithSchema("s11"), "int", 80.0))
             .rejects(SequenceState.of(ctx.enrichWithSchema("s1"), "int", 80.0))
             .rejects(ColumnWithSerialType.ofSerial(Column.ofNullable(ctx.enrichWithSchema("t"), "c"), ctx.enrichWithSchema("s1")));
