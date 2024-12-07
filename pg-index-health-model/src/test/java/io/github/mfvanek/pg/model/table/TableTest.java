@@ -61,8 +61,8 @@ class TableTest {
             .hasToString("Table{tableName='t', tableSizeInBytes=2}");
         assertThat(Table.of(PgContext.ofPublic(), "t", 2L))
             .hasToString("Table{tableName='t', tableSizeInBytes=2}");
-        assertThat(Table.of(PgContext.of("test_schema"), "t"))
-            .hasToString("Table{tableName='test_schema.t', tableSizeInBytes=0}");
+        assertThat(Table.of(PgContext.of("tst"), "t"))
+            .hasToString("Table{tableName='tst.t', tableSizeInBytes=0}");
     }
 
     @SuppressWarnings("ConstantConditions")

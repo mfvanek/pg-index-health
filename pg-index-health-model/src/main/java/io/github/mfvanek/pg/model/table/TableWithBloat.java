@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.table;
 
 import io.github.mfvanek.pg.model.bloat.BloatAware;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
@@ -107,11 +108,33 @@ public final class TableWithBloat extends AbstractTableAware implements BloatAwa
      * @param bloatPercentage  bloat percentage in the range from 0 to 100 inclusive.
      * @return {@code TableWithBloat}
      */
+    @Nonnull
     public static TableWithBloat of(@Nonnull final String tableName,
                                     final long tableSizeInBytes,
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
         final Table table = Table.of(tableName, tableSizeInBytes);
+        return of(table, bloatSizeInBytes, bloatPercentage);
+    }
+
+    /**
+     * Constructs a {@code TableWithBloat} object with given context.
+     *
+     * @param pgContext        the schema context to enrich table name; must be non-null.
+     * @param tableName        table name; should be non-blank.
+     * @param tableSizeInBytes table size in bytes; should be positive or zero.
+     * @param bloatSizeInBytes bloat amount in bytes; should be positive or zero.
+     * @param bloatPercentage  bloat percentage in the range from 0 to 100 inclusive.
+     * @return {@code TableWithBloat}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static TableWithBloat of(@Nonnull final PgContext pgContext,
+                                    @Nonnull final String tableName,
+                                    final long tableSizeInBytes,
+                                    final long bloatSizeInBytes,
+                                    final double bloatPercentage) {
+        final Table table = Table.of(pgContext, tableName, tableSizeInBytes);
         return of(table, bloatSizeInBytes, bloatPercentage);
     }
 
@@ -124,6 +147,7 @@ public final class TableWithBloat extends AbstractTableAware implements BloatAwa
      * @return {@code TableWithBloat}
      * @since 0.7.0
      */
+    @Nonnull
     public static TableWithBloat of(@Nonnull final Table table,
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
