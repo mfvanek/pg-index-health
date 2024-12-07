@@ -36,6 +36,9 @@ class UnusedIndexTest {
     void testToString() {
         assertThat(UnusedIndex.of("t", "i", 1L, 2L))
             .hasToString("UnusedIndex{tableName='t', indexName='i', " + "indexSizeInBytes=1, indexScans=2}");
+
+        assertThat(UnusedIndex.of("t", "i"))
+            .hasToString("UnusedIndex{tableName='t', indexName='i', " + "indexSizeInBytes=0, indexScans=0}");
     }
 
     @Test

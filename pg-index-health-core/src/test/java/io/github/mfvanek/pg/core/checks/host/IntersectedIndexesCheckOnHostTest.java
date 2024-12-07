@@ -48,12 +48,12 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .containsExactly(
                     DuplicatedIndexes.of(
-                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), 0L),
-                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), 0L)
+                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted")),
+                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"))
                     ),
                     DuplicatedIndexes.of(
-                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L),
-                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
+                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first")),
+                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"))))
                 .allMatch(d -> d.getTotalSize() >= 106_496L);
 
             assertThat(check)
@@ -75,8 +75,8 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .containsExactly(
                     DuplicatedIndexes.of(
-                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L),
-                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L)))
+                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first")),
+                        IndexWithSize.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"))))
                 .allMatch(d -> d.getTotalSize() >= 106_496L);
 
             assertThat(check)

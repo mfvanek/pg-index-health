@@ -137,8 +137,10 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
 
     /**
      * Constructs a {@code Table} object with zero size.
+     *
      * @param tableName table name; should be non-blank.
      * @return {@code Table}
+     * @since 0.14.3
      */
     @Nonnull
     public static Table of(@Nonnull final String tableName) {

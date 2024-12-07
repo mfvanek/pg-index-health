@@ -81,4 +81,18 @@ public class IndexWithSize extends Index implements IndexSizeAware {
                                    final long indexSizeInBytes) {
         return new IndexWithSize(tableName, indexName, indexSizeInBytes);
     }
+
+    /**
+     * Constructs an {@code IndexWithSize} object with zero size.
+     *
+     * @param tableName table name; should be non-blank.
+     * @param indexName index name; should be non-blank.
+     * @return {@code IndexWithSize}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static IndexWithSize of(@Nonnull final String tableName,
+                                   @Nonnull final String indexName) {
+        return new IndexWithSize(tableName, indexName, 0L);
+    }
 }

@@ -21,7 +21,7 @@ class IndexWithSizeTest {
 
     @Test
     void indexWithZeroSize() {
-        final IndexWithSize index = IndexWithSize.of("t", "i", 0L);
+        final IndexWithSize index = IndexWithSize.of("t", "i");
         assertThat(index.getIndexName())
             .isEqualTo("i")
             .isEqualTo(index.getName());

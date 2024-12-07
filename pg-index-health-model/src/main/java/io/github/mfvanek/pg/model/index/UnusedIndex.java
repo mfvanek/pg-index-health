@@ -71,10 +71,24 @@ public final class UnusedIndex extends IndexWithSize {
      * @throws NullPointerException     if {@code tableName} or {@code indexName} is null
      * @throws IllegalArgumentException if {@code indexScans} is negative
      */
+    @Nonnull
     public static UnusedIndex of(@Nonnull final String tableName,
                                  @Nonnull final String indexName,
                                  final long indexSizeInBytes,
                                  final long indexScans) {
         return new UnusedIndex(tableName, indexName, indexSizeInBytes, indexScans);
+    }
+
+    /**
+     * Creates a new {@code UnusedIndex} instance with zero size.
+     *
+     * @param tableName the name of the table associated with the index, must be non-null
+     * @param indexName the name of the index, must be non-null
+     * @return a new {@code UnusedIndex} instance
+     */
+    @Nonnull
+    public static UnusedIndex of(@Nonnull final String tableName,
+                                 @Nonnull final String indexName) {
+        return new UnusedIndex(tableName, indexName, 0L, 0L);
     }
 }
