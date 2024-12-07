@@ -41,7 +41,7 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(Table.of(ctx.enrichWithSchema("bad_clients")));
+                .containsExactly(Table.of(ctx, "bad_clients"));
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_clients"))

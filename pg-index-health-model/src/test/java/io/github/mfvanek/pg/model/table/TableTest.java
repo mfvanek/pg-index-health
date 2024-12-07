@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -46,12 +47,22 @@ class TableTest {
         assertThatThrownBy(() -> Table.of("t", -1L))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("tableSizeInBytes cannot be less than zero");
+        assertThatThrownBy(() -> Table.of(null, "t"))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgContext cannot be null");
+        assertThatThrownBy(() -> Table.of(null, "t", -1L))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgContext cannot be null");
     }
 
     @Test
     void testToString() {
         assertThat(Table.of("t", 2L))
             .hasToString("Table{tableName='t', tableSizeInBytes=2}");
+        assertThat(Table.of(PgContext.ofPublic(), "t", 2L))
+            .hasToString("Table{tableName='t', tableSizeInBytes=2}");
+        assertThat(Table.of(PgContext.of("test_schema"), "t"))
+            .hasToString("Table{tableName='test_schema.t', tableSizeInBytes=0}");
     }
 
     @SuppressWarnings("ConstantConditions")

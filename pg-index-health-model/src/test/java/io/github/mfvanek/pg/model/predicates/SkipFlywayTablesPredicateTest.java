@@ -52,10 +52,10 @@ class SkipFlywayTablesPredicateTest {
     void shouldWorkWithCustomSchema(final String schemaName) {
         final PgContext ctx = PgContext.of(schemaName);
         assertThat(SkipFlywayTablesPredicate.of(ctx))
-            .accepts(Table.of(ctx.enrichWithSchema("t")))
+            .accepts(Table.of(ctx, "t"))
             .accepts(Index.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i")))
             .accepts(SequenceState.of(ctx.enrichWithSchema("s"), "int", 100.0))
-            .rejects(Table.of(ctx.enrichWithSchema("flyway_schema_history")))
-            .rejects(Table.of(ctx.enrichWithSchema("FLYWAY_SCHEMA_HISTORY")));
+            .rejects(Table.of(ctx, "flyway_schema_history"))
+            .rejects(Table.of(ctx, "FLYWAY_SCHEMA_HISTORY"));
     }
 }

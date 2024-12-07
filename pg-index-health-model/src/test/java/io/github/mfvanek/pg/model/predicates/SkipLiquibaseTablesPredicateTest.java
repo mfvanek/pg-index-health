@@ -52,12 +52,12 @@ class SkipLiquibaseTablesPredicateTest {
     void shouldWorkWithCustomSchema(final String schemaName) {
         final PgContext ctx = PgContext.of(schemaName);
         assertThat(SkipLiquibaseTablesPredicate.of(ctx))
-            .accepts(Table.of(ctx.enrichWithSchema("t")))
+            .accepts(Table.of(ctx, "t"))
             .accepts(Index.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i")))
             .accepts(SequenceState.of(ctx.enrichWithSchema("s"), "int", 100.0))
-            .rejects(Table.of(ctx.enrichWithSchema("databasechangelog")))
-            .rejects(Table.of(ctx.enrichWithSchema("DATABASECHANGELOG")))
-            .rejects(Table.of(ctx.enrichWithSchema("databasechangeloglock")))
-            .rejects(Table.of(ctx.enrichWithSchema("DATABASECHANGELOGLOCK")));
+            .rejects(Table.of(ctx, "databasechangelog"))
+            .rejects(Table.of(ctx, "DATABASECHANGELOG"))
+            .rejects(Table.of(ctx, "databasechangeloglock"))
+            .rejects(Table.of(ctx, "DATABASECHANGELOGLOCK"));
     }
 }

@@ -77,10 +77,10 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         return logResult;
     }
 
-    private Predicate<DbObject> prepareFilters(@Nonnull final Exclusions exclusions, @Nonnull final PgContext ctx) {
-        return SkipTablesByNamePredicate.of(ctx, exclusions.getTableNameExclusions())
-            .and(SkipIndexesByNamePredicate.of(ctx, exclusions.getIndexNameExclusions()))
-            .and(SkipBySequenceNamePredicate.of(ctx, exclusions.getSequenceNameExclusions()))
+    private Predicate<DbObject> prepareFilters(@Nonnull final Exclusions exclusions, @Nonnull final PgContext pgContext) {
+        return SkipTablesByNamePredicate.of(pgContext, exclusions.getTableNameExclusions())
+            .and(SkipIndexesByNamePredicate.of(pgContext, exclusions.getIndexNameExclusions()))
+            .and(SkipBySequenceNamePredicate.of(pgContext, exclusions.getSequenceNameExclusions()))
             .and(SkipBloatUnderThresholdPredicate.of(exclusions.getBloatSizeThresholdInBytes(), exclusions.getBloatPercentageThreshold()))
             .and(SkipSmallTablesPredicate.of(exclusions.getTableSizeThresholdInBytes()))
             .and(SkipSmallIndexesPredicate.of(exclusions.getIndexSizeThresholdInBytes()));

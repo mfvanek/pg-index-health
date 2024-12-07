@@ -46,13 +46,13 @@ class TablesWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
-                    Table.of(ctx.enrichWithSchema("accounts")),
-                    Table.of(ctx.enrichWithSchema("clients")));
+                    Table.of(ctx, "accounts"),
+                    Table.of(ctx, "clients"));
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts")))
                 .hasSize(1)
-                .containsExactly(Table.of(ctx.enrichWithSchema("clients")))
+                .containsExactly(Table.of(ctx, "clients"))
                 .allMatch(t -> t.getTableSizeInBytes() > 0L);
         });
     }
@@ -65,13 +65,13 @@ class TablesWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
-                    Table.of(ctx.enrichWithSchema("accounts")),
-                    Table.of(ctx.enrichWithSchema("clients")));
+                    Table.of(ctx, "accounts"),
+                    Table.of(ctx, "clients"));
 
             assertThat(check)
                 .executing(ctx, SkipSmallTablesPredicate.of(1_234L))
                 .hasSize(1)
-                .containsExactly(Table.of(ctx.enrichWithSchema("clients")))
+                .containsExactly(Table.of(ctx, "clients"))
                 .allMatch(t -> t.getTableSizeInBytes() > 1_234L);
         });
     }
