@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import javax.annotation.Nonnull;
@@ -80,6 +81,26 @@ public final class UnusedIndex extends IndexWithSize {
     }
 
     /**
+     * Creates a new {@code UnusedIndex} instance with the specified parameters and given context.
+     *
+     * @param pgContext        the schema context to enrich table and index name; must be non-null.
+     * @param tableName        the name of the table associated with the index, must be non-null
+     * @param indexName        the name of the index, must be non-null
+     * @param indexSizeInBytes the size of the index in bytes
+     * @param indexScans       the number of times the index has been scanned, must be non-negative
+     * @return a new {@code UnusedIndex} instance
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static UnusedIndex of(@Nonnull final PgContext pgContext,
+                                 @Nonnull final String tableName,
+                                 @Nonnull final String indexName,
+                                 final long indexSizeInBytes,
+                                 final long indexScans) {
+        return of(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext), indexSizeInBytes, indexScans);
+    }
+
+    /**
      * Creates a new {@code UnusedIndex} instance with zero size.
      *
      * @param tableName the name of the table associated with the index, must be non-null
@@ -90,6 +111,22 @@ public final class UnusedIndex extends IndexWithSize {
     @Nonnull
     public static UnusedIndex of(@Nonnull final String tableName,
                                  @Nonnull final String indexName) {
-        return new UnusedIndex(tableName, indexName, 0L, 0L);
+        return of(tableName, indexName, 0L, 0L);
+    }
+
+    /**
+     * Creates a new {@code UnusedIndex} instance with zero size and given context.
+     *
+     * @param pgContext the schema context to enrich table and index name; must be non-null.
+     * @param tableName the name of the table associated with the index, must be non-null
+     * @param indexName the name of the index, must be non-null
+     * @return a new {@code UnusedIndex} instance
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static UnusedIndex of(@Nonnull final PgContext pgContext,
+                                 @Nonnull final String tableName,
+                                 @Nonnull final String indexName) {
+        return of(pgContext, tableName, indexName, 0L, 0L);
     }
 }
