@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -62,12 +63,17 @@ class IndexWithNullsTest {
         assertThatThrownBy(() -> IndexWithNulls.of("t", "i", 0, "  "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
+        assertThatThrownBy(() -> IndexWithNulls.of(null, null, null, 0, "f"))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgContext cannot be null");
     }
 
     @Test
     void testToString() {
         assertThat(IndexWithNulls.of("t", "i", 22L, "f"))
-            .hasToString("IndexWithNulls{tableName='t', indexName='i', " + "indexSizeInBytes=22, columns=[Column{tableName='t', columnName='f', notNull=false}]}");
+            .hasToString("IndexWithNulls{tableName='t', indexName='i', indexSizeInBytes=22, columns=[Column{tableName='t', columnName='f', notNull=false}]}");
+        assertThat(IndexWithNulls.of(PgContext.of("tst"), "t", "i", 22L, "f"))
+            .hasToString("IndexWithNulls{tableName='tst.t', indexName='tst.i', indexSizeInBytes=22, columns=[Column{tableName='tst.t', columnName='f', notNull=false}]}");
     }
 
     @SuppressWarnings("ConstantConditions")

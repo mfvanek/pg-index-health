@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
 import java.util.Objects;
@@ -67,5 +68,26 @@ public final class IndexWithNulls extends IndexWithColumns {
                                     final long indexSizeInBytes,
                                     @Nonnull final String nullableColumnName) {
         return new IndexWithNulls(tableName, indexName, indexSizeInBytes, Column.ofNullable(tableName, nullableColumnName));
+    }
+
+    /**
+     * Constructs an {@code IndexWithNulls} object with given context.
+     *
+     * @param pgContext          the schema context to enrich table and index name; must be non-null.
+     * @param tableName          table name; should be non-blank.
+     * @param indexName          index name; should be non-blank.
+     * @param indexSizeInBytes   index size in bytes; should be positive or zero.
+     * @param nullableColumnName nullable column in this index.
+     * @return {@code IndexWithNulls}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static IndexWithNulls of(@Nonnull final PgContext pgContext,
+                                    @Nonnull final String tableName,
+                                    @Nonnull final String indexName,
+                                    final long indexSizeInBytes,
+                                    @Nonnull final String nullableColumnName) {
+        return new IndexWithNulls(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext),
+            indexSizeInBytes, Column.ofNullable(pgContext, tableName, nullableColumnName));
     }
 }
