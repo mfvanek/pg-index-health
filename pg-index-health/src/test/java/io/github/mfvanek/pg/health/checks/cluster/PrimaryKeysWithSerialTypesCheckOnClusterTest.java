@@ -46,7 +46,7 @@ class PrimaryKeysWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase
                 .hasSize(1)
                 .containsExactlyInAnyOrder(
                     ColumnWithSerialType.of(
-                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "id"), SerialType.BIG_SERIAL, ctx.enrichWithSchema("bad_accounts_id_seq")
+                        Column.ofNotNull(ctx, "bad_accounts", "id"), SerialType.BIG_SERIAL, ctx.enrichWithSchema("bad_accounts_id_seq")
                     ));
 
             assertThat(check)

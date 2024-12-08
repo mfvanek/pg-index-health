@@ -95,7 +95,7 @@ public final class IndexWithBloat extends IndexWithSize implements BloatAware {
     /**
      * Constructs a {@code IndexWithBloat} object with given context.
      *
-     * @param pgContext        the schema context to enrich index name; must be non-null.
+     * @param pgContext        the schema context to enrich table and index name; must be non-null.
      * @param tableName        table name; should be non-blank.
      * @param indexName        index name; should be non-blank.
      * @param indexSizeInBytes index size in bytes; should be positive or zero.

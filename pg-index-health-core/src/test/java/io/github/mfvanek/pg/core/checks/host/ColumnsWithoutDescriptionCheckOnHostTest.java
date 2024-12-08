@@ -79,8 +79,8 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 .filteredOn(c -> "id".equalsIgnoreCase(c.getColumnName()))
                 .hasSize(2)
                 .containsExactly(
-                    Column.ofNotNull(ctx.enrichWithSchema("accounts"), "id"),
-                    Column.ofNotNull(ctx.enrichWithSchema("clients"), "id")));
+                    Column.ofNotNull(ctx, "accounts", "id"),
+                    Column.ofNotNull(ctx, "clients", "id")));
     }
 
     @ParameterizedTest

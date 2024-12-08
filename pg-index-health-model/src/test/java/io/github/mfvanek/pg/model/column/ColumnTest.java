@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.column;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -79,9 +80,14 @@ class ColumnTest {
     void testToString() {
         assertThat(Column.ofNotNull("t1", "c1"))
             .hasToString("Column{tableName='t1', columnName='c1', notNull=true}");
-
         assertThat(Column.ofNullable("t2", "c2"))
             .hasToString("Column{tableName='t2', columnName='c2', notNull=false}");
+
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(Column.ofNotNull(ctx, "t1", "c1"))
+            .hasToString("Column{tableName='tst.t1', columnName='c1', notNull=true}");
+        assertThat(Column.ofNullable(ctx, "t2", "c2"))
+            .hasToString("Column{tableName='tst.t2', columnName='c2', notNull=false}");
     }
 
     @SuppressWarnings("ConstantConditions")

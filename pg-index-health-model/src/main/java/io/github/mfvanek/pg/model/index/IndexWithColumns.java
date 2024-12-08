@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.List;
@@ -95,6 +96,26 @@ public class IndexWithColumns extends IndexWithSize {
     }
 
     /**
+     * Constructs an {@code IndexWithColumns} object with one column and given context.
+     *
+     * @param pgContext        the schema context to enrich table and index name; must be non-null.
+     * @param tableName        table name; should be non-blank.
+     * @param indexName        index name; should be non-blank.
+     * @param indexSizeInBytes index size in bytes; should be positive or zero.
+     * @param column           column in index.
+     * @return {@code IndexWithColumns}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static IndexWithColumns ofSingle(@Nonnull final PgContext pgContext,
+                                            @Nonnull final String tableName,
+                                            @Nonnull final String indexName,
+                                            final long indexSizeInBytes,
+                                            @Nonnull final Column column) {
+        return ofSingle(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext), indexSizeInBytes, column);
+    }
+
+    /**
      * Constructs an {@code IndexWithColumns} object with given columns.
      *
      * @param tableName        table name; should be non-blank.
@@ -109,5 +130,25 @@ public class IndexWithColumns extends IndexWithSize {
                                              final long indexSizeInBytes,
                                              @Nonnull final List<Column> columns) {
         return new IndexWithColumns(tableName, indexName, indexSizeInBytes, columns);
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object with given columns and context.
+     *
+     * @param pgContext        the schema context to enrich table and index name; must be non-null.
+     * @param tableName        table name; should be non-blank.
+     * @param indexName        index name; should be non-blank.
+     * @param indexSizeInBytes index size in bytes; should be positive or zero.
+     * @param columns          columns in index.
+     * @return {@code IndexWithColumns}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static IndexWithColumns ofColumns(@Nonnull final PgContext pgContext,
+                                             @Nonnull final String tableName,
+                                             @Nonnull final String indexName,
+                                             final long indexSizeInBytes,
+                                             @Nonnull final List<Column> columns) {
+        return ofColumns(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext), indexSizeInBytes, columns);
     }
 }

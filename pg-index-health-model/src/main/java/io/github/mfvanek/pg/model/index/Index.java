@@ -156,7 +156,7 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
     /**
      * Constructs an {@code Index} object with given context.
      *
-     * @param pgContext the schema context to enrich index name; must be non-null.
+     * @param pgContext the schema context to enrich table and index name; must be non-null.
      * @param tableName table name; should be non-blank.
      * @param indexName index name; should be non-blank.
      * @return {@code Index}

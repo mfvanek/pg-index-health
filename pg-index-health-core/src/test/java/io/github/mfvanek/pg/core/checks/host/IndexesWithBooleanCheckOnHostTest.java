@@ -45,8 +45,8 @@ class IndexesWithBooleanCheckOnHostTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
-                    IndexWithColumns.ofSingle(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_deleted"), 0L,
-                        Column.ofNotNull(ctx.enrichWithSchema("accounts"), "deleted"))
+                    IndexWithColumns.ofSingle(ctx, "accounts", "i_accounts_deleted", 0L,
+                        Column.ofNotNull(ctx, "accounts", "deleted"))
                 );
 
             assertThat(check)
