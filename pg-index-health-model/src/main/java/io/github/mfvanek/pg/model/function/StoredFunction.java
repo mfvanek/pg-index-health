@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.function;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
@@ -128,8 +129,23 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
      * @param functionName procedure/function name.
      * @return {@code StoredFunction}
      */
+    @Nonnull
     public static StoredFunction ofNoArgs(@Nonnull final String functionName) {
         return new StoredFunction(functionName, "");
+    }
+
+    /**
+     * Constructs a {@code StoredFunction} object without arguments/signature with given context.
+     *
+     * @param pgContext    the schema context to enrich procedure/function name; must be non-null.
+     * @param functionName procedure/function name.
+     * @return {@code StoredFunction}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static StoredFunction ofNoArgs(@Nonnull final PgContext pgContext,
+                                          @Nonnull final String functionName) {
+        return ofNoArgs(PgContext.enrichWith(functionName, pgContext));
     }
 
     /**
@@ -139,7 +155,25 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
      * @param functionSignature procedure/function signature (arguments).
      * @return {@code StoredFunction}
      */
-    public static StoredFunction of(@Nonnull final String functionName, @Nonnull final String functionSignature) {
+    @Nonnull
+    public static StoredFunction of(@Nonnull final String functionName,
+                                    @Nonnull final String functionSignature) {
         return new StoredFunction(functionName, functionSignature);
+    }
+
+    /**
+     * Constructs a {@code StoredFunction} object with given context.
+     *
+     * @param pgContext         the schema context to enrich procedure/function name; must be non-null.
+     * @param functionName      procedure/function name.
+     * @param functionSignature procedure/function signature (arguments).
+     * @return {@code StoredFunction}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static StoredFunction of(@Nonnull final PgContext pgContext,
+                                    @Nonnull final String functionName,
+                                    @Nonnull final String functionSignature) {
+        return of(PgContext.enrichWith(functionName, pgContext), functionSignature);
     }
 }
