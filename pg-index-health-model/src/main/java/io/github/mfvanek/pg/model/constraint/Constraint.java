@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.table.TableNameAware;
@@ -169,5 +170,23 @@ public class Constraint implements DbObject, TableNameAware, ConstraintNameAware
                                     @Nonnull final String constraintName,
                                     @Nonnull final ConstraintType constraintType) {
         return new Constraint(tableName, constraintName, constraintType);
+    }
+
+    /**
+     * Constructs a {@code Constraint} object with given {@code ConstraintType} and context.
+     *
+     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param tableName      table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param constraintType constraint type; should be non-null.
+     * @return {@code Constraint}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static Constraint ofType(@Nonnull final PgContext pgContext,
+                                    @Nonnull final String tableName,
+                                    @Nonnull final String constraintName,
+                                    @Nonnull final ConstraintType constraintType) {
+        return ofType(PgContext.enrichWith(tableName, pgContext), constraintName, constraintType);
     }
 }

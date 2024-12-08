@@ -94,11 +94,11 @@ class SkipTablesByNamePredicateTest {
     void shouldWorkWithCustomSchema(final String schemaName) {
         final PgContext ctx = PgContext.of(schemaName);
         assertThat(SkipTablesByNamePredicate.of(ctx, Set.of("t2", "T1")))
-            .accepts(Table.of(ctx.enrichWithSchema("t"), 0L))
-            .accepts(Index.of(ctx.enrichWithSchema("T"), ctx.enrichWithSchema("I")))
-            .accepts(SequenceState.of(ctx.enrichWithSchema("s"), "int", 100.0))
-            .rejects(Index.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i1")))
-            .rejects(Index.of(ctx.enrichWithSchema("T2"), ctx.enrichWithSchema("i2")))
-            .accepts(Table.of(ctx.enrichWithSchema("t11"), 0L));
+            .accepts(Table.of(ctx, "t"))
+            .accepts(Index.of(ctx, "T", "I"))
+            .accepts(SequenceState.of(ctx, "s", "int", 100.0))
+            .rejects(Index.of(ctx, "t1", "i1"))
+            .rejects(Index.of(ctx, "T2", "i2"))
+            .accepts(Table.of(ctx, "t11"));
     }
 }

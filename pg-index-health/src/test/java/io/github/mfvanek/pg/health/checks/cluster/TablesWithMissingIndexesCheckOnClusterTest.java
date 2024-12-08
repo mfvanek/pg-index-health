@@ -47,7 +47,7 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
-                    TableWithMissingIndex.of(ctx.enrichWithSchema("accounts"), 0L, 0L, 0L))
+                    TableWithMissingIndex.of(ctx, "accounts", 0L, 0L, 0L))
                 .allMatch(t -> t.getSeqScans() >= AMOUNT_OF_TRIES)
                 .allMatch(t -> t.getIndexScans() == 0)
                 .allMatch(t -> t.getTableSizeInBytes() > 1L);

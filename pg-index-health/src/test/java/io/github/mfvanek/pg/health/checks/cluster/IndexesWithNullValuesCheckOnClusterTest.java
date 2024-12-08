@@ -51,8 +51,7 @@ class IndexesWithNullValuesCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(
-                    IndexWithNulls.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_middle_name"), 0L, "middle_name"))
+                .containsExactly(IndexWithNulls.of(ctx, "clients", "i_clients_middle_name", 0L, "middle_name"))
                 .allMatch(i -> i.getNullableColumn().isNullable());
 
             assertThat(check)

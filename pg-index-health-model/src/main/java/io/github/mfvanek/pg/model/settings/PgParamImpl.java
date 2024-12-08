@@ -26,6 +26,9 @@ public class PgParamImpl implements PgParam {
         this.value = ParamValidators.paramValueNotNull(value, "value for '" + name + "' cannot be null");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Nonnull
     public String getName() {

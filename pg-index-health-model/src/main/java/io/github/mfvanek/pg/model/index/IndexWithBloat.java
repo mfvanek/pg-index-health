@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.bloat.BloatAware;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import javax.annotation.Nonnull;
@@ -89,5 +90,44 @@ public final class IndexWithBloat extends IndexWithSize implements BloatAware {
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
         return new IndexWithBloat(tableName, indexName, indexSizeInBytes, bloatSizeInBytes, bloatPercentage);
+    }
+
+    /**
+     * Constructs a {@code IndexWithBloat} object with given context.
+     *
+     * @param pgContext        the schema context to enrich table and index name; must be non-null.
+     * @param tableName        table name; should be non-blank.
+     * @param indexName        index name; should be non-blank.
+     * @param indexSizeInBytes index size in bytes; should be positive or zero.
+     * @param bloatSizeInBytes bloat amount in bytes; should be positive or zero.
+     * @param bloatPercentage  bloat percentage in the range from 0 to 100 inclusive.
+     * @return {@code IndexWithBloat}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static IndexWithBloat of(@Nonnull final PgContext pgContext,
+                                    @Nonnull final String tableName,
+                                    @Nonnull final String indexName,
+                                    final long indexSizeInBytes,
+                                    final long bloatSizeInBytes,
+                                    final double bloatPercentage) {
+        return of(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext),
+            indexSizeInBytes, bloatSizeInBytes, bloatPercentage);
+    }
+
+    /**
+     * Constructs a {@code IndexWithBloat} object with given context and zero bloat.
+     *
+     * @param pgContext the schema context to enrich table and index name; must be non-null.
+     * @param tableName table name; should be non-blank.
+     * @param indexName index name; should be non-blank.
+     * @return {@code IndexWithBloat}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static IndexWithBloat of(@Nonnull final PgContext pgContext,
+                                    @Nonnull final String tableName,
+                                    @Nonnull final String indexName) {
+        return of(pgContext, tableName, indexName, 0L, 0L, 0.0);
     }
 }

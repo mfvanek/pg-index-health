@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -34,8 +35,16 @@ class UnusedIndexTest {
 
     @Test
     void testToString() {
+        final PgContext ctx = PgContext.of("tst");
         assertThat(UnusedIndex.of("t", "i", 1L, 2L))
             .hasToString("UnusedIndex{tableName='t', indexName='i', " + "indexSizeInBytes=1, indexScans=2}");
+        assertThat(UnusedIndex.of(ctx, "t", "i", 1L, 2L))
+            .hasToString("UnusedIndex{tableName='tst.t', indexName='tst.i', " + "indexSizeInBytes=1, indexScans=2}");
+
+        assertThat(UnusedIndex.of("t", "i"))
+            .hasToString("UnusedIndex{tableName='t', indexName='i', " + "indexSizeInBytes=0, indexScans=0}");
+        assertThat(UnusedIndex.of(ctx, "t", "i"))
+            .hasToString("UnusedIndex{tableName='tst.t', indexName='tst.i', " + "indexSizeInBytes=0, indexScans=0}");
     }
 
     @Test

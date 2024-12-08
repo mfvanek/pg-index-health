@@ -93,6 +93,8 @@ class PgContextTest {
             .isEqualTo("test.table2");
         assertThat(pgContext.enrichWithSchema("TEST.table2"))
             .isEqualTo("TEST.table2");
+        assertThat(PgContext.enrichWith("table1", pgContext))
+            .isEqualTo("test.table1");
     }
 
     @Test
@@ -106,6 +108,8 @@ class PgContextTest {
             .isEqualTo("public.table2");
         assertThat(pgContext.enrichWithSchema("PUBLIC.table2"))
             .isEqualTo("PUBLIC.table2");
+        assertThat(PgContext.enrichWith("table1", pgContext))
+            .isEqualTo("table1");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -121,5 +125,8 @@ class PgContextTest {
         assertThatThrownBy(() -> pgContext.enrichWithSchema("   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("objectName cannot be blank");
+        assertThatThrownBy(() -> PgContext.enrichWith(null, null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgContext cannot be null");
     }
 }

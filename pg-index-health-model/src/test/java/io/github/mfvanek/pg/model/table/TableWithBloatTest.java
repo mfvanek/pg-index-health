@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,11 @@ class TableWithBloatTest {
     void testToString() {
         assertThat(TableWithBloat.of("t", 2L, 1L, 50))
             .hasToString("TableWithBloat{tableName='t', tableSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50.0}");
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(TableWithBloat.of(ctx, "t", 2L, 1L, 50))
+            .hasToString("TableWithBloat{tableName='tst.t', tableSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50.0}");
+        assertThat(TableWithBloat.of(ctx, "t"))
+            .hasToString("TableWithBloat{tableName='tst.t', tableSizeInBytes=0, bloatSizeInBytes=0, bloatPercentage=0.0}");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -59,6 +65,9 @@ class TableWithBloatTest {
         assertThatThrownBy(() -> TableWithBloat.of("t", -1L, 0L, 0))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("tableSizeInBytes cannot be less than zero");
+        assertThatThrownBy(() -> TableWithBloat.of(null, "t", 0L, 0L, 0))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgContext cannot be null");
 
         assertThat(TableWithBloat.of("t", 0L, 0L, 0))
             .isNotNull();

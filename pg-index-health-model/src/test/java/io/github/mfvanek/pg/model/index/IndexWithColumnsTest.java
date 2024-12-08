@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -75,9 +76,14 @@ class IndexWithColumnsTest {
 
     @Test
     void testToString() {
-        final Column column = Column.ofNullable("t", "f");
-        assertThat(IndexWithColumns.ofSingle("t", "i", 22L, column))
-            .hasToString("IndexWithColumns{tableName='t', indexName='i', " + "indexSizeInBytes=22, columns=[Column{tableName='t', columnName='f', notNull=false}]}");
+        assertThat(IndexWithColumns.ofSingle("t", "i", 22L, Column.ofNullable("t", "f")))
+            .hasToString("IndexWithColumns{tableName='t', indexName='i', indexSizeInBytes=22, columns=[Column{tableName='t', columnName='f', notNull=false}]}");
+        final PgContext ctx = PgContext.of("tst");
+        final Column column = Column.ofNullable(ctx, "t", "f");
+        assertThat(IndexWithColumns.ofSingle(ctx, "t", "i", 22L, column))
+            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=22, columns=[Column{tableName='tst.t', columnName='f', notNull=false}]}");
+        assertThat(IndexWithColumns.ofColumns(ctx, "t", "i", 22L, List.of(column)))
+            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=22, columns=[Column{tableName='tst.t', columnName='f', notNull=false}]}");
     }
 
     @SuppressWarnings("ConstantConditions")

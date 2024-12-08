@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
@@ -118,11 +119,33 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      * @param indexScans       number of index scans initiated on this table; should be non-negative.
      * @return {@code TableWithMissingIndex}
      */
+    @Nonnull
     public static TableWithMissingIndex of(@Nonnull final String tableName,
                                            final long tableSizeInBytes,
                                            final long seqScans,
                                            final long indexScans) {
         final Table table = Table.of(tableName, tableSizeInBytes);
+        return of(table, seqScans, indexScans);
+    }
+
+    /**
+     * Constructs a {@code TableWithMissingIndex} object with given context.
+     *
+     * @param pgContext        the schema context to enrich table name; must be non-null.
+     * @param tableName        table name; should be non-blank.
+     * @param tableSizeInBytes table size in bytes; should be positive or zero.
+     * @param seqScans         number of sequential scans initiated on this table; should be non-negative.
+     * @param indexScans       number of index scans initiated on this table; should be non-negative.
+     * @return {@code TableWithMissingIndex}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static TableWithMissingIndex of(@Nonnull final PgContext pgContext,
+                                           @Nonnull final String tableName,
+                                           final long tableSizeInBytes,
+                                           final long seqScans,
+                                           final long indexScans) {
+        final Table table = Table.of(pgContext, tableName, tableSizeInBytes);
         return of(table, seqScans, indexScans);
     }
 
@@ -135,6 +158,7 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      * @return {@code TableWithMissingIndex}
      * @since 0.7.0
      */
+    @Nonnull
     public static TableWithMissingIndex of(@Nonnull final Table table,
                                            final long seqScans,
                                            final long indexScans) {

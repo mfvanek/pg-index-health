@@ -45,9 +45,9 @@ class BtreeIndexesOnArrayColumnsCheckOnHostTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactlyInAnyOrder(
-                    IndexWithColumns.ofSingle(accountsTableName, ctx.enrichWithSchema("accounts_roles_btree_idx"), 0L,
+                    IndexWithColumns.ofSingle(ctx, accountsTableName, "accounts_roles_btree_idx", 0L,
                         Column.ofNotNull(accountsTableName, "roles")),
-                    IndexWithColumns.ofSingle(accountsTableName, ctx.enrichWithSchema("accounts_account_number_roles_btree_idx"), 0L,
+                    IndexWithColumns.ofSingle(ctx, accountsTableName, "accounts_account_number_roles_btree_idx", 0L,
                         Column.ofNotNull(accountsTableName, "roles"))
                 );
 

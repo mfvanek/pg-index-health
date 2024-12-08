@@ -49,7 +49,7 @@ class SkipBloatUnderThresholdPredicateTest {
     @Test
     void shouldWork() {
         assertThat(SkipBloatUnderThresholdPredicate.of(100L, 10.0))
-            .accepts(Table.of("t", 0L))
+            .accepts(Table.of("t"))
             .accepts(SequenceState.of("s1", "int", 80.0))
             .rejects(TableWithBloat.of(Table.of("t2", 1L), 1L, 10.0))
             .rejects(TableWithBloat.of(Table.of("t2", 1L), 1L, 11.0))

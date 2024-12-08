@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import javax.annotation.Nonnull;
@@ -80,5 +81,53 @@ public class IndexWithSize extends Index implements IndexSizeAware {
                                    @Nonnull final String indexName,
                                    final long indexSizeInBytes) {
         return new IndexWithSize(tableName, indexName, indexSizeInBytes);
+    }
+
+    /**
+     * Constructs an {@code IndexWithSize} object with given context.
+     *
+     * @param pgContext        the schema context to enrich table and index name; must be non-null.
+     * @param tableName        table name; should be non-blank.
+     * @param indexName        index name; should be non-blank.
+     * @param indexSizeInBytes index size in bytes; should be positive or zero.
+     * @return {@code IndexWithSize}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static IndexWithSize of(@Nonnull final PgContext pgContext,
+                                   @Nonnull final String tableName,
+                                   @Nonnull final String indexName,
+                                   final long indexSizeInBytes) {
+        return of(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext), indexSizeInBytes);
+    }
+
+    /**
+     * Constructs an {@code IndexWithSize} object with zero size.
+     *
+     * @param tableName table name; should be non-blank.
+     * @param indexName index name; should be non-blank.
+     * @return {@code IndexWithSize}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static IndexWithSize of(@Nonnull final String tableName,
+                                   @Nonnull final String indexName) {
+        return of(tableName, indexName, 0L);
+    }
+
+    /**
+     * Constructs an {@code IndexWithSize} object with zero size and given context.
+     *
+     * @param pgContext the schema context to enrich table and index name; must be non-null.
+     * @param tableName table name; should be non-blank.
+     * @param indexName index name; should be non-blank.
+     * @return {@code IndexWithSize}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static IndexWithSize of(@Nonnull final PgContext pgContext,
+                                   @Nonnull final String tableName,
+                                   @Nonnull final String indexName) {
+        return of(pgContext, tableName, indexName, 0L);
     }
 }

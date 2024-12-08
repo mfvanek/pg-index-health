@@ -39,7 +39,7 @@ class SkipSmallIndexesPredicateTest {
     @Test
     void shouldWork() {
         assertThat(SkipSmallIndexesPredicate.of(10L))
-            .accepts(Table.of("t", 0L))
+            .accepts(Table.of("t"))
             .accepts(IndexWithSize.of("t", "i", 10L))
             .accepts(IndexWithSize.of("t", "i", 11L))
             .accepts(SequenceState.of("s1", "int", 80.0))

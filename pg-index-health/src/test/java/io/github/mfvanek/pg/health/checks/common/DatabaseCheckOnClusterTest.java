@@ -36,8 +36,8 @@ class DatabaseCheckOnClusterTest {
             .thenAnswer(invocation -> {
                 final PgContext ctx = invocation.getArgument(0);
                 return List.of(
-                    Table.of(ctx.enrichWithSchema("t1"), 1L),
-                    Table.of(ctx.enrichWithSchema("t2"), 1L));
+                    Table.of(ctx, "t1", 1L),
+                    Table.of(ctx, "t2", 1L));
             });
         final List<Table> tables = check.check(CONTEXTS, item -> true);
         assertThat(tables)

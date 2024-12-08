@@ -51,7 +51,7 @@ internal class PostgresCustomDataSourceDemoApplicationKtTest {
                     Diagnostic.TABLES_NOT_LINKED_TO_OTHERS ->
                         listAssert
                             .hasSize(1)
-                            .containsExactly(Table.of("warehouse", 0L))
+                            .containsExactly(Table.of("warehouse"))
 
                     else -> listAssert.isEmpty()
                 }

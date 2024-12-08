@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -46,19 +47,29 @@ class TableTest {
         assertThatThrownBy(() -> Table.of("t", -1L))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("tableSizeInBytes cannot be less than zero");
+        assertThatThrownBy(() -> Table.of(null, "t"))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgContext cannot be null");
+        assertThatThrownBy(() -> Table.of(null, "t", -1L))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgContext cannot be null");
     }
 
     @Test
     void testToString() {
         assertThat(Table.of("t", 2L))
             .hasToString("Table{tableName='t', tableSizeInBytes=2}");
+        assertThat(Table.of(PgContext.ofPublic(), "t", 2L))
+            .hasToString("Table{tableName='t', tableSizeInBytes=2}");
+        assertThat(Table.of(PgContext.of("tst"), "t"))
+            .hasToString("Table{tableName='tst.t', tableSizeInBytes=0}");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
         final Table first = Table.of("t1", 22L);
-        final Table theSame = Table.of("t1", 0L); // different size!
+        final Table theSame = Table.of("t1"); // different size!
         final Table second = Table.of("t2", 30L);
         final Table third = Table.of("t3", 22L);
 
@@ -106,7 +117,7 @@ class TableTest {
     @Test
     void compareToTest() {
         final Table first = Table.of("t1", 22L);
-        final Table theSame = Table.of("t1", 0L); // different size!
+        final Table theSame = Table.of("t1"); // different size!
         final Table second = Table.of("t2", 30L);
         final Table third = Table.of("t3", 22L);
 

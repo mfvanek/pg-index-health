@@ -86,8 +86,8 @@ class FunctionsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
-                    StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer"),
-                    StoredFunction.of(ctx.enrichWithSchema("add"), "a integer, b integer, c integer")
+                    StoredFunction.of(ctx, "add", "a integer, b integer"),
+                    StoredFunction.of(ctx, "add", "a integer, b integer, c integer")
                 ));
     }
 

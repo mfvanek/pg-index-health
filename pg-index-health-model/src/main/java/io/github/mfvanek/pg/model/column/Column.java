@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.column;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
@@ -151,8 +152,25 @@ public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
      * @return {@code Column}
      */
     @Nonnull
-    public static Column ofNotNull(@Nonnull final String tableName, @Nonnull final String columnName) {
+    public static Column ofNotNull(@Nonnull final String tableName,
+                                   @Nonnull final String columnName) {
         return new Column(tableName, columnName, true);
+    }
+
+    /**
+     * Constructs a not null {@code Column} object with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static Column ofNotNull(@Nonnull final PgContext pgContext,
+                                   @Nonnull final String tableName,
+                                   @Nonnull final String columnName) {
+        return ofNotNull(PgContext.enrichWith(tableName, pgContext), columnName);
     }
 
     /**
@@ -163,7 +181,24 @@ public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
      * @return {@code Column}
      */
     @Nonnull
-    public static Column ofNullable(@Nonnull final String tableName, @Nonnull final String columnName) {
+    public static Column ofNullable(@Nonnull final String tableName,
+                                    @Nonnull final String columnName) {
         return new Column(tableName, columnName, false);
+    }
+
+    /**
+     * Constructs a nullable {@code Column} object with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static Column ofNullable(@Nonnull final PgContext pgContext,
+                                    @Nonnull final String tableName,
+                                    @Nonnull final String columnName) {
+        return ofNullable(PgContext.enrichWith(tableName, pgContext), columnName);
     }
 }

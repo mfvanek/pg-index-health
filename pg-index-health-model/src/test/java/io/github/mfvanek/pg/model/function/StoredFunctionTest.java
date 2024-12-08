@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.function;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -68,6 +69,9 @@ class StoredFunctionTest {
         assertThatThrownBy(() -> StoredFunction.ofNoArgs("  "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("functionName cannot be blank");
+        assertThatThrownBy(() -> StoredFunction.ofNoArgs(null, null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgContext cannot be null");
 
         assertThatThrownBy(() -> StoredFunction.of(null, null))
             .isInstanceOf(NullPointerException.class)
@@ -81,15 +85,23 @@ class StoredFunctionTest {
         assertThatThrownBy(() -> StoredFunction.of("f1", null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("functionSignature cannot be null");
+        assertThatThrownBy(() -> StoredFunction.of(null, null, null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgContext cannot be null");
     }
 
     @Test
     void testToString() {
+        final PgContext ctx = PgContext.of("tst");
         assertThat(StoredFunction.ofNoArgs("f1"))
             .hasToString("StoredFunction{functionName='f1', functionSignature=''}");
+        assertThat(StoredFunction.ofNoArgs(ctx, "f1"))
+            .hasToString("StoredFunction{functionName='tst.f1', functionSignature=''}");
 
         assertThat(StoredFunction.of("f2", "IN a integer, IN b integer, IN c integer"))
             .hasToString("StoredFunction{functionName='f2', functionSignature='IN a integer, IN b integer, IN c integer'}");
+        assertThat(StoredFunction.of(ctx, "f2", "IN a integer, IN b integer, IN c integer"))
+            .hasToString("StoredFunction{functionName='tst.f2', functionSignature='IN a integer, IN b integer, IN c integer'}");
     }
 
     @SuppressWarnings("ConstantConditions")

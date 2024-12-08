@@ -47,12 +47,12 @@ class UnusedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(6)
                 .containsExactlyInAnyOrder(
-                    UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_first"), 0L, 0),
-                    UnusedIndex.of(ctx.enrichWithSchema("clients"), ctx.enrichWithSchema("i_clients_last_name"), 0L, 0),
-                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number"), 0L, 0),
-                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_number_balance_not_deleted"), 0L, 0),
-                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number_not_deleted"), 0L, 0),
-                    UnusedIndex.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_id_account_number_not_deleted"), 0L, 0))
+                    UnusedIndex.of(ctx, "clients", "i_clients_last_first"),
+                    UnusedIndex.of(ctx, "clients", "i_clients_last_name"),
+                    UnusedIndex.of(ctx, "accounts", "i_accounts_account_number"),
+                    UnusedIndex.of(ctx, "accounts", "i_accounts_number_balance_not_deleted"),
+                    UnusedIndex.of(ctx, "accounts", "i_accounts_account_number_not_deleted"),
+                    UnusedIndex.of(ctx, "accounts", "i_accounts_id_account_number_not_deleted"))
                 .allMatch(i -> i.getIndexSizeInBytes() > 0L)
                 .allMatch(i -> i.getIndexScans() == 0);
 

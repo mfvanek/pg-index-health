@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
@@ -131,7 +132,51 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      * @return {@code Table}
      */
     @Nonnull
-    public static Table of(@Nonnull final String tableName, final long tableSizeInBytes) {
+    public static Table of(@Nonnull final String tableName,
+                           final long tableSizeInBytes) {
         return new Table(tableName, tableSizeInBytes);
+    }
+
+    /**
+     * Constructs a {@code Table} object with given context.
+     *
+     * @param pgContext        the schema context to enrich table name; must be non-null.
+     * @param tableName        table name; should be non-blank.
+     * @param tableSizeInBytes table size in bytes; should be positive or zero.
+     * @return {@code Table}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static Table of(@Nonnull final PgContext pgContext,
+                           @Nonnull final String tableName,
+                           final long tableSizeInBytes) {
+        return of(PgContext.enrichWith(tableName, pgContext), tableSizeInBytes);
+    }
+
+    /**
+     * Constructs a {@code Table} object with zero size.
+     *
+     * @param tableName table name; should be non-blank.
+     * @return {@code Table}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static Table of(@Nonnull final String tableName) {
+        return of(tableName, 0L);
+    }
+
+    /**
+     * Constructs a {@code Table} object with zero size and given context.
+     *
+     * @param pgContext the schema context to enrich table name; must be non-null.
+     * @param tableName table name; should be non-blank.
+     * @return {@code Table}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static Table of(@Nonnull final PgContext pgContext,
+                           @Nonnull final String tableName) {
+        Objects.requireNonNull(pgContext, "pgContext cannot be null");
+        return of(PgContext.enrichWith(tableName, pgContext));
     }
 }

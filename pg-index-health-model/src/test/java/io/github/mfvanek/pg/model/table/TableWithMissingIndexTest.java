@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.table;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -59,12 +60,17 @@ class TableWithMissingIndexTest {
         assertThatThrownBy(() -> TableWithMissingIndex.of(null, 0L, 0L))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("table cannot be null");
+        assertThatThrownBy(() -> TableWithMissingIndex.of(null, "t", 0L, 0L, 0L))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgContext cannot be null");
     }
 
     @Test
     void testToString() {
         assertThat(TableWithMissingIndex.of("t", 11L, 33L, 22L))
             .hasToString("TableWithMissingIndex{tableName='t', tableSizeInBytes=11, seqScans=33, indexScans=22}");
+        assertThat(TableWithMissingIndex.of(PgContext.of("tst"), "t", 11L, 33L, 22L))
+            .hasToString("TableWithMissingIndex{tableName='tst.t', tableSizeInBytes=11, seqScans=33, indexScans=22}");
     }
 
     @SuppressWarnings("ConstantConditions")

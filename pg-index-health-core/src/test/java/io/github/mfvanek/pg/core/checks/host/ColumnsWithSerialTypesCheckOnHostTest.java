@@ -74,7 +74,7 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("bad_accounts"), "real_client_id"), ctx.enrichWithSchema("bad_accounts_real_client_id_seq"))
+                        Column.ofNotNull(ctx, "bad_accounts", "real_client_id"), ctx.enrichWithSchema("bad_accounts_real_client_id_seq"))
                 );
 
             assertThat(check)
@@ -105,7 +105,7 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("one_more_table"), "id"), ctx.enrichWithSchema("one_more_table_id_seq"))
+                        Column.ofNotNull(ctx, "one_more_table", "id"), ctx.enrichWithSchema("one_more_table_id_seq"))
                 ));
     }
 
@@ -118,11 +118,11 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(3)
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("one_more_table"), "id"), ctx.enrichWithSchema("one_more_table_id_seq")),
+                        Column.ofNotNull(ctx, "one_more_table", "id"), ctx.enrichWithSchema("one_more_table_id_seq")),
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("test_table"), "id"), ctx.enrichWithSchema("test_table_id_seq")),
+                        Column.ofNotNull(ctx, "test_table", "id"), ctx.enrichWithSchema("test_table_id_seq")),
                     ColumnWithSerialType.ofBigSerial(
-                        Column.ofNotNull(ctx.enrichWithSchema("test_table"), "num"), ctx.enrichWithSchema("test_table_num_seq"))
+                        Column.ofNotNull(ctx, "test_table", "num"), ctx.enrichWithSchema("test_table_num_seq"))
                 ));
     }
 }

@@ -46,8 +46,8 @@ class DuplicatedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .containsExactly(
                     DuplicatedIndexes.of(
-                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("accounts_account_number_key"), 0L),
-                        IndexWithSize.of(ctx.enrichWithSchema("accounts"), ctx.enrichWithSchema("i_accounts_account_number"), 0L)))
+                        IndexWithSize.of(ctx, "accounts", "accounts_account_number_key"),
+                        IndexWithSize.of(ctx, "accounts", "i_accounts_account_number")))
                 .allMatch(d -> d.getTotalSize() >= 16_384L);
 
             assertThat(check)
