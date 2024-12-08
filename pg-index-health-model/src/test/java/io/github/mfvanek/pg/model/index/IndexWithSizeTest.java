@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -45,8 +46,15 @@ class IndexWithSizeTest {
 
     @Test
     void testToString() {
+        final PgContext ctx = PgContext.of("tst");
         assertThat(IndexWithSize.of("t", "i", 33L))
             .hasToString("IndexWithSize{tableName='t', indexName='i', indexSizeInBytes=33}");
+        assertThat(IndexWithSize.of(ctx, "t", "i", 33L))
+            .hasToString("IndexWithSize{tableName='tst.t', indexName='tst.i', indexSizeInBytes=33}");
+        assertThat(IndexWithSize.of("t", "i"))
+            .hasToString("IndexWithSize{tableName='t', indexName='i', indexSizeInBytes=0}");
+        assertThat(IndexWithSize.of(ctx, "t", "i"))
+            .hasToString("IndexWithSize{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0}");
     }
 
     @SuppressWarnings("ConstantConditions")
