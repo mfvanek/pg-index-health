@@ -114,4 +114,20 @@ public final class IndexWithBloat extends IndexWithSize implements BloatAware {
         return of(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext),
             indexSizeInBytes, bloatSizeInBytes, bloatPercentage);
     }
+
+    /**
+     * Constructs a {@code IndexWithBloat} object with given context and zero bloat.
+     *
+     * @param pgContext the schema context to enrich table and index name; must be non-null.
+     * @param tableName table name; should be non-blank.
+     * @param indexName index name; should be non-blank.
+     * @return {@code IndexWithBloat}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static IndexWithBloat of(@Nonnull final PgContext pgContext,
+                                    @Nonnull final String tableName,
+                                    @Nonnull final String indexName) {
+        return of(pgContext, tableName, indexName, 0L, 0L, 0.0);
+    }
 }

@@ -40,8 +40,11 @@ class TableWithBloatTest {
     void testToString() {
         assertThat(TableWithBloat.of("t", 2L, 1L, 50))
             .hasToString("TableWithBloat{tableName='t', tableSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50.0}");
-        assertThat(TableWithBloat.of(PgContext.of("tst"), "t", 2L, 1L, 50))
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(TableWithBloat.of(ctx, "t", 2L, 1L, 50))
             .hasToString("TableWithBloat{tableName='tst.t', tableSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50.0}");
+        assertThat(TableWithBloat.of(ctx, "t"))
+            .hasToString("TableWithBloat{tableName='tst.t', tableSizeInBytes=0, bloatSizeInBytes=0, bloatPercentage=0.0}");
     }
 
     @SuppressWarnings("ConstantConditions")

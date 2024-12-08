@@ -139,6 +139,20 @@ public final class TableWithBloat extends AbstractTableAware implements BloatAwa
     }
 
     /**
+     * Constructs a {@code TableWithBloat} object with given context and zero bloat.
+     *
+     * @param pgContext the schema context to enrich table name; must be non-null.
+     * @param tableName table name; should be non-blank.
+     * @return {@code TableWithBloat}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static TableWithBloat of(@Nonnull final PgContext pgContext,
+                                    @Nonnull final String tableName) {
+        return of(pgContext, tableName, 0L, 0L, 0.0);
+    }
+
+    /**
      * Constructs a {@code TableWithBloat} object.
      *
      * @param table            table; should be non-null.

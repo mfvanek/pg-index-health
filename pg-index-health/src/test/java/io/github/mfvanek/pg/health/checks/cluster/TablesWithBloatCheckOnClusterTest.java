@@ -50,8 +50,8 @@ class TablesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactlyInAnyOrder(
-                    TableWithBloat.of(ctx, "accounts", 0L, 0L, 0),
-                    TableWithBloat.of(ctx, "clients", 0L, 0L, 0))
+                    TableWithBloat.of(ctx, "accounts"),
+                    TableWithBloat.of(ctx, "clients"))
                 .allMatch(t -> t.getTableSizeInBytes() > 0L) // real size doesn't matter
                 .allMatch(t -> t.getBloatPercentage() == 0 && t.getBloatSizeInBytes() == 0L);
 

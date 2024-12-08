@@ -42,8 +42,11 @@ class IndexWithBloatTest {
     void testToString() {
         assertThat(IndexWithBloat.of("t", "i", 2L, 1L, 50))
             .hasToString("IndexWithBloat{tableName='t', indexName='i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50.0}");
-        assertThat(IndexWithBloat.of(PgContext.of("tst"), "t", "i", 2L, 1L, 50))
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(IndexWithBloat.of(ctx, "t", "i", 2L, 1L, 50))
             .hasToString("IndexWithBloat{tableName='tst.t', indexName='tst.i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50.0}");
+        assertThat(IndexWithBloat.of(ctx, "t", "i"))
+            .hasToString("IndexWithBloat{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, bloatSizeInBytes=0, bloatPercentage=0.0}");
     }
 
     @Test
