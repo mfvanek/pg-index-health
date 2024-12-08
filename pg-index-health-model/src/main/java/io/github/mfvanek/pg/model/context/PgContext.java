@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.model.context;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Locale;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -177,5 +178,19 @@ public final class PgContext {
     @Nonnull
     public static PgContext ofPublic() {
         return of(DEFAULT_SCHEMA_NAME);
+    }
+
+    /**
+     * Complement the given object name with the specified schema name if it is necessary.
+     *
+     * @param objectName the name of the object to be enriched with schema information; must not be {@code null}
+     * @param pgContext  the schema context to enrich object name; must be non-null.
+     * @return the fully qualified object name with schema information
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static String enrichWith(@Nonnull final String objectName, @Nonnull final PgContext pgContext) {
+        Objects.requireNonNull(pgContext, "pgContext cannot be null");
+        return pgContext.enrichWithSchema(objectName);
     }
 }

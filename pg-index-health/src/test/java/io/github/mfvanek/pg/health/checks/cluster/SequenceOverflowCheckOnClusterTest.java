@@ -45,9 +45,9 @@ class SequenceOverflowCheckOnClusterTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(3)
                 .containsExactlyInAnyOrder(
-                    SequenceState.of(ctx.enrichWithSchema("seq_1"), "smallint", 8.08),
-                    SequenceState.of(ctx.enrichWithSchema("seq_3"), "integer", 8.08),
-                    SequenceState.of(ctx.enrichWithSchema("seq_5"), "bigint", 8.08));
+                    SequenceState.of(ctx, "seq_1", "smallint", 8.08),
+                    SequenceState.of(ctx, "seq_3", "integer", 8.08),
+                    SequenceState.of(ctx, "seq_5", "bigint", 8.08));
 
             assertThat(check)
                 .executing(ctx, SkipBySequenceNamePredicate.of(ctx, List.of("seq_1", "seq_3", "seq_5")))

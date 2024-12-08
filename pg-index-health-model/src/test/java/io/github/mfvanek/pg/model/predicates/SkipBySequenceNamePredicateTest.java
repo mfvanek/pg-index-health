@@ -110,8 +110,8 @@ class SkipBySequenceNamePredicateTest {
         final PgContext ctx = PgContext.of(schemaName);
         assertThat(SkipBySequenceNamePredicate.of(ctx, Set.of("s1", "s2")))
             .accepts(Table.of(ctx, "t"))
-            .accepts(SequenceState.of(ctx.enrichWithSchema("s11"), "int", 80.0))
-            .rejects(SequenceState.of(ctx.enrichWithSchema("s1"), "int", 80.0))
+            .accepts(SequenceState.of(ctx, "s11", "int", 80.0))
+            .rejects(SequenceState.of(ctx, "s1", "int", 80.0))
             .rejects(ColumnWithSerialType.ofSerial(Column.ofNullable(ctx.enrichWithSchema("t"), "c"), ctx.enrichWithSchema("s1")));
     }
 }

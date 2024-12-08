@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.sequence;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
@@ -147,5 +148,23 @@ public final class SequenceState implements DbObject, SequenceNameAware {
                                    @Nonnull final String dataType,
                                    final double remainingPercentage) {
         return new SequenceState(sequenceName, dataType, remainingPercentage);
+    }
+
+    /**
+     * Constructs a {@code SequenceState} object with given context.
+     *
+     * @param pgContext           the schema context to enrich sequence name; must be non-null.
+     * @param sequenceName        sequence name; should be non-blank.
+     * @param dataType            data type; should be non-blank.
+     * @param remainingPercentage remaining percentage; in the range from 0 to 100 inclusive.
+     * @return {@code SequenceState}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static SequenceState of(@Nonnull final PgContext pgContext,
+                                   @Nonnull final String sequenceName,
+                                   @Nonnull final String dataType,
+                                   final double remainingPercentage) {
+        return of(PgContext.enrichWith(sequenceName, pgContext), dataType, remainingPercentage);
     }
 }

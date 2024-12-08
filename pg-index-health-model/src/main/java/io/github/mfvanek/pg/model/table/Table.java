@@ -132,7 +132,8 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      * @return {@code Table}
      */
     @Nonnull
-    public static Table of(@Nonnull final String tableName, final long tableSizeInBytes) {
+    public static Table of(@Nonnull final String tableName,
+                           final long tableSizeInBytes) {
         return new Table(tableName, tableSizeInBytes);
     }
 
@@ -146,8 +147,10 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      * @since 0.14.3
      */
     @Nonnull
-    public static Table of(@Nonnull final PgContext pgContext, @Nonnull final String tableName, final long tableSizeInBytes) {
-        return of(enrichWithSchema(pgContext, tableName), tableSizeInBytes);
+    public static Table of(@Nonnull final PgContext pgContext,
+                           @Nonnull final String tableName,
+                           final long tableSizeInBytes) {
+        return of(PgContext.enrichWith(tableName, pgContext), tableSizeInBytes);
     }
 
     /**
@@ -171,14 +174,9 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      * @since 0.14.3
      */
     @Nonnull
-    public static Table of(@Nonnull final PgContext pgContext, @Nonnull final String tableName) {
+    public static Table of(@Nonnull final PgContext pgContext,
+                           @Nonnull final String tableName) {
         Objects.requireNonNull(pgContext, "pgContext cannot be null");
-        return of(enrichWithSchema(pgContext, tableName));
-    }
-
-    @Nonnull
-    private static String enrichWithSchema(@Nonnull final PgContext pgContext, @Nonnull final String tableName) {
-        Objects.requireNonNull(pgContext, "pgContext cannot be null");
-        return pgContext.enrichWithSchema(tableName);
+        return of(PgContext.enrichWith(tableName, pgContext));
     }
 }
