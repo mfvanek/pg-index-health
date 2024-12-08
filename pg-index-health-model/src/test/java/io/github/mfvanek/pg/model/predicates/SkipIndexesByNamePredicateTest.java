@@ -131,7 +131,7 @@ class SkipIndexesByNamePredicateTest {
         final PgContext ctx = PgContext.of(schemaName);
         assertThat(SkipIndexesByNamePredicate.of(ctx, Set.of("i1", "i2")))
             .accepts(Table.of(ctx, "t"))
-            .accepts(Index.of(ctx.enrichWithSchema("t1"), ctx.enrichWithSchema("i11")))
-            .rejects(Index.of(ctx.enrichWithSchema("t2"), ctx.enrichWithSchema("i2")));
+            .accepts(Index.of(ctx, "t1", "i11"))
+            .rejects(Index.of(ctx, "t2", "i2"));
     }
 }

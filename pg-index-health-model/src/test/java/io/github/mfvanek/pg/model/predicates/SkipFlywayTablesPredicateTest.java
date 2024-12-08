@@ -53,7 +53,7 @@ class SkipFlywayTablesPredicateTest {
         final PgContext ctx = PgContext.of(schemaName);
         assertThat(SkipFlywayTablesPredicate.of(ctx))
             .accepts(Table.of(ctx, "t"))
-            .accepts(Index.of(ctx.enrichWithSchema("t"), ctx.enrichWithSchema("i")))
+            .accepts(Index.of(ctx, "t", "i"))
             .accepts(SequenceState.of(ctx, "s", "int", 100.0))
             .rejects(Table.of(ctx, "flyway_schema_history"))
             .rejects(Table.of(ctx, "FLYWAY_SCHEMA_HISTORY"));

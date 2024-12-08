@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,8 @@ class IndexWithBloatTest {
     void testToString() {
         assertThat(IndexWithBloat.of("t", "i", 2L, 1L, 50))
             .hasToString("IndexWithBloat{tableName='t', indexName='i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50.0}");
+        assertThat(IndexWithBloat.of(PgContext.of("tst"), "t", "i", 2L, 1L, 50))
+            .hasToString("IndexWithBloat{tableName='tst.t', indexName='tst.i', indexSizeInBytes=2, bloatSizeInBytes=1, bloatPercentage=50.0}");
     }
 
     @Test
@@ -54,8 +57,8 @@ class IndexWithBloatTest {
         assertThatThrownBy(() -> IndexWithBloat.of("t", "i", -1L, 0L, 0))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("indexSizeInBytes cannot be less than zero");
-        final IndexWithBloat bloat = IndexWithBloat.of("t", "i", 0L, 0L, 0);
-        assertThat(bloat).isNotNull();
+        assertThat(IndexWithBloat.of("t", "i", 0L, 0L, 0))
+            .isNotNull();
     }
 
     @SuppressWarnings("ConstantConditions")

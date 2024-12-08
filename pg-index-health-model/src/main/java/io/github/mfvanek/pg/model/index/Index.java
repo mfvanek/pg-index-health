@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.table.TableNameAware;
@@ -146,7 +147,25 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
      * @param indexName index name; should be non-blank.
      * @return {@code Index}
      */
-    public static Index of(@Nonnull final String tableName, @Nonnull final String indexName) {
+    @Nonnull
+    public static Index of(@Nonnull final String tableName,
+                           @Nonnull final String indexName) {
         return new Index(tableName, indexName);
+    }
+
+    /**
+     * Constructs an {@code Index} object with given context.
+     *
+     * @param pgContext the schema context to enrich index name; must be non-null.
+     * @param tableName table name; should be non-blank.
+     * @param indexName index name; should be non-blank.
+     * @return {@code Index}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static Index of(@Nonnull final PgContext pgContext,
+                           @Nonnull final String tableName,
+                           @Nonnull final String indexName) {
+        return of(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext));
     }
 }

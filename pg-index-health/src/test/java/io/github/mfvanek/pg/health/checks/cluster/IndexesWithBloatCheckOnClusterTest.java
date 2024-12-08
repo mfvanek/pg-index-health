@@ -67,10 +67,10 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
                 .executing(ctx)
                 .hasSize(4)
                 .containsExactlyInAnyOrder(
-                    IndexWithBloat.of(accountsTableName, ctx.enrichWithSchema("accounts_account_number_key"), 0L, 0L, 0),
-                    IndexWithBloat.of(accountsTableName, ctx.enrichWithSchema("accounts_pkey"), 0L, 0L, 0),
-                    IndexWithBloat.of(clientsTableName, ctx.enrichWithSchema("clients_pkey"), 0L, 0L, 0),
-                    IndexWithBloat.of(clientsTableName, ctx.enrichWithSchema("i_clients_email_phone"), 0L, 0L, 0))
+                    IndexWithBloat.of(ctx, accountsTableName, "accounts_account_number_key", 0L, 0L, 0),
+                    IndexWithBloat.of(ctx, accountsTableName, "accounts_pkey", 0L, 0L, 0),
+                    IndexWithBloat.of(ctx, clientsTableName, "clients_pkey", 0L, 0L, 0),
+                    IndexWithBloat.of(ctx, clientsTableName, "i_clients_email_phone", 0L, 0L, 0))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L)
                 .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
 

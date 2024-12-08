@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.index;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,9 @@ class IndexTest {
         assertThatThrownBy(() -> Index.of("t", " "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("indexName cannot be blank");
+        assertThatThrownBy(() -> Index.of(null, null, null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgContext cannot be null");
     }
 
     @Test
@@ -60,6 +64,8 @@ class IndexTest {
     void testToString() {
         assertThat(Index.of("t", "i"))
             .hasToString("Index{tableName='t', indexName='i'}");
+        assertThat(Index.of(PgContext.of("tst"), "t", "i"))
+            .hasToString("Index{tableName='tst.t', indexName='tst.i'}");
     }
 
     @SuppressWarnings("ConstantConditions")
