@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -21,13 +22,16 @@ class ConstraintTest {
 
     @Test
     void testToString() {
-        final Constraint constraintWithCheck = Constraint.ofType("t", "not_valid_id", ConstraintType.CHECK);
-        assertThat(constraintWithCheck)
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(Constraint.ofType("t", "not_valid_id", ConstraintType.CHECK))
             .hasToString("Constraint{tableName='t', constraintName='not_valid_id', constraintType=CHECK}");
+        assertThat(Constraint.ofType(ctx, "t", "not_valid_id", ConstraintType.CHECK))
+            .hasToString("Constraint{tableName='tst.t', constraintName='not_valid_id', constraintType=CHECK}");
 
-        final Constraint constraintWithForeignKey = Constraint.ofType("t", "not_valid_id", ConstraintType.FOREIGN_KEY);
-        assertThat(constraintWithForeignKey)
+        assertThat(Constraint.ofType("t", "not_valid_id", ConstraintType.FOREIGN_KEY))
             .hasToString("Constraint{tableName='t', constraintName='not_valid_id', constraintType=FOREIGN_KEY}");
+        assertThat(Constraint.ofType(ctx, "t1", "not_valid_id", ConstraintType.FOREIGN_KEY))
+            .hasToString("Constraint{tableName='tst.t1', constraintName='not_valid_id', constraintType=FOREIGN_KEY}");
     }
 
     @Test

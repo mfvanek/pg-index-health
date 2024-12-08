@@ -48,8 +48,8 @@ class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
             Assertions.assertThat(notValidConstraints)
                 .hasSize(2)
                 .containsExactly(
-                    Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_chk_client_id_not_validated_yet", ConstraintType.CHECK),
-                    Constraint.ofType(ctx.enrichWithSchema("accounts"), "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
+                    Constraint.ofType(ctx, "accounts", "c_accounts_chk_client_id_not_validated_yet", ConstraintType.CHECK),
+                    Constraint.ofType(ctx, "accounts", "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
