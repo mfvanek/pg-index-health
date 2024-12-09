@@ -174,6 +174,7 @@ public final class PgContext {
      *
      * @return {@code PgContext}
      * @see PgContext#DEFAULT_BLOAT_PERCENTAGE_THRESHOLD
+     * @see PgContext#DEFAULT_REMAINING_PERCENTAGE_THRESHOLD
      */
     @Nonnull
     public static PgContext ofPublic() {

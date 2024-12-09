@@ -84,7 +84,7 @@ class PostgresWithCustomUserDemoApplicationTest {
     }
 
     @Test
-    void checksShouldWorkForDefaultSchema() {
+    void checksShouldWorkForMainSchema() {
         assertThat(checks)
             .hasSameSizeAs(Diagnostic.values());
 
@@ -92,7 +92,7 @@ class PostgresWithCustomUserDemoApplicationTest {
         checks.stream()
             .filter(DatabaseCheckOnHost::isStatic)
             .forEach(c -> {
-                final ListAssert<? extends DbObject> listAssert = assertThat(c.check(ctx, SkipLiquibaseTablesPredicate.ofPublic()))
+                final ListAssert<? extends DbObject> listAssert = assertThat(c.check(ctx, SkipLiquibaseTablesPredicate.of(ctx)))
                     .as(c.getDiagnostic().name());
 
                 switch (c.getDiagnostic()) {
@@ -100,7 +100,7 @@ class PostgresWithCustomUserDemoApplicationTest {
                         listAssert
                             .hasSize(1)
                             .asInstanceOf(list(Table.class))
-                            .containsExactly(Table.of("warehouse"));
+                            .containsExactly(Table.of(ctx, "warehouse"));
                         break;
 
                     case PRIMARY_KEYS_WITH_SERIAL_TYPES:
@@ -108,7 +108,7 @@ class PostgresWithCustomUserDemoApplicationTest {
                             .hasSize(1)
                             .asInstanceOf(list(ColumnWithSerialType.class))
                             .containsExactly(ColumnWithSerialType.of(
-                                Column.ofNotNull("warehouse", "id"),
+                                Column.ofNotNull(ctx, "warehouse", "id"),
                                 SerialType.BIG_SERIAL, ctx.enrichWithSchema("warehouse_id_seq")));
                         break;
 
@@ -128,9 +128,10 @@ class PostgresWithCustomUserDemoApplicationTest {
         checks.stream()
             .filter(DatabaseCheckOnHost::isStatic)
             .forEach(c -> {
-                final ListAssert<? extends DbObject> listAssert = assertThat(c.check(ctx, SkipLiquibaseTablesPredicate.ofPublic()))
+                final ListAssert<? extends DbObject> listAssert = assertThat(c.check(ctx))
                     .as(c.getDiagnostic().name());
 
+                // PRIMARY_KEYS_WITH_SERIAL_TYPES are present in the schema but cannot be found due to insufficient permissions
                 switch (c.getDiagnostic()) {
                     case TABLES_WITHOUT_DESCRIPTION:
                     case TABLES_NOT_LINKED_TO_OTHERS:
