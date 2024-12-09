@@ -14,7 +14,7 @@ dependencies {
     implementation("org.gradle:test-retry-gradle-plugin:1.6.0")
     implementation(libs.forbiddenapis)
     implementation(libs.detekt)
-    val kotlinVersion = "1.9.23"
+    val kotlinVersion = "2.1.0"
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion")
 }
