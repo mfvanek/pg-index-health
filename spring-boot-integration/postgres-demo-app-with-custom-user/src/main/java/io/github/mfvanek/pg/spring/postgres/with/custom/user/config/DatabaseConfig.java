@@ -51,7 +51,7 @@ public class DatabaseConfig {
         // See resources/init.sql
         hikariConfig.setUsername("custom_user");
         hikariConfig.setPassword("customUserPassword");
-        hikariConfig.setMaximumPoolSize(10);
+        hikariConfig.setMaximumPoolSize(5);
         return new HikariDataSource(hikariConfig);
     }
 
