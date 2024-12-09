@@ -22,3 +22,5 @@ include("spring-boot-integration:postgres-tc-url-demo-app")
 findProject(":spring-boot-integration:postgres-tc-url-demo-app")?.name = "postgres-tc-url-demo-app"
 include("spring-boot-integration:kotlin-custom-ds-demo-app")
 findProject(":spring-boot-integration:kotlin-custom-ds-demo-app")?.name = "kotlin-custom-ds-demo-app"
+include("spring-boot-integration:postgres-demo-app-with-custom-user")
+findProject(":spring-boot-integration:postgres-demo-app-with-custom-user")?.name = "postgres-demo-app-with-custom-user"
