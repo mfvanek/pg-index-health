@@ -100,8 +100,4 @@
         <Bug pattern="ITC_INHERITANCE_TYPE_CHECKING"/>
         <Class name="io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate"/>
     </Match>
-    <Match>
-        <Bug pattern="HARD_CODE_PASSWORD"/>
-        <Class name="io.github.mfvanek.pg.spring.postgres.with.custom.user.config.DatabaseConfig"/>
-    </Match>
 </FindBugsFilter>

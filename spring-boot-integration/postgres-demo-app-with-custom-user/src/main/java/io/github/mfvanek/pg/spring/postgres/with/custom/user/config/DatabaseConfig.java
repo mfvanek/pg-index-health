@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.spring.postgres.with.custom.user.config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import io.github.mfvanek.pg.testing.PostgresVersionHolder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,21 +45,21 @@ public class DatabaseConfig {
     @Primary
     @Bean
     public DataSource dataSource(@Nonnull final JdbcDatabaseContainer<?> jdbcDatabaseContainer,
-                                 @Nonnull final Environment environment) {
+                                 @Nonnull final Environment environment,
+                                 @Value("${spring.datasource.username}") final String appUserName,
+                                 @Value("${spring.datasource.password}") final String appUserPassword) {
         ConfigurableEnvironmentMutator.addDatasourceUrlIfNeed(jdbcDatabaseContainer, environment);
         final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(jdbcDatabaseContainer.getJdbcUrl());
-        // See resources/init.sql
-        hikariConfig.setUsername("custom_user");
-        hikariConfig.setPassword("customUserPassword");
+        hikariConfig.setUsername(appUserName);
+        hikariConfig.setPassword(appUserPassword);
         hikariConfig.setMaximumPoolSize(5);
         return new HikariDataSource(hikariConfig);
     }
 
     @LiquibaseDataSource
     @Bean
-    public DataSource liquibaseDataSource(@Nonnull final JdbcDatabaseContainer<?> jdbcDatabaseContainer,
-                                          @Nonnull final Environment environment) {
+    public DataSource liquibaseDataSource(@Nonnull final JdbcDatabaseContainer<?> jdbcDatabaseContainer) {
         final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(jdbcDatabaseContainer.getJdbcUrl());
         hikariConfig.setUsername(jdbcDatabaseContainer.getUsername());
