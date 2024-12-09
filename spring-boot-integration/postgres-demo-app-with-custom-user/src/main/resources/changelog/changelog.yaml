@@ -1,0 +1,3 @@
+databaseChangeLog:
+    - include:
+          file: changelog/sql/warehouse.sql

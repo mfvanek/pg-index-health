@@ -1,0 +1,11 @@
+debug: false
+
+spring:
+    datasource:
+        # see resources/init.sql
+        username: custom_user
+        password: customUserPassword
+    main:
+        banner-mode: off
+    liquibase:
+        change-log: classpath:/changelog/changelog.yaml

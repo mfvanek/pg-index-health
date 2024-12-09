@@ -15,6 +15,7 @@ internal class PostgresCustomDataSourceDemoApplicationKtRunTest {
         assertThatCode { main(arrayOf("--spring.profiles.active=test")) }
             .doesNotThrowAnyException()
         assertThat(output.all)
+            .contains("Reading from custom_ds_schema.databasechangelog")
             .contains("Starting PostgresCustomDataSourceDemoApplicationKt using Java")
             .contains("Container is started (JDBC URL: jdbc:postgresql://localhost:")
             .contains("Started PostgresCustomDataSourceDemoApplicationKt in")
