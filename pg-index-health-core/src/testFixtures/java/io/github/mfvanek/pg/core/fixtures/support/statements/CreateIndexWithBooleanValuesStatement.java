@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-public class CreateIndexWithBooleanValues extends AbstractDbStatement {
+public class CreateIndexWithBooleanValuesStatement extends AbstractDbStatement {
 
     @Nonnull
     @Override

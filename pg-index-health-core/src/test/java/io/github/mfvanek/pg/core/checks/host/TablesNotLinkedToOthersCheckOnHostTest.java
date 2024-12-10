@@ -49,4 +49,15 @@ class TablesNotLinkedToOthersCheckOnHostTest extends DatabaseAwareTestBase {
                 .isEmpty();
         });
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withPartitionedTableWithoutComments(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name")));
+    }
 }
