@@ -75,4 +75,15 @@ class TablesWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
                 .allMatch(t -> t.getTableSizeInBytes() > 1_234L);
         });
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withPartitionedTableWithoutComments, ctx ->
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .hasSize(1)
+                .containsExactly(
+                    Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name")));
+    }
 }

@@ -21,6 +21,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
+
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -93,5 +95,20 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
                 .hasSize(1)
                 .containsExactly(
                     Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name")));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        final String expectedTableName = "custom_entity_reference_with_very_very_very_long_name";
+        executeTestOnDatabase(schemaName, DatabasePopulator::withPartitionedTableWithoutComments, ctx ->
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .hasSize(4)
+                .containsExactly(
+                    Column.ofNotNull(ctx, expectedTableName, "creation_date"),
+                    Column.ofNotNull(ctx, expectedTableName, "entity_id"),
+                    Column.ofNotNull(ctx, expectedTableName, "ref_type"),
+                    Column.ofNotNull(ctx, expectedTableName, "ref_value")));
     }
 }
