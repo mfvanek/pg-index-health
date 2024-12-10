@@ -21,6 +21,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeig
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddInvalidForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAccountsAndClientsStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddPrimaryKeyForDefaultPartitionStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJsonTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateAccountsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateClientsTableStatement;
@@ -30,22 +31,23 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedHas
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateForeignKeyOnNullableColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateFunctionsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithBooleanValues;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithNullValues;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArrayColumn;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithBooleanValuesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithNullValuesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArrayColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDifferentOpclassStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutComments;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutCommentsStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSuitableIndexForForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKey;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIdentityPrimaryKey;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithSerialPrimaryKeyReferencesToAnotherTable;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithUniqueSerialColumn;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIdentityPrimaryKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithUniqueSerialColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithoutPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.DbStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.DropColumnStatement;
@@ -140,13 +142,13 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Nonnull
     public DatabasePopulator withNullValuesInIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(48, new CreateIndexWithNullValues());
+        statementsToExecuteInSameTransaction.putIfAbsent(48, new CreateIndexWithNullValuesStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withBooleanValuesInIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(49, new CreateIndexWithBooleanValues());
+        statementsToExecuteInSameTransaction.putIfAbsent(49, new CreateIndexWithBooleanValuesStatement());
         return this;
     }
 
@@ -224,19 +226,19 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Nonnull
     public DatabasePopulator withCheckConstraintOnSerialPrimaryKey() {
-        statementsToExecuteInSameTransaction.putIfAbsent(80, new CreateTableWithCheckConstraintOnSerialPrimaryKey());
+        statementsToExecuteInSameTransaction.putIfAbsent(80, new CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withUniqueConstraintOnSerialColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(81, new CreateTableWithUniqueSerialColumn());
+        statementsToExecuteInSameTransaction.putIfAbsent(81, new CreateTableWithUniqueSerialColumnStatement());
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withSerialPrimaryKeyReferencesToAnotherTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(82, new CreateTableWithSerialPrimaryKeyReferencesToAnotherTable());
+        statementsToExecuteInSameTransaction.putIfAbsent(82, new CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement());
         return withCheckConstraintOnSerialPrimaryKey()
             .withUniqueConstraintOnSerialColumn();
     }
@@ -282,7 +284,7 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     public DatabasePopulator withBtreeIndexesOnArrayColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(96, new CreateIndexesOnArrayColumn());
+        statementsToExecuteInSameTransaction.putIfAbsent(96, new CreateIndexesOnArrayColumnStatement());
         return this;
     }
 
@@ -294,7 +296,7 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Nonnull
     public DatabasePopulator withIdentityPrimaryKey() {
-        statementsToExecuteInSameTransaction.putIfAbsent(98, new CreateTableWithIdentityPrimaryKey());
+        statementsToExecuteInSameTransaction.putIfAbsent(98, new CreateTableWithIdentityPrimaryKeyStatement());
         return this;
     }
 
@@ -312,7 +314,19 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Nonnull
     public DatabasePopulator withPartitionedTableWithoutComments() {
-        statementsToExecuteInSameTransaction.putIfAbsent(110, new CreatePartitionedTableWithoutComments());
+        statementsToExecuteInSameTransaction.putIfAbsent(110, new CreatePartitionedTableWithoutCommentsStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withPartitionedTableWithoutPrimaryKey() {
+        statementsToExecuteInSameTransaction.putIfAbsent(111, new CreatePartitionedTableWithoutPrimaryKeyStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withPrimaryKeyForDefaultPartition() {
+        statementsToExecuteInSameTransaction.putIfAbsent(112, new AddPrimaryKeyForDefaultPartitionStatement());
         return this;
     }
 

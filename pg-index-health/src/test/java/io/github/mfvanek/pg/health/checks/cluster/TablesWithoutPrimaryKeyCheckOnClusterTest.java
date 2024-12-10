@@ -37,7 +37,7 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withTableWithoutPrimaryKey(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withTableWithoutPrimaryKey(), ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
@@ -52,9 +52,33 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldReturnNothingForMaterializedViews(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withMaterializedView(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withMaterializedView(), ctx ->
             assertThat(check)
                 .executing(ctx)
                 .isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTablesAndPartitions(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withPartitionedTableWithoutPrimaryKey(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(2)
+                .containsExactly(
+                    Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name"),
+                    Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default")
+                ));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTablesWhenOnlyPartitionsHavePrimaryKeys(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withPartitionedTableWithoutPrimaryKey().withPrimaryKeyForDefaultPartition(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name")));
     }
 }

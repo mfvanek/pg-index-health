@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.core.fixtures.support.statements;
 
-import java.util.List;
 import javax.annotation.Nonnull;
+import java.util.List;
 
-public class CreatePartitionedTableWithoutComments extends AbstractDbStatement {
+public class CreatePartitionedTableWithoutPrimaryKeyStatement extends AbstractDbStatement {
 
     @Nonnull
     @Override
@@ -23,8 +23,7 @@ public class CreatePartitionedTableWithoutComments extends AbstractDbStatement {
                 "ref_type varchar(32) not null," +
                 "ref_value varchar(64) not null," +
                 "creation_date timestamp with time zone not null," +
-                "entity_id varchar(64) not null," +
-                "primary key(ref_type, ref_value, creation_date, entity_id)" +
+                "entity_id varchar(64) not null" +
                 ") partition by range (creation_date);",
             "create table if not exists {schemaName}.custom_entity_reference_with_very_very_very_long_name_1_default " +
                 "partition of {schemaName}.custom_entity_reference_with_very_very_very_long_name default;"

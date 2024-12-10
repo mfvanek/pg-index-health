@@ -13,17 +13,18 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-public class CreateTableWithUniqueSerialColumn extends AbstractDbStatement {
+public class CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement extends AbstractDbStatement {
 
     @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create table if not exists {schemaName}.one_more_table(" +
+            "create table if not exists {schemaName}.test_table(" +
                 "id bigserial, " +
-                "constraint unique_id unique (id), " +
-                "constraint not_reserved_id check (id > 1000), " +
-                "constraint less_than_million check (id < 1000000));"
+                "num bigserial, " +
+                "constraint test_table_pkey_id primary key (id), " +
+                "constraint test_table_fkey_other_id foreign key (id) references {schemaName}.another_table (id), " +
+                "constraint test_table_fkey_one_more_id foreign key (id) references {schemaName}.one_more_table (id));"
         );
     }
 }

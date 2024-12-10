@@ -13,16 +13,14 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-public class CreateTableWithCheckConstraintOnSerialPrimaryKey extends AbstractDbStatement {
+public class AddPrimaryKeyForDefaultPartitionStatement extends AbstractDbStatement {
 
     @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create table if not exists {schemaName}.another_table(" +
-                "id bigserial primary key, " +
-                "constraint not_reserved_id check (id > 1000), " +
-                "constraint less_than_million check (id < 1000000));"
+            "alter table if exists {schemaName}.custom_entity_reference_with_very_very_very_long_name_1_default " +
+                "add primary key (ref_type, ref_value, creation_date, entity_id);"
         );
     }
 }
