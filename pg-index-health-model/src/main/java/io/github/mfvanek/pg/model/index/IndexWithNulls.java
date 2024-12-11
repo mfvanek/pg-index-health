@@ -90,4 +90,22 @@ public final class IndexWithNulls extends IndexWithColumns {
         return new IndexWithNulls(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext),
             indexSizeInBytes, Column.ofNullable(pgContext, tableName, nullableColumnName));
     }
+
+    /**
+     * Constructs an {@code IndexWithNulls} object with given context.
+     *
+     * @param pgContext          the schema context to enrich table and index name; must be non-null.
+     * @param tableName          table name; should be non-blank.
+     * @param indexName          index name; should be non-blank.
+     * @param nullableColumnName nullable column in this index.
+     * @return {@code IndexWithNulls}
+     * @since 0.14.3
+     */
+    @Nonnull
+    public static IndexWithNulls of(@Nonnull final PgContext pgContext,
+                                    @Nonnull final String tableName,
+                                    @Nonnull final String indexName,
+                                    @Nonnull final String nullableColumnName) {
+        return of(pgContext, tableName, indexName, 0L, nullableColumnName);
+    }
 }

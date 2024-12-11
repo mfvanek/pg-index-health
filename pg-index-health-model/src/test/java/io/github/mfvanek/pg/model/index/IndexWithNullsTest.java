@@ -74,6 +74,8 @@ class IndexWithNullsTest {
             .hasToString("IndexWithNulls{tableName='t', indexName='i', indexSizeInBytes=22, columns=[Column{tableName='t', columnName='f', notNull=false}]}");
         assertThat(IndexWithNulls.of(PgContext.of("tst"), "t", "i", 22L, "f"))
             .hasToString("IndexWithNulls{tableName='tst.t', indexName='tst.i', indexSizeInBytes=22, columns=[Column{tableName='tst.t', columnName='f', notNull=false}]}");
+        assertThat(IndexWithNulls.of(PgContext.of("tst"), "t", "i", "f"))
+            .hasToString("IndexWithNulls{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='f', notNull=false}]}");
     }
 
     @SuppressWarnings("ConstantConditions")

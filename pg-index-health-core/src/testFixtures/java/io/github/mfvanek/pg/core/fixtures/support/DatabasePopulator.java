@@ -37,6 +37,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArra
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDifferentOpclassStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNullableFieldsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutCommentsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateProceduresStatement;
@@ -327,6 +328,12 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withPrimaryKeyForDefaultPartition() {
         statementsToExecuteInSameTransaction.putIfAbsent(112, new AddPrimaryKeyForDefaultPartitionStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withNullableIndexesInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(113, new CreatePartitionedTableWithNullableFieldsStatement());
         return this;
     }
 
