@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithNulls;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
@@ -43,7 +44,7 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(IndexWithNulls.of(ctx, "clients", "i_clients_middle_name", 0L, "middle_name"))
+                .containsExactly(IndexWithNulls.of(ctx, "clients", "i_clients_middle_name", "middle_name"))
                 .allMatch(i -> i.getNullableColumn().isNullable());
 
             assertThat(check)
@@ -54,5 +55,18 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
                 .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_middle_name"))
                 .isEmpty();
         });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withNullableIndexesInPartitionedTable, ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(2)
+                .containsExactly(
+                    IndexWithNulls.of(ctx, "custom_entity_reference_with_very_very_very_long_name", "idx_custom_entity_reference_with_very_very_very_long_name_1", "ref_type"),
+                    IndexWithNulls.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "idx_custom_entity_reference_with_very_very_very_long_name_1_d_3", "ref_type"))
+        );
     }
 }
