@@ -25,11 +25,14 @@ public class CreatePartitionedTableWithNullableFieldsStatement extends AbstractD
                 "creation_date timestamp with time zone not null," +
                 "entity_id varchar(64) not null" +
                 ") partition by range (creation_date);",
-            "create index if not exists idx_custom_entity_reference_with_very_very_very_long_name_1 on {schemaName}.custom_entity_reference_with_very_very_very_long_name (ref_type, ref_value);",
-            "create index if not exists idx_custom_entity_reference_with_very_very_very_long_name_2 on {schemaName}.custom_entity_reference_with_very_very_very_long_name (entity_id, ref_value);",
+            "create index if not exists idx_custom_entity_reference_with_very_very_very_long_name_1 " +
+                "on {schemaName}.custom_entity_reference_with_very_very_very_long_name (ref_type, ref_value);",
+            "create index if not exists idx_custom_entity_reference_with_very_very_very_long_name_2 " +
+                "on {schemaName}.custom_entity_reference_with_very_very_very_long_name (entity_id, ref_value);",
             "create table if not exists {schemaName}.custom_entity_reference_with_very_very_very_long_name_1_default " +
                 "partition of {schemaName}.custom_entity_reference_with_very_very_very_long_name default;",
-            "create index if not exists idx_custom_entity_reference_with_very_very_very_long_name_1_d_3 on {schemaName}.custom_entity_reference_with_very_very_very_long_name_1_default (ref_type, ref_value);"
+            "create index if not exists idx_custom_entity_reference_with_very_very_very_long_name_1_d_3 " +
+                "on {schemaName}.custom_entity_reference_with_very_very_very_long_name_1_default (ref_type, ref_value);"
         );
     }
 }
