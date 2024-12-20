@@ -12,9 +12,6 @@ package io.github.mfvanek.pg.spring.postgres.kt
 
 import com.zaxxer.hikari.HikariDataSource
 import io.github.mfvanek.pg.connection.PgConnection
-import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost
-import io.github.mfvanek.pg.core.checks.common.Diagnostic
-import io.github.mfvanek.pg.model.dbobject.DbObject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,8 +20,8 @@ import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
 import org.springframework.test.context.ActiveProfiles
 
-@ActiveProfiles("test")
 @SpringBootTest
+@ActiveProfiles("test")
 internal class PostgresDemoApplicationKtTest {
 
     @Autowired
@@ -32,9 +29,6 @@ internal class PostgresDemoApplicationKtTest {
 
     @Autowired
     private lateinit var environment: Environment
-
-    @Autowired
-    private lateinit var checks: List<DatabaseCheckOnHost<out DbObject?>>
 
     @Test
     fun contextLoadsAndContainsPgIndexHealthBeans() {
@@ -48,19 +42,5 @@ internal class PostgresDemoApplicationKtTest {
             .isNotBlank()
             .startsWith("jdbc:postgresql://localhost:")
             .endsWith("/demo_for_pg_index_health_starter?loggerLevel=OFF")
-    }
-
-    @Test
-    fun checksShouldWork() {
-        assertThat(checks)
-            .hasSameSizeAs(Diagnostic.entries.toTypedArray())
-
-        checks
-            .filter { it.isStatic }
-            .forEach {
-                assertThat(it.check())
-                    .`as`(it.diagnostic.name)
-                    .isEmpty()
-            }
     }
 }

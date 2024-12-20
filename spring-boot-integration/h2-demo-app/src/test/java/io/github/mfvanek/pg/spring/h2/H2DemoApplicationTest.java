@@ -20,8 +20,8 @@ import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("test")
 @SpringBootTest
+@ActiveProfiles("test")
 class H2DemoApplicationTest {
 
     @Autowired
