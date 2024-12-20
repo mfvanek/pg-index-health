@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.dbobject;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
@@ -108,8 +109,24 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
      * @param objectType type of object in a database; should be non-null.
      * @return {@code AnyObject} instance
      */
-    public static AnyObject ofType(@Nonnull final String objectName, @Nonnull final PgObjectType objectType) {
+    public static AnyObject ofType(@Nonnull final String objectName,
+                                   @Nonnull final PgObjectType objectType) {
         return new AnyObject(objectName, objectType);
+    }
+
+    /**
+     * Constructs an {@code AnyObject} instance with given context.
+     *
+     * @param pgContext  the schema context to enrich object name; must be non-null.
+     * @param objectName name of object in a database; should be non-blank.
+     * @param objectType type of object in a database; should be non-null.
+     * @return {@code AnyObject} instance
+     * @since 0.14.4
+     */
+    public static AnyObject ofType(@Nonnull final PgContext pgContext,
+                                   @Nonnull final String objectName,
+                                   @Nonnull final PgObjectType objectType) {
+        return ofType(PgContext.enrichWith(objectName, pgContext), objectType);
     }
 
     /**
@@ -119,7 +136,8 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
      * @param objectType literal type of object in a database; should be non-null.
      * @return {@code AnyObject} instance
      */
-    public static AnyObject ofRaw(@Nonnull final String objectName, @Nonnull final String objectType) {
+    public static AnyObject ofRaw(@Nonnull final String objectName,
+                                  @Nonnull final String objectType) {
         return new AnyObject(objectName, PgObjectType.valueFrom(objectType));
     }
 }

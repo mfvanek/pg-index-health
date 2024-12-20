@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.Collection;
@@ -21,6 +22,8 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
+
+import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.prepareFullyQualifiedNamesToSkip;
 
 /**
  * A predicate for filtering database objects by their fully qualified names.
@@ -87,6 +90,20 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
     }
 
     /**
+     * Creates a predicate to skip a specific object name in the given context.
+     *
+     * @param pgContext        the PostgreSQL context to use; must be non-null
+     * @param objectNameToSkip the object name to skip, must be non-null and non-blank
+     * @return a predicate that skips the specified object
+     * @since 0.14.4
+     */
+    @Nonnull
+    public static Predicate<DbObject> ofName(@Nonnull final PgContext pgContext,
+                                             @Nonnull final String objectNameToSkip) {
+        return ofName(PgContext.enrichWith(objectNameToSkip, pgContext));
+    }
+
+    /**
      * Creates a predicate to skip multiple fully qualified object names.
      *
      * @param fullyQualifiedObjectNamesToSkip a collection of fully qualified object names to skip, must be non-null
@@ -96,5 +113,19 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
     @Nonnull
     public static Predicate<DbObject> of(@Nonnull final Collection<String> fullyQualifiedObjectNamesToSkip) {
         return new SkipDbObjectsByNamePredicate(fullyQualifiedObjectNamesToSkip);
+    }
+
+    /**
+     * Creates a predicate to skip multiple object names in the given context.
+     *
+     * @param pgContext         the PostgreSQL context to use; must be non-null
+     * @param objectNamesToSkip a collection of object names to skip, must be non-null
+     * @return a predicate that skips the specified objects
+     * @since 0.14.4
+     */
+    @Nonnull
+    public static Predicate<DbObject> of(@Nonnull final PgContext pgContext,
+                                         @Nonnull final Collection<String> objectNamesToSkip) {
+        return of(prepareFullyQualifiedNamesToSkip(pgContext, objectNamesToSkip));
     }
 }
