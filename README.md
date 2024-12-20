@@ -39,8 +39,8 @@ For **Java 8** compatible version take a look at release [0.7.0](https://github.
 All checks can be divided into 2 groups:
 
 1. Runtime checks (those that make sense to perform only on a production database with real data and statistics).  
-   Runtime checks usually [require aggregating data from all nodes in the cluster](https://github.com/mfvanek/pg-index-health/blob/d1473dc68975ebe932d92c9e43ceebde657d0cc7/pg-index-health-core/src/main/java/io/github/mfvanek/pg/common/maintenance/Diagnostic.java#L162).
-   This necessitated creating [our own abstraction over the database connection](https://github.com/mfvanek/pg-index-health/tree/master/pg-index-health-jdbc-connection).
+   Runtime checks usually [require aggregating data from all nodes in the cluster](https://github.com/mfvanek/pg-index-health/blob/3e9a63cc2a04799f3e97c9bec9b684ababca8db7/pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/common/Diagnostic.java#L162).
+   This necessitated creating [our own abstraction over the database connection](https://github.com/mfvanek/pg-index-health/blob/3e9a63cc2a04799f3e97c9bec9b684ababca8db7/pg-index-health-jdbc-connection/src/main/java/io/github/mfvanek/pg/connection/HighAvailabilityPgConnection.java#L22).
 2. Static checks (those can be run in tests on an empty database).  
    All static checks can be performed at runtime as well.
 
@@ -81,6 +81,7 @@ For raw sql queries see [pg-index-health-sql](https://github.com/mfvanek/pg-inde
 ### Static checks
 
 Static checks are based on [information schema](https://www.postgresql.org/docs/current/information-schema.html)/[system catalogs](https://www.postgresql.org/docs/current/catalogs.html).
+They work with finite database state (after all migrations are applied).
 
 ### Runtime checks
 
@@ -88,7 +89,7 @@ Static checks are based on [information schema](https://www.postgresql.org/docs/
 (formerly known as [PostgreSQL's statistics collector](https://www.postgresql.org/docs/14/monitoring-stats.html)).
 
 You can call `pg_stat_reset()` on each host to reset all statistics counters for the current database to zero
-but the best way to do it is to use [DatabaseManagement::resetStatistics()](https://github.com/mfvanek/pg-index-health/blob/d1473dc68975ebe932d92c9e43ceebde657d0cc7/pg-index-health/src/main/java/io/github/mfvanek/pg/common/management/DatabaseManagement.java#L33) method.
+but the best way to do it is to use [DatabaseManagement::resetStatistics()](https://github.com/mfvanek/pg-index-health/blob/3e9a63cc2a04799f3e97c9bec9b684ababca8db7/pg-index-health/src/main/java/io/github/mfvanek/pg/health/checks/management/DatabaseManagement.java#L33) method.
 
 ## Installation
 
@@ -116,12 +117,15 @@ Using Maven:
 
 ## Articles and publications
 
+### In Russian
 * [Index health in PostgreSQL through the eyes of a Java developer](https://habr.com/ru/post/490824/)
+* [DBA: finding useless indexes](https://habr.com/ru/companies/tensor/articles/488104/)
+* [The series of articles "Static analysis of the database structure"](https://habr.com/ru/articles/800121/)
 
 ## How to use
 
 There are three main scenarios of using **pg-index-health** in your projects:
-* unit\functional testing;
+* unit\functional testing (see **standard test** in section below);
 * collecting indexes health data and monitoring bloat;
 * analysis of database configuration.
 
@@ -159,6 +163,45 @@ Using Maven:
     <version>0.14.3</version>
     <scope>test</scope>
 </dependency>
+```
+
+### Standard test
+
+Add a standard test to your project as shown below. Ideally, all checks should work and return an empty result.
+
+```java
+import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
+@ActiveProfiles("test")
+class DatabaseStructureStaticAnalysisTest {
+
+    @Autowired
+    private List<DatabaseCheckOnHost<? extends DbObject>> checks;
+
+    @Test
+    void checksShouldWork() {
+        assertThat(checks)
+            .hasSameSizeAs(Diagnostic.values());
+
+        checks.stream()
+            .filter(DatabaseCheckOnHost::isStatic)
+            .forEach(c ->
+                assertThat(c.check())
+                    .as(c.getDiagnostic().name())
+                    .isEmpty());
+    }
+}
 ```
 
 ### Spring Boot compatibility

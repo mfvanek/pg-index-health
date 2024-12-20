@@ -12,7 +12,7 @@ internal class PostgresCustomDataSourceDemoApplicationKtRunTest {
 
     @Test
     fun applicationShouldRun(output: CapturedOutput) {
-        assertThatCode { main(arrayOf("--spring.profiles.active=test")) }
+        assertThatCode { main(arrayOf("--spring.profiles.active=test,run")) }
             .doesNotThrowAnyException()
         assertThat(output.all)
             .contains("Reading from custom_ds_schema.databasechangelog")
