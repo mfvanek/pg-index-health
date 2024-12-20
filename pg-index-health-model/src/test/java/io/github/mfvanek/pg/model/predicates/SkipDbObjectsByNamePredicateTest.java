@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,9 +22,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SkipDbObjectsByNamePredicateTest {
 
-    private static final Table FIRST = Table.of("custom.TABLE1", 1L);
-    private static final Table SECOND = Table.of("custom.TABLE2", 2L);
-    private static final Table THIRD = Table.of("custom.TABLE3", 3L);
+    private static final PgContext CTX = PgContext.of("CUSTOM");
+    private static final Table FIRST = Table.of(CTX, "TABLE1", 1L);
+    private static final Table SECOND = Table.of(CTX, "TABLE2", 2L);
+    private static final Table THIRD = Table.of(CTX, "TABLE3", 3L);
 
     @SuppressWarnings("DataFlowIssue")
     @Test
@@ -43,6 +45,9 @@ class SkipDbObjectsByNamePredicateTest {
         assertThatThrownBy(() -> SkipDbObjectsByNamePredicate.of(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("fullyQualifiedObjectNamesToSkip cannot be null");
+        assertThatThrownBy(() -> SkipDbObjectsByNamePredicate.of(null, null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("pgContext cannot be null");
     }
 
     @Test
@@ -51,11 +56,21 @@ class SkipDbObjectsByNamePredicateTest {
             .accepts(FIRST)
             .accepts(SECOND)
             .rejects(THIRD);
+
+        assertThat(SkipDbObjectsByNamePredicate.ofName(CTX, "table3"))
+            .accepts(FIRST)
+            .accepts(SECOND)
+            .rejects(THIRD);
     }
 
     @Test
     void forList() {
         assertThat(SkipDbObjectsByNamePredicate.of(List.of("CUSTOM.table1", "CUSTOM.table3")))
+            .rejects(FIRST)
+            .accepts(SECOND)
+            .rejects(THIRD);
+
+        assertThat(SkipDbObjectsByNamePredicate.of(CTX, List.of("table1", "table3")))
             .rejects(FIRST)
             .accepts(SECOND)
             .rejects(THIRD);

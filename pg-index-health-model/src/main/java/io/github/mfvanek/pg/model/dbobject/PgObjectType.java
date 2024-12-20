@@ -30,11 +30,25 @@ public enum PgObjectType {
      */
     TABLE("table"),
     /**
+     * A partitioned table in a database.
+     *
+     * @see <a href="https://www.postgresql.org/docs/current/ddl-partitioning.html">Table Partitioning</a>
+     * @since 0.14.4
+     */
+    PARTITIONED_TABLE("partitioned table"),
+    /**
      * An index in a database.
      *
      * @see <a href="https://www.postgresql.org/docs/current/indexes-types.html">Index Types</a>
      */
     INDEX("index"),
+    /**
+     * A partitioned index in a database.
+     *
+     * @see <a href="https://www.postgresql.org/docs/current/ddl-partitioning.html">Table Partitioning</a>
+     * @since 0.14.4
+     */
+    PARTITIONED_INDEX("partitioned index"),
     /**
      * A sequence in a database.
      *

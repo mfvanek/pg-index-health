@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.dbobject;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -58,6 +59,10 @@ class AnyObjectTest {
     void testToString() {
         assertThat(AnyObject.ofRaw("mv", "Materialized View"))
             .hasToString("AnyObject{objectName='mv', objectType=MATERIALIZED_VIEW}");
+        assertThat(AnyObject.ofType("pi", PgObjectType.PARTITIONED_INDEX))
+            .hasToString("AnyObject{objectName='pi', objectType=PARTITIONED_INDEX}");
+        assertThat(AnyObject.ofType(PgContext.of("tst"), "pi", PgObjectType.PARTITIONED_INDEX))
+            .hasToString("AnyObject{objectName='tst.pi', objectType=PARTITIONED_INDEX}");
     }
 
     @SuppressWarnings("ConstantConditions")

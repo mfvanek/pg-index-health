@@ -131,7 +131,6 @@ class PostgresWithCustomUserDemoApplicationTest {
                 final ListAssert<? extends DbObject> listAssert = assertThat(c.check(ctx))
                     .as(c.getDiagnostic().name());
 
-                // PRIMARY_KEYS_WITH_SERIAL_TYPES are present in the schema but cannot be found due to insufficient permissions
                 switch (c.getDiagnostic()) {
                     case TABLES_WITHOUT_DESCRIPTION:
                     case TABLES_NOT_LINKED_TO_OTHERS:
@@ -142,6 +141,14 @@ class PostgresWithCustomUserDemoApplicationTest {
 
                     case COLUMNS_WITHOUT_DESCRIPTION:
                         listAssert.hasSize(2);
+                        break;
+
+                    case PRIMARY_KEYS_WITH_SERIAL_TYPES:
+                        listAssert.hasSize(1)
+                            .asInstanceOf(list(ColumnWithSerialType.class))
+                            .containsExactly(ColumnWithSerialType.of(
+                                Column.ofNotNull(ctx, "additional_table", "id"), SerialType.BIG_SERIAL, ctx.enrichWithSchema("additional_table_id_seq"))
+                            );
                         break;
 
                     default:
