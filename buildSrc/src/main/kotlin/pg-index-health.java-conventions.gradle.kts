@@ -32,7 +32,7 @@ dependencies {
 
     spotbugsPlugins("jp.skypencil.findbugs.slf4j:bug-pattern:1.5.0")
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.8")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.9")
 }
 
 tasks.withType<JavaCompile>().configureEach {
