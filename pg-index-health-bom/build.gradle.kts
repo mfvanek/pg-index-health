@@ -41,11 +41,6 @@ publishing {
                         name.set("Ivan Vakhrushev")
                         email.set("mfvanek@gmail.com")
                     }
-                    developer {
-                        id.set("Evreke")
-                        name.set("Alex Antipin")
-                        email.set("evreke@gmail.com")
-                    }
                 }
 
                 scm {
