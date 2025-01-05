@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health
+ *
+ * This file is a part of "pg-index-health" - a Java library for
+ * analyzing and maintaining indexes health in PostgreSQL databases.
+ *
+ * Licensed under the Apache License 2.0
+ */
+
 import com.github.spotbugs.snom.Confidence
 import com.github.spotbugs.snom.Effort
 import com.github.spotbugs.snom.SpotBugsTask
@@ -22,7 +32,7 @@ dependencies {
 
     spotbugsPlugins("jp.skypencil.findbugs.slf4j:bug-pattern:1.5.0")
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.8")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.9")
 }
 
 tasks.withType<JavaCompile>().configureEach {
