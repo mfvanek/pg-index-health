@@ -11,7 +11,7 @@ forbiddenapis = "3.8"
 
 [libraries]
 jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
-postgresql = "org.postgresql:postgresql:42.7.4"
+postgresql = "org.postgresql:postgresql:42.7.5"
 logback-classic = "ch.qos.logback:logback-classic:1.2.12"
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
