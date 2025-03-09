@@ -6,7 +6,7 @@
 ## Почему может понадобиться первичный ключ, если нужно скорректировать размер таблицы на диске
 Интенсивное обновление данных или долгие транзакции могут привести к раздуванию таблиц, потому что [старые версии строк не удаляются сразу](https://postgrespro.ru/docs/postgresql/17/routine-vacuuming#VACUUM-FOR-SPACE-RECOVERY).
 Autovaccum в таких случаях не помогает, место на диске не освобождается. В этом случае [может помочь VACUUM FULL](https://postgrespro.ru/docs/postgresql/17/routine-vacuuming#VACUUM-FOR-SPACE-RECOVERY), но это требует полной блокировки таблицы.
-Также для сжатия таблциы [есть утилита pg_repack](https://postgrespro.ru/docs/postgrespro/17/app-pgrepack), но в целевой таблице должен быть первичный ключ или хотя бы уникальный индекс по столбцу NOT NULL. 
+Также для сжатия таблицы [есть утилита pg_repack](https://postgrespro.ru/docs/postgrespro/17/app-pgrepack), но в целевой таблице должен быть первичный ключ или хотя бы уникальный индекс по столбцу NOT NULL. 
 
 ## Как работает эта проверка
 При вызове метода класса этой проверки doCheck выполняется sql-запрос [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_without_primary_key.sql).
