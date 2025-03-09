@@ -117,7 +117,13 @@ Using Maven:
 
 ## Articles and publications
 
+### In English
+
+* [pg-index-health – a static analysis tool for you PostgreSQL database](https://dev.to/mfvanek/pg-index-health-a-static-analysis-tool-for-you-postgresql-database-2no5)
+
 ### In Russian
+
+* [pg-index-health – static analysis of the structure of PostgreSQL databases](https://habr.com/ru/articles/871546/)
 * [Index health in PostgreSQL through the eyes of a Java developer](https://habr.com/ru/post/490824/)
 * [DBA: finding useless indexes](https://habr.com/ru/companies/tensor/articles/488104/)
 * [The series of articles "Static analysis of the database structure"](https://habr.com/ru/articles/800121/)

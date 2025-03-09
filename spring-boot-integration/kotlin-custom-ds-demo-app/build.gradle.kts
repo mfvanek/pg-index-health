@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health
+ *
+ * This file is a part of "pg-index-health" - a Java library for
+ * analyzing and maintaining indexes health in PostgreSQL databases.
+ *
+ * Licensed under the Apache License 2.0
+ */
+
 plugins {
     id("pg-index-health.kotlin-application")
     alias(libs.plugins.spring.boot.gradlePlugin)
@@ -13,7 +23,7 @@ dependencies {
     implementation(platform(libs.testcontainers.bom))
     implementation("org.testcontainers:postgresql")
     implementation(libs.spring.boot.starter.data.jdbc)
-    implementation("org.liquibase:liquibase-core:4.30.0")
+    implementation("org.liquibase:liquibase-core:4.31.1")
     implementation("com.github.blagerweij:liquibase-sessionlock:1.6.9")
 
     runtimeOnly(libs.postgresql)

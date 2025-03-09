@@ -20,7 +20,7 @@
     </module>
     <module name="Header">
         <property name="header"
-                  value="/*\n * Copyright (c) 2019-2024. Ivan Vakhrushev and others.\n * https://github.com/mfvanek/pg-index-health\n *\n * This file is a part of &quot;pg-index-health&quot; - a Java library for\n * analyzing and maintaining indexes health in PostgreSQL databases.\n *\n * Licensed under the Apache License 2.0\n */"/>
+                  value="/*\n * Copyright (c) 2019-2025. Ivan Vakhrushev and others.\n * https://github.com/mfvanek/pg-index-health\n *\n * This file is a part of &quot;pg-index-health&quot; - a Java library for\n * analyzing and maintaining indexes health in PostgreSQL databases.\n *\n * Licensed under the Apache License 2.0\n */"/>
         <property name="fileExtensions" value="java"/>
     </module>
     <module name="NewlineAtEndOfFile"/>

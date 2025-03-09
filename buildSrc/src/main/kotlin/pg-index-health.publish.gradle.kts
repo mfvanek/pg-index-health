@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health
+ *
+ * This file is a part of "pg-index-health" - a Java library for
+ * analyzing and maintaining indexes health in PostgreSQL databases.
+ *
+ * Licensed under the Apache License 2.0
+ */
+
 plugins {
     id("maven-publish")
     id("signing")
@@ -34,11 +44,6 @@ publishing {
                         id.set("mfvanek")
                         name.set("Ivan Vakhrushev")
                         email.set("mfvanek@gmail.com")
-                    }
-                    developer {
-                        id.set("Evreke")
-                        name.set("Alex Antipin")
-                        email.set("evreke@gmail.com")
                     }
                 }
 
