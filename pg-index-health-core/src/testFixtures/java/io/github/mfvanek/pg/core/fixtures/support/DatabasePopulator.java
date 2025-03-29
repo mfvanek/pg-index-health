@@ -67,7 +67,7 @@ import java.util.TreeMap;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessiveImports"})
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessiveImports", "PMD.ExcessivePublicCount"})
 public final class DatabasePopulator implements AutoCloseable {
 
     private final DataSource dataSource;
