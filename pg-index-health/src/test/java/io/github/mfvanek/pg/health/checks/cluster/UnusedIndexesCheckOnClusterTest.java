@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.health.checks.cluster;
 import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.core.utils.ClockHolder;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
@@ -85,6 +86,26 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts")
                     .and(SkipDbObjectsByNamePredicate.of(List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_clients_last_name")))))
+                .isEmpty();
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withNullableIndexesInPartitionedTable, ctx -> {
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(3)
+                .containsExactlyInAnyOrder(
+                    UnusedIndex.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "custom_entity_reference_with_very_very_v_ref_type_ref_value_idx"),
+                    UnusedIndex.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "custom_entity_reference_with_very_very__entity_id_ref_value_idx"),
+                    UnusedIndex.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "idx_custom_entity_reference_with_very_very_very_long_name_1_d_3"))
+                .allMatch(i -> i.getIndexSizeInBytes() > 0L)
+                .allMatch(i -> i.getIndexScans() == 0);
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default"))
                 .isEmpty();
         });
     }
