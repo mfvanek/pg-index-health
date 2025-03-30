@@ -39,6 +39,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedV
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithJsonAndSerialColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNullableFieldsStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithSerialAndForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVeryLongNamesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutCommentsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutPrimaryKeyStatement;
@@ -348,6 +349,12 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withJsonAndSerialColumnsInPartitionedTable() {
         statementsToExecuteInSameTransaction.putIfAbsent(115, new CreatePartitionedTableWithJsonAndSerialColumnsStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withSerialAndForeignKeysInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(116, new CreatePartitionedTableWithSerialAndForeignKeysStatement());
         return this;
     }
 
