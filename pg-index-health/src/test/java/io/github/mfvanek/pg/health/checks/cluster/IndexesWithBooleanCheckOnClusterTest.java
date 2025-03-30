@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -55,5 +56,18 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
                 .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_accounts_deleted"))
                 .isEmpty();
         });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialAndForeignKeysInPartitionedTable, ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted", 0L,
+                        Column.ofNotNull(ctx, "t1", "deleted"))
+                ));
     }
 }
