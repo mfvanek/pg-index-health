@@ -26,6 +26,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJson
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateAccountsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateClientsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateCustomCollationStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedCustomCollationIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedHashIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedIndexStatement;
@@ -355,6 +356,12 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withSerialAndForeignKeysInPartitionedTable() {
         statementsToExecuteInSameTransaction.putIfAbsent(116, new CreatePartitionedTableWithSerialAndForeignKeysStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withDuplicatedAndIntersectedIndexesInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(117, new CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement());
         return this;
     }
 
