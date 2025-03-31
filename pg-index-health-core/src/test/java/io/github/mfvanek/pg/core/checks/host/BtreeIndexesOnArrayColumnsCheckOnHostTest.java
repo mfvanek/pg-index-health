@@ -46,14 +46,26 @@ class BtreeIndexesOnArrayColumnsCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .containsExactlyInAnyOrder(
                     IndexWithColumns.ofSingle(ctx, accountsTableName, "accounts_roles_btree_idx", 0L,
-                        Column.ofNotNull(accountsTableName, "roles")),
+                        Column.ofNotNull(ctx, accountsTableName, "roles")),
                     IndexWithColumns.ofSingle(ctx, accountsTableName, "accounts_account_number_roles_btree_idx", 0L,
-                        Column.ofNotNull(accountsTableName, "roles"))
+                        Column.ofNotNull(ctx, accountsTableName, "roles"))
                 );
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
                 .isEmpty();
         });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withSerialAndForeignKeysInPartitionedTable().withBtreeIndexOnArrayColumnInPartitionedTable(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    IndexWithColumns.ofSingle(ctx, "t1", "t1_roles_btree_idx", 0L, Column.ofNotNull(ctx, "t1", "roles"))
+                ));
     }
 }
