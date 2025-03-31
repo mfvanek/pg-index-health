@@ -12,7 +12,7 @@ plugins {
     id("pg-index-health.java-application")
     alias(libs.plugins.spring.boot.gradlePlugin)
     alias(libs.plugins.spring.dependency.management)
-    id("io.freefair.lombok") version "8.13"
+    id("io.freefair.lombok") version "8.13.1"
 }
 
 ext["commons-lang3.version"] = libs.versions.commons.lang3.get()
