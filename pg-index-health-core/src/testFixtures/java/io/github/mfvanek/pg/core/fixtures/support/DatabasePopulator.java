@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.core.fixtures.support;
 
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddArrayColumnAndIndexToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnTablesStatement;
@@ -21,6 +22,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeig
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddInvalidForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAccountsAndClientsStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddNotValidConstraintToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddPrimaryKeyForDefaultPartitionStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJsonTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateAccountsTableStatement;
@@ -362,6 +364,18 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withDuplicatedAndIntersectedIndexesInPartitionedTable() {
         statementsToExecuteInSameTransaction.putIfAbsent(117, new CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withNotValidConstraintInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(118, new AddNotValidConstraintToPartitionedTableStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withBtreeIndexOnArrayColumnInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(119, new AddArrayColumnAndIndexToPartitionedTableStatement());
         return this;
     }
 
