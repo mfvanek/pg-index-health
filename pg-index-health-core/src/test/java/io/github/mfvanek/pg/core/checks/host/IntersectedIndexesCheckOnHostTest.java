@@ -98,4 +98,21 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .isEmpty());
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withSerialAndForeignKeysInPartitionedTable().withDuplicatedAndIntersectedIndexesInPartitionedTable(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(2)
+                .containsExactly(
+                    DuplicatedIndexes.of(
+                        IndexWithSize.of(ctx, "t1", "idx_t1_deleted_duplicate"),
+                        IndexWithSize.of(ctx, "t1", "idx_t1_deleted_entity_id")),
+                    DuplicatedIndexes.of(
+                        IndexWithSize.of(ctx, "t1", "idx_t1_deleted_entity_id"),
+                        IndexWithSize.of(ctx, "t1", "idx_t1_deleted"))
+                ));
+    }
 }
