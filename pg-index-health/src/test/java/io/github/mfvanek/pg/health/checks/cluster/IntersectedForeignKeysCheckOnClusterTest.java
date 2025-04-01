@@ -41,7 +41,8 @@ class IntersectedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldIgnoreCompletelyIdenticalForeignKeys(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withDuplicatedForeignKeys(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn()
+            .withDuplicatedForeignKeys().withSerialAndForeignKeysInPartitionedTable().withDuplicatedForeignKeysInPartitionedTable(), ctx ->
             assertThat(check)
                 .executing(ctx)
                 .isEmpty());
@@ -51,21 +52,35 @@ class IntersectedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withIntersectedForeignKeys(), ctx -> {
-            final String expectedTableName = ctx.enrichWithSchema("client_preferences");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
                     DuplicatedForeignKeys.of(
-                        ForeignKey.of(expectedTableName, "c_client_preferences_email_phone_fk",
-                            List.of(Column.ofNotNull(expectedTableName, "email"), Column.ofNotNull(expectedTableName, "phone"))),
-                        ForeignKey.of(expectedTableName, "c_client_preferences_phone_email_fk",
-                            List.of(Column.ofNotNull(expectedTableName, "phone"), Column.ofNotNull(expectedTableName, "email"))))
+                        ForeignKey.of(ctx, "client_preferences", "c_client_preferences_email_phone_fk",
+                            List.of(Column.ofNotNull(ctx, "client_preferences", "email"), Column.ofNotNull(ctx, "client_preferences", "phone"))),
+                        ForeignKey.of(ctx, "client_preferences", "c_client_preferences_phone_email_fk",
+                            List.of(Column.ofNotNull(ctx, "client_preferences", "phone"), Column.ofNotNull(ctx, "client_preferences", "email"))))
                 );
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "client_preferences"))
                 .isEmpty();
         });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withSerialAndForeignKeysInPartitionedTable().withIntersectedForeignKeysInPartitionedTable(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    DuplicatedForeignKeys.of(
+                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type"),
+                        ForeignKey.of(ctx, "t1", "t1_ref_type_ref_value_fk",
+                            List.of(Column.ofNotNull(ctx, "t1", "ref_type"), Column.ofNotNull(ctx, "t1", "ref_value"))))
+                ));
     }
 }

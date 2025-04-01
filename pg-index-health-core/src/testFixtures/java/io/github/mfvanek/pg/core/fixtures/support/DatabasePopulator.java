@@ -19,7 +19,9 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnFunctio
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddInvalidForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAccountsAndClientsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddNotValidConstraintToPartitionedTableStatement;
@@ -376,6 +378,18 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withBtreeIndexOnArrayColumnInPartitionedTable() {
         statementsToExecuteInSameTransaction.putIfAbsent(119, new AddArrayColumnAndIndexToPartitionedTableStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withDuplicatedForeignKeysInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(120, new AddDuplicatedForeignKeysToPartitionedTableStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withIntersectedForeignKeysInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(121, new AddIntersectedForeignKeysToPartitionedTableStatement());
         return this;
     }
 

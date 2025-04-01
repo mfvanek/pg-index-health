@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -41,21 +40,32 @@ class DuplicatedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withDuplicatedForeignKeys(), ctx -> {
-            final String expectedTableName = ctx.enrichWithSchema("accounts");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
                     DuplicatedForeignKeys.of(
-                        ForeignKey.ofColumn(expectedTableName, "c_accounts_fk_client_id",
-                            Column.ofNotNull(expectedTableName, "client_id")),
-                        ForeignKey.ofColumn(expectedTableName, "c_accounts_fk_client_id_duplicate",
-                            Column.ofNotNull(expectedTableName, "client_id")))
+                        ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id"),
+                        ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id_duplicate", "client_id"))
                 );
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
                 .isEmpty();
         });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withSerialAndForeignKeysInPartitionedTable().withDuplicatedForeignKeysInPartitionedTable(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    DuplicatedForeignKeys.of(
+                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
+                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type"))
+                ));
     }
 }

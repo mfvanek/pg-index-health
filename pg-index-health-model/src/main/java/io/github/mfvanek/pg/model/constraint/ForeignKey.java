@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.constraint;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
@@ -80,6 +81,24 @@ public final class ForeignKey extends Constraint {
     }
 
     /**
+     * Constructs a {@code ForeignKey} object with given columns and context.
+     *
+     * @param pgContext           the schema context to enrich table name; must be non-null.
+     * @param tableName           table name; should be non-blank.
+     * @param constraintName      constraint name; should be non-blank.
+     * @param columnsInConstraint list of columns that are included in constraint; should be non-empty.
+     * @return {@code ForeignKey}
+     * @since 0.14.5
+     */
+    @Nonnull
+    public static ForeignKey of(@Nonnull final PgContext pgContext,
+                                @Nonnull final String tableName,
+                                @Nonnull final String constraintName,
+                                @Nonnull final List<Column> columnsInConstraint) {
+        return new ForeignKey(PgContext.enrichWith(tableName, pgContext), constraintName, columnsInConstraint);
+    }
+
+    /**
      * Constructs a {@code ForeignKey} object with given {@code Column}.
      *
      * @param tableName      table name; should be non-blank.
@@ -110,6 +129,24 @@ public final class ForeignKey extends Constraint {
     }
 
     /**
+     * Constructs a {@code ForeignKey} object with not null column and given context.
+     *
+     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param tableName      table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param columnName     name of column that is included in constraint; should be non-blank.
+     * @return {@code ForeignKey}
+     * @since 0.14.5
+     */
+    @Nonnull
+    public static ForeignKey ofNotNullColumn(@Nonnull final PgContext pgContext,
+                                             @Nonnull final String tableName,
+                                             @Nonnull final String constraintName,
+                                             @Nonnull final String columnName) {
+        return ofColumn(PgContext.enrichWith(tableName, pgContext), constraintName, Column.ofNotNull(pgContext, tableName, columnName));
+    }
+
+    /**
      * Constructs a {@code ForeignKey} object with nullable column.
      *
      * @param tableName      table name; should be non-blank.
@@ -122,5 +159,23 @@ public final class ForeignKey extends Constraint {
                                               @Nonnull final String constraintName,
                                               @Nonnull final String columnName) {
         return ofColumn(tableName, constraintName, Column.ofNullable(tableName, columnName));
+    }
+
+    /**
+     * Constructs a {@code ForeignKey} object with nullable column and given context.
+     *
+     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param tableName      table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param columnName     name of column that is included in constraint; should be non-blank.
+     * @return {@code ForeignKey}
+     * @since 0.14.5
+     */
+    @Nonnull
+    public static ForeignKey ofNullableColumn(@Nonnull final PgContext pgContext,
+                                              @Nonnull final String tableName,
+                                              @Nonnull final String constraintName,
+                                              @Nonnull final String columnName) {
+        return ofColumn(PgContext.enrichWith(tableName, pgContext), constraintName, Column.ofNullable(pgContext, tableName, columnName));
     }
 }

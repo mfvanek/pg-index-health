@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.constraint;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -25,13 +26,18 @@ class ForeignKeyTest {
 
     @Test
     void testToString() {
-        final ForeignKey foreignKey = ForeignKey.ofNotNullColumn("t", "c_t_order_id", "order_id");
-        assertThat(foreignKey)
+        assertThat(ForeignKey.ofNotNullColumn("t", "c_t_order_id", "order_id"))
             .hasToString("ForeignKey{tableName='t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='t', columnName='order_id', notNull=true}]}");
 
-        final ForeignKey foreignKeyWithNullableColumn = ForeignKey.ofNullableColumn("t", "c_t_order_id", "order_id");
-        assertThat(foreignKeyWithNullableColumn)
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(ForeignKey.ofNotNullColumn(ctx, "t", "c_t_order_id", "order_id"))
+            .hasToString("ForeignKey{tableName='tst.t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='tst.t', columnName='order_id', notNull=true}]}");
+
+        assertThat(ForeignKey.ofNullableColumn("t", "c_t_order_id", "order_id"))
             .hasToString("ForeignKey{tableName='t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='t', columnName='order_id', notNull=false}]}");
+
+        assertThat(ForeignKey.ofNullableColumn(ctx, "t", "c_t_order_id", "order_id"))
+            .hasToString("ForeignKey{tableName='tst.t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='tst.t', columnName='order_id', notNull=false}]}");
     }
 
     @Test
@@ -54,12 +60,22 @@ class ForeignKeyTest {
 
     @Test
     void getColumnsInConstraint() {
-        final ForeignKey key = ForeignKey.of("t", "c_t_order_id",
+        final ForeignKey first = ForeignKey.of("t", "c_t_order_id",
             List.of(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id")));
-        assertThat(key.getColumnsInConstraint())
+        assertThat(first.getColumnsInConstraint())
             .hasSize(2)
             .containsExactly(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id"))
             .isUnmodifiable();
+
+        final PgContext ctx = PgContext.of("tst");
+        final ForeignKey second = ForeignKey.of(ctx, "t", "c_t_order_id",
+            List.of(Column.ofNotNull(ctx, "t", "order_id"), Column.ofNotNull(ctx, "t", "item_id")));
+        assertThat(second.getColumnsInConstraint())
+            .hasSize(2)
+            .containsExactly(Column.ofNotNull("tst.t", "order_id"), Column.ofNotNull("tst.t", "item_id"))
+            .isUnmodifiable();
+        assertThat(second.getTableName())
+            .isEqualTo("tst.t");
     }
 
     @Test
