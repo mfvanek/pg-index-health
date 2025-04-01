@@ -56,6 +56,7 @@ Implement a new class extending [AbstractCheckOnCluster](pg-index-health/src/mai
 
 * Your code must be 100% covered.
 * Mutation tests via [pitest](https://pitest.org/) should work.
+* Behavior of new check should be tested for partitioned tables.
 
 ### Further steps
 
