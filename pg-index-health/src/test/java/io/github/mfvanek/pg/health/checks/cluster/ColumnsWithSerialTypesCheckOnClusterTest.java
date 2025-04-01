@@ -123,4 +123,15 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                         Column.ofNotNull(ctx, "test_table", "num"), ctx.enrichWithSchema("test_table_num_seq"))
                 ));
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withJsonAndSerialColumnsInPartitionedTable, ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    ColumnWithSerialType.ofBigSerial(Column.ofNotNull(ctx, "parent", "real_client_id"), ctx.enrichWithSchema("parent_real_client_id_seq"))));
+    }
 }

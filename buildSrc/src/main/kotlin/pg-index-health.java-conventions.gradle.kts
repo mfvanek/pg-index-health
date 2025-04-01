@@ -44,7 +44,7 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks {
     test {
-        dependsOn(checkstyleMain, checkstyleTest, pmdMain, pmdTest, spotbugsMain, spotbugsTest)
+        dependsOn(checkstyleMain, checkstyleTest, checkstyleTestFixtures, pmdMain, pmdTest, pmdTestFixtures, spotbugsMain, spotbugsTest, spotbugsTestFixtures)
     }
 
     withType<Test>().configureEach {

@@ -65,4 +65,17 @@ class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
                 .isEmpty();
         });
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withSerialAndForeignKeysInPartitionedTable().withNotValidConstraintInPartitionedTable(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(2)
+                .containsExactly(
+                    Constraint.ofType(ctx, "t1", "t1_entity_id_not_validated_yet", ConstraintType.CHECK),
+                    Constraint.ofType(ctx, "t1_default", "t1_default_entity_id_not_validated_yet", ConstraintType.CHECK)
+                ));
+    }
 }

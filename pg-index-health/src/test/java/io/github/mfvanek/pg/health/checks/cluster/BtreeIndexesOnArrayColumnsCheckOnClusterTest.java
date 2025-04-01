@@ -64,4 +64,16 @@ class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase
                 .isEmpty();
         });
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withSerialAndForeignKeysInPartitionedTable().withBtreeIndexOnArrayColumnInPartitionedTable(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    IndexWithColumns.ofSingle(ctx, "t1", "t1_roles_btree_idx", 0L, Column.ofNotNull(ctx, "t1", "roles"))
+                ));
+    }
 }

@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.core.fixtures.support;
 
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddArrayColumnAndIndexToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnTablesStatement;
@@ -21,11 +22,13 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeig
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddInvalidForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAccountsAndClientsStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddNotValidConstraintToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddPrimaryKeyForDefaultPartitionStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJsonTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateAccountsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateClientsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateCustomCollationStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedCustomCollationIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedHashIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedIndexStatement;
@@ -37,7 +40,9 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArra
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDifferentOpclassStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithJsonAndSerialColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNullableFieldsStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithSerialAndForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVeryLongNamesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutCommentsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutPrimaryKeyStatement;
@@ -66,7 +71,7 @@ import java.util.TreeMap;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
-@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessiveImports"})
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessiveImports", "PMD.ExcessivePublicCount"})
 public final class DatabasePopulator implements AutoCloseable {
 
     private final DataSource dataSource;
@@ -341,6 +346,36 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withVeryLongNamesInPartitionedTable() {
         statementsToExecuteInSameTransaction.putIfAbsent(114, new CreatePartitionedTableWithVeryLongNamesStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withJsonAndSerialColumnsInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(115, new CreatePartitionedTableWithJsonAndSerialColumnsStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withSerialAndForeignKeysInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(116, new CreatePartitionedTableWithSerialAndForeignKeysStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withDuplicatedAndIntersectedIndexesInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(117, new CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withNotValidConstraintInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(118, new AddNotValidConstraintToPartitionedTableStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withBtreeIndexOnArrayColumnInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(119, new AddArrayColumnAndIndexToPartitionedTableStatement());
         return this;
     }
 
