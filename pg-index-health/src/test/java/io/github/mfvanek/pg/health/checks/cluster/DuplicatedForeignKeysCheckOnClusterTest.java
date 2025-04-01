@@ -57,4 +57,22 @@ class DuplicatedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                 .isEmpty();
         });
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withSerialAndForeignKeysInPartitionedTable().withDuplicatedForeignKeysInPartitionedTable(), ctx -> {
+            final String expectedTableName = ctx.enrichWithSchema("t1");
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    DuplicatedForeignKeys.of(
+                        ForeignKey.ofColumn(expectedTableName, "t1_ref_type_fk_duplicate",
+                            Column.ofNotNull(ctx, expectedTableName, "ref_type")),
+                        ForeignKey.ofColumn(expectedTableName, "t1_ref_type_fkey",
+                            Column.ofNotNull(ctx, expectedTableName, "ref_type")))
+                );
+        });
+    }
 }

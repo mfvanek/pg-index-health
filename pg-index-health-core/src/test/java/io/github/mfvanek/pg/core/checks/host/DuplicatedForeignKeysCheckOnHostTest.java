@@ -48,14 +48,32 @@ class DuplicatedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
                 .containsExactly(
                     DuplicatedForeignKeys.of(
                         ForeignKey.ofColumn(expectedTableName, "c_accounts_fk_client_id",
-                            Column.ofNotNull(expectedTableName, "client_id")),
+                            Column.ofNotNull(ctx, expectedTableName, "client_id")),
                         ForeignKey.ofColumn(expectedTableName, "c_accounts_fk_client_id_duplicate",
-                            Column.ofNotNull(expectedTableName, "client_id")))
+                            Column.ofNotNull(ctx, expectedTableName, "client_id")))
                 );
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
                 .isEmpty();
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withSerialAndForeignKeysInPartitionedTable().withDuplicatedForeignKeysInPartitionedTable(), ctx -> {
+            final String expectedTableName = ctx.enrichWithSchema("t1");
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .containsExactly(
+                    DuplicatedForeignKeys.of(
+                        ForeignKey.ofColumn(expectedTableName, "t1_ref_type_fk_duplicate",
+                            Column.ofNotNull(ctx, expectedTableName, "ref_type")),
+                        ForeignKey.ofColumn(expectedTableName, "t1_ref_type_fkey",
+                            Column.ofNotNull(ctx, expectedTableName, "ref_type")))
+                );
         });
     }
 }
