@@ -58,9 +58,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
                     ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id"),
                     ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id"),
                     ForeignKey.of(ctx, "bad_clients", "c_bad_clients_fk_email_phone",
-                        List.of(
-                            Column.ofNullable(ctx, "bad_clients", "email"),
-                            Column.ofNullable(ctx, "bad_clients", "phone"))))
+                        List.of(Column.ofNullable(ctx, "bad_clients", "email"), Column.ofNullable(ctx, "bad_clients", "phone"))))
                 .flatExtracting(ForeignKey::getColumnsInConstraint)
                 .hasSize(4)
                 .containsExactlyInAnyOrder(
@@ -106,10 +104,9 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
         executeTestOnDatabase(schemaName, DatabasePopulator::withSerialAndForeignKeysInPartitionedTable, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(2)
+                .hasSize(1)
                 .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type"),
-                    ForeignKey.ofNotNullColumn(ctx, "t1_default", "t1_ref_type_fkey", "ref_type")
+                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type")
                 ));
     }
 }
