@@ -12,6 +12,7 @@
         <exclude name="GuardLogStatement"/>
         <exclude name="AbstractClassWithoutAbstractMethod"/> <!-- useless -->
         <exclude name="CheckResultSet"/>
+        <exclude name="ImplicitFunctionalInterface"/>
     </rule>
 
     <rule ref="category/java/codestyle.xml">

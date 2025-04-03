@@ -27,7 +27,7 @@ plugins {
 }
 
 dependencies {
-    errorprone("com.google.errorprone:error_prone_core:2.36.0")
+    errorprone("com.google.errorprone:error_prone_core:2.37.0")
     errorprone("jp.skypencil.errorprone.slf4j:errorprone-slf4j:0.1.28")
 
     spotbugsPlugins("jp.skypencil.findbugs.slf4j:bug-pattern:1.5.0")
@@ -96,7 +96,7 @@ tasks {
 }
 
 checkstyle {
-    toolVersion = "10.20.1"
+    toolVersion = "10.23.0"
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     maxWarnings = 0
@@ -104,7 +104,7 @@ checkstyle {
 }
 
 pmd {
-    toolVersion = "7.7.0"
+    toolVersion = "7.12.0"
     isConsoleOutput = true
     ruleSetFiles = files("${rootDir}/config/pmd/pmd.xml")
     ruleSets = listOf()

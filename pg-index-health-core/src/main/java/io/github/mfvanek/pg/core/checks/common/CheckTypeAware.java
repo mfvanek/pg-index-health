@@ -16,6 +16,7 @@ package io.github.mfvanek.pg.core.checks.common;
  * @author Ivan Vakhrushev
  * @since 0.13.2
  */
+@FunctionalInterface
 public interface CheckTypeAware {
 
     /**
