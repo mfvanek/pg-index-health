@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 /**
  * Represents a service that determines if a given database connection is established with a primary host.
  */
+@FunctionalInterface
 public interface PrimaryHostDeterminer {
 
     /**
