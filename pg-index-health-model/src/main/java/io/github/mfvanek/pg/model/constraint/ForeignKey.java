@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.constraint;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
@@ -28,7 +29,7 @@ import javax.annotation.concurrent.Immutable;
  * @see Constraint
  */
 @Immutable
-public final class ForeignKey extends Constraint {
+public final class ForeignKey extends Constraint implements ColumnsAware {
 
     private final List<Column> columnsInConstraint;
 
@@ -47,9 +48,24 @@ public final class ForeignKey extends Constraint {
      *
      * @return columns of foreign key constraint
      * @see Column
+     * @deprecated since 0.14.6. Use getColumns() instead
      */
+    @Deprecated(forRemoval = true)
     @Nonnull
     public List<Column> getColumnsInConstraint() {
+        return getColumns();
+    }
+
+    /**
+     * Retrieves columns of foreign key constraint (one or more).
+     *
+     * @return columns of foreign key constraint
+     * @see Column
+     * @since 0.14.6
+     */
+    @Nonnull
+    @Override
+    public List<Column> getColumns() {
         return columnsInConstraint;
     }
 

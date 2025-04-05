@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
@@ -26,7 +27,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.11.0
  */
 @Immutable
-public class IndexWithColumns extends IndexWithSize {
+public class IndexWithColumns extends IndexWithSize implements ColumnsAware {
 
     private final List<Column> columns;
 
@@ -50,11 +51,12 @@ public class IndexWithColumns extends IndexWithSize {
     }
 
     /**
-     * Retrieves columns in index.
+     * Retrieves columns in index (one or more).
      *
      * @return list of columns
      */
     @Nonnull
+    @Override
     public List<Column> getColumns() {
         return columns;
     }

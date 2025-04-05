@@ -52,7 +52,7 @@ final class PgIndexOnForeignKeyGenerator extends AbstractOptionsAwareSqlGenerato
             .append(keyword("on "))
             .append(foreignKey.getTableName())
             .append(" (")
-            .append(foreignKey.getColumnsInConstraint().stream().map(Column::getColumnName).collect(Collectors.joining(", ")))
+            .append(foreignKey.getColumns().stream().map(Column::getColumnName).collect(Collectors.joining(", ")))
             .append(')');
         if (hasToExcludeNulls(foreignKey)) {
             excludeNulls(queryBuilder, foreignKey);
@@ -70,12 +70,12 @@ final class PgIndexOnForeignKeyGenerator extends AbstractOptionsAwareSqlGenerato
 
     private boolean hasToExcludeNulls(@Nonnull final ForeignKey foreignKey) {
         return options.isExcludeNulls() &&
-            foreignKey.getColumnsInConstraint().stream().anyMatch(Column::isNullable);
+            foreignKey.getColumns().stream().anyMatch(Column::isNullable);
     }
 
     private void excludeNulls(@Nonnull final StringBuilder queryBuilder, @Nonnull final ForeignKey foreignKey) {
         queryBuilder.append(keyword(" where "));
-        final String columnsList = foreignKey.getColumnsInConstraint().stream()
+        final String columnsList = foreignKey.getColumns().stream()
             .filter(Column::isNullable)
             .map(Column::getColumnName)
             .map(n -> n + keyword(" is not null"))
