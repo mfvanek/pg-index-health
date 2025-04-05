@@ -22,6 +22,7 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * Representation of a database table with its columns.
+ * Table can have zero or more columns.
  *
  * @author Ivan Vakhrushev
  * @since 0.14.6
