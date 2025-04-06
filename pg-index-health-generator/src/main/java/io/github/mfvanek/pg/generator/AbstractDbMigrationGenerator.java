@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  * Base class for all migration generators.
  *
  * @param <T> represents an object in a database associated with a table
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.2
  */
 abstract class AbstractDbMigrationGenerator<T extends TableNameAware> implements DbMigrationGenerator<T> {

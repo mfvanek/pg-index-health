@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for columns without description on a specific host.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.0
  */
 public class ColumnsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Column> {

@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 /**
  * A mapper from raw data to {@link DuplicatedForeignKeys} model.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @see ForeignKeyExtractor
  * @since 0.13.1
  */

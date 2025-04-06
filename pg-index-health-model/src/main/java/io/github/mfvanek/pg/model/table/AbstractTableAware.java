@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 /**
  * Abstract base class for database objects that are associated with a specific table.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.7.0
  */
 abstract class AbstractTableAware implements DbObject, TableSizeAware {

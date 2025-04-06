@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for tables with zero or one column on all hosts in the cluster.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.14.6
  */
 public class TablesWithZeroOrOneColumnCheckOnCluster extends AbstractCheckOnCluster<TableWithColumns> {

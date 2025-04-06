@@ -28,7 +28,7 @@ import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_S
 /**
  * A mapper from raw data to {@link TableWithColumns} model.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.14.6
  */
 public class TableWithColumnsExtractor implements ResultSetExtractor<TableWithColumns> {

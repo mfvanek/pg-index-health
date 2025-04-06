@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * Check for tables with zero or one column on a specific host.
  * This usually indicates a poor design of tables in the database or the presence of garbage.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.14.6
  */
 public class TablesWithZeroOrOneColumnCheckOnHost extends AbstractCheckOnHost<TableWithColumns> {

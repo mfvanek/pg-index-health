@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for duplicated (completely identical) indexes on a specific host.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.0
  */
 public class DuplicatedIndexesCheckOnHost extends AbstractCheckOnHost<DuplicatedIndexes> {

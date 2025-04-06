@@ -22,7 +22,7 @@ import javax.annotation.concurrent.Immutable;
 /**
  * A representation of any stored procedure/function.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.7.0
  */
 @Immutable

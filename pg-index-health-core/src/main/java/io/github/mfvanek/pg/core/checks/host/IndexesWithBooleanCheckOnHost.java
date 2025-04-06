@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for indexes that contain boolean values on a specific host.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.11.0
  */
 public class IndexesWithBooleanCheckOnHost extends AbstractCheckOnHost<IndexWithColumns> {

@@ -25,7 +25,7 @@ import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGenerator.MAX_ID
 /**
  * Index name generator.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.5.0
  */
 class PgIdentifierNameGenerator {

@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 /**
  * SQL query generator for creating an index covering given foreign key.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.5.0
  */
 final class PgIndexOnForeignKeyGenerator extends AbstractOptionsAwareSqlGenerator<ForeignKey> {

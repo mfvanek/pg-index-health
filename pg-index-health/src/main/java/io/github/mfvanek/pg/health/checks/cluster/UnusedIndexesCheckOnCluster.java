@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for unused indexes on all hosts in the cluster.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.0
  */
 public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIndex> {

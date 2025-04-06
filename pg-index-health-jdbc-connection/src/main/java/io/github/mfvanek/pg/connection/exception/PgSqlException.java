@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 /**
  * Custom unchecked exception for SQL errors.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.5.0
  */
 public class PgSqlException extends RuntimeException {

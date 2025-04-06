@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for intersected (partially identical) foreign keys on a specific host.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @see DuplicatedForeignKeysCheckOnHost
  * @since 0.13.1
  */
