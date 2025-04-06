@@ -33,6 +33,7 @@ import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.TablesWithZeroOrOneColumnCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
@@ -124,7 +125,8 @@ class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigur
             IntersectedForeignKeysCheckOnHost.class,
             PossibleObjectNameOverflowCheckOnHost.class,
             TablesNotLinkedToOthersCheckOnHost.class,
-            ForeignKeysWithUnmatchedColumnTypeCheckOnHost.class
+            ForeignKeysWithUnmatchedColumnTypeCheckOnHost.class,
+            TablesWithZeroOrOneColumnCheckOnHost.class
         );
     }
 }
