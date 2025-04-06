@@ -31,7 +31,7 @@ class TableWithColumnsTest {
             .isEqualTo("tst.t1")
             .isEqualTo(first.getName());
         assertThat(first.getTableSizeInBytes())
-            .isEqualTo(0L);
+            .isZero();
         assertThat(first.getObjectType())
             .isEqualTo(PgObjectType.TABLE);
         assertThat(first.getColumns())
