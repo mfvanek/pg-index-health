@@ -96,29 +96,64 @@ public final class TableWithColumns extends AbstractTableAware implements Column
         return table.compareTo(other.table);
     }
 
+    /**
+     * Creates a {@code TableWithColumns} instance with no columns.
+     *
+     * @param table the table reference
+     * @return a {@code TableWithColumns} with an empty column list
+     */
     @Nonnull
     public static TableWithColumns withoutColumns(@Nonnull final Table table) {
         return new TableWithColumns(table, List.of());
     }
 
+    /**
+     * Creates a {@code TableWithColumns} instance with no columns from the given context and table name.
+     *
+     * @param pgContext the schema context to enrich table name; must be non-null.
+     * @param tableName table name; should be non-blank.
+     * @return a {@code TableWithColumns} with no columns
+     */
     @Nonnull
     public static TableWithColumns withoutColumns(@Nonnull final PgContext pgContext,
                                                   @Nonnull final String tableName) {
         return new TableWithColumns(Table.of(pgContext, tableName), List.of());
     }
 
+    /**
+     * Creates a {@code TableWithColumns} from the given table and list of columns.
+     *
+     * @param table   the table
+     * @param columns the list of columns (must not be null)
+     * @return a {@code TableWithColumns} instance
+     */
     @Nonnull
     public static TableWithColumns of(@Nonnull final Table table,
                                       @Nonnull final List<Column> columns) {
         return new TableWithColumns(table, columns);
     }
 
+    /**
+     * Creates a {@code TableWithColumns} containing a single column.
+     *
+     * @param table  the table
+     * @param column the single column
+     * @return a {@code TableWithColumns} with one column
+     */
     @Nonnull
     public static TableWithColumns ofSingle(@Nonnull final Table table,
                                             @Nonnull final Column column) {
         return of(table, List.of(column));
     }
 
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single non-nullable column.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one non-nullable column
+     */
     @Nonnull
     public static TableWithColumns ofNotNullColumn(@Nonnull final PgContext pgContext,
                                                    @Nonnull final String tableName,
@@ -126,6 +161,14 @@ public final class TableWithColumns extends AbstractTableAware implements Column
         return ofSingle(Table.of(pgContext, tableName), Column.ofNotNull(pgContext, tableName, columnName));
     }
 
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single nullable column.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one nullable column
+     */
     @Nonnull
     public static TableWithColumns ofNullableColumn(@Nonnull final PgContext pgContext,
                                                     @Nonnull final String tableName,
