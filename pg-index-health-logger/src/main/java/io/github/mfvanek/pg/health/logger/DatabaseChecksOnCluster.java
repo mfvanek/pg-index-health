@@ -33,6 +33,7 @@ import io.github.mfvanek.pg.health.checks.cluster.SequenceOverflowCheckOnCluster
 import io.github.mfvanek.pg.health.checks.cluster.TablesNotLinkedToOthersCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.TablesWithBloatCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.TablesWithMissingIndexesCheckOnCluster;
+import io.github.mfvanek.pg.health.checks.cluster.TablesWithZeroOrOneColumnCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.TablesWithoutDescriptionCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.TablesWithoutPrimaryKeyCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.UnusedIndexesCheckOnCluster;
@@ -95,7 +96,8 @@ public final class DatabaseChecksOnCluster {
             new IntersectedForeignKeysCheckOnCluster(haPgConnection),
             new PossibleObjectNameOverflowCheckOnCluster(haPgConnection),
             new TablesNotLinkedToOthersCheckOnCluster(haPgConnection),
-            new ForeignKeysWithUnmatchedColumnTypeCheckOnCluster(haPgConnection)
+            new ForeignKeysWithUnmatchedColumnTypeCheckOnCluster(haPgConnection),
+            new TablesWithZeroOrOneColumnCheckOnCluster(haPgConnection)
         );
     }
 
