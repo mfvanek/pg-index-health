@@ -239,6 +239,12 @@ public class DatabaseStructureChecksAutoConfiguration {
         return new StatisticsMaintenanceOnHostImpl(pgConnection);
     }
 
+    /**
+     * Deprecated for removal.
+     *
+     * @deprecated since 0.14.6
+     */
+    @Deprecated(forRemoval = true)
     @Bean
     @ConditionalOnClass(ConfigurationMaintenanceOnHost.class)
     @ConditionalOnMissingBean

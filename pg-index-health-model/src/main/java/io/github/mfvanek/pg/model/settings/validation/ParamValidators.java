@@ -13,12 +13,23 @@ package io.github.mfvanek.pg.model.settings.validation;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
+/**
+ * Utility class for validating PostgreSQL parameter values.
+ */
 public final class ParamValidators {
 
     private ParamValidators() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Validates that the given parameter value is not {@code null}, and returns the trimmed value.
+     *
+     * @param value   the parameter value to check
+     * @param message the exception message if the value is {@code null}
+     * @return the trimmed, non-null parameter value
+     * @throws NullPointerException if {@code value} is {@code null}
+     */
     public static String paramValueNotNull(@Nonnull final String value, @Nonnull final String message) {
         return Objects.requireNonNull(value, message).trim();
     }
