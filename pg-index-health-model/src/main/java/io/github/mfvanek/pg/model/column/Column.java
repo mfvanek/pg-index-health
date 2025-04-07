@@ -20,7 +20,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * A representation of column in database table.
+ * A representation of a column in database table/index/foreign key.
+ * Column always belongs to a table/index/foreign key.
  *
  * @author Ivan Vakhrushev
  * @since 0.5.0

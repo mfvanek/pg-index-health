@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for duplicated (completely identical) foreign keys on a specific host.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.13.1
  */
 public class DuplicatedForeignKeysCheckOnHost extends AbstractCheckOnHost<DuplicatedForeignKeys> {

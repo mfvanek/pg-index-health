@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
  * A generalized representation of a database object.
  * Mostly used as a marker interface.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.7.0
  */
 public interface DbObject {

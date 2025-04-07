@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for columns of serial types that are not primary keys on all hosts in the cluster.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.2
  */
 public class ColumnsWithSerialTypesCheckOnCluster extends AbstractCheckOnCluster<ColumnWithSerialType> {

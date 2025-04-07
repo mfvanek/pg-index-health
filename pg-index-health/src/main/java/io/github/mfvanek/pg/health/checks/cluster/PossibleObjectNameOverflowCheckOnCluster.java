@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for objects whose names have a length of {@code max_identifier_length} (usually it is 63) on all hosts in the cluster.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @see <a href="https://www.postgresql.org/docs/current/limits.html">PostgreSQL Limits</a>
  * @since 0.13.2
  */

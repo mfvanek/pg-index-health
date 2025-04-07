@@ -12,6 +12,12 @@ package io.github.mfvanek.pg.model.settings;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Deprecated for removal.
+ *
+ * @deprecated since 0.14.6
+ */
+@Deprecated(forRemoval = true)
 public interface PgParam extends ParamNameAware {
 
     @Nonnull

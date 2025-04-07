@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 /**
  * An abstraction of sql query executor without schema.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.1
  */
 @FunctionalInterface

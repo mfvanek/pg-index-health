@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for columns with {@code json} type on all hosts in the cluster.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.1
  */
 public class ColumnsWithJsonTypeCheckOnCluster extends AbstractCheckOnCluster<Column> {

@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for tables without description on a specific host.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.0
  */
 public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Table> {

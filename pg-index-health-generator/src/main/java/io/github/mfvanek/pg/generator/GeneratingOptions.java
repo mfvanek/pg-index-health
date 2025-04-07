@@ -17,7 +17,7 @@ import javax.annotation.concurrent.Immutable;
 /**
  * Options to generate sql queries for database migration.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.5.0
  */
 @Immutable

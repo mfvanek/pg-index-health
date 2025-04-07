@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for indexes bloat on a specific host.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.0
  */
 public class IndexesWithBloatCheckOnHost extends AbstractCheckOnHost<IndexWithBloat> {

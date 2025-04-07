@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 /**
  * Migration generator for creating indexes covering foreign keys.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.5.0
  */
 public class ForeignKeyMigrationGenerator extends AbstractDbMigrationGenerator<ForeignKey> {
