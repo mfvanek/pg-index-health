@@ -31,16 +31,16 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public final class ForeignKey extends Constraint implements ColumnsAware {
 
-    private final List<Column> columnsInConstraint;
+    private final List<Column> columns;
 
     private ForeignKey(@Nonnull final String tableName,
                        @Nonnull final String constraintName,
-                       @Nonnull final List<Column> columnsInConstraint) {
+                       @Nonnull final List<Column> columns) {
         super(tableName, constraintName, ConstraintType.FOREIGN_KEY);
-        final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columnsInConstraint, "columnsInConstraint cannot be null"));
+        final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columns, "columns cannot be null"));
         Validators.validateThatNotEmpty(defensiveCopy);
         Validators.validateThatTableIsTheSame(tableName, defensiveCopy);
-        this.columnsInConstraint = defensiveCopy;
+        this.columns = defensiveCopy;
     }
 
     /**
@@ -66,7 +66,7 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
     @Nonnull
     @Override
     public List<Column> getColumns() {
-        return columnsInConstraint;
+        return columns;
     }
 
     /**
@@ -77,7 +77,7 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
     public String toString() {
         return ForeignKey.class.getSimpleName() + '{' +
             innerToString() +
-            ", columnsInConstraint=" + columnsInConstraint +
+            ", columns=" + columns +
             '}';
     }
 
@@ -86,14 +86,14 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
      *
      * @param tableName           table name; should be non-blank.
      * @param constraintName      constraint name; should be non-blank.
-     * @param columnsInConstraint list of columns that are included in constraint; should be non-empty.
+     * @param columns list of columns that are included in constraint; should be non-empty.
      * @return {@code ForeignKey}
      */
     @Nonnull
     public static ForeignKey of(@Nonnull final String tableName,
                                 @Nonnull final String constraintName,
-                                @Nonnull final List<Column> columnsInConstraint) {
-        return new ForeignKey(tableName, constraintName, columnsInConstraint);
+                                @Nonnull final List<Column> columns) {
+        return new ForeignKey(tableName, constraintName, columns);
     }
 
     /**
@@ -102,7 +102,7 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
      * @param pgContext           the schema context to enrich table name; must be non-null.
      * @param tableName           table name; should be non-blank.
      * @param constraintName      constraint name; should be non-blank.
-     * @param columnsInConstraint list of columns that are included in constraint; should be non-empty.
+     * @param columns list of columns that are included in constraint; should be non-empty.
      * @return {@code ForeignKey}
      * @since 0.14.5
      */
@@ -110,8 +110,8 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
     public static ForeignKey of(@Nonnull final PgContext pgContext,
                                 @Nonnull final String tableName,
                                 @Nonnull final String constraintName,
-                                @Nonnull final List<Column> columnsInConstraint) {
-        return new ForeignKey(PgContext.enrichWith(tableName, pgContext), constraintName, columnsInConstraint);
+                                @Nonnull final List<Column> columns) {
+        return new ForeignKey(PgContext.enrichWith(tableName, pgContext), constraintName, columns);
     }
 
     /**

@@ -10,6 +10,9 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -131,5 +134,16 @@ class ConstraintTest {
             .isEqualTo("alter table t validate constraint not_valid_id;");
         assertThat(Constraint.ofType("custom_schema.t", "not_valid_id", ConstraintType.CHECK).getValidateSql())
             .isEqualTo("alter table custom_schema.t validate constraint not_valid_id;");
+    }
+
+    @Test
+    void serializationToJsonShouldWork() throws JsonProcessingException {
+        final Constraint original = Constraint.ofType("t", "not_valid_id", ConstraintType.CHECK);
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION);
+        final String json = mapper.writeValueAsString(original);
+        final Constraint restored = mapper.readValue(json, Constraint.class);
+        assertThat(restored)
+            .isEqualTo(original);
     }
 }

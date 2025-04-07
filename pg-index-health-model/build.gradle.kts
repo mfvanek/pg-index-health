@@ -9,6 +9,8 @@ dependencies {
     testImplementation(libs.equalsverifier)
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.junit.jupiter:junit-jupiter-params")
+    testImplementation(platform("com.fasterxml.jackson:jackson-bom:2.18.3"))
+    testImplementation("com.fasterxml.jackson.core:jackson-databind")
 
     testFixturesImplementation(libs.jsr305)
     testFixturesCompileOnly(libs.forbiddenapis)

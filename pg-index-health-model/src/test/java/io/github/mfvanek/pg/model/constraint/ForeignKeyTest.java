@@ -10,10 +10,13 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -27,17 +30,17 @@ class ForeignKeyTest {
     @Test
     void testToString() {
         assertThat(ForeignKey.ofNotNullColumn("t", "c_t_order_id", "order_id"))
-            .hasToString("ForeignKey{tableName='t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='t', columnName='order_id', notNull=true}]}");
+            .hasToString("ForeignKey{tableName='t', constraintName='c_t_order_id', columns=[Column{tableName='t', columnName='order_id', notNull=true}]}");
 
         final PgContext ctx = PgContext.of("tst");
         assertThat(ForeignKey.ofNotNullColumn(ctx, "t", "c_t_order_id", "order_id"))
-            .hasToString("ForeignKey{tableName='tst.t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='tst.t', columnName='order_id', notNull=true}]}");
+            .hasToString("ForeignKey{tableName='tst.t', constraintName='c_t_order_id', columns=[Column{tableName='tst.t', columnName='order_id', notNull=true}]}");
 
         assertThat(ForeignKey.ofNullableColumn("t", "c_t_order_id", "order_id"))
-            .hasToString("ForeignKey{tableName='t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='t', columnName='order_id', notNull=false}]}");
+            .hasToString("ForeignKey{tableName='t', constraintName='c_t_order_id', columns=[Column{tableName='t', columnName='order_id', notNull=false}]}");
 
         assertThat(ForeignKey.ofNullableColumn(ctx, "t", "c_t_order_id", "order_id"))
-            .hasToString("ForeignKey{tableName='tst.t', constraintName='c_t_order_id', columnsInConstraint=[Column{tableName='tst.t', columnName='order_id', notNull=false}]}");
+            .hasToString("ForeignKey{tableName='tst.t', constraintName='c_t_order_id', columns=[Column{tableName='tst.t', columnName='order_id', notNull=false}]}");
     }
 
     @Test
@@ -115,11 +118,11 @@ class ForeignKeyTest {
             .hasMessage("constraintName cannot be null");
         assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("columnsInConstraint cannot be null");
+            .hasMessage("columns cannot be null");
         final List<Column> columns = List.of();
         assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", columns))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("columnsInConstraint cannot be empty");
+            .hasMessage("columns cannot be empty");
         assertThatThrownBy(() -> ForeignKey.ofColumn("t", "fk", null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("column cannot be null");
@@ -194,7 +197,18 @@ class ForeignKeyTest {
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(ForeignKey.class)
-            .withIgnoredFields("constraintType", "columnsInConstraint")
+            .withIgnoredFields("constraintType", "columns")
             .verify();
+    }
+
+    @Disabled
+    @Test
+    void serializationToJsonShouldWork() throws JsonProcessingException {
+        final ForeignKey original = ForeignKey.ofNotNullColumn("t", "c_t_order_id", "order_id");
+        final ObjectMapper mapper = new ObjectMapper();
+        final String json = mapper.writeValueAsString(original);
+        final ForeignKey restored = mapper.readValue(json, ForeignKey.class);
+        assertThat(restored)
+            .isEqualTo(original);
     }
 }
