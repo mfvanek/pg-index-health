@@ -33,6 +33,7 @@ import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.TablesWithZeroOrOneColumnCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
@@ -233,12 +234,25 @@ public class DatabaseStructureChecksAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnClass(TablesWithZeroOrOneColumnCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public TablesWithZeroOrOneColumnCheckOnHost tablesWithZeroOrOneColumnCheckOnHost(final PgConnection pgConnection) {
+        return new TablesWithZeroOrOneColumnCheckOnHost(pgConnection);
+    }
+
+    @Bean
     @ConditionalOnClass(StatisticsMaintenanceOnHost.class)
     @ConditionalOnMissingBean
     public StatisticsMaintenanceOnHost statisticsMaintenanceOnHost(final PgConnection pgConnection) {
         return new StatisticsMaintenanceOnHostImpl(pgConnection);
     }
 
+    /**
+     * Deprecated for removal.
+     *
+     * @deprecated since 0.14.6
+     */
+    @Deprecated(forRemoval = true)
     @Bean
     @ConditionalOnClass(ConfigurationMaintenanceOnHost.class)
     @ConditionalOnMissingBean

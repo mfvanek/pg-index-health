@@ -19,34 +19,34 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("fast")
-class ColumnsInForeignKeyParserTest {
+class ColumnsDataParserTest {
 
     @Test
     void privateConstructor() {
-        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(ColumnsInForeignKeyParser.class))
+        assertThatThrownBy(() -> TestUtils.invokePrivateConstructor(ColumnsDataParser.class))
             .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void shouldThrowExceptionWhenPassedInvalidData() {
-        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData(null))
+        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnInForeignKey(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("tableName cannot be null");
-        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t"))
+        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnInForeignKey("t"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Columns array cannot be empty");
-        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t", "abracadabra"))
+        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnInForeignKey("t", "abracadabra"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Cannot parse column info from abracadabra");
-        assertThatThrownBy(() -> ColumnsInForeignKeyParser.parseRawColumnData("t", "a, b, c"))
+        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnInForeignKey("t", "a, b, c"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Cannot parse column info from a, b, c");
     }
 
     @Test
     void shouldWorkWhenValidDataPassed() {
-        assertThat(ColumnsInForeignKeyParser.parseRawColumnData("t", "c1, true", "c2, false", "c3, abracadabra"))
+        assertThat(ColumnsDataParser.parseRawColumnInForeignKey("t", "c1, true", "c2, false", "c3, abracadabra"))
             .hasSize(3)
             .containsExactly(
                 Column.ofNotNull("t", "c1"),
@@ -57,7 +57,7 @@ class ColumnsInForeignKeyParserTest {
 
     @Test
     void shouldWorkWithoutSpaces() {
-        assertThat(ColumnsInForeignKeyParser.parseRawColumnData("t", "c1,true", "c2,false", "c3,abracadabra"))
+        assertThat(ColumnsDataParser.parseRawColumnInForeignKey("t", "c1,true", "c2,false", "c3,abracadabra"))
             .hasSize(3)
             .containsExactly(
                 Column.ofNotNull("t", "c1"),
@@ -68,7 +68,7 @@ class ColumnsInForeignKeyParserTest {
 
     @Test
     void shouldWorkWithExtraSpaces() {
-        assertThat(ColumnsInForeignKeyParser.parseRawColumnData("t", "  c1,  true  ", "   c2,   false   "))
+        assertThat(ColumnsDataParser.parseRawColumnInForeignKey("t", "  c1,  true  ", "   c2,   false   "))
             .hasSize(2)
             .containsExactly(
                 Column.ofNotNull("t", "c1"),

@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 /**
  * An abstraction of sql query executor.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @see DbObject
  * @since 0.6.0
  */

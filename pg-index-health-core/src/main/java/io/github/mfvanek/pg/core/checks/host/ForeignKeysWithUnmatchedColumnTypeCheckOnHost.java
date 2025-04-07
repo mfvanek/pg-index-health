@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * This eliminates unnecessary conversions at the DBMS level and in the application code,
  * and reduces the number of errors that may appear due to type inconsistencies in the future.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @see <a href="https://www.postgresql.org/docs/current/catalog-pg-constraint.html">pg_constraint</a>
  * @since 0.13.2
  */

@@ -15,6 +15,12 @@ import io.github.mfvanek.pg.model.validation.Validators;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Deprecated for removal.
+ *
+ * @deprecated since 0.14.6
+ */
+@Deprecated(forRemoval = true)
 public class ServerSpecificationBuilder {
 
     private int cpuCoresAmount;

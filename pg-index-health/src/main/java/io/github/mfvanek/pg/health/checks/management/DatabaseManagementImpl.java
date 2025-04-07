@@ -80,6 +80,12 @@ public class DatabaseManagementImpl implements DatabaseManagement {
             .getLastStatsResetTimestamp();
     }
 
+    /**
+     * Deprecated for removal.
+     *
+     * @deprecated since 0.14.6
+     */
+    @Deprecated(forRemoval = true)
     @Override
     @Nonnull
     public Set<PgParam> getParamsWithDefaultValues(@Nonnull final ServerSpecification specification) {
@@ -87,6 +93,12 @@ public class DatabaseManagementImpl implements DatabaseManagement {
             .getParamsWithDefaultValues(specification);
     }
 
+    /**
+     * Deprecated for removal.
+     *
+     * @deprecated since 0.14.6
+     */
+    @Deprecated(forRemoval = true)
     @Override
     @Nonnull
     public Set<PgParam> getParamsCurrentValues() {

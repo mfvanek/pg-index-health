@@ -24,7 +24,9 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @see HostAware
  * @see ConfigurationAware
+ * @deprecated since 0.14.6
  */
+@Deprecated(forRemoval = true)
 public interface ConfigurationMaintenanceOnHost extends ConfigurationAware, HostAware {
 
     @Override

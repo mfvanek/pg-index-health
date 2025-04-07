@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.generator;
 /**
  * Possible positions of "idx" in the generated index name.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.5.0
  */
 public enum IdxPosition {

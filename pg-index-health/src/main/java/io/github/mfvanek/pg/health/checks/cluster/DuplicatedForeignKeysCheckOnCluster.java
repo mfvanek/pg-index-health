@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for duplicated (completely identical) foreign keys on all hosts in the cluster.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.13.1
  */
 public class DuplicatedForeignKeysCheckOnCluster extends AbstractCheckOnCluster<DuplicatedForeignKeys> {

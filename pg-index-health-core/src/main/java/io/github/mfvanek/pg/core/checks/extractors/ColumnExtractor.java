@@ -22,7 +22,7 @@ import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_N
 /**
  * A mapper from raw data to {@link Column} model.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.1
  */
 public class ColumnExtractor implements ResultSetExtractor<Column> {

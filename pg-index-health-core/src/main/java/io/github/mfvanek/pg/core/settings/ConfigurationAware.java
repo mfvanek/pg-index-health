@@ -21,7 +21,9 @@ import javax.annotation.Nonnull;
  *
  * @author Ivan Vakhrushev
  * @since 0.4.0
+ * @deprecated since 0.14.6
  */
+@Deprecated(forRemoval = true)
 public interface ConfigurationAware {
 
     @Nonnull
