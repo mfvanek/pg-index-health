@@ -25,7 +25,7 @@ import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGenerator.MAX_ID
 /**
  * Index name generator.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.5.0
  */
 class PgIdentifierNameGenerator {
@@ -42,11 +42,11 @@ class PgIdentifierNameGenerator {
         Objects.requireNonNull(foreignKey, "foreignKey cannot be null");
         this.options = Objects.requireNonNull(options, "options cannot be null");
         this.tableNameWithoutSchema = NameUtils.getTableNameWithoutSchema(foreignKey);
-        this.columnsInIndex = foreignKey.getColumnsInConstraint().stream()
+        this.columnsInIndex = foreignKey.getColumns().stream()
             .map(Column::getColumnName)
             .collect(Collectors.joining(AbstractDbMigrationGenerator.DELIMITER));
         this.hasToAddWithoutNullsSuffix = options.isNameWithoutNulls() && options.isExcludeNulls() &&
-            foreignKey.getColumnsInConstraint().stream().anyMatch(Column::isNullable);
+            foreignKey.getColumns().stream().anyMatch(Column::isNullable);
     }
 
     @Nonnull

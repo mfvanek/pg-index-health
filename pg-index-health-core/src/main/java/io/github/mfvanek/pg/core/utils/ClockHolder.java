@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 /**
  * Utility class to work with {@link Clock}.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.0
  */
 public final class ClockHolder {

@@ -16,6 +16,12 @@ import io.github.mfvanek.pg.model.validation.Validators;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
+/**
+ * Deprecated for removal.
+ *
+ * @deprecated since 0.14.6
+ */
+@Deprecated(forRemoval = true)
 public class PgParamImpl implements PgParam {
 
     private final String name;

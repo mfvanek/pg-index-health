@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for columns with {@code json} type on a specific host.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.1
  */
 public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<Column> {

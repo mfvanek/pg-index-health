@@ -59,7 +59,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
                     ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id"),
                     ForeignKey.of(ctx, "bad_clients", "c_bad_clients_fk_email_phone",
                         List.of(Column.ofNullable(ctx, "bad_clients", "email"), Column.ofNullable(ctx, "bad_clients", "phone"))))
-                .flatExtracting(ForeignKey::getColumnsInConstraint)
+                .flatExtracting(ForeignKey::getColumns)
                 .hasSize(4)
                 .containsExactlyInAnyOrder(
                     Column.ofNotNull(ctx, "accounts", "client_id"),

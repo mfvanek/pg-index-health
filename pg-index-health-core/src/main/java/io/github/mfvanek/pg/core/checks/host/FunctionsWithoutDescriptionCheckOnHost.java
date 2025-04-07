@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for procedures/functions without description on a specific host.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.7.0
  */
 public class FunctionsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<StoredFunction> {

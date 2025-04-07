@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for columns of serial types that are not primary keys on a specific host.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.2
  */
 public class ColumnsWithSerialTypesCheckOnHost extends AbstractCheckOnHost<ColumnWithSerialType> {

@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for tables with missing indexes on all hosts in the cluster.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.0
  */
 public class TablesWithMissingIndexesCheckOnCluster extends AbstractCheckOnCluster<TableWithMissingIndex> {

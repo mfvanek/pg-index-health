@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * If there is an object with a name of maximum length in the database, then an overflow may have occurred.
  * It is advisable to avoid such situations and use shorter names.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @see <a href="https://www.postgresql.org/docs/current/limits.html">PostgreSQL Limits</a>
  * @since 0.13.2
  */

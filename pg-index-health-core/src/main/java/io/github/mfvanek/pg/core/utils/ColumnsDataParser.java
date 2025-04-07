@@ -19,17 +19,29 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
-public class ColumnsInForeignKeyParser {
+public final class ColumnsDataParser {
 
-    private ColumnsInForeignKeyParser() {
+    private ColumnsDataParser() {
         throw new UnsupportedOperationException();
     }
 
     @Nonnull
-    public static List<Column> parseRawColumnData(@Nonnull final String tableName, @Nonnull final String... rawColumns) {
+    public static List<Column> parseRawColumnInForeignKey(@Nonnull final String tableName, @Nonnull final String... rawColumns) {
+        return parseRawColumnData(tableName, true, rawColumns);
+    }
+
+    @Nonnull
+    public static List<Column> parseRawColumnInTable(@Nonnull final String tableName, @Nonnull final String... rawColumns) {
+        return parseRawColumnData(tableName, false, rawColumns);
+    }
+
+    @Nonnull
+    private static List<Column> parseRawColumnData(@Nonnull final String tableName,
+                                                   final boolean cannotHaveZeroColumns,
+                                                   @Nonnull final String... rawColumns) {
         Validators.tableNameNotBlank(tableName);
         Objects.requireNonNull(rawColumns, "rawColumns cannot be null");
-        if (rawColumns.length == 0) {
+        if (cannotHaveZeroColumns && rawColumns.length == 0) {
             throw new IllegalArgumentException("Columns array cannot be empty");
         }
         return Arrays.stream(rawColumns)

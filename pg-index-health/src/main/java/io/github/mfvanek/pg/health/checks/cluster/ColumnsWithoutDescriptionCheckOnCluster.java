@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 /**
  * Check for columns without description on all hosts in the cluster.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.0
  */
 public class ColumnsWithoutDescriptionCheckOnCluster extends AbstractCheckOnCluster<Column> {

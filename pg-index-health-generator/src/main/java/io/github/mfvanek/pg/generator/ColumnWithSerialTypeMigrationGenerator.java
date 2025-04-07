@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 /**
  * Migration generator for removing default value and sequence on columns of serial types.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.2
  */
 public class ColumnWithSerialTypeMigrationGenerator extends AbstractDbMigrationGenerator<ColumnWithSerialType> {

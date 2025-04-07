@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 /**
  * SQL query generator for dropping a default value on given column.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.2
  */
 final class DropDefaultValueGenerator extends AbstractOptionsAwareSqlGenerator<ColumnNameAware> {

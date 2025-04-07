@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.core.checks.extractors;
 
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
-import io.github.mfvanek.pg.core.utils.ColumnsInForeignKeyParser;
+import io.github.mfvanek.pg.core.utils.ColumnsDataParser;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 
@@ -27,7 +27,7 @@ import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_N
 /**
  * A mapper from raw data to {@link ForeignKey} model.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.13.1
  */
 public class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey> {
@@ -50,7 +50,7 @@ public class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey> {
         final String constraintName = resultSet.getString(getConstraintNameField());
         final Array columnsArray = resultSet.getArray(getColumnsField());
         final String[] rawColumns = (String[]) columnsArray.getArray();
-        final List<Column> columns = ColumnsInForeignKeyParser.parseRawColumnData(tableName, rawColumns);
+        final List<Column> columns = ColumnsDataParser.parseRawColumnInForeignKey(tableName, rawColumns);
         return ForeignKey.of(tableName, constraintName, columns);
     }
 

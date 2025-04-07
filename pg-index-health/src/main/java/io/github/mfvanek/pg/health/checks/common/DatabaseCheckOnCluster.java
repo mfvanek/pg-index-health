@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * An abstract check on database structure.
  *
  * @param <T> any database object associated with a table (table itself, index, column, constraint)
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @see DbObject
  * @since 0.6.0
  */

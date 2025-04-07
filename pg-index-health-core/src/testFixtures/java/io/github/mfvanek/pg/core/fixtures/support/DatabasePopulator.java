@@ -34,6 +34,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedAnd
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedCustomCollationIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedHashIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedIndexStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateEmptyTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateForeignKeyOnNullableColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateFunctionsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithBooleanValuesStatement;
@@ -42,6 +43,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArra
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDifferentOpclassStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithDroppedColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithJsonAndSerialColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNullableFieldsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithSerialAndForeignKeysStatement;
@@ -390,6 +392,18 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withIntersectedForeignKeysInPartitionedTable() {
         statementsToExecuteInSameTransaction.putIfAbsent(121, new AddIntersectedForeignKeysToPartitionedTableStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withDroppedColumnInPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(122, new CreatePartitionedTableWithDroppedColumnStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withEmptyTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(130, new CreateEmptyTableStatement());
         return this;
     }
 

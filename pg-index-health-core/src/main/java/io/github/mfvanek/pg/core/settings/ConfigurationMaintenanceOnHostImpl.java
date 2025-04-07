@@ -27,6 +27,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
+/**
+ * Deprecated for removal.
+ *
+ * @deprecated since 0.14.6
+ */
+@Deprecated(forRemoval = true)
 public class ConfigurationMaintenanceOnHostImpl implements ConfigurationMaintenanceOnHost {
 
     /**

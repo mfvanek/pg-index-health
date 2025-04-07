@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 /**
  * A mapper from raw data to {@link Table} model.
  *
- * @author Ivan Vahrushev
+ * @author Ivan Vakhrushev
  * @since 0.6.1
  */
 public class TableExtractor implements ResultSetExtractor<Table> {

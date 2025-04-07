@@ -49,7 +49,8 @@ abstract class HealthLoggerTestBase extends StatisticsAwareTestBase {
         .withIntersectedForeignKeys()
         .withMaterializedView()
         .withIdentityPrimaryKey()
-        .withForeignKeyOnNullableColumn();
+        .withForeignKeyOnNullableColumn()
+        .withEmptyTable();
 
     @Nonnull
     protected static Predicate<String> ofKey(@Nonnull final Diagnostic diagnostic) {
