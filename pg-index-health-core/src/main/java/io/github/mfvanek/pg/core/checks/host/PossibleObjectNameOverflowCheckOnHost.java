@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.extractors.AnyObjectExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
 
@@ -48,10 +49,6 @@ public class PossibleObjectNameOverflowCheckOnHost extends AbstractCheckOnHost<A
     @Nonnull
     @Override
     protected List<AnyObject> doCheck(@Nonnull final PgContext pgContext) {
-        return executeQuery(pgContext, rs -> {
-            final String objectName = rs.getString("object_name");
-            final String objectType = rs.getString("object_type");
-            return AnyObject.ofRaw(objectName, objectType);
-        });
+        return executeQuery(pgContext, AnyObjectExtractor.of());
     }
 }
