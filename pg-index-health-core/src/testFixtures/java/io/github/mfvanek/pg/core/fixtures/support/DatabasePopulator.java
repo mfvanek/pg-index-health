@@ -28,6 +28,8 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddNotValidConstrai
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddPrimaryKeyForDefaultPartitionStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJsonTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateAccountsTableStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedObjectsStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateClientsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateCustomCollationStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement;
@@ -402,8 +404,20 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     @Nonnull
+    public DatabasePopulator withBadlyNamedPartitionedTable() {
+        statementsToExecuteInSameTransaction.putIfAbsent(123, new CreateBadlyNamedPartitionedTableStatement());
+        return this;
+    }
+
+    @Nonnull
     public DatabasePopulator withEmptyTable() {
         statementsToExecuteInSameTransaction.putIfAbsent(130, new CreateEmptyTableStatement());
+        return this;
+    }
+
+    @Nonnull
+    public DatabasePopulator withBadlyNamedObjects() {
+        statementsToExecuteInSameTransaction.putIfAbsent(135, new CreateBadlyNamedObjectsStatement());
         return this;
     }
 

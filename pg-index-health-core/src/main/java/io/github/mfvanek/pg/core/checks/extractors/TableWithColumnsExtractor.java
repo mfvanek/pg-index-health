@@ -51,9 +51,9 @@ public class TableWithColumnsExtractor implements ResultSetExtractor<TableWithCo
     }
 
     /**
-     * Creates {@code TableExtractor} instance.
+     * Creates {@code TableWithColumnsExtractor} instance.
      *
-     * @return {@code TableExtractor} instance
+     * @return {@code TableWithColumnsExtractor} instance
      */
     @Nonnull
     public static ResultSetExtractor<TableWithColumns> of() {

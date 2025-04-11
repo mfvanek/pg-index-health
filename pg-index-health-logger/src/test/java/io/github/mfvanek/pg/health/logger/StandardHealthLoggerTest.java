@@ -36,22 +36,23 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
             "intersected_indexes:11",
             "unused_indexes:12",
             "tables_with_missing_indexes:0",
-            "tables_without_description:7",
-            "columns_without_description:27",
+            "tables_without_description:9",
+            "columns_without_description:30",
             "columns_with_json_type:1",
             "columns_with_serial_types:3",
-            "functions_without_description:2",
+            "functions_without_description:3",
             "indexes_with_boolean:1",
             "not_valid_constraints:2",
             "btree_indexes_on_array_columns:2",
             "sequence_overflow:3",
-            "primary_keys_with_serial_types:1",
+            "primary_keys_with_serial_types:2",
             "duplicated_foreign_keys:3",
             "intersected_foreign_keys:1",
             "possible_object_name_overflow:2",
             "tables_not_linked_to_others:3",
             "foreign_keys_with_unmatched_column_type:2",
-            "tables_with_zero_or_one_column:1"
+            "tables_with_zero_or_one_column:2",
+            "objects_not_following_naming_convention:10"
         };
     }
 

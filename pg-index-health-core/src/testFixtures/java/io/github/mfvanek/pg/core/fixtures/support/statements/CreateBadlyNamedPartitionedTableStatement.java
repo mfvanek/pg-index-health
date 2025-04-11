@@ -13,15 +13,17 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-public class CreateMaterializedViewStatement extends AbstractDbStatement {
+public class CreateBadlyNamedPartitionedTableStatement extends AbstractDbStatement {
 
     @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create materialized view if not exists " +
-                "{schemaName}.\"accounts-materialized-view-with-length-63-1234567890-1234567890\" as (" +
-                "select client_id, account_number from {schemaName}.accounts);"
+            "create table if not exists {schemaName}.\"one-partitioned\"(" +
+                "\"bad-id\" bigserial not null primary key" +
+                ") partition by range (\"bad-id\");",
+            "create table if not exists {schemaName}.\"one-default\" " +
+                "partition of {schemaName}.\"one-partitioned\" default;"
         );
     }
 }

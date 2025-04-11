@@ -50,7 +50,8 @@ abstract class HealthLoggerTestBase extends StatisticsAwareTestBase {
         .withMaterializedView()
         .withIdentityPrimaryKey()
         .withForeignKeyOnNullableColumn()
-        .withEmptyTable();
+        .withEmptyTable()
+        .withBadlyNamedObjects();
 
     @Nonnull
     protected static Predicate<String> ofKey(@Nonnull final Diagnostic diagnostic) {
