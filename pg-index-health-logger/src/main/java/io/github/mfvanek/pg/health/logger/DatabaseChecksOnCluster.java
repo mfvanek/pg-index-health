@@ -27,6 +27,7 @@ import io.github.mfvanek.pg.health.checks.cluster.IntersectedForeignKeysCheckOnC
 import io.github.mfvanek.pg.health.checks.cluster.IntersectedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.InvalidIndexesCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.NotValidConstraintsCheckOnCluster;
+import io.github.mfvanek.pg.health.checks.cluster.ObjectsNotFollowingNamingConventionCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.PossibleObjectNameOverflowCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.PrimaryKeysWithSerialTypesCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.SequenceOverflowCheckOnCluster;
@@ -97,7 +98,8 @@ public final class DatabaseChecksOnCluster {
             new PossibleObjectNameOverflowCheckOnCluster(haPgConnection),
             new TablesNotLinkedToOthersCheckOnCluster(haPgConnection),
             new ForeignKeysWithUnmatchedColumnTypeCheckOnCluster(haPgConnection),
-            new TablesWithZeroOrOneColumnCheckOnCluster(haPgConnection)
+            new TablesWithZeroOrOneColumnCheckOnCluster(haPgConnection),
+            new ObjectsNotFollowingNamingConventionCheckOnCluster(haPgConnection)
         );
     }
 

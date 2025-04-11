@@ -27,6 +27,7 @@ import io.github.mfvanek.pg.core.checks.host.IntersectedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IntersectedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.InvalidIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.NotValidConstraintsCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ObjectsNotFollowingNamingConventionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PossibleObjectNameOverflowCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
@@ -238,6 +239,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public TablesWithZeroOrOneColumnCheckOnHost tablesWithZeroOrOneColumnCheckOnHost(final PgConnection pgConnection) {
         return new TablesWithZeroOrOneColumnCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(ObjectsNotFollowingNamingConventionCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public ObjectsNotFollowingNamingConventionCheckOnHost objectsNotFollowingNamingConventionCheckOnHost(final PgConnection pgConnection) {
+        return new ObjectsNotFollowingNamingConventionCheckOnHost(pgConnection);
     }
 
     @Bean

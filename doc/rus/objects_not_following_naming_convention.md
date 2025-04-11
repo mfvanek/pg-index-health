@@ -7,7 +7,8 @@
 - [Соглашение об именовании](https://postgrespro.ru/docs/postgresql/17/sql-syntax-lexical#SQL-SYNTAX-IDENTIFIERS)
 
 Следует избегать использования идентификаторов, требующих обрамления двойными кавычками.
-Это неудобно и может приводить [к неочевидным ошибкам](https://lerner.co.il/2013/11/30/quoting-postgresql/).
+Это неудобно и может приводить [к неочевидным ошибкам](https://lerner.co.il/2013/11/30/quoting-postgresql/).  
+Смотри также [wiki.postgresql.org](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_upper_case_table_or_column_names).
 
 ## Как могут появиться такие идентификаторы?
 
