@@ -43,7 +43,7 @@ class PossibleObjectNameOverflowCheckOnHostTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withMaterializedView().withIdentityPrimaryKey(), ctx -> {
-            final String matViewName = "accounts_materialized_view_with_length_63_1234567890_1234567890";
+            final String matViewName = "\"accounts-materialized-view-with-length-63-1234567890-1234567890\"";
             final String constraintName = "num_less_than_million_constraint_with_length_63_1234567890_1234";
             assertThat(check)
                 .executing(ctx)
