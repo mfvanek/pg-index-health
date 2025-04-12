@@ -43,16 +43,18 @@ class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withNotValidConstraints().withUniqueConstraintOnSerialColumn(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withNotValidConstraints().withUniqueConstraintOnSerialColumn().withBadlyNamedObjects(), ctx -> {
             final List<Constraint> notValidConstraints = check.check(ctx);
             Assertions.assertThat(notValidConstraints)
-                .hasSize(2)
+                .hasSize(3)
                 .containsExactly(
                     Constraint.ofType(ctx, "accounts", "c_accounts_chk_client_id_not_validated_yet", ConstraintType.CHECK),
-                    Constraint.ofType(ctx, "accounts", "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY));
+                    Constraint.ofType(ctx, "accounts", "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY),
+                    Constraint.ofType(ctx, "\"bad-table-two\"", "\"bad-table-two-fk-bad-ref-id\"", ConstraintType.FOREIGN_KEY)
+                );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "\"bad-table-two\"")))
                 .isEmpty();
 
             ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {
