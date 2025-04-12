@@ -70,7 +70,7 @@ class HealthLoggerTest extends HealthLoggerTestBase {
             "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_serial_types\t3",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tfunctions_without_description\t3",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_boolean\t1",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tnot_valid_constraints\t2",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tnot_valid_constraints\t3",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tbtree_indexes_on_array_columns\t2",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tsequence_overflow\t3",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tprimary_keys_with_serial_types\t2",
