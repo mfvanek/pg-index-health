@@ -24,6 +24,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
+
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class PrimaryKeysWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -41,21 +43,25 @@ class PrimaryKeysWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withSerialType(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withSerialType().withBadlyNamedObjects(), ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
-                .containsExactlyInAnyOrder(
+                .hasSize(2)
+                .containsExactly(
                     ColumnWithSerialType.of(
-                        Column.ofNotNull(ctx, "bad_accounts", "id"), SerialType.BIG_SERIAL, ctx.enrichWithSchema("bad_accounts_id_seq")
-                    ));
+                        ctx, Column.ofNotNull(ctx, "bad_accounts", "id"), SerialType.BIG_SERIAL, "bad_accounts_id_seq"
+                    ),
+                    ColumnWithSerialType.of(
+                        ctx, Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\""), SerialType.SERIAL, "\"bad-table_bad-id_seq\""
+                    )
+                );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("bad_accounts", "\"bad-table\"")))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipBySequenceNamePredicate.ofName(ctx, "bad_accounts_id_seq"))
+                .executing(ctx, SkipBySequenceNamePredicate.of(ctx, List.of("bad_accounts_id_seq", "\"bad-table_bad-id_seq\"")))
                 .isEmpty();
         });
     }
@@ -75,12 +81,12 @@ class PrimaryKeysWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase
     void shouldWorkWithPartitionedTables(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withVeryLongNamesInPartitionedTable, ctx -> {
             final String tableName = "entity_long_1234567890_1234567890_1234567890_1234567890_1234567";
-            final String sequenceName = ctx.enrichWithSchema("entity_long_1234567890_1234567890_1234567890_1234_entity_id_seq");
+            final String sequenceName = "entity_long_1234567890_1234567890_1234567890_1234_entity_id_seq";
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
-                    ColumnWithSerialType.of(Column.ofNotNull(ctx, tableName, "entity_id"), SerialType.BIG_SERIAL, sequenceName)
+                    ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, tableName, "entity_id"), SerialType.BIG_SERIAL, sequenceName)
                 );
         });
     }

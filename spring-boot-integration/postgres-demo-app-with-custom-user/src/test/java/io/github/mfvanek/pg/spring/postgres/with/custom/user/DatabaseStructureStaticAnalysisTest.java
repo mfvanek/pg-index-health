@@ -79,9 +79,9 @@ class DatabaseStructureStaticAnalysisTest {
                         listAssert
                             .hasSize(1)
                             .asInstanceOf(list(ColumnWithSerialType.class))
-                            .containsExactly(ColumnWithSerialType.of(
-                                Column.ofNotNull(ctx, "warehouse", "id"),
-                                SerialType.BIG_SERIAL, ctx.enrichWithSchema("warehouse_id_seq")));
+                            .containsExactly(
+                                ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "warehouse", "id"), SerialType.BIG_SERIAL, "warehouse_id_seq")
+                            );
                         break;
 
                     default:
@@ -118,8 +118,8 @@ class DatabaseStructureStaticAnalysisTest {
                     case PRIMARY_KEYS_WITH_SERIAL_TYPES:
                         listAssert.hasSize(1)
                             .asInstanceOf(list(ColumnWithSerialType.class))
-                            .containsExactly(ColumnWithSerialType.of(
-                                Column.ofNotNull(ctx, "additional_table", "id"), SerialType.BIG_SERIAL, ctx.enrichWithSchema("additional_table_id_seq"))
+                            .containsExactly(
+                                ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "additional_table", "id"), SerialType.BIG_SERIAL, "additional_table_id_seq")
                             );
                         break;
 
