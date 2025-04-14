@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.spring;
 
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithoutDescriptionCheckOnHost;
@@ -128,7 +129,8 @@ class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigur
             TablesNotLinkedToOthersCheckOnHost.class,
             ForeignKeysWithUnmatchedColumnTypeCheckOnHost.class,
             TablesWithZeroOrOneColumnCheckOnHost.class,
-            ObjectsNotFollowingNamingConventionCheckOnHost.class
+            ObjectsNotFollowingNamingConventionCheckOnHost.class,
+            ColumnsNotFollowingNamingConventionCheckOnHost.class
         );
     }
 }

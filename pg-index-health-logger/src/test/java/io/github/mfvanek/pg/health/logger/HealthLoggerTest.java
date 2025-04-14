@@ -80,7 +80,8 @@ class HealthLoggerTest extends HealthLoggerTestBase {
             "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_not_linked_to_others\t3",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_with_unmatched_column_type\t2",
             "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_zero_or_one_column\t2",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tobjects_not_following_naming_convention\t10"
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tobjects_not_following_naming_convention\t10",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_not_following_naming_convention\t2"
         };
     }
 
