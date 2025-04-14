@@ -40,33 +40,36 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx -> {
-            final String accountsTableName = ctx.enrichWithSchema("accounts");
-            final String clientsTableName = ctx.enrichWithSchema("clients");
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBadlyNamedObjects(), ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(10)
+                .hasSize(13)
                 .containsExactly(
-                    Column.ofNotNull(accountsTableName, "account_balance"),
-                    Column.ofNotNull(accountsTableName, "account_number"),
-                    Column.ofNotNull(accountsTableName, "client_id"),
-                    Column.ofNotNull(accountsTableName, "deleted"),
-                    Column.ofNotNull(accountsTableName, "id"),
-                    Column.ofNotNull(clientsTableName, "first_name"),
-                    Column.ofNotNull(clientsTableName, "id"),
-                    Column.ofNullable(clientsTableName, "info"),
-                    Column.ofNotNull(clientsTableName, "last_name"),
-                    Column.ofNullable(clientsTableName, "middle_name"))
+                    Column.ofNotNull(ctx, "accounts", "account_balance"),
+                    Column.ofNotNull(ctx, "accounts", "account_number"),
+                    Column.ofNotNull(ctx, "accounts", "client_id"),
+                    Column.ofNotNull(ctx, "accounts", "deleted"),
+                    Column.ofNotNull(ctx, "accounts", "id"),
+                    Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\""),
+                    Column.ofNotNull(ctx, "\"bad-table-two\"", "\"bad-ref-id\""),
+                    Column.ofNullable(ctx, "\"bad-table-two\"", "description"),
+                    Column.ofNotNull(ctx, "clients", "first_name"),
+                    Column.ofNotNull(ctx, "clients", "id"),
+                    Column.ofNullable(ctx, "clients", "info"),
+                    Column.ofNotNull(ctx, "clients", "last_name"),
+                    Column.ofNullable(ctx, "clients", "middle_name"))
                 .filteredOn(Column::isNullable)
-                .hasSize(2)
+                .hasSize(3)
                 .containsExactly(
-                    Column.ofNullable(clientsTableName, "info"),
-                    Column.ofNullable(clientsTableName, "middle_name"));
+                    Column.ofNullable(ctx, "\"bad-table-two\"", "description"),
+                    Column.ofNullable(ctx, "clients", "info"),
+                    Column.ofNullable(ctx, "clients", "middle_name")
+                );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "\"bad-table\"", "\"bad-table-two\"")))
                 .hasSize(5)
-                .allMatch(c -> c.getTableName().equals(clientsTableName));
+                .allMatch(c -> c.getTableName().equals(ctx.enrichWithSchema("clients")));
         });
     }
 

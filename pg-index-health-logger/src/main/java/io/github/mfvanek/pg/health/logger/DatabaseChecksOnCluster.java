@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.health.logger;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.health.checks.cluster.BtreeIndexesOnArrayColumnsCheckOnCluster;
+import io.github.mfvanek.pg.health.checks.cluster.ColumnsNotFollowingNamingConventionCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithJsonTypeCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithSerialTypesCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithoutDescriptionCheckOnCluster;
@@ -99,7 +100,8 @@ public final class DatabaseChecksOnCluster {
             new TablesNotLinkedToOthersCheckOnCluster(haPgConnection),
             new ForeignKeysWithUnmatchedColumnTypeCheckOnCluster(haPgConnection),
             new TablesWithZeroOrOneColumnCheckOnCluster(haPgConnection),
-            new ObjectsNotFollowingNamingConventionCheckOnCluster(haPgConnection)
+            new ObjectsNotFollowingNamingConventionCheckOnCluster(haPgConnection),
+            new ColumnsNotFollowingNamingConventionCheckOnCluster(haPgConnection)
         );
     }
 

@@ -52,7 +52,8 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
             "tables_not_linked_to_others:3",
             "foreign_keys_with_unmatched_column_type:2",
             "tables_with_zero_or_one_column:2",
-            "objects_not_following_naming_convention:10"
+            "objects_not_following_naming_convention:10",
+            "columns_not_following_naming_convention:2"
         };
     }
 

@@ -50,7 +50,8 @@ public enum Diagnostic implements CheckTypeAware {
     TABLES_NOT_LINKED_TO_OTHERS("tables_not_linked_to_others.sql"),
     FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE("foreign_keys_with_unmatched_column_type.sql"),
     TABLES_WITH_ZERO_OR_ONE_COLUMN("tables_with_zero_or_one_column.sql"),
-    OBJECTS_NOT_FOLLOWING_NAMING_CONVENTION("objects_not_following_naming_convention.sql");
+    OBJECTS_NOT_FOLLOWING_NAMING_CONVENTION("objects_not_following_naming_convention.sql"),
+    COLUMNS_NOT_FOLLOWING_NAMING_CONVENTION("columns_not_following_naming_convention.sql");
 
     private final ExecutionTopology executionTopology;
     private final String sqlQueryFileName;

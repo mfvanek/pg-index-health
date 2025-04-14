@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.column;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
@@ -174,6 +175,24 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
                                           @Nonnull final SerialType serialType,
                                           @Nonnull final String sequenceName) {
         return new ColumnWithSerialType(column, serialType, sequenceName);
+    }
+
+    /**
+     * Constructs a {@code ColumnWithSerialType} object of given serial type and context.
+     *
+     * @param pgContext    the schema context to enrich table name; must be non-null.
+     * @param column       column; should be non-null.
+     * @param serialType   column serial type; should be non-null.
+     * @param sequenceName sequence name; should be non-blank.
+     * @return {@code ColumnWithSerialType}
+     * @since 0.14.6
+     */
+    @Nonnull
+    public static ColumnWithSerialType of(@Nonnull final PgContext pgContext,
+                                          @Nonnull final Column column,
+                                          @Nonnull final SerialType serialType,
+                                          @Nonnull final String sequenceName) {
+        return of(column, serialType, PgContext.enrichWith(sequenceName, pgContext));
     }
 
     /**

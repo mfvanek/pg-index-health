@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.column;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -93,6 +94,10 @@ class ColumnWithSerialTypeTest {
     void toStringTest() {
         assertThat(prepare())
             .hasToString("ColumnWithSerialType{column=Column{tableName='t1', columnName='c1', notNull=true}, serialType=SerialType{columnType='serial'}, sequenceName='s1'}");
+
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "t2", "c2"), SerialType.SMALL_SERIAL, "s2"))
+            .hasToString("ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, serialType=SerialType{columnType='smallserial'}, sequenceName='tst.s2'}");
     }
 
     @SuppressWarnings("ConstantConditions")
