@@ -49,6 +49,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTa
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithJsonAndSerialColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNullableFieldsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithSerialAndForeignKeysStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVarcharStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVeryLongNamesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutCommentsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutPrimaryKeyStatement;
@@ -58,6 +59,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceState
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithFixedLengthVarcharStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIdentityPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithUniqueSerialColumnStatement;
@@ -90,9 +92,9 @@ public final class DatabasePopulator implements AutoCloseable {
         this.dataSource = Objects.requireNonNull(dataSource);
         this.schemaName = Validators.notBlank(schemaName, "schemaName");
         this.supportsProcedures = supportsProcedures;
-        this.statementsToExecuteInSameTransaction.putIfAbsent(1, new CreateSchemaStatement());
-        this.statementsToExecuteInSameTransaction.putIfAbsent(2, new CreateClientsTableStatement());
-        this.statementsToExecuteInSameTransaction.putIfAbsent(3, new CreateAccountsTableStatement());
+        register(1, new CreateSchemaStatement());
+        register(2, new CreateClientsTableStatement());
+        register(3, new CreateAccountsTableStatement());
     }
 
     static DatabasePopulator builder(@Nonnull final DataSource dataSource, @Nonnull final String schemaName, final boolean supportsProcedures) {
@@ -101,14 +103,12 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Nonnull
     public DatabasePopulator withCustomCollation() {
-        statementsToExecuteInSameTransaction.putIfAbsent(4, new CreateCustomCollationStatement());
-        return this;
+        return register(4, new CreateCustomCollationStatement());
     }
 
     @Nonnull
     public DatabasePopulator withReferences() {
-        statementsToExecuteInSameTransaction.putIfAbsent(5, new AddLinksBetweenAccountsAndClientsStatement());
-        return this;
+        return register(5, new AddLinksBetweenAccountsAndClientsStatement());
     }
 
     @Nonnull
@@ -125,300 +125,265 @@ public final class DatabasePopulator implements AutoCloseable {
 
     @Nonnull
     public DatabasePopulator withDuplicatedIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(40, new CreateDuplicatedIndexStatement());
-        return this;
+        return register(40, new CreateDuplicatedIndexStatement());
     }
 
     @Nonnull
     public DatabasePopulator withDuplicatedHashIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(41, new CreateDuplicatedHashIndexStatement());
-        return this;
+        return register(41, new CreateDuplicatedHashIndexStatement());
     }
 
     @Nonnull
     public DatabasePopulator withNonSuitableIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(43, new CreateNotSuitableIndexForForeignKeyStatement());
-        return this;
+        return register(43, new CreateNotSuitableIndexForForeignKeyStatement());
     }
 
     @Nonnull
     public DatabasePopulator withSuitableIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(44, new CreateSuitableIndexForForeignKeyStatement());
-        return this;
+        return register(44, new CreateSuitableIndexForForeignKeyStatement());
     }
 
     @Nonnull
     public DatabasePopulator withTableWithoutPrimaryKey() {
-        statementsToExecuteInSameTransaction.putIfAbsent(47, new CreateTableWithoutPrimaryKeyStatement());
-        return this;
+        return register(47, new CreateTableWithoutPrimaryKeyStatement());
     }
 
     @Nonnull
     public DatabasePopulator withNullValuesInIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(48, new CreateIndexWithNullValuesStatement());
-        return this;
+        return register(48, new CreateIndexWithNullValuesStatement());
     }
 
     @Nonnull
     public DatabasePopulator withBooleanValuesInIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(49, new CreateIndexWithBooleanValuesStatement());
-        return this;
+        return register(49, new CreateIndexWithBooleanValuesStatement());
     }
 
     @Nonnull
     public DatabasePopulator withDifferentOpclassIndexes() {
-        statementsToExecuteInSameTransaction.putIfAbsent(50, new CreateIndexesWithDifferentOpclassStatement());
-        return this;
+        return register(50, new CreateIndexesWithDifferentOpclassStatement());
     }
 
     @Nonnull
     public DatabasePopulator withMaterializedView() {
-        statementsToExecuteInSameTransaction.putIfAbsent(55, new CreateMaterializedViewStatement());
-        return this;
+        return register(55, new CreateMaterializedViewStatement());
     }
 
     @Nonnull
     public DatabasePopulator withDuplicatedCustomCollationIndex() {
-        statementsToExecuteInSameTransaction.putIfAbsent(58, new CreateDuplicatedCustomCollationIndexStatement());
-        return this;
+        return register(58, new CreateDuplicatedCustomCollationIndexStatement());
     }
 
     @Nonnull
     public DatabasePopulator withForeignKeyOnNullableColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(60, new CreateForeignKeyOnNullableColumnStatement());
-        return withTableWithoutPrimaryKey();
+        return register(60, new CreateForeignKeyOnNullableColumnStatement())
+            .withTableWithoutPrimaryKey();
     }
 
     @Nonnull
     public DatabasePopulator withCommentOnTables() {
-        statementsToExecuteInSameTransaction.putIfAbsent(64, new AddCommentOnTablesStatement());
-        return this;
+        return register(64, new AddCommentOnTablesStatement());
     }
 
     @Nonnull
     public DatabasePopulator withBlankCommentOnTables() {
-        statementsToExecuteInSameTransaction.putIfAbsent(65, new AddBlankCommentOnTablesStatement());
-        return this;
+        return register(65, new AddBlankCommentOnTablesStatement());
     }
 
     @Nonnull
     public DatabasePopulator withCommentOnColumns() {
-        statementsToExecuteInSameTransaction.putIfAbsent(66, new AddCommentOnColumnsStatement());
-        return this;
+        return register(66, new AddCommentOnColumnsStatement());
     }
 
     @Nonnull
     public DatabasePopulator withBlankCommentOnColumns() {
-        statementsToExecuteInSameTransaction.putIfAbsent(67, new AddBlankCommentOnColumnsStatement());
-        return this;
+        return register(67, new AddBlankCommentOnColumnsStatement());
     }
 
     @Nonnull
     public DatabasePopulator withJsonType() {
-        statementsToExecuteInSameTransaction.putIfAbsent(25, new ConvertColumnToJsonTypeStatement());
-        return this;
+        return register(25, new ConvertColumnToJsonTypeStatement());
     }
 
     @Nonnull
     public DatabasePopulator withDroppedInfoColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(70, new DropColumnStatement("clients", "info"));
-        return this;
+        return register(70, new DropColumnStatement("clients", "info"));
     }
 
     @Nonnull
     public DatabasePopulator withSerialType() {
-        statementsToExecuteInSameTransaction.putIfAbsent(75, new CreateTableWithColumnOfBigSerialTypeStatement());
-        return this;
+        return register(75, new CreateTableWithColumnOfBigSerialTypeStatement());
     }
 
     @Nonnull
     public DatabasePopulator withDroppedSerialColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(76, new DropColumnStatement("bad_accounts", "real_account_id"));
-        return this;
+        return register(76, new DropColumnStatement("bad_accounts", "real_account_id"));
     }
 
     @Nonnull
     public DatabasePopulator withCheckConstraintOnSerialPrimaryKey() {
-        statementsToExecuteInSameTransaction.putIfAbsent(80, new CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement());
-        return this;
+        return register(80, new CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement());
     }
 
     @Nonnull
     public DatabasePopulator withUniqueConstraintOnSerialColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(81, new CreateTableWithUniqueSerialColumnStatement());
-        return this;
+        return register(81, new CreateTableWithUniqueSerialColumnStatement());
     }
 
     @Nonnull
     public DatabasePopulator withSerialPrimaryKeyReferencesToAnotherTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(82, new CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement());
-        return withCheckConstraintOnSerialPrimaryKey()
+        return register(82, new CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement())
+            .withCheckConstraintOnSerialPrimaryKey()
             .withUniqueConstraintOnSerialColumn();
     }
 
     @Nonnull
     public DatabasePopulator withFunctions() {
-        statementsToExecuteInSameTransaction.putIfAbsent(90, new CreateFunctionsStatement());
-        return this;
+        return register(90, new CreateFunctionsStatement());
     }
 
     @Nonnull
     public DatabasePopulator withProcedures() {
         if (supportsProcedures) {
-            statementsToExecuteInSameTransaction.putIfAbsent(91, new CreateProceduresStatement());
+            return register(91, new CreateProceduresStatement());
         }
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withBlankCommentOnFunctions() {
-        statementsToExecuteInSameTransaction.putIfAbsent(92, new AddBlankCommentOnFunctionsStatement());
-        return this;
+        return register(92, new AddBlankCommentOnFunctionsStatement());
     }
 
     @Nonnull
     public DatabasePopulator withCommentOnFunctions() {
-        statementsToExecuteInSameTransaction.putIfAbsent(93, new AddCommentOnFunctionsStatement());
-        return this;
+        return register(93, new AddCommentOnFunctionsStatement());
     }
 
     @Nonnull
     public DatabasePopulator withCommentOnProcedures() {
         if (supportsProcedures) {
-            statementsToExecuteInSameTransaction.putIfAbsent(94, new AddCommentOnProceduresStatement());
+            return register(94, new AddCommentOnProceduresStatement());
         }
         return this;
     }
 
     @Nonnull
     public DatabasePopulator withNotValidConstraints() {
-        statementsToExecuteInSameTransaction.putIfAbsent(95, new AddInvalidForeignKeyStatement());
-        return this;
+        return register(95, new AddInvalidForeignKeyStatement());
     }
 
     public DatabasePopulator withBtreeIndexesOnArrayColumn() {
-        statementsToExecuteInSameTransaction.putIfAbsent(96, new CreateIndexesOnArrayColumnStatement());
-        return this;
+        return register(96, new CreateIndexesOnArrayColumnStatement());
     }
 
     @Nonnull
     public DatabasePopulator withSequenceOverflow() {
-        statementsToExecuteInSameTransaction.putIfAbsent(97, new CreateSequenceStatement());
-        return this;
+        return register(97, new CreateSequenceStatement());
     }
 
     @Nonnull
     public DatabasePopulator withIdentityPrimaryKey() {
-        statementsToExecuteInSameTransaction.putIfAbsent(98, new CreateTableWithIdentityPrimaryKeyStatement());
-        return this;
+        return register(98, new CreateTableWithIdentityPrimaryKeyStatement());
     }
 
     @Nonnull
     public DatabasePopulator withDuplicatedForeignKeys() {
-        statementsToExecuteInSameTransaction.putIfAbsent(105, new AddDuplicatedForeignKeysStatement());
-        return this;
+        return register(105, new AddDuplicatedForeignKeysStatement());
     }
 
     @Nonnull
     public DatabasePopulator withIntersectedForeignKeys() {
-        statementsToExecuteInSameTransaction.putIfAbsent(106, new AddIntersectedForeignKeysStatement());
-        return this;
+        return register(106, new AddIntersectedForeignKeysStatement());
     }
 
     @Nonnull
     public DatabasePopulator withPartitionedTableWithoutComments() {
-        statementsToExecuteInSameTransaction.putIfAbsent(110, new CreatePartitionedTableWithoutCommentsStatement());
-        return this;
+        return register(110, new CreatePartitionedTableWithoutCommentsStatement());
     }
 
     @Nonnull
     public DatabasePopulator withPartitionedTableWithoutPrimaryKey() {
-        statementsToExecuteInSameTransaction.putIfAbsent(111, new CreatePartitionedTableWithoutPrimaryKeyStatement());
-        return this;
+        return register(111, new CreatePartitionedTableWithoutPrimaryKeyStatement());
     }
 
     @Nonnull
     public DatabasePopulator withPrimaryKeyForDefaultPartition() {
-        statementsToExecuteInSameTransaction.putIfAbsent(112, new AddPrimaryKeyForDefaultPartitionStatement());
-        return this;
+        return register(112, new AddPrimaryKeyForDefaultPartitionStatement());
     }
 
     @Nonnull
     public DatabasePopulator withNullableIndexesInPartitionedTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(113, new CreatePartitionedTableWithNullableFieldsStatement());
-        return this;
+        return register(113, new CreatePartitionedTableWithNullableFieldsStatement());
     }
 
     @Nonnull
     public DatabasePopulator withVeryLongNamesInPartitionedTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(114, new CreatePartitionedTableWithVeryLongNamesStatement());
-        return this;
+        return register(114, new CreatePartitionedTableWithVeryLongNamesStatement());
     }
 
     @Nonnull
     public DatabasePopulator withJsonAndSerialColumnsInPartitionedTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(115, new CreatePartitionedTableWithJsonAndSerialColumnsStatement());
-        return this;
+        return register(115, new CreatePartitionedTableWithJsonAndSerialColumnsStatement());
     }
 
     @Nonnull
     public DatabasePopulator withSerialAndForeignKeysInPartitionedTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(116, new CreatePartitionedTableWithSerialAndForeignKeysStatement());
-        return this;
+        return register(116, new CreatePartitionedTableWithSerialAndForeignKeysStatement());
     }
 
     @Nonnull
     public DatabasePopulator withDuplicatedAndIntersectedIndexesInPartitionedTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(117, new CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement());
-        return this;
+        return register(117, new CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement());
     }
 
     @Nonnull
     public DatabasePopulator withNotValidConstraintInPartitionedTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(118, new AddNotValidConstraintToPartitionedTableStatement());
-        return this;
+        return register(118, new AddNotValidConstraintToPartitionedTableStatement());
     }
 
     @Nonnull
     public DatabasePopulator withBtreeIndexOnArrayColumnInPartitionedTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(119, new AddArrayColumnAndIndexToPartitionedTableStatement());
-        return this;
+        return register(119, new AddArrayColumnAndIndexToPartitionedTableStatement());
     }
 
     @Nonnull
     public DatabasePopulator withDuplicatedForeignKeysInPartitionedTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(120, new AddDuplicatedForeignKeysToPartitionedTableStatement());
-        return this;
+        return register(120, new AddDuplicatedForeignKeysToPartitionedTableStatement());
     }
 
     @Nonnull
     public DatabasePopulator withIntersectedForeignKeysInPartitionedTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(121, new AddIntersectedForeignKeysToPartitionedTableStatement());
-        return this;
+        return register(121, new AddIntersectedForeignKeysToPartitionedTableStatement());
     }
 
     @Nonnull
     public DatabasePopulator withDroppedColumnInPartitionedTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(122, new CreatePartitionedTableWithDroppedColumnStatement());
-        return this;
+        return register(122, new CreatePartitionedTableWithDroppedColumnStatement());
     }
 
     @Nonnull
     public DatabasePopulator withBadlyNamedPartitionedTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(123, new CreateBadlyNamedPartitionedTableStatement());
-        return this;
+        return register(123, new CreateBadlyNamedPartitionedTableStatement());
+    }
+
+    @Nonnull
+    public DatabasePopulator withVarcharInPartitionedTable() {
+        return register(124, new CreatePartitionedTableWithVarcharStatement());
     }
 
     @Nonnull
     public DatabasePopulator withEmptyTable() {
-        statementsToExecuteInSameTransaction.putIfAbsent(130, new CreateEmptyTableStatement());
-        return this;
+        return register(130, new CreateEmptyTableStatement());
     }
 
     @Nonnull
     public DatabasePopulator withBadlyNamedObjects() {
-        statementsToExecuteInSameTransaction.putIfAbsent(135, new CreateBadlyNamedObjectsStatement());
-        return this;
+        return register(135, new CreateBadlyNamedObjectsStatement());
+    }
+
+    @Nonnull
+    public DatabasePopulator withVarcharInsteadOfUuid() {
+        return register(136, new CreateTableWithFixedLengthVarcharStatement());
     }
 
     public void populate() {
@@ -426,6 +391,12 @@ public final class DatabasePopulator implements AutoCloseable {
             ExecuteUtils.executeInTransaction(dataSource, statementsToExecuteInSameTransaction.values());
         }
         actionsToExecuteOutsideTransaction.forEach((k, v) -> v.run());
+    }
+
+    @Nonnull
+    private DatabasePopulator register(final int statementOrder, @Nonnull final DbStatement dbStatement) {
+        statementsToExecuteInSameTransaction.putIfAbsent(statementOrder, dbStatement);
+        return this;
     }
 
     private void createInvalidIndex() {

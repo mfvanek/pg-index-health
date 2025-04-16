@@ -31,6 +31,7 @@ import io.github.mfvanek.pg.health.checks.cluster.NotValidConstraintsCheckOnClus
 import io.github.mfvanek.pg.health.checks.cluster.ObjectsNotFollowingNamingConventionCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.PossibleObjectNameOverflowCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.PrimaryKeysWithSerialTypesCheckOnCluster;
+import io.github.mfvanek.pg.health.checks.cluster.PrimaryKeysWithVarcharCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.SequenceOverflowCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.TablesNotLinkedToOthersCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.TablesWithBloatCheckOnCluster;
@@ -101,7 +102,8 @@ public final class DatabaseChecksOnCluster {
             new ForeignKeysWithUnmatchedColumnTypeCheckOnCluster(haPgConnection),
             new TablesWithZeroOrOneColumnCheckOnCluster(haPgConnection),
             new ObjectsNotFollowingNamingConventionCheckOnCluster(haPgConnection),
-            new ColumnsNotFollowingNamingConventionCheckOnCluster(haPgConnection)
+            new ColumnsNotFollowingNamingConventionCheckOnCluster(haPgConnection),
+            new PrimaryKeysWithVarcharCheckOnCluster(haPgConnection)
         );
     }
 

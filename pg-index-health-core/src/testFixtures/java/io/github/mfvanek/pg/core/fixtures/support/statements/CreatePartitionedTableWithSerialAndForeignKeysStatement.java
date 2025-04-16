@@ -29,7 +29,7 @@ public class CreatePartitionedTableWithSerialAndForeignKeysStatement extends Abs
                 "creation_date timestamp with time zone not null," +
                 "entity_id varchar(64) not null," +
                 "deleted boolean not null," +
-                "primary key(ref_value, ref_type, creation_date, entity_id)" +
+                "primary key (ref_value, ref_type, creation_date, entity_id)" +
                 ") partition by range (creation_date);",
             "create index if not exists idx_t1_deleted on {schemaName}.t1(deleted);",
             "create table if not exists {schemaName}.t1_default " +
