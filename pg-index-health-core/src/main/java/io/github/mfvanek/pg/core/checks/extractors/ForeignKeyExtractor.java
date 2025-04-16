@@ -30,7 +30,7 @@ import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_N
  * @author Ivan Vakhrushev
  * @since 0.13.1
  */
-public class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey> {
+public final class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey> {
 
     public static final String CONSTRAINT_NAME = "constraint_name";
 
@@ -50,7 +50,7 @@ public class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey> {
         final String constraintName = resultSet.getString(getConstraintNameField());
         final Array columnsArray = resultSet.getArray(getColumnsField());
         final String[] rawColumns = (String[]) columnsArray.getArray();
-        final List<Column> columns = ColumnsDataParser.parseRawColumnInForeignKey(tableName, rawColumns);
+        final List<Column> columns = ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex(tableName, rawColumns);
         return ForeignKey.of(tableName, constraintName, columns);
     }
 

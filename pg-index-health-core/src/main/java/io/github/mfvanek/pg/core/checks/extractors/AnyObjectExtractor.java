@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @since 0.14.6
  */
-public class AnyObjectExtractor implements ResultSetExtractor<AnyObject> {
+public final class AnyObjectExtractor implements ResultSetExtractor<AnyObject> {
 
     public static final String OBJECT_NAME = "object_name";
     public static final String OBJECT_TYPE = "object_type";

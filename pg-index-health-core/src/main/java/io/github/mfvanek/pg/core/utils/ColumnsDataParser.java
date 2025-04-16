@@ -26,19 +26,19 @@ public final class ColumnsDataParser {
     }
 
     @Nonnull
-    public static List<Column> parseRawColumnInForeignKey(@Nonnull final String tableName, @Nonnull final String... rawColumns) {
-        return parseRawColumnData(tableName, true, rawColumns);
+    public static List<Column> parseRawColumnsInForeignKeyOrIndex(@Nonnull final String tableName, @Nonnull final String... rawColumns) {
+        return parseRawColumnsData(tableName, true, rawColumns);
     }
 
     @Nonnull
-    public static List<Column> parseRawColumnInTable(@Nonnull final String tableName, @Nonnull final String... rawColumns) {
-        return parseRawColumnData(tableName, false, rawColumns);
+    public static List<Column> parseRawColumnsInTable(@Nonnull final String tableName, @Nonnull final String... rawColumns) {
+        return parseRawColumnsData(tableName, false, rawColumns);
     }
 
     @Nonnull
-    private static List<Column> parseRawColumnData(@Nonnull final String tableName,
-                                                   final boolean cannotHaveZeroColumns,
-                                                   @Nonnull final String... rawColumns) {
+    private static List<Column> parseRawColumnsData(@Nonnull final String tableName,
+                                                    final boolean cannotHaveZeroColumns,
+                                                    @Nonnull final String... rawColumns) {
         Validators.tableNameNotBlank(tableName);
         Objects.requireNonNull(rawColumns, "rawColumns cannot be null");
         if (cannotHaveZeroColumns && rawColumns.length == 0) {

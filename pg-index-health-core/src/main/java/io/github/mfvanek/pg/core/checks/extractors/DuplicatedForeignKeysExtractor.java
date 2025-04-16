@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @see ForeignKeyExtractor
  * @since 0.13.1
  */
-public class DuplicatedForeignKeysExtractor implements ResultSetExtractor<DuplicatedForeignKeys> {
+public final class DuplicatedForeignKeysExtractor implements ResultSetExtractor<DuplicatedForeignKeys> {
 
     private final ResultSetExtractor<ForeignKey> defaultExtractor;
     private final ResultSetExtractor<ForeignKey> duplicateKeyExtractor;

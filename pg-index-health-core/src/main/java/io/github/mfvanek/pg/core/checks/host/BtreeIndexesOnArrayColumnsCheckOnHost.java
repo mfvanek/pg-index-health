@@ -20,7 +20,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Check for B-tree indexes on array columns.
+ * Check for B-tree indexes on array columns on a specific host.
+ * <p>
  * GIN-index should be used instead for such columns.
  *
  * @author Vadim Khizhin

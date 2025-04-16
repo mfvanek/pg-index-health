@@ -20,7 +20,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Check for primary keys columns with serial types (smallserial/serial/bigserial)
+ * Check for primary keys columns with serial types (smallserial/serial/bigserial) on a specific host.
+ * <p>
  * New "generated as identity" syntax should be used instead.
  *
  * @author Vadim Khizhin
@@ -33,7 +34,10 @@ public class PrimaryKeysWithSerialTypesCheckOnHost extends AbstractCheckOnHost<C
     }
 
     /**
-     * {@inheritDoc}
+     * Returns primary keys with columns of serial types in the specified schema.
+     *
+     * @param pgContext check's context with the specified schema; must not be null
+     * @return list of primary keys with columns of serial types
      */
     @Nonnull
     @Override

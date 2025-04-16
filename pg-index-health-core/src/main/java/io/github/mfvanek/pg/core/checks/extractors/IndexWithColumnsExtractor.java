@@ -11,30 +11,29 @@
 package io.github.mfvanek.pg.core.checks.extractors;
 
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
+import io.github.mfvanek.pg.core.utils.ColumnsDataParser;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import javax.annotation.Nonnull;
 
+import static io.github.mfvanek.pg.core.checks.extractors.IndexWithSingleColumnExtractor.INDEX_NAME;
+import static io.github.mfvanek.pg.core.checks.extractors.IndexWithSingleColumnExtractor.INDEX_SIZE;
 import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_NAME;
 
 /**
- * A mapper from raw data with only one column to {@link IndexWithColumns} model.
+ * A mapper from raw data with multiple columns to {@link IndexWithColumns} model.
  *
  * @author Ivan Vakhrushev
- * @since 0.11.0
+ * @since 0.14.6
  */
-public final class IndexWithSingleColumnExtractor implements ResultSetExtractor<IndexWithColumns> {
+public final class IndexWithColumnsExtractor implements ResultSetExtractor<IndexWithColumns> {
 
-    public static final String INDEX_NAME = "index_name";
-    public static final String INDEX_SIZE = "index_size";
-
-    private final ResultSetExtractor<Column> columnExtractor;
-
-    private IndexWithSingleColumnExtractor() {
-        this.columnExtractor = ColumnExtractor.of();
+    private IndexWithColumnsExtractor() {
     }
 
     /**
@@ -46,17 +45,19 @@ public final class IndexWithSingleColumnExtractor implements ResultSetExtractor<
         final String tableName = resultSet.getString(TABLE_NAME);
         final String indexName = resultSet.getString(INDEX_NAME);
         final long indexSize = resultSet.getLong(INDEX_SIZE);
-        final Column column = columnExtractor.extractData(resultSet);
-        return IndexWithColumns.ofSingle(tableName, indexName, indexSize, column);
+        final Array columnsArray = resultSet.getArray("columns");
+        final String[] rawColumns = (String[]) columnsArray.getArray();
+        final List<Column> columns = ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex(tableName, rawColumns);
+        return IndexWithColumns.ofColumns(tableName, indexName, indexSize, columns);
     }
 
     /**
-     * Creates {@code IndexWithSingleColumnExtractor} instance.
+     * Creates {@code IndexWithColumnsExtractor} instance.
      *
-     * @return {@code IndexWithSingleColumnExtractor} instance
+     * @return {@code IndexWithColumnsExtractor} instance
      */
     @Nonnull
     public static ResultSetExtractor<IndexWithColumns> of() {
-        return new IndexWithSingleColumnExtractor();
+        return new IndexWithColumnsExtractor();
     }
 }
