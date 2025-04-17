@@ -386,6 +386,11 @@ public final class DatabasePopulator implements AutoCloseable {
         return register(136, new CreateTableWithFixedLengthVarcharStatement());
     }
 
+    @Nonnull
+    public DatabasePopulator withDroppedAccountNumberColumn() {
+        return register(137, new DropColumnStatement("accounts", "account_number"));
+    }
+
     public void populate() {
         try (SchemaNameHolder ignored = SchemaNameHolder.with(schemaName)) {
             ExecuteUtils.executeInTransaction(dataSource, statementsToExecuteInSameTransaction.values());
