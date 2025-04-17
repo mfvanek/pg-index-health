@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @since 0.6.1
  */
-public class TableExtractor implements ResultSetExtractor<Table> {
+public final class TableExtractor implements ResultSetExtractor<Table> {
 
     public static final String TABLE_NAME = "table_name";
     public static final String TABLE_SIZE = "table_size";

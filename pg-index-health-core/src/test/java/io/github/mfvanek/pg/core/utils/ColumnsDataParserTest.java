@@ -30,23 +30,23 @@ class ColumnsDataParserTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void shouldThrowExceptionWhenPassedInvalidData() {
-        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnInForeignKey(null))
+        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("tableName cannot be null");
-        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnInForeignKey("t"))
+        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Columns array cannot be empty");
-        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnInForeignKey("t", "abracadabra"))
+        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "abracadabra"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Cannot parse column info from abracadabra");
-        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnInForeignKey("t", "a, b, c"))
+        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "a, b, c"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Cannot parse column info from a, b, c");
     }
 
     @Test
     void shouldWorkWhenValidDataPassed() {
-        assertThat(ColumnsDataParser.parseRawColumnInForeignKey("t", "c1, true", "c2, false", "c3, abracadabra"))
+        assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "c1, true", "c2, false", "c3, abracadabra"))
             .hasSize(3)
             .containsExactly(
                 Column.ofNotNull("t", "c1"),
@@ -57,7 +57,7 @@ class ColumnsDataParserTest {
 
     @Test
     void shouldWorkWithoutSpaces() {
-        assertThat(ColumnsDataParser.parseRawColumnInForeignKey("t", "c1,true", "c2,false", "c3,abracadabra"))
+        assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "c1,true", "c2,false", "c3,abracadabra"))
             .hasSize(3)
             .containsExactly(
                 Column.ofNotNull("t", "c1"),
@@ -68,7 +68,7 @@ class ColumnsDataParserTest {
 
     @Test
     void shouldWorkWithExtraSpaces() {
-        assertThat(ColumnsDataParser.parseRawColumnInForeignKey("t", "  c1,  true  ", "   c2,   false   "))
+        assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "  c1,  true  ", "   c2,   false   "))
             .hasSize(2)
             .containsExactly(
                 Column.ofNotNull("t", "c1"),

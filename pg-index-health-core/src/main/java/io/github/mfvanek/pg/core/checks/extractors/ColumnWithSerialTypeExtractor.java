@@ -19,7 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.annotation.Nonnull;
 
-public class ColumnWithSerialTypeExtractor implements ResultSetExtractor<ColumnWithSerialType> {
+public final class ColumnWithSerialTypeExtractor implements ResultSetExtractor<ColumnWithSerialType> {
 
     private final ResultSetExtractor<Column> columnExtractor;
 

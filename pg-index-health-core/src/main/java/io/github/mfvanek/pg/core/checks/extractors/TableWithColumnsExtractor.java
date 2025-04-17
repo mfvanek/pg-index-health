@@ -31,7 +31,7 @@ import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_S
  * @author Ivan Vakhrushev
  * @since 0.14.6
  */
-public class TableWithColumnsExtractor implements ResultSetExtractor<TableWithColumns> {
+public final class TableWithColumnsExtractor implements ResultSetExtractor<TableWithColumns> {
 
     private TableWithColumnsExtractor() {
     }
@@ -46,7 +46,7 @@ public class TableWithColumnsExtractor implements ResultSetExtractor<TableWithCo
         final long tableSize = resultSet.getLong(TABLE_SIZE);
         final Array columnsArray = resultSet.getArray("columns");
         final String[] rawColumns = (String[]) columnsArray.getArray();
-        final List<Column> columns = ColumnsDataParser.parseRawColumnInTable(tableName, rawColumns);
+        final List<Column> columns = ColumnsDataParser.parseRawColumnsInTable(tableName, rawColumns);
         return TableWithColumns.of(Table.of(tableName, tableSize), columns);
     }
 

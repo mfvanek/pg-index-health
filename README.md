@@ -76,6 +76,7 @@ All checks can be divided into 2 groups:
 | 26 | Tables with zero or one column                                                                                                     | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_zero_or_one_column.sql)          |
 | 27 | Objects whose names do not follow naming convention                                                                                | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/objects_not_following_naming_convention.sql) |
 | 28 | Columns whose names do not follow naming convention                                                                                | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_not_following_naming_convention.sql) |
+| 29 | Primary keys with varchar columns instead of uuids                                                                                 | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_with_varchar.sql)               |
 
 For raw sql queries see [pg-index-health-sql](https://github.com/mfvanek/pg-index-health-sql) project.
 

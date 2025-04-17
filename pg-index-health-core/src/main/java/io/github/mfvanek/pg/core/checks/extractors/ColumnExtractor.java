@@ -25,7 +25,7 @@ import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_N
  * @author Ivan Vakhrushev
  * @since 0.6.1
  */
-public class ColumnExtractor implements ResultSetExtractor<Column> {
+public final class ColumnExtractor implements ResultSetExtractor<Column> {
 
     private ColumnExtractor() {
     }
