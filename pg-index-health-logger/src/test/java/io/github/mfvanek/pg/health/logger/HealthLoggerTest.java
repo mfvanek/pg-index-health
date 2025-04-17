@@ -56,16 +56,16 @@ class HealthLoggerTest extends HealthLoggerTestBase {
         return new String[]{
             "1999-12-31T23:59:59Z\tdb_indexes_health\tinvalid_indexes\t1",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tduplicated_indexes\t2",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t7",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_primary_key\t3",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_without_index\t8",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_primary_key\t4",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tindexes_with_null_values\t1",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tbloated_indexes\t17",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tbloated_tables\t2",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tbloated_indexes\t19",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tbloated_tables\t4",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tintersected_indexes\t11",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tunused_indexes\t12",
             "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_missing_indexes\t0",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_description\t9",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_without_description\t30",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_without_description\t14",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_without_description\t36",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_json_type\t1",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_serial_types\t3",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tfunctions_without_description\t3",
@@ -77,11 +77,12 @@ class HealthLoggerTest extends HealthLoggerTestBase {
             "1999-12-31T23:59:59Z\tdb_indexes_health\tduplicated_foreign_keys\t3",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tintersected_foreign_keys\t1",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tpossible_object_name_overflow\t2",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_not_linked_to_others\t3",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_not_linked_to_others\t5",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tforeign_keys_with_unmatched_column_type\t2",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_zero_or_one_column\t2",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tobjects_not_following_naming_convention\t10",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_not_following_naming_convention\t2"
+            "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_zero_or_one_column\t6",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tobjects_not_following_naming_convention\t14",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_not_following_naming_convention\t4",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tprimary_keys_with_varchar\t3"
         };
     }
 

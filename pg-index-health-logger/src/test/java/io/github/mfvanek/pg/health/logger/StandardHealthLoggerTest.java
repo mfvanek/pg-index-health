@@ -28,16 +28,16 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
         return new String[]{
             "invalid_indexes:1",
             "duplicated_indexes:2",
-            "foreign_keys_without_index:7",
-            "tables_without_primary_key:3",
+            "foreign_keys_without_index:8",
+            "tables_without_primary_key:4",
             "indexes_with_null_values:1",
-            "bloated_indexes:17",
-            "bloated_tables:2",
+            "bloated_indexes:19",
+            "bloated_tables:4",
             "intersected_indexes:11",
             "unused_indexes:12",
             "tables_with_missing_indexes:0",
-            "tables_without_description:9",
-            "columns_without_description:30",
+            "tables_without_description:14",
+            "columns_without_description:36",
             "columns_with_json_type:1",
             "columns_with_serial_types:3",
             "functions_without_description:3",
@@ -49,11 +49,12 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
             "duplicated_foreign_keys:3",
             "intersected_foreign_keys:1",
             "possible_object_name_overflow:2",
-            "tables_not_linked_to_others:3",
+            "tables_not_linked_to_others:5",
             "foreign_keys_with_unmatched_column_type:2",
-            "tables_with_zero_or_one_column:2",
-            "objects_not_following_naming_convention:10",
-            "columns_not_following_naming_convention:2"
+            "tables_with_zero_or_one_column:6",
+            "objects_not_following_naming_convention:14",
+            "columns_not_following_naming_convention:4",
+            "primary_keys_with_varchar:3"
         };
     }
 
