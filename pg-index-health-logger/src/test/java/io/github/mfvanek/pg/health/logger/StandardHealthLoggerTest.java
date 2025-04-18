@@ -54,7 +54,8 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
             "tables_with_zero_or_one_column:6",
             "objects_not_following_naming_convention:14",
             "columns_not_following_naming_convention:4",
-            "primary_keys_with_varchar:3"
+            "primary_keys_with_varchar:3",
+            "columns_with_fixed_length_varchar:17"
         };
     }
 

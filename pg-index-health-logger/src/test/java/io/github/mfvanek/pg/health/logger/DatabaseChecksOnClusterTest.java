@@ -55,7 +55,7 @@ class DatabaseChecksOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void onDatabaseWithoutThemCheckShouldReturnNothing() {
-        final Set<Diagnostic> exclusions = EnumSet.of(Diagnostic.BLOATED_INDEXES, Diagnostic.BLOATED_TABLES, Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX);
+        final Set<Diagnostic> exclusions = EnumSet.of(Diagnostic.BLOATED_INDEXES, Diagnostic.BLOATED_TABLES, Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX, Diagnostic.COLUMNS_WITH_FIXED_LENGTH_VARCHAR);
         for (final String schemaName : SCHEMAS) {
             for (final DatabaseCheckOnCluster<? extends DbObject> check : checksOnCluster.getAll()) {
                 if (!exclusions.contains(check.getDiagnostic())) {
