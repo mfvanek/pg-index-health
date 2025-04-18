@@ -15,7 +15,7 @@ varchar (без (n)) или text похожи, но без ограничени�
 
 ## SQL запрос
 
-- [columns_with_json_type.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_fixed_length_varchar.sql)
+- [columns_with_fixed_length_varchar.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_fixed_length_varchar.sql)
 
 ## Тип проверки
 
@@ -25,3 +25,26 @@ varchar (без (n)) или text похожи, но без ограничени�
 
 Поддерживает секционированные таблицы.
 Проверка выполняется на самой секционированной таблице (родительской). Отдельные секции (потомки) игнорируются.
+
+## Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+
+create table if not exists demo."bad_varchar_limit"
+(
+    id int not null primary key,
+    name varchar(20) -- Limits future flexibility
+);
+
+create table if not exists demo."bad_varchar_limit_partitioned"
+(
+    id int not null,
+    name varchar(20), -- Limits future flexibility
+    primary key (id, name)
+) partition by hash (name);
+
+create table if not exists demo."bad_varchar_limit_partitioned_hash_p0"
+    partition of demo."bad_varchar_limit_partitioned"
+    for values with (modulus 4, remainder 0);
+```
