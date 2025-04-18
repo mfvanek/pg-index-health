@@ -4,7 +4,7 @@
 create table if not exists warehouse
 (
     id bigint primary key generated always as identity,
-    name varchar(255) not null
+    name text not null
 );
 
 comment on table warehouse is 'Information about the warehouses';

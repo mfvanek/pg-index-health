@@ -82,7 +82,8 @@ class HealthLoggerTest extends HealthLoggerTestBase {
             "1999-12-31T23:59:59Z\tdb_indexes_health\ttables_with_zero_or_one_column\t6",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tobjects_not_following_naming_convention\t14",
             "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_not_following_naming_convention\t4",
-            "1999-12-31T23:59:59Z\tdb_indexes_health\tprimary_keys_with_varchar\t3"
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tprimary_keys_with_varchar\t3",
+            "1999-12-31T23:59:59Z\tdb_indexes_health\tcolumns_with_fixed_length_varchar\t17"
         };
     }
 
