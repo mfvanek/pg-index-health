@@ -22,14 +22,22 @@ List of all available PostgreSQL versions can be found [here](https://hub.docker
 
 ## Implementing a new check
 
-### Write a new SQL query
+### Write a new SQL query (pg-index-health-sql repository)
 
 Each database structure check starts with an SQL query to the [pg_catalog](https://www.postgresql.org/docs/current/catalogs.html).
 
 1. SQL queries for checks are located in a separate repository https://github.com/mfvanek/pg-index-health-sql
-2. That repository is pulled into the current project as a git submodule
+2. That repository is pulled into the current project as a [git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
 3. [SQLFluff](https://github.com/sqlfluff/sqlfluff) is used as a linter for all sql queries
 4. All queries must be schema-aware (see [example](https://github.com/mfvanek/pg-index-health-sql/blob/6a5b823d2f86f3fed946f073de93a20245b8d312/sql/duplicated_indexes.sql#L23))
+
+### Update git submodule
+
+After your PR with a new sql query is merged, you need to update git submodule:
+
+```shell
+  git submodule foreach --recursive git pull origin master
+```
 
 ### Extend domain model (if needed)
 
