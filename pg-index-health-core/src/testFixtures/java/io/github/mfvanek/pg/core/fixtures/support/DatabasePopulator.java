@@ -41,6 +41,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateForeignKeyOnN
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateFunctionsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithBooleanValuesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithNullValuesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArrayColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDifferentOpclassStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
@@ -389,6 +390,11 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withDroppedAccountNumberColumn() {
         return register(137, new DropColumnStatement("accounts", "account_number"));
+    }
+
+    @Nonnull
+    public DatabasePopulator withUnnecessaryWhereClause() {
+        return register(138, new CreateIndexWithUnnecessaryWhereClauseStatement());
     }
 
     public void populate() {

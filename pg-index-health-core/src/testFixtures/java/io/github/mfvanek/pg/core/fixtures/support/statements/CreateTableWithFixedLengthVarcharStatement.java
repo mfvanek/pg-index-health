@@ -26,8 +26,8 @@ public class CreateTableWithFixedLengthVarcharStatement extends AbstractDbStatem
                 "id_long varchar(36) not null primary key);",
             "insert into {schemaName}.t_varchar_long values (gen_random_uuid());",
             "create table if not exists {schemaName}.t_link (" +
-                "id_long varchar(36) not null references {schemaName}.t_varchar_long (id_long)," +
                 "\"id-short\" varchar(32) not null references {schemaName}.\"t-varchar-short\" (\"id-short\")," +
+                "id_long varchar(36) not null references {schemaName}.t_varchar_long (id_long)," +
                 "primary key (id_long, \"id-short\"));",
             "create table if not exists {schemaName}.t_varchar_long_not_pk (" +
                 "id_long varchar(36) not null);",
