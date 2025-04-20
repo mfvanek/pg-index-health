@@ -63,7 +63,8 @@ abstract class AutoConfigurationTestBase {
         "objectsNotFollowingNamingConventionCheckOnHost",
         "columnsNotFollowingNamingConventionCheckOnHost",
         "primaryKeysWithVarcharCheckOnHost",
-        "columnsWithFixedLengthVarcharCheckOnHost"
+        "columnsWithFixedLengthVarcharCheckOnHost",
+        "indexesWithUnnecessaryWhereClauseCheckOnHost"
     );
     protected static final Class<?>[] EXPECTED_TYPES = {PgConnection.class, DatabaseCheckOnHost.class, StatisticsMaintenanceOnHost.class, ConfigurationMaintenanceOnHost.class};
     protected static final DataSource DATA_SOURCE_MOCK = Mockito.mock(DataSource.class);

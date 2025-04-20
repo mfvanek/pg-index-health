@@ -50,8 +50,8 @@ insert into demo.t_varchar_long values (gen_random_uuid());
 select id_long from demo.t_varchar_long;
 
 create table if not exists demo.t_link (
-    id_long varchar(36) not null references demo.t_varchar_long (id_long),
     "id-short" varchar(32) not null references demo."t-varchar-short" ("id-short"),
+    id_long varchar(36) not null references demo.t_varchar_long (id_long),
     primary key (id_long, "id-short")
 );
 

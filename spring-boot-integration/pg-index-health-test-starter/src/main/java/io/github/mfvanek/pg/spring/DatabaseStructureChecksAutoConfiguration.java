@@ -25,6 +25,7 @@ import io.github.mfvanek.pg.core.checks.host.FunctionsWithoutDescriptionCheckOnH
 import io.github.mfvanek.pg.core.checks.host.IndexesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithBooleanCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithNullValuesCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.IndexesWithUnnecessaryWhereClauseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IntersectedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IntersectedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.InvalidIndexesCheckOnHost;
@@ -270,6 +271,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public ColumnsWithFixedLengthVarcharCheckOnHost columnsWithFixedLengthVarcharCheckOnHost(final PgConnection pgConnection) {
         return new ColumnsWithFixedLengthVarcharCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(IndexesWithUnnecessaryWhereClauseCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public IndexesWithUnnecessaryWhereClauseCheckOnHost indexesWithUnnecessaryWhereClauseCheckOnHost(final PgConnection pgConnection) {
+        return new IndexesWithUnnecessaryWhereClauseCheckOnHost(pgConnection);
     }
 
     @Bean

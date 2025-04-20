@@ -25,6 +25,7 @@ import io.github.mfvanek.pg.health.checks.cluster.FunctionsWithoutDescriptionChe
 import io.github.mfvanek.pg.health.checks.cluster.IndexesWithBloatCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.IndexesWithBooleanCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.IndexesWithNullValuesCheckOnCluster;
+import io.github.mfvanek.pg.health.checks.cluster.IndexesWithUnnecessaryWhereClauseCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.IntersectedForeignKeysCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.IntersectedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.InvalidIndexesCheckOnCluster;
@@ -105,7 +106,8 @@ public final class DatabaseChecksOnCluster {
             new ObjectsNotFollowingNamingConventionCheckOnCluster(haPgConnection),
             new ColumnsNotFollowingNamingConventionCheckOnCluster(haPgConnection),
             new PrimaryKeysWithVarcharCheckOnCluster(haPgConnection),
-            new ColumnsWithFixedLengthVarcharCheckOnCluster(haPgConnection)
+            new ColumnsWithFixedLengthVarcharCheckOnCluster(haPgConnection),
+            new IndexesWithUnnecessaryWhereClauseCheckOnCluster(haPgConnection)
         );
     }
 

@@ -52,7 +52,8 @@ abstract class HealthLoggerTestBase extends StatisticsAwareTestBase {
         .withForeignKeyOnNullableColumn()
         .withEmptyTable()
         .withBadlyNamedObjects()
-        .withVarcharInsteadOfUuid();
+        .withVarcharInsteadOfUuid()
+        .withUnnecessaryWhereClause();
 
     @Nonnull
     protected static Predicate<String> ofKey(@Nonnull final Diagnostic diagnostic) {
