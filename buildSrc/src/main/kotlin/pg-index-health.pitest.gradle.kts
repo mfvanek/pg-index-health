@@ -16,12 +16,12 @@ plugins {
 }
 
 dependencies {
-    pitest("it.mulders.stryker:pit-dashboard-reporter:0.3.2")
+    pitest("it.mulders.stryker:pit-dashboard-reporter:0.3.3")
 }
 
 pitest {
     junit5PluginVersion.set("1.2.2")
-    pitestVersion.set("1.19.0")
+    pitestVersion.set("1.19.1")
     threads.set(4)
     if (System.getenv("STRYKER_DASHBOARD_API_KEY") != null) {
         outputFormats.set(setOf("stryker-dashboard"))
