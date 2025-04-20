@@ -44,4 +44,13 @@ create index if not exists "idx_t2_first-ref_second_ref" on demo.t2 (second_ref,
 create index if not exists idx_t2_id_ref on demo.t2 (t1_id) where t1_id is not null;
 
 create index if not exists idx_second_ref_t1_id on demo.t2 (t1_id, second_ref) where t1_id is not null;
+
+create table if not exists demo.one_partitioned(
+    "first-ref" bigint not null,
+    second_ref  bigint not null
+) partition by range (second_ref);
+
+create index if not exists "idx_second_ref_first-ref" on demo.one_partitioned (second_ref, "first-ref") where "first-ref" is not null;
+
+create table if not exists demo.one_default partition of demo.one_partitioned default;
 ```

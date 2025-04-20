@@ -25,6 +25,7 @@ import io.github.mfvanek.pg.core.checks.host.FunctionsWithoutDescriptionCheckOnH
 import io.github.mfvanek.pg.core.checks.host.IndexesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithBooleanCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithNullValuesCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.IndexesWithUnnecessaryWhereClauseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IntersectedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IntersectedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.InvalidIndexesCheckOnHost;
@@ -134,7 +135,8 @@ class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigur
             ObjectsNotFollowingNamingConventionCheckOnHost.class,
             ColumnsNotFollowingNamingConventionCheckOnHost.class,
             PrimaryKeysWithVarcharCheckOnHost.class,
-            ColumnsWithFixedLengthVarcharCheckOnHost.class
+            ColumnsWithFixedLengthVarcharCheckOnHost.class,
+            IndexesWithUnnecessaryWhereClauseCheckOnHost.class
         );
     }
 }

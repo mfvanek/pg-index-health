@@ -53,7 +53,8 @@ public enum Diagnostic implements CheckTypeAware {
     OBJECTS_NOT_FOLLOWING_NAMING_CONVENTION("objects_not_following_naming_convention.sql"),
     COLUMNS_NOT_FOLLOWING_NAMING_CONVENTION("columns_not_following_naming_convention.sql"),
     PRIMARY_KEYS_WITH_VARCHAR("primary_keys_with_varchar.sql"),
-    COLUMNS_WITH_FIXED_LENGTH_VARCHAR("columns_with_fixed_length_varchar.sql");
+    COLUMNS_WITH_FIXED_LENGTH_VARCHAR("columns_with_fixed_length_varchar.sql"),
+    INDEXES_WITH_UNNECESSARY_WHERE_CLAUSE("indexes_with_unnecessary_where_clause.sql");
 
     private final ExecutionTopology executionTopology;
     private final String sqlQueryFileName;

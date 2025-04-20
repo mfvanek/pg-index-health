@@ -29,15 +29,15 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
             "invalid_indexes:1",
             "duplicated_indexes:2",
             "foreign_keys_without_index:8",
-            "tables_without_primary_key:4",
+            "tables_without_primary_key:5",
             "indexes_with_null_values:1",
             "bloated_indexes:19",
             "bloated_tables:4",
-            "intersected_indexes:11",
-            "unused_indexes:12",
+            "intersected_indexes:12",
+            "unused_indexes:14",
             "tables_with_missing_indexes:0",
-            "tables_without_description:14",
-            "columns_without_description:36",
+            "tables_without_description:16",
+            "columns_without_description:41",
             "columns_with_json_type:1",
             "columns_with_serial_types:3",
             "functions_without_description:3",
@@ -52,10 +52,11 @@ class StandardHealthLoggerTest extends HealthLoggerTestBase {
             "tables_not_linked_to_others:5",
             "foreign_keys_with_unmatched_column_type:2",
             "tables_with_zero_or_one_column:6",
-            "objects_not_following_naming_convention:14",
-            "columns_not_following_naming_convention:4",
+            "objects_not_following_naming_convention:15",
+            "columns_not_following_naming_convention:5",
             "primary_keys_with_varchar:3",
-            "columns_with_fixed_length_varchar:17"
+            "columns_with_fixed_length_varchar:17",
+            "indexes_with_unnecessary_where_clause:2"
         };
     }
 
