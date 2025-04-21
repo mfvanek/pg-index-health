@@ -1,6 +1,6 @@
 services:
     postgres:
-        image: postgres:17.2
+        image: postgres:17.4
         shm_size: "2gb"
         environment:
             POSTGRES_DB: "pgih-db"
