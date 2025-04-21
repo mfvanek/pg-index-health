@@ -11,7 +11,8 @@ Java >= 11 is required.
     * On Linux and macOS: `./gradlew build`
     * On Windows: `.\gradlew.bat build`
     
-   This will build the project and run tests.
+   This will build the project and run tests.  
+   **You need to have [Docker](https://www.docker.com/) up and running**.
     
 By default, [PostgreSQL 17.2 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
 Set `TEST_PG_VERSION` environment variable to use any of other available PostgreSQL version:
