@@ -11,7 +11,8 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                pg_version: [ "13.18", "14.15", "15.10", "16.6", "17.2" ]
+                # bitnami without subscription supports only latest version
+                pg_version: [ "13.18", "14.15", "15.10", "16.6", "17.4" ]
         env:
             TEST_PG_VERSION: ${{ matrix.pg_version }}
         runs-on: ubuntu-latest

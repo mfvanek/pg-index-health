@@ -172,7 +172,7 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
             setMocks(connectionMock);
 
             assertWithTestConfig()
-                .withPropertyValues("spring.datasource.url=jdbc:tc:postgresql:17.2:///test")
+                .withPropertyValues("spring.datasource.url=jdbc:tc:postgresql:17.4:///test")
                 .withInitializer(AutoConfigurationTestBase::initialize)
                 .run(context -> {
                     assertThatBeansPresent(context);
