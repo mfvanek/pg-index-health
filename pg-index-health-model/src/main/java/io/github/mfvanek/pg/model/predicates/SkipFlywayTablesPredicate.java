@@ -55,10 +55,10 @@ public final class SkipFlywayTablesPredicate extends AbstractSkipTablesPredicate
      * Flyway tables in environments where the default schema is used.
      * </p>
      *
-     * @return a predicate that skips Flyway tables in the "public" schema
+     * @return a predicate that skips Flyway tables in the default "public" schema
      */
-    public static Predicate<DbObject> ofPublic() {
-        return new SkipFlywayTablesPredicate(PgContext.ofPublic());
+    public static Predicate<DbObject> ofDefault() {
+        return new SkipFlywayTablesPredicate(PgContext.ofDefault());
     }
 
     /**

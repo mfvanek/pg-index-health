@@ -209,6 +209,22 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     }
 
     /**
+     * Constructs a {@code ColumnWithSerialType} object of {@code bigserial} type and context.
+     *
+     * @param pgContext    the schema context to enrich table name; must be non-null.
+     * @param column       column; should be non-null.
+     * @param sequenceName sequence name; should be non-blank.
+     * @return {@code ColumnWithSerialType}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static ColumnWithSerialType ofBigSerial(@Nonnull final PgContext pgContext,
+                                                   @Nonnull final Column column,
+                                                   @Nonnull final String sequenceName) {
+        return ofBigSerial(column, PgContext.enrichWith(sequenceName, pgContext));
+    }
+
+    /**
      * Constructs a {@code ColumnWithSerialType} object of {@code serial} type.
      *
      * @param column       column; should be non-null.
@@ -222,6 +238,22 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     }
 
     /**
+     * Constructs a {@code ColumnWithSerialType} object of {@code serial} type.
+     *
+     * @param pgContext    the schema context to enrich table name; must be non-null.
+     * @param column       column; should be non-null.
+     * @param sequenceName sequence name; should be non-blank.
+     * @return {@code ColumnWithSerialType}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static ColumnWithSerialType ofSerial(@Nonnull final PgContext pgContext,
+                                                @Nonnull final Column column,
+                                                @Nonnull final String sequenceName) {
+        return ofSerial(column, PgContext.enrichWith(sequenceName, pgContext));
+    }
+
+    /**
      * Constructs a {@code ColumnWithSerialType} object of {@code smallserial} type.
      *
      * @param column       column; should be non-null.
@@ -232,5 +264,21 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     public static ColumnWithSerialType ofSmallSerial(@Nonnull final Column column,
                                                      @Nonnull final String sequenceName) {
         return of(column, SerialType.SMALL_SERIAL, sequenceName);
+    }
+
+    /**
+     * Constructs a {@code ColumnWithSerialType} object of {@code smallserial} type.
+     *
+     * @param pgContext    the schema context to enrich table name; must be non-null.
+     * @param column       column; should be non-null.
+     * @param sequenceName sequence name; should be non-blank.
+     * @return {@code ColumnWithSerialType}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static ColumnWithSerialType ofSmallSerial(@Nonnull final PgContext pgContext,
+                                                     @Nonnull final Column column,
+                                                     @Nonnull final String sequenceName) {
+        return ofSmallSerial(column, PgContext.enrichWith(sequenceName, pgContext));
     }
 }

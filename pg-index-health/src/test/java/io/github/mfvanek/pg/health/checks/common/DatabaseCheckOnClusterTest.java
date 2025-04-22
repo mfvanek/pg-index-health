@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 class DatabaseCheckOnClusterTest {
 
     private static final Collection<PgContext> CONTEXTS = List.of(
-        PgContext.of("demo"), PgContext.of("test"), PgContext.ofPublic());
+        PgContext.of("demo"), PgContext.of("test"), PgContext.ofDefault());
 
     @SuppressWarnings("unchecked")
     @Test

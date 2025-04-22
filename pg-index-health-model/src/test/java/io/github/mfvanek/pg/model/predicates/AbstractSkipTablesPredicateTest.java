@@ -33,7 +33,7 @@ class AbstractSkipTablesPredicateTest {
             .isInstanceOf(NullPointerException.class)
             .hasMessage("pgContext cannot be null");
 
-        final PgContext ctx = PgContext.ofPublic();
+        final PgContext ctx = PgContext.ofDefault();
         assertThatThrownBy(() -> new SkipTablesPredicate(ctx, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawNamesToSkip cannot be null");
@@ -41,7 +41,7 @@ class AbstractSkipTablesPredicateTest {
 
     @Test
     void canCombinePredicatesIntoChain() {
-        final Predicate<DbObject> composite = SkipLiquibaseTablesPredicate.ofPublic().and(SkipFlywayTablesPredicate.ofPublic());
+        final Predicate<DbObject> composite = SkipLiquibaseTablesPredicate.ofDefault().and(SkipFlywayTablesPredicate.ofDefault());
         assertThat(composite)
             .accepts(Table.of("t"))
             .rejects(Table.of("databasechangelog", 1L))
@@ -51,7 +51,7 @@ class AbstractSkipTablesPredicateTest {
     @Test
     void shouldNotCastObjectsWhenExclusionsIsEmpty() {
         final Table mockTable = Mockito.mock(Table.class);
-        assertThat(new SkipTablesPredicate(PgContext.ofPublic(), List.of()))
+        assertThat(new SkipTablesPredicate(PgContext.ofDefault(), List.of()))
             .accepts(mockTable);
         Mockito.verify(mockTable, Mockito.never()).getTableName();
     }

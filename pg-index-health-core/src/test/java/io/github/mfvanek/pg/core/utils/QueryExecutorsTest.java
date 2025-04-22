@@ -79,7 +79,7 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
                 throw new SQLException("bad parameter");
             }).when(statement).setString(anyInt(), anyString());
             final PgConnection pgConnection = PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:6432"));
-            final PgContext context = PgContext.ofPublic();
+            final PgContext context = PgContext.ofDefault();
             assertThatThrownBy(() -> QueryExecutors.executeQueryWithSchema(pgConnection, context, "select version()", rs -> rs.getString(1)))
                 .isInstanceOf(PgSqlException.class)
                 .hasMessage("bad parameter")
@@ -99,7 +99,7 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
                 throw new SQLException("bad parameter");
             }).when(statement).setString(anyInt(), anyString());
             final PgConnection pgConnection = PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:6432"));
-            final PgContext context = PgContext.ofPublic();
+            final PgContext context = PgContext.ofDefault();
             assertThatThrownBy(() -> QueryExecutors.executeQueryWithBloatThreshold(pgConnection, context, "select version()", rs -> rs.getString(1)))
                 .isInstanceOf(PgSqlException.class)
                 .hasMessage("bad parameter")
@@ -123,7 +123,7 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
             }).when(statement).setDouble(anyInt(), anyDouble());
 
             final PgConnection pgConnection = PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:6432"));
-            final PgContext context = PgContext.ofPublic();
+            final PgContext context = PgContext.ofDefault();
             final String sqlQuery = "SELECT version()";
 
             assertThatThrownBy(() -> QueryExecutors.executeQueryWithRemainingPercentageThreshold(pgConnection, context, sqlQuery, rs -> rs.getString(1)))
