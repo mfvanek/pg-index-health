@@ -170,15 +170,14 @@ public final class PgContext {
     }
 
     /**
-     * Creates {@code PgContext} for default "public" schema with default bloat percentage threshold.
+     * Creates {@code PgContext} for public schema with default bloat percentage threshold.
      *
      * @return {@code PgContext}
      * @see PgContext#DEFAULT_BLOAT_PERCENTAGE_THRESHOLD
      * @see PgContext#DEFAULT_REMAINING_PERCENTAGE_THRESHOLD
-     * @since 0.15.0
      */
     @Nonnull
-    public static PgContext ofDefault() {
+    public static PgContext ofPublic() {
         return of(DEFAULT_SCHEMA_NAME);
     }
 

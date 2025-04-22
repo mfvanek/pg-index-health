@@ -40,6 +40,6 @@ public interface HealthLogger {
      */
     @Nonnull
     default List<String> logAll(@Nonnull final Exclusions exclusions) {
-        return logAll(exclusions, PgContext.ofDefault());
+        return logAll(exclusions, PgContext.ofPublic());
     }
 }

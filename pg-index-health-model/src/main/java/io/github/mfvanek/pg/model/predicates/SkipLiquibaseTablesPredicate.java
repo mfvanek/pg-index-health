@@ -49,17 +49,17 @@ public final class SkipLiquibaseTablesPredicate extends AbstractSkipTablesPredic
     }
 
     /**
-     * Returns a predicate that skips Liquibase tables in the default context.
+     * Returns a predicate that skips Liquibase tables in the default "public" schema context.
      * <p>
      * This method creates an instance of {@link SkipLiquibaseTablesPredicate} using a
      * {@link PgContext} that represents the "public" schema, making it easy to filter
      * Liquibase tables in environments where the default schema is used.
      * </p>
      *
-     * @return a predicate that skips Liquibase tables in the default "public" schema
+     * @return a predicate that skips Liquibase tables in the "public" schema
      */
-    public static Predicate<DbObject> ofDefault() {
-        return new SkipLiquibaseTablesPredicate(PgContext.ofDefault());
+    public static Predicate<DbObject> ofPublic() {
+        return new SkipLiquibaseTablesPredicate(PgContext.ofPublic());
     }
 
     /**

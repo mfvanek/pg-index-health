@@ -55,7 +55,7 @@ public interface DatabaseCheckOnHost<T extends DbObject> extends DiagnosticAware
      * Executes the check in the public schema.
      *
      * @return list of deviations from the specified rule
-     * @see PgContext#ofDefault()
+     * @see PgContext#ofPublic()
      */
     @Nonnull
     default List<T> check() {
@@ -70,7 +70,7 @@ public interface DatabaseCheckOnHost<T extends DbObject> extends DiagnosticAware
      */
     @Nonnull
     default List<T> check(@Nonnull final Predicate<? super T> exclusionsFilter) {
-        return check(PgContext.ofDefault(), exclusionsFilter);
+        return check(PgContext.ofPublic(), exclusionsFilter);
     }
 
     /**

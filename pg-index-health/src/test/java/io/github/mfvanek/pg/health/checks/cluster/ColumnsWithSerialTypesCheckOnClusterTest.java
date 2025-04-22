@@ -43,14 +43,15 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withSerialType, ctx -> {
+            final String tableName = ctx.enrichWithSchema("bad_accounts");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
-                    ColumnWithSerialType.ofBigSerial(ctx,
-                        Column.ofNotNull(ctx, "bad_accounts", "real_account_id"), "bad_accounts_real_account_id_seq"),
-                    ColumnWithSerialType.ofBigSerial(ctx,
-                        Column.ofNotNull(ctx, "bad_accounts", "real_client_id"), "bad_accounts_real_client_id_seq"));
+                    ColumnWithSerialType.ofBigSerial(
+                        Column.ofNotNull(tableName, "real_account_id"), ctx.enrichWithSchema("bad_accounts_real_account_id_seq")),
+                    ColumnWithSerialType.ofBigSerial(
+                        Column.ofNotNull(tableName, "real_client_id"), ctx.enrichWithSchema("bad_accounts_real_client_id_seq")));
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_accounts"))
@@ -101,7 +102,8 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
-                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "one_more_table", "id"), "one_more_table_id_seq")
+                    ColumnWithSerialType.ofBigSerial(
+                        Column.ofNotNull(ctx, "one_more_table", "id"), ctx.enrichWithSchema("one_more_table_id_seq"))
                 ));
     }
 
@@ -113,9 +115,12 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(3)
                 .containsExactly(
-                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "one_more_table", "id"), "one_more_table_id_seq"),
-                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "test_table", "id"), "test_table_id_seq"),
-                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "test_table", "num"), "test_table_num_seq")
+                    ColumnWithSerialType.ofBigSerial(
+                        Column.ofNotNull(ctx, "one_more_table", "id"), ctx.enrichWithSchema("one_more_table_id_seq")),
+                    ColumnWithSerialType.ofBigSerial(
+                        Column.ofNotNull(ctx, "test_table", "id"), ctx.enrichWithSchema("test_table_id_seq")),
+                    ColumnWithSerialType.ofBigSerial(
+                        Column.ofNotNull(ctx, "test_table", "num"), ctx.enrichWithSchema("test_table_num_seq"))
                 ));
     }
 
@@ -127,6 +132,6 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
-                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "parent", "real_client_id"), "parent_real_client_id_seq")));
+                    ColumnWithSerialType.ofBigSerial(Column.ofNotNull(ctx, "parent", "real_client_id"), ctx.enrichWithSchema("parent_real_client_id_seq"))));
     }
 }

@@ -41,7 +41,7 @@ class SkipFlywayTablesPredicateTest {
             Table.of("t"),
             Table.of("flyway_schema_history")
         );
-        assertThat(objects.stream().filter(SkipFlywayTablesPredicate.ofDefault()))
+        assertThat(objects.stream().filter(SkipFlywayTablesPredicate.ofPublic()))
             .hasSize(1)
             .asInstanceOf(list(Table.class))
             .containsExactly(Table.of("t"));

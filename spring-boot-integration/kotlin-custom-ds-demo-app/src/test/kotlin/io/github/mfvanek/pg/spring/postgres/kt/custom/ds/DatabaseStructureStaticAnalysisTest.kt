@@ -39,7 +39,7 @@ internal class DatabaseStructureStaticAnalysisTest {
             .forEach { check ->
                 val ctx = PgContext.of("custom_ds_schema")
                 // Due to the use of spring.liquibase.default-schema, all names are resolved without a schema
-                val listAssert = assertThat(check.check(ctx, SkipLiquibaseTablesPredicate.ofDefault()))
+                val listAssert = assertThat(check.check(ctx, SkipLiquibaseTablesPredicate.ofPublic()))
                     .`as`(check.diagnostic.name)
 
                 when (check.diagnostic) {

@@ -59,7 +59,7 @@ class TableTest {
     void testToString() {
         assertThat(Table.of("t", 2L))
             .hasToString("Table{tableName='t', tableSizeInBytes=2}");
-        assertThat(Table.of(PgContext.ofDefault(), "t", 2L))
+        assertThat(Table.of(PgContext.ofPublic(), "t", 2L))
             .hasToString("Table{tableName='t', tableSizeInBytes=2}");
         assertThat(Table.of(PgContext.of("tst"), "t"))
             .hasToString("Table{tableName='tst.t', tableSizeInBytes=0}");
