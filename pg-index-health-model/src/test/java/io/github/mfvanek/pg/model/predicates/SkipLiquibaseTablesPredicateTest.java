@@ -41,7 +41,7 @@ class SkipLiquibaseTablesPredicateTest {
             Table.of("t"),
             Table.of("databasechangelog")
         );
-        assertThat(objects.stream().filter(SkipLiquibaseTablesPredicate.ofPublic()))
+        assertThat(objects.stream().filter(SkipLiquibaseTablesPredicate.ofDefault()))
             .hasSize(1)
             .asInstanceOf(list(Table.class))
             .containsExactly(Table.of("t"));
