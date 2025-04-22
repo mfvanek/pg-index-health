@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.health.checks.management;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.host.PgHost;
-import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
-import io.github.mfvanek.pg.model.settings.PgParam;
-import io.github.mfvanek.pg.model.settings.ServerSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
 
@@ -34,7 +30,6 @@ import javax.annotation.Nonnull;
  *
  * @author Ivan Vakhrushev
  * @see StatisticsMaintenanceOnHost
- * @see ConfigurationMaintenanceOnHost
  */
 public class DatabaseManagementImpl implements DatabaseManagement {
 
@@ -42,18 +37,13 @@ public class DatabaseManagementImpl implements DatabaseManagement {
 
     private final HighAvailabilityPgConnection haPgConnection;
     private final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory;
-    private final Function<PgConnection, ConfigurationMaintenanceOnHost> configurationOnHostFactory;
     private final Map<PgHost, StatisticsMaintenanceOnHost> statistics;
-    private final Map<PgHost, ConfigurationMaintenanceOnHost> configuration;
 
     public DatabaseManagementImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
-                                  @Nonnull final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory,
-                                  @Nonnull final Function<PgConnection, ConfigurationMaintenanceOnHost> configurationOnHostFactory) {
+                                  @Nonnull final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory) {
         this.haPgConnection = Objects.requireNonNull(haPgConnection, "haPgConnection cannot be null");
         this.statisticsOnHostFactory = Objects.requireNonNull(statisticsOnHostFactory, "statisticsOnHostFactory cannot be null");
-        this.configurationOnHostFactory = Objects.requireNonNull(configurationOnHostFactory, "configurationOnHostFactory cannot be null");
         this.statistics = new HashMap<>();
-        this.configuration = new HashMap<>();
     }
 
     /**
@@ -76,38 +66,12 @@ public class DatabaseManagementImpl implements DatabaseManagement {
     @Override
     @Nonnull
     public Optional<OffsetDateTime> getLastStatsResetTimestamp() {
-        return computeStatisticsForHostIfNeed(getPrimaryAngLog())
+        return computeStatisticsForHostIfNeed(getPrimaryAndLog())
             .getLastStatsResetTimestamp();
     }
 
-    /**
-     * Deprecated for removal.
-     *
-     * @deprecated since 0.14.6
-     */
-    @Deprecated(forRemoval = true)
-    @Override
     @Nonnull
-    public Set<PgParam> getParamsWithDefaultValues(@Nonnull final ServerSpecification specification) {
-        return computeConfigurationForHostIfNeed(getPrimaryAngLog())
-            .getParamsWithDefaultValues(specification);
-    }
-
-    /**
-     * Deprecated for removal.
-     *
-     * @deprecated since 0.14.6
-     */
-    @Deprecated(forRemoval = true)
-    @Override
-    @Nonnull
-    public Set<PgParam> getParamsCurrentValues() {
-        return computeConfigurationForHostIfNeed(getPrimaryAngLog())
-            .getParamsCurrentValues();
-    }
-
-    @Nonnull
-    private PgConnection getPrimaryAngLog() {
+    private PgConnection getPrimaryAndLog() {
         final PgConnection connectionToPrimary = haPgConnection.getConnectionToPrimary();
         LOGGER.debug("Going to execute on primary host {}", connectionToPrimary.getHost().getName());
         return connectionToPrimary;
@@ -116,10 +80,5 @@ public class DatabaseManagementImpl implements DatabaseManagement {
     @Nonnull
     private StatisticsMaintenanceOnHost computeStatisticsForHostIfNeed(@Nonnull final PgConnection connectionToHost) {
         return statistics.computeIfAbsent(connectionToHost.getHost(), h -> statisticsOnHostFactory.apply(connectionToHost));
-    }
-
-    @Nonnull
-    private ConfigurationMaintenanceOnHost computeConfigurationForHostIfNeed(@Nonnull final PgConnection connectionToHost) {
-        return configuration.computeIfAbsent(connectionToHost.getHost(), h -> configurationOnHostFactory.apply(connectionToHost));
     }
 }

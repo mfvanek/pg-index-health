@@ -44,19 +44,6 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
     }
 
     /**
-     * Retrieves columns of foreign key constraint.
-     *
-     * @return columns of foreign key constraint
-     * @see Column
-     * @deprecated since 0.14.6. Use getColumns() instead
-     */
-    @Deprecated(forRemoval = true)
-    @Nonnull
-    public List<Column> getColumnsInConstraint() {
-        return getColumns();
-    }
-
-    /**
      * Retrieves columns of foreign key constraint (one or more).
      *
      * @return columns of foreign key constraint

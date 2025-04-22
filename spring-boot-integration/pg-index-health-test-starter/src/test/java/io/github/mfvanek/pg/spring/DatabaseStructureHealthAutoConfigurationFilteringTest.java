@@ -42,7 +42,6 @@ import io.github.mfvanek.pg.core.checks.host.TablesWithZeroOrOneColumnCheckOnHos
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
-import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -55,7 +54,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigurationTestBase {
 
-    private static final int ADDITIONAL_BEANS = 3; // pgConnection + statisticsMaintenanceOnHost + configurationMaintenanceOnHost
+    private static final int ADDITIONAL_BEANS = 2; // pgConnection + statisticsMaintenanceOnHost
 
     @Test
     void beansCompleteness() {
@@ -64,7 +63,7 @@ class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigur
             .hasSize(Diagnostic.values().length + ADDITIONAL_BEANS);
 
         assertThat(getCheckTypes())
-            .hasSize(Diagnostic.values().length + 2); // statisticsMaintenanceOnHost + configurationMaintenanceOnHost
+            .hasSize(Diagnostic.values().length + 1); // + statisticsMaintenanceOnHost
     }
 
     @ParameterizedTest
@@ -123,7 +122,6 @@ class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigur
             NotValidConstraintsCheckOnHost.class,
             BtreeIndexesOnArrayColumnsCheckOnHost.class,
             StatisticsMaintenanceOnHost.class,
-            ConfigurationMaintenanceOnHost.class,
             SequenceOverflowCheckOnHost.class,
             PrimaryKeysWithSerialTypesCheckOnHost.class,
             DuplicatedForeignKeysCheckOnHost.class,

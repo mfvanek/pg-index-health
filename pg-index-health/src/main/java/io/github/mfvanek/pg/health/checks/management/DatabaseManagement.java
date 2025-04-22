@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.health.checks.management;
 
-import io.github.mfvanek.pg.core.settings.ConfigurationAware;
 import io.github.mfvanek.pg.core.statistics.StatisticsAware;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 
@@ -18,7 +17,7 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public interface DatabaseManagement extends StatisticsAware, ConfigurationAware {
+public interface DatabaseManagement extends StatisticsAware {
 
     /**
      * Reset all statistics counters on all hosts in the cluster to zero.
