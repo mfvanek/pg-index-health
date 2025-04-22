@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
-import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -35,18 +34,13 @@ class DatabaseManagementImplUnitTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void shouldThrowExceptionWhenInvalidArgumentsArePassed() {
-        assertThatThrownBy(() -> new DatabaseManagementImpl(null, null, null))
+        assertThatThrownBy(() -> new DatabaseManagementImpl(null, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("haPgConnection cannot be null");
 
-        assertThatThrownBy(() -> new DatabaseManagementImpl(haPgConnectionMock, null, null))
+        assertThatThrownBy(() -> new DatabaseManagementImpl(haPgConnectionMock, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("statisticsOnHostFactory cannot be null");
-
-        final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory = pgConnection -> Mockito.mock(StatisticsMaintenanceOnHost.class);
-        assertThatThrownBy(() -> new DatabaseManagementImpl(haPgConnectionMock, statisticsOnHostFactory, null))
-            .isInstanceOf(NullPointerException.class)
-            .hasMessage("configurationOnHostFactory cannot be null");
     }
 
     @Test
@@ -62,7 +56,7 @@ class DatabaseManagementImplUnitTest {
             }
             return secondStatisticsMock;
         };
-        final DatabaseManagement management = new DatabaseManagementImpl(haPgConnectionMock, statisticsOnHostFactory, ConfigurationMaintenanceOnHostImpl::new);
+        final DatabaseManagement management = new DatabaseManagementImpl(haPgConnectionMock, statisticsOnHostFactory);
         Mockito.when(haPgConnectionMock.getConnectionsToAllHostsInCluster())
             .thenReturn(Set.of(firstConnection, secondConnection));
 

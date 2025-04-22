@@ -42,8 +42,6 @@ import io.github.mfvanek.pg.core.checks.host.TablesWithZeroOrOneColumnCheckOnHos
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
-import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHost;
-import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHostImpl;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -285,18 +283,5 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public StatisticsMaintenanceOnHost statisticsMaintenanceOnHost(final PgConnection pgConnection) {
         return new StatisticsMaintenanceOnHostImpl(pgConnection);
-    }
-
-    /**
-     * Deprecated for removal.
-     *
-     * @deprecated since 0.14.6
-     */
-    @Deprecated(forRemoval = true)
-    @Bean
-    @ConditionalOnClass(ConfigurationMaintenanceOnHost.class)
-    @ConditionalOnMissingBean
-    public ConfigurationMaintenanceOnHost configurationMaintenanceOnHost(final PgConnection pgConnection) {
-        return new ConfigurationMaintenanceOnHostImpl(pgConnection);
     }
 }

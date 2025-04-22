@@ -50,7 +50,7 @@ class ForeignKeyTest {
             .isNotBlank()
             .isEqualTo("c_t_order_id")
             .isEqualTo(foreignKey.getName());
-        assertThat(foreignKey.getColumnsInConstraint())
+        assertThat(foreignKey.getColumns())
             .hasSize(1)
             .containsExactly(Column.ofNotNull("t", "order_id"))
             .isUnmodifiable();
@@ -59,10 +59,10 @@ class ForeignKeyTest {
     }
 
     @Test
-    void getColumnsInConstraint() {
+    void getColumns() {
         final ForeignKey first = ForeignKey.of("t", "c_t_order_id",
             List.of(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id")));
-        assertThat(first.getColumnsInConstraint())
+        assertThat(first.getColumns())
             .hasSize(2)
             .containsExactly(Column.ofNotNull("t", "order_id"), Column.ofNotNull("t", "item_id"))
             .isUnmodifiable();
@@ -70,7 +70,7 @@ class ForeignKeyTest {
         final PgContext ctx = PgContext.of("tst");
         final ForeignKey second = ForeignKey.of(ctx, "t", "c_t_order_id",
             List.of(Column.ofNotNull(ctx, "t", "order_id"), Column.ofNotNull(ctx, "t", "item_id")));
-        assertThat(second.getColumnsInConstraint())
+        assertThat(second.getColumns())
             .hasSize(2)
             .containsExactly(Column.ofNotNull("tst.t", "order_id"), Column.ofNotNull("tst.t", "item_id"))
             .isUnmodifiable();
@@ -88,7 +88,7 @@ class ForeignKeyTest {
 
         columns.add(Column.ofNotNull("t", "fourth"));
 
-        assertThat(key.getColumnsInConstraint())
+        assertThat(key.getColumns())
             .hasSize(3)
             .doesNotContain(Column.ofNotNull("t", "fourth"))
             .isUnmodifiable();

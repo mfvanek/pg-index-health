@@ -11,14 +11,9 @@
 package io.github.mfvanek.pg.health.checks.management;
 
 import io.github.mfvanek.pg.core.fixtures.support.StatisticsAwareTestBase;
-import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.core.utils.ClockHolder;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.settings.ImportantParam;
-import io.github.mfvanek.pg.model.settings.PgParam;
-import io.github.mfvanek.pg.model.settings.ServerSpecification;
-import io.github.mfvanek.pg.model.units.MemoryUnit;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -28,8 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class DatabaseManagementImplTest extends StatisticsAwareTestBase {
 
-    private final DatabaseManagement databaseManagement = new DatabaseManagementImpl(getHaPgConnection(),
-        StatisticsMaintenanceOnHostImpl::new, ConfigurationMaintenanceOnHostImpl::new);
+    private final DatabaseManagement databaseManagement = new DatabaseManagementImpl(getHaPgConnection(), StatisticsMaintenanceOnHostImpl::new);
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
@@ -50,26 +44,5 @@ class DatabaseManagementImplTest extends StatisticsAwareTestBase {
                 .get()
                 .satisfies(t -> assertThat(t).isAfter(testStartTime));
         });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldReturnParamsWithDefaultValues(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
-            final ServerSpecification specification = ServerSpecification.builder().withCpuCores(2).withMemoryAmount(2, MemoryUnit.GB).withSSD().build();
-            assertThat(databaseManagement.getParamsWithDefaultValues(specification))
-                .hasSize(5)
-                .extracting(PgParam::getName)
-                .containsExactlyInAnyOrder("log_min_duration_statement", "idle_in_transaction_session_timeout", "statement_timeout", "effective_cache_size", "temp_file_limit");
-        });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldReturnParamsCurrentValues(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
-            assertThat(databaseManagement.getParamsCurrentValues())
-                .hasSizeGreaterThan(ImportantParam.values().length)
-                .isUnmodifiable());
     }
 }

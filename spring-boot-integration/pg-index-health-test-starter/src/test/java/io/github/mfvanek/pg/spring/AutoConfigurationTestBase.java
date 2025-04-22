@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.spring;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
-import io.github.mfvanek.pg.core.settings.ConfigurationMaintenanceOnHost;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import org.apache.commons.lang3.StringUtils;
 import org.mockito.Mockito;
@@ -51,7 +50,6 @@ abstract class AutoConfigurationTestBase {
         "notValidConstraintsCheckOnHost",
         "btreeIndexesOnArrayColumnsCheckOnHost",
         "statisticsMaintenanceOnHost",
-        "configurationMaintenanceOnHost",
         "sequenceOverflowCheckOnHost",
         "primaryKeysWithSerialTypesCheckOnHost",
         "duplicatedForeignKeysCheckOnHost",
@@ -66,7 +64,7 @@ abstract class AutoConfigurationTestBase {
         "columnsWithFixedLengthVarcharCheckOnHost",
         "indexesWithUnnecessaryWhereClauseCheckOnHost"
     );
-    protected static final Class<?>[] EXPECTED_TYPES = {PgConnection.class, DatabaseCheckOnHost.class, StatisticsMaintenanceOnHost.class, ConfigurationMaintenanceOnHost.class};
+    protected static final Class<?>[] EXPECTED_TYPES = {PgConnection.class, DatabaseCheckOnHost.class, StatisticsMaintenanceOnHost.class};
     protected static final DataSource DATA_SOURCE_MOCK = Mockito.mock(DataSource.class);
 
     private static final String CUSTOM_DATASOURCE_BEAN_NAME = "customDataSource";
