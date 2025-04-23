@@ -43,7 +43,7 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check.check(PgContext.of("; select pg_sleep(100000000);")))
                 .isEmpty();
 
-            assertThat(check.check()) // executing on public schema by default
+            assertThat(check.check()) // executing on default schema
                 .hasSize(1)
                 .containsExactly(
                     IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name"));

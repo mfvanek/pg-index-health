@@ -44,10 +44,10 @@ public final class SkipTablesByNamePredicate extends AbstractSkipTablesPredicate
     }
 
     /**
-     * Creates a predicate to skip a specific table in the default "public" schema.
+     * Creates a predicate to skip a specific table in the default schema.
      *
      * @param rawTableNameToSkip the name of the table to skip, must be non-null and non-blank
-     * @return a predicate that skips the specified table in the default "public" schema
+     * @return a predicate that skips the specified table in the default schema
      * @throws NullPointerException     if {@code tableName} is null
      * @throws IllegalArgumentException if {@code tableName} is blank
      */
@@ -56,10 +56,10 @@ public final class SkipTablesByNamePredicate extends AbstractSkipTablesPredicate
     }
 
     /**
-     * Creates a predicate to skip specific tables in the default "public" schema.
+     * Creates a predicate to skip specific tables in the default schema.
      *
      * @param rawTableNamesToSkip a collection of table names to skip, must be non-null
-     * @return a predicate that skips the specified tables in the default "public" schema
+     * @return a predicate that skips the specified tables in the default schema
      * @throws NullPointerException if {@code rawTableNamesToSkip} is null
      */
     public static Predicate<DbObject> ofDefault(@Nonnull final Collection<String> rawTableNamesToSkip) {

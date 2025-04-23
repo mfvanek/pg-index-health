@@ -81,7 +81,7 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
     }
 
     /**
-     * Creates a predicate to skip a single index name in the default "public" schema.
+     * Creates a predicate to skip a single index name in the default schema.
      *
      * @param rawIndexNameToSkip the raw index name to skip; must be non-null and non-blank
      * @return a {@link Predicate} to skip the specified index name
@@ -91,7 +91,7 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
     }
 
     /**
-     * Creates a predicate to skip a collection of index names in the default "public" schema.
+     * Creates a predicate to skip a collection of index names in the default schema.
      *
      * @param rawIndexNamesToSkip a collection of raw index names to skip; must be non-null
      * @return a {@link Predicate} to skip the specified index names

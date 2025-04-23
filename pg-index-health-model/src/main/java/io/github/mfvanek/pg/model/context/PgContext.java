@@ -61,9 +61,9 @@ public final class PgContext {
     }
 
     /**
-     * Determines whether the specified schema is public or not.
+     * Determines whether the specified schema is default or not.
      *
-     * @return true if it is the public schema
+     * @return true if it is the default schema
      */
     public boolean isDefaultSchema() {
         return DEFAULT_SCHEMA_NAME.equalsIgnoreCase(schemaName);
@@ -170,7 +170,7 @@ public final class PgContext {
     }
 
     /**
-     * Creates {@code PgContext} for default "public" schema with default bloat percentage threshold.
+     * Creates {@code PgContext} for default schema with default bloat percentage threshold.
      *
      * @return {@code PgContext}
      * @see PgContext#DEFAULT_BLOAT_PERCENTAGE_THRESHOLD

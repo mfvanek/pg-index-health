@@ -56,7 +56,7 @@ public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAw
     }
 
     /**
-     * Executes the check in the public schema without filtering results.
+     * Executes the check in the default schema without filtering results.
      *
      * @return list of deviations from the specified rule
      * @see PgContext#ofDefault()
