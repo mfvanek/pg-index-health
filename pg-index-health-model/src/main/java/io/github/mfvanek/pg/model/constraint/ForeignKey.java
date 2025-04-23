@@ -117,6 +117,24 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
     }
 
     /**
+     * Constructs a {@code ForeignKey} object with given {@code Column} and context.
+     *
+     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param tableName      table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param column         column that is included in constraint.
+     * @return {@code ForeignKey}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static ForeignKey ofColumn(@Nonnull final PgContext pgContext,
+                                      @Nonnull final String tableName,
+                                      @Nonnull final String constraintName,
+                                      @Nonnull final Column column) {
+        return ofColumn(PgContext.enrichWith(tableName, pgContext), constraintName, column);
+    }
+
+    /**
      * Constructs a {@code ForeignKey} object with not null column.
      *
      * @param tableName      table name; should be non-blank.
@@ -146,7 +164,7 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
                                              @Nonnull final String tableName,
                                              @Nonnull final String constraintName,
                                              @Nonnull final String columnName) {
-        return ofColumn(PgContext.enrichWith(tableName, pgContext), constraintName, Column.ofNotNull(pgContext, tableName, columnName));
+        return ofColumn(pgContext, tableName, constraintName, Column.ofNotNull(pgContext, tableName, columnName));
     }
 
     /**
@@ -179,6 +197,6 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
                                               @Nonnull final String tableName,
                                               @Nonnull final String constraintName,
                                               @Nonnull final String columnName) {
-        return ofColumn(PgContext.enrichWith(tableName, pgContext), constraintName, Column.ofNullable(pgContext, tableName, columnName));
+        return ofColumn(pgContext, tableName, constraintName, Column.ofNullable(pgContext, tableName, columnName));
     }
 }
