@@ -33,13 +33,13 @@ public interface HealthLogger {
     List<String> logAll(@Nonnull Exclusions exclusions, @Nonnull PgContext pgContext);
 
     /**
-     * Logs indexes and tables health with given exclusions in public schema.
+     * Logs indexes and tables health with given exclusions in default schema.
      *
      * @param exclusions {@link Exclusions}
      * @return results of logging health indexes
      */
     @Nonnull
     default List<String> logAll(@Nonnull final Exclusions exclusions) {
-        return logAll(exclusions, PgContext.ofPublic());
+        return logAll(exclusions, PgContext.ofDefault());
     }
 }

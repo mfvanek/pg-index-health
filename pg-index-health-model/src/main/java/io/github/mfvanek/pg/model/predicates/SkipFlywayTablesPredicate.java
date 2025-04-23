@@ -48,17 +48,17 @@ public final class SkipFlywayTablesPredicate extends AbstractSkipTablesPredicate
     }
 
     /**
-     * Returns a predicate that skips Flyway tables in the default "public" schema context.
+     * Returns a predicate that skips Flyway tables in the default schema.
      * <p>
      * This method creates an instance of {@link SkipFlywayTablesPredicate} using a
-     * {@link PgContext} that represents the "public" schema, making it easy to filter
+     * {@link PgContext} that represents the default schema, making it easy to filter
      * Flyway tables in environments where the default schema is used.
      * </p>
      *
-     * @return a predicate that skips Flyway tables in the "public" schema
+     * @return a predicate that skips Flyway tables in the default schema
      */
-    public static Predicate<DbObject> ofPublic() {
-        return new SkipFlywayTablesPredicate(PgContext.ofPublic());
+    public static Predicate<DbObject> ofDefault() {
+        return new SkipFlywayTablesPredicate(PgContext.ofDefault());
     }
 
     /**
@@ -66,7 +66,7 @@ public final class SkipFlywayTablesPredicate extends AbstractSkipTablesPredicate
      * <p>
      * This method creates an instance of {@link SkipFlywayTablesPredicate} using the
      * provided {@link PgContext} to enrich Flyway table names with a specific schema,
-     * allowing for filtering in environments where a schema other than "public" is used.
+     * allowing for filtering in environments where a schema other than default one is used.
      * </p>
      *
      * @param pgContext the schema context to enrich Flyway table names
