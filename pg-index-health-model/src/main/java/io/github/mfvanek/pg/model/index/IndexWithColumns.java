@@ -27,7 +27,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.11.0
  */
 @Immutable
-public class IndexWithColumns extends IndexWithSize implements ColumnsAware {
+public class IndexWithColumns extends Index implements ColumnsAware {
 
     private final List<Column> columns;
 

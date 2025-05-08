@@ -19,13 +19,13 @@ import javax.annotation.concurrent.Immutable;
 /**
  * Represents an unused database index with information about its usage and size.
  * <p>
- * This class extends {@link IndexWithSize} to include additional details on the
+ * This class extends {@link Index} to include additional details on the
  * number of scans (or accesses) the index has had, providing insight into whether
  * the index is actively used or potentially redundant.
  * </p>
  */
 @Immutable
-public final class UnusedIndex extends IndexWithSize {
+public final class UnusedIndex extends Index {
 
     /**
      * The number of scans performed on this index.

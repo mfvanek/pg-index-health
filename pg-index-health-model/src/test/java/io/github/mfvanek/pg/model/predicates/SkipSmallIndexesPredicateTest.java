@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
-import io.github.mfvanek.pg.model.index.IndexWithSize;
+import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class SkipSmallIndexesPredicateTest {
 
     @Test
     void shouldNotCastObjectsWhenThresholdIsZero() {
-        final IndexWithSize mockIndex = Mockito.mock(IndexWithSize.class);
+        final Index mockIndex = Mockito.mock(Index.class);
         assertThat(SkipSmallIndexesPredicate.of(0L))
             .accepts(mockIndex);
         Mockito.verify(mockIndex, Mockito.never()).getIndexSizeInBytes();
@@ -40,9 +40,9 @@ class SkipSmallIndexesPredicateTest {
     void shouldWork() {
         assertThat(SkipSmallIndexesPredicate.of(10L))
             .accepts(Table.of("t"))
-            .accepts(IndexWithSize.of("t", "i", 10L))
-            .accepts(IndexWithSize.of("t", "i", 11L))
+            .accepts(Index.of("t", "i", 10L))
+            .accepts(Index.of("t", "i", 11L))
             .accepts(SequenceState.of("s1", "int", 80.0))
-            .rejects(IndexWithSize.of("t2", "i2", 9L));
+            .rejects(Index.of("t2", "i2", 9L));
     }
 }
