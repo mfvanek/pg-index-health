@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.index.IndexWithNulls;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.junit.jupiter.api.Test;
@@ -26,12 +26,12 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<IndexWithNulls> check = new IndexesWithNullValuesCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<IndexWithColumns> check = new IndexesWithNullValuesCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(IndexWithNulls.class)
+            .hasType(IndexWithColumns.class)
             .hasDiagnostic(Diagnostic.INDEXES_WITH_NULL_VALUES)
             .hasHost(getHost())
             .isStatic();
@@ -44,8 +44,8 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(IndexWithNulls.of(ctx, "clients", "i_clients_middle_name", "middle_name"))
-                .allMatch(i -> i.getNullableColumn().isNullable());
+                .containsExactly(IndexWithColumns.ofNullable(ctx, "clients", "i_clients_middle_name", "middle_name"))
+                .allMatch(i -> i.getFirstColumn() != null && i.getFirstColumn().isNullable());
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
@@ -65,8 +65,8 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(2)
                 .containsExactly(
-                    IndexWithNulls.of(ctx, "custom_entity_reference_with_very_very_very_long_name", "idx_custom_entity_reference_with_very_very_very_long_name_1", "ref_type"),
-                    IndexWithNulls.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "idx_custom_entity_reference_with_very_very_very_long_name_1_d_3", "ref_type"))
+                    IndexWithColumns.ofNullable(ctx, "custom_entity_reference_with_very_very_very_long_name", "idx_custom_entity_reference_with_very_very_very_long_name_1", "ref_type"),
+                    IndexWithColumns.ofNullable(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "idx_custom_entity_reference_with_very_very_very_long_name_1_d_3", "ref_type"))
         );
     }
 }
