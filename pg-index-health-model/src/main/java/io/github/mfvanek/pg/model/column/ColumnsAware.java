@@ -39,9 +39,9 @@ public interface ColumnsAware {
     @Nullable
     default Column getFirstColumn() {
         final List<Column> columns = getColumns();
-        if (columns != null && !columns.isEmpty()) {
-            return columns.get(0);
+        if (columns.isEmpty()) {
+            return null;
         }
-        return null;
+        return columns.get(0);
     }
 }
