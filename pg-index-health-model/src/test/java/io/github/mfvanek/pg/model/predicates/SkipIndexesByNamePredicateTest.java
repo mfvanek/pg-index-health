@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.Index;
-import io.github.mfvanek.pg.model.index.IndexWithSize;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
@@ -86,26 +85,26 @@ class SkipIndexesByNamePredicateTest {
             .accepts(Table.of("t"))
             .accepts(Index.of("t1", "i1"))
             .accepts(DuplicatedIndexes.of(
-                IndexWithSize.of("t1", "i1", 1L),
-                IndexWithSize.of("t1", "i3", 1L)))
+                Index.of("t1", "i1", 1L),
+                Index.of("t1", "i3", 1L)))
             .rejects(Index.of("t2", "i2"))
             .rejects(Index.of("t2", "I2"))
             .rejects(DuplicatedIndexes.of(
-                IndexWithSize.of("t1", "i1", 1L),
-                IndexWithSize.of("t1", "i2", 1L)));
+                Index.of("t1", "i1", 1L),
+                Index.of("t1", "i2", 1L)));
 
         final PgContext ctx = PgContext.of("CUSTOM");
         assertThat(SkipIndexesByNamePredicate.ofName(ctx, "I2"))
             .accepts(Table.of("custom.t"))
             .accepts(Index.of("custom.t1", "custom.i1"))
             .accepts(DuplicatedIndexes.of(
-                IndexWithSize.of("custom.t1", "custom.i1", 1L),
-                IndexWithSize.of("custom.t1", "custom.i3", 1L)))
+                Index.of("custom.t1", "custom.i1", 1L),
+                Index.of("custom.t1", "custom.i3", 1L)))
             .rejects(Index.of("custom.t2", "custom.i2"))
             .rejects(Index.of("custom.T2", "custom.I2"))
             .rejects(DuplicatedIndexes.of(
-                IndexWithSize.of("custom.t1", "custom.i1", 1L),
-                IndexWithSize.of("custom.t1", "custom.i2", 1L)));
+                Index.of("custom.t1", "custom.i1", 1L),
+                Index.of("custom.t1", "custom.i2", 1L)));
     }
 
     @Test
@@ -115,14 +114,14 @@ class SkipIndexesByNamePredicateTest {
             .accepts(SequenceState.of("s11", "int", 80.0))
             .accepts(ColumnWithSerialType.ofSerial(Column.ofNullable("t", "c"), "s1"))
             .accepts(DuplicatedIndexes.of(
-                IndexWithSize.of("t1", "i", 1L),
-                IndexWithSize.of("t1", "i3", 1L)))
+                Index.of("t1", "i", 1L),
+                Index.of("t1", "i3", 1L)))
             .rejects(Index.of("t1", "i1"))
             .rejects(Index.of("t2", "i1"))
             .rejects(Index.of("T2", "I2"))
             .rejects(DuplicatedIndexes.of(
-                IndexWithSize.of("t1", "i1", 1L),
-                IndexWithSize.of("t1", "i2", 1L)));
+                Index.of("t1", "i1", 1L),
+                Index.of("t1", "i2", 1L)));
     }
 
     @ParameterizedTest

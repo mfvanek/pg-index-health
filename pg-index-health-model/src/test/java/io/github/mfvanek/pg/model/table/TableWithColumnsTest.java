@@ -42,6 +42,8 @@ class TableWithColumnsTest {
         final TableWithColumns second = TableWithColumns.withoutColumns(ctx, "t1");
         assertThat(second.getColumns())
             .isEmpty();
+        assertThat(second.getFirstColumn())
+            .isNull();
     }
 
     @SuppressWarnings("ConstantConditions")

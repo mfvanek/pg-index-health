@@ -99,15 +99,43 @@ class IndexWithBloatTest {
 
         // another
         final Index anotherType = Index.of("t1", "i1");
+        //noinspection AssertBetweenInconvertibleTypes
         assertThat(anotherType)
-            .isEqualTo(first)
+            .isNotEqualTo(first)
             .hasSameHashCodeAs(first);
     }
 
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(IndexWithBloat.class)
-            .withIgnoredFields("indexSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
+            .withIgnoredFields("bloatSizeInBytes", "bloatPercentage")
             .verify();
+    }
+
+    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+    @Test
+    void compareToTest() {
+        final IndexWithBloat first = IndexWithBloat.of("t1", "i1", 22L, 11L, 50);
+        final IndexWithBloat theSame = IndexWithBloat.of("t1", "i1", 100L, 60L, 60); // different size!
+        final IndexWithBloat second = IndexWithBloat.of("t2", "i2", 30L, 3L, 10);
+        final IndexWithBloat third = IndexWithBloat.of("t3", "i3", 22L, 11L, 50);
+
+        assertThatThrownBy(() -> first.compareTo(null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("other cannot be null");
+
+        assertThat(first)
+            .isEqualByComparingTo(first) // self
+            .isEqualByComparingTo(theSame) // the same
+            .isLessThan(second)
+            .isLessThan(third);
+
+        assertThat(second)
+            .isGreaterThan(first)
+            .isLessThan(third);
+
+        assertThat(third)
+            .isGreaterThan(first)
+            .isGreaterThan(second);
     }
 }

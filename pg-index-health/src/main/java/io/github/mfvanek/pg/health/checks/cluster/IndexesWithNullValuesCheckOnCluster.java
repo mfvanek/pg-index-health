@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithNullValuesCheckOnHost;
-import io.github.mfvanek.pg.model.index.IndexWithNulls;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import javax.annotation.Nonnull;
 
@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @since 0.6.0
  */
-public class IndexesWithNullValuesCheckOnCluster extends AbstractCheckOnCluster<IndexWithNulls> {
+public class IndexesWithNullValuesCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
     public IndexesWithNullValuesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, IndexesWithNullValuesCheckOnHost::new);

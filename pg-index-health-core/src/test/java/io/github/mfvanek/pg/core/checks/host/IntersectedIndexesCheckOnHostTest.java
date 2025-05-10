@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
-import io.github.mfvanek.pg.model.index.IndexWithSize;
+import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.junit.jupiter.api.Test;
@@ -48,12 +48,12 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .containsExactly(
                     DuplicatedIndexes.of(
-                        IndexWithSize.of(ctx, "accounts", "i_accounts_account_number_not_deleted"),
-                        IndexWithSize.of(ctx, "accounts", "i_accounts_number_balance_not_deleted")
+                        Index.of(ctx, "accounts", "i_accounts_account_number_not_deleted"),
+                        Index.of(ctx, "accounts", "i_accounts_number_balance_not_deleted")
                     ),
                     DuplicatedIndexes.of(
-                        IndexWithSize.of(ctx, "clients", "i_clients_last_first"),
-                        IndexWithSize.of(ctx, "clients", "i_clients_last_name")
+                        Index.of(ctx, "clients", "i_clients_last_first"),
+                        Index.of(ctx, "clients", "i_clients_last_name")
                     ))
                 .allMatch(d -> d.getTotalSize() >= 106_496L);
 
@@ -76,8 +76,8 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .containsExactly(
                     DuplicatedIndexes.of(
-                        IndexWithSize.of(ctx, "clients", "i_clients_last_first"),
-                        IndexWithSize.of(ctx, "clients", "i_clients_last_name")))
+                        Index.of(ctx, "clients", "i_clients_last_first"),
+                        Index.of(ctx, "clients", "i_clients_last_name")))
                 .allMatch(d -> d.getTotalSize() >= 106_496L);
 
             assertThat(check)
@@ -108,11 +108,11 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .containsExactly(
                     DuplicatedIndexes.of(
-                        IndexWithSize.of(ctx, "t1", "idx_t1_deleted_duplicate"),
-                        IndexWithSize.of(ctx, "t1", "idx_t1_deleted_entity_id")),
+                        Index.of(ctx, "t1", "idx_t1_deleted_duplicate"),
+                        Index.of(ctx, "t1", "idx_t1_deleted_entity_id")),
                     DuplicatedIndexes.of(
-                        IndexWithSize.of(ctx, "t1", "idx_t1_deleted_entity_id"),
-                        IndexWithSize.of(ctx, "t1", "idx_t1_deleted"))
+                        Index.of(ctx, "t1", "idx_t1_deleted_entity_id"),
+                        Index.of(ctx, "t1", "idx_t1_deleted"))
                 ));
     }
 }

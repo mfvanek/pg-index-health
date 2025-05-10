@@ -33,23 +33,23 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public final class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware {
 
-    private static final Comparator<IndexWithSize> INDEX_WITH_SIZE_COMPARATOR =
-        Comparator.comparing(IndexWithSize::getTableName)
-            .thenComparing(IndexWithSize::getIndexName)
-            .thenComparing(IndexWithSize::getIndexSizeInBytes);
+    private static final Comparator<Index> INDEX_WITH_SIZE_COMPARATOR =
+        Comparator.comparing(Index::getTableName)
+            .thenComparing(Index::getIndexName)
+            .thenComparing(Index::getIndexSizeInBytes);
 
-    private final List<IndexWithSize> indexes;
+    private final List<Index> indexes;
     private final long totalSize;
     private final List<String> indexesNames;
 
-    private DuplicatedIndexes(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
-        final List<IndexWithSize> defensiveCopy = List.copyOf(Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes cannot be null"));
+    private DuplicatedIndexes(@Nonnull final List<Index> duplicatedIndexes) {
+        final List<Index> defensiveCopy = List.copyOf(Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes cannot be null"));
         Validators.validateThatTableIsTheSame(defensiveCopy);
         this.indexes = defensiveCopy.stream()
             .sorted(INDEX_WITH_SIZE_COMPARATOR)
             .collect(Collectors.toUnmodifiableList());
         this.totalSize = this.indexes.stream()
-            .mapToLong(IndexWithSize::getIndexSizeInBytes)
+            .mapToLong(Index::getIndexSizeInBytes)
             .sum();
         this.indexesNames = this.indexes.stream()
             .map(Index::getIndexName)
@@ -89,7 +89,7 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
      * @return list of duplicated indexes
      */
     @Nonnull
-    public List<IndexWithSize> getDuplicatedIndexes() {
+    public List<Index> getDuplicatedIndexes() {
         return indexes;
     }
 
@@ -165,7 +165,7 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
      * @return {@code DuplicatedIndexes}
      */
     @Nonnull
-    public static DuplicatedIndexes of(@Nonnull final List<IndexWithSize> duplicatedIndexes) {
+    public static DuplicatedIndexes of(@Nonnull final List<Index> duplicatedIndexes) {
         return new DuplicatedIndexes(duplicatedIndexes);
     }
 
@@ -181,8 +181,8 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
         Validators.tableNameNotBlank(tableName);
         final List<Map.Entry<String, Long>> indexesWithNameAndSize = DuplicatedIndexesParser.parseAsIndexNameAndSize(
             Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
-        final List<IndexWithSize> duplicatedIndexes = indexesWithNameAndSize.stream()
-            .map(e -> IndexWithSize.of(tableName, e.getKey(), e.getValue()))
+        final List<Index> duplicatedIndexes = indexesWithNameAndSize.stream()
+            .map(e -> Index.of(tableName, e.getKey(), e.getValue()))
             .collect(Collectors.toUnmodifiableList());
         return new DuplicatedIndexes(duplicatedIndexes);
     }
@@ -196,9 +196,9 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
      * @return {@code DuplicatedIndexes}
      */
     @Nonnull
-    public static DuplicatedIndexes of(@Nonnull final IndexWithSize firstIndex,
-                                       @Nonnull final IndexWithSize secondIndex,
-                                       @Nonnull final IndexWithSize... otherIndexes) {
+    public static DuplicatedIndexes of(@Nonnull final Index firstIndex,
+                                       @Nonnull final Index secondIndex,
+                                       @Nonnull final Index... otherIndexes) {
         return new DuplicatedIndexes(DuplicatedIndexesParser.combine(firstIndex, secondIndex, otherIndexes));
     }
 }
