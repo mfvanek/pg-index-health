@@ -92,15 +92,43 @@ class UnusedIndexTest {
 
         // another
         final Index anotherType = Index.of("t1", "i1");
+        //noinspection AssertBetweenInconvertibleTypes
         assertThat(anotherType)
-            .isEqualTo(first)
+            .isNotEqualTo(first)
             .hasSameHashCodeAs(first);
     }
 
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(UnusedIndex.class)
-            .withIgnoredFields("indexSizeInBytes", "indexScans")
+            .withIgnoredFields("indexScans")
             .verify();
+    }
+
+    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+    @Test
+    void compareToTest() {
+        final UnusedIndex first = UnusedIndex.of("t1", "i1", 1L, 2L);
+        final UnusedIndex theSame = UnusedIndex.of("t1", "i1", 10L, 6L); // different size!
+        final UnusedIndex second = UnusedIndex.of("t1", "i2", 1L, 3L);
+        final UnusedIndex third = UnusedIndex.of("t2", "i3", 2L, 2L);
+
+        assertThatThrownBy(() -> first.compareTo(null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("other cannot be null");
+
+        assertThat(first)
+            .isEqualByComparingTo(first) // self
+            .isEqualByComparingTo(theSame) // the same
+            .isLessThan(second)
+            .isLessThan(third);
+
+        assertThat(second)
+            .isGreaterThan(first)
+            .isLessThan(third);
+
+        assertThat(third)
+            .isGreaterThan(first)
+            .isGreaterThan(second);
     }
 }

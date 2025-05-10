@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.model.bloat.BloatAware;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
@@ -23,17 +24,15 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  */
 @Immutable
-public final class IndexWithBloat extends Index implements BloatAware {
+public final class IndexWithBloat extends AbstractIndexAware implements BloatAware, Comparable<IndexWithBloat> {
 
     private final long bloatSizeInBytes;
     private final double bloatPercentage;
 
-    private IndexWithBloat(@Nonnull final String tableName,
-                           @Nonnull final String indexName,
-                           final long indexSizeInBytes,
+    private IndexWithBloat(@Nonnull final Index index,
                            final long bloatSizeInBytes,
                            final double bloatPercentage) {
-        super(tableName, indexName, indexSizeInBytes);
+        super(index);
         this.bloatSizeInBytes = Validators.sizeNotNegative(bloatSizeInBytes, "bloatSizeInBytes");
         this.bloatPercentage = Validators.validPercent(bloatPercentage, "bloatPercentage");
     }
@@ -59,18 +58,46 @@ public final class IndexWithBloat extends Index implements BloatAware {
      */
     @Nonnull
     @Override
-    protected String innerToString() {
-        return super.innerToString() + ", bloatSizeInBytes=" + bloatSizeInBytes +
-            ", bloatPercentage=" + bloatPercentage;
+    public String toString() {
+        return IndexWithBloat.class.getSimpleName() + '{' +
+            index.innerToString() +
+            ", bloatSizeInBytes=" + bloatSizeInBytes +
+            ", bloatPercentage=" + bloatPercentage +
+            '}';
     }
 
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public String toString() {
-        return IndexWithBloat.class.getSimpleName() + '{' + innerToString() + '}';
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (!(other instanceof IndexWithBloat)) {
+            return false;
+        }
+
+        final IndexWithBloat that = (IndexWithBloat) other;
+        return Objects.equals(index, that.index);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(index);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(@Nonnull final IndexWithBloat other) {
+        Objects.requireNonNull(other, "other cannot be null");
+        return index.compareTo(other.index);
     }
 
     /**
@@ -89,7 +116,7 @@ public final class IndexWithBloat extends Index implements BloatAware {
                                     final long indexSizeInBytes,
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
-        return new IndexWithBloat(tableName, indexName, indexSizeInBytes, bloatSizeInBytes, bloatPercentage);
+        return of(Index.of(tableName, indexName, indexSizeInBytes), bloatSizeInBytes, bloatPercentage);
     }
 
     /**
@@ -111,8 +138,7 @@ public final class IndexWithBloat extends Index implements BloatAware {
                                     final long indexSizeInBytes,
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
-        return of(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext),
-            indexSizeInBytes, bloatSizeInBytes, bloatPercentage);
+        return of(Index.of(pgContext, tableName, indexName, indexSizeInBytes), bloatSizeInBytes, bloatPercentage);
     }
 
     /**
@@ -129,5 +155,21 @@ public final class IndexWithBloat extends Index implements BloatAware {
                                     @Nonnull final String tableName,
                                     @Nonnull final String indexName) {
         return of(pgContext, tableName, indexName, 0L, 0L, 0.0);
+    }
+
+    /**
+     * Constructs a {@code IndexWithBloat} object with given index and bloat.
+     *
+     * @param index            index; must be non-null.
+     * @param bloatSizeInBytes bloat amount in bytes; should be positive or zero.
+     * @param bloatPercentage  bloat percentage in the range from 0 to 100 inclusive.
+     * @return {@code IndexWithBloat}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static IndexWithBloat of(@Nonnull final Index index,
+                                    final long bloatSizeInBytes,
+                                    final double bloatPercentage) {
+        return new IndexWithBloat(index, bloatSizeInBytes, bloatPercentage);
     }
 }

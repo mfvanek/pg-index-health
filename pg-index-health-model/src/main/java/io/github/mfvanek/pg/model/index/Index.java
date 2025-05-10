@@ -28,7 +28,7 @@ import javax.annotation.concurrent.Immutable;
  * @see IndexSizeAware
  */
 @Immutable
-public class Index implements DbObject, TableNameAware, IndexSizeAware, Comparable<Index> {
+public final class Index implements DbObject, TableNameAware, IndexSizeAware, Comparable<Index> {
 
     private final String tableName;
     private final String indexName;
@@ -41,8 +41,7 @@ public class Index implements DbObject, TableNameAware, IndexSizeAware, Comparab
      * @param indexName        the name of this index; must be non-blank.
      * @param indexSizeInBytes size of the index in bytes; must be non-negative.
      */
-    @SuppressWarnings("WeakerAccess")
-    protected Index(@Nonnull final String tableName, @Nonnull final String indexName, final long indexSizeInBytes) {
+    private Index(@Nonnull final String tableName, @Nonnull final String indexName, final long indexSizeInBytes) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.indexName = Validators.indexNameNotBlank(indexName);
         this.indexSizeInBytes = Validators.sizeNotNegative(indexSizeInBytes, "indexSizeInBytes");
@@ -53,7 +52,7 @@ public class Index implements DbObject, TableNameAware, IndexSizeAware, Comparab
      */
     @Nonnull
     @Override
-    public final String getName() {
+    public String getName() {
         return getIndexName();
     }
 
@@ -62,7 +61,7 @@ public class Index implements DbObject, TableNameAware, IndexSizeAware, Comparab
      */
     @Nonnull
     @Override
-    public final PgObjectType getObjectType() {
+    public PgObjectType getObjectType() {
         return PgObjectType.INDEX;
     }
 
@@ -106,9 +105,8 @@ public class Index implements DbObject, TableNameAware, IndexSizeAware, Comparab
      *
      * @return string representation of the internal fields of this class
      */
-    @SuppressWarnings("WeakerAccess")
     @Nonnull
-    protected String innerToString() {
+    String innerToString() {
         return "tableName='" + tableName + '\'' +
             ", indexName='" + indexName + '\'' +
             ", indexSizeInBytes=" + indexSizeInBytes;
@@ -118,7 +116,7 @@ public class Index implements DbObject, TableNameAware, IndexSizeAware, Comparab
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -136,7 +134,7 @@ public class Index implements DbObject, TableNameAware, IndexSizeAware, Comparab
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(tableName, indexName);
     }
 

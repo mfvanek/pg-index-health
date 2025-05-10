@@ -27,26 +27,15 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.11.0
  */
 @Immutable
-public class IndexWithColumns extends Index implements ColumnsAware {
+public final class IndexWithColumns extends AbstractIndexAware implements ColumnsAware, Comparable<IndexWithColumns> {
 
     private final List<Column> columns;
 
-    /**
-     * Constructs an {@code IndexWithColumns} with the specified table name, index name, size in bytes, and list of columns.
-     *
-     * @param tableName        the name of the table associated with this index; must be non-blank.
-     * @param indexName        the name of the index; must be non-blank.
-     * @param indexSizeInBytes the size of the index in bytes; must be zero or positive.
-     * @param columns          the list of columns associated with the index; cannot be null.
-     */
-    @SuppressWarnings("WeakerAccess")
-    protected IndexWithColumns(@Nonnull final String tableName,
-                               @Nonnull final String indexName,
-                               final long indexSizeInBytes,
-                               @Nonnull final List<Column> columns) {
-        super(tableName, indexName, indexSizeInBytes);
+    private IndexWithColumns(@Nonnull final Index index,
+                             @Nonnull final List<Column> columns) {
+        super(index);
         final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columns, "columns cannot be null"));
-        Validators.validateThatTableIsTheSame(tableName, defensiveCopy);
+        Validators.validateThatTableIsTheSame(index.getTableName(), defensiveCopy);
         this.columns = defensiveCopy;
     }
 
@@ -66,17 +55,45 @@ public class IndexWithColumns extends Index implements ColumnsAware {
      */
     @Nonnull
     @Override
-    protected String innerToString() {
-        return super.innerToString() + ", columns=" + columns;
+    public String toString() {
+        return IndexWithColumns.class.getSimpleName() + '{' +
+            index.innerToString() +
+            ", columns=" + columns +
+            '}';
     }
 
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public String toString() {
-        return IndexWithColumns.class.getSimpleName() + '{' + innerToString() + '}';
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (!(other instanceof IndexWithColumns)) {
+            return false;
+        }
+
+        final IndexWithColumns that = (IndexWithColumns) other;
+        return Objects.equals(index, that.index);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(index);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(@Nonnull final IndexWithColumns other) {
+        Objects.requireNonNull(other, "other cannot be null");
+        return index.compareTo(other.index);
     }
 
     /**
@@ -85,7 +102,7 @@ public class IndexWithColumns extends Index implements ColumnsAware {
      * @param tableName        table name; should be non-blank.
      * @param indexName        index name; should be non-blank.
      * @param indexSizeInBytes index size in bytes; should be positive or zero.
-     * @param column           column in index.
+     * @param column           column in index; must be non-null.
      * @return {@code IndexWithColumns}
      */
     @Nonnull
@@ -93,8 +110,7 @@ public class IndexWithColumns extends Index implements ColumnsAware {
                                             @Nonnull final String indexName,
                                             final long indexSizeInBytes,
                                             @Nonnull final Column column) {
-        final List<Column> columns = List.of(Objects.requireNonNull(column, "column cannot be null"));
-        return new IndexWithColumns(tableName, indexName, indexSizeInBytes, columns);
+        return ofSingle(Index.of(tableName, indexName, indexSizeInBytes), column);
     }
 
     /**
@@ -104,7 +120,7 @@ public class IndexWithColumns extends Index implements ColumnsAware {
      * @param tableName        table name; should be non-blank.
      * @param indexName        index name; should be non-blank.
      * @param indexSizeInBytes index size in bytes; should be positive or zero.
-     * @param column           column in index.
+     * @param column           column in index; must be non-null.
      * @return {@code IndexWithColumns}
      * @since 0.14.3
      */
@@ -114,7 +130,40 @@ public class IndexWithColumns extends Index implements ColumnsAware {
                                             @Nonnull final String indexName,
                                             final long indexSizeInBytes,
                                             @Nonnull final Column column) {
-        return ofSingle(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext), indexSizeInBytes, column);
+        return ofSingle(Index.of(pgContext, tableName, indexName, indexSizeInBytes), column);
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object with one column and given index.
+     *
+     * @param index  index; must be non-null.
+     * @param column column in index; must be non-null.
+     * @return {@code IndexWithColumns}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static IndexWithColumns ofSingle(@Nonnull final Index index,
+                                            @Nonnull final Column column) {
+        final List<Column> columns = List.of(Objects.requireNonNull(column, "column cannot be null"));
+        return of(index, columns);
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one nullable column and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static IndexWithColumns ofNullable(@Nonnull final PgContext pgContext,
+                                              @Nonnull final String tableName,
+                                              @Nonnull final String indexName,
+                                              @Nonnull final String columnName) {
+        return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNullable(pgContext, tableName, columnName));
     }
 
     /**
@@ -123,7 +172,7 @@ public class IndexWithColumns extends Index implements ColumnsAware {
      * @param tableName        table name; should be non-blank.
      * @param indexName        index name; should be non-blank.
      * @param indexSizeInBytes index size in bytes; should be positive or zero.
-     * @param columns          columns in index.
+     * @param columns          columns in index; must be non-null.
      * @return {@code IndexWithColumns}
      */
     @Nonnull
@@ -131,7 +180,7 @@ public class IndexWithColumns extends Index implements ColumnsAware {
                                              @Nonnull final String indexName,
                                              final long indexSizeInBytes,
                                              @Nonnull final List<Column> columns) {
-        return new IndexWithColumns(tableName, indexName, indexSizeInBytes, columns);
+        return of(Index.of(tableName, indexName, indexSizeInBytes), columns);
     }
 
     /**
@@ -141,7 +190,7 @@ public class IndexWithColumns extends Index implements ColumnsAware {
      * @param tableName        table name; should be non-blank.
      * @param indexName        index name; should be non-blank.
      * @param indexSizeInBytes index size in bytes; should be positive or zero.
-     * @param columns          columns in index.
+     * @param columns          columns in index; must be non-null.
      * @return {@code IndexWithColumns}
      * @since 0.14.3
      */
@@ -151,6 +200,20 @@ public class IndexWithColumns extends Index implements ColumnsAware {
                                              @Nonnull final String indexName,
                                              final long indexSizeInBytes,
                                              @Nonnull final List<Column> columns) {
-        return ofColumns(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext), indexSizeInBytes, columns);
+        return of(Index.of(pgContext, tableName, indexName, indexSizeInBytes), columns);
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object with given index and columns.
+     *
+     * @param index   index; must be non-null.
+     * @param columns columns in index; must be non-null.
+     * @return {@code IndexWithColumns}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static IndexWithColumns of(@Nonnull final Index index,
+                                      @Nonnull final List<Column> columns) {
+        return new IndexWithColumns(index, columns);
     }
 }

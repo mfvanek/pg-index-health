@@ -12,8 +12,9 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.index.IndexWithNulls;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -24,10 +25,10 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @since 0.6.0
  */
-public class IndexesWithNullValuesCheckOnHost extends AbstractCheckOnHost<IndexWithNulls> {
+public class IndexesWithNullValuesCheckOnHost extends AbstractCheckOnHost<IndexWithColumns> {
 
     public IndexesWithNullValuesCheckOnHost(@Nonnull final PgConnection pgConnection) {
-        super(IndexWithNulls.class, pgConnection, Diagnostic.INDEXES_WITH_NULL_VALUES);
+        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_NULL_VALUES);
     }
 
     /**
@@ -38,13 +39,14 @@ public class IndexesWithNullValuesCheckOnHost extends AbstractCheckOnHost<IndexW
      */
     @Nonnull
     @Override
-    protected List<IndexWithNulls> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<IndexWithColumns> doCheck(@Nonnull final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);
             final long indexSize = rs.getLong(INDEX_SIZE);
             final String nullableField = rs.getString("nullable_fields");
-            return IndexWithNulls.of(tableName, indexName, indexSize, nullableField);
+            final Column nullableColumn = Column.ofNullable(tableName, nullableField);
+            return IndexWithColumns.ofSingle(tableName, indexName, indexSize, nullableColumn);
         });
     }
 }

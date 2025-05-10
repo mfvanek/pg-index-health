@@ -17,6 +17,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -93,10 +94,7 @@ class IndexWithColumnsTest {
         final IndexWithColumns first = IndexWithColumns.ofSingle("t1", "i1", 1, column);
         final IndexWithColumns theSame = IndexWithColumns.ofSingle("t1", "i1", 3, column); // different size!
         final IndexWithColumns second = IndexWithColumns.ofSingle("t2", "i2", 2, Column.ofNotNull("t2", "f2"));
-        final List<Column> columns = List.of(
-            Column.ofNullable("t3", "t"),
-            Column.ofNullable("t3", "f"));
-        final IndexWithColumns third = IndexWithColumns.ofColumns("t3", "i3", 2, columns);
+        final IndexWithColumns third = createThird();
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -125,15 +123,52 @@ class IndexWithColumnsTest {
 
         // another
         final Index anotherType = Index.of("t1", "i1");
+        //noinspection AssertBetweenInconvertibleTypes
         assertThat(anotherType)
-            .isEqualTo(first)
+            .isNotEqualTo(first)
             .hasSameHashCodeAs(first);
     }
 
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(IndexWithColumns.class)
-            .withIgnoredFields("indexSizeInBytes", "columns")
+            .withIgnoredFields("columns")
             .verify();
+    }
+
+    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+    @Test
+    void compareToTest() {
+        final Column column = Column.ofNullable("t1", "f");
+        final IndexWithColumns first = IndexWithColumns.ofSingle("t1", "i1", 1, column);
+        final IndexWithColumns theSame = IndexWithColumns.ofSingle("t1", "i1", 3, column); // different size!
+        final IndexWithColumns second = IndexWithColumns.ofSingle("t2", "i2", 2, Column.ofNotNull("t2", "f2"));
+        final IndexWithColumns third = createThird();
+
+        assertThatThrownBy(() -> first.compareTo(null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("other cannot be null");
+
+        assertThat(first)
+            .isEqualByComparingTo(first) // self
+            .isEqualByComparingTo(theSame) // the same
+            .isLessThan(second)
+            .isLessThan(third);
+
+        assertThat(second)
+            .isGreaterThan(first)
+            .isLessThan(third);
+
+        assertThat(third)
+            .isGreaterThan(first)
+            .isGreaterThan(second);
+    }
+
+    @Nonnull
+    private static IndexWithColumns createThird() {
+        final List<Column> columns = List.of(
+            Column.ofNullable("t3", "t"),
+            Column.ofNullable("t3", "f"));
+        return IndexWithColumns.ofColumns("t3", "i3", 2, columns);
     }
 }
