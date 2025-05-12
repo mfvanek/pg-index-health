@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model.column;
 
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Representing an object that is aware of a collection of {@link Column} instances (zero or more).
@@ -28,4 +29,19 @@ public interface ColumnsAware {
      */
     @Nonnull
     List<Column> getColumns();
+
+    /**
+     * Retrieves the first column in the list.
+     *
+     * @return the first column in the list if present; otherwise null
+     * @since 0.15.0
+     */
+    @Nullable
+    default Column getFirstColumn() {
+        final List<Column> columns = getColumns();
+        if (columns.isEmpty()) {
+            return null;
+        }
+        return columns.get(0);
+    }
 }

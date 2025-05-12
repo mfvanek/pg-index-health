@@ -14,7 +14,7 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.index.IndexWithNulls;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SuppressWarnings("checkstyle:AbstractClassName")
 class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final AbstractCheckOnCluster<IndexWithNulls> check = new IndexesWithNullValuesCheckOnCluster(getHaPgConnection());
+    private final AbstractCheckOnCluster<IndexWithColumns> check = new IndexesWithNullValuesCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldThrowExceptionIfMapperNotPassedForCrossClusterCheck() {
@@ -45,7 +45,7 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check.check()) // executing on default schema
                 .hasSize(1)
                 .containsExactly(
-                    IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name"))
+                    IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name", "middle_name"))
         );
     }
 

@@ -58,20 +58,42 @@ class IndexTest {
             .isEqualTo(index.getName());
         assertThat(index.getObjectType())
             .isEqualTo(PgObjectType.INDEX);
+        assertThat(index.getIndexSizeInBytes())
+            .isZero();
+    }
+
+    @Test
+    void indexWithPositiveSize() {
+        final Index index = Index.of("t", "i", 123L);
+        assertThat(index.getIndexSizeInBytes())
+            .isEqualTo(123L);
+    }
+
+    @Test
+    void indexWithNegativeSize() {
+        assertThatThrownBy(() -> Index.of("t", "i", -1L))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("indexSizeInBytes cannot be less than zero");
     }
 
     @Test
     void testToString() {
         assertThat(Index.of("t", "i"))
-            .hasToString("Index{tableName='t', indexName='i'}");
-        assertThat(Index.of(PgContext.of("tst"), "t", "i"))
-            .hasToString("Index{tableName='tst.t', indexName='tst.i'}");
+            .hasToString("Index{tableName='t', indexName='i', indexSizeInBytes=0}");
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(Index.of(ctx, "t", "i"))
+            .hasToString("Index{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0}");
+        assertThat(Index.of("t", "i", 33L))
+            .hasToString("Index{tableName='t', indexName='i', indexSizeInBytes=33}");
+        assertThat(Index.of(ctx, "t", "i", 33L))
+            .hasToString("Index{tableName='tst.t', indexName='tst.i', indexSizeInBytes=33}");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
         final Index first = Index.of("t1", "i1");
+        final Index theSame = Index.of("t1", "i1", 44L); // different size!
         final Index second = Index.of("t1", "i2");
         final Index third = Index.of("t2", "i2");
 
@@ -85,7 +107,7 @@ class IndexTest {
             .hasSameHashCodeAs(first);
 
         // the same
-        assertThat(Index.of("t1", "i1"))
+        assertThat(theSame)
             .isEqualTo(first)
             .hasSameHashCodeAs(first);
 
@@ -104,6 +126,7 @@ class IndexTest {
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(Index.class)
+            .withIgnoredFields("indexSizeInBytes")
             .verify();
     }
 
@@ -111,6 +134,7 @@ class IndexTest {
     @Test
     void compareToTest() {
         final Index first = Index.of("t1", "i1");
+        final Index theSame = Index.of("t1", "i1", 44L); // different size!
         final Index second = Index.of("t1", "i2");
         final Index third = Index.of("t2", "i2");
 
@@ -120,7 +144,7 @@ class IndexTest {
 
         assertThat(first)
             .isEqualByComparingTo(first) // self
-            .isEqualByComparingTo(Index.of("t1", "i1")) // the same
+            .isEqualByComparingTo(theSame) // the same
             .isLessThan(second)
             .isLessThan(third);
 

@@ -43,7 +43,8 @@ public class InvalidIndexesCheckOnHost extends AbstractCheckOnHost<Index> {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);
-            return Index.of(tableName, indexName);
+            final long indexSize = rs.getLong(INDEX_SIZE);
+            return Index.of(tableName, indexName, indexSize);
         });
     }
 }
