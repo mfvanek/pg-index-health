@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
-import io.github.mfvanek.pg.model.index.IndexWithSize;
+import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.junit.jupiter.api.Test;
@@ -46,8 +46,8 @@ class DuplicatedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .containsExactly(
                     DuplicatedIndexes.of(
-                        IndexWithSize.of(ctx, "accounts", "accounts_account_number_key"),
-                        IndexWithSize.of(ctx, "accounts", "i_accounts_account_number")))
+                        Index.of(ctx, "accounts", "accounts_account_number_key"),
+                        Index.of(ctx, "accounts", "i_accounts_account_number")))
                 .allMatch(d -> d.getTotalSize() >= 16_384L);
 
             assertThat(check)
@@ -100,8 +100,8 @@ class DuplicatedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .containsExactly(
                     DuplicatedIndexes.of(
-                        IndexWithSize.of(ctx, "t1", "idx_t1_deleted"),
-                        IndexWithSize.of(ctx, "t1", "idx_t1_deleted_duplicate"))
+                        Index.of(ctx, "t1", "idx_t1_deleted"),
+                        Index.of(ctx, "t1", "idx_t1_deleted_duplicate"))
                 ));
     }
 }

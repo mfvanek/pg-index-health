@@ -25,24 +25,26 @@ import javax.annotation.concurrent.Immutable;
  *
  * @author Ivan Vakhrushev
  * @see TableNameAware
- * @see IndexNameAware
+ * @see IndexSizeAware
  */
 @Immutable
-public class Index implements DbObject, TableNameAware, IndexNameAware, Comparable<Index> {
+public final class Index implements DbObject, TableNameAware, IndexSizeAware, Comparable<Index> {
 
     private final String tableName;
     private final String indexName;
+    private final long indexSizeInBytes;
 
     /**
-     * Constructs an {@code Index} with the specified table and index names.
+     * Constructs an {@code Index} object with the specified table name, index name, and index size.
      *
-     * @param tableName the name of the table associated with this index; must be non-blank.
-     * @param indexName the name of this index; must be non-blank.
+     * @param tableName        the name of the table associated with this index; must be non-blank.
+     * @param indexName        the name of this index; must be non-blank.
+     * @param indexSizeInBytes size of the index in bytes; must be non-negative.
      */
-    @SuppressWarnings("WeakerAccess")
-    protected Index(@Nonnull final String tableName, @Nonnull final String indexName) {
+    private Index(@Nonnull final String tableName, @Nonnull final String indexName, final long indexSizeInBytes) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.indexName = Validators.indexNameNotBlank(indexName);
+        this.indexSizeInBytes = Validators.sizeNotNegative(indexSizeInBytes, "indexSizeInBytes");
     }
 
     /**
@@ -50,7 +52,7 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
      */
     @Nonnull
     @Override
-    public final String getName() {
+    public String getName() {
         return getIndexName();
     }
 
@@ -59,7 +61,7 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
      */
     @Nonnull
     @Override
-    public final PgObjectType getObjectType() {
+    public PgObjectType getObjectType() {
         return PgObjectType.INDEX;
     }
 
@@ -84,6 +86,14 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
     /**
      * {@inheritDoc}
      */
+    @Override
+    public long getIndexSizeInBytes() {
+        return indexSizeInBytes;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public String toString() {
@@ -95,18 +105,18 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
      *
      * @return string representation of the internal fields of this class
      */
-    @SuppressWarnings("WeakerAccess")
     @Nonnull
-    protected String innerToString() {
+    String innerToString() {
         return "tableName='" + tableName + '\'' +
-            ", indexName='" + indexName + '\'';
+            ", indexName='" + indexName + '\'' +
+            ", indexSizeInBytes=" + indexSizeInBytes;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -124,7 +134,7 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(tableName, indexName);
     }
 
@@ -143,6 +153,40 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
     /**
      * Constructs an {@code Index} object.
      *
+     * @param tableName        table name; should be non-blank.
+     * @param indexName        index name; should be non-blank.
+     * @param indexSizeInBytes index size in bytes; should be positive or zero.
+     * @return {@code Index}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static Index of(@Nonnull final String tableName,
+                           @Nonnull final String indexName,
+                           final long indexSizeInBytes) {
+        return new Index(tableName, indexName, indexSizeInBytes);
+    }
+
+    /**
+     * Constructs an {@code Index} object with given context.
+     *
+     * @param pgContext        the schema context to enrich table and index name; must be non-null.
+     * @param tableName        table name; should be non-blank.
+     * @param indexName        index name; should be non-blank.
+     * @param indexSizeInBytes index size in bytes; should be positive or zero.
+     * @return {@code Index}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static Index of(@Nonnull final PgContext pgContext,
+                           @Nonnull final String tableName,
+                           @Nonnull final String indexName,
+                           final long indexSizeInBytes) {
+        return of(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext), indexSizeInBytes);
+    }
+
+    /**
+     * Constructs an {@code Index} object with zero size.
+     *
      * @param tableName table name; should be non-blank.
      * @param indexName index name; should be non-blank.
      * @return {@code Index}
@@ -150,11 +194,11 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
     @Nonnull
     public static Index of(@Nonnull final String tableName,
                            @Nonnull final String indexName) {
-        return new Index(tableName, indexName);
+        return of(tableName, indexName, 0L);
     }
 
     /**
-     * Constructs an {@code Index} object with given context.
+     * Constructs an {@code Index} object with zero size and given context.
      *
      * @param pgContext the schema context to enrich table and index name; must be non-null.
      * @param tableName table name; should be non-blank.
@@ -166,6 +210,6 @@ public class Index implements DbObject, TableNameAware, IndexNameAware, Comparab
     public static Index of(@Nonnull final PgContext pgContext,
                            @Nonnull final String tableName,
                            @Nonnull final String indexName) {
-        return of(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext));
+        return of(pgContext, tableName, indexName, 0L);
     }
 }

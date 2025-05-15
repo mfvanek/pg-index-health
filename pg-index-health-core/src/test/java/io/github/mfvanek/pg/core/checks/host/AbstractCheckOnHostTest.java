@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.exception.PgSqlException;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.index.IndexWithNulls;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("checkstyle:AbstractClassName")
 class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final AbstractCheckOnHost<IndexWithNulls> check = new IndexesWithNullValuesCheckOnHost(getPgConnection());
+    private final AbstractCheckOnHost<IndexWithColumns> check = new IndexesWithNullValuesCheckOnHost(getPgConnection());
 
     @ParameterizedTest
     @ValueSource(strings = PgContext.DEFAULT_SCHEMA_NAME)
@@ -46,7 +46,7 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check.check()) // executing on default schema
                 .hasSize(1)
                 .containsExactly(
-                    IndexWithNulls.of("clients", "i_clients_middle_name", 0L, "middle_name"));
+                    IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name", "middle_name"));
 
             assertThat(check.check(t -> !"clients".equalsIgnoreCase(t.getTableName())))
                 .isEmpty();
