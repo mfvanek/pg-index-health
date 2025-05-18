@@ -16,7 +16,6 @@ dependencies {
     testImplementation(testFixtures(project(":pg-index-health-model")))
     testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
     testImplementation("org.mockito:mockito-core")
-    testImplementation(libs.logback.classic)
     testRuntimeOnly(libs.postgresql)
 }
 
