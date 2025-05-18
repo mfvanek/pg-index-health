@@ -17,7 +17,7 @@ plugins {
 private val versionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
 dependencies {
-    versionCatalog.findLibrary("slf4j-simple").ifPresent {
+    versionCatalog.findLibrary("slf4j-simple").ifPresent { // TODO
         spotbugsSlf4j(it)
     }
 }

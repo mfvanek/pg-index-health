@@ -8,7 +8,6 @@ dependencies {
     api(project(":pg-index-health-model"))
     api(project(":pg-index-health-jdbc-connection"))
     api(project(":pg-index-health-core"))
-    implementation(libs.slf4j.api)
 
     testImplementation(project(":pg-index-health-testing"))
     testImplementation(testFixtures(project(":pg-index-health-model")))

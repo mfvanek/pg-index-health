@@ -9,7 +9,6 @@ dependencies {
     api(project(":pg-index-health-jdbc-connection"))
     api(project(":pg-index-health-core"))
     api(project(":pg-index-health"))
-    implementation(libs.slf4j.api)
 
     testImplementation(testFixtures(project(":pg-index-health-core")))
     testImplementation("org.junit.jupiter:junit-jupiter-params")

@@ -10,9 +10,6 @@
 
 package io.github.mfvanek.pg.connection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -20,6 +17,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 /**
@@ -31,7 +30,7 @@ import javax.annotation.Nonnull;
  */
 public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConnection {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HighAvailabilityPgConnectionImpl.class);
+    private static final Logger LOGGER = Logger.getLogger(HighAvailabilityPgConnectionImpl.class.getName());
     private static final long DEFAULT_PRIMARY_REFRESH_INTERVAL_MILLISECONDS = 30_000L;
 
     private final AtomicReference<PgConnection> cachedConnectionToPrimary = new AtomicReference<>();
@@ -114,7 +113,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
         if (this.getConnectionsToAllHostsInCluster().size() >= 2) {
             executorService.scheduleWithFixedDelay(this::updateConnectionToPrimary, primaryRefreshIntervalMilliseconds, primaryRefreshIntervalMilliseconds, TimeUnit.MILLISECONDS);
         } else {
-            LOGGER.debug("Single node. There's no point to monitor primary node.");
+            LOGGER.fine("Single node. There's no point to monitor primary node.");
         }
     }
 
@@ -124,10 +123,10 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
             try {
                 if (primaryHostDeterminer.isPrimary(pgConnection)) {
                     cachedConnectionToPrimary.set(pgConnection);
-                    LOGGER.debug("Current primary is {}", pgConnection.getHost().getPgUrl());
+                    LOGGER.fine(() -> "Current primary is " + pgConnection.getHost().getPgUrl());
                 }
             } catch (Exception e) {
-                LOGGER.warn("Exception during primary detection for host {}", pgConnection.getHost(), e);
+                LOGGER.log(Level.WARNING, e, () -> "Exception during primary detection for host " + pgConnection.getHost());
             }
         });
     }
