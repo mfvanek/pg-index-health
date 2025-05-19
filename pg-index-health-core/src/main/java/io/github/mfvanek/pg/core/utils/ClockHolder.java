@@ -10,12 +10,11 @@
 
 package io.github.mfvanek.pg.core.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.time.Clock;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 /**
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public final class ClockHolder {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClockHolder.class);
+    private static final Logger LOGGER = Logger.getLogger(ClockHolder.class.getName());
     private static final AtomicReference<Clock> CLOCK_REFERENCE = new AtomicReference<>(Clock.systemUTC());
 
     private ClockHolder() {
@@ -53,7 +52,7 @@ public final class ClockHolder {
     public static Clock setClock(@Nonnull final Clock newClock) {
         Objects.requireNonNull(newClock, "newClock cannot be null");
         final Clock oldClock = CLOCK_REFERENCE.getAndSet(newClock);
-        LOGGER.debug("Set new clock {}. Old clock was {}", newClock, oldClock);
+        LOGGER.fine(() -> String.format(Locale.ROOT, "Set new clock %s. Old clock was %s", newClock, oldClock));
         return oldClock;
     }
 }

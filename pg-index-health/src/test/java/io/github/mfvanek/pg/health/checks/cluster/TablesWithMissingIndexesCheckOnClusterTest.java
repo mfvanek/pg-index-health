@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.health.checks.cluster;
 
+import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.StatisticsAwareTestBase;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
@@ -23,6 +24,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
@@ -64,19 +66,21 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
 
     @Test
     void getResultAsUnion() {
-        final TableWithMissingIndex t1 = TableWithMissingIndex.of("t1", 1L, 10L, 1L);
-        final TableWithMissingIndex t2 = TableWithMissingIndex.of("t2", 2L, 30L, 3L);
-        final TableWithMissingIndex t3 = TableWithMissingIndex.of("t3", 3L, 40L, 4L);
-        final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = List.of(
-            List.of(),
-            List.of(t1, t3),
-            List.of(t2),
-            List.of(t2, t3)
-        );
-        final List<TableWithMissingIndex> tablesWithMissingIndexes = TablesWithMissingIndexesCheckOnCluster.getResultAsUnion(
-            tablesWithMissingIndexesFromAllHosts);
-        Assertions.assertThat(tablesWithMissingIndexes)
-            .hasSize(3)
-            .containsExactlyInAnyOrder(t1, t2, t3);
+        try (LogsCaptor ignored = new LogsCaptor(TablesWithMissingIndexesCheckOnCluster.class, Level.FINEST)) {
+            final TableWithMissingIndex t1 = TableWithMissingIndex.of("t1", 1L, 10L, 1L);
+            final TableWithMissingIndex t2 = TableWithMissingIndex.of("t2", 2L, 30L, 3L);
+            final TableWithMissingIndex t3 = TableWithMissingIndex.of("t3", 3L, 40L, 4L);
+            final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts = List.of(
+                List.of(),
+                List.of(t1, t3),
+                List.of(t2),
+                List.of(t2, t3)
+            );
+            final List<TableWithMissingIndex> tablesWithMissingIndexes = TablesWithMissingIndexesCheckOnCluster.getResultAsUnion(
+                tablesWithMissingIndexesFromAllHosts);
+            Assertions.assertThat(tablesWithMissingIndexes)
+                .hasSize(3)
+                .containsExactlyInAnyOrder(t1, t2, t3);
+        }
     }
 }

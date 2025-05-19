@@ -10,11 +10,13 @@
 
 package io.github.mfvanek.pg.core.utils;
 
+import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
+import java.util.logging.Level;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -30,10 +32,12 @@ class SqlQueryReaderTest {
 
     @Test
     void getQueryFromFileShouldFindFileAndReadIt() {
-        final String query = SqlQueryReader.getQueryFromFile("bloated_tables.sql");
-        assertThat(query)
-            .isNotNull()
-            .hasSizeGreaterThan(1_000);
+        try (LogsCaptor ignored = new LogsCaptor(SqlQueryReader.class, Level.FINEST)) {
+            final String query = SqlQueryReader.getQueryFromFile("bloated_tables.sql");
+            assertThat(query)
+                .isNotNull()
+                .hasSizeGreaterThan(1_000);
+        }
     }
 
     @Test

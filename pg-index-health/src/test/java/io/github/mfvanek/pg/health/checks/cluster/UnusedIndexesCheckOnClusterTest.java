@@ -31,6 +31,7 @@ import org.mockito.Mockito;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 
 import static io.github.mfvanek.pg.health.checks.cluster.UnusedIndexesCheckOnCluster.getLastStatsResetDateLogMessage;
 import static io.github.mfvanek.pg.health.checks.cluster.UnusedIndexesCheckOnCluster.getResultAsIntersection;
@@ -57,7 +58,7 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
             Assertions.assertThat(logsCaptor.getLogs())
                 .hasSize(1)
-                .allMatch(l -> l.getFormattedMessage().contains("reset"));
+                .allMatch(l -> l.getMessage().contains("reset"));
         }
     }
 
@@ -112,19 +113,21 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void getResultAsIntersectionShouldWork() {
-        final UnusedIndex i1 = UnusedIndex.of("t1", "i1", 1L, 1L);
-        final UnusedIndex i2 = UnusedIndex.of("t1", "i2", 2L, 2L);
-        final UnusedIndex i3 = UnusedIndex.of("t2", "i3", 3L, 3L);
-        final UnusedIndex i4 = UnusedIndex.of("t3", "i4", 4L, 4L);
-        final UnusedIndex i5 = UnusedIndex.of("t3", "i5", 5L, 5L);
-        final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = List.of(
-            List.of(i5, i4, i1, i3),
-            List.of(i2, i1, i5),
-            List.of(i2, i5, i1, i4));
-        Assertions.assertThat(getResultAsIntersection(potentiallyUnusedIndexesFromAllHosts))
-            .hasSize(2)
-            .containsExactlyInAnyOrder(i1, i5)
-            .isUnmodifiable();
+        try (LogsCaptor ignored = new LogsCaptor(UnusedIndexesCheckOnCluster.class, Level.FINEST)) {
+            final UnusedIndex i1 = UnusedIndex.of("t1", "i1", 1L, 1L);
+            final UnusedIndex i2 = UnusedIndex.of("t1", "i2", 2L, 2L);
+            final UnusedIndex i3 = UnusedIndex.of("t2", "i3", 3L, 3L);
+            final UnusedIndex i4 = UnusedIndex.of("t3", "i4", 4L, 4L);
+            final UnusedIndex i5 = UnusedIndex.of("t3", "i5", 5L, 5L);
+            final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts = List.of(
+                List.of(i5, i4, i1, i3),
+                List.of(i2, i1, i5),
+                List.of(i2, i5, i1, i4));
+            Assertions.assertThat(getResultAsIntersection(potentiallyUnusedIndexesFromAllHosts))
+                .hasSize(2)
+                .containsExactlyInAnyOrder(i1, i5)
+                .isUnmodifiable();
+        }
     }
 
     @Test

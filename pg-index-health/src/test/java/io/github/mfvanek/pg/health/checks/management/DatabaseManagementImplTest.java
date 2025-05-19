@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.health.checks.management;
 
+import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.core.fixtures.support.StatisticsAwareTestBase;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.core.utils.ClockHolder;
@@ -18,6 +19,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.OffsetDateTime;
+import java.util.logging.Level;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,21 +30,23 @@ class DatabaseManagementImplTest extends StatisticsAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldResetCounters(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
-            final OffsetDateTime testStartTime = OffsetDateTime.now(ClockHolder.clock());
-            tryToFindAccountByClientId(schemaName);
-            assertThat(getSeqScansForAccounts(ctx))
-                .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
-            assertThat(databaseManagement.resetStatistics())
-                .isTrue();
-            collectStatistics(schemaName);
-            assertThat(getSeqScansForAccounts(ctx))
-                .isZero();
+        try (LogsCaptor ignored = new LogsCaptor(DatabaseManagementImpl.class, Level.FINEST)) {
+            executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
+                final OffsetDateTime testStartTime = OffsetDateTime.now(ClockHolder.clock());
+                tryToFindAccountByClientId(schemaName);
+                assertThat(getSeqScansForAccounts(ctx))
+                    .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
+                assertThat(databaseManagement.resetStatistics())
+                    .isTrue();
+                collectStatistics(schemaName);
+                assertThat(getSeqScansForAccounts(ctx))
+                    .isZero();
 
-            assertThat(databaseManagement.getLastStatsResetTimestamp())
-                .isPresent()
-                .get()
-                .satisfies(t -> assertThat(t).isAfter(testStartTime));
-        });
+                assertThat(databaseManagement.getLastStatsResetTimestamp())
+                    .isPresent()
+                    .get()
+                    .satisfies(t -> assertThat(t).isAfter(testStartTime));
+            });
+        }
     }
 }

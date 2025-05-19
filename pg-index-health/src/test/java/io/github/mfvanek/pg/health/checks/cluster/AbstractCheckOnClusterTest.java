@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
+import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,12 +43,14 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = PgContext.DEFAULT_SCHEMA_NAME)
     void forPublicSchema(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx ->
-            assertThat(check.check()) // executing on default schema
-                .hasSize(1)
-                .containsExactly(
-                    IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name", "middle_name"))
-        );
+        try (LogsCaptor ignored = new LogsCaptor(AbstractCheckOnCluster.class, Level.FINEST)) {
+            executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx ->
+                assertThat(check.check()) // executing on default schema
+                    .hasSize(1)
+                    .containsExactly(
+                        IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name", "middle_name"))
+            );
+        }
     }
 
     static class WrongCheck extends AbstractCheckOnCluster<UnusedIndex> {
