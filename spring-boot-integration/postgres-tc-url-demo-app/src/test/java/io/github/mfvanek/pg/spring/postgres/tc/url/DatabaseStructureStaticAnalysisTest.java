@@ -14,23 +14,28 @@ import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@ExtendWith(OutputCaptureExtension.class)
 class DatabaseStructureStaticAnalysisTest {
 
     @Autowired
     private List<DatabaseCheckOnHost<? extends DbObject>> checks;
 
     @Test
-    void checksShouldWork() {
+    void checksShouldWork(@Nonnull final CapturedOutput output) {
         assertThat(checks)
             .hasSameSizeAs(Diagnostic.values());
 
@@ -45,5 +50,8 @@ class DatabaseStructureStaticAnalysisTest {
                     .startsWith("jdbc:postgresql://localhost:")
                     .endsWith("/test?loggerLevel=OFF");
             });
+
+        assertThat(output.getAll())
+            .contains("Query completed with result []");
     }
 }

@@ -15,8 +15,6 @@ import io.github.mfvanek.pg.model.units.MemoryUnit;
 import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.awaitility.Awaitility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.WaitStrategy;
@@ -26,6 +24,8 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
@@ -42,7 +42,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
 
     public static final Duration WAIT_INTERVAL_SECONDS = Duration.ofSeconds(100L);
     private static final String IMAGE_NAME = "docker.io/bitnami/postgresql-repmgr";
-    private static final Logger LOGGER = LoggerFactory.getLogger(PostgreSqlClusterWrapper.class);
+    private static final Logger LOGGER = Logger.getLogger(PostgreSqlClusterWrapper.class.getName());
 
     private final PostgresVersionHolder pgVersion;
     private final Network network;
@@ -94,12 +94,12 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         try {
             dataSourceForStandBy.close();
         } catch (SQLException ex) {
-            LOGGER.warn("Error occurred while closing data source to replica", ex);
+            LOGGER.log(Level.WARNING, "Error occurred while closing data source to replica", ex);
         }
         try {
             dataSourceForPrimary.close();
         } catch (SQLException ex) {
-            LOGGER.warn("Error occurred while closing data source to primary", ex);
+            LOGGER.log(Level.WARNING, "Error occurred while closing data source to primary", ex);
         }
         containerForStandBy.close();
         containerForPrimary.close();

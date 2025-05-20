@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.exception.PgSqlException;
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,8 +22,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
@@ -34,7 +34,7 @@ import javax.sql.DataSource;
  */
 public final class QueryExecutors {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(QueryExecutors.class);
+    private static final Logger LOGGER = Logger.getLogger(QueryExecutors.class.getName());
 
     private QueryExecutors() {
         throw new UnsupportedOperationException();
@@ -55,7 +55,7 @@ public final class QueryExecutors {
     public static <T> List<T> executeQuery(@Nonnull final PgConnection pgConnection,
                                            @Nonnull final String sqlQuery,
                                            @Nonnull final ResultSetExtractor<T> rse) {
-        LOGGER.debug("Executing query: {}", sqlQuery);
+        LOGGER.fine(() -> "Executing query: " + sqlQuery);
         Objects.requireNonNull(sqlQuery, "sqlQuery cannot be null");
         final DataSource dataSource = pgConnection.getDataSource();
         try (Connection connection = dataSource.getConnection();
@@ -66,7 +66,7 @@ public final class QueryExecutors {
                     executionResult.add(rse.extractData(resultSet));
                 }
             }
-            LOGGER.debug("Query completed with result {}", executionResult);
+            LOGGER.fine(() -> "Query completed with result " + executionResult);
             return executionResult;
         } catch (SQLException e) {
             throw new PgSqlException(e);
@@ -159,7 +159,7 @@ public final class QueryExecutors {
                                             @Nonnull final String sqlQuery,
                                             @Nonnull final ResultSetExtractor<T> rse,
                                             @Nonnull final Consumer<PreparedStatement> paramsSetter) {
-        LOGGER.debug("Executing query with context {}: {}", pgContext, sqlQuery);
+        LOGGER.fine(() -> String.format(Locale.ROOT, "Executing query with context %s: %s", pgContext, sqlQuery));
         Objects.requireNonNull(sqlQuery, "sqlQuery");
         final DataSource dataSource = pgConnection.getDataSource();
         try (Connection connection = dataSource.getConnection();
@@ -171,7 +171,7 @@ public final class QueryExecutors {
                     executionResult.add(rse.extractData(resultSet));
                 }
             }
-            LOGGER.debug("Query completed with result {}", executionResult);
+            LOGGER.fine(() -> "Query completed with result " + executionResult);
             return executionResult;
         } catch (SQLException e) {
             throw new PgSqlException(e);

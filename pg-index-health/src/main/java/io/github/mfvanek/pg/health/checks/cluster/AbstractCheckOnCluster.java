@@ -18,8 +18,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -40,7 +39,7 @@ import javax.annotation.Nullable;
  */
 abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseCheckOnCluster<T> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCheckOnCluster.class);
+    private static final Logger LOGGER = Logger.getLogger(AbstractCheckOnCluster.class.getName());
 
     private final HighAvailabilityPgConnection haPgConnection;
     private final Function<PgConnection, DatabaseCheckOnHost<T>> checkOnHostFactory;
@@ -96,7 +95,7 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
     }
 
     protected void doBeforeExecuteOnHost(@Nonnull final PgConnection connectionToHost) {
-        LOGGER.debug("Going to execute on host {}", connectionToHost.getHost().getName());
+        LOGGER.fine(() -> "Going to execute on host " + connectionToHost.getHost().getName());
     }
 
     @Nonnull
@@ -112,7 +111,7 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
     @Nonnull
     private List<T> executeOnPrimary(@Nonnull final PgContext pgContext, @Nonnull final Predicate<? super T> exclusionsFilter) {
         final DatabaseCheckOnHost<T> checkOnPrimary = computeCheckForPrimaryIfNeed();
-        LOGGER.debug("Going to execute on primary host {}", checkOnPrimary.getHost().getName());
+        LOGGER.fine(() -> "Going to execute on primary host " + checkOnPrimary.getHost().getName());
         return checkOnPrimary.check(pgContext, exclusionsFilter);
     }
 

@@ -10,11 +10,15 @@
 
 package io.github.mfvanek.pg.connection;
 
+import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.connection.support.DatabaseAwareTestBase;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +35,8 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
             .hasSize(1)
             .containsExactly(getPgConnection())
             .isUnmodifiable();
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster().iterator().next()).isEqualTo(haPgConnection.getConnectionToPrimary());
+        assertThat(haPgConnection.getConnectionsToAllHostsInCluster().iterator().next())
+            .isEqualTo(haPgConnection.getConnectionToPrimary());
     }
 
     @Test
@@ -47,15 +52,22 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
 
     @Test
     void withReplicas() {
-        final PgConnection primary = getPgConnection();
-        final PgConnection replica = getConnectionToReplica();
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary, List.of(primary, replica));
-        assertThat(haPgConnection).isNotNull();
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
-            .isNotNull()
-            .hasSize(2)
-            .containsExactlyInAnyOrder(primary, replica)
-            .isUnmodifiable();
+        try (LogsCaptor ignored = new LogsCaptor(HighAvailabilityPgConnectionImpl.class, Level.FINEST)) {
+            final PgConnection primary = getPgConnection();
+            final PgConnection replica = getConnectionToReplica();
+            final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary, List.of(primary, replica), 5L);
+            assertThat(haPgConnection).isNotNull();
+            Awaitility
+                .await()
+                .atMost(Duration.ofMillis(100L))
+                .pollDelay(Duration.ofMillis(20L))
+                .until(() -> Boolean.TRUE);
+            assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
+                .isNotNull()
+                .hasSize(2)
+                .containsExactlyInAnyOrder(primary, replica)
+                .isUnmodifiable();
+        }
     }
 
     @Test

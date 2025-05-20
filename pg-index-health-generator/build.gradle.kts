@@ -7,9 +7,7 @@ description = "pg-index-health-generator is an extension for generating database
 
 dependencies {
     api(project(":pg-index-health-model"))
-    implementation(libs.slf4j.api)
 
     testImplementation(testFixtures(project(":pg-index-health-model")))
     testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
-    testImplementation(libs.logback.classic)
 }

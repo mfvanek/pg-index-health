@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -23,6 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 /**
@@ -33,7 +32,7 @@ import javax.annotation.Nonnull;
  */
 public class DatabaseManagementImpl implements DatabaseManagement {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseManagementImpl.class);
+    private static final Logger LOGGER = Logger.getLogger(DatabaseManagementImpl.class.getName());
 
     private final HighAvailabilityPgConnection haPgConnection;
     private final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory;
@@ -53,7 +52,7 @@ public class DatabaseManagementImpl implements DatabaseManagement {
     public boolean resetStatistics() {
         boolean result = true;
         for (final PgConnection pgConnection : haPgConnection.getConnectionsToAllHostsInCluster()) {
-            LOGGER.debug("Going to execute on host {}", pgConnection.getHost().getName());
+            LOGGER.fine(() -> "Going to execute on host " + pgConnection.getHost().getName());
             final boolean resultOnHost = computeStatisticsForHostIfNeed(pgConnection).resetStatistics();
             result = result && resultOnHost;
         }
@@ -73,7 +72,7 @@ public class DatabaseManagementImpl implements DatabaseManagement {
     @Nonnull
     private PgConnection getPrimaryAndLog() {
         final PgConnection connectionToPrimary = haPgConnection.getConnectionToPrimary();
-        LOGGER.debug("Going to execute on primary host {}", connectionToPrimary.getHost().getName());
+        LOGGER.fine(() -> "Going to execute on primary host " + connectionToPrimary.getHost().getName());
         return connectionToPrimary;
     }
 

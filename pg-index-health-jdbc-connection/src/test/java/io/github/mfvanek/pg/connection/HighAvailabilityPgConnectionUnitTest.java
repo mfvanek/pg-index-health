@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.connection;
 
-import ch.qos.logback.classic.Level;
 import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
@@ -25,6 +24,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.util.List;
+import java.util.logging.Level;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
@@ -96,7 +96,7 @@ class HighAvailabilityPgConnectionUnitTest {
 
     @Test
     void updateConnectionToPrimaryShouldCatchAndLogExceptions() throws SQLException {
-        try (LogsCaptor logsCaptor = new LogsCaptor(HighAvailabilityPgConnectionImpl.class, Level.WARN)) {
+        try (LogsCaptor logsCaptor = new LogsCaptor(HighAvailabilityPgConnectionImpl.class, Level.WARNING)) {
             initMocksCommon(firstConnectionMocks);
             Mockito.when(firstConnectionMocks.resultSet.getBoolean(1)).thenThrow(RuntimeException.class);
             initMocksCommon(secondConnectionMocks);
@@ -107,7 +107,7 @@ class HighAvailabilityPgConnectionUnitTest {
 
             Awaitility
                 .await()
-                .pollDelay(Duration.ofMillis(120)) // start delay compensation + OS dependent behavior
+                .pollDelay(Duration.ofMillis(200)) // start delay compensation + OS dependent behavior
                 .until(() -> Boolean.TRUE);
 
             assertThat(logsCaptor.getLogs())

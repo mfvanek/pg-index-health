@@ -10,15 +10,14 @@
 
 package io.github.mfvanek.pg.generator.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.Locale;
 import java.util.Objects;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 public final class StringUtils {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StringUtils.class);
+    private static final Logger LOGGER = Logger.getLogger(StringUtils.class.getName());
 
     private StringUtils() {
         throw new UnsupportedOperationException();
@@ -41,7 +40,7 @@ public final class StringUtils {
         if (str.length() <= maxWidth) {
             return str;
         }
-        LOGGER.trace("String {} will be truncated", str);
+        LOGGER.finest(() -> String.format(Locale.ROOT, "String %s will be truncated", str));
         return str.substring(0, maxWidth);
     }
 }
