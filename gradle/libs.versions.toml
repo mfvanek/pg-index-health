@@ -5,7 +5,7 @@ commons-lang3 = "3.17.0"
 assertj = "3.27.3"
 testcontainers = "1.21.0"
 junit = "5.12.2"
-mockito = "5.17.0"
+mockito = "5.18.0"
 forbiddenapis = "3.9"
 
 [libraries]
@@ -26,6 +26,8 @@ detekt-libraries = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules
 testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
 forbiddenapis = { group = "de.thetaphi", name = "forbiddenapis", version.ref = "forbiddenapis" }
 detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+liquibase-core = "org.liquibase:liquibase-core:4.32.0"
+liquibase-sessionlock = "com.github.blagerweij:liquibase-sessionlock:1.6.9"
 
 [plugins]
 spring-boot-gradlePlugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
