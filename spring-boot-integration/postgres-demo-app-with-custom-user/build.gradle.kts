@@ -24,8 +24,8 @@ dependencies {
     implementation(libs.spring.boot.starter.data.jdbc)
     implementation(platform(libs.testcontainers.bom))
     implementation("org.testcontainers:postgresql")
-    implementation("org.liquibase:liquibase-core:4.31.1")
-    implementation("com.github.blagerweij:liquibase-sessionlock:1.6.9")
+    implementation(libs.liquibase.core)
+    implementation(libs.liquibase.sessionlock)
 
     runtimeOnly(libs.postgresql)
 
