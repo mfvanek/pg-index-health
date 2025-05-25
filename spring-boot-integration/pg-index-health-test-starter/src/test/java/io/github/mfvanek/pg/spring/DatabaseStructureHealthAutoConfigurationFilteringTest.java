@@ -32,6 +32,7 @@ import io.github.mfvanek.pg.core.checks.host.InvalidIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.NotValidConstraintsCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ObjectsNotFollowingNamingConventionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PossibleObjectNameOverflowCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
@@ -134,7 +135,8 @@ class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigur
             ColumnsNotFollowingNamingConventionCheckOnHost.class,
             PrimaryKeysWithVarcharCheckOnHost.class,
             ColumnsWithFixedLengthVarcharCheckOnHost.class,
-            IndexesWithUnnecessaryWhereClauseCheckOnHost.class
+            IndexesWithUnnecessaryWhereClauseCheckOnHost.class,
+            PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost.class
         );
     }
 }

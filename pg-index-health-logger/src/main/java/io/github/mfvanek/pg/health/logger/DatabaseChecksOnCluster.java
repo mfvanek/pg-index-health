@@ -32,6 +32,7 @@ import io.github.mfvanek.pg.health.checks.cluster.InvalidIndexesCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.NotValidConstraintsCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ObjectsNotFollowingNamingConventionCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.PossibleObjectNameOverflowCheckOnCluster;
+import io.github.mfvanek.pg.health.checks.cluster.PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.PrimaryKeysWithSerialTypesCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.PrimaryKeysWithVarcharCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.SequenceOverflowCheckOnCluster;
@@ -107,7 +108,8 @@ public final class DatabaseChecksOnCluster {
             new ColumnsNotFollowingNamingConventionCheckOnCluster(haPgConnection),
             new PrimaryKeysWithVarcharCheckOnCluster(haPgConnection),
             new ColumnsWithFixedLengthVarcharCheckOnCluster(haPgConnection),
-            new IndexesWithUnnecessaryWhereClauseCheckOnCluster(haPgConnection)
+            new IndexesWithUnnecessaryWhereClauseCheckOnCluster(haPgConnection),
+            new PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster(haPgConnection)
         );
     }
 
