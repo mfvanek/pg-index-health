@@ -23,7 +23,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Abstract base class for predicates that skip specific database tables.
@@ -39,7 +38,6 @@ import javax.annotation.concurrent.ThreadSafe;
  * @since 0.13.3
  */
 @Immutable
-@ThreadSafe
 abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
 
     /**

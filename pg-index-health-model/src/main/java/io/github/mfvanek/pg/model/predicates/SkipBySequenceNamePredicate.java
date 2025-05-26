@@ -20,7 +20,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 
 import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.prepareFullyQualifiedNamesToSkip;
 
@@ -33,7 +32,6 @@ import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.
  * @since 0.13.3
  */
 @Immutable
-@ThreadSafe
 public final class SkipBySequenceNamePredicate implements Predicate<DbObject> {
 
     private final Set<String> fullyQualifiedSequenceNamesToSkip;

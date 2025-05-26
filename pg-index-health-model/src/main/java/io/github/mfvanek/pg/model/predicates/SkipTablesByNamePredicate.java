@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Predicate implementation for filtering database tables by specific names.
@@ -32,7 +31,6 @@ import javax.annotation.concurrent.ThreadSafe;
  * @since 0.13.3
  */
 @Immutable
-@ThreadSafe
 public final class SkipTablesByNamePredicate extends AbstractSkipTablesPredicate {
 
     private SkipTablesByNamePredicate(@Nonnull final PgContext pgContext, @Nonnull final Collection<String> rawTableNamesToSkip) {

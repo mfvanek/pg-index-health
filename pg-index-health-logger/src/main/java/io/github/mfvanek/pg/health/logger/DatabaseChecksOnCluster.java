@@ -48,10 +48,9 @@ import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.List;
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * A thread-safe class that aggregates various database checks on a PostgreSQL cluster.
+ * A class that aggregates various database checks on a PostgreSQL cluster.
  * <p>
  * This class initializes a list of database checks to be performed on the cluster,
  * such as checks for bloat, missing indexes, unused indexes, invalid constraints,
@@ -64,7 +63,6 @@ import javax.annotation.concurrent.ThreadSafe;
  * @see DatabaseCheckOnCluster
  */
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
-@ThreadSafe
 public final class DatabaseChecksOnCluster {
 
     private final List<DatabaseCheckOnCluster<? extends DbObject>> checks;
