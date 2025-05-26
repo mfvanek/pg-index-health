@@ -56,6 +56,8 @@ class ForeignKeyTest {
             .isUnmodifiable();
         assertThat(foreignKey.getObjectType())
             .isEqualTo(PgObjectType.CONSTRAINT);
+        assertThat(foreignKey.getConstraintType())
+            .isEqualTo(ConstraintType.FOREIGN_KEY);
     }
 
     @Test
@@ -141,6 +143,12 @@ class ForeignKeyTest {
         assertThatThrownBy(() -> ForeignKey.ofNullableColumn("t", "fk", "  "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
+        assertThatThrownBy(() -> ForeignKey.ofColumn(Constraint.ofType("t", "c", ConstraintType.CHECK), Column.ofNotNull("t", "col")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("constraint must be foreign key");
+        assertThatThrownBy(() -> ForeignKey.ofColumn(null, Column.ofNotNull("t", "col")))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("constraint cannot be null");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -194,7 +202,7 @@ class ForeignKeyTest {
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(ForeignKey.class)
-            .withIgnoredFields("constraintType", "columnsInConstraint")
+            .withIgnoredFields("columnsInConstraint")
             .verify();
     }
 }
