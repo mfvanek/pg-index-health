@@ -16,26 +16,24 @@ import io.github.mfvanek.pg.model.index.utils.DuplicatedIndexesParser;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * A representation of duplicated foreign keys in a database.
+ * An immutable representation of duplicated foreign keys in a database.
  *
  * @author Ivan Vakhrushev
  * @see TableNameAware
  * @since 0.13.1
  */
-@Immutable
 public final class DuplicatedForeignKeys implements DbObject, TableNameAware, ConstraintsAware {
 
     private final List<ForeignKey> foreignKeys;
     private final List<String> foreignKeysNames;
 
-    private DuplicatedForeignKeys(@Nonnull final List<ForeignKey> foreignKeys) {
+    private DuplicatedForeignKeys(final Collection<ForeignKey> foreignKeys) {
         final List<ForeignKey> defensiveCopy = List.copyOf(Objects.requireNonNull(foreignKeys, "foreignKeys cannot be null"));
         Validators.validateThatTableIsTheSame(defensiveCopy);
         this.foreignKeys = defensiveCopy;
@@ -47,7 +45,6 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return String.join(",", foreignKeysNames);
@@ -56,7 +53,6 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public PgObjectType getObjectType() {
         return PgObjectType.CONSTRAINT;
@@ -66,7 +62,6 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
     public String getTableName() {
         return foreignKeys.get(0).getTableName();
     }
@@ -77,7 +72,6 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
      * @return list of duplicated foreign keys
      * @see ForeignKey
      */
-    @Nonnull
     public List<ForeignKey> getForeignKeys() {
         return foreignKeys;
     }
@@ -86,7 +80,6 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
     public List<ConstraintNameAware> getConstraints() {
         return List.copyOf(getForeignKeys());
     }
@@ -119,7 +112,6 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return DuplicatedForeignKeys.class.getSimpleName() + '{' +
@@ -134,8 +126,7 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
      * @param foreignKeys list of duplicated foreign keys; should be non-null.
      * @return {@code DuplicatedForeignKeys}
      */
-    @Nonnull
-    public static DuplicatedForeignKeys of(@Nonnull final List<ForeignKey> foreignKeys) {
+    public static DuplicatedForeignKeys of(final Collection<ForeignKey> foreignKeys) {
         return new DuplicatedForeignKeys(foreignKeys);
     }
 
@@ -147,10 +138,9 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
      * @param otherForeignKeys other foreign keys.
      * @return {@code DuplicatedForeignKeys}
      */
-    @Nonnull
-    public static DuplicatedForeignKeys of(@Nonnull final ForeignKey firstForeignKey,
-                                           @Nonnull final ForeignKey secondForeignKey,
-                                           @Nonnull final ForeignKey... otherForeignKeys) {
+    public static DuplicatedForeignKeys of(final ForeignKey firstForeignKey,
+                                           final ForeignKey secondForeignKey,
+                                           final ForeignKey... otherForeignKeys) {
         return new DuplicatedForeignKeys(DuplicatedIndexesParser.combine(firstForeignKey, secondForeignKey, otherForeignKeys));
     }
 }

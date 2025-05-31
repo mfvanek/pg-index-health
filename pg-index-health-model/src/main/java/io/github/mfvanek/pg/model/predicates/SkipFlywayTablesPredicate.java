@@ -15,8 +15,6 @@ import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.Set;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * A predicate that tests if a given {@link DbObject} is a Flyway-related table.
@@ -31,7 +29,6 @@ import javax.annotation.concurrent.Immutable;
  * @see Predicate
  * @since 0.13.3
  */
-@Immutable
 public final class SkipFlywayTablesPredicate extends AbstractSkipTablesPredicate {
 
     /**
@@ -41,7 +38,7 @@ public final class SkipFlywayTablesPredicate extends AbstractSkipTablesPredicate
      */
     private static final Set<String> RAW_FLYWAY_TABLES = Set.of("flyway_schema_history");
 
-    private SkipFlywayTablesPredicate(@Nonnull final PgContext pgContext) {
+    private SkipFlywayTablesPredicate(final PgContext pgContext) {
         super(pgContext, RAW_FLYWAY_TABLES);
     }
 
@@ -70,7 +67,7 @@ public final class SkipFlywayTablesPredicate extends AbstractSkipTablesPredicate
      * @param pgContext the schema context to enrich Flyway table names
      * @return a predicate that skips Flyway tables in the specified schema
      */
-    public static Predicate<DbObject> of(@Nonnull final PgContext pgContext) {
+    public static Predicate<DbObject> of(final PgContext pgContext) {
         return new SkipFlywayTablesPredicate(pgContext);
     }
 }

@@ -15,8 +15,6 @@ import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * A predicate that filters out database objects with bloat values under specified thresholds.
@@ -28,7 +26,6 @@ import javax.annotation.concurrent.Immutable;
  * @see BloatAware
  * @since 0.13.3
  */
-@Immutable
 public final class SkipBloatUnderThresholdPredicate implements Predicate<DbObject> {
 
     private final long sizeThresholdInBytes;
@@ -50,7 +47,7 @@ public final class SkipBloatUnderThresholdPredicate implements Predicate<DbObjec
      * @return {@code true} if the {@code dbObject} meets or exceeds the thresholds or does not implement {@link BloatAware}; {@code false} if it is below the thresholds
      */
     @Override
-    public boolean test(@Nonnull final DbObject dbObject) {
+    public boolean test(final DbObject dbObject) {
         if (sizeThresholdInBytes == 0L && percentageThreshold == 0.0) {
             return true;
         }
@@ -69,7 +66,6 @@ public final class SkipBloatUnderThresholdPredicate implements Predicate<DbObjec
      * @param percentageThreshold  minimum bloat percentage required for a {@link BloatAware} object to pass the test; must be a valid percentage (0-100)
      * @return a {@link Predicate} that skips objects below the specified bloat thresholds
      */
-    @Nonnull
     public static Predicate<DbObject> of(final long sizeThresholdInBytes, final double percentageThreshold) {
         return new SkipBloatUnderThresholdPredicate(sizeThresholdInBytes, percentageThreshold);
     }

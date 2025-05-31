@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.model.dbobject;
 
-import javax.annotation.Nonnull;
-
 /**
  * A generalized representation of a database object.
  * Mostly used as a marker interface.
@@ -26,7 +24,6 @@ public interface DbObject {
      *
      * @return database object name
      */
-    @Nonnull
     String getName();
 
     /**
@@ -35,6 +32,5 @@ public interface DbObject {
      * @return database object type
      * @since 0.13.2
      */
-    @Nonnull
     PgObjectType getObjectType();
 }

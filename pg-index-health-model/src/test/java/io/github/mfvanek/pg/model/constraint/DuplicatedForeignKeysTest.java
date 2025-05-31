@@ -12,10 +12,10 @@ package io.github.mfvanek.pg.model.constraint;
 
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -110,7 +110,7 @@ class DuplicatedForeignKeysTest {
             .verify();
     }
 
-    @Nonnull
+    @NonNull
     private DuplicatedForeignKeys prepare() {
         return DuplicatedForeignKeys.of(
             ForeignKey.ofNotNullColumn("t1", "c1", "col1"),

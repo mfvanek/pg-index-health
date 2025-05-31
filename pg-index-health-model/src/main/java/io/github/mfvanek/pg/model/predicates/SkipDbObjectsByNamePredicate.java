@@ -19,8 +19,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.prepareFullyQualifiedNamesToSkip;
 
@@ -37,7 +35,6 @@ import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.
  * @see DbObject
  * @since 0.13.3
  */
-@Immutable
 public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
 
     /**
@@ -45,14 +42,14 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
      */
     private final Set<String> fullyQualifiedNamesToSkip;
 
-    private SkipDbObjectsByNamePredicate(@Nonnull final Collection<String> fullyQualifiedObjectNamesToSkip) {
+    private SkipDbObjectsByNamePredicate(final Collection<String> fullyQualifiedObjectNamesToSkip) {
         this.fullyQualifiedNamesToSkip = Objects.requireNonNull(fullyQualifiedObjectNamesToSkip, "fullyQualifiedObjectNamesToSkip cannot be null")
             .stream()
             .map(s -> s.toLowerCase(Locale.ROOT))
             .collect(Collectors.toUnmodifiableSet());
     }
 
-    private SkipDbObjectsByNamePredicate(@Nonnull final String fullyQualifiedObjectNameToSkip) {
+    private SkipDbObjectsByNamePredicate(final String fullyQualifiedObjectNameToSkip) {
         this(AbstractSkipTablesPredicate.prepareSingleNameToSkip(fullyQualifiedObjectNameToSkip, "fullyQualifiedObjectNameToSkip"));
     }
 
@@ -67,7 +64,7 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
      * @return {@code true} if the object should not be skipped, {@code false} if it should be skipped
      */
     @Override
-    public boolean test(@Nonnull final DbObject objectNameAware) {
+    public boolean test(final DbObject objectNameAware) {
         if (fullyQualifiedNamesToSkip.isEmpty()) {
             return true;
         }
@@ -82,8 +79,7 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
      * @throws NullPointerException     if {@code fullyQualifiedObjectNameToSkip} is null
      * @throws IllegalArgumentException if {@code fullyQualifiedObjectNameToSkip} is blank
      */
-    @Nonnull
-    public static Predicate<DbObject> ofName(@Nonnull final String fullyQualifiedObjectNameToSkip) {
+    public static Predicate<DbObject> ofName(final String fullyQualifiedObjectNameToSkip) {
         return new SkipDbObjectsByNamePredicate(fullyQualifiedObjectNameToSkip);
     }
 
@@ -95,9 +91,8 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
      * @return a predicate that skips the specified object
      * @since 0.14.4
      */
-    @Nonnull
-    public static Predicate<DbObject> ofName(@Nonnull final PgContext pgContext,
-                                             @Nonnull final String objectNameToSkip) {
+    public static Predicate<DbObject> ofName(final PgContext pgContext,
+                                             final String objectNameToSkip) {
         return ofName(PgContext.enrichWith(objectNameToSkip, pgContext));
     }
 
@@ -108,8 +103,7 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
      * @return a predicate that skips the specified objects
      * @throws NullPointerException if {@code fullyQualifiedObjectNamesToSkip} is null
      */
-    @Nonnull
-    public static Predicate<DbObject> of(@Nonnull final Collection<String> fullyQualifiedObjectNamesToSkip) {
+    public static Predicate<DbObject> of(final Collection<String> fullyQualifiedObjectNamesToSkip) {
         return new SkipDbObjectsByNamePredicate(fullyQualifiedObjectNamesToSkip);
     }
 
@@ -121,9 +115,8 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
      * @return a predicate that skips the specified objects
      * @since 0.14.4
      */
-    @Nonnull
-    public static Predicate<DbObject> of(@Nonnull final PgContext pgContext,
-                                         @Nonnull final Collection<String> objectNamesToSkip) {
+    public static Predicate<DbObject> of(final PgContext pgContext,
+                                         final Collection<String> objectNamesToSkip) {
         return of(prepareFullyQualifiedNamesToSkip(pgContext, objectNamesToSkip));
     }
 }

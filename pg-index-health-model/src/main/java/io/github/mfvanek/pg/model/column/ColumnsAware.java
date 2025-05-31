@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.model.column;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Representing an object that is aware of a collection of {@link Column} instances (zero or more).
@@ -27,7 +27,6 @@ public interface ColumnsAware {
      *
      * @return a non-null list of columns
      */
-    @Nonnull
     List<ColumnNameAware> getColumns();
 
     /**

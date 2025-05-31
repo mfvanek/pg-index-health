@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.model.constraint;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * A mapping to PostgreSQL constraint types.
@@ -33,7 +32,7 @@ public enum ConstraintType {
 
     private final String pgConType;
 
-    ConstraintType(@Nonnull final String pgConType) {
+    ConstraintType(final String pgConType) {
         this.pgConType = Objects.requireNonNull(pgConType, "pgConType");
     }
 
@@ -42,7 +41,6 @@ public enum ConstraintType {
      *
      * @return pgConType
      */
-    @Nonnull
     public String getPgConType() {
         return pgConType;
     }
@@ -53,8 +51,7 @@ public enum ConstraintType {
      * @param pgConType internal PostgreSQL constraint type; should be non-null.
      * @return {@code ConstraintType}
      */
-    @Nonnull
-    public static ConstraintType valueFrom(@Nonnull final String pgConType) {
+    public static ConstraintType valueFrom(final String pgConType) {
         Objects.requireNonNull(pgConType, "pgConType cannot be null");
         for (final ConstraintType ct : values()) {
             if (ct.getPgConType().equals(pgConType)) {

@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.model.units;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * Units of information.
@@ -38,7 +37,7 @@ public enum MemoryUnit {
     private final long dimension;
     private final String description;
 
-    MemoryUnit(final long dimension, @Nonnull final String description) {
+    MemoryUnit(final long dimension, final String description) {
         this.dimension = dimension;
         this.description = Objects.requireNonNull(description);
     }
@@ -56,7 +55,6 @@ public enum MemoryUnit {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return MemoryUnit.class.getSimpleName() + '{' +

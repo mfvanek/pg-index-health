@@ -109,6 +109,7 @@ pmd {
 }
 
 spotbugs {
+    toolVersion.set("4.9.3")
     showProgress.set(true)
     effort.set(Effort.MAX)
     reportLevel.set(Confidence.LOW)

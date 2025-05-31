@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FindBugsFilter>
     <Match>
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
-    </Match>
-    <Match>
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE,RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE,AI_ANNOTATION_ISSUES_NEEDS_NULLABLE"/>
     </Match>
     <Match>
         <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2,CT_CONSTRUCTOR_THROW"/>
@@ -100,5 +97,16 @@
             <Class name="io.github.mfvanek.pg.model.predicates.SkipByConstraintNamePredicate"/>
             <Class name="io.github.mfvanek.pg.model.predicates.SkipByColumnNamePredicate"/>
         </Or>
+    </Match>
+    <Match>
+        <Bug pattern="OCP_OVERLY_CONCRETE_PARAMETER"/>
+        <Or>
+            <Class name="io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys"/>
+            <Class name="io.github.mfvanek.pg.model.index.DuplicatedIndexes"/>
+        </Or>
+    </Match>
+    <Match>
+        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_THROWABLE"/>
+        <Class name="io.github.mfvanek.pg.model.fixtures.support.TestUtils"/>
     </Match>
 </FindBugsFilter>

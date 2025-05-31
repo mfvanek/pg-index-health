@@ -18,17 +18,14 @@ import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Locale;
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * A representation of constraint in a database.
+ * An immutable representation of constraint in a database.
  *
  * @author Blohny
  * @see TableNameAware
  * @since 0.11.0
  */
-@Immutable
 public final class Constraint implements DbObject, ConstraintNameAware {
 
     private final String tableName;
@@ -43,9 +40,9 @@ public final class Constraint implements DbObject, ConstraintNameAware {
      * @param constraintType constraint type; should be non-null.
      */
     private Constraint(
-        @Nonnull final String tableName,
-        @Nonnull final String constraintName,
-        @Nonnull final ConstraintType constraintType) {
+        final String tableName,
+        final String constraintName,
+        final ConstraintType constraintType) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.constraintName = Validators.notBlank(constraintName, "constraintName");
         this.constraintType = Objects.requireNonNull(constraintType, "constraintType cannot be null");
@@ -54,7 +51,6 @@ public final class Constraint implements DbObject, ConstraintNameAware {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return getConstraintName();
@@ -63,7 +59,6 @@ public final class Constraint implements DbObject, ConstraintNameAware {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public PgObjectType getObjectType() {
         return PgObjectType.CONSTRAINT;
@@ -72,7 +67,6 @@ public final class Constraint implements DbObject, ConstraintNameAware {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getTableName() {
         return tableName;
@@ -81,7 +75,6 @@ public final class Constraint implements DbObject, ConstraintNameAware {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getConstraintName() {
         return constraintName;
@@ -90,7 +83,6 @@ public final class Constraint implements DbObject, ConstraintNameAware {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public ConstraintType getConstraintType() {
         return constraintType;
@@ -127,7 +119,6 @@ public final class Constraint implements DbObject, ConstraintNameAware {
      *
      * @return string representation of the internal fields of this class
      */
-    @Nonnull
     String innerToString() {
         return "tableName='" + tableName + '\'' +
             ", constraintName='" + constraintName + '\'';
@@ -150,7 +141,6 @@ public final class Constraint implements DbObject, ConstraintNameAware {
      * @return sql query to validate current constraint
      * @see <a href="https://www.postgresql.org/docs/current/sql-altertable.html#SQL-ALTERTABLE-DESC-VALIDATE-CONSTRAINT">VALIDATE CONSTRAINT</a>
      */
-    @Nonnull
     public String getValidateSql() {
         return String.format(Locale.ROOT, "alter table %s validate constraint %s;", tableName, constraintName);
     }
@@ -163,10 +153,9 @@ public final class Constraint implements DbObject, ConstraintNameAware {
      * @param constraintType constraint type; should be non-null.
      * @return {@code Constraint}
      */
-    @Nonnull
-    public static Constraint ofType(@Nonnull final String tableName,
-                                    @Nonnull final String constraintName,
-                                    @Nonnull final ConstraintType constraintType) {
+    public static Constraint ofType(final String tableName,
+                                    final String constraintName,
+                                    final ConstraintType constraintType) {
         return new Constraint(tableName, constraintName, constraintType);
     }
 
@@ -180,11 +169,10 @@ public final class Constraint implements DbObject, ConstraintNameAware {
      * @return {@code Constraint}
      * @since 0.14.3
      */
-    @Nonnull
-    public static Constraint ofType(@Nonnull final PgContext pgContext,
-                                    @Nonnull final String tableName,
-                                    @Nonnull final String constraintName,
-                                    @Nonnull final ConstraintType constraintType) {
+    public static Constraint ofType(final PgContext pgContext,
+                                    final String tableName,
+                                    final String constraintName,
+                                    final ConstraintType constraintType) {
         return ofType(PgContext.enrichWith(tableName, pgContext), constraintName, constraintType);
     }
 }

@@ -14,23 +14,20 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * A generalized representation of an object in a database.
+ * An immutable generalized representation of an object in a database.
  *
  * @author Ivan Vakhrushev
  * @see PgObjectType
  * @since 0.13.2
  */
-@Immutable
 public final class AnyObject implements DbObject, Comparable<AnyObject> {
 
     private final String objectName;
     private final PgObjectType objectType;
 
-    private AnyObject(@Nonnull final String objectName, @Nonnull final PgObjectType objectType) {
+    private AnyObject(final String objectName, final PgObjectType objectType) {
         this.objectName = Validators.notBlank(objectName, "objectName");
         this.objectType = Objects.requireNonNull(objectType, "objectType cannot be null");
     }
@@ -38,7 +35,6 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return objectName;
@@ -47,7 +43,6 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public PgObjectType getObjectType() {
         return objectType;
@@ -94,7 +89,7 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(@Nonnull final AnyObject other) {
+    public int compareTo(final AnyObject other) {
         Objects.requireNonNull(other, "other cannot be null");
         if (objectType != other.objectType) {
             return objectType.compareTo(other.objectType);
@@ -109,8 +104,8 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
      * @param objectType type of object in a database; should be non-null.
      * @return {@code AnyObject} instance
      */
-    public static AnyObject ofType(@Nonnull final String objectName,
-                                   @Nonnull final PgObjectType objectType) {
+    public static AnyObject ofType(final String objectName,
+                                   final PgObjectType objectType) {
         return new AnyObject(objectName, objectType);
     }
 
@@ -123,9 +118,9 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
      * @return {@code AnyObject} instance
      * @since 0.14.4
      */
-    public static AnyObject ofType(@Nonnull final PgContext pgContext,
-                                   @Nonnull final String objectName,
-                                   @Nonnull final PgObjectType objectType) {
+    public static AnyObject ofType(final PgContext pgContext,
+                                   final String objectName,
+                                   final PgObjectType objectType) {
         return ofType(PgContext.enrichWith(objectName, pgContext), objectType);
     }
 
@@ -136,8 +131,8 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
      * @param objectType literal type of object in a database; should be non-null.
      * @return {@code AnyObject} instance
      */
-    public static AnyObject ofRaw(@Nonnull final String objectName,
-                                  @Nonnull final String objectType) {
+    public static AnyObject ofRaw(final String objectName,
+                                  final String objectType) {
         return new AnyObject(objectName, PgObjectType.valueFrom(objectType));
     }
 }

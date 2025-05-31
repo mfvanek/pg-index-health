@@ -16,8 +16,6 @@ import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * A representation of any stored procedure/function.
@@ -25,13 +23,12 @@ import javax.annotation.concurrent.Immutable;
  * @author Ivan Vakhrushev
  * @since 0.7.0
  */
-@Immutable
 public final class StoredFunction implements DbObject, Comparable<StoredFunction> {
 
     private final String functionName;
     private final String functionSignature;
 
-    private StoredFunction(@Nonnull final String functionName, @Nonnull final String functionSignature) {
+    private StoredFunction(final String functionName, final String functionSignature) {
         this.functionName = Validators.notBlank(functionName, "functionName");
         this.functionSignature = Objects.requireNonNull(functionSignature, "functionSignature cannot be null")
             .trim(); // can be empty
@@ -40,7 +37,6 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return getFunctionName();
@@ -49,7 +45,6 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public PgObjectType getObjectType() {
         return PgObjectType.FUNCTION;
@@ -60,7 +55,6 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
      *
      * @return returns procedure/function name
      */
-    @Nonnull
     public String getFunctionName() {
         return functionName;
     }
@@ -70,7 +64,6 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
      *
      * @return returns procedure/function arguments or empty string
      */
-    @Nonnull
     public String getFunctionSignature() {
         return functionSignature;
     }
@@ -78,7 +71,6 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return StoredFunction.class.getSimpleName() + "{functionName='" + functionName + '\'' +
@@ -115,7 +107,7 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(@Nonnull final StoredFunction other) {
+    public int compareTo(final StoredFunction other) {
         Objects.requireNonNull(other, "other cannot be null");
         if (!functionName.equals(other.functionName)) {
             return functionName.compareTo(other.functionName);
@@ -129,8 +121,7 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
      * @param functionName procedure/function name.
      * @return {@code StoredFunction}
      */
-    @Nonnull
-    public static StoredFunction ofNoArgs(@Nonnull final String functionName) {
+    public static StoredFunction ofNoArgs(final String functionName) {
         return new StoredFunction(functionName, "");
     }
 
@@ -142,9 +133,8 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
      * @return {@code StoredFunction}
      * @since 0.14.3
      */
-    @Nonnull
-    public static StoredFunction ofNoArgs(@Nonnull final PgContext pgContext,
-                                          @Nonnull final String functionName) {
+    public static StoredFunction ofNoArgs(final PgContext pgContext,
+                                          final String functionName) {
         return ofNoArgs(PgContext.enrichWith(functionName, pgContext));
     }
 
@@ -155,9 +145,8 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
      * @param functionSignature procedure/function signature (arguments).
      * @return {@code StoredFunction}
      */
-    @Nonnull
-    public static StoredFunction of(@Nonnull final String functionName,
-                                    @Nonnull final String functionSignature) {
+    public static StoredFunction of(final String functionName,
+                                    final String functionSignature) {
         return new StoredFunction(functionName, functionSignature);
     }
 
@@ -170,10 +159,9 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
      * @return {@code StoredFunction}
      * @since 0.14.3
      */
-    @Nonnull
-    public static StoredFunction of(@Nonnull final PgContext pgContext,
-                                    @Nonnull final String functionName,
-                                    @Nonnull final String functionSignature) {
+    public static StoredFunction of(final PgContext pgContext,
+                                    final String functionName,
+                                    final String functionSignature) {
         return of(PgContext.enrichWith(functionName, pgContext), functionSignature);
     }
 }

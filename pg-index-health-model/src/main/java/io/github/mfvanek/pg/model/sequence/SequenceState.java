@@ -16,18 +16,15 @@ import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * A representation of a sequence's state in a database.
+ * An immutable representation of a sequence's state in a database.
  * This class encapsulates the details of a database sequence, including its name, data type,
  * and the percentage of remaining values before it overflows.
  *
  * @author Blohny
  * @since 0.12.0
  */
-@Immutable
 public final class SequenceState implements DbObject, SequenceNameAware {
 
     private final String sequenceName;
@@ -41,8 +38,8 @@ public final class SequenceState implements DbObject, SequenceNameAware {
      * @param dataType            data type; should be non-blank.
      * @param remainingPercentage remaining percentage; in the range from 0 to 100 inclusive.
      */
-    private SequenceState(@Nonnull final String sequenceName,
-                          @Nonnull final String dataType,
+    private SequenceState(final String sequenceName,
+                          final String dataType,
                           final double remainingPercentage
     ) {
         this.sequenceName = Validators.notBlank(sequenceName, "sequenceName");
@@ -55,7 +52,6 @@ public final class SequenceState implements DbObject, SequenceNameAware {
      *
      * @return the name of the sequence.
      */
-    @Nonnull
     @Override
     public String getSequenceName() {
         return sequenceName;
@@ -66,7 +62,6 @@ public final class SequenceState implements DbObject, SequenceNameAware {
      *
      * @return the data type of the sequence.
      */
-    @Nonnull
     public String getDataType() {
         return dataType;
     }
@@ -83,7 +78,6 @@ public final class SequenceState implements DbObject, SequenceNameAware {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return getSequenceName();
@@ -92,7 +86,6 @@ public final class SequenceState implements DbObject, SequenceNameAware {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public PgObjectType getObjectType() {
         return PgObjectType.SEQUENCE;
@@ -143,9 +136,8 @@ public final class SequenceState implements DbObject, SequenceNameAware {
      * @param remainingPercentage remaining percentage; in the range from 0 to 100 inclusive.
      * @return {@code SequenceState}
      */
-    @Nonnull
-    public static SequenceState of(@Nonnull final String sequenceName,
-                                   @Nonnull final String dataType,
+    public static SequenceState of(final String sequenceName,
+                                   final String dataType,
                                    final double remainingPercentage) {
         return new SequenceState(sequenceName, dataType, remainingPercentage);
     }
@@ -160,10 +152,9 @@ public final class SequenceState implements DbObject, SequenceNameAware {
      * @return {@code SequenceState}
      * @since 0.14.3
      */
-    @Nonnull
-    public static SequenceState of(@Nonnull final PgContext pgContext,
-                                   @Nonnull final String sequenceName,
-                                   @Nonnull final String dataType,
+    public static SequenceState of(final PgContext pgContext,
+                                   final String sequenceName,
+                                   final String dataType,
                                    final double remainingPercentage) {
         return of(PgContext.enrichWith(sequenceName, pgContext), dataType, remainingPercentage);
     }

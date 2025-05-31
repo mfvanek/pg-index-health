@@ -16,21 +16,18 @@ import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * A base representation of database table.
+ * An immutable representation of a database table.
  *
  * @author Ivan Vakhrushev
  */
-@Immutable
 public final class Table implements DbObject, TableSizeAware, Comparable<Table> {
 
     private final String tableName;
     private final long tableSizeInBytes;
 
-    private Table(@Nonnull final String tableName, final long tableSizeInBytes) {
+    private Table(final String tableName, final long tableSizeInBytes) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.tableSizeInBytes = Validators.sizeNotNegative(tableSizeInBytes, "tableSizeInBytes");
     }
@@ -38,7 +35,6 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return getTableName();
@@ -47,7 +43,6 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public PgObjectType getObjectType() {
         return PgObjectType.TABLE;
@@ -57,7 +52,6 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
     public String getTableName() {
         return tableName;
     }
@@ -75,7 +69,6 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      *
      * @return string representation of the internal fields of this class
      */
-    @Nonnull
     String innerToString() {
         return "tableName='" + tableName + '\'' +
             ", tableSizeInBytes=" + tableSizeInBytes;
@@ -84,7 +77,6 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return Table.class.getSimpleName() + '{' + innerToString() + '}';
@@ -119,7 +111,7 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(@Nonnull final Table other) {
+    public int compareTo(final Table other) {
         Objects.requireNonNull(other, "other cannot be null");
         return tableName.compareTo(other.tableName);
     }
@@ -131,8 +123,7 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      * @param tableSizeInBytes table size in bytes; should be positive or zero.
      * @return {@code Table}
      */
-    @Nonnull
-    public static Table of(@Nonnull final String tableName,
+    public static Table of(final String tableName,
                            final long tableSizeInBytes) {
         return new Table(tableName, tableSizeInBytes);
     }
@@ -146,9 +137,8 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      * @return {@code Table}
      * @since 0.14.3
      */
-    @Nonnull
-    public static Table of(@Nonnull final PgContext pgContext,
-                           @Nonnull final String tableName,
+    public static Table of(final PgContext pgContext,
+                           final String tableName,
                            final long tableSizeInBytes) {
         return of(PgContext.enrichWith(tableName, pgContext), tableSizeInBytes);
     }
@@ -160,8 +150,7 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      * @return {@code Table}
      * @since 0.14.3
      */
-    @Nonnull
-    public static Table of(@Nonnull final String tableName) {
+    public static Table of(final String tableName) {
         return of(tableName, 0L);
     }
 
@@ -173,9 +162,8 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      * @return {@code Table}
      * @since 0.14.3
      */
-    @Nonnull
-    public static Table of(@Nonnull final PgContext pgContext,
-                           @Nonnull final String tableName) {
+    public static Table of(final PgContext pgContext,
+                           final String tableName) {
         Objects.requireNonNull(pgContext, "pgContext cannot be null");
         return of(PgContext.enrichWith(tableName, pgContext));
     }

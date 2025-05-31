@@ -20,8 +20,6 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.prepareFullyQualifiedNamesToSkip;
 
@@ -38,16 +36,15 @@ import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.
  * @see PgContext
  * @since 0.13.3
  */
-@Immutable
 public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
 
     private final Set<String> fullyQualifiedIndexNamesToSkip;
 
-    private SkipIndexesByNamePredicate(@Nonnull final PgContext pgContext, @Nonnull final Collection<String> rawIndexNamesToSkip) {
+    private SkipIndexesByNamePredicate(final PgContext pgContext, final Collection<String> rawIndexNamesToSkip) {
         this.fullyQualifiedIndexNamesToSkip = prepareFullyQualifiedNamesToSkip(pgContext, rawIndexNamesToSkip);
     }
 
-    private SkipIndexesByNamePredicate(@Nonnull final PgContext pgContext, @Nonnull final String rawIndexNameToSkip) {
+    private SkipIndexesByNamePredicate(final PgContext pgContext, final String rawIndexNameToSkip) {
         this(pgContext, AbstractSkipTablesPredicate.prepareSingleNameToSkip(rawIndexNameToSkip, "rawIndexNameToSkip"));
     }
 
@@ -58,7 +55,7 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
      * @return {@code true} if the {@code dbObject}'s index name does not match any of the names to skip; {@code false} otherwise
      */
     @Override
-    public boolean test(@Nonnull final DbObject dbObject) {
+    public boolean test(final DbObject dbObject) {
         if (fullyQualifiedIndexNamesToSkip.isEmpty()) {
             return true;
         }
@@ -83,7 +80,7 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
      * @param rawIndexNameToSkip the raw index name to skip; must be non-null and non-blank
      * @return a {@link Predicate} to skip the specified index name
      */
-    public static Predicate<DbObject> ofName(@Nonnull final String rawIndexNameToSkip) {
+    public static Predicate<DbObject> ofName(final String rawIndexNameToSkip) {
         return new SkipIndexesByNamePredicate(PgContext.ofDefault(), rawIndexNameToSkip);
     }
 
@@ -93,7 +90,7 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
      * @param rawIndexNamesToSkip a collection of raw index names to skip; must be non-null
      * @return a {@link Predicate} to skip the specified index names
      */
-    public static Predicate<DbObject> ofDefault(@Nonnull final Collection<String> rawIndexNamesToSkip) {
+    public static Predicate<DbObject> ofDefault(final Collection<String> rawIndexNamesToSkip) {
         return new SkipIndexesByNamePredicate(PgContext.ofDefault(), rawIndexNamesToSkip);
     }
 
@@ -104,7 +101,7 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
      * @param rawIndexNameToSkip the raw index name to skip; must be non-null and non-blank
      * @return a {@link Predicate} to skip the specified index name
      */
-    public static Predicate<DbObject> ofName(@Nonnull final PgContext pgContext, @Nonnull final String rawIndexNameToSkip) {
+    public static Predicate<DbObject> ofName(final PgContext pgContext, final String rawIndexNameToSkip) {
         return new SkipIndexesByNamePredicate(pgContext, rawIndexNameToSkip);
     }
 
@@ -115,7 +112,7 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
      * @param rawIndexNamesToSkip a collection of raw index names to skip; must be non-null
      * @return a {@link Predicate} to skip the specified index names
      */
-    public static Predicate<DbObject> of(@Nonnull final PgContext pgContext, @Nonnull final Collection<String> rawIndexNamesToSkip) {
+    public static Predicate<DbObject> of(final PgContext pgContext, final Collection<String> rawIndexNamesToSkip) {
         return new SkipIndexesByNamePredicate(pgContext, rawIndexNamesToSkip);
     }
 }

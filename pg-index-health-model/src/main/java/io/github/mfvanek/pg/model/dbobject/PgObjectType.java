@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.model.dbobject;
 import io.github.mfvanek.pg.model.constraint.ConstraintType;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * A mapping to PostgreSQL object types.
@@ -84,7 +83,7 @@ public enum PgObjectType {
 
     private final String objectType;
 
-    PgObjectType(@Nonnull final String objectType) {
+    PgObjectType(final String objectType) {
         this.objectType = Objects.requireNonNull(objectType, "objectType");
     }
 
@@ -94,8 +93,7 @@ public enum PgObjectType {
      * @param objectType literal PostgreSQL object type; should be non-null.
      * @return {@code PgObjectType}
      */
-    @Nonnull
-    public static PgObjectType valueFrom(@Nonnull final String objectType) {
+    public static PgObjectType valueFrom(final String objectType) {
         Objects.requireNonNull(objectType, "objectType cannot be null");
         for (final PgObjectType pgObjectType : values()) {
             if (pgObjectType.objectType.equalsIgnoreCase(objectType)) {

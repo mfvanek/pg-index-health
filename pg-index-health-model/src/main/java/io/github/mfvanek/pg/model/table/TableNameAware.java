@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.model.table;
 
-import javax.annotation.Nonnull;
-
 /**
  * Allows getting table name.
  *
@@ -25,6 +23,5 @@ public interface TableNameAware {
      *
      * @return table name
      */
-    @Nonnull
     String getTableName();
 }

@@ -15,8 +15,6 @@ import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.Set;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * A predicate that tests if a given {@link DbObject} is a Liquibase-related table.
@@ -31,7 +29,6 @@ import javax.annotation.concurrent.Immutable;
  * @see Predicate
  * @since 0.13.3
  */
-@Immutable
 public final class SkipLiquibaseTablesPredicate extends AbstractSkipTablesPredicate {
 
     /**
@@ -42,7 +39,7 @@ public final class SkipLiquibaseTablesPredicate extends AbstractSkipTablesPredic
      */
     private static final Set<String> RAW_LIQUIBASE_TABLES = Set.of("databasechangelog", "databasechangeloglock");
 
-    private SkipLiquibaseTablesPredicate(@Nonnull final PgContext pgContext) {
+    private SkipLiquibaseTablesPredicate(final PgContext pgContext) {
         super(pgContext, RAW_LIQUIBASE_TABLES);
     }
 
@@ -71,7 +68,7 @@ public final class SkipLiquibaseTablesPredicate extends AbstractSkipTablesPredic
      * @param pgContext the schema context to enrich Liquibase table names
      * @return a predicate that skips Liquibase tables in the specified schema
      */
-    public static Predicate<DbObject> of(@Nonnull final PgContext pgContext) {
+    public static Predicate<DbObject> of(final PgContext pgContext) {
         return new SkipLiquibaseTablesPredicate(pgContext);
     }
 }

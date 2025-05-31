@@ -11,11 +11,12 @@
 package io.github.mfvanek.pg.model.fixtures.support;
 
 import de.thetaphi.forbiddenapis.SuppressForbidden;
+import org.jspecify.annotations.NullMarked;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import javax.annotation.Nonnull;
 
+@NullMarked
 public final class TestUtils {
 
     private TestUtils() {
@@ -24,7 +25,7 @@ public final class TestUtils {
 
     @SuppressWarnings("checkstyle:IllegalThrows")
     @SuppressForbidden
-    public static <T> void invokePrivateConstructor(@Nonnull final Class<T> type)
+    public static <T> void invokePrivateConstructor(final Class<T> type)
         throws Throwable {
         final Constructor<T> constructor = type.getDeclaredConstructor();
         constructor.setAccessible(true);

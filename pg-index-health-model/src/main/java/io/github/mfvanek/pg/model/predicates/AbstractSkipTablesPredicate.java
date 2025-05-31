@@ -21,8 +21,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * Abstract base class for predicates that skip specific database tables.
@@ -37,7 +35,6 @@ import javax.annotation.concurrent.Immutable;
  * @see Predicate
  * @since 0.13.3
  */
-@Immutable
 abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
 
     /**
@@ -57,7 +54,7 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      * @param rawTableNamesToSkip the collection of raw table names to skip, without schema enrichment
      * @throws NullPointerException if {@code pgContext} or {@code rawTableNamesToSkip} is null
      */
-    AbstractSkipTablesPredicate(@Nonnull final PgContext pgContext, @Nonnull final Collection<String> rawTableNamesToSkip) {
+    AbstractSkipTablesPredicate(final PgContext pgContext, final Collection<String> rawTableNamesToSkip) {
         this.fullyQualifiedTableNamesToSkip = prepareFullyQualifiedNamesToSkip(pgContext, rawTableNamesToSkip);
     }
 
@@ -73,7 +70,7 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      * @return {@code false} if the {@code DbObject} matches a table name in the skip set, {@code true} otherwise
      */
     @Override
-    public boolean test(@Nonnull final DbObject dbObject) {
+    public boolean test(final DbObject dbObject) {
         if (!fullyQualifiedTableNamesToSkip.isEmpty() && dbObject instanceof TableNameAware) {
             final TableNameAware t = (TableNameAware) dbObject;
             return !fullyQualifiedTableNamesToSkip.contains(t.getTableName().toLowerCase(Locale.ROOT));
@@ -90,9 +87,8 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      * @return an unmodifiable {@link Set} of fully qualified names to skip, in lowercase
      * @throws NullPointerException if {@code pgContext} or {@code rawNamesToSkip} is null
      */
-    @Nonnull
-    static Set<String> prepareFullyQualifiedNamesToSkip(@Nonnull final PgContext pgContext,
-                                                        @Nonnull final Collection<String> rawNamesToSkip) {
+    static Set<String> prepareFullyQualifiedNamesToSkip(final PgContext pgContext,
+                                                        final Collection<String> rawNamesToSkip) {
         Objects.requireNonNull(pgContext, "pgContext cannot be null");
         return Objects.requireNonNull(rawNamesToSkip, "rawNamesToSkip cannot be null")
             .stream()
@@ -108,8 +104,7 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      * @return an unmodifiable {@link Set} of names to skip, in lowercase
      * @throws NullPointerException if {@code pgContext} or {@code rawNamesToSkip} is null
      */
-    @Nonnull
-    static Set<String> prepareNamesToSkip(@Nonnull final Collection<String> rawNamesToSkip) {
+    static Set<String> prepareNamesToSkip(final Collection<String> rawNamesToSkip) {
         return Objects.requireNonNull(rawNamesToSkip, "rawNamesToSkip cannot be null")
             .stream()
             .map(s -> s.toLowerCase(Locale.ROOT))
@@ -125,8 +120,7 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      * @throws IllegalArgumentException if {@code rawNameToSkip} is blank
      * @throws NullPointerException     if {@code rawNameToSkip} is null
      */
-    @Nonnull
-    static Set<String> prepareSingleNameToSkip(@Nonnull final String rawNameToSkip, @Nonnull final String argumentName) {
+    static Set<String> prepareSingleNameToSkip(final String rawNameToSkip, final String argumentName) {
         return Set.of(Validators.notBlank(rawNameToSkip, argumentName));
     }
 }

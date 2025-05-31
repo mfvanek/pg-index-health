@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 /**
  * Utility class for parsing duplicated index information from a formatted string and combining database objects into lists.
@@ -46,7 +45,7 @@ public final class DuplicatedIndexesParser {
      * @throws NullPointerException     if {@code duplicatedAsString} is null
      * @throws IllegalArgumentException if {@code duplicatedAsString} is blank
      */
-    public static List<Map.Entry<String, Long>> parseAsIndexNameAndSize(@Nonnull final String duplicatedAsString) {
+    public static List<Map.Entry<String, Long>> parseAsIndexNameAndSize(final String duplicatedAsString) {
         Validators.notBlank(duplicatedAsString, "duplicatedAsString");
         final String[] indexes = duplicatedAsString.split("; ");
         return Arrays.stream(indexes)
@@ -70,10 +69,9 @@ public final class DuplicatedIndexesParser {
      * @return combined list of database objects
      */
     @SafeVarargs
-    @Nonnull
-    public static <T extends TableNameAware & DbObject> List<T> combine(@Nonnull final T firstObject,
-                                                                        @Nonnull final T secondObject,
-                                                                        @Nonnull final T... otherObjects) {
+    public static <T extends TableNameAware & DbObject> List<T> combine(final T firstObject,
+                                                                        final T secondObject,
+                                                                        final T... otherObjects) {
         Objects.requireNonNull(firstObject, "firstObject cannot be null");
         Objects.requireNonNull(secondObject, "secondObject cannot be null");
         if (Stream.of(otherObjects).anyMatch(Objects::isNull)) {

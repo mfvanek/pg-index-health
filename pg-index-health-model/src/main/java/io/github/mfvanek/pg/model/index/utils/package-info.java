@@ -8,20 +8,10 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.index;
-
 /**
- * Allows getting index name.
- *
- * @author Ivan Vakhrushev
- * @see io.github.mfvanek.pg.model.table.TableNameAware
+ * An additional index relates utilities.
  */
-public interface IndexNameAware {
+@NullMarked
+package io.github.mfvanek.pg.model.index.utils;
 
-    /**
-     * Retrieves index name.
-     *
-     * @return index name
-     */
-    String getIndexName();
-}
+import org.jspecify.annotations.NullMarked;
