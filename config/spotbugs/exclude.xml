@@ -95,6 +95,9 @@
     </Match>
     <Match>
         <Bug pattern="ITC_INHERITANCE_TYPE_CHECKING"/>
-        <Class name="io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate"/>
+        <Or>
+            <Class name="io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate"/>
+            <Class name="io.github.mfvanek.pg.model.predicates.SkipByConstraintNamePredicate"/>
+        </Or>
     </Match>
 </FindBugsFilter>
