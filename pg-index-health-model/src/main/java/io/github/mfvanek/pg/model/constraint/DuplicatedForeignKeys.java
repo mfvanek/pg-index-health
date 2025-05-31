@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.model.index.utils.DuplicatedIndexesParser;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
     private final List<ForeignKey> foreignKeys;
     private final List<String> foreignKeysNames;
 
-    private DuplicatedForeignKeys(final List<ForeignKey> foreignKeys) {
+    private DuplicatedForeignKeys(final Collection<ForeignKey> foreignKeys) {
         final List<ForeignKey> defensiveCopy = List.copyOf(Objects.requireNonNull(foreignKeys, "foreignKeys cannot be null"));
         Validators.validateThatTableIsTheSame(defensiveCopy);
         this.foreignKeys = defensiveCopy;
@@ -125,7 +126,7 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
      * @param foreignKeys list of duplicated foreign keys; should be non-null.
      * @return {@code DuplicatedForeignKeys}
      */
-    public static DuplicatedForeignKeys of(final List<ForeignKey> foreignKeys) {
+    public static DuplicatedForeignKeys of(final Collection<ForeignKey> foreignKeys) {
         return new DuplicatedForeignKeys(foreignKeys);
     }
 

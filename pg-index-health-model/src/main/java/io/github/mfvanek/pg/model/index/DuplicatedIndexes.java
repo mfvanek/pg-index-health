@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.model.index.utils.DuplicatedIndexesParser;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     private final long totalSize;
     private final List<String> indexesNames;
 
-    private DuplicatedIndexes(final List<Index> duplicatedIndexes) {
+    private DuplicatedIndexes(final Collection<Index> duplicatedIndexes) {
         final List<Index> defensiveCopy = List.copyOf(Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes cannot be null"));
         Validators.validateThatTableIsTheSame(defensiveCopy);
         this.indexes = defensiveCopy.stream()
@@ -155,7 +156,7 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
      * @param duplicatedIndexes list of duplicated indexes; should be non-null.
      * @return {@code DuplicatedIndexes}
      */
-    public static DuplicatedIndexes of(final List<Index> duplicatedIndexes) {
+    public static DuplicatedIndexes of(final Collection<Index> duplicatedIndexes) {
         return new DuplicatedIndexes(duplicatedIndexes);
     }
 

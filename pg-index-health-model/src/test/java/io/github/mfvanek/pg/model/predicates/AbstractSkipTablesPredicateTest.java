@@ -16,9 +16,9 @@ import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -58,7 +58,7 @@ class AbstractSkipTablesPredicateTest {
 
     private static class SkipTablesPredicate extends AbstractSkipTablesPredicate {
 
-        SkipTablesPredicate(@Nonnull final PgContext pgContext, @Nonnull final List<String> rawTableNamesToSkip) {
+        SkipTablesPredicate(final PgContext pgContext, final Collection<String> rawTableNamesToSkip) {
             super(pgContext, rawTableNamesToSkip);
         }
     }

@@ -14,10 +14,10 @@ import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -170,7 +170,7 @@ class IndexWithColumnsTest {
             .isGreaterThan(second);
     }
 
-    @Nonnull
+    @NonNull
     private static IndexWithColumns createThird() {
         final List<Column> columns = List.of(
             Column.ofNullable("t3", "t"),

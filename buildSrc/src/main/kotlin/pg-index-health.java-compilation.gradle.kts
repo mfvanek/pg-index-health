@@ -13,7 +13,7 @@ plugins {
     id("jacoco")
 }
 
-configurations.all {
+configurations.compileClasspath {
     exclude("com.google.code.findbugs", "jsr305")
 }
 

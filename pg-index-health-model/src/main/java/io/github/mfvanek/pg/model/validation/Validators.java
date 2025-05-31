@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.model.validation;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -131,7 +132,7 @@ public final class Validators {
      * @param rows              the rows to check
      * @throws IllegalArgumentException if any row has a different table name
      */
-    public static void validateThatTableIsTheSame(final String expectedTableName, final List<? extends TableNameAware> rows) {
+    public static void validateThatTableIsTheSame(final String expectedTableName, final Collection<? extends TableNameAware> rows) {
         final boolean tableIsTheSame = rows.stream().allMatch(i -> i.getTableName().equals(expectedTableName));
         if (!tableIsTheSame) {
             throw new IllegalArgumentException("Table name is not the same within given rows");
@@ -167,7 +168,7 @@ public final class Validators {
      * @param <T>                 the type of the list elements
      * @throws IllegalArgumentException if the list is empty
      */
-    public static <T> void validateThatNotEmpty(final List<T> columnsInConstraint) {
+    public static <T> void validateThatNotEmpty(final Collection<T> columnsInConstraint) {
         if (columnsInConstraint.isEmpty()) {
             throw new IllegalArgumentException("columnsInConstraint cannot be empty");
         }
