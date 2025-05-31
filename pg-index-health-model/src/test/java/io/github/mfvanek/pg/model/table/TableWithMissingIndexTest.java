@@ -69,8 +69,14 @@ class TableWithMissingIndexTest {
     void testToString() {
         assertThat(TableWithMissingIndex.of("t", 11L, 33L, 22L))
             .hasToString("TableWithMissingIndex{tableName='t', tableSizeInBytes=11, seqScans=33, indexScans=22}");
-        assertThat(TableWithMissingIndex.of(PgContext.of("tst"), "t", 11L, 33L, 22L))
+        assertThat(TableWithMissingIndex.of("t"))
+            .hasToString("TableWithMissingIndex{tableName='t', tableSizeInBytes=0, seqScans=0, indexScans=0}");
+
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(TableWithMissingIndex.of(ctx, "t", 11L, 33L, 22L))
             .hasToString("TableWithMissingIndex{tableName='tst.t', tableSizeInBytes=11, seqScans=33, indexScans=22}");
+        assertThat(TableWithMissingIndex.of(ctx, "t"))
+            .hasToString("TableWithMissingIndex{tableName='tst.t', tableSizeInBytes=0, seqScans=0, indexScans=0}");
     }
 
     @SuppressWarnings("ConstantConditions")

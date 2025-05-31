@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.constraint;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
@@ -102,8 +103,8 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      */
     @Nonnull
     @Override
-    public List<Column> getColumns() {
-        return columnsInConstraint;
+    public List<ColumnNameAware> getColumns() {
+        return List.copyOf(columnsInConstraint);
     }
 
     /**

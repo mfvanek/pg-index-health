@@ -28,7 +28,7 @@ public interface ColumnsAware {
      * @return a non-null list of columns
      */
     @Nonnull
-    List<Column> getColumns();
+    List<ColumnNameAware> getColumns();
 
     /**
      * Retrieves the first column in the list.
@@ -37,8 +37,8 @@ public interface ColumnsAware {
      * @since 0.15.0
      */
     @Nullable
-    default Column getFirstColumn() {
-        final List<Column> columns = getColumns();
+    default ColumnNameAware getFirstColumn() {
+        final List<ColumnNameAware> columns = getColumns();
         if (columns.isEmpty()) {
             return null;
         }

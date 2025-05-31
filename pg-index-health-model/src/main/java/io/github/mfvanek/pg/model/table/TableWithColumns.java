@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.table;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
@@ -47,8 +48,8 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      */
     @Nonnull
     @Override
-    public List<Column> getColumns() {
-        return columns;
+    public List<ColumnNameAware> getColumns() {
+        return List.copyOf(columns);
     }
 
     /**
