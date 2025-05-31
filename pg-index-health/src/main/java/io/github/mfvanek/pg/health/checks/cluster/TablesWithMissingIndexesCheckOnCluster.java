@@ -13,11 +13,10 @@ package io.github.mfvanek.pg.health.checks.cluster;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
@@ -29,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public class TablesWithMissingIndexesCheckOnCluster extends AbstractCheckOnCluster<TableWithMissingIndex> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TablesWithMissingIndexesCheckOnCluster.class);
+    private static final Logger LOGGER = Logger.getLogger(TablesWithMissingIndexesCheckOnCluster.class.getName());
 
     public TablesWithMissingIndexesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesWithMissingIndexesCheckOnHost::new, TablesWithMissingIndexesCheckOnCluster::getResultAsUnion);
@@ -37,13 +36,13 @@ public class TablesWithMissingIndexesCheckOnCluster extends AbstractCheckOnClust
 
     @Nonnull
     static List<TableWithMissingIndex> getResultAsUnion(@Nonnull final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts) {
-        LOGGER.debug("tablesWithMissingIndexesFromAllHosts = {}", tablesWithMissingIndexesFromAllHosts);
+        LOGGER.fine(() -> "tablesWithMissingIndexesFromAllHosts = " + tablesWithMissingIndexesFromAllHosts);
         final List<TableWithMissingIndex> result = tablesWithMissingIndexesFromAllHosts.stream()
             .flatMap(Collection::stream)
             .distinct()
             .sorted()
             .collect(Collectors.toList());
-        LOGGER.debug("Union result {}", result);
+        LOGGER.fine(() -> "Union result " + result);
         return result;
     }
 }

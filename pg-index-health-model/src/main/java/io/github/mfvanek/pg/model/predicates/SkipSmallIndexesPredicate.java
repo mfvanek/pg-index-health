@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * A predicate that filters out small indexes based on a specified size threshold.
@@ -30,7 +29,6 @@ import javax.annotation.concurrent.ThreadSafe;
  * @since 0.13.3
  */
 @Immutable
-@ThreadSafe
 public final class SkipSmallIndexesPredicate extends AbstractFilterBySize {
 
     private SkipSmallIndexesPredicate(final long thresholdInBytes) {

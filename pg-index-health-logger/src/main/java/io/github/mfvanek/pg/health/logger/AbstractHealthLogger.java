@@ -22,19 +22,19 @@ import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipSmallIndexesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipSmallTablesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 public abstract class AbstractHealthLogger implements HealthLogger {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHealthLogger.class);
+    private static final Logger LOGGER = Logger.getLogger(AbstractHealthLogger.class.getName());
 
     private final ConnectionCredentials credentials;
     private final HighAvailabilityPgConnectionFactory connectionFactory;
@@ -70,7 +70,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
             if (checkResult.isEmpty()) {
                 logResult.add(writeZeroToLog(key));
             } else {
-                LOGGER.warn("There are {} in the database {}", key.getDescription(), checkResult);
+                LOGGER.warning(() -> String.format(Locale.ROOT, "There are %s in the database %s", key.getDescription(), checkResult));
                 logResult.add(writeToLog(key, checkResult.size()));
             }
         }

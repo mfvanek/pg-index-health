@@ -63,6 +63,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithChec
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithFixedLengthVarcharStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIdentityPrimaryKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithNaturalKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithUniqueSerialColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithoutPrimaryKeyStatement;
@@ -401,6 +402,11 @@ public final class DatabasePopulator implements AutoCloseable {
     @Nonnull
     public DatabasePopulator withUnnecessaryWhereClause() {
         return register(138, new CreateIndexWithUnnecessaryWhereClauseStatement());
+    }
+
+    @Nonnull
+    public DatabasePopulator withNaturalKeys() {
+        return register(139, new CreateTableWithNaturalKeyStatement());
     }
 
     public void populate() {

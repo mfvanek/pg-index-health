@@ -78,7 +78,7 @@ class SkipBySequenceNamePredicateTest {
     }
 
     @Test
-    void shouldWorkForSingleSequence() {
+    void shouldWorkForSingleItem() {
         assertThat(SkipBySequenceNamePredicate.ofName("s2"))
             .accepts(Table.of("t"))
             .accepts(SequenceState.of("s1", "int", 80.0))
@@ -94,7 +94,7 @@ class SkipBySequenceNamePredicateTest {
     }
 
     @Test
-    void shouldWorkForMultipleSequences() {
+    void shouldWorkForMultipleItems() {
         assertThat(SkipBySequenceNamePredicate.ofDefault(Set.of("s1", "S2")))
             .accepts(Table.of("t"))
             .accepts(SequenceState.of("s11", "int", 80.0))

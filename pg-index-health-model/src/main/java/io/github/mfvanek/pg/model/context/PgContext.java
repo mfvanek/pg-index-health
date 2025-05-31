@@ -16,7 +16,6 @@ import java.util.Locale;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Represents a context for running maintenance queries.
@@ -24,7 +23,6 @@ import javax.annotation.concurrent.ThreadSafe;
  * @author Ivan Vakhrushev
  */
 @Immutable
-@ThreadSafe
 public final class PgContext {
 
     /**

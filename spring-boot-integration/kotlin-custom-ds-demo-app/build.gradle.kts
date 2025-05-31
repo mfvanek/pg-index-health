@@ -16,15 +16,14 @@ plugins {
 
 ext["commons-lang3.version"] = libs.versions.commons.lang3.get()
 ext["assertj.version"] = libs.versions.assertj.get()
-// ext["mockito.version"] = libs.versions.mockito.get()
 ext["junit-jupiter.version"] = libs.versions.junit.get()
 
 dependencies {
     implementation(platform(libs.testcontainers.bom))
     implementation("org.testcontainers:postgresql")
     implementation(libs.spring.boot.starter.data.jdbc)
-    implementation("org.liquibase:liquibase-core:4.31.1")
-    implementation("com.github.blagerweij:liquibase-sessionlock:1.6.9")
+    implementation(libs.liquibase.core)
+    implementation(libs.liquibase.sessionlock)
 
     runtimeOnly(libs.postgresql)
 

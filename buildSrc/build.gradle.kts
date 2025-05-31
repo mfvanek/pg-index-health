@@ -7,9 +7,9 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.spotbugs.snom:spotbugs-gradle-plugin:6.1.7")
-    implementation("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:6.1.0.5360")
-    implementation("net.ltgt.gradle:gradle-errorprone-plugin:4.0.1")
+    implementation("com.github.spotbugs.snom:spotbugs-gradle-plugin:6.1.12")
+    implementation("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:6.2.0.5505")
+    implementation("net.ltgt.gradle:gradle-errorprone-plugin:4.2.0")
     implementation("info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0")
     implementation("org.gradle:test-retry-gradle-plugin:1.6.2")
     implementation(libs.forbiddenapis)

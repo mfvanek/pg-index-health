@@ -11,8 +11,11 @@
 package io.github.mfvanek.pg.model.constraint;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
+import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
@@ -29,18 +32,66 @@ import javax.annotation.concurrent.Immutable;
  * @see Constraint
  */
 @Immutable
-public final class ForeignKey extends Constraint implements ColumnsAware {
+public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsAware {
 
+    private final Constraint constraint;
     private final List<Column> columnsInConstraint;
 
-    private ForeignKey(@Nonnull final String tableName,
-                       @Nonnull final String constraintName,
+    private ForeignKey(@Nonnull final Constraint constraint,
                        @Nonnull final List<Column> columnsInConstraint) {
-        super(tableName, constraintName, ConstraintType.FOREIGN_KEY);
+        this.constraint = Objects.requireNonNull(constraint, "constraint cannot be null");
+        if (this.constraint.getConstraintType() != ConstraintType.FOREIGN_KEY) {
+            throw new IllegalArgumentException("constraint must be foreign key");
+        }
         final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columnsInConstraint, "columnsInConstraint cannot be null"));
         Validators.validateThatNotEmpty(defensiveCopy);
-        Validators.validateThatTableIsTheSame(tableName, defensiveCopy);
+        Validators.validateThatTableIsTheSame(constraint.getTableName(), defensiveCopy);
         this.columnsInConstraint = defensiveCopy;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public String getConstraintName() {
+        return constraint.getConstraintName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public ConstraintType getConstraintType() {
+        return constraint.getConstraintType();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public String getName() {
+        return constraint.getName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public PgObjectType getObjectType() {
+        return constraint.getObjectType();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
+    @Override
+    public String getTableName() {
+        return constraint.getTableName();
     }
 
     /**
@@ -52,8 +103,33 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
      */
     @Nonnull
     @Override
-    public List<Column> getColumns() {
-        return columnsInConstraint;
+    public List<ColumnNameAware> getColumns() {
+        return List.copyOf(columnsInConstraint);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (!(other instanceof ForeignKey)) {
+            return false;
+        }
+
+        final ForeignKey that = (ForeignKey) other;
+        return Objects.equals(constraint, that.constraint);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(constraint);
     }
 
     /**
@@ -63,9 +139,22 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
     @Override
     public String toString() {
         return ForeignKey.class.getSimpleName() + '{' +
-            innerToString() +
+            constraint.innerToString() +
             ", columnsInConstraint=" + columnsInConstraint +
             '}';
+    }
+
+    @Nonnull
+    private static Constraint toConstraint(@Nonnull final String tableName,
+                                           @Nonnull final String constraintName) {
+        return Constraint.ofType(tableName, constraintName, ConstraintType.FOREIGN_KEY);
+    }
+
+    @Nonnull
+    private static Constraint toConstraint(@Nonnull final PgContext pgContext,
+                                           @Nonnull final String tableName,
+                                           @Nonnull final String constraintName) {
+        return Constraint.ofType(pgContext, tableName, constraintName, ConstraintType.FOREIGN_KEY);
     }
 
     /**
@@ -80,7 +169,7 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
     public static ForeignKey of(@Nonnull final String tableName,
                                 @Nonnull final String constraintName,
                                 @Nonnull final List<Column> columnsInConstraint) {
-        return new ForeignKey(tableName, constraintName, columnsInConstraint);
+        return new ForeignKey(toConstraint(tableName, constraintName), columnsInConstraint);
     }
 
     /**
@@ -98,7 +187,21 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
                                 @Nonnull final String tableName,
                                 @Nonnull final String constraintName,
                                 @Nonnull final List<Column> columnsInConstraint) {
-        return new ForeignKey(PgContext.enrichWith(tableName, pgContext), constraintName, columnsInConstraint);
+        return new ForeignKey(toConstraint(pgContext, tableName, constraintName), columnsInConstraint);
+    }
+
+    /**
+     * Constructs a {@code ForeignKey} object with given {@code Constraint} and {@code Column}.
+     *
+     * @param constraint underlying constraint that is included in foreign key; must be non-null.
+     * @param column     column that is included in constraint; must be non-null.
+     * @return {@code ForeignKey}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static ForeignKey ofColumn(@Nonnull final Constraint constraint,
+                                      @Nonnull final Column column) {
+        return new ForeignKey(constraint, List.of(Objects.requireNonNull(column, "column cannot be null")));
     }
 
     /**
@@ -106,14 +209,14 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
      *
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
-     * @param column         column that is included in constraint.
+     * @param column         column that is included in constraint; must be non-null.
      * @return {@code ForeignKey}
      */
     @Nonnull
     public static ForeignKey ofColumn(@Nonnull final String tableName,
                                       @Nonnull final String constraintName,
                                       @Nonnull final Column column) {
-        return new ForeignKey(tableName, constraintName, List.of(Objects.requireNonNull(column, "column cannot be null")));
+        return ofColumn(toConstraint(tableName, constraintName), column);
     }
 
     /**
@@ -131,7 +234,7 @@ public final class ForeignKey extends Constraint implements ColumnsAware {
                                       @Nonnull final String tableName,
                                       @Nonnull final String constraintName,
                                       @Nonnull final Column column) {
-        return ofColumn(PgContext.enrichWith(tableName, pgContext), constraintName, column);
+        return ofColumn(toConstraint(pgContext, tableName, constraintName), column);
     }
 
     /**

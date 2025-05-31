@@ -46,9 +46,6 @@
         <Class name="io.github.mfvanek.pg.spring.DatabaseStructureHealthAutoConfigurationFilteringTest"/>
     </Match>
     <Match>
-        <Bug pattern="SLF4J_LOGGER_SHOULD_BE_NON_STATIC,SLF4J_SIGN_ONLY_FORMAT"/>
-    </Match>
-    <Match>
         <Bug pattern="PDP_POORLY_DEFINED_PARAMETER"/>
         <Class name="io.github.mfvanek.pg.spring.AutoConfigurationTestBase"/>
     </Match>
@@ -98,6 +95,10 @@
     </Match>
     <Match>
         <Bug pattern="ITC_INHERITANCE_TYPE_CHECKING"/>
-        <Class name="io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate"/>
+        <Or>
+            <Class name="io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate"/>
+            <Class name="io.github.mfvanek.pg.model.predicates.SkipByConstraintNamePredicate"/>
+            <Class name="io.github.mfvanek.pg.model.predicates.SkipByColumnNamePredicate"/>
+        </Or>
     </Match>
 </FindBugsFilter>

@@ -80,7 +80,7 @@ class SkipIndexesByNamePredicateTest {
     }
 
     @Test
-    void shouldWorkForSingleIndex() {
+    void shouldWorkForSingleItem() {
         assertThat(SkipIndexesByNamePredicate.ofName("i2"))
             .accepts(Table.of("t"))
             .accepts(Index.of("t1", "i1"))
@@ -108,7 +108,7 @@ class SkipIndexesByNamePredicateTest {
     }
 
     @Test
-    void shouldWorkForMultipleIndexes() {
+    void shouldWorkForMultipleItems() {
         assertThat(SkipIndexesByNamePredicate.ofDefault(Set.of("i1", "I2")))
             .accepts(Table.of("t"))
             .accepts(SequenceState.of("s11", "int", 80.0))

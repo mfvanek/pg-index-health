@@ -16,63 +16,65 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.predicates.SkipByColumnNamePredicate;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
+
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
-class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
+class PrimaryKeysThatMostLikelyNaturalKeysCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<Column> check = new ColumnsWithJsonTypeCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<IndexWithColumns> check = new PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(Column.class)
-            .hasDiagnostic(Diagnostic.COLUMNS_WITH_JSON_TYPE)
+            .hasType(IndexWithColumns.class)
+            .hasDiagnostic(Diagnostic.PRIMARY_KEYS_THAT_MOST_LIKELY_NATURAL_KEYS)
             .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withJsonType(), ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withNaturalKeys, ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
-                .containsExactly(Column.ofNullable(ctx.enrichWithSchema("clients"), "info"));
+                .hasSize(3)
+                .containsExactly(
+                    IndexWithColumns.ofColumns(ctx, "t2_composite", "t2_composite_pkey", 0L,
+                        List.of(Column.ofNotNull(ctx, "t2_composite", "passport_series"), Column.ofNotNull(ctx, "t2_composite", "passport_number"))),
+                    IndexWithColumns.ofColumns(ctx, "t3_composite", "t3_composite_pkey", 0L,
+                        List.of(Column.ofNotNull(ctx, "t3_composite", "app_id"), Column.ofNotNull(ctx, "t3_composite", "app_number"))),
+                    IndexWithColumns.ofNotNull(ctx, "\"times-of-creation\"", "\"times-of-creation_pkey\"", "\"time-of-creation\"")
+                );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
-                .isEmpty();
-
-            assertThat(check)
-                .executing(ctx, SkipByColumnNamePredicate.ofName("info"))
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("t2_composite", "t3_composite", "\"times-of-creation\"")))
                 .isEmpty();
         });
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldIgnoreDroppedColumns(final String schemaName) {
-        // withData - skipped here below
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withJsonType().withDroppedInfoColumn(), ctx ->
+    void onDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .isEmpty());
+                .isEmpty()
+        );
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withJsonAndSerialColumnsInPartitionedTable, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
-                .containsExactly(
-                    Column.ofNullable(ctx, "parent", "raw_data")));
+                .hasSize(1));
     }
 }

@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
@@ -46,8 +47,8 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      */
     @Nonnull
     @Override
-    public List<Column> getColumns() {
-        return columns;
+    public List<ColumnNameAware> getColumns() {
+        return List.copyOf(columns);
     }
 
     /**
@@ -164,6 +165,24 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
                                               @Nonnull final String indexName,
                                               @Nonnull final String columnName) {
         return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNullable(pgContext, tableName, columnName));
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one not-null column and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static IndexWithColumns ofNotNull(@Nonnull final PgContext pgContext,
+                                             @Nonnull final String tableName,
+                                             @Nonnull final String indexName,
+                                             @Nonnull final String columnName) {
+        return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNotNull(pgContext, tableName, columnName));
     }
 
     /**

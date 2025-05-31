@@ -129,6 +129,18 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
     }
 
     /**
+     * Constructs a {@code TableWithMissingIndex} object with zero size.
+     *
+     * @param tableName table name; should be non-blank.
+     * @return {@code TableWithMissingIndex}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static TableWithMissingIndex of(@Nonnull final String tableName) {
+        return of(tableName, 0L, 0L, 0L);
+    }
+
+    /**
      * Constructs a {@code TableWithMissingIndex} object with given context.
      *
      * @param pgContext        the schema context to enrich table name; must be non-null.
@@ -147,6 +159,20 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
                                            final long indexScans) {
         final Table table = Table.of(pgContext, tableName, tableSizeInBytes);
         return of(table, seqScans, indexScans);
+    }
+
+    /**
+     * Constructs a {@code TableWithMissingIndex} object with given context and zero size.
+     *
+     * @param pgContext the schema context to enrich table name; must be non-null.
+     * @param tableName table name; should be non-blank.
+     * @return {@code TableWithMissingIndex}
+     * @since 0.15.0
+     */
+    @Nonnull
+    public static TableWithMissingIndex of(@Nonnull final PgContext pgContext,
+                                           @Nonnull final String tableName) {
+        return of(pgContext, tableName, 0L, 0L, 0L);
     }
 
     /**

@@ -11,19 +11,18 @@
 package io.github.mfvanek.pg.core.utils;
 
 import io.github.mfvanek.pg.model.validation.Validators;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 public final class SqlQueryReader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SqlQueryReader.class);
+    private static final Logger LOGGER = Logger.getLogger(SqlQueryReader.class.getName());
 
     private SqlQueryReader() {
         throw new UnsupportedOperationException();
@@ -38,7 +37,7 @@ public final class SqlQueryReader {
                 throw new FileNotFoundException(fileName);
             }
             final String sqlQueryFromFile = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            LOGGER.trace("Query from file {}", sqlQueryFromFile);
+            LOGGER.finest(() -> "Query from file " + sqlQueryFromFile);
             return NamedParametersParser.parse(sqlQueryFromFile);
         } catch (IOException ex) {
             throw new RuntimeException(ex); //NOSONAR

@@ -26,7 +26,13 @@ public class CreatePartitionedTableWithVarcharStatement extends AbstractDbStatem
                 "primary key (creation_date, ref_type, entity_id)" +
                 ") partition by range (creation_date);",
             "create table if not exists {schemaName}.tp_default " +
-                "partition of {schemaName}.tp default;"
+                "partition of {schemaName}.tp default;",
+            "create table if not exists {schemaName}.tp_good (" +
+                "creation_date timestamp not null," +
+                "entity_id uuid not null," +
+                "primary key (creation_date, entity_id)" +
+                ") partition by range (creation_date);",
+            "create table if not exists {schemaName}.\"tp_good-default\" partition of {schemaName}.tp_good default;"
         );
     }
 }

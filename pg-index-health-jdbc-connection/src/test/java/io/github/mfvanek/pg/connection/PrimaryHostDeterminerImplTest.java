@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.connection;
 
 import io.github.mfvanek.pg.connection.exception.PgSqlException;
+import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.connection.support.DatabaseAwareTestBase;
@@ -21,6 +22,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
+import java.util.logging.Level;
 import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,8 +36,10 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
 
     @Test
     void isPrimary() {
-        final PgConnection pgConnection = PgConnectionImpl.of(getDataSource(), localhost);
-        assertThat(primaryHostDeterminer.isPrimary(pgConnection)).isTrue();
+        try (LogsCaptor ignored = new LogsCaptor(PrimaryHostDeterminerImpl.class, Level.FINEST)) {
+            final PgConnection pgConnection = PgConnectionImpl.of(getDataSource(), localhost);
+            assertThat(primaryHostDeterminer.isPrimary(pgConnection)).isTrue();
+        }
     }
 
     @Test

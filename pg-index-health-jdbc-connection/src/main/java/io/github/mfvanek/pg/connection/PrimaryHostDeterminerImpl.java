@@ -11,20 +11,20 @@
 package io.github.mfvanek.pg.connection;
 
 import io.github.mfvanek.pg.connection.exception.PgSqlException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PrimaryHostDeterminerImpl.class);
+    private static final Logger LOGGER = Logger.getLogger(PrimaryHostDeterminerImpl.class.getName());
     private static final String SQL_QUERY = "select not pg_is_in_recovery()";
 
     /**
@@ -33,7 +33,8 @@ public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
     @Override
     public boolean isPrimary(@Nonnull final PgConnection pgConnection) {
         Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
-        LOGGER.debug("Executing on host {} query: {}", pgConnection.getHost(), SQL_QUERY);
+        LOGGER.fine(() -> String.format(Locale.ROOT, "Executing on host %s query: %s", pgConnection.getHost(), SQL_QUERY));
+
         if (pgConnection.getHost().cannotBePrimary()) {
             return false;
         }
@@ -44,7 +45,7 @@ public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
             try (ResultSet resultSet = statement.executeQuery(SQL_QUERY)) {
                 resultSet.next();
                 final boolean executionResult = resultSet.getBoolean(1);
-                LOGGER.debug("Query completed with result {}", executionResult);
+                LOGGER.fine(() -> "Query completed with result " + executionResult);
                 return executionResult;
             }
         } catch (SQLException e) {

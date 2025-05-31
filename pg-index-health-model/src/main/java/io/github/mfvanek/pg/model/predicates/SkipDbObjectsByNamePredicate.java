@@ -21,7 +21,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 
 import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.prepareFullyQualifiedNamesToSkip;
 
@@ -39,7 +38,6 @@ import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.
  * @since 0.13.3
  */
 @Immutable
-@ThreadSafe
 public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
 
     /**

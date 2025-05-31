@@ -10,31 +10,32 @@
 
 package io.github.mfvanek.pg.connection.fixtures.support;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
-import org.slf4j.LoggerFactory;
-
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 public final class LogsCaptor implements AutoCloseable {
 
     private final Logger logger;
-    private final ListAppender<ILoggingEvent> logAppender;
+    private final CapturingHandler handler;
 
     public LogsCaptor(@Nonnull final Class<?> type) {
         this(type, Level.INFO);
     }
 
     public LogsCaptor(@Nonnull final Class<?> type, @Nonnull final Level level) {
-        final LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-        this.logger = context.getLogger(type);
-        this.logAppender = new ListAppender<>();
-        logAppender.start();
-        logger.addAppender(logAppender);
+        this.logger = Logger.getLogger(type.getName());
+        this.handler = new CapturingHandler();
+        this.handler.setLevel(level);
+
+        logger.setUseParentHandlers(false);
+
+        logger.addHandler(handler);
         logger.setLevel(level);
     }
 
@@ -43,17 +44,46 @@ public final class LogsCaptor implements AutoCloseable {
      */
     @Override
     public void close() {
-        logger.detachAppender(logAppender);
+        logger.removeHandler(handler);
         clear();
     }
 
     public void clear() {
-        logAppender.clearAllFilters();
-        logAppender.list.clear();
+        handler.clear();
     }
 
     @Nonnull
-    public List<ILoggingEvent> getLogs() {
-        return List.copyOf(logAppender.list);
+    public List<LogRecord> getLogs() {
+        return handler.getLogRecords();
+    }
+
+    private static class CapturingHandler extends Handler {
+
+        private final List<LogRecord> records = Collections.synchronizedList(new ArrayList<>());
+
+        @Override
+        public void publish(final LogRecord record) {
+            if (isLoggable(record)) {
+                records.add(record);
+            }
+        }
+
+        @Override
+        public void flush() {
+            // No-op
+        }
+
+        @Override
+        public void close() {
+            records.clear();
+        }
+
+        public List<LogRecord> getLogRecords() {
+            return List.copyOf(records);
+        }
+
+        public void clear() {
+            records.clear();
+        }
     }
 }

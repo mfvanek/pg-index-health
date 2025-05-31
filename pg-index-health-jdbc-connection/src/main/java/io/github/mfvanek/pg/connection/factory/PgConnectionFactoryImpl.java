@@ -13,23 +13,23 @@ package io.github.mfvanek.pg.connection.factory;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public class PgConnectionFactoryImpl implements PgConnectionFactory {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PgConnectionFactoryImpl.class);
+    private static final Logger LOGGER = Logger.getLogger(PgConnectionFactoryImpl.class.getName());
 
     @Nonnull
     @Override
     public PgConnection forUrl(@Nonnull final String pgUrl,
                                @Nonnull final String userName,
                                @Nonnull final String password) {
-        LOGGER.debug("Creating {} with pgUrl = {}, userName = {}, password = {}",
-            PgConnection.class.getSimpleName(), pgUrl, userName, "*****");
+        LOGGER.fine(() -> String.format(Locale.ROOT, "Creating %s with pgUrl = %s, userName = %s, password = %s",
+            PgConnection.class.getSimpleName(), pgUrl, userName, "*****"));
         final DataSource dataSource = dataSourceFor(pgUrl, userName, password);
         return PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl(pgUrl));
     }

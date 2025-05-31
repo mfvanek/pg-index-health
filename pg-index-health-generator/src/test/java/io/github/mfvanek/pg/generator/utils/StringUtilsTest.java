@@ -10,10 +10,11 @@
 
 package io.github.mfvanek.pg.generator.utils;
 
-import ch.qos.logback.classic.Level;
 import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import org.junit.jupiter.api.Test;
+
+import java.util.logging.Level;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -42,7 +43,7 @@ class StringUtilsTest {
 
     @Test
     void truncationShouldBePerformed() {
-        try (LogsCaptor logsCaptor = new LogsCaptor(StringUtils.class, Level.TRACE)) {
+        try (LogsCaptor logsCaptor = new LogsCaptor(StringUtils.class, Level.FINEST)) {
             assertThat(StringUtils.truncate(TARGET, 0))
                 .isEmpty();
             assertThat(StringUtils.truncate(TARGET, 1))
@@ -59,7 +60,7 @@ class StringUtilsTest {
 
     @Test
     void truncationShouldNotBePerformed() {
-        try (LogsCaptor logsCaptor = new LogsCaptor(StringUtils.class, Level.TRACE)) {
+        try (LogsCaptor logsCaptor = new LogsCaptor(StringUtils.class, Level.FINEST)) {
             assertThat(StringUtils.truncate(TARGET, 6))
                 .isEqualTo("abcqwe")
                 .isSameAs(TARGET);

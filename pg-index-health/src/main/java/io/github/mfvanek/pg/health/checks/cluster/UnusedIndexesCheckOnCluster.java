@@ -19,8 +19,6 @@ import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHostImpl;
 import io.github.mfvanek.pg.core.utils.ClockHolder;
 import io.github.mfvanek.pg.health.utils.CollectionUtils;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
@@ -32,6 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 /**
@@ -42,7 +41,7 @@ import javax.annotation.Nonnull;
  */
 public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIndex> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UnusedIndexesCheckOnCluster.class);
+    private static final Logger LOGGER = Logger.getLogger(UnusedIndexesCheckOnCluster.class.getName());
 
     private final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory;
     private final Map<PgHost, StatisticsMaintenanceOnHost> statistics;
@@ -61,13 +60,13 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
 
     private void logLastStatsResetDate(@Nonnull final PgConnection connectionToHost) {
         final String resetDateLogMessage = getLastStatsResetDateLogMessage(computeStatisticsForHostIfNeed(connectionToHost));
-        LOGGER.info("{}", resetDateLogMessage);
+        LOGGER.info(resetDateLogMessage);
     }
 
     @Nonnull
     static List<UnusedIndex> getResultAsIntersection(
         @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts) {
-        LOGGER.debug("potentiallyUnusedIndexesFromAllHosts = {}", potentiallyUnusedIndexesFromAllHosts);
+        LOGGER.fine(() -> "potentiallyUnusedIndexesFromAllHosts = " + potentiallyUnusedIndexesFromAllHosts);
         Collection<UnusedIndex> unusedIndexes = null;
         for (final List<UnusedIndex> unusedIndexesFromHost : potentiallyUnusedIndexesFromAllHosts) {
             if (unusedIndexes == null) {
@@ -77,7 +76,7 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
             unusedIndexes = CollectionUtils.intersection(unusedIndexes, unusedIndexesFromHost);
         }
         final List<UnusedIndex> result = unusedIndexes == null ? List.of() : List.copyOf(unusedIndexes);
-        LOGGER.debug("Intersection result {}", result);
+        LOGGER.fine(() -> "Intersection result " + result);
         return result;
     }
 

@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.generator;
 
-import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 
 import java.util.Objects;
@@ -52,7 +52,7 @@ final class PgIndexOnForeignKeyGenerator extends AbstractOptionsAwareSqlGenerato
             .append(keyword("on "))
             .append(foreignKey.getTableName())
             .append(" (")
-            .append(foreignKey.getColumns().stream().map(Column::getColumnName).collect(Collectors.joining(", ")))
+            .append(foreignKey.getColumns().stream().map(ColumnNameAware::getColumnName).collect(Collectors.joining(", ")))
             .append(')');
         if (hasToExcludeNulls(foreignKey)) {
             excludeNulls(queryBuilder, foreignKey);
@@ -70,14 +70,14 @@ final class PgIndexOnForeignKeyGenerator extends AbstractOptionsAwareSqlGenerato
 
     private boolean hasToExcludeNulls(@Nonnull final ForeignKey foreignKey) {
         return options.isExcludeNulls() &&
-            foreignKey.getColumns().stream().anyMatch(Column::isNullable);
+            foreignKey.getColumns().stream().anyMatch(ColumnNameAware::isNullable);
     }
 
     private void excludeNulls(@Nonnull final StringBuilder queryBuilder, @Nonnull final ForeignKey foreignKey) {
         queryBuilder.append(keyword(" where "));
         final String columnsList = foreignKey.getColumns().stream()
-            .filter(Column::isNullable)
-            .map(Column::getColumnName)
+            .filter(ColumnNameAware::isNullable)
+            .map(ColumnNameAware::getColumnName)
             .map(n -> n + keyword(" is not null"))
             .collect(Collectors.joining(" and "));
         queryBuilder.append(columnsList);

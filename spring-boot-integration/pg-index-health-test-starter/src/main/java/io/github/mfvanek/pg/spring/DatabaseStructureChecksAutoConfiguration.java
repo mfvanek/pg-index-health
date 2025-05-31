@@ -32,6 +32,7 @@ import io.github.mfvanek.pg.core.checks.host.InvalidIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.NotValidConstraintsCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ObjectsNotFollowingNamingConventionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PossibleObjectNameOverflowCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
@@ -276,6 +277,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public IndexesWithUnnecessaryWhereClauseCheckOnHost indexesWithUnnecessaryWhereClauseCheckOnHost(final PgConnection pgConnection) {
         return new IndexesWithUnnecessaryWhereClauseCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost primaryKeysThatMostLikelyNaturalKeysCheckOnHost(final PgConnection pgConnection) {
+        return new PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost(pgConnection);
     }
 
     @Bean

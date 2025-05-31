@@ -17,7 +17,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * A predicate that tests if a given {@link DbObject} is a Flyway-related table.
@@ -33,7 +32,6 @@ import javax.annotation.concurrent.ThreadSafe;
  * @since 0.13.3
  */
 @Immutable
-@ThreadSafe
 public final class SkipFlywayTablesPredicate extends AbstractSkipTablesPredicate {
 
     /**

@@ -28,9 +28,7 @@ plugins {
 
 dependencies {
     errorprone("com.google.errorprone:error_prone_core:2.38.0")
-    errorprone("jp.skypencil.errorprone.slf4j:errorprone-slf4j:0.1.28")
 
-    spotbugsPlugins("jp.skypencil.findbugs.slf4j:bug-pattern:1.5.0")
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0")
     spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.9")
 }
@@ -38,7 +36,7 @@ dependencies {
 tasks.withType<JavaCompile>().configureEach {
     options.errorprone {
         disableWarningsInGeneratedCode.set(true)
-        disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType", "TruthSelfEquals", "Slf4jLoggerShouldBeNonStatic", "Slf4jSignOnlyFormat")
+        disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType", "TruthSelfEquals")
     }
 }
 

@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * An adapter for the {@link LoggingKey} interface that provides simple logging keys
@@ -25,7 +24,6 @@ import javax.annotation.concurrent.ThreadSafe;
  * sub-key name, and description from the given {@link Diagnostic} object.</p>
  */
 @Immutable
-@ThreadSafe
 public final class SimpleLoggingKeyAdapter implements LoggingKey {
 
     /**
