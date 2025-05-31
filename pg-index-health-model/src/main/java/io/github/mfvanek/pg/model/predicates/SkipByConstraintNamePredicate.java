@@ -18,8 +18,6 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * A predicate that filters out database objects based on a specified set of constraint names.
@@ -30,16 +28,15 @@ import javax.annotation.concurrent.Immutable;
  * @see ConstraintsAware
  * @since 0.15.0
  */
-@Immutable
 public final class SkipByConstraintNamePredicate implements Predicate<DbObject> {
 
     private final Set<String> constraintNamesToSkip;
 
-    private SkipByConstraintNamePredicate(@Nonnull final Collection<String> constraintNamesToSkip) {
+    private SkipByConstraintNamePredicate(final Collection<String> constraintNamesToSkip) {
         this.constraintNamesToSkip = AbstractSkipTablesPredicate.prepareNamesToSkip(constraintNamesToSkip);
     }
 
-    private SkipByConstraintNamePredicate(@Nonnull final String constraintNameToSkip) {
+    private SkipByConstraintNamePredicate(final String constraintNameToSkip) {
         this(AbstractSkipTablesPredicate.prepareSingleNameToSkip(constraintNameToSkip, "constraintNameToSkip"));
     }
 
@@ -50,7 +47,7 @@ public final class SkipByConstraintNamePredicate implements Predicate<DbObject> 
      * @return {@code false} if the object's constraint name matches one in the skip list; {@code true} otherwise
      */
     @Override
-    public boolean test(@Nonnull final DbObject dbObject) {
+    public boolean test(final DbObject dbObject) {
         if (constraintNamesToSkip.isEmpty()) {
             return true;
         }
@@ -75,7 +72,7 @@ public final class SkipByConstraintNamePredicate implements Predicate<DbObject> 
      * @param constraintNameToSkip the constraint name to skip; must be non-blank
      * @return a {@code SkipByConstraintNamePredicate} instance for the specified constraint name
      */
-    public static Predicate<DbObject> ofName(@Nonnull final String constraintNameToSkip) {
+    public static Predicate<DbObject> ofName(final String constraintNameToSkip) {
         return new SkipByConstraintNamePredicate(constraintNameToSkip);
     }
 
@@ -85,7 +82,7 @@ public final class SkipByConstraintNamePredicate implements Predicate<DbObject> 
      * @param constraintNamesToSkip the collection of constraint names to skip; must be non-null
      * @return a {@code SkipByConstraintNamePredicate} instance for the specified constraint names
      */
-    public static Predicate<DbObject> of(@Nonnull final Collection<String> constraintNamesToSkip) {
+    public static Predicate<DbObject> of(final Collection<String> constraintNamesToSkip) {
         return new SkipByConstraintNamePredicate(constraintNamesToSkip);
     }
 }

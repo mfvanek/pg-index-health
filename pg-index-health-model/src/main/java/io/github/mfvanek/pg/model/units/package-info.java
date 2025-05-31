@@ -8,17 +8,10 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.settings;
-
 /**
- * Represents an entity that is aware of its parameter name.
+ * Units of information for pg-index-health models.
  */
-public interface ParamNameAware {
+@NullMarked
+package io.github.mfvanek.pg.model.units;
 
-    /**
-     * Retrieves the name of the parameter.
-     *
-     * @return the name of the parameter, never {@code null}
-     */
-    String getName();
-}
+import org.jspecify.annotations.NullMarked;

@@ -8,17 +8,10 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.settings;
-
 /**
- * Represents an entity that is aware of its parameter name.
+ * A set of classes for filtering {@link io.github.mfvanek.pg.model.dbobject.DbObject} instances.
  */
-public interface ParamNameAware {
+@NullMarked
+package io.github.mfvanek.pg.model.predicates;
 
-    /**
-     * Retrieves the name of the parameter.
-     *
-     * @return the name of the parameter, never {@code null}
-     */
-    String getName();
-}
+import org.jspecify.annotations.NullMarked;

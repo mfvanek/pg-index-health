@@ -8,17 +8,10 @@
  * Licensed under the Apache License 2.0
  */
 
+/**
+ * A settings relates classes and interfaces.
+ */
+@NullMarked
 package io.github.mfvanek.pg.model.settings;
 
-/**
- * Represents an entity that is aware of its parameter name.
- */
-public interface ParamNameAware {
-
-    /**
-     * Retrieves the name of the parameter.
-     *
-     * @return the name of the parameter, never {@code null}
-     */
-    String getName();
-}
+import org.jspecify.annotations.NullMarked;

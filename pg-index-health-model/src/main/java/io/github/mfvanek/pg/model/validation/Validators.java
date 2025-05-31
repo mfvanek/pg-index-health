@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.List;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * Utility class providing various validation methods.
@@ -35,7 +34,7 @@ public final class Validators {
      * @return the provided value if it is positive
      * @throws IllegalArgumentException if the value is not positive
      */
-    public static long valueIsPositive(final long argumentValue, @Nonnull final String argumentName) {
+    public static long valueIsPositive(final long argumentValue, final String argumentName) {
         if (argumentValue <= 0) {
             throw new IllegalArgumentException(argumentName + " should be greater than zero");
         }
@@ -49,8 +48,7 @@ public final class Validators {
      * @return the provided table name if it is not blank
      * @throws IllegalArgumentException if the table name is blank
      */
-    @Nonnull
-    public static String tableNameNotBlank(@Nonnull final String tableName) {
+    public static String tableNameNotBlank(final String tableName) {
         return notBlank(tableName, "tableName");
     }
 
@@ -61,8 +59,7 @@ public final class Validators {
      * @return the provided index name if it is not blank
      * @throws IllegalArgumentException if the index name is blank
      */
-    @Nonnull
-    public static String indexNameNotBlank(@Nonnull final String indexName) {
+    public static String indexNameNotBlank(final String indexName) {
         return notBlank(indexName, "indexName");
     }
 
@@ -74,8 +71,7 @@ public final class Validators {
      * @return the provided string argument if it is not blank
      * @throws IllegalArgumentException if the argument is blank
      */
-    @Nonnull
-    public static String notBlank(@Nonnull final String argumentValue, @Nonnull final String argumentName) {
+    public static String notBlank(final String argumentValue, final String argumentName) {
         if (Objects.requireNonNull(argumentValue, argumentName + " cannot be null").isBlank()) {
             throw new IllegalArgumentException(argumentName + " cannot be blank");
         }
@@ -90,7 +86,7 @@ public final class Validators {
      * @return the provided size if it is not negative
      * @throws IllegalArgumentException if the size is negative
      */
-    public static long sizeNotNegative(final long sizeInBytes, @Nonnull final String argumentName) {
+    public static long sizeNotNegative(final long sizeInBytes, final String argumentName) {
         return argumentNotNegative(sizeInBytes, argumentName);
     }
 
@@ -102,7 +98,7 @@ public final class Validators {
      * @return the provided count if it is not negative
      * @throws IllegalArgumentException if the count is negative
      */
-    public static long countNotNegative(final long count, @Nonnull final String argumentName) {
+    public static long countNotNegative(final long count, final String argumentName) {
         return argumentNotNegative(count, argumentName);
     }
 
@@ -114,14 +110,14 @@ public final class Validators {
      * @return the provided value if it is not negative
      * @throws IllegalArgumentException if the value is negative
      */
-    public static int argumentNotNegative(final int argumentValue, @Nonnull final String argumentName) {
+    public static int argumentNotNegative(final int argumentValue, final String argumentName) {
         if (argumentValue < 0) {
             throw new IllegalArgumentException(argumentName + " cannot be less than zero");
         }
         return argumentValue;
     }
 
-    private static long argumentNotNegative(final long argumentValue, @Nonnull final String argumentName) {
+    private static long argumentNotNegative(final long argumentValue, final String argumentName) {
         if (argumentValue < 0L) {
             throw new IllegalArgumentException(argumentName + " cannot be less than zero");
         }
@@ -135,7 +131,7 @@ public final class Validators {
      * @param rows              the rows to check
      * @throws IllegalArgumentException if any row has a different table name
      */
-    public static void validateThatTableIsTheSame(@Nonnull final String expectedTableName, @Nonnull final List<? extends TableNameAware> rows) {
+    public static void validateThatTableIsTheSame(final String expectedTableName, final List<? extends TableNameAware> rows) {
         final boolean tableIsTheSame = rows.stream().allMatch(i -> i.getTableName().equals(expectedTableName));
         if (!tableIsTheSame) {
             throw new IllegalArgumentException("Table name is not the same within given rows");
@@ -146,15 +142,14 @@ public final class Validators {
      * Validates that all rows have the same table name.
      *
      * @param rows the rows to check
-     * @param <T> the type of the list elements
+     * @param <T>  the type of the list elements
      */
-    public static <T extends TableNameAware & DbObject> void validateThatTableIsTheSame(@Nonnull final List<T> rows) {
+    public static <T extends TableNameAware & DbObject> void validateThatTableIsTheSame(final List<T> rows) {
         final String tableName = validateThatContainsAtLeastTwoRows(rows).get(0).getTableName();
         validateThatTableIsTheSame(tableName, rows);
     }
 
-    @Nonnull
-    private static <T extends TableNameAware & DbObject> List<T> validateThatContainsAtLeastTwoRows(@Nonnull final List<T> rows) {
+    private static <T extends TableNameAware & DbObject> List<T> validateThatContainsAtLeastTwoRows(final List<T> rows) {
         final int size = Objects.requireNonNull(rows, "rows cannot be null").size();
         if (0 == size) {
             throw new IllegalArgumentException("rows cannot be empty");
@@ -172,7 +167,7 @@ public final class Validators {
      * @param <T>                 the type of the list elements
      * @throws IllegalArgumentException if the list is empty
      */
-    public static <T> void validateThatNotEmpty(@Nonnull final List<T> columnsInConstraint) {
+    public static <T> void validateThatNotEmpty(final List<T> columnsInConstraint) {
         if (columnsInConstraint.isEmpty()) {
             throw new IllegalArgumentException("columnsInConstraint cannot be empty");
         }
@@ -186,7 +181,7 @@ public final class Validators {
      * @return the provided percent value if it is valid
      * @throws IllegalArgumentException if the percent value is outside the valid range
      */
-    public static double validPercent(final double percentValue, @Nonnull final String argumentName) {
+    public static double validPercent(final double percentValue, final String argumentName) {
         if (percentValue < 0.0 || percentValue > 100.0) {
             throw new IllegalArgumentException(argumentName + " should be in the range from 0.0 to 100.0 inclusive");
         }
