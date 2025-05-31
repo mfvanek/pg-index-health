@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.model.index;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Represents an entity that is aware of and can provide a list of indexes.
@@ -28,6 +27,5 @@ public interface IndexesAware {
      *
      * @return a non-null list of {@link Index} or its subclasses. The list may be empty if no indexes are available.
      */
-    @Nonnull
     List<Index> getIndexes();
 }

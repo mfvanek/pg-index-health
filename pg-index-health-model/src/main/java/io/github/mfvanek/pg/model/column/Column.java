@@ -16,17 +16,14 @@ import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * A representation of a column in database table/index/foreign key.
+ * An immutable representation of a column in database table/index/foreign key.
  * Column always belongs to a table/index/foreign key.
  *
  * @author Ivan Vakhrushev
  * @since 0.5.0
  */
-@Immutable
 public final class Column implements DbObject, ColumnNameAware, Comparable<Column> {
 
     private final String tableName;
@@ -40,8 +37,8 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param columnName column name; should be non-blank.
      * @param notNull    whether column is not null or nullable
      */
-    private Column(@Nonnull final String tableName,
-                   @Nonnull final String columnName,
+    private Column(final String tableName,
+                   final String columnName,
                    final boolean notNull) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.columnName = Validators.notBlank(columnName, "columnName");
@@ -51,7 +48,6 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return getColumnName();
@@ -60,7 +56,6 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public PgObjectType getObjectType() {
         return PgObjectType.TABLE;
@@ -69,7 +64,6 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getTableName() {
         return tableName;
@@ -78,7 +72,6 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getColumnName() {
         return columnName;
@@ -95,7 +88,6 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return Column.class.getSimpleName() + "{tableName='" + tableName + '\'' +
@@ -134,7 +126,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(@Nonnull final Column other) {
+    public int compareTo(final Column other) {
         Objects.requireNonNull(other, "other cannot be null");
         if (!tableName.equals(other.tableName)) {
             return tableName.compareTo(other.tableName);
@@ -152,9 +144,8 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
      */
-    @Nonnull
-    public static Column ofNotNull(@Nonnull final String tableName,
-                                   @Nonnull final String columnName) {
+    public static Column ofNotNull(final String tableName,
+                                   final String columnName) {
         return new Column(tableName, columnName, true);
     }
 
@@ -167,10 +158,9 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @return {@code Column}
      * @since 0.14.3
      */
-    @Nonnull
-    public static Column ofNotNull(@Nonnull final PgContext pgContext,
-                                   @Nonnull final String tableName,
-                                   @Nonnull final String columnName) {
+    public static Column ofNotNull(final PgContext pgContext,
+                                   final String tableName,
+                                   final String columnName) {
         return ofNotNull(PgContext.enrichWith(tableName, pgContext), columnName);
     }
 
@@ -181,9 +171,8 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
      */
-    @Nonnull
-    public static Column ofNullable(@Nonnull final String tableName,
-                                    @Nonnull final String columnName) {
+    public static Column ofNullable(final String tableName,
+                                    final String columnName) {
         return new Column(tableName, columnName, false);
     }
 
@@ -196,10 +185,9 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @return {@code Column}
      * @since 0.14.3
      */
-    @Nonnull
-    public static Column ofNullable(@Nonnull final PgContext pgContext,
-                                    @Nonnull final String tableName,
-                                    @Nonnull final String columnName) {
+    public static Column ofNullable(final PgContext pgContext,
+                                    final String tableName,
+                                    final String columnName) {
         return ofNullable(PgContext.enrichWith(tableName, pgContext), columnName);
     }
 }

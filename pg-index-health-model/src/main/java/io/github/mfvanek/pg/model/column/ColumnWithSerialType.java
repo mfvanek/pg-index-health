@@ -17,27 +17,24 @@ import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * A representation of column with serial type in database table.
+ * An immutable representation of column with serial type in database table.
  *
  * @author Ivan Vakhrushev
  * @see SerialType
  * @see Column
  * @since 0.6.2
  */
-@Immutable
 public final class ColumnWithSerialType implements DbObject, ColumnNameAware, SequenceNameAware, Comparable<ColumnWithSerialType> {
 
     private final Column column;
     private final SerialType serialType;
     private final String sequenceName;
 
-    private ColumnWithSerialType(@Nonnull final Column column,
-                                 @Nonnull final SerialType serialType,
-                                 @Nonnull final String sequenceName) {
+    private ColumnWithSerialType(final Column column,
+                                 final SerialType serialType,
+                                 final String sequenceName) {
         this.column = Objects.requireNonNull(column, "column cannot be null");
         this.serialType = Objects.requireNonNull(serialType, "serialType cannot be null");
         this.sequenceName = Validators.notBlank(sequenceName, "sequenceName");
@@ -46,7 +43,6 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return column.getName();
@@ -55,7 +51,6 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public PgObjectType getObjectType() {
         return column.getObjectType();
@@ -64,7 +59,6 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getTableName() {
         return column.getTableName();
@@ -73,7 +67,6 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getColumnName() {
         return column.getColumnName();
@@ -92,7 +85,6 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      *
      * @return type of serial column
      */
-    @Nonnull
     public SerialType getSerialType() {
         return serialType;
     }
@@ -102,7 +94,6 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      *
      * @return name of the associated sequence
      */
-    @Nonnull
     @Override
     public String getSequenceName() {
         return sequenceName;
@@ -111,7 +102,6 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return ColumnWithSerialType.class.getSimpleName() + "{column=" + column +
@@ -151,7 +141,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(@Nonnull final ColumnWithSerialType other) {
+    public int compareTo(final ColumnWithSerialType other) {
         Objects.requireNonNull(other, "other cannot be null");
         if (!column.equals(other.column)) {
             return column.compareTo(other.column);
@@ -170,10 +160,9 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
      */
-    @Nonnull
-    public static ColumnWithSerialType of(@Nonnull final Column column,
-                                          @Nonnull final SerialType serialType,
-                                          @Nonnull final String sequenceName) {
+    public static ColumnWithSerialType of(final Column column,
+                                          final SerialType serialType,
+                                          final String sequenceName) {
         return new ColumnWithSerialType(column, serialType, sequenceName);
     }
 
@@ -187,11 +176,10 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @return {@code ColumnWithSerialType}
      * @since 0.14.6
      */
-    @Nonnull
-    public static ColumnWithSerialType of(@Nonnull final PgContext pgContext,
-                                          @Nonnull final Column column,
-                                          @Nonnull final SerialType serialType,
-                                          @Nonnull final String sequenceName) {
+    public static ColumnWithSerialType of(final PgContext pgContext,
+                                          final Column column,
+                                          final SerialType serialType,
+                                          final String sequenceName) {
         return of(column, serialType, PgContext.enrichWith(sequenceName, pgContext));
     }
 
@@ -202,9 +190,8 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
      */
-    @Nonnull
-    public static ColumnWithSerialType ofBigSerial(@Nonnull final Column column,
-                                                   @Nonnull final String sequenceName) {
+    public static ColumnWithSerialType ofBigSerial(final Column column,
+                                                   final String sequenceName) {
         return of(column, SerialType.BIG_SERIAL, sequenceName);
     }
 
@@ -217,10 +204,9 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @return {@code ColumnWithSerialType}
      * @since 0.15.0
      */
-    @Nonnull
-    public static ColumnWithSerialType ofBigSerial(@Nonnull final PgContext pgContext,
-                                                   @Nonnull final Column column,
-                                                   @Nonnull final String sequenceName) {
+    public static ColumnWithSerialType ofBigSerial(final PgContext pgContext,
+                                                   final Column column,
+                                                   final String sequenceName) {
         return ofBigSerial(column, PgContext.enrichWith(sequenceName, pgContext));
     }
 
@@ -231,9 +217,8 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
      */
-    @Nonnull
-    public static ColumnWithSerialType ofSerial(@Nonnull final Column column,
-                                                @Nonnull final String sequenceName) {
+    public static ColumnWithSerialType ofSerial(final Column column,
+                                                final String sequenceName) {
         return of(column, SerialType.SERIAL, sequenceName);
     }
 
@@ -246,10 +231,9 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @return {@code ColumnWithSerialType}
      * @since 0.15.0
      */
-    @Nonnull
-    public static ColumnWithSerialType ofSerial(@Nonnull final PgContext pgContext,
-                                                @Nonnull final Column column,
-                                                @Nonnull final String sequenceName) {
+    public static ColumnWithSerialType ofSerial(final PgContext pgContext,
+                                                final Column column,
+                                                final String sequenceName) {
         return ofSerial(column, PgContext.enrichWith(sequenceName, pgContext));
     }
 
@@ -260,9 +244,8 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
      */
-    @Nonnull
-    public static ColumnWithSerialType ofSmallSerial(@Nonnull final Column column,
-                                                     @Nonnull final String sequenceName) {
+    public static ColumnWithSerialType ofSmallSerial(final Column column,
+                                                     final String sequenceName) {
         return of(column, SerialType.SMALL_SERIAL, sequenceName);
     }
 
@@ -275,10 +258,9 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @return {@code ColumnWithSerialType}
      * @since 0.15.0
      */
-    @Nonnull
-    public static ColumnWithSerialType ofSmallSerial(@Nonnull final PgContext pgContext,
-                                                     @Nonnull final Column column,
-                                                     @Nonnull final String sequenceName) {
+    public static ColumnWithSerialType ofSmallSerial(final PgContext pgContext,
+                                                     final Column column,
+                                                     final String sequenceName) {
         return ofSmallSerial(column, PgContext.enrichWith(sequenceName, pgContext));
     }
 }

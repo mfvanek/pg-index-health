@@ -12,8 +12,6 @@ package io.github.mfvanek.pg.model.constraint;
 
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
-import javax.annotation.Nonnull;
-
 /**
  * Represents an entity that is aware of a database constraint name.
  * Classes implementing this interface should provide the name of a specific database constraint.
@@ -28,7 +26,6 @@ public interface ConstraintNameAware extends TableNameAware {
      *
      * @return the name of the constraint as a non-null {@link String}.
      */
-    @Nonnull
     String getConstraintName();
 
     /**
@@ -38,6 +35,5 @@ public interface ConstraintNameAware extends TableNameAware {
      * @see ConstraintType
      * @since 0.15.0
      */
-    @Nonnull
     ConstraintType getConstraintType();
 }

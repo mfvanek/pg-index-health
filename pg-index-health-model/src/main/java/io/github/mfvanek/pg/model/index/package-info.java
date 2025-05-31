@@ -8,20 +8,10 @@
  * Licensed under the Apache License 2.0
  */
 
+/**
+ * An index relates classes and interfaces.
+ */
+@NullMarked
 package io.github.mfvanek.pg.model.index;
 
-/**
- * Allows getting index name.
- *
- * @author Ivan Vakhrushev
- * @see io.github.mfvanek.pg.model.table.TableNameAware
- */
-public interface IndexNameAware {
-
-    /**
-     * Retrieves index name.
-     *
-     * @return index name
-     */
-    String getIndexName();
-}
+import org.jspecify.annotations.NullMarked;
