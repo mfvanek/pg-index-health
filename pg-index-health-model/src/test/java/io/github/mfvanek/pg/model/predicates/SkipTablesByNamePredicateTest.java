@@ -67,7 +67,7 @@ class SkipTablesByNamePredicateTest {
     }
 
     @Test
-    void shouldWorkForSingleTable() {
+    void shouldWorkForSingleItem() {
         assertThat(SkipTablesByNamePredicate.ofName("t"))
             .accepts(Index.of("t1", "i1"))
             .rejects(Index.of("t", "i"))
@@ -81,7 +81,7 @@ class SkipTablesByNamePredicateTest {
     }
 
     @Test
-    void shouldWorkForMultipleTables() {
+    void shouldWorkForMultipleItems() {
         assertThat(SkipTablesByNamePredicate.ofDefault(Set.of("t", "T2")))
             .accepts(Index.of("t1", "i1"))
             .rejects(Index.of("t", "i"))

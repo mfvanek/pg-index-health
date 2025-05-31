@@ -10,6 +10,8 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
+import io.github.mfvanek.pg.model.table.TableNameAware;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -19,7 +21,7 @@ import javax.annotation.Nonnull;
  * @author Ivan Vakhrushev
  * @since 0.13.3
  */
-public interface ConstraintNameAware {
+public interface ConstraintNameAware extends TableNameAware {
 
     /**
      * Retrieves the name of the database constraint associated with this entity.
@@ -28,4 +30,14 @@ public interface ConstraintNameAware {
      */
     @Nonnull
     String getConstraintName();
+
+    /**
+     * Retrieves type of constraint.
+     *
+     * @return type of constraint
+     * @see ConstraintType
+     * @since 0.15.0
+     */
+    @Nonnull
+    ConstraintType getConstraintType();
 }

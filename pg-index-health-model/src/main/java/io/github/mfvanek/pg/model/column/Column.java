@@ -27,7 +27,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.5.0
  */
 @Immutable
-public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
+public final class Column implements DbObject, ColumnNameAware, Comparable<Column> {
 
     private final String tableName;
     private final String columnName;
@@ -40,9 +40,9 @@ public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
      * @param columnName column name; should be non-blank.
      * @param notNull    whether column is not null or nullable
      */
-    protected Column(@Nonnull final String tableName,
-                     @Nonnull final String columnName,
-                     final boolean notNull) {
+    private Column(@Nonnull final String tableName,
+                   @Nonnull final String columnName,
+                   final boolean notNull) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.columnName = Validators.notBlank(columnName, "columnName");
         this.notNull = notNull;
@@ -53,7 +53,7 @@ public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
      */
     @Nonnull
     @Override
-    public final String getName() {
+    public String getName() {
         return getColumnName();
     }
 
@@ -62,7 +62,7 @@ public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
      */
     @Nonnull
     @Override
-    public final PgObjectType getObjectType() {
+    public PgObjectType getObjectType() {
         return PgObjectType.TABLE;
     }
 
@@ -107,7 +107,7 @@ public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -126,7 +126,7 @@ public class Column implements DbObject, ColumnNameAware, Comparable<Column> {
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(tableName, columnName, notNull);
     }
 

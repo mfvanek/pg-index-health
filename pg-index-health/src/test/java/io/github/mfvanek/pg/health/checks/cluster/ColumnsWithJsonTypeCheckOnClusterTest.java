@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipByColumnNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -46,6 +47,10 @@ class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
+                .isEmpty();
+
+            assertThat(check)
+                .executing(ctx, SkipByColumnNamePredicate.ofName("info"))
                 .isEmpty();
         });
     }

@@ -23,7 +23,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Abstract base class for predicates that skip specific database tables.
@@ -39,7 +38,6 @@ import javax.annotation.concurrent.ThreadSafe;
  * @since 0.13.3
  */
 @Immutable
-@ThreadSafe
 abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
 
     /**
@@ -99,6 +97,21 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
         return Objects.requireNonNull(rawNamesToSkip, "rawNamesToSkip cannot be null")
             .stream()
             .map(pgContext::enrichWithSchema)
+            .map(s -> s.toLowerCase(Locale.ROOT))
+            .collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
+     * Prepares a set of names to skip by converting each raw name to lowercase for case-insensitive matching.
+     *
+     * @param rawNamesToSkip the collection of raw names to skip; must be non-null
+     * @return an unmodifiable {@link Set} of names to skip, in lowercase
+     * @throws NullPointerException if {@code pgContext} or {@code rawNamesToSkip} is null
+     */
+    @Nonnull
+    static Set<String> prepareNamesToSkip(@Nonnull final Collection<String> rawNamesToSkip) {
+        return Objects.requireNonNull(rawNamesToSkip, "rawNamesToSkip cannot be null")
+            .stream()
             .map(s -> s.toLowerCase(Locale.ROOT))
             .collect(Collectors.toUnmodifiableSet());
     }

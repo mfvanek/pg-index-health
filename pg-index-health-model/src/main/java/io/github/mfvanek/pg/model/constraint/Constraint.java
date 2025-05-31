@@ -29,7 +29,7 @@ import javax.annotation.concurrent.Immutable;
  * @since 0.11.0
  */
 @Immutable
-public class Constraint implements DbObject, TableNameAware, ConstraintNameAware {
+public final class Constraint implements DbObject, ConstraintNameAware {
 
     private final String tableName;
     private final String constraintName;
@@ -42,7 +42,7 @@ public class Constraint implements DbObject, TableNameAware, ConstraintNameAware
      * @param constraintName constraint name; should be non-blank.
      * @param constraintType constraint type; should be non-null.
      */
-    protected Constraint(
+    private Constraint(
         @Nonnull final String tableName,
         @Nonnull final String constraintName,
         @Nonnull final ConstraintType constraintType) {
@@ -56,7 +56,7 @@ public class Constraint implements DbObject, TableNameAware, ConstraintNameAware
      */
     @Nonnull
     @Override
-    public final String getName() {
+    public String getName() {
         return getConstraintName();
     }
 
@@ -65,7 +65,7 @@ public class Constraint implements DbObject, TableNameAware, ConstraintNameAware
      */
     @Nonnull
     @Override
-    public final PgObjectType getObjectType() {
+    public PgObjectType getObjectType() {
         return PgObjectType.CONSTRAINT;
     }
 
@@ -88,12 +88,10 @@ public class Constraint implements DbObject, TableNameAware, ConstraintNameAware
     }
 
     /**
-     * Retrieves type of constraint.
-     *
-     * @return type of constraint
-     * @see ConstraintType
+     * {@inheritDoc}
      */
     @Nonnull
+    @Override
     public ConstraintType getConstraintType() {
         return constraintType;
     }
@@ -102,7 +100,7 @@ public class Constraint implements DbObject, TableNameAware, ConstraintNameAware
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -120,7 +118,7 @@ public class Constraint implements DbObject, TableNameAware, ConstraintNameAware
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(tableName, constraintName);
     }
 
@@ -130,7 +128,7 @@ public class Constraint implements DbObject, TableNameAware, ConstraintNameAware
      * @return string representation of the internal fields of this class
      */
     @Nonnull
-    final String innerToString() {
+    String innerToString() {
         return "tableName='" + tableName + '\'' +
             ", constraintName='" + constraintName + '\'';
     }

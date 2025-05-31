@@ -87,7 +87,7 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
      */
     @Override
     @Nonnull
-    public List<Constraint> getConstraints() {
+    public List<ConstraintNameAware> getConstraints() {
         return List.copyOf(getForeignKeys());
     }
 

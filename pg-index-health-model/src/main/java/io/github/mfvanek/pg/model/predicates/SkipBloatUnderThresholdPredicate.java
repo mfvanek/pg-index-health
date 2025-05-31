@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.validation.Validators;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * A predicate that filters out database objects with bloat values under specified thresholds.
@@ -30,7 +29,6 @@ import javax.annotation.concurrent.ThreadSafe;
  * @since 0.13.3
  */
 @Immutable
-@ThreadSafe
 public final class SkipBloatUnderThresholdPredicate implements Predicate<DbObject> {
 
     private final long sizeThresholdInBytes;

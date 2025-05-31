@@ -22,13 +22,11 @@ import java.util.Set;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 
 import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.prepareFullyQualifiedNamesToSkip;
 
 /**
  * A predicate that skips specified indexes by name in database objects implementing the {@link DbObject} interface.
- * This class is immutable and thread-safe.
  * <p>
  * It can be configured with either a single index name or a collection of index names to skip. The names are enriched
  * with schema information, if available, to ensure they match the fully qualified index names in the database.
@@ -41,7 +39,6 @@ import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.
  * @since 0.13.3
  */
 @Immutable
-@ThreadSafe
 public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
 
     private final Set<String> fullyQualifiedIndexNamesToSkip;
