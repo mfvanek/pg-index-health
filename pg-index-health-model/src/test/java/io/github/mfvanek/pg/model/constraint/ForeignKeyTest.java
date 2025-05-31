@@ -144,7 +144,8 @@ class ForeignKeyTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
         final Column column = Column.ofNotNull("t", "col");
-        assertThatThrownBy(() -> ForeignKey.ofColumn(Constraint.ofType("t", "c", ConstraintType.CHECK), column))
+        final Constraint constraint = Constraint.ofType("t", "c", ConstraintType.CHECK);
+        assertThatThrownBy(() -> ForeignKey.ofColumn(constraint, column))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("constraint must be foreign key");
         assertThatThrownBy(() -> ForeignKey.ofColumn(null, column))

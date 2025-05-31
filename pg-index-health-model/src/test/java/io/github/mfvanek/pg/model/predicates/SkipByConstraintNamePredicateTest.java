@@ -44,7 +44,7 @@ class SkipByConstraintNamePredicateTest {
 
         assertThatThrownBy(() -> SkipByConstraintNamePredicate.of(null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("constraintNamesToSkip cannot be null");
+            .hasMessage("rawNamesToSkip cannot be null");
     }
 
     @Test

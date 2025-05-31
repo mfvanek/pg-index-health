@@ -16,10 +16,8 @@ import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.Collection;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
@@ -38,10 +36,7 @@ public final class SkipByConstraintNamePredicate implements Predicate<DbObject> 
     private final Set<String> constraintNamesToSkip;
 
     private SkipByConstraintNamePredicate(@Nonnull final Collection<String> constraintNamesToSkip) {
-        this.constraintNamesToSkip = Objects.requireNonNull(constraintNamesToSkip, "constraintNamesToSkip cannot be null")
-            .stream()
-            .map(s -> s.toLowerCase(Locale.ROOT))
-            .collect(Collectors.toUnmodifiableSet());
+        this.constraintNamesToSkip = AbstractSkipTablesPredicate.prepareNamesToSkip(constraintNamesToSkip);
     }
 
     private SkipByConstraintNamePredicate(@Nonnull final String constraintNameToSkip) {

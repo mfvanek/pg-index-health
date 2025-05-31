@@ -98,6 +98,7 @@
         <Or>
             <Class name="io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate"/>
             <Class name="io.github.mfvanek.pg.model.predicates.SkipByConstraintNamePredicate"/>
+            <Class name="io.github.mfvanek.pg.model.predicates.SkipByColumnNamePredicate"/>
         </Or>
     </Match>
 </FindBugsFilter>

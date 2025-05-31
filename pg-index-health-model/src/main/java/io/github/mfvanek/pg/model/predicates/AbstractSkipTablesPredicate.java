@@ -102,6 +102,21 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
     }
 
     /**
+     * Prepares a set of names to skip by converting each raw name to lowercase for case-insensitive matching.
+     *
+     * @param rawNamesToSkip the collection of raw names to skip; must be non-null
+     * @return an unmodifiable {@link Set} of names to skip, in lowercase
+     * @throws NullPointerException if {@code pgContext} or {@code rawNamesToSkip} is null
+     */
+    @Nonnull
+    static Set<String> prepareNamesToSkip(@Nonnull final Collection<String> rawNamesToSkip) {
+        return Objects.requireNonNull(rawNamesToSkip, "rawNamesToSkip cannot be null")
+            .stream()
+            .map(s -> s.toLowerCase(Locale.ROOT))
+            .collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
      * Prepares a set containing a single name to skip, after validating that it is non-blank.
      *
      * @param rawNameToSkip the raw name to skip; must be non-null and non-blank
