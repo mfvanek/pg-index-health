@@ -9,9 +9,9 @@
  */
 
 /**
- * An additional index related utilities.
+ * Custom exceptions.
  */
 @NullMarked
-package io.github.mfvanek.pg.model.index.utils;
+package io.github.mfvanek.pg.connection.exception;
 
 import org.jspecify.annotations.NullMarked;

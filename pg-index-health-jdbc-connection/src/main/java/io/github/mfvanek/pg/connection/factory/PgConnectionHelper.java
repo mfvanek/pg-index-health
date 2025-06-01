@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.connection.factory;
 import io.github.mfvanek.pg.connection.host.PgUrlValidators;
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 final class PgConnectionHelper {
@@ -22,10 +21,9 @@ final class PgConnectionHelper {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
-    static DataSource createDataSource(@Nonnull final String pgUrl,
-                                       @Nonnull final String userName,
-                                       @Nonnull final String password) {
+    static DataSource createDataSource(final String pgUrl,
+                                       final String userName,
+                                       final String password) {
         PgUrlValidators.pgUrlNotBlankAndValid(pgUrl, "pgUrl");
         PgConnectionValidators.userNameNotBlank(userName);
         PgConnectionValidators.passwordNotBlank(password);
@@ -35,9 +33,9 @@ final class PgConnectionHelper {
         return dataSource;
     }
 
-    private static void setCommonProperties(@Nonnull final BasicDataSource dataSource,
-                                            @Nonnull final String userName,
-                                            @Nonnull final String password) {
+    private static void setCommonProperties(final BasicDataSource dataSource,
+                                            final String userName,
+                                            final String password) {
         dataSource.setDriverClassName("org.postgresql.Driver");
         dataSource.setUsername(userName);
         dataSource.setPassword(password);

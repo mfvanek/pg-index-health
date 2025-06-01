@@ -17,7 +17,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.connection.host.PgUrlValidators.pgUrlNotBlankAndValid;
 
@@ -61,7 +60,7 @@ public final class PgUrlParser {
      * @param pgUrl the PostgreSQL connection URL; must be valid and non-blank.
      * @return {@code true} if the URL specifies a replica as the target server type.
      */
-    static boolean isReplicaUrl(@Nonnull final String pgUrl) {
+    static boolean isReplicaUrl(final String pgUrl) {
         pgUrlNotBlankAndValid(pgUrl);
         return pgUrl.contains("targetServerType=slave") ||
             pgUrl.contains("targetServerType=secondary");
@@ -73,8 +72,7 @@ public final class PgUrlParser {
      * @param pgUrl the PostgreSQL connection URL; must be valid and non-blank.
      * @return a list of host-port pairs and corresponding replica-compatible URLs.
      */
-    @Nonnull
-    public static List<Map.Entry<String, String>> extractNameWithPortAndUrlForEachHost(@Nonnull final String pgUrl) {
+    public static List<Map.Entry<String, String>> extractNameWithPortAndUrlForEachHost(final String pgUrl) {
         // For example, jdbc:postgresql://host-1:6432/db_name?param=value
         pgUrlNotBlankAndValid(pgUrl);
         final int lastIndex = pgUrl.lastIndexOf('/');
@@ -94,8 +92,7 @@ public final class PgUrlParser {
      * @param dbNameWithParams the database name and parameters from the URL.
      * @return the replica-compatible connection string.
      */
-    @Nonnull
-    private static String convertToReplicaConnectionString(@Nonnull final String dbNameWithParams) {
+    private static String convertToReplicaConnectionString(final String dbNameWithParams) {
         final List<String> primaryServerTypes = List.of("targetServerType=primary", "targetServerType=master");
         for (final String serverType : primaryServerTypes) {
             if (dbNameWithParams.contains(serverType)) {
@@ -111,8 +108,7 @@ public final class PgUrlParser {
      * @param pgUrl the PostgreSQL connection URL; must be valid and non-blank.
      * @return a list of host-port pairs.
      */
-    @Nonnull
-    static List<Map.Entry<String, Integer>> extractHostNames(@Nonnull final String pgUrl) {
+    static List<Map.Entry<String, Integer>> extractHostNames(final String pgUrl) {
         final String allHostsWithPort = extractAllHostsWithPort(pgUrlNotBlankAndValid(pgUrl));
         return Arrays.stream(allHostsWithPort.split(","))
             .filter(Predicate.not(String::isBlank))
@@ -132,8 +128,7 @@ public final class PgUrlParser {
      * @return the database name extracted from the URLs.
      * @throws IllegalArgumentException if the connection string is invalid.
      */
-    @Nonnull
-    static String extractDatabaseName(@Nonnull final Set<String> pgUrls) {
+    static String extractDatabaseName(final Set<String> pgUrls) {
         final String pgUrl = pgUrls.iterator().next();
         final int lastIndexOfSlash = pgUrl.lastIndexOf('/');
         final String dbNameWithParams = pgUrl.substring(lastIndexOfSlash);
@@ -152,8 +147,7 @@ public final class PgUrlParser {
      * @param pgUrl the PostgreSQL connection URL; must be valid and non-blank.
      * @return a string containing all host and port pairs.
      */
-    @Nonnull
-    private static String extractAllHostsWithPort(@Nonnull final String pgUrl) {
+    private static String extractAllHostsWithPort(final String pgUrl) {
         final int lastIndex = pgUrl.lastIndexOf('/');
         if (lastIndex >= URL_HEADER.length()) {
             return pgUrl.substring(URL_HEADER.length(), lastIndex);
@@ -168,9 +162,8 @@ public final class PgUrlParser {
      * @param secondPgUrl a second PostgreSQL connection URL.
      * @return the constructed primary connection URL.
      */
-    @Nonnull
-    public static String buildCommonUrlToPrimary(@Nonnull final String firstPgUrl,
-                                                 @Nonnull final String secondPgUrl) {
+    public static String buildCommonUrlToPrimary(final String firstPgUrl,
+                                                 final String secondPgUrl) {
         return buildCommonUrlToPrimary(Set.of(firstPgUrl, secondPgUrl));
     }
 
@@ -182,10 +175,9 @@ public final class PgUrlParser {
      * @param urlParameters optional additional parameters to include in the URL.
      * @return the constructed primary connection URL.
      */
-    @Nonnull
-    public static String buildCommonUrlToPrimary(@Nonnull final String firstPgUrl,
-                                                 @Nonnull final String secondPgUrl,
-                                                 @Nonnull final Map<String, String> urlParameters) {
+    public static String buildCommonUrlToPrimary(final String firstPgUrl,
+                                                 final String secondPgUrl,
+                                                 final Map<String, String> urlParameters) {
         return buildCommonUrlToPrimary(Set.of(firstPgUrl, secondPgUrl), urlParameters);
     }
 
@@ -195,8 +187,7 @@ public final class PgUrlParser {
      * @param pgUrls a set of PostgreSQL connection URLs.
      * @return the constructed primary connection URL.
      */
-    @Nonnull
-    public static String buildCommonUrlToPrimary(@Nonnull final Set<String> pgUrls) {
+    public static String buildCommonUrlToPrimary(final Set<String> pgUrls) {
         return buildCommonUrlToPrimary(pgUrls, Map.of());
     }
 
@@ -207,9 +198,8 @@ public final class PgUrlParser {
      * @param urlParameters optional additional parameters to include in the URL.
      * @return the constructed primary connection URL.
      */
-    @Nonnull
-    public static String buildCommonUrlToPrimary(@Nonnull final Set<String> pgUrls,
-                                                 @Nonnull final Map<String, String> urlParameters) {
+    public static String buildCommonUrlToPrimary(final Set<String> pgUrls,
+                                                 final Map<String, String> urlParameters) {
         final String additionalUrlParams = constructUrlParameters(urlParameters);
         return URL_HEADER + pgUrls.stream()
             .map(PgUrlParser::extractAllHostsWithPort)
@@ -224,8 +214,7 @@ public final class PgUrlParser {
      * @param urlParameters a map of additional URL parameters.
      * @return the constructed query string, prefixed by {@code ?}.
      */
-    @Nonnull
-    static String constructUrlParameters(@Nonnull final Map<String, String> urlParameters) {
+    static String constructUrlParameters(final Map<String, String> urlParameters) {
         final Map<String, String> jointUrlParameters = new TreeMap<>(urlParameters);
         DEFAULT_URL_PARAMETERS.forEach(jointUrlParameters::putIfAbsent);
 

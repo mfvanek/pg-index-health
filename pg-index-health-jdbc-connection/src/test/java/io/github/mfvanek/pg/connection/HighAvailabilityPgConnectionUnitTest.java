@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import org.awaitility.Awaitility;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -25,7 +26,6 @@ import java.sql.Statement;
 import java.time.Duration;
 import java.util.List;
 import java.util.logging.Level;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -128,7 +128,7 @@ class HighAvailabilityPgConnectionUnitTest {
         Mockito.when(connectionMocks.statement.executeQuery(anyString())).thenReturn(connectionMocks.resultSet);
     }
 
-    @Nonnull
+    @NonNull
     private List<PgConnection> prepareConnections() {
         final PgHost localhostOne = PgHostImpl.ofUrl("jdbc:postgresql://localhost-1:5432");
         final PgHost localhostTwo = PgHostImpl.ofUrl("jdbc:postgresql://localhost-2:5432");

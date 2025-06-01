@@ -9,9 +9,9 @@
  */
 
 /**
- * An additional index related utilities.
+ * A custom PostgreSQL container for testing in cluster environment.
  */
 @NullMarked
-package io.github.mfvanek.pg.model.index.utils;
+package io.github.mfvanek.pg.testing;
 
 import org.jspecify.annotations.NullMarked;

@@ -81,7 +81,6 @@ class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitna
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("PMD.CloseResource")
     @Override
     public boolean equals(final Object other) {
         if (this == other) {

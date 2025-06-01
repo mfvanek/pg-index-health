@@ -11,12 +11,10 @@
 package io.github.mfvanek.pg.model.fixtures.support;
 
 import de.thetaphi.forbiddenapis.SuppressForbidden;
-import org.jspecify.annotations.NullMarked;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-@NullMarked
 public final class TestUtils {
 
     private TestUtils() {

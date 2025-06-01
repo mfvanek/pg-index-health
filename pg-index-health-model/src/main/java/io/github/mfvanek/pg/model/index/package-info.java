@@ -9,7 +9,7 @@
  */
 
 /**
- * An index relates classes and interfaces.
+ * An index related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.model.index;

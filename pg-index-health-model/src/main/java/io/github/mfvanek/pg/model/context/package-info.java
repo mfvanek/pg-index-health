@@ -9,7 +9,7 @@
  */
 
 /**
- * A context relates classes and interfaces.
+ * A context related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.model.context;

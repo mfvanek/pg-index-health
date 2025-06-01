@@ -9,9 +9,9 @@
  */
 
 /**
- * An additional index related utilities.
+ * An additional testing classes and interfaces.
  */
 @NullMarked
-package io.github.mfvanek.pg.model.index.utils;
+package io.github.mfvanek.pg.testing.annotations;
 
 import org.jspecify.annotations.NullMarked;

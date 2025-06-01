@@ -9,7 +9,7 @@
  */
 
 /**
- * A stored procedure/function relates classes and interfaces.
+ * A stored procedure/function related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.model.function;

@@ -9,9 +9,9 @@
  */
 
 /**
- * An additional index related utilities.
+ * A PostgreSQL connection factory related classes and interfaces.
  */
 @NullMarked
-package io.github.mfvanek.pg.model.index.utils;
+package io.github.mfvanek.pg.connection.factory;
 
 import org.jspecify.annotations.NullMarked;

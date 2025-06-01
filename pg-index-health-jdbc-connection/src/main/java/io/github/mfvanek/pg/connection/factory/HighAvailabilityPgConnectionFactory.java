@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.connection.factory;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 
 import java.util.Collection;
-import javax.annotation.Nonnull;
 
 public interface HighAvailabilityPgConnectionFactory {
 
@@ -23,20 +22,17 @@ public interface HighAvailabilityPgConnectionFactory {
      * @param credentials given credentials.
      * @return instance of {@code HighAvailabilityPgConnection}
      */
-    @Nonnull
-    HighAvailabilityPgConnection of(@Nonnull ConnectionCredentials credentials);
+    HighAvailabilityPgConnection of(ConnectionCredentials credentials);
 
-    @Nonnull
-    default HighAvailabilityPgConnection ofUrl(@Nonnull final String writeUrl,
-                                               @Nonnull final String userName,
-                                               @Nonnull final String password) {
+    default HighAvailabilityPgConnection ofUrl(final String writeUrl,
+                                               final String userName,
+                                               final String password) {
         return of(ConnectionCredentials.ofUrl(writeUrl, userName, password));
     }
 
-    @Nonnull
-    default HighAvailabilityPgConnection ofUrls(@Nonnull final Collection<String> connectionUrls,
-                                                @Nonnull final String userName,
-                                                @Nonnull final String password) {
+    default HighAvailabilityPgConnection ofUrls(final Collection<String> connectionUrls,
+                                                final String userName,
+                                                final String password) {
         return of(ConnectionCredentials.of(connectionUrls, userName, password));
     }
 }

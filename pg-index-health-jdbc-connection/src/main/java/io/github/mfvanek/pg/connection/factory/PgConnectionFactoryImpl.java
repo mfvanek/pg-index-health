@@ -16,18 +16,16 @@ import io.github.mfvanek.pg.connection.host.PgHostImpl;
 
 import java.util.Locale;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public class PgConnectionFactoryImpl implements PgConnectionFactory {
 
     private static final Logger LOGGER = Logger.getLogger(PgConnectionFactoryImpl.class.getName());
 
-    @Nonnull
     @Override
-    public PgConnection forUrl(@Nonnull final String pgUrl,
-                               @Nonnull final String userName,
-                               @Nonnull final String password) {
+    public PgConnection forUrl(final String pgUrl,
+                               final String userName,
+                               final String password) {
         LOGGER.fine(() -> String.format(Locale.ROOT, "Creating %s with pgUrl = %s, userName = %s, password = %s",
             PgConnection.class.getSimpleName(), pgUrl, userName, "*****"));
         final DataSource dataSource = dataSourceFor(pgUrl, userName, password);
@@ -35,10 +33,9 @@ public class PgConnectionFactoryImpl implements PgConnectionFactory {
     }
 
     @Override
-    @Nonnull
-    public DataSource dataSourceFor(@Nonnull final String pgUrl,
-                                    @Nonnull final String userName,
-                                    @Nonnull final String password) {
+    public DataSource dataSourceFor(final String pgUrl,
+                                    final String userName,
+                                    final String password) {
         return PgConnectionHelper.createDataSource(pgUrl, userName, password);
     }
 }

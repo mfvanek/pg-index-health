@@ -9,7 +9,7 @@
  */
 
 /**
- * A general database object relates classes and interfaces.
+ * A general database object related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.model.dbobject;

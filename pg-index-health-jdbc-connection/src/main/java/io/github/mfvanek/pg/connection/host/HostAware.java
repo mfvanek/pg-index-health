@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.connection.host;
 
-import javax.annotation.Nonnull;
-
 /**
  * Allows getting information about database host.
  *
@@ -25,6 +23,5 @@ public interface HostAware {
      * @return {@code PgHost}
      * @see PgHost
      */
-    @Nonnull
     PgHost getHost();
 }

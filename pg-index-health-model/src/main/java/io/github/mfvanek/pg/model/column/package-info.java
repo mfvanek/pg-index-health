@@ -9,7 +9,7 @@
  */
 
 /**
- * A column relates classes and interfaces.
+ * A column related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.model.column;

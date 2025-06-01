@@ -94,7 +94,7 @@ tasks {
 }
 
 checkstyle {
-    toolVersion = "10.23.0"
+    toolVersion = "10.24.0"
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     maxWarnings = 0
@@ -102,7 +102,7 @@ checkstyle {
 }
 
 pmd {
-    toolVersion = "7.12.0"
+    toolVersion = "7.14.0"
     isConsoleOutput = true
     ruleSetFiles = files("${rootDir}/config/pmd/pmd.xml")
     ruleSets = listOf()
