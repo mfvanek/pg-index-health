@@ -30,7 +30,6 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 
 public abstract class AbstractHealthLogger implements HealthLogger {
 
@@ -41,9 +40,9 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     private final Function<HighAvailabilityPgConnection, DatabaseChecksOnCluster> databaseChecksFactory;
 
     @SuppressWarnings("WeakerAccess")
-    protected AbstractHealthLogger(@Nonnull final ConnectionCredentials credentials,
-                                   @Nonnull final HighAvailabilityPgConnectionFactory connectionFactory,
-                                   @Nonnull final Function<HighAvailabilityPgConnection, DatabaseChecksOnCluster> databaseChecksFactory) {
+    protected AbstractHealthLogger(final ConnectionCredentials credentials,
+                                   final HighAvailabilityPgConnectionFactory connectionFactory,
+                                   final Function<HighAvailabilityPgConnection, DatabaseChecksOnCluster> databaseChecksFactory) {
         this.credentials = Objects.requireNonNull(credentials, "credentials cannot be null");
         this.connectionFactory = Objects.requireNonNull(connectionFactory, "connectionFactory cannot be null");
         this.databaseChecksFactory = Objects.requireNonNull(databaseChecksFactory, "databaseChecksFactory cannot be null");
@@ -53,9 +52,8 @@ public abstract class AbstractHealthLogger implements HealthLogger {
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
-    public final List<String> logAll(@Nonnull final Exclusions exclusions,
-                                     @Nonnull final PgContext pgContext) {
+    public final List<String> logAll(final Exclusions exclusions,
+                                     final PgContext pgContext) {
         Objects.requireNonNull(exclusions);
         Objects.requireNonNull(pgContext);
         // The main idea here is to create haPgConnection for a short period of time.
@@ -77,7 +75,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         return logResult;
     }
 
-    private Predicate<DbObject> prepareFilters(@Nonnull final Exclusions exclusions, @Nonnull final PgContext pgContext) {
+    private Predicate<DbObject> prepareFilters(final Exclusions exclusions, final PgContext pgContext) {
         return SkipTablesByNamePredicate.of(pgContext, exclusions.getTableNameExclusions())
             .and(SkipIndexesByNamePredicate.of(pgContext, exclusions.getIndexNameExclusions()))
             .and(SkipBySequenceNamePredicate.of(pgContext, exclusions.getSequenceNameExclusions()))
@@ -86,10 +84,9 @@ public abstract class AbstractHealthLogger implements HealthLogger {
             .and(SkipSmallIndexesPredicate.of(exclusions.getIndexSizeThresholdInBytes()));
     }
 
-    protected abstract String writeToLog(@Nonnull LoggingKey key, int value);
+    protected abstract String writeToLog(LoggingKey key, int value);
 
-    @Nonnull
-    private String writeZeroToLog(@Nonnull final LoggingKey key) {
+    private String writeZeroToLog(final LoggingKey key) {
         return writeToLog(key, 0);
     }
 }

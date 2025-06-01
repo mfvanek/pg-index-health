@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.connection.factory.ConnectionCredentials;
 import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFactory;
 
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 /**
  * Outputs summary about database health to an array of strings.
@@ -24,14 +23,14 @@ import javax.annotation.Nonnull;
  */
 public class StandardHealthLogger extends AbstractHealthLogger {
 
-    public StandardHealthLogger(@Nonnull final ConnectionCredentials credentials,
-                                @Nonnull final HighAvailabilityPgConnectionFactory connectionFactory,
-                                @Nonnull final Function<HighAvailabilityPgConnection, DatabaseChecksOnCluster> databaseChecksFactory) {
+    public StandardHealthLogger(final ConnectionCredentials credentials,
+                                final HighAvailabilityPgConnectionFactory connectionFactory,
+                                final Function<HighAvailabilityPgConnection, DatabaseChecksOnCluster> databaseChecksFactory) {
         super(credentials, connectionFactory, databaseChecksFactory);
     }
 
     @Override
-    protected String writeToLog(@Nonnull final LoggingKey key, final int value) {
+    protected String writeToLog(final LoggingKey key, final int value) {
         return key.getSubKeyName() + ":" + value;
     }
 }
