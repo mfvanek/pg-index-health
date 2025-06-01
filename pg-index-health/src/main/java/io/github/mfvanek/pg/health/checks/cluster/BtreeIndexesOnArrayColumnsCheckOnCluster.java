@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for B-tree indexes on array columns on all hosts in the cluster.
  * GIN-index should be used instead for such columns.
@@ -25,7 +23,7 @@ import javax.annotation.Nonnull;
  */
 public class BtreeIndexesOnArrayColumnsCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
-    public BtreeIndexesOnArrayColumnsCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public BtreeIndexesOnArrayColumnsCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, BtreeIndexesOnArrayColumnsCheckOnHost::new);
     }
 }

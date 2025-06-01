@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ForeignKeysNotCoveredWithIndexCheckOnHost;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for foreign keys without associated indexes on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class ForeignKeysNotCoveredWithIndexCheckOnCluster extends AbstractCheckOnCluster<ForeignKey> {
 
-    public ForeignKeysNotCoveredWithIndexCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public ForeignKeysNotCoveredWithIndexCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ForeignKeysNotCoveredWithIndexCheckOnHost::new);
     }
 }

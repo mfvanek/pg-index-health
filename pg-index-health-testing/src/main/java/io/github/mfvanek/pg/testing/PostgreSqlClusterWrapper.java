@@ -196,7 +196,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         private String username = "customuser";
         private String password = "custompassword";
         private String databaseName = "customdatabase";
-        private String postgresVersion;
+        private @Nullable String postgresVersion;
 
         private PostgreSqlClusterBuilder() {
         }

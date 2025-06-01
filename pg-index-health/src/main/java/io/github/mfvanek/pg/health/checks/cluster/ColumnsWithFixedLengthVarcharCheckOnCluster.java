@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
 import io.github.mfvanek.pg.model.column.Column;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for columns with fixed length varchar type on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class ColumnsWithFixedLengthVarcharCheckOnCluster extends AbstractCheckOnCluster<Column> {
 
-    public ColumnsWithFixedLengthVarcharCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public ColumnsWithFixedLengthVarcharCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ColumnsWithFixedLengthVarcharCheckOnHost::new);
     }
 }

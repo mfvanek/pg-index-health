@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithVarcharCheckOnHost;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for primary keys with columns of fixed length varchar(32/36/38) type on all hosts in the cluster.
  * <p>
@@ -34,7 +32,7 @@ import javax.annotation.Nonnull;
  */
 public class PrimaryKeysWithVarcharCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
-    public PrimaryKeysWithVarcharCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public PrimaryKeysWithVarcharCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, PrimaryKeysWithVarcharCheckOnHost::new);
     }
 }

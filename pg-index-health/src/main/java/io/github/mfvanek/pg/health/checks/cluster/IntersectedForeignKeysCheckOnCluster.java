@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.IntersectedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for intersected (partially identical) foreign keys on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class IntersectedForeignKeysCheckOnCluster extends AbstractCheckOnCluster<DuplicatedForeignKeys> {
 
-    public IntersectedForeignKeysCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public IntersectedForeignKeysCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, IntersectedForeignKeysCheckOnHost::new);
     }
 }

@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.InvalidIndexesCheckOnHost;
 import io.github.mfvanek.pg.model.index.Index;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for invalid (broken) indexes on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class InvalidIndexesCheckOnCluster extends AbstractCheckOnCluster<Index> {
 
-    public InvalidIndexesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public InvalidIndexesCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, InvalidIndexesCheckOnHost::new);
     }
 }

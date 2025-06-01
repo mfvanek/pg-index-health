@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithUnnecessaryWhereClauseCheckOnHost;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for indexes with unnecessary where-clause on not null column on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class IndexesWithUnnecessaryWhereClauseCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
-    public IndexesWithUnnecessaryWhereClauseCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public IndexesWithUnnecessaryWhereClauseCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, IndexesWithUnnecessaryWhereClauseCheckOnHost::new);
     }
 }

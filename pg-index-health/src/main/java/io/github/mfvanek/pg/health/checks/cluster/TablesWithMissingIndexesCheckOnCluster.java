@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 /**
  * Check for tables with missing indexes on all hosts in the cluster.
@@ -30,12 +29,11 @@ public class TablesWithMissingIndexesCheckOnCluster extends AbstractCheckOnClust
 
     private static final Logger LOGGER = Logger.getLogger(TablesWithMissingIndexesCheckOnCluster.class.getName());
 
-    public TablesWithMissingIndexesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public TablesWithMissingIndexesCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesWithMissingIndexesCheckOnHost::new, TablesWithMissingIndexesCheckOnCluster::getResultAsUnion);
     }
 
-    @Nonnull
-    static List<TableWithMissingIndex> getResultAsUnion(@Nonnull final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts) {
+    static List<TableWithMissingIndex> getResultAsUnion(final List<List<TableWithMissingIndex>> tablesWithMissingIndexesFromAllHosts) {
         LOGGER.fine(() -> "tablesWithMissingIndexesFromAllHosts = " + tablesWithMissingIndexesFromAllHosts);
         final List<TableWithMissingIndex> result = tablesWithMissingIndexesFromAllHosts.stream()
             .flatMap(Collection::stream)

@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for indexes bloat on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class IndexesWithBloatCheckOnCluster extends AbstractCheckOnCluster<IndexWithBloat> {
 
-    public IndexesWithBloatCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public IndexesWithBloatCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, IndexesWithBloatCheckOnHost::new);
     }
 }
