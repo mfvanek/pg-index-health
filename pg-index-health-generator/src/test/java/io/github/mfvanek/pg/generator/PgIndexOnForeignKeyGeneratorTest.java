@@ -12,10 +12,10 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.generator.PgIdentifierNameGeneratorTest.notNullColumnWithSchema;
 import static io.github.mfvanek.pg.generator.PgIdentifierNameGeneratorTest.nullableColumnWithSchema;
@@ -87,7 +87,7 @@ class PgIndexOnForeignKeyGeneratorTest {
                 "    on custom_table (custom_column_1, custom_column_22) where custom_column_22 is not null;");
     }
 
-    @Nonnull
+    @NonNull
     static ForeignKey severalColumnsWithNulls() {
         return ForeignKey.of("custom_table", "cn",
             List.of(

@@ -11,11 +11,11 @@
 package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
+import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 /**
  * SQL query generator for creating an index covering given foreign key.
@@ -28,13 +28,12 @@ final class PgIndexOnForeignKeyGenerator extends AbstractOptionsAwareSqlGenerato
     // See https://www.postgresql.org/docs/current/limits.html
     public static final int MAX_IDENTIFIER_LENGTH = 63;
 
-    PgIndexOnForeignKeyGenerator(@Nonnull final GeneratingOptions options) {
+    PgIndexOnForeignKeyGenerator(final GeneratingOptions options) {
         super(options);
     }
 
-    @Nonnull
     @Override
-    public String generate(@Nonnull final ForeignKey foreignKey) {
+    public String generate(final ForeignKey foreignKey) {
         Objects.requireNonNull(foreignKey, "foreignKey cannot be null");
         final PgIdentifierNameGenerator nameGenerator = PgIdentifierNameGenerator.of(foreignKey, options);
         final StringBuilder queryBuilder = new StringBuilder();
@@ -61,19 +60,19 @@ final class PgIndexOnForeignKeyGenerator extends AbstractOptionsAwareSqlGenerato
             .toString();
     }
 
-    private void appendFullIndexNameAsComment(@Nonnull final StringBuilder queryBuilder, @Nonnull final String fullIndexName) {
+    private void appendFullIndexNameAsComment(final StringBuilder queryBuilder, final String fullIndexName) {
         queryBuilder.append("/* ")
             .append(fullIndexName)
             .append(" */")
             .append(options.isBreakLines() ? System.lineSeparator() : " ");
     }
 
-    private boolean hasToExcludeNulls(@Nonnull final ForeignKey foreignKey) {
+    private boolean hasToExcludeNulls(final ColumnsAware foreignKey) {
         return options.isExcludeNulls() &&
             foreignKey.getColumns().stream().anyMatch(ColumnNameAware::isNullable);
     }
 
-    private void excludeNulls(@Nonnull final StringBuilder queryBuilder, @Nonnull final ForeignKey foreignKey) {
+    private void excludeNulls(final StringBuilder queryBuilder, final ColumnsAware foreignKey) {
         queryBuilder.append(keyword(" where "));
         final String columnsList = foreignKey.getColumns().stream()
             .filter(ColumnNameAware::isNullable)
