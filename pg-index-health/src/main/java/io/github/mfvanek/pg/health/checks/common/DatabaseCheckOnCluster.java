@@ -69,7 +69,7 @@ public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAw
      * @param exclusionsFilter predicate to filter out unnecessary results
      * @return list of deviations from the specified rule
      */
-    default List<T> check(final Collection<? extends PgContext> pgContexts, final Predicate<? super T> exclusionsFilter) {
+    default List<T> check(final Collection<PgContext> pgContexts, final Predicate<? super T> exclusionsFilter) {
         return pgContexts.stream()
             .map(ctx -> check(ctx, exclusionsFilter))
             .flatMap(List::stream)

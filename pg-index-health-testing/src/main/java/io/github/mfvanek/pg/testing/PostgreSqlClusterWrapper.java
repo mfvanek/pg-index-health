@@ -51,9 +51,8 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private final BasicDataSource dataSourceForStandBy;
 
     private PostgreSqlClusterWrapper(final PostgreSqlClusterBuilder builder) {
-        this.pgVersion = builder.getPostgresVersion() != null ?
-            PostgresVersionHolder.forCluster(builder.getPostgresVersion()) :
-            PostgresVersionHolder.forCluster();
+        final String version = builder.getPostgresVersion();
+        this.pgVersion = version != null ? PostgresVersionHolder.forCluster(version) : PostgresVersionHolder.forCluster();
         this.network = Network.newNetwork();
 
         final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
