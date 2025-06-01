@@ -11,15 +11,13 @@
 package io.github.mfvanek.pg.spring;
 
 import io.github.mfvanek.pg.connection.host.PgUrlParser;
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Custom {@link SpringBootCondition} to disable starter when configured a data source to another database (not PostgreSQL).
@@ -44,15 +42,14 @@ public class DatabaseStructureHealthCondition extends SpringBootCondition {
     }
 
     @Nullable
-    private static String getJdbcUrl(@Nonnull final ConditionContext context,
-                                     @Nonnull final String datasourceUrlPropertyName) {
+    private static String getJdbcUrl(final ConditionContext context,
+                                     final String datasourceUrlPropertyName) {
         return Binder.get(context.getEnvironment())
             .bind(datasourceUrlPropertyName, String.class)
             .orElse(null);
     }
 
-    @Nonnull
-    private static String getDatasourceUrlPropertyName(@Nonnull final ConditionContext context) {
+    private static String getDatasourceUrlPropertyName(final ConditionContext context) {
         return Binder.get(context.getEnvironment())
             .bind("pg.index.health.test.datasource-url-property-name", String.class)
             .orElse(DatabaseStructureHealthProperties.STANDARD_DATASOURCE_URL_PROPERTY_NAME);

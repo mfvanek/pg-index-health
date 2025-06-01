@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.spring;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -20,7 +21,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -227,7 +227,7 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
         }
     }
 
-    private void assertThatBeansPresent(@Nonnull final ConfigurableApplicationContext context) {
+    private void assertThatBeansPresent(@NonNull final ConfigurableApplicationContext context) {
         assertThat(context.getBeanDefinitionNames())
             .isNotEmpty()
             .filteredOn(beanNamesFilter)
@@ -235,14 +235,14 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
             .containsAll(EXPECTED_BEANS);
     }
 
-    private void assertThatPgConnectionIsValid(@Nonnull final ConfigurableApplicationContext context) {
+    private void assertThatPgConnectionIsValid(@NonNull final ConfigurableApplicationContext context) {
         assertThat(context.getBean("pgConnection", PgConnection.class))
             .isNotNull()
             .satisfies(c -> assertThat(c.getHost())
                 .isEqualTo(PgHostImpl.ofUrl("jdbc:postgresql://192.168.1.1:6432")));
     }
 
-    private void setMocks(@Nonnull final Connection connectionMock) throws SQLException {
+    private void setMocks(@NonNull final Connection connectionMock) throws SQLException {
         Mockito.when(DATA_SOURCE_MOCK.getConnection())
             .thenReturn(connectionMock);
         final DatabaseMetaData metaDataMock = Mockito.mock(DatabaseMetaData.class);

@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.spring.postgres.tc.url;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,10 +32,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DatabaseStructureStaticAnalysisTest {
 
     @Autowired
-    private List<DatabaseCheckOnHost<? extends DbObject>> checks;
+    private List<DatabaseCheckOnHost<? extends @NonNull DbObject>> checks;
 
     @Test
-    void checksShouldWork(@Nonnull final CapturedOutput output) {
+    void checksShouldWork(@NonNull final CapturedOutput output) {
         assertThat(checks)
             .hasSameSizeAs(Diagnostic.values());
 

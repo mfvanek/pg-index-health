@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.spring.postgres.config;
 
 import lombok.experimental.UtilityClass;
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
@@ -18,15 +19,14 @@ import org.springframework.core.env.MutablePropertySources;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 @UtilityClass
 class ConfigurableEnvironmentMutator {
 
     static final String DATASOURCE_URL_PROP_NAME = "spring.datasource.url";
 
-    static boolean addDatasourceUrlIfNeed(@Nonnull final JdbcDatabaseContainer<?> jdbcDatabaseContainer,
-                                          @Nonnull final Environment environment) {
+    static boolean addDatasourceUrlIfNeed(@NonNull final JdbcDatabaseContainer<?> jdbcDatabaseContainer,
+                                          @NonNull final Environment environment) {
         if (environment.getProperty(DATASOURCE_URL_PROP_NAME) == null && environment instanceof ConfigurableEnvironment) {
             final ConfigurableEnvironment configurableEnvironment = (ConfigurableEnvironment) environment;
             final MutablePropertySources mps = configurableEnvironment.getPropertySources();

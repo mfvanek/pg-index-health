@@ -24,7 +24,7 @@ import org.springframework.test.context.ActiveProfiles
 internal class DatabaseStructureStaticAnalysisTest {
 
     @Autowired
-    private lateinit var checks: List<DatabaseCheckOnHost<out DbObject?>>
+    private lateinit var checks: List<DatabaseCheckOnHost<out DbObject>>
 
     @Test
     fun checksShouldWork() {

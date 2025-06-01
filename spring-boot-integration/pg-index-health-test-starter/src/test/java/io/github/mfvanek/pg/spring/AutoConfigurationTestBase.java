@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -21,7 +22,6 @@ import org.springframework.context.support.GenericApplicationContext;
 
 import java.util.List;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 import static io.github.mfvanek.pg.spring.DatabaseStructureHealthProperties.STANDARD_DATASOURCE_BEAN_NAME;
@@ -77,32 +77,32 @@ abstract class AutoConfigurationTestBase {
         !CUSTOM_DATASOURCE_BEAN_NAME.equals(b);
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner();
 
-    @Nonnull
+    @NonNull
     protected ApplicationContextRunner assertWithTestConfig() {
         return contextRunner.withUserConfiguration(DatabaseStructureHealthAutoConfiguration.class, DatabaseStructureChecksAutoConfiguration.class);
     }
 
-    protected static <C extends ConfigurableApplicationContext> void initialize(@Nonnull final C applicationContext) {
+    protected static <C extends ConfigurableApplicationContext> void initialize(@NonNull final C applicationContext) {
         final GenericApplicationContext context = (GenericApplicationContext) applicationContext;
         context.registerBean(STANDARD_DATASOURCE_BEAN_NAME, DataSource.class, () -> DATA_SOURCE_MOCK);
     }
 
-    protected static <C extends ConfigurableApplicationContext> void initializeCustom(@Nonnull final C applicationContext) {
+    protected static <C extends ConfigurableApplicationContext> void initializeCustom(@NonNull final C applicationContext) {
         final GenericApplicationContext context = (GenericApplicationContext) applicationContext;
         context.registerBean(CUSTOM_DATASOURCE_BEAN_NAME, DataSource.class, () -> DATA_SOURCE_MOCK);
     }
 
-    @Nonnull
-    protected static String getBeanName(@Nonnull final Class<?> type) {
+    @NonNull
+    protected static String getBeanName(@NonNull final Class<?> type) {
         return StringUtils.uncapitalize(type.getSimpleName());
     }
 
-    protected void assertThatBeansAreNotNullBean(@Nonnull final ConfigurableApplicationContext context) {
+    protected void assertThatBeansAreNotNullBean(@NonNull final ConfigurableApplicationContext context) {
         EXPECTED_BEANS.forEach(beanName ->
             assertThatBeanIsNotNullBean(context, beanName));
     }
 
-    protected void assertThatBeanIsNotNullBean(@Nonnull final ConfigurableApplicationContext context, @Nonnull final String beanName) {
+    protected void assertThatBeanIsNotNullBean(@NonNull final ConfigurableApplicationContext context, @NonNull final String beanName) {
         assertThat(context.getBean(beanName))
             .isInstanceOfAny(EXPECTED_TYPES);
     }

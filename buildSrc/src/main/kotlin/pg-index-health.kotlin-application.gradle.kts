@@ -35,7 +35,8 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     compilerOptions {
-        freeCompilerArgs.add("-Xjava-nullability-annotations=strict")
+        freeCompilerArgs.add("-Xjsr305=strict")
+        freeCompilerArgs.add("-Xnullability-annotations=@org.jspecify.annotations:strict")
         jvmTarget = JvmTarget.JVM_11
     }
 }

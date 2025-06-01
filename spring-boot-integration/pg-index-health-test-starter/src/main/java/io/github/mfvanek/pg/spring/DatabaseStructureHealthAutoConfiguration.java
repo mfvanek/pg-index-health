@@ -24,7 +24,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.core.env.Environment;
 
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 /**
@@ -51,7 +50,7 @@ public class DatabaseStructureHealthAutoConfiguration {
      * @param properties the {@link DatabaseStructureHealthProperties} containing
      *                   the configuration for this auto-configuration (must not be null)
      */
-    public DatabaseStructureHealthAutoConfiguration(@Nonnull final DatabaseStructureHealthProperties properties) {
+    public DatabaseStructureHealthAutoConfiguration(final DatabaseStructureHealthProperties properties) {
         this.properties = properties;
     }
 
@@ -73,8 +72,8 @@ public class DatabaseStructureHealthAutoConfiguration {
     @Bean
     @ConditionalOnBean(DataSource.class)
     @ConditionalOnMissingBean
-    public PgConnection pgConnection(@Nonnull final BeanFactory beanFactory,
-                                     @Nonnull final Environment environment) {
+    public PgConnection pgConnection(final BeanFactory beanFactory,
+                                     final Environment environment) {
         final DataSource dataSource = beanFactory.getBean(properties.getDatasourceBeanName(), DataSource.class);
         final String databaseUrl = environment.getProperty(properties.getDatasourceUrlPropertyName());
         return PgConnectionImpl.ofUrl(dataSource, databaseUrl);

@@ -47,6 +47,7 @@ class DatabaseStructureHealthPropertiesTest {
             .hasToString("DatabaseStructureHealthProperties{enabled=false, datasourceBeanName='customDataSource', datasourceUrlPropertyName='custom.datasource.url'}");
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Test
     void shouldThrowExceptionWhenInvalidArgumentsArePassed() {
         assertThatThrownBy(() -> new DatabaseStructureHealthProperties(true, null, null))
