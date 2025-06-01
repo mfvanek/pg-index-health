@@ -108,6 +108,7 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
         return checkOnPrimary.check(pgContext, exclusionsFilter);
     }
 
+    @SuppressWarnings("NullAway")
     private List<T> executeOnCluster(final PgContext pgContext, final Predicate<? super T> exclusionsFilter) {
         final List<List<T>> acrossClusterResults = new ArrayList<>();
         for (final PgConnection pgConnection : haPgConnection.getConnectionsToAllHostsInCluster()) {

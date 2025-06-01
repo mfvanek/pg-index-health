@@ -21,6 +21,9 @@ import java.util.Objects;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
 
+/**
+ * Standard implementation of a service that determines if a given database connection is established with a primary host.
+ */
 public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
 
     private static final Logger LOGGER = Logger.getLogger(PrimaryHostDeterminerImpl.class.getName());

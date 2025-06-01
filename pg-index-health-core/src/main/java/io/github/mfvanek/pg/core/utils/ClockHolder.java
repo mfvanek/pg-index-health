@@ -36,8 +36,9 @@ public final class ClockHolder {
      *
      * @return {@code Clock} instance
      */
+    @SuppressWarnings("NullAway")
     public static Clock clock() {
-        return CLOCK_REFERENCE.get();
+        return CLOCK_REFERENCE.get(); // cannot be null
     }
 
     /**

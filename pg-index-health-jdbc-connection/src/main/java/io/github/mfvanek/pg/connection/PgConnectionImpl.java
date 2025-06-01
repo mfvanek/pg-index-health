@@ -113,7 +113,7 @@ public class PgConnectionImpl implements PgConnection {
      */
     public static PgConnection ofUrl(final DataSource dataSource, @Nullable final String databaseUrl) {
         final PgHost host;
-        if (needToGetUrlFromMetaData(databaseUrl)) {
+        if (databaseUrl == null || needToGetUrlFromMetaData(databaseUrl)) {
             try (Connection connection = validateDataSource(dataSource).getConnection()) {
                 host = PgHostImpl.ofUrl(connection.getMetaData().getURL());
             } catch (SQLException ex) {
@@ -129,9 +129,8 @@ public class PgConnectionImpl implements PgConnection {
         return Objects.requireNonNull(dataSource, "dataSource cannot be null");
     }
 
-    private static boolean needToGetUrlFromMetaData(@Nullable final String databaseUrl) {
-        return databaseUrl == null ||
-            databaseUrl.isBlank() ||
+    private static boolean needToGetUrlFromMetaData(final String databaseUrl) {
+        return databaseUrl.isBlank() ||
             databaseUrl.startsWith(PgUrlParser.TESTCONTAINERS_PG_URL_PREFIX);
     }
 }

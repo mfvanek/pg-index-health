@@ -28,6 +28,7 @@ plugins {
 
 dependencies {
     errorprone("com.google.errorprone:error_prone_core:2.38.0")
+    errorprone("com.uber.nullaway:nullaway:0.12.7")
 
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0")
     spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.9")
@@ -37,6 +38,13 @@ tasks.withType<JavaCompile>().configureEach {
     options.errorprone {
         disableWarningsInGeneratedCode.set(true)
         disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType", "TruthSelfEquals")
+        option("NullAway:OnlyNullMarked", "true")
+        error("NullAway")
+        if (name.lowercase().contains("test")) {
+            options.errorprone {
+                disable("NullAway")
+            }
+        }
     }
 }
 

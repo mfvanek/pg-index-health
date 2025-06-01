@@ -48,18 +48,18 @@ class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitna
             ":" +
             getMappedPort(POSTGRESQL_PORT) +
             "/" +
-            envVars.get("POSTGRESQL_DATABASE") +
+            envVars.getOrDefault("POSTGRESQL_DATABASE", "postgres") +
             additionalUrlParams;
     }
 
     @Override
     public String getUsername() {
-        return envVars.get("POSTGRESQL_USERNAME");
+        return envVars.getOrDefault("POSTGRESQL_USERNAME", "");
     }
 
     @Override
     public String getPassword() {
-        return envVars.get("POSTGRESQL_PASSWORD");
+        return envVars.getOrDefault("POSTGRESQL_PASSWORD", "");
     }
 
     @Override

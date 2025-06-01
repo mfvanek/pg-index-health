@@ -52,8 +52,9 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("NullAway")
     public PgConnection getConnectionToPrimary() {
-        return cachedConnectionToPrimary.get();
+        return cachedConnectionToPrimary.get(); // always not null
     }
 
     /**
