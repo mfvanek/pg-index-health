@@ -58,7 +58,7 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
         this.checksOnHosts = new HashMap<>();
         this.acrossClusterResultsMapper = acrossClusterResultsMapper;
         final DatabaseCheckOnHost<T> checkOnPrimary = computeCheckForPrimaryIfNeed();
-        if (checkOnPrimary.getDiagnostic().isAcrossCluster() && acrossClusterResultsMapper == null) {
+        if (acrossClusterResultsMapper == null && checkOnPrimary.getDiagnostic().isAcrossCluster()) {
             throw new IllegalArgumentException("acrossClusterResultsMapper cannot be null for diagnostic " + checkOnPrimary.getDiagnostic());
         }
     }
