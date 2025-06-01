@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for duplicated (completely identical) indexes on a specific host.
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class DuplicatedIndexesCheckOnHost extends AbstractCheckOnHost<DuplicatedIndexes> {
 
-    public DuplicatedIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public DuplicatedIndexesCheckOnHost(final PgConnection pgConnection) {
         super(DuplicatedIndexes.class, pgConnection, Diagnostic.DUPLICATED_INDEXES);
     }
 
@@ -36,9 +35,8 @@ public class DuplicatedIndexesCheckOnHost extends AbstractCheckOnHost<Duplicated
      * @param pgContext check's context with the specified schema
      * @return list of duplicated indexes
      */
-    @Nonnull
     @Override
-    protected List<DuplicatedIndexes> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<DuplicatedIndexes> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String duplicatedAsString = rs.getString("duplicated_indexes");

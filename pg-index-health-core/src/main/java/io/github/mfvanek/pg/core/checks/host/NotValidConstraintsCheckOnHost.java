@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.constraint.ConstraintType;
 import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.core.checks.extractors.ForeignKeyExtractor.CONSTRAINT_NAME;
 
@@ -29,7 +28,7 @@ import static io.github.mfvanek.pg.core.checks.extractors.ForeignKeyExtractor.CO
  */
 public class NotValidConstraintsCheckOnHost extends AbstractCheckOnHost<Constraint> {
 
-    public NotValidConstraintsCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public NotValidConstraintsCheckOnHost(final PgConnection pgConnection) {
         super(Constraint.class, pgConnection, Diagnostic.NOT_VALID_CONSTRAINTS);
     }
 
@@ -40,9 +39,8 @@ public class NotValidConstraintsCheckOnHost extends AbstractCheckOnHost<Constrai
      * @return list of not valid constraints
      * @see Constraint
      */
-    @Nonnull
     @Override
-    protected List<Constraint> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<Constraint> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String constraintName = rs.getString(CONSTRAINT_NAME);

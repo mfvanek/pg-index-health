@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.column.SerialType;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.annotation.Nonnull;
 
 public final class ColumnWithSerialTypeExtractor implements ResultSetExtractor<ColumnWithSerialType> {
 
@@ -30,9 +29,8 @@ public final class ColumnWithSerialTypeExtractor implements ResultSetExtractor<C
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public ColumnWithSerialType extractData(@Nonnull final ResultSet resultSet) throws SQLException {
+    public ColumnWithSerialType extractData(final ResultSet resultSet) throws SQLException {
         final Column column = columnExtractor.extractData(resultSet);
         final String columnType = resultSet.getString("column_type");
         final String sequenceName = resultSet.getString("sequence_name");
@@ -44,7 +42,6 @@ public final class ColumnWithSerialTypeExtractor implements ResultSetExtractor<C
      *
      * @return {@code ColumnWithSerialTypeExtractor} instance
      */
-    @Nonnull
     public static ResultSetExtractor<ColumnWithSerialType> of() {
         return new ColumnWithSerialTypeExtractor();
     }

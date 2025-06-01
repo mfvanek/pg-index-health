@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.core.fixtures.support;
 
 import java.util.concurrent.atomic.AtomicReference;
-import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.model.context.PgContext.DEFAULT_SCHEMA_NAME;
 
@@ -21,7 +20,7 @@ public final class SchemaNameHolder implements AutoCloseable {
 
     private final String oldSchemaName;
 
-    private SchemaNameHolder(@Nonnull final String newSchemaName) {
+    private SchemaNameHolder(final String newSchemaName) {
         this.oldSchemaName = SCHEMA_NAME_HOLDER.getAndSet(newSchemaName);
     }
 
@@ -30,13 +29,11 @@ public final class SchemaNameHolder implements AutoCloseable {
         SCHEMA_NAME_HOLDER.set(oldSchemaName);
     }
 
-    @Nonnull
     public static String getSchemaName() {
         return SCHEMA_NAME_HOLDER.get();
     }
 
-    @Nonnull
-    public static SchemaNameHolder with(@Nonnull final String schemaName) {
+    public static SchemaNameHolder with(final String schemaName) {
         return new SchemaNameHolder(schemaName);
     }
 }

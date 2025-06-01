@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 /**
  * An abstract class for all database checks performed on a specific host.
@@ -57,9 +56,9 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
      */
     private final Diagnostic diagnostic;
 
-    protected AbstractCheckOnHost(@Nonnull final Class<T> type,
-                                  @Nonnull final PgConnection pgConnection,
-                                  @Nonnull final Diagnostic diagnostic) {
+    protected AbstractCheckOnHost(final Class<T> type,
+                                  final PgConnection pgConnection,
+                                  final Diagnostic diagnostic) {
         this.type = Objects.requireNonNull(type, "type cannot be null");
         this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
         this.diagnostic = Objects.requireNonNull(diagnostic, "diagnostic cannot be null");
@@ -68,18 +67,16 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public Class<T> getType() {
+    public final Class<T> getType() {
         return type;
     }
 
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public Diagnostic getDiagnostic() {
+    public final Diagnostic getDiagnostic() {
         return diagnostic;
     }
 
@@ -87,17 +84,15 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
-    public PgHost getHost() {
+    public final PgHost getHost() {
         return pgConnection.getHost();
     }
 
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public final List<T> check(@Nonnull final PgContext pgContext, @Nonnull final Predicate<? super T> exclusionsFilter) {
+    public final List<T> check(final PgContext pgContext, final Predicate<? super T> exclusionsFilter) {
         return doCheck(pgContext).stream()
             .filter(exclusionsFilter)
             .collect(Collectors.toList());
@@ -110,8 +105,7 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
      * @param pgContext check's context with the specified schema; must not be null
      * @return list of deviations from the specified rule
      */
-    @Nonnull
-    protected abstract List<T> doCheck(@Nonnull PgContext pgContext);
+    protected abstract List<T> doCheck(PgContext pgContext);
 
     /**
      * Executes query associated with diagnostic and extracts result.
@@ -120,9 +114,8 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
      * @param rse       the extractor used to extract results from the {@link ResultSet}; must not be null
      * @return list of deviations from the specified rule
      */
-    @Nonnull
-    protected final List<T> executeQuery(@Nonnull final PgContext pgContext,
-                                         @Nonnull final ResultSetExtractor<T> rse) {
+    protected final List<T> executeQuery(final PgContext pgContext,
+                                         final ResultSetExtractor<T> rse) {
         final String sqlQuery = SqlQueryReader.getQueryFromFile(diagnostic.getSqlQueryFileName());
         return diagnostic.getQueryExecutor().executeQuery(pgConnection, pgContext, sqlQuery, rse);
     }

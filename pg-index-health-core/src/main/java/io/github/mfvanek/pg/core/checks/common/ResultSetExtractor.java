@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.core.checks.common;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.annotation.Nonnull;
 
 /**
  * A mapper from raw data to domain model.
@@ -30,6 +29,5 @@ public interface ResultSetExtractor<T> {
      * @return an arbitrary result object
      * @throws SQLException if an SQLException is encountered getting column values or navigating
      */
-    @Nonnull
-    T extractData(@Nonnull ResultSet resultSet) throws SQLException;
+    T extractData(ResultSet resultSet) throws SQLException;
 }

@@ -18,7 +18,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnHost {
 
@@ -28,13 +27,13 @@ public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnH
     private final PgConnection pgConnection;
     private final StatisticsQueryExecutor queryExecutor;
 
-    StatisticsMaintenanceOnHostImpl(@Nonnull final PgConnection pgConnection,
-                                    @Nonnull final StatisticsQueryExecutor queryExecutor) {
+    StatisticsMaintenanceOnHostImpl(final PgConnection pgConnection,
+                                    final StatisticsQueryExecutor queryExecutor) {
         this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
         this.queryExecutor = Objects.requireNonNull(queryExecutor, "queryExecutor cannot be null");
     }
 
-    public StatisticsMaintenanceOnHostImpl(@Nonnull final PgConnection pgConnection) {
+    public StatisticsMaintenanceOnHostImpl(final PgConnection pgConnection) {
         this(pgConnection, QueryExecutors::executeQuery);
     }
 
@@ -42,7 +41,6 @@ public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnH
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
     public PgHost getHost() {
         return pgConnection.getHost();
     }
@@ -60,7 +58,6 @@ public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnH
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
     public Optional<OffsetDateTime> getLastStatsResetTimestamp() {
         final String query = "select stats_reset from pg_stat_database where datname = current_database()";
         final List<OffsetDateTime> statsResetTimes = queryExecutor.executeQuery(pgConnection, query,

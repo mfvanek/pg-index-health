@@ -13,19 +13,17 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class DropColumnStatement extends AbstractDbStatement {
 
     private final String tableName;
     private final String columnName;
 
-    public DropColumnStatement(@Nonnull final String tableName, @Nonnull final String columnName) {
+    public DropColumnStatement(final String tableName, final String columnName) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.columnName = Validators.notBlank(columnName, "columnName");
     }
 
-    @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("alter table if exists {schemaName}." + tableName + " drop column " + columnName);

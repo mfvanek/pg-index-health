@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for tables without description on a specific host.
@@ -27,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Table> {
 
-    public TablesWithoutDescriptionCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public TablesWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
         super(Table.class, pgConnection, Diagnostic.TABLES_WITHOUT_DESCRIPTION);
     }
 
@@ -38,9 +37,8 @@ public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Tab
      * @return list of tables without description
      * @see <a href="https://www.postgresql.org/docs/current/sql-comment.html">SQL Commands - COMMENT</a>
      */
-    @Nonnull
     @Override
-    protected List<Table> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<Table> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, TableExtractor.of());
     }
 }

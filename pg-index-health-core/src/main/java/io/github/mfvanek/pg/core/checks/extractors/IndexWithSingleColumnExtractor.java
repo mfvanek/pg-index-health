@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_NAME;
 
@@ -40,9 +39,8 @@ public final class IndexWithSingleColumnExtractor implements ResultSetExtractor<
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public IndexWithColumns extractData(@Nonnull final ResultSet resultSet) throws SQLException {
+    public IndexWithColumns extractData(final ResultSet resultSet) throws SQLException {
         final String tableName = resultSet.getString(TABLE_NAME);
         final String indexName = resultSet.getString(INDEX_NAME);
         final long indexSize = resultSet.getLong(INDEX_SIZE);
@@ -55,7 +53,6 @@ public final class IndexWithSingleColumnExtractor implements ResultSetExtractor<
      *
      * @return {@code IndexWithSingleColumnExtractor} instance
      */
-    @Nonnull
     public static ResultSetExtractor<IndexWithColumns> of() {
         return new IndexWithSingleColumnExtractor();
     }

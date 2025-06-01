@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for indexes bloat on a specific host.
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class IndexesWithBloatCheckOnHost extends AbstractCheckOnHost<IndexWithBloat> {
 
-    public IndexesWithBloatCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public IndexesWithBloatCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithBloat.class, pgConnection, Diagnostic.BLOATED_INDEXES);
     }
 
@@ -40,9 +39,8 @@ public class IndexesWithBloatCheckOnHost extends AbstractCheckOnHost<IndexWithBl
      * @param pgContext check's context with the specified schema
      * @return list of bloated indexes
      */
-    @Nonnull
     @Override
-    protected List<IndexWithBloat> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<IndexWithBloat> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);

@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for indexes that contain boolean values on a specific host.
@@ -27,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public class IndexesWithBooleanCheckOnHost extends AbstractCheckOnHost<IndexWithColumns> {
 
-    public IndexesWithBooleanCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public IndexesWithBooleanCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_BOOLEAN);
     }
 
@@ -37,9 +36,8 @@ public class IndexesWithBooleanCheckOnHost extends AbstractCheckOnHost<IndexWith
      * @param pgContext check's context with the specified schema
      * @return list of indexes that contain boolean values
      */
-    @Nonnull
     @Override
-    protected List<IndexWithColumns> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, IndexWithSingleColumnExtractor.of());
     }
 }

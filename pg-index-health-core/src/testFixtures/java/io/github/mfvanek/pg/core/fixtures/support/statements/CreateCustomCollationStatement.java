@@ -18,20 +18,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Locale;
-import javax.annotation.Nonnull;
 
 public class CreateCustomCollationStatement extends AbstractDbStatement {
 
     private static final String ICU_COLLATION = "en-US-x-icu";
 
-    @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of();
     }
 
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
+    public void execute(final Statement statement) throws SQLException {
         final String customCollation = "C.UTF-8";
         if (isCollationExist(statement, customCollation)) {
             return;
@@ -39,7 +37,7 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
         createCustomCollation(statement, customCollation);
     }
 
-    private boolean isCollationExist(@Nonnull final Statement statement, @Nonnull final String collation) {
+    private boolean isCollationExist(final Statement statement, final String collation) {
         final String sqlQuery = "select exists(select 1 from pg_catalog.pg_collation as pgc where pgc.collname = '%s'::text)";
         try (ResultSet rs = statement.executeQuery(String.format(Locale.ROOT, sqlQuery, collation))) {
             rs.next();
@@ -49,8 +47,8 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
         }
     }
 
-    private void createCustomCollation(@Nonnull final Statement statement,
-                                       @Nonnull final String customCollation) throws SQLException {
+    private void createCustomCollation(final Statement statement,
+                                       final String customCollation) throws SQLException {
         if (!isCollationExist(statement, ICU_COLLATION)) {
             throw new IllegalStateException(String.format(Locale.ROOT, "System collation '%s' not found", ICU_COLLATION));
         }

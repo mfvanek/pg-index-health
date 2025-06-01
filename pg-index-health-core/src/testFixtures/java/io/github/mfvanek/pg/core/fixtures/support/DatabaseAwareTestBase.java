@@ -21,41 +21,35 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.testing.PostgreSqlContainerWrapper;
 
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public abstract class DatabaseAwareTestBase {
 
     private static final PostgreSqlContainerWrapper POSTGRES = PostgreSqlContainerWrapper.withDefaultVersion();
 
-    @Nonnull
     protected static PgConnection getPgConnection() {
         return PgConnectionImpl.of(getDataSource(), getHost());
     }
 
-    @Nonnull
     protected static PgHost getHost() {
         return PgHostImpl.ofUrl(POSTGRES.getUrl());
     }
 
-    @Nonnull
     protected static HighAvailabilityPgConnection getHaPgConnection() {
         return HighAvailabilityPgConnectionImpl.of(getPgConnection());
     }
 
-    @Nonnull
     protected static ConnectionCredentials getConnectionCredentials() {
         return ConnectionCredentials.ofUrl(POSTGRES.getUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
     }
 
-    @Nonnull
     protected static DataSource getDataSource() {
         return POSTGRES.getDataSource();
     }
 
-    protected void executeTestOnDatabase(@Nonnull final String schemaName,
-                                         @Nonnull final DatabaseConfigurer databaseConfigurer,
-                                         @Nonnull final Consumer<PgContext> testExecutor) {
+    protected void executeTestOnDatabase(final String schemaName,
+                                         final DatabaseConfigurer databaseConfigurer,
+                                         final Consumer<PgContext> testExecutor) {
         try (DatabasePopulator databasePopulator = DatabasePopulator.builder(getDataSource(), schemaName, isProceduresSupported())) {
             databaseConfigurer.configure(databasePopulator)
                 .populate();

@@ -12,10 +12,9 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.annotation.Nonnull;
 
 @FunctionalInterface
 public interface DbStatement {
 
-    void execute(@Nonnull Statement statement) throws SQLException;
+    void execute(Statement statement) throws SQLException;
 }

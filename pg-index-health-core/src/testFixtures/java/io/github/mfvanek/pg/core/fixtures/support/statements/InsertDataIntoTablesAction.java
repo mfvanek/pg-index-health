@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public class InsertDataIntoTablesAction implements Runnable {
@@ -30,7 +29,7 @@ public class InsertDataIntoTablesAction implements Runnable {
     private final DataSource dataSource;
     private final String schemaName;
 
-    public InsertDataIntoTablesAction(@Nonnull final DataSource dataSource, @Nonnull final String schemaName) {
+    public InsertDataIntoTablesAction(final DataSource dataSource, final String schemaName) {
         this.dataSource = Objects.requireNonNull(dataSource);
         this.schemaName = Objects.requireNonNull(schemaName);
     }
@@ -77,7 +76,6 @@ public class InsertDataIntoTablesAction implements Runnable {
         }
     }
 
-    @Nonnull
     private static PGobject prepareClientInfo() throws SQLException {
         final PGobject clientInfo = new PGobject();
         clientInfo.setType("jsonb");
@@ -89,7 +87,7 @@ public class InsertDataIntoTablesAction implements Runnable {
         return "407028101" + StringUtils.leftPad(String.valueOf(clientId), 11, '0');
     }
 
-    private long getNextClientIdFromSequence(@Nonnull final Connection connection) {
+    private long getNextClientIdFromSequence(final Connection connection) {
         final String selectClientIdSql = String.format(Locale.ROOT, "select nextval('%s.clients_seq')", schemaName);
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(selectClientIdSql)) {

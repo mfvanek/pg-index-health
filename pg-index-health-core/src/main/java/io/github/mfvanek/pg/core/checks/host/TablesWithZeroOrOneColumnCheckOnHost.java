@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for tables with zero or one column on a specific host.
@@ -28,7 +27,7 @@ import javax.annotation.Nonnull;
  */
 public class TablesWithZeroOrOneColumnCheckOnHost extends AbstractCheckOnHost<TableWithColumns> {
 
-    public TablesWithZeroOrOneColumnCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public TablesWithZeroOrOneColumnCheckOnHost(final PgConnection pgConnection) {
         super(TableWithColumns.class, pgConnection, Diagnostic.TABLES_WITH_ZERO_OR_ONE_COLUMN);
     }
 
@@ -38,9 +37,8 @@ public class TablesWithZeroOrOneColumnCheckOnHost extends AbstractCheckOnHost<Ta
      * @param pgContext check's context with the specified schema
      * @return list of tables with zero or one column
      */
-    @Nonnull
     @Override
-    protected List<TableWithColumns> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<TableWithColumns> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, TableWithColumnsExtractor.of());
     }
 }

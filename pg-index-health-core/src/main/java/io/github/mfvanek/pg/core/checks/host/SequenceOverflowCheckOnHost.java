@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for sequence overflow on a specific host.
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class SequenceOverflowCheckOnHost extends AbstractCheckOnHost<SequenceState> {
 
-    public SequenceOverflowCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public SequenceOverflowCheckOnHost(final PgConnection pgConnection) {
         super(SequenceState.class, pgConnection, Diagnostic.SEQUENCE_OVERFLOW);
     }
 
@@ -37,9 +36,8 @@ public class SequenceOverflowCheckOnHost extends AbstractCheckOnHost<SequenceSta
      * @return list of sequences close to overflow
      * @see SequenceState
      */
-    @Nonnull
     @Override
-    protected List<SequenceState> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<SequenceState> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String sequenceName = rs.getString("sequence_name");
             final String dataType = rs.getString("data_type");

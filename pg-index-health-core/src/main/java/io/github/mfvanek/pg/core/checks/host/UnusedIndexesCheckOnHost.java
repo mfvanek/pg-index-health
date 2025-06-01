@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for unused indexes on a specific host.
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class UnusedIndexesCheckOnHost extends AbstractCheckOnHost<UnusedIndex> {
 
-    public UnusedIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public UnusedIndexesCheckOnHost(final PgConnection pgConnection) {
         super(UnusedIndex.class, pgConnection, Diagnostic.UNUSED_INDEXES);
     }
 
@@ -36,9 +35,8 @@ public class UnusedIndexesCheckOnHost extends AbstractCheckOnHost<UnusedIndex> {
      * @param pgContext check's context with the specified schema
      * @return list of unused indexes
      */
-    @Nonnull
     @Override
-    protected List<UnusedIndex> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<UnusedIndex> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);

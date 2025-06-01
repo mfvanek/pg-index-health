@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for objects whose names do not follow naming convention (that have to be enclosed in double-quotes) on a specific host.
@@ -30,7 +29,7 @@ import javax.annotation.Nonnull;
  */
 public class ObjectsNotFollowingNamingConventionCheckOnHost extends AbstractCheckOnHost<AnyObject> {
 
-    public ObjectsNotFollowingNamingConventionCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public ObjectsNotFollowingNamingConventionCheckOnHost(final PgConnection pgConnection) {
         super(AnyObject.class, pgConnection, Diagnostic.OBJECTS_NOT_FOLLOWING_NAMING_CONVENTION);
     }
 
@@ -40,9 +39,8 @@ public class ObjectsNotFollowingNamingConventionCheckOnHost extends AbstractChec
      * @param pgContext check's context with the specified schema; must not be null
      * @return list of objects whose names do not follow naming convention
      */
-    @Nonnull
     @Override
-    protected List<AnyObject> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<AnyObject> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, AnyObjectExtractor.of());
     }
 }
