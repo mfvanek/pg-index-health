@@ -58,7 +58,7 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
         this.checksOnHosts = new HashMap<>();
         this.acrossClusterResultsMapper = acrossClusterResultsMapper;
         final DatabaseCheckOnHost<T> checkOnPrimary = computeCheckForPrimaryIfNeed();
-        if (checkOnPrimary.getDiagnostic().isAcrossCluster() && Objects.isNull(acrossClusterResultsMapper)) {
+        if (checkOnPrimary.getDiagnostic().isAcrossCluster() && acrossClusterResultsMapper == null) {
             throw new IllegalArgumentException("acrossClusterResultsMapper cannot be null for diagnostic " + checkOnPrimary.getDiagnostic());
         }
     }
@@ -115,7 +115,7 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
             final List<T> resultsFromHost = executeOnHost(pgConnection, pgContext, exclusionsFilter);
             acrossClusterResults.add(resultsFromHost);
         }
-        return acrossClusterResultsMapper.apply(acrossClusterResults);
+        return acrossClusterResultsMapper.apply(acrossClusterResults); // acrossClusterResultsMapper cannot be null here
     }
 
     private List<T> executeOnHost(final PgConnection connectionToHost,

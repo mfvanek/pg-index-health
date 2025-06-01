@@ -105,27 +105,22 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     }
 
     public DataSource getDataSourceForPrimary() {
-        throwErrorIfNotInitialized();
         return dataSourceForPrimary;
     }
 
     public DataSource getDataSourceForStandBy() {
-        throwErrorIfNotInitialized();
         return dataSourceForStandBy;
     }
 
     public String getFirstContainerJdbcUrl() {
-        throwErrorIfNotInitialized();
         return containerForPrimary.getJdbcUrl();
     }
 
     public String getSecondContainerJdbcUrl() {
-        throwErrorIfNotInitialized();
         return containerForStandBy.getJdbcUrl();
     }
 
     public String getCommonUrlToPrimary() {
-        throwErrorIfNotInitialized();
         return PgUrlParser.buildCommonUrlToPrimary(containerForPrimary.getJdbcUrl(), containerForStandBy.getJdbcUrl());
     }
 
@@ -172,13 +167,6 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
             .withNetworkAliases(alias)
             .withExposedPorts(5432)
             .waitingFor(waitStrategy);
-    }
-
-    @ExcludeFromJacocoGeneratedReport
-    private void throwErrorIfNotInitialized() {
-        if (containerForPrimary == null || dataSourceForPrimary == null || containerForStandBy == null || dataSourceForStandBy == null) {
-            throw new AssertionError("not initialized");
-        }
     }
 
     public static PostgreSqlClusterBuilder builder() {
