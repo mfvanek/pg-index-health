@@ -9,7 +9,7 @@
  */
 
 /**
- * A sequence related classes and interfaces.
+ * Sequence related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.model.sequence;

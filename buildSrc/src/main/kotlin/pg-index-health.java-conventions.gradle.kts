@@ -31,7 +31,7 @@ dependencies {
     errorprone("com.uber.nullaway:nullaway:0.12.7")
 
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.9")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.10")
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -41,9 +41,7 @@ tasks.withType<JavaCompile>().configureEach {
         option("NullAway:OnlyNullMarked", "true")
         error("NullAway")
         if (name.lowercase().contains("test")) {
-            options.errorprone {
-                disable("NullAway")
-            }
+            disable("NullAway")
         }
     }
 }

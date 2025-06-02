@@ -9,7 +9,7 @@
  */
 
 /**
- * A connection testing utils.
+ * Connection testing utils.
  */
 @NullMarked
 package io.github.mfvanek.pg.connection.fixtures.support;

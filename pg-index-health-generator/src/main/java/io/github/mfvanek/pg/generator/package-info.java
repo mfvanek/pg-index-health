@@ -9,7 +9,7 @@
  */
 
 /**
- * A database migrations generator related classes and interfaces.
+ * Database migrations generator related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.generator;

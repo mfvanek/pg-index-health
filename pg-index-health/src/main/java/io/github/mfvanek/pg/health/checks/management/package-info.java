@@ -9,7 +9,7 @@
  */
 
 /**
- * A database management related classes and interfaces.
+ * Database management related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.health.checks.management;

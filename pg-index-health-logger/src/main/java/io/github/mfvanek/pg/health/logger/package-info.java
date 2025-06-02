@@ -9,7 +9,7 @@
  */
 
 /**
- * A database structure health data logging related classes and interfaces.
+ * Database structure health data logging related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.health.logger;

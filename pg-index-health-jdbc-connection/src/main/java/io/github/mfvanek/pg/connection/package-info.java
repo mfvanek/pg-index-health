@@ -9,7 +9,7 @@
  */
 
 /**
- * A PostgreSQL connection related classes and interfaces.
+ * PostgreSQL connection related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.connection;

@@ -9,7 +9,7 @@
  */
 
 /**
- * A statistics related classes and interfaces.
+ * Statistics related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.core.statistics;

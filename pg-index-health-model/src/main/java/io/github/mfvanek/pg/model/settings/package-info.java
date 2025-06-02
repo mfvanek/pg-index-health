@@ -9,7 +9,7 @@
  */
 
 /**
- * A settings related classes and interfaces.
+ * Settings related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.model.settings;

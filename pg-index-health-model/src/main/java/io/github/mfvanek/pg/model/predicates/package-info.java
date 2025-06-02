@@ -9,7 +9,7 @@
  */
 
 /**
- * A set of classes for filtering {@link io.github.mfvanek.pg.model.dbobject.DbObject} instances.
+ * Set of classes for filtering {@link io.github.mfvanek.pg.model.dbobject.DbObject} instances.
  */
 @NullMarked
 package io.github.mfvanek.pg.model.predicates;
