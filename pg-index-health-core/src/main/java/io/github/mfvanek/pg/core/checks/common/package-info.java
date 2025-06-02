@@ -9,7 +9,7 @@
  */
 
 /**
- * A common checks related classes and interfaces.
+ * Common checks related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.core.checks.common;

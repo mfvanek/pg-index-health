@@ -9,7 +9,7 @@
  */
 
 /**
- * A constraint related classes and interfaces.
+ * Constraint related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.model.constraint;

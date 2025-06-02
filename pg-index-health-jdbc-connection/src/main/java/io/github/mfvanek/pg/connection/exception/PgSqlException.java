@@ -20,7 +20,7 @@ import java.sql.SQLException;
  */
 public class PgSqlException extends RuntimeException {
 
-    private static final long serialVersionUID = -6917248037245766939L;
+    private static final long serialVersionUID = -8740709401886468019L;
 
     /**
      * Constructs a new {@code PgSqlException} with the specified cause.

@@ -9,7 +9,7 @@
  */
 
 /**
- * A bloat related classes and interfaces.
+ * Bloat related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.model.bloat;

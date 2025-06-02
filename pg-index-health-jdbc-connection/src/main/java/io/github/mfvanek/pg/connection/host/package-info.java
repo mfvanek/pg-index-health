@@ -9,7 +9,7 @@
  */
 
 /**
- * A PostgreSQL host related classes and interfaces.
+ * PostgreSQL host related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.connection.host;

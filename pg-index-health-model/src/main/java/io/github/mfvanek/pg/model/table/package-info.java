@@ -9,7 +9,7 @@
  */
 
 /**
- * A table related classes and interfaces.
+ * Table related classes and interfaces.
  */
 @NullMarked
 package io.github.mfvanek.pg.model.table;

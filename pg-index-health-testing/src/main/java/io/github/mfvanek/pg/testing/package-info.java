@@ -9,7 +9,7 @@
  */
 
 /**
- * A custom PostgreSQL container for testing in cluster environment.
+ * Custom PostgreSQL container for testing in cluster environment.
  */
 @NullMarked
 package io.github.mfvanek.pg.testing;

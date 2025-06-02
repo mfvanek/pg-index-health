@@ -9,7 +9,7 @@
  */
 
 /**
- * A model testing utils.
+ * Models testing utils.
  */
 @NullMarked
 package io.github.mfvanek.pg.model.fixtures.support;
