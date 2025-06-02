@@ -12,8 +12,6 @@ package io.github.mfvanek.pg.core.utils;
 
 import io.github.mfvanek.pg.model.validation.Validators;
 
-import javax.annotation.Nonnull;
-
 @SuppressWarnings({"PMD.AvoidReassigningLoopVariables", "PMD.CognitiveComplexity", "PMD.CyclomaticComplexity", "checkstyle:CyclomaticComplexity", "checkstyle:ModifiedControlVariable"})
 public final class NamedParametersParser {
 
@@ -30,12 +28,11 @@ public final class NamedParametersParser {
     private boolean isInSquareBrackets;
     private char currentCharacter;
 
-    private NamedParametersParser(@Nonnull final String originalSqlQuery) {
+    private NamedParametersParser(final String originalSqlQuery) {
         this.originalSqlQuery = Validators.notBlank(originalSqlQuery, "originalSqlQuery");
         this.queryLength = originalSqlQuery.length();
     }
 
-    @Nonnull
     private String doParse() {
         final StringBuilder resultQuery = new StringBuilder(queryLength);
         for (int i = 0; i < queryLength; ++i) {
@@ -118,8 +115,7 @@ public final class NamedParametersParser {
         }
     }
 
-    @Nonnull
-    public static String parse(@Nonnull final String originalSqlQuery) {
+    public static String parse(final String originalSqlQuery) {
         return new NamedParametersParser(originalSqlQuery).doParse();
     }
 }

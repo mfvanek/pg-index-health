@@ -22,7 +22,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 
 /**
  * Implementation of {@code DatabaseManagement}.
@@ -38,8 +37,8 @@ public class DatabaseManagementImpl implements DatabaseManagement {
     private final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory;
     private final Map<PgHost, StatisticsMaintenanceOnHost> statistics;
 
-    public DatabaseManagementImpl(@Nonnull final HighAvailabilityPgConnection haPgConnection,
-                                  @Nonnull final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory) {
+    public DatabaseManagementImpl(final HighAvailabilityPgConnection haPgConnection,
+                                  final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory) {
         this.haPgConnection = Objects.requireNonNull(haPgConnection, "haPgConnection cannot be null");
         this.statisticsOnHostFactory = Objects.requireNonNull(statisticsOnHostFactory, "statisticsOnHostFactory cannot be null");
         this.statistics = new HashMap<>();
@@ -63,21 +62,18 @@ public class DatabaseManagementImpl implements DatabaseManagement {
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
     public Optional<OffsetDateTime> getLastStatsResetTimestamp() {
         return computeStatisticsForHostIfNeed(getPrimaryAndLog())
             .getLastStatsResetTimestamp();
     }
 
-    @Nonnull
     private PgConnection getPrimaryAndLog() {
         final PgConnection connectionToPrimary = haPgConnection.getConnectionToPrimary();
         LOGGER.fine(() -> "Going to execute on primary host " + connectionToPrimary.getHost().getName());
         return connectionToPrimary;
     }
 
-    @Nonnull
-    private StatisticsMaintenanceOnHost computeStatisticsForHostIfNeed(@Nonnull final PgConnection connectionToHost) {
+    private StatisticsMaintenanceOnHost computeStatisticsForHostIfNeed(final PgConnection connectionToHost) {
         return statistics.computeIfAbsent(connectionToHost.getHost(), h -> statisticsOnHostFactory.apply(connectionToHost));
     }
 }

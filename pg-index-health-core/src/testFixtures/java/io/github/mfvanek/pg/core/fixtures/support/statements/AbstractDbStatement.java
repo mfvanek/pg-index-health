@@ -17,14 +17,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Locale;
-import javax.annotation.Nonnull;
 
 public abstract class AbstractDbStatement implements DbStatement {
 
     protected void throwExceptionIfTableDoesNotExist(
-        @Nonnull final Statement statement,
-        @Nonnull final String tableName,
-        @Nonnull final String schemaName
+        final Statement statement,
+        final String tableName,
+        final String schemaName
     ) throws SQLException {
         final String checkQuery = String.format(Locale.ROOT, "select exists (%n" +
             "   select 1 %n" +
@@ -45,7 +44,6 @@ public abstract class AbstractDbStatement implements DbStatement {
         }
     }
 
-    @Nonnull
     protected abstract List<String> getSqlToExecute();
 
     /**
@@ -56,7 +54,7 @@ public abstract class AbstractDbStatement implements DbStatement {
      * @throws SQLException if a database access error occurs or the SQL statement is invalid.
      */
     @Override
-    public void execute(@Nonnull final Statement statement) throws SQLException {
+    public void execute(final Statement statement) throws SQLException {
         final String schemaName = SchemaNameHolder.getSchemaName();
         for (final String sql : getSqlToExecute()) {
             statement.execute(sql.replace("{schemaName}", schemaName));
@@ -64,7 +62,7 @@ public abstract class AbstractDbStatement implements DbStatement {
         postExecute(statement, schemaName);
     }
 
-    protected void postExecute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
+    protected void postExecute(final Statement statement, final String schemaName) throws SQLException {
         //This method is intended to be overridden by subclasses to perform any post-execution logic.
     }
 }

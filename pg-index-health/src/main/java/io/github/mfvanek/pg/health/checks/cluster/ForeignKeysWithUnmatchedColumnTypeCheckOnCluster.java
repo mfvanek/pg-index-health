@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ForeignKeysWithUnmatchedColumnTypeCheckOnHost;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for foreign keys where the type of the constrained column does not match the type in the referenced table on all hosts in the cluster.
  * <p>
@@ -30,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public class ForeignKeysWithUnmatchedColumnTypeCheckOnCluster extends AbstractCheckOnCluster<ForeignKey> {
 
-    public ForeignKeysWithUnmatchedColumnTypeCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public ForeignKeysWithUnmatchedColumnTypeCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ForeignKeysWithUnmatchedColumnTypeCheckOnHost::new);
     }
 }

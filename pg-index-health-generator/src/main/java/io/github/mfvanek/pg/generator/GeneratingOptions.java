@@ -11,16 +11,13 @@
 package io.github.mfvanek.pg.generator;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * Options to generate sql queries for database migration.
+ * Immutable options to generate sql queries for database migration.
  *
  * @author Ivan Vakhrushev
  * @since 0.5.0
  */
-@Immutable
 public class GeneratingOptions {
 
     /**
@@ -58,7 +55,7 @@ public class GeneratingOptions {
                               final int indentation,
                               final boolean uppercaseForKeywords,
                               final boolean nameWithoutNulls,
-                              @Nonnull final IdxPosition idxPosition) {
+                              final IdxPosition idxPosition) {
         this.concurrently = concurrently;
         this.excludeNulls = excludeNulls;
         this.breakLines = breakLines;
@@ -92,7 +89,6 @@ public class GeneratingOptions {
         return nameWithoutNulls;
     }
 
-    @Nonnull
     public IdxPosition getIdxPosition() {
         return idxPosition;
     }
@@ -104,7 +100,6 @@ public class GeneratingOptions {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return GeneratingOptions.class.getSimpleName() + '{' +
@@ -118,7 +113,6 @@ public class GeneratingOptions {
             '}';
     }
 
-    @Nonnull
     public static Builder builder() {
         return new Builder();
     }
@@ -136,7 +130,6 @@ public class GeneratingOptions {
         private Builder() {
         }
 
-        @Nonnull
         public GeneratingOptions build() {
             return new GeneratingOptions(concurrently, excludeNulls, breakLines, indentation, uppercaseForKeywords, nameWithoutNulls, idxPosition);
         }
@@ -146,7 +139,6 @@ public class GeneratingOptions {
          *
          * @return builder object
          */
-        @Nonnull
         public Builder concurrently() {
             this.concurrently = true;
             return this;
@@ -157,68 +149,57 @@ public class GeneratingOptions {
          *
          * @return builder object
          */
-        @Nonnull
         public Builder normally() {
             this.concurrently = false;
             return this;
         }
 
-        @Nonnull
         public Builder excludeNulls() {
             this.excludeNulls = true;
             return this;
         }
 
-        @Nonnull
         public Builder includeNulls() {
             this.excludeNulls = false;
             return this;
         }
 
-        @Nonnull
         public Builder breakLines() {
             this.breakLines = true;
             return this;
         }
 
-        @Nonnull
         public Builder doNotBreakLines() {
             this.breakLines = false;
             return this;
         }
 
-        @Nonnull
         public Builder withIndentation(final int indentation) {
             this.indentation = validateIndentation(indentation);
             return this;
         }
 
-        @Nonnull
         public Builder uppercaseForKeywords() {
             this.uppercaseForKeywords = true;
             return this;
         }
 
-        @Nonnull
         public Builder lowercaseForKeywords() {
             this.uppercaseForKeywords = false;
             return this;
         }
 
-        @Nonnull
         public Builder nameWithoutNulls() {
             this.nameWithoutNulls = true;
             return this;
         }
 
-        @Nonnull
         public Builder doNotNameWithoutNulls() {
             this.nameWithoutNulls = false;
             return this;
         }
 
-        @Nonnull
-        public Builder withIdxPosition(@Nonnull final IdxPosition idxPosition) {
+        public Builder withIdxPosition(final IdxPosition idxPosition) {
             this.idxPosition = Objects.requireNonNull(idxPosition, "idxPosition cannot be null");
             return this;
         }
@@ -226,7 +207,6 @@ public class GeneratingOptions {
         /**
          * {@inheritDoc}
          */
-        @Nonnull
         @Override
         public String toString() {
             return Builder.class.getSimpleName() + '{' +

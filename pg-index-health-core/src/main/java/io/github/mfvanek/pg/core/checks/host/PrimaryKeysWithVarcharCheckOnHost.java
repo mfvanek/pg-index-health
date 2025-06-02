@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for primary keys with columns of fixed length varchar(32/36/38) type on a specific host.
@@ -37,7 +36,7 @@ import javax.annotation.Nonnull;
  */
 public class PrimaryKeysWithVarcharCheckOnHost extends AbstractCheckOnHost<IndexWithColumns> {
 
-    public PrimaryKeysWithVarcharCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public PrimaryKeysWithVarcharCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithColumns.class, pgConnection, Diagnostic.PRIMARY_KEYS_WITH_VARCHAR);
     }
 
@@ -47,9 +46,8 @@ public class PrimaryKeysWithVarcharCheckOnHost extends AbstractCheckOnHost<Index
      * @param pgContext check's context with the specified schema
      * @return list of primary keys with columns of fixed length varchar
      */
-    @Nonnull
     @Override
-    protected List<IndexWithColumns> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, IndexWithColumnsExtractor.of());
     }
 }

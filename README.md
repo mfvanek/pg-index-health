@@ -180,12 +180,13 @@ Using Maven:
 
 ### Standard test
 
-Add a standard test to your project as shown below. Ideally, all checks should work and return an empty result.
+Add a standard test to your project as shown below. Ideally, all checks should pass and return an empty result.
 
 ```java
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -200,7 +201,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DatabaseStructureStaticAnalysisTest {
 
     @Autowired
-    private List<DatabaseCheckOnHost<? extends DbObject>> checks;
+    private List<DatabaseCheckOnHost<? extends @NonNull DbObject>> checks;
 
     @Test
     void checksShouldWork() {
@@ -216,6 +217,44 @@ class DatabaseStructureStaticAnalysisTest {
     }
 }
 ```
+
+<details>
+<summary>with Kotlin</summary>
+
+```kotlin
+import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost
+import io.github.mfvanek.pg.core.checks.common.Diagnostic
+import io.github.mfvanek.pg.model.dbobject.DbObject
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
+
+@SpringBootTest
+@ActiveProfiles("test")
+internal class DatabaseStructureStaticAnalysisTest {
+
+    @Autowired
+    private lateinit var checks: List<DatabaseCheckOnHost<out DbObject>>
+
+    @Test
+    fun checksShouldWork() {
+        assertThat(checks)
+            .hasSameSizeAs(Diagnostic.entries.toTypedArray())
+
+        checks
+            .filter { it.isStatic }
+            .forEach {
+                assertThat(it.check())
+                    .`as`(it.diagnostic.name)
+                    .isEmpty()
+            }
+    }
+}
+```
+
+</details>
 
 ### Spring Boot compatibility
 

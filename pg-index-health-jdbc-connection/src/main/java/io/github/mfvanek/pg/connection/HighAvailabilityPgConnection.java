@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.connection;
 
 import java.util.Set;
-import javax.annotation.Nonnull;
 
 /**
  * An abstraction of a connection to a high availability cluster (with set of primary host and replicas).
@@ -26,7 +25,6 @@ public interface HighAvailabilityPgConnection {
      *
      * @return {@code PgConnection} to a primary host in the cluster
      */
-    @Nonnull
     PgConnection getConnectionToPrimary();
 
     /**
@@ -34,6 +32,5 @@ public interface HighAvailabilityPgConnection {
      *
      * @return {@code Set} of connections to all hosts in target cluster
      */
-    @Nonnull
     Set<PgConnection> getConnectionsToAllHostsInCluster();
 }

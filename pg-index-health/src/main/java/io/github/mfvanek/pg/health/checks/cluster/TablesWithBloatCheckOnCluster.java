@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for tables bloat on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class TablesWithBloatCheckOnCluster extends AbstractCheckOnCluster<TableWithBloat> {
 
-    public TablesWithBloatCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public TablesWithBloatCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesWithBloatCheckOnHost::new);
     }
 }

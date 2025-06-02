@@ -12,8 +12,6 @@ package io.github.mfvanek.pg.model.column;
 
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
-import javax.annotation.Nonnull;
-
 /**
  * Allows getting column name.
  *
@@ -28,7 +26,6 @@ public interface ColumnNameAware extends TableNameAware {
      *
      * @return column name
      */
-    @Nonnull
     String getColumnName();
 
     /**

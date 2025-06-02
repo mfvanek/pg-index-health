@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.core.checks.common;
 
-import javax.annotation.Nonnull;
-
 /**
  * Allows getting information about rule related to the check.
  *
@@ -26,6 +24,5 @@ public interface DiagnosticAware {
      * @return diagnostic
      * @see Diagnostic
      */
-    @Nonnull
     Diagnostic getDiagnostic();
 }

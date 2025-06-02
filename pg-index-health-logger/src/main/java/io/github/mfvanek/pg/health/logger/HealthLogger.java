@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.health.logger;
 import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * An abstraction of indexes and tables health logger.
@@ -29,8 +28,7 @@ public interface HealthLogger {
      * @param pgContext  {@link PgContext}
      * @return results of logging health indexes
      */
-    @Nonnull
-    List<String> logAll(@Nonnull Exclusions exclusions, @Nonnull PgContext pgContext);
+    List<String> logAll(Exclusions exclusions, PgContext pgContext);
 
     /**
      * Logs indexes and tables health with given exclusions in default schema.
@@ -38,8 +36,7 @@ public interface HealthLogger {
      * @param exclusions {@link Exclusions}
      * @return results of logging health indexes
      */
-    @Nonnull
-    default List<String> logAll(@Nonnull final Exclusions exclusions) {
+    default List<String> logAll(final Exclusions exclusions) {
         return logAll(exclusions, PgContext.ofDefault());
     }
 }

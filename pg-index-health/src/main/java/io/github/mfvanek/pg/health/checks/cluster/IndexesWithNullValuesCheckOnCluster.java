@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithNullValuesCheckOnHost;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for indexes with null values on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class IndexesWithNullValuesCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
-    public IndexesWithNullValuesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public IndexesWithNullValuesCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, IndexesWithNullValuesCheckOnHost::new);
     }
 }

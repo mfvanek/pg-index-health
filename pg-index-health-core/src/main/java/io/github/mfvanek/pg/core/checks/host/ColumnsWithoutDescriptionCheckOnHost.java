@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for columns without description on a specific host.
@@ -27,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public class ColumnsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Column> {
 
-    public ColumnsWithoutDescriptionCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public ColumnsWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
         super(Column.class, pgConnection, Diagnostic.COLUMNS_WITHOUT_DESCRIPTION);
     }
 
@@ -38,9 +37,8 @@ public class ColumnsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Co
      * @return list of columns without description
      * @see <a href="https://www.postgresql.org/docs/current/sql-comment.html">SQL Commands - COMMENT</a>
      */
-    @Nonnull
     @Override
-    protected List<Column> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<Column> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, ColumnExtractor.of());
     }
 }

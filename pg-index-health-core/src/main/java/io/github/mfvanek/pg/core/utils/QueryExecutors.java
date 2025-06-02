@@ -26,7 +26,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 /**
@@ -51,10 +50,9 @@ public final class QueryExecutors {
      * @throws NullPointerException if any of the parameters are null
      * @throws PgSqlException       if a database access error occurs
      */
-    @Nonnull
-    public static <T> List<T> executeQuery(@Nonnull final PgConnection pgConnection,
-                                           @Nonnull final String sqlQuery,
-                                           @Nonnull final ResultSetExtractor<T> rse) {
+    public static <T> List<T> executeQuery(final PgConnection pgConnection,
+                                           final String sqlQuery,
+                                           final ResultSetExtractor<T> rse) {
         LOGGER.fine(() -> "Executing query: " + sqlQuery);
         Objects.requireNonNull(sqlQuery, "sqlQuery cannot be null");
         final DataSource dataSource = pgConnection.getDataSource();
@@ -85,11 +83,10 @@ public final class QueryExecutors {
      * @throws NullPointerException if any of the parameters are null
      * @throws PgSqlException       if a database access error occurs
      */
-    @Nonnull
-    public static <T> List<T> executeQueryWithSchema(@Nonnull final PgConnection pgConnection,
-                                                     @Nonnull final PgContext pgContext,
-                                                     @Nonnull final String sqlQuery,
-                                                     @Nonnull final ResultSetExtractor<T> rse) {
+    public static <T> List<T> executeQueryWithSchema(final PgConnection pgConnection,
+                                                     final PgContext pgContext,
+                                                     final String sqlQuery,
+                                                     final ResultSetExtractor<T> rse) {
         return executeQuery(pgConnection, pgContext, sqlQuery, rse, statement -> {
             try {
                 statement.setString(1, pgContext.getSchemaName());
@@ -111,11 +108,10 @@ public final class QueryExecutors {
      * @throws NullPointerException if any of the parameters are null
      * @throws PgSqlException       if a database access error occurs
      */
-    @Nonnull
-    public static <T> List<T> executeQueryWithBloatThreshold(@Nonnull final PgConnection pgConnection,
-                                                             @Nonnull final PgContext pgContext,
-                                                             @Nonnull final String sqlQuery,
-                                                             @Nonnull final ResultSetExtractor<T> rse) {
+    public static <T> List<T> executeQueryWithBloatThreshold(final PgConnection pgConnection,
+                                                             final PgContext pgContext,
+                                                             final String sqlQuery,
+                                                             final ResultSetExtractor<T> rse) {
         return executeQuery(pgConnection, pgContext, sqlQuery, rse, statement -> {
             try {
                 statement.setString(1, pgContext.getSchemaName());
@@ -138,11 +134,10 @@ public final class QueryExecutors {
      * @throws NullPointerException if any of the parameters are null
      * @throws PgSqlException       if a database access error occurs
      */
-    @Nonnull
-    public static <T> List<T> executeQueryWithRemainingPercentageThreshold(@Nonnull final PgConnection pgConnection,
-                                                                           @Nonnull final PgContext pgContext,
-                                                                           @Nonnull final String sqlQuery,
-                                                                           @Nonnull final ResultSetExtractor<T> rse) {
+    public static <T> List<T> executeQueryWithRemainingPercentageThreshold(final PgConnection pgConnection,
+                                                                           final PgContext pgContext,
+                                                                           final String sqlQuery,
+                                                                           final ResultSetExtractor<T> rse) {
         return executeQuery(pgConnection, pgContext, sqlQuery, rse, statement -> {
             try {
                 statement.setString(1, pgContext.getSchemaName());
@@ -153,12 +148,11 @@ public final class QueryExecutors {
         });
     }
 
-    @Nonnull
-    private static <T> List<T> executeQuery(@Nonnull final PgConnection pgConnection,
-                                            @Nonnull final PgContext pgContext,
-                                            @Nonnull final String sqlQuery,
-                                            @Nonnull final ResultSetExtractor<T> rse,
-                                            @Nonnull final Consumer<PreparedStatement> paramsSetter) {
+    private static <T> List<T> executeQuery(final PgConnection pgConnection,
+                                            final PgContext pgContext,
+                                            final String sqlQuery,
+                                            final ResultSetExtractor<T> rse,
+                                            final Consumer<PreparedStatement> paramsSetter) {
         LOGGER.fine(() -> String.format(Locale.ROOT, "Executing query with context %s: %s", pgContext, sqlQuery));
         Objects.requireNonNull(sqlQuery, "sqlQuery");
         final DataSource dataSource = pgConnection.getDataSource();

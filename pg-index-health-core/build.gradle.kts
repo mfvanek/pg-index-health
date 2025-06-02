@@ -15,7 +15,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core")
     testImplementation(libs.postgresql)
 
-    testFixturesImplementation(libs.jsr305)
+    testFixturesImplementation(libs.jspecify)
     testFixturesImplementation(libs.apache.commons.lang3)
     testFixturesImplementation(libs.postgresql)
     testFixturesImplementation(project(":pg-index-health-testing"))

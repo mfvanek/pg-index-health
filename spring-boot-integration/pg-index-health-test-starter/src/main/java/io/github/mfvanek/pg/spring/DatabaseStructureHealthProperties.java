@@ -15,8 +15,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
-import javax.annotation.concurrent.Immutable;
-
 /**
  * Represents properties for managing pg-index-health-test-starter configuration.
  *
@@ -25,7 +23,6 @@ import javax.annotation.concurrent.Immutable;
  */
 @ConstructorBinding
 @ConfigurationProperties(prefix = "pg.index.health.test")
-@Immutable
 public class DatabaseStructureHealthProperties {
 
     /**

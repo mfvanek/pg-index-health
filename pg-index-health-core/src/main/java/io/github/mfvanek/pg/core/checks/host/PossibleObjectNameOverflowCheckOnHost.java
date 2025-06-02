@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for objects whose names have a length of {@code max_identifier_length} (usually it is 63) on a specific host.
@@ -36,7 +35,7 @@ import javax.annotation.Nonnull;
  */
 public class PossibleObjectNameOverflowCheckOnHost extends AbstractCheckOnHost<AnyObject> {
 
-    public PossibleObjectNameOverflowCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public PossibleObjectNameOverflowCheckOnHost(final PgConnection pgConnection) {
         super(AnyObject.class, pgConnection, Diagnostic.POSSIBLE_OBJECT_NAME_OVERFLOW);
     }
 
@@ -46,9 +45,8 @@ public class PossibleObjectNameOverflowCheckOnHost extends AbstractCheckOnHost<A
      * @param pgContext check's context with the specified schema; must not be null
      * @return list of objects whose names have a length of {@code max_identifier_length}
      */
-    @Nonnull
     @Override
-    protected List<AnyObject> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<AnyObject> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, AnyObjectExtractor.of());
     }
 }

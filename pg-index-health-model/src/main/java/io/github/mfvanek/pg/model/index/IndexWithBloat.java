@@ -15,21 +15,18 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * Represents database index with information about bloat.
+ * An immutable representation of a database index with information about bloat.
  *
  * @author Ivan Vakhrushev
  */
-@Immutable
 public final class IndexWithBloat extends AbstractIndexAware implements BloatAware, Comparable<IndexWithBloat> {
 
     private final long bloatSizeInBytes;
     private final double bloatPercentage;
 
-    private IndexWithBloat(@Nonnull final Index index,
+    private IndexWithBloat(final Index index,
                            final long bloatSizeInBytes,
                            final double bloatPercentage) {
         super(index);
@@ -56,7 +53,6 @@ public final class IndexWithBloat extends AbstractIndexAware implements BloatAwa
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return IndexWithBloat.class.getSimpleName() + '{' +
@@ -95,7 +91,7 @@ public final class IndexWithBloat extends AbstractIndexAware implements BloatAwa
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(@Nonnull final IndexWithBloat other) {
+    public int compareTo(final IndexWithBloat other) {
         Objects.requireNonNull(other, "other cannot be null");
         return index.compareTo(other.index);
     }
@@ -110,9 +106,8 @@ public final class IndexWithBloat extends AbstractIndexAware implements BloatAwa
      * @param bloatPercentage  bloat percentage in the range from 0 to 100 inclusive.
      * @return {@code IndexWithBloat}
      */
-    @Nonnull
-    public static IndexWithBloat of(@Nonnull final String tableName,
-                                    @Nonnull final String indexName,
+    public static IndexWithBloat of(final String tableName,
+                                    final String indexName,
                                     final long indexSizeInBytes,
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
@@ -131,10 +126,9 @@ public final class IndexWithBloat extends AbstractIndexAware implements BloatAwa
      * @return {@code IndexWithBloat}
      * @since 0.14.3
      */
-    @Nonnull
-    public static IndexWithBloat of(@Nonnull final PgContext pgContext,
-                                    @Nonnull final String tableName,
-                                    @Nonnull final String indexName,
+    public static IndexWithBloat of(final PgContext pgContext,
+                                    final String tableName,
+                                    final String indexName,
                                     final long indexSizeInBytes,
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
@@ -150,10 +144,9 @@ public final class IndexWithBloat extends AbstractIndexAware implements BloatAwa
      * @return {@code IndexWithBloat}
      * @since 0.14.3
      */
-    @Nonnull
-    public static IndexWithBloat of(@Nonnull final PgContext pgContext,
-                                    @Nonnull final String tableName,
-                                    @Nonnull final String indexName) {
+    public static IndexWithBloat of(final PgContext pgContext,
+                                    final String tableName,
+                                    final String indexName) {
         return of(pgContext, tableName, indexName, 0L, 0L, 0.0);
     }
 
@@ -166,8 +159,7 @@ public final class IndexWithBloat extends AbstractIndexAware implements BloatAwa
      * @return {@code IndexWithBloat}
      * @since 0.15.0
      */
-    @Nonnull
-    public static IndexWithBloat of(@Nonnull final Index index,
+    public static IndexWithBloat of(final Index index,
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
         return new IndexWithBloat(index, bloatSizeInBytes, bloatPercentage);

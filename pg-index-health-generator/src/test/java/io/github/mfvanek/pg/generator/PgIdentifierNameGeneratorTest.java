@@ -12,10 +12,10 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGenerator.MAX_IDENTIFIER_LENGTH;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -225,25 +225,25 @@ class PgIdentifierNameGeneratorTest {
             .isEqualTo(generator.generateTruncatedIndexName());
     }
 
-    @Nonnull
+    @NonNull
     static ForeignKey notNullColumnWithSchema() {
         return ForeignKey.ofNotNullColumn("schema_name_that_should_be_omitted.table_with_very_very_very_long_name",
             "cn", "column_with_very_very_very_long_name");
     }
 
-    @Nonnull
+    @NonNull
     static ForeignKey nullableColumnWithSchema() {
         return ForeignKey.ofNullableColumn("schema_name_that_should_be_omitted.table_with_very_very_very_long_name",
             "cn", "column_with_very_very_very_long_name");
     }
 
-    @Nonnull
+    @NonNull
     static ForeignKey notNullColumnWithZeroHash() {
         return ForeignKey.ofNotNullColumn("table_with_very_very_very_long_name_that_is_even_longer",
             "cn", "corrugatestendentiousness");
     }
 
-    @Nonnull
+    @NonNull
     static ForeignKey severalColumnsWithoutNulls() {
         return ForeignKey.of("table_with_very_very_very_long_name", "cn",
             List.of(
@@ -252,7 +252,7 @@ class PgIdentifierNameGeneratorTest {
             ));
     }
 
-    @Nonnull
+    @NonNull
     static ForeignKey severalColumnsWithNulls() {
         return ForeignKey.of("table_with_very_very_very_long_name", "cn",
             List.of(

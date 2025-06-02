@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseConfigurer;
 import io.github.mfvanek.pg.core.fixtures.support.StatisticsAwareTestBase;
 import io.github.mfvanek.pg.model.context.PgContext;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -24,7 +25,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -139,14 +139,14 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
         });
     }
 
-    @Nonnull
-    private static String getExpectedValueForDefaultSchema(@Nonnull final Diagnostic diagnostic) {
+    @NonNull
+    private static String getExpectedValueForDefaultSchema(final Diagnostic diagnostic) {
         final LoggingKey key = SimpleLoggingKeyAdapter.of(diagnostic);
         return key.getSubKeyName() + ":0";
     }
 
-    @Nonnull
-    private static Predicate<String> ofKey(@Nonnull final Diagnostic diagnostic) {
+    @NonNull
+    private static Predicate<String> ofKey(final Diagnostic diagnostic) {
         return new SimpleLoggingKeyPredicate(SimpleLoggingKeyAdapter.of(diagnostic));
     }
 
@@ -154,7 +154,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
 
         private final LoggingKey key;
 
-        SimpleLoggingKeyPredicate(@Nonnull final LoggingKey key) {
+        SimpleLoggingKeyPredicate(final LoggingKey key) {
             this.key = Objects.requireNonNull(key);
         }
 

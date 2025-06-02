@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.health.logger;
 
-import javax.annotation.Nonnull;
-
 /**
  * Represents a logging key with associated metadata.
  *
@@ -25,7 +23,6 @@ public interface LoggingKey {
      *
      * @return the key name, never {@code null}.
      */
-    @Nonnull
     String getKeyName();
 
     /**
@@ -33,7 +30,6 @@ public interface LoggingKey {
      *
      * @return the sub-key name, never {@code null}.
      */
-    @Nonnull
     String getSubKeyName();
 
     /**
@@ -41,6 +37,5 @@ public interface LoggingKey {
      *
      * @return a description of the key, never {@code null}.
      */
-    @Nonnull
     String getDescription();
 }

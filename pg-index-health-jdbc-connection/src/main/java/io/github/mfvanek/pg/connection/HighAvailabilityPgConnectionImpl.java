@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 
 /**
  * Implementation of a connection to a high availability cluster (with set of primary host and replicas).
@@ -38,9 +37,9 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private final PrimaryHostDeterminer primaryHostDeterminer;
 
-    private HighAvailabilityPgConnectionImpl(@Nonnull final PgConnection connectionToPrimary,
-                                             @Nonnull final Collection<PgConnection> connectionsToAllHostsInCluster,
-                                             @Nonnull final PrimaryHostDeterminer primaryHostDeterminer) {
+    private HighAvailabilityPgConnectionImpl(final PgConnection connectionToPrimary,
+                                             final Collection<PgConnection> connectionsToAllHostsInCluster,
+                                             final PrimaryHostDeterminer primaryHostDeterminer) {
         this.primaryHostDeterminer = Objects.requireNonNull(primaryHostDeterminer);
         Objects.requireNonNull(connectionToPrimary, "connectionToPrimary");
         final Set<PgConnection> defensiveCopy = Set.copyOf(Objects.requireNonNull(connectionsToAllHostsInCluster, "connectionsToAllHostsInCluster"));
@@ -53,16 +52,15 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
+    @SuppressWarnings("NullAway")
     public PgConnection getConnectionToPrimary() {
-        return cachedConnectionToPrimary.get();
+        return cachedConnectionToPrimary.get(); // always not null
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
     public Set<PgConnection> getConnectionsToAllHostsInCluster() {
         return connectionsToAllHostsInCluster;
     }
@@ -73,8 +71,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
      * @param connectionToPrimary connection to the primary host in the single-node cluster.
      * @return {@code HighAvailabilityPgConnection}
      */
-    @Nonnull
-    public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToPrimary) {
+    public static HighAvailabilityPgConnection of(final PgConnection connectionToPrimary) {
         return of(connectionToPrimary, Set.of(connectionToPrimary));
     }
 
@@ -85,9 +82,8 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
      * @param connectionsToAllHostsInCluster connections to all replicas in the cluster.
      * @return {@code HighAvailabilityPgConnection}
      */
-    @Nonnull
-    public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToPrimary,
-                                                  @Nonnull final Collection<PgConnection> connectionsToAllHostsInCluster) {
+    public static HighAvailabilityPgConnection of(final PgConnection connectionToPrimary,
+                                                  final Collection<PgConnection> connectionsToAllHostsInCluster) {
         return of(connectionToPrimary, connectionsToAllHostsInCluster, DEFAULT_PRIMARY_REFRESH_INTERVAL_MILLISECONDS);
     }
 
@@ -99,9 +95,8 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
      * @param primaryRefreshIntervalMilliseconds time interval in milliseconds to refresh connection to the primary host.
      * @return {@code HighAvailabilityPgConnection}
      */
-    @Nonnull
-    public static HighAvailabilityPgConnection of(@Nonnull final PgConnection connectionToPrimary,
-                                                  @Nonnull final Collection<PgConnection> connectionsToAllHostsInCluster,
+    public static HighAvailabilityPgConnection of(final PgConnection connectionToPrimary,
+                                                  final Collection<PgConnection> connectionsToAllHostsInCluster,
                                                   final long primaryRefreshIntervalMilliseconds) {
         final PrimaryHostDeterminer primaryHostDeterminer = new PrimaryHostDeterminerImpl();
         final HighAvailabilityPgConnectionImpl highAvailabilityPgConnection = new HighAvailabilityPgConnectionImpl(connectionToPrimary, connectionsToAllHostsInCluster, primaryHostDeterminer);
@@ -131,8 +126,8 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
         });
     }
 
-    private static void shouldContainsConnectionToPrimary(@Nonnull final PgConnection connectionToPrimary,
-                                                          @Nonnull final Set<PgConnection> connectionsToAllHostsInCluster) {
+    private static void shouldContainsConnectionToPrimary(final PgConnection connectionToPrimary,
+                                                          final Set<PgConnection> connectionsToAllHostsInCluster) {
         if (!connectionsToAllHostsInCluster.contains(connectionToPrimary)) {
             throw new IllegalArgumentException("connectionsToAllHostsInCluster have to contain a connection to the primary");
         }

@@ -13,8 +13,6 @@ package io.github.mfvanek.pg.testing;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 
-import javax.annotation.Nonnull;
-
 /**
  * Builder for DataSource.
  *
@@ -27,8 +25,7 @@ final class PostgreSqlDataSourceHelper {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
-    static BasicDataSource buildDataSource(@Nonnull final JdbcDatabaseContainer<?> container) {
+    static BasicDataSource buildDataSource(final JdbcDatabaseContainer<?> container) {
         final BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setUrl(container.getJdbcUrl());
         basicDataSource.setUsername(container.getUsername());

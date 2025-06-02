@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.annotation.Nonnull;
 
 /**
  * Utility class providing various collection-related utility methods.
@@ -33,8 +32,7 @@ public final class CollectionUtils {
      * @param <T>    the generic type that is able to represent the types contained in both input collections.
      * @return the intersection of the two collections
      */
-    @Nonnull
-    public static <T> Collection<T> intersection(@Nonnull final Collection<? extends T> first, @Nonnull final Collection<? extends T> second) {
+    public static <T> Collection<T> intersection(final Collection<? extends T> first, final Collection<? extends T> second) {
         Objects.requireNonNull(first, "first cannot be null");
         final Set<T> prepared = Set.copyOf(Objects.requireNonNull(second, "second cannot be null"));
         final Set<T> result = new LinkedHashSet<>();

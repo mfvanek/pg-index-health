@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.spring.postgres;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DatabaseStructureStaticAnalysisTest {
 
     @Autowired
-    private List<DatabaseCheckOnHost<? extends DbObject>> checks;
+    private List<DatabaseCheckOnHost<? extends @NonNull DbObject>> checks;
 
     @Test
     void checksShouldWork() {

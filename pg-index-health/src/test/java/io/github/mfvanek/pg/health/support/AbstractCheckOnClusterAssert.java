@@ -20,16 +20,15 @@ import org.assertj.core.api.ListAssert;
 import org.assertj.core.util.CheckReturnValue;
 
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
 
 @SuppressWarnings({"PMD.LinguisticNaming", "checkstyle:AbstractClassName"})
 public class AbstractCheckOnClusterAssert<E extends DbObject> extends AbstractAssert<AbstractCheckOnClusterAssert<E>, DatabaseCheckOnCluster<E>> {
 
-    protected AbstractCheckOnClusterAssert(@Nonnull final DatabaseCheckOnCluster<E> abstractCheckOnCluster) {
+    protected AbstractCheckOnClusterAssert(final DatabaseCheckOnCluster<E> abstractCheckOnCluster) {
         super(abstractCheckOnCluster, AbstractCheckOnClusterAssert.class);
     }
 
-    public <T> AbstractCheckOnClusterAssert<E> hasType(@Nonnull final Class<T> type) {
+    public <T> AbstractCheckOnClusterAssert<E> hasType(final Class<T> type) {
         isNotNull();
         if (!actual.getType().isAssignableFrom(type)) {
             failWithMessage("Expected type %s but was %s", type, actual.getType());
@@ -37,7 +36,7 @@ public class AbstractCheckOnClusterAssert<E extends DbObject> extends AbstractAs
         return this;
     }
 
-    public AbstractCheckOnClusterAssert<E> hasDiagnostic(@Nonnull final Diagnostic diagnostic) {
+    public AbstractCheckOnClusterAssert<E> hasDiagnostic(final Diagnostic diagnostic) {
         isNotNull();
         if (actual.getDiagnostic() != diagnostic) {
             failWithMessage("Expected diagnostic %s but was %s", diagnostic, actual.getDiagnostic());
@@ -68,19 +67,19 @@ public class AbstractCheckOnClusterAssert<E extends DbObject> extends AbstractAs
     }
 
     @CheckReturnValue
-    public ListAssert<E> executing(@Nonnull final PgContext pgContext) {
+    public ListAssert<E> executing(final PgContext pgContext) {
         isNotNull();
         return Assertions.assertThat(actual.check(pgContext));
     }
 
     @CheckReturnValue
-    public ListAssert<E> executing(@Nonnull final PgContext pgContext, @Nonnull final Predicate<? super E> exclusionsFilter) {
+    public ListAssert<E> executing(final PgContext pgContext, final Predicate<? super E> exclusionsFilter) {
         isNotNull();
         return Assertions.assertThat(actual.check(pgContext, exclusionsFilter));
     }
 
     @CheckReturnValue
-    public static <T extends DbObject> AbstractCheckOnClusterAssert<T> assertThat(@Nonnull final DatabaseCheckOnCluster<T> actual) {
+    public static <T extends DbObject> AbstractCheckOnClusterAssert<T> assertThat(final DatabaseCheckOnCluster<T> actual) {
         return new AbstractCheckOnClusterAssert<>(actual);
     }
 }

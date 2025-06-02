@@ -18,8 +18,6 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * A predicate that filters out database objects based on a specified set of column names.
@@ -30,16 +28,15 @@ import javax.annotation.concurrent.Immutable;
  * @see ColumnsAware
  * @since 0.15.0
  */
-@Immutable
 public final class SkipByColumnNamePredicate implements Predicate<DbObject> {
 
     private final Set<String> columnNamesToSkip;
 
-    private SkipByColumnNamePredicate(@Nonnull final Collection<String> columnNamesToSkip) {
+    private SkipByColumnNamePredicate(final Collection<String> columnNamesToSkip) {
         this.columnNamesToSkip = AbstractSkipTablesPredicate.prepareNamesToSkip(columnNamesToSkip);
     }
 
-    private SkipByColumnNamePredicate(@Nonnull final String columnNameToSkip) {
+    private SkipByColumnNamePredicate(final String columnNameToSkip) {
         this(AbstractSkipTablesPredicate.prepareSingleNameToSkip(columnNameToSkip, "columnNameToSkip"));
     }
 
@@ -50,7 +47,7 @@ public final class SkipByColumnNamePredicate implements Predicate<DbObject> {
      * @return {@code false} if the object's column name matches one in the skip list; {@code true} otherwise
      */
     @Override
-    public boolean test(@Nonnull final DbObject dbObject) {
+    public boolean test(final DbObject dbObject) {
         if (columnNamesToSkip.isEmpty()) {
             return true;
         }
@@ -75,7 +72,7 @@ public final class SkipByColumnNamePredicate implements Predicate<DbObject> {
      * @param columnNameToSkip the column name to skip; must be non-blank
      * @return a {@code SkipByColumnNamePredicate} instance for the specified column name
      */
-    public static Predicate<DbObject> ofName(@Nonnull final String columnNameToSkip) {
+    public static Predicate<DbObject> ofName(final String columnNameToSkip) {
         return new SkipByColumnNamePredicate(columnNameToSkip);
     }
 
@@ -85,7 +82,7 @@ public final class SkipByColumnNamePredicate implements Predicate<DbObject> {
      * @param columnNamesToSkip the collection of column names to skip; must be non-null
      * @return a {@code SkipByColumnNamePredicate} instance for the specified column names
      */
-    public static Predicate<DbObject> of(@Nonnull final Collection<String> columnNamesToSkip) {
+    public static Predicate<DbObject> of(final Collection<String> columnNamesToSkip) {
         return new SkipByColumnNamePredicate(columnNamesToSkip);
     }
 }

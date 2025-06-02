@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for sequence overflow on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class SequenceOverflowCheckOnCluster extends AbstractCheckOnCluster<SequenceState> {
 
-    public SequenceOverflowCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public SequenceOverflowCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, SequenceOverflowCheckOnHost::new);
     }
 }

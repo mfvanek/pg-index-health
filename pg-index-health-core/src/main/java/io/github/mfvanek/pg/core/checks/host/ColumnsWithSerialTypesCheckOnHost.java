@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for columns of serial types that are not primary keys on a specific host.
@@ -27,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public class ColumnsWithSerialTypesCheckOnHost extends AbstractCheckOnHost<ColumnWithSerialType> {
 
-    public ColumnsWithSerialTypesCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public ColumnsWithSerialTypesCheckOnHost(final PgConnection pgConnection) {
         super(ColumnWithSerialType.class, pgConnection, Diagnostic.COLUMNS_WITH_SERIAL_TYPES);
     }
 
@@ -37,9 +36,8 @@ public class ColumnsWithSerialTypesCheckOnHost extends AbstractCheckOnHost<Colum
      * @param pgContext check's context with the specified schema
      * @return list of columns with serial types that are not primary keys
      */
-    @Nonnull
     @Override
-    protected List<ColumnWithSerialType> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<ColumnWithSerialType> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, ColumnWithSerialTypeExtractor.of());
     }
 }

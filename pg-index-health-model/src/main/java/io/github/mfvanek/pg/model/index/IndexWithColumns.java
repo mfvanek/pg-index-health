@@ -18,22 +18,19 @@ import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.List;
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * Represents database index with information about size and columns.
+ * An immutable representation of a database index with information about size and columns.
  *
  * @author Ivan Vakhrushev
  * @since 0.11.0
  */
-@Immutable
 public final class IndexWithColumns extends AbstractIndexAware implements ColumnsAware, Comparable<IndexWithColumns> {
 
     private final List<Column> columns;
 
-    private IndexWithColumns(@Nonnull final Index index,
-                             @Nonnull final List<Column> columns) {
+    private IndexWithColumns(final Index index,
+                             final List<Column> columns) {
         super(index);
         final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columns, "columns cannot be null"));
         Validators.validateThatTableIsTheSame(index.getTableName(), defensiveCopy);
@@ -45,7 +42,6 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      *
      * @return list of columns
      */
-    @Nonnull
     @Override
     public List<ColumnNameAware> getColumns() {
         return List.copyOf(columns);
@@ -54,7 +50,6 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return IndexWithColumns.class.getSimpleName() + '{' +
@@ -92,7 +87,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(@Nonnull final IndexWithColumns other) {
+    public int compareTo(final IndexWithColumns other) {
         Objects.requireNonNull(other, "other cannot be null");
         return index.compareTo(other.index);
     }
@@ -106,11 +101,10 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param column           column in index; must be non-null.
      * @return {@code IndexWithColumns}
      */
-    @Nonnull
-    public static IndexWithColumns ofSingle(@Nonnull final String tableName,
-                                            @Nonnull final String indexName,
+    public static IndexWithColumns ofSingle(final String tableName,
+                                            final String indexName,
                                             final long indexSizeInBytes,
-                                            @Nonnull final Column column) {
+                                            final Column column) {
         return ofSingle(Index.of(tableName, indexName, indexSizeInBytes), column);
     }
 
@@ -125,12 +119,11 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @return {@code IndexWithColumns}
      * @since 0.14.3
      */
-    @Nonnull
-    public static IndexWithColumns ofSingle(@Nonnull final PgContext pgContext,
-                                            @Nonnull final String tableName,
-                                            @Nonnull final String indexName,
+    public static IndexWithColumns ofSingle(final PgContext pgContext,
+                                            final String tableName,
+                                            final String indexName,
                                             final long indexSizeInBytes,
-                                            @Nonnull final Column column) {
+                                            final Column column) {
         return ofSingle(Index.of(pgContext, tableName, indexName, indexSizeInBytes), column);
     }
 
@@ -142,9 +135,8 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @return {@code IndexWithColumns}
      * @since 0.15.0
      */
-    @Nonnull
-    public static IndexWithColumns ofSingle(@Nonnull final Index index,
-                                            @Nonnull final Column column) {
+    public static IndexWithColumns ofSingle(final Index index,
+                                            final Column column) {
         final List<Column> columns = List.of(Objects.requireNonNull(column, "column cannot be null"));
         return of(index, columns);
     }
@@ -159,11 +151,10 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @return {@code IndexWithColumns}
      * @since 0.15.0
      */
-    @Nonnull
-    public static IndexWithColumns ofNullable(@Nonnull final PgContext pgContext,
-                                              @Nonnull final String tableName,
-                                              @Nonnull final String indexName,
-                                              @Nonnull final String columnName) {
+    public static IndexWithColumns ofNullable(final PgContext pgContext,
+                                              final String tableName,
+                                              final String indexName,
+                                              final String columnName) {
         return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNullable(pgContext, tableName, columnName));
     }
 
@@ -177,11 +168,10 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @return {@code IndexWithColumns}
      * @since 0.15.0
      */
-    @Nonnull
-    public static IndexWithColumns ofNotNull(@Nonnull final PgContext pgContext,
-                                             @Nonnull final String tableName,
-                                             @Nonnull final String indexName,
-                                             @Nonnull final String columnName) {
+    public static IndexWithColumns ofNotNull(final PgContext pgContext,
+                                             final String tableName,
+                                             final String indexName,
+                                             final String columnName) {
         return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNotNull(pgContext, tableName, columnName));
     }
 
@@ -194,11 +184,10 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param columns          columns in index; must be non-null.
      * @return {@code IndexWithColumns}
      */
-    @Nonnull
-    public static IndexWithColumns ofColumns(@Nonnull final String tableName,
-                                             @Nonnull final String indexName,
+    public static IndexWithColumns ofColumns(final String tableName,
+                                             final String indexName,
                                              final long indexSizeInBytes,
-                                             @Nonnull final List<Column> columns) {
+                                             final List<Column> columns) {
         return of(Index.of(tableName, indexName, indexSizeInBytes), columns);
     }
 
@@ -213,12 +202,11 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @return {@code IndexWithColumns}
      * @since 0.14.3
      */
-    @Nonnull
-    public static IndexWithColumns ofColumns(@Nonnull final PgContext pgContext,
-                                             @Nonnull final String tableName,
-                                             @Nonnull final String indexName,
+    public static IndexWithColumns ofColumns(final PgContext pgContext,
+                                             final String tableName,
+                                             final String indexName,
                                              final long indexSizeInBytes,
-                                             @Nonnull final List<Column> columns) {
+                                             final List<Column> columns) {
         return of(Index.of(pgContext, tableName, indexName, indexSizeInBytes), columns);
     }
 
@@ -230,9 +218,8 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @return {@code IndexWithColumns}
      * @since 0.15.0
      */
-    @Nonnull
-    public static IndexWithColumns of(@Nonnull final Index index,
-                                      @Nonnull final List<Column> columns) {
+    public static IndexWithColumns of(final Index index,
+                                      final List<Column> columns) {
         return new IndexWithColumns(index, columns);
     }
 }

@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.spring.postgres.with.custom.user.config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import io.github.mfvanek.pg.testing.PostgresVersionHolder;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseDataSource;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +25,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 @Configuration(proxyBeanMethods = false)
@@ -44,8 +44,8 @@ public class DatabaseConfig {
 
     @Primary
     @Bean
-    public DataSource dataSource(@Nonnull final JdbcDatabaseContainer<?> jdbcDatabaseContainer,
-                                 @Nonnull final Environment environment,
+    public DataSource dataSource(@NonNull final JdbcDatabaseContainer<?> jdbcDatabaseContainer,
+                                 @NonNull final Environment environment,
                                  @Value("${spring.datasource.username}") final String appUserName,
                                  @Value("${spring.datasource.password}") final String appUserPassword) {
         ConfigurableEnvironmentMutator.addDatasourceUrlIfNeed(jdbcDatabaseContainer, environment);
@@ -59,7 +59,7 @@ public class DatabaseConfig {
 
     @LiquibaseDataSource
     @Bean
-    public DataSource liquibaseDataSource(@Nonnull final JdbcDatabaseContainer<?> jdbcDatabaseContainer) {
+    public DataSource liquibaseDataSource(@NonNull final JdbcDatabaseContainer<?> jdbcDatabaseContainer) {
         final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(jdbcDatabaseContainer.getJdbcUrl());
         hikariConfig.setUsername(jdbcDatabaseContainer.getUsername());

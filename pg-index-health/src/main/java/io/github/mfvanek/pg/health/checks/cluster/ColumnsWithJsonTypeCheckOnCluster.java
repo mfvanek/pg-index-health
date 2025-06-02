@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
 import io.github.mfvanek.pg.model.column.Column;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for columns with {@code json} type on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class ColumnsWithJsonTypeCheckOnCluster extends AbstractCheckOnCluster<Column> {
 
-    public ColumnsWithJsonTypeCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public ColumnsWithJsonTypeCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ColumnsWithJsonTypeCheckOnHost::new);
     }
 }

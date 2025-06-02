@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.core.checks.common;
 import io.github.mfvanek.pg.core.utils.QueryExecutors;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * A list of all supported diagnostics with corresponding sql queries and query executors.
@@ -70,9 +69,9 @@ public enum Diagnostic implements CheckTypeAware {
      * @param queryExecutor     the lambda which executes the associated sql query
      * @param runtimeCheck      whether this is a runtime diagnostic or static
      */
-    Diagnostic(@Nonnull final ExecutionTopology executionTopology,
-               @Nonnull final String sqlQueryFileName,
-               @Nonnull final QueryExecutor queryExecutor,
+    Diagnostic(final ExecutionTopology executionTopology,
+               final String sqlQueryFileName,
+               final QueryExecutor queryExecutor,
                final boolean runtimeCheck) {
         this.executionTopology = Objects.requireNonNull(executionTopology, "executionTopology cannot be null");
         this.sqlQueryFileName = Objects.requireNonNull(sqlQueryFileName, "sqlQueryFileName cannot be null");
@@ -87,8 +86,8 @@ public enum Diagnostic implements CheckTypeAware {
      * @param queryExecutor    the lambda which executes the associated sql query
      * @param runtimeCheck     whether this is a runtime diagnostic or static
      */
-    Diagnostic(@Nonnull final String sqlQueryFileName,
-               @Nonnull final QueryExecutor queryExecutor,
+    Diagnostic(final String sqlQueryFileName,
+               final QueryExecutor queryExecutor,
                final boolean runtimeCheck) {
         this(ExecutionTopology.ON_PRIMARY, sqlQueryFileName, queryExecutor, runtimeCheck);
     }
@@ -99,8 +98,8 @@ public enum Diagnostic implements CheckTypeAware {
      * @param executionTopology the place where the diagnostic should be executed
      * @param sqlQueryFileName  the associated sql query file name; must be non-null
      */
-    Diagnostic(@Nonnull final ExecutionTopology executionTopology,
-               @Nonnull final String sqlQueryFileName) {
+    Diagnostic(final ExecutionTopology executionTopology,
+               final String sqlQueryFileName) {
         this(executionTopology, sqlQueryFileName, QueryExecutors::executeQueryWithSchema, true);
     }
 
@@ -109,7 +108,7 @@ public enum Diagnostic implements CheckTypeAware {
      *
      * @param sqlQueryFileName the associated sql query file name; must be non-null
      */
-    Diagnostic(@Nonnull final String sqlQueryFileName) {
+    Diagnostic(final String sqlQueryFileName) {
         this(ExecutionTopology.ON_PRIMARY, sqlQueryFileName, QueryExecutors::executeQueryWithSchema, false);
     }
 
@@ -118,7 +117,6 @@ public enum Diagnostic implements CheckTypeAware {
      *
      * @return {@code ExecutionTopology}
      */
-    @Nonnull
     public ExecutionTopology getExecutionTopology() {
         return executionTopology;
     }
@@ -128,7 +126,6 @@ public enum Diagnostic implements CheckTypeAware {
      *
      * @return sql query file name
      */
-    @Nonnull
     public String getSqlQueryFileName() {
         return sqlQueryFileName;
     }
@@ -138,7 +135,6 @@ public enum Diagnostic implements CheckTypeAware {
      *
      * @return {@code QueryExecutor}
      */
-    @Nonnull
     public QueryExecutor getQueryExecutor() {
         return queryExecutor;
     }

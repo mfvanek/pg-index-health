@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedIndexesCheckOnHost;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for duplicated (completely identical) indexes on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class DuplicatedIndexesCheckOnCluster extends AbstractCheckOnCluster<DuplicatedIndexes> {
 
-    public DuplicatedIndexesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public DuplicatedIndexesCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, DuplicatedIndexesCheckOnHost::new);
     }
 }

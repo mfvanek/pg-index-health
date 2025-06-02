@@ -12,8 +12,6 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 
-import javax.annotation.Nonnull;
-
 /**
  * Migration generator for creating indexes covering foreign keys.
  *
@@ -24,13 +22,12 @@ public class ForeignKeyMigrationGenerator extends AbstractDbMigrationGenerator<F
 
     private final PgIndexOnForeignKeyGenerator generator;
 
-    public ForeignKeyMigrationGenerator(@Nonnull final GeneratingOptions options) {
+    public ForeignKeyMigrationGenerator(final GeneratingOptions options) {
         this.generator = new PgIndexOnForeignKeyGenerator(options);
     }
 
     @Override
-    @Nonnull
-    protected String generate(@Nonnull final ForeignKey foreignKey) {
+    protected String generate(final ForeignKey foreignKey) {
         return generator.generate(foreignKey);
     }
 }

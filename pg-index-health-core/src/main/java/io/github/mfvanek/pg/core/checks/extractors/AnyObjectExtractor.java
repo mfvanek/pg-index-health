@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.model.dbobject.AnyObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.annotation.Nonnull;
 
 /**
  * A mapper from raw data to {@link AnyObject} model.
@@ -34,9 +33,8 @@ public final class AnyObjectExtractor implements ResultSetExtractor<AnyObject> {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public AnyObject extractData(@Nonnull final ResultSet resultSet) throws SQLException {
+    public AnyObject extractData(final ResultSet resultSet) throws SQLException {
         final String objectName = resultSet.getString(OBJECT_NAME);
         final String objectType = resultSet.getString(OBJECT_TYPE);
         return AnyObject.ofRaw(objectName, objectType);
@@ -47,7 +45,6 @@ public final class AnyObjectExtractor implements ResultSetExtractor<AnyObject> {
      *
      * @return {@code AnyObjectExtractor} instance
      */
-    @Nonnull
     public static ResultSetExtractor<AnyObject> of() {
         return new AnyObjectExtractor();
     }

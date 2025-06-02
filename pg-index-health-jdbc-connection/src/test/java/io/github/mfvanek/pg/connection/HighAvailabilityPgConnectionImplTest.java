@@ -14,12 +14,12 @@ import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.connection.support.DatabaseAwareTestBase;
 import org.awaitility.Awaitility;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.logging.Level;
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -80,7 +80,7 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
             .hasMessage("connectionsToAllHostsInCluster have to contain a connection to the primary");
     }
 
-    @Nonnull
+    @NonNull
     private PgConnection getConnectionToReplica() {
         return PgConnectionImpl.of(getDataSource(), PgHostImpl.ofUrl("jdbc:postgresql://replica:5432"));
     }

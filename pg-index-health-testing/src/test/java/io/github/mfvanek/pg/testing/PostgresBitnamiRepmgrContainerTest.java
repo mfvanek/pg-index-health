@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.testing;
 
 import io.github.mfvanek.pg.model.units.MemoryUnit;
 import org.awaitility.Awaitility;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.Network;
 import org.testcontainers.utility.DockerImageName;
@@ -19,7 +20,6 @@ import org.testcontainers.utility.DockerImageName;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,7 +70,7 @@ class PostgresBitnamiRepmgrContainerTest {
         }
     }
 
-    @Nonnull
+    @NonNull
     private DockerImageName prepareDockerImageName() {
         final PostgresVersionHolder versionHolder = PostgresVersionHolder.forCluster();
         return DockerImageName.parse("docker.io/bitnami/postgresql-repmgr")

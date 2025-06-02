@@ -21,24 +21,21 @@ import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.List;
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * A representation of foreign key in a database.
+ * An immutable representation of foreign key in a database.
  *
  * @author Ivan Vakhrushev
  * @see TableNameAware
  * @see Constraint
  */
-@Immutable
 public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsAware {
 
     private final Constraint constraint;
     private final List<Column> columnsInConstraint;
 
-    private ForeignKey(@Nonnull final Constraint constraint,
-                       @Nonnull final List<Column> columnsInConstraint) {
+    private ForeignKey(final Constraint constraint,
+                       final List<Column> columnsInConstraint) {
         this.constraint = Objects.requireNonNull(constraint, "constraint cannot be null");
         if (this.constraint.getConstraintType() != ConstraintType.FOREIGN_KEY) {
             throw new IllegalArgumentException("constraint must be foreign key");
@@ -52,7 +49,6 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getConstraintName() {
         return constraint.getConstraintName();
@@ -61,7 +57,6 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public ConstraintType getConstraintType() {
         return constraint.getConstraintType();
@@ -70,7 +65,6 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return constraint.getName();
@@ -79,7 +73,6 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public PgObjectType getObjectType() {
         return constraint.getObjectType();
@@ -88,7 +81,6 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getTableName() {
         return constraint.getTableName();
@@ -101,7 +93,6 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @see Column
      * @since 0.14.6
      */
-    @Nonnull
     @Override
     public List<ColumnNameAware> getColumns() {
         return List.copyOf(columnsInConstraint);
@@ -135,7 +126,6 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return ForeignKey.class.getSimpleName() + '{' +
@@ -144,16 +134,14 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
             '}';
     }
 
-    @Nonnull
-    private static Constraint toConstraint(@Nonnull final String tableName,
-                                           @Nonnull final String constraintName) {
+    private static Constraint toConstraint(final String tableName,
+                                           final String constraintName) {
         return Constraint.ofType(tableName, constraintName, ConstraintType.FOREIGN_KEY);
     }
 
-    @Nonnull
-    private static Constraint toConstraint(@Nonnull final PgContext pgContext,
-                                           @Nonnull final String tableName,
-                                           @Nonnull final String constraintName) {
+    private static Constraint toConstraint(final PgContext pgContext,
+                                           final String tableName,
+                                           final String constraintName) {
         return Constraint.ofType(pgContext, tableName, constraintName, ConstraintType.FOREIGN_KEY);
     }
 
@@ -165,10 +153,9 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param columnsInConstraint list of columns that are included in constraint; should be non-empty.
      * @return {@code ForeignKey}
      */
-    @Nonnull
-    public static ForeignKey of(@Nonnull final String tableName,
-                                @Nonnull final String constraintName,
-                                @Nonnull final List<Column> columnsInConstraint) {
+    public static ForeignKey of(final String tableName,
+                                final String constraintName,
+                                final List<Column> columnsInConstraint) {
         return new ForeignKey(toConstraint(tableName, constraintName), columnsInConstraint);
     }
 
@@ -182,11 +169,10 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.14.5
      */
-    @Nonnull
-    public static ForeignKey of(@Nonnull final PgContext pgContext,
-                                @Nonnull final String tableName,
-                                @Nonnull final String constraintName,
-                                @Nonnull final List<Column> columnsInConstraint) {
+    public static ForeignKey of(final PgContext pgContext,
+                                final String tableName,
+                                final String constraintName,
+                                final List<Column> columnsInConstraint) {
         return new ForeignKey(toConstraint(pgContext, tableName, constraintName), columnsInConstraint);
     }
 
@@ -198,9 +184,8 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.15.0
      */
-    @Nonnull
-    public static ForeignKey ofColumn(@Nonnull final Constraint constraint,
-                                      @Nonnull final Column column) {
+    public static ForeignKey ofColumn(final Constraint constraint,
+                                      final Column column) {
         return new ForeignKey(constraint, List.of(Objects.requireNonNull(column, "column cannot be null")));
     }
 
@@ -212,10 +197,9 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param column         column that is included in constraint; must be non-null.
      * @return {@code ForeignKey}
      */
-    @Nonnull
-    public static ForeignKey ofColumn(@Nonnull final String tableName,
-                                      @Nonnull final String constraintName,
-                                      @Nonnull final Column column) {
+    public static ForeignKey ofColumn(final String tableName,
+                                      final String constraintName,
+                                      final Column column) {
         return ofColumn(toConstraint(tableName, constraintName), column);
     }
 
@@ -229,11 +213,10 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.15.0
      */
-    @Nonnull
-    public static ForeignKey ofColumn(@Nonnull final PgContext pgContext,
-                                      @Nonnull final String tableName,
-                                      @Nonnull final String constraintName,
-                                      @Nonnull final Column column) {
+    public static ForeignKey ofColumn(final PgContext pgContext,
+                                      final String tableName,
+                                      final String constraintName,
+                                      final Column column) {
         return ofColumn(toConstraint(pgContext, tableName, constraintName), column);
     }
 
@@ -245,10 +228,9 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      */
-    @Nonnull
-    public static ForeignKey ofNotNullColumn(@Nonnull final String tableName,
-                                             @Nonnull final String constraintName,
-                                             @Nonnull final String columnName) {
+    public static ForeignKey ofNotNullColumn(final String tableName,
+                                             final String constraintName,
+                                             final String columnName) {
         return ofColumn(tableName, constraintName, Column.ofNotNull(tableName, columnName));
     }
 
@@ -262,11 +244,10 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.14.5
      */
-    @Nonnull
-    public static ForeignKey ofNotNullColumn(@Nonnull final PgContext pgContext,
-                                             @Nonnull final String tableName,
-                                             @Nonnull final String constraintName,
-                                             @Nonnull final String columnName) {
+    public static ForeignKey ofNotNullColumn(final PgContext pgContext,
+                                             final String tableName,
+                                             final String constraintName,
+                                             final String columnName) {
         return ofColumn(pgContext, tableName, constraintName, Column.ofNotNull(pgContext, tableName, columnName));
     }
 
@@ -278,10 +259,9 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      */
-    @Nonnull
-    public static ForeignKey ofNullableColumn(@Nonnull final String tableName,
-                                              @Nonnull final String constraintName,
-                                              @Nonnull final String columnName) {
+    public static ForeignKey ofNullableColumn(final String tableName,
+                                              final String constraintName,
+                                              final String columnName) {
         return ofColumn(tableName, constraintName, Column.ofNullable(tableName, columnName));
     }
 
@@ -295,11 +275,10 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.14.5
      */
-    @Nonnull
-    public static ForeignKey ofNullableColumn(@Nonnull final PgContext pgContext,
-                                              @Nonnull final String tableName,
-                                              @Nonnull final String constraintName,
-                                              @Nonnull final String columnName) {
+    public static ForeignKey ofNullableColumn(final PgContext pgContext,
+                                              final String tableName,
+                                              final String constraintName,
+                                              final String columnName) {
         return ofColumn(pgContext, tableName, constraintName, Column.ofNullable(pgContext, tableName, columnName));
     }
 }

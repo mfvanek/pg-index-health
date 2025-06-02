@@ -10,6 +10,6 @@ dependencies {
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.junit.jupiter:junit-jupiter-params")
 
-    testFixturesImplementation(libs.jsr305)
+    testFixturesImplementation(libs.jspecify)
     testFixturesCompileOnly(libs.forbiddenapis)
 }

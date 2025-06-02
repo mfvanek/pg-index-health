@@ -13,9 +13,8 @@ package io.github.mfvanek.pg.model.column;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
-
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -199,12 +198,12 @@ class ColumnWithSerialTypeTest {
             .isGreaterThan(fifth);
     }
 
-    @Nonnull
+    @NonNull
     private static ColumnWithSerialType prepare() {
         return ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c1"), "s1");
     }
 
-    @Nonnull
+    @NonNull
     private static ColumnWithSerialType prepareNullable() {
         return ColumnWithSerialType.ofSerial(Column.ofNullable("t1", "c1"), "s1");
     }

@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ObjectsNotFollowingNamingConventionCheckOnHost;
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for objects whose names do not follow naming convention (that have to be enclosed in double-quotes) on all hosts in the cluster.
  * <p>
@@ -27,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class ObjectsNotFollowingNamingConventionCheckOnCluster extends AbstractCheckOnCluster<AnyObject> {
 
-    public ObjectsNotFollowingNamingConventionCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public ObjectsNotFollowingNamingConventionCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ObjectsNotFollowingNamingConventionCheckOnHost::new);
     }
 }

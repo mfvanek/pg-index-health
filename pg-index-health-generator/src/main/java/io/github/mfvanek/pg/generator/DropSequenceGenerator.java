@@ -13,17 +13,15 @@ package io.github.mfvanek.pg.generator;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 final class DropSequenceGenerator extends AbstractOptionsAwareSqlGenerator<ColumnWithSerialType> {
 
-    DropSequenceGenerator(@Nonnull final GeneratingOptions options) {
+    DropSequenceGenerator(final GeneratingOptions options) {
         super(options);
     }
 
-    @Nonnull
     @Override
-    public String generate(@Nonnull final ColumnWithSerialType column) {
+    public String generate(final ColumnWithSerialType column) {
         Objects.requireNonNull(column, "column cannot be null");
         return keyword("drop sequence ") +
             keyword("if exists ") +

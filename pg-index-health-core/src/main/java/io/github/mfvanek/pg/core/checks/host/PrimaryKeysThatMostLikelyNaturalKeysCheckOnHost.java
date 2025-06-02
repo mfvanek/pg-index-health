@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for primary keys that are most likely natural keys on a specific host.
@@ -30,7 +29,7 @@ import javax.annotation.Nonnull;
  */
 public class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost extends AbstractCheckOnHost<IndexWithColumns> {
 
-    public PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithColumns.class, pgConnection, Diagnostic.PRIMARY_KEYS_THAT_MOST_LIKELY_NATURAL_KEYS);
     }
 
@@ -40,9 +39,8 @@ public class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost extends AbstractChe
      * @param pgContext check's context with the specified schema
      * @return list of primary keys that are most likely natural keys
      */
-    @Nonnull
     @Override
-    protected List<IndexWithColumns> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, IndexWithColumnsExtractor.of());
     }
 }

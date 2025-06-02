@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for tables with potentially missing indexes on a specific host.
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class TablesWithMissingIndexesCheckOnHost extends AbstractCheckOnHost<TableWithMissingIndex> {
 
-    public TablesWithMissingIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public TablesWithMissingIndexesCheckOnHost(final PgConnection pgConnection) {
         super(TableWithMissingIndex.class, pgConnection, Diagnostic.TABLES_WITH_MISSING_INDEXES);
     }
 
@@ -36,9 +35,8 @@ public class TablesWithMissingIndexesCheckOnHost extends AbstractCheckOnHost<Tab
      * @param pgContext check's context with the specified schema
      * @return list of tables with potentially missing indexes
      */
-    @Nonnull
     @Override
-    protected List<TableWithMissingIndex> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<TableWithMissingIndex> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final long tableSize = rs.getLong(TABLE_SIZE);

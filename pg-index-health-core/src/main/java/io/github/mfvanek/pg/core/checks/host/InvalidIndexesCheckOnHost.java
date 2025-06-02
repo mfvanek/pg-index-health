@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for invalid (broken) indexes on a specific host.
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class InvalidIndexesCheckOnHost extends AbstractCheckOnHost<Index> {
 
-    public InvalidIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public InvalidIndexesCheckOnHost(final PgConnection pgConnection) {
         super(Index.class, pgConnection, Diagnostic.INVALID_INDEXES);
     }
 
@@ -37,9 +36,8 @@ public class InvalidIndexesCheckOnHost extends AbstractCheckOnHost<Index> {
      * @return list of invalid indexes
      * @see Index
      */
-    @Nonnull
     @Override
-    protected List<Index> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<Index> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);

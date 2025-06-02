@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.Locale;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 abstract class AbstractOptionsAwareSqlGenerator<T extends TableNameAware> {
 
@@ -22,18 +21,16 @@ abstract class AbstractOptionsAwareSqlGenerator<T extends TableNameAware> {
 
     protected final GeneratingOptions options;
 
-    protected AbstractOptionsAwareSqlGenerator(@Nonnull final GeneratingOptions options) {
+    protected AbstractOptionsAwareSqlGenerator(final GeneratingOptions options) {
         this.options = Objects.requireNonNull(options, "options cannot be null");
     }
 
-    @Nonnull
-    protected String keyword(@Nonnull final String keyword) {
+    protected String keyword(final String keyword) {
         if (options.isUppercaseForKeywords()) {
             return keyword.toUpperCase(Locale.ROOT);
         }
         return keyword;
     }
 
-    @Nonnull
-    public abstract String generate(@Nonnull T dbObject);
+    public abstract String generate(T dbObject);
 }

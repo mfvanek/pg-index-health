@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for columns with {@code json} type on a specific host.
@@ -27,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<Column> {
 
-    public ColumnsWithJsonTypeCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public ColumnsWithJsonTypeCheckOnHost(final PgConnection pgConnection) {
         super(Column.class, pgConnection, Diagnostic.COLUMNS_WITH_JSON_TYPE);
     }
 
@@ -39,9 +38,8 @@ public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<Column> 
      * @return list of columns with json type
      * @see <a href="https://www.postgresql.org/docs/current/datatype-json.html">JSON Types</a>
      */
-    @Nonnull
     @Override
-    protected List<Column> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<Column> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, ColumnExtractor.of());
     }
 }

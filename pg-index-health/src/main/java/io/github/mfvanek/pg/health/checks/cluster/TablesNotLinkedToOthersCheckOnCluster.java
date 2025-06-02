@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
 import io.github.mfvanek.pg.model.table.Table;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for tables that are not linked to other tables on all hosts in the cluster.
  * <p>
@@ -27,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class TablesNotLinkedToOthersCheckOnCluster extends AbstractCheckOnCluster<Table> {
 
-    public TablesNotLinkedToOthersCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public TablesNotLinkedToOthersCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesNotLinkedToOthersCheckOnHost::new);
     }
 }

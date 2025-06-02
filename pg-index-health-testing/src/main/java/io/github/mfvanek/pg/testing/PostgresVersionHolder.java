@@ -13,20 +13,17 @@ package io.github.mfvanek.pg.testing;
 import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * A helper class to obtain PostgreSQL version to run with Testcontainers.
  *
  * @author Ivan Vakhrushev
  */
-@Immutable
 public final class PostgresVersionHolder implements PostgresVersionAware {
 
     private final String pgVersion;
 
-    PostgresVersionHolder(@Nonnull final String pgVersion) {
+    PostgresVersionHolder(final String pgVersion) {
         this.pgVersion = Objects.requireNonNull(pgVersion, "pgVersion cannot be null");
     }
 
@@ -40,7 +37,6 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
      *
      * @return PostgreSQL version to run
      */
-    @Nonnull
     public String getVersion() {
         return pgVersion;
     }
@@ -70,7 +66,6 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
     }
 
     @ExcludeFromJacocoGeneratedReport
-    @Nonnull
     private static String preparePostgresVersion() {
         final String pgVersion = System.getenv("TEST_PG_VERSION");
         if (pgVersion != null) {
@@ -92,8 +87,7 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
      * @return The Bitnami-compatible version string, ensuring it has three digits.
      * @throws NullPointerException if {@code pgVersion} is null.
      */
-    @Nonnull
-    public static String toBitnamiVersion(@Nonnull final String pgVersion) {
+    public static String toBitnamiVersion(final String pgVersion) {
         final int index = pgVersion.indexOf('-');
         final String bitnamiVersion = index == -1 ? pgVersion : pgVersion.substring(0, index);
         // Bitnami images use semantic versioning with three digits
@@ -107,7 +101,6 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
      *
      * @return {@code PostgresVersionHolder}
      */
-    @Nonnull
     public static PostgresVersionHolder forCluster() {
         return new PostgresVersionHolder(toBitnamiVersion(preparePostgresVersion()));
     }
@@ -119,8 +112,7 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
      * @return {@code PostgresVersionHolder}
      * @since 0.9.2
      */
-    @Nonnull
-    public static PostgresVersionHolder forCluster(@Nonnull final String pgVersion) {
+    public static PostgresVersionHolder forCluster(final String pgVersion) {
         return new PostgresVersionHolder(toBitnamiVersion(pgVersion));
     }
 
@@ -131,7 +123,6 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
      *
      * @return {@code PostgresVersionHolder}
      */
-    @Nonnull
     public static PostgresVersionHolder forSingleNode() {
         return new PostgresVersionHolder(preparePostgresVersion());
     }
@@ -143,8 +134,7 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
      * @return {@code PostgresVersionHolder}
      * @since 0.9.2
      */
-    @Nonnull
-    public static PostgresVersionHolder forSingleNode(@Nonnull final String pgVersion) {
+    public static PostgresVersionHolder forSingleNode(final String pgVersion) {
         return new PostgresVersionHolder(pgVersion);
     }
 }

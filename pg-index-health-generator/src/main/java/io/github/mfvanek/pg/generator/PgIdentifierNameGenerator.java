@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.generator.AbstractDbMigrationGenerator.DELIMITER_LENGTH;
 import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGenerator.MAX_IDENTIFIER_LENGTH;
@@ -38,7 +37,7 @@ class PgIdentifierNameGenerator {
     private final String columnsInIndex;
     private final boolean hasToAddWithoutNullsSuffix;
 
-    private PgIdentifierNameGenerator(@Nonnull final ForeignKey foreignKey, @Nonnull final GeneratingOptions options) {
+    private PgIdentifierNameGenerator(final ForeignKey foreignKey, final GeneratingOptions options) {
         Objects.requireNonNull(foreignKey, "foreignKey cannot be null");
         this.options = Objects.requireNonNull(options, "options cannot be null");
         this.tableNameWithoutSchema = NameUtils.getTableNameWithoutSchema(foreignKey);
@@ -49,7 +48,6 @@ class PgIdentifierNameGenerator {
             foreignKey.getColumns().stream().anyMatch(ColumnNameAware::isNullable);
     }
 
-    @Nonnull
     public String generateFullIndexName() {
         final StringBuilder fullNameBuilder = new StringBuilder();
         addMainPart(fullNameBuilder);
@@ -58,7 +56,6 @@ class PgIdentifierNameGenerator {
             .toString();
     }
 
-    @Nonnull
     public String generateTruncatedIndexName() {
         int remainingLength = options.isNeedToAddIdx() ? MAX_IDENTIFIER_LENGTH - IDX.length() - DELIMITER_LENGTH : MAX_IDENTIFIER_LENGTH;
         final StringBuilder truncatedNameBuilder = new StringBuilder();
@@ -87,7 +84,7 @@ class PgIdentifierNameGenerator {
             .toString();
     }
 
-    private void addMainPart(@Nonnull final StringBuilder nameBuilder) {
+    private void addMainPart(final StringBuilder nameBuilder) {
         nameBuilder.append(tableNameWithoutSchema)
             .append(AbstractDbMigrationGenerator.DELIMITER)
             .append(columnsInIndex);
@@ -97,15 +94,14 @@ class PgIdentifierNameGenerator {
         return tableNameWithoutSchema.length() + DELIMITER_LENGTH + columnsInIndex.length();
     }
 
-    private void addWithoutNullsIfNeed(@Nonnull final StringBuilder nameBuilder) {
+    private void addWithoutNullsIfNeed(final StringBuilder nameBuilder) {
         if (hasToAddWithoutNullsSuffix) {
             nameBuilder.append(AbstractDbMigrationGenerator.DELIMITER)
                 .append(WITHOUT_NULLS);
         }
     }
 
-    @Nonnull
-    private StringBuilder addIdxIfNeed(@Nonnull final StringBuilder nameBuilder) {
+    private StringBuilder addIdxIfNeed(final StringBuilder nameBuilder) {
         if (options.isNeedToAddIdx()) {
             if (options.getIdxPosition() == IdxPosition.SUFFIX) {
                 nameBuilder.append(AbstractDbMigrationGenerator.DELIMITER)
@@ -117,8 +113,7 @@ class PgIdentifierNameGenerator {
         return nameBuilder;
     }
 
-    @Nonnull
-    public static PgIdentifierNameGenerator of(@Nonnull final ForeignKey foreignKey, @Nonnull final GeneratingOptions options) {
+    public static PgIdentifierNameGenerator of(final ForeignKey foreignKey, final GeneratingOptions options) {
         return new PgIdentifierNameGenerator(foreignKey, options);
     }
 }

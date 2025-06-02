@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for B-tree indexes on array columns on a specific host.
@@ -29,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public class BtreeIndexesOnArrayColumnsCheckOnHost extends AbstractCheckOnHost<IndexWithColumns> {
 
-    public BtreeIndexesOnArrayColumnsCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public BtreeIndexesOnArrayColumnsCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithColumns.class, pgConnection, Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS);
     }
 
@@ -39,9 +38,8 @@ public class BtreeIndexesOnArrayColumnsCheckOnHost extends AbstractCheckOnHost<I
      * @param pgContext check's context with the specified schema
      * @return list of B-tree indexes on array columns
      */
-    @Nonnull
     @Override
-    protected List<IndexWithColumns> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, IndexWithSingleColumnExtractor.of());
     }
 }

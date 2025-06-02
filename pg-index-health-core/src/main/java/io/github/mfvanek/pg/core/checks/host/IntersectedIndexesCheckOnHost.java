@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for intersected (partially identical) indexes on a specific host.
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class IntersectedIndexesCheckOnHost extends AbstractCheckOnHost<DuplicatedIndexes> {
 
-    public IntersectedIndexesCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public IntersectedIndexesCheckOnHost(final PgConnection pgConnection) {
         super(DuplicatedIndexes.class, pgConnection, Diagnostic.INTERSECTED_INDEXES);
     }
 
@@ -36,9 +35,8 @@ public class IntersectedIndexesCheckOnHost extends AbstractCheckOnHost<Duplicate
      * @param pgContext check's context with the specified schema
      * @return list of intersected indexes
      */
-    @Nonnull
     @Override
-    protected List<DuplicatedIndexes> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<DuplicatedIndexes> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String duplicatedAsString = rs.getString("intersected_indexes");

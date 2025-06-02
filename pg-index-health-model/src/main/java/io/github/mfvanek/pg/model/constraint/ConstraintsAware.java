@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.model.constraint;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Represents an entity that is aware of database constraints.
@@ -27,6 +26,5 @@ public interface ConstraintsAware {
      *
      * @return a list of {@link ConstraintNameAware} objects. The list may be empty but will never be {@code null}.
      */
-    @Nonnull
     List<ConstraintNameAware> getConstraints();
 }

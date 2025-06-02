@@ -13,8 +13,6 @@ package io.github.mfvanek.pg.model.settings;
 import io.github.mfvanek.pg.model.settings.validation.ParamValidators;
 import io.github.mfvanek.pg.model.validation.Validators;
 
-import javax.annotation.Nonnull;
-
 /**
  * Enumeration of PostgreSQL configuration parameters considered important for database performance and behavior.
  * <p>
@@ -86,7 +84,7 @@ public enum ImportantParam implements ParamNameAware {
     private final String name;
     private final String defaultValue;
 
-    ImportantParam(@Nonnull final String name, @Nonnull final String defaultValue) {
+    ImportantParam(final String name, final String defaultValue) {
         this.name = Validators.notBlank(name, "name");
         this.defaultValue = ParamValidators.paramValueNotNull(
             defaultValue, "defaultValue for '" + name + "' cannot be null");
@@ -97,7 +95,6 @@ public enum ImportantParam implements ParamNameAware {
      *
      * @return the non-null default value
      */
-    @Nonnull
     public String getDefaultValue() {
         return defaultValue;
     }
@@ -105,7 +102,6 @@ public enum ImportantParam implements ParamNameAware {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return name;
@@ -114,7 +110,6 @@ public enum ImportantParam implements ParamNameAware {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return ImportantParam.class.getSimpleName() + '{' +

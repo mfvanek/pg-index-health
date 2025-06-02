@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for tables bloat on a specific host.
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class TablesWithBloatCheckOnHost extends AbstractCheckOnHost<TableWithBloat> {
 
-    public TablesWithBloatCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public TablesWithBloatCheckOnHost(final PgConnection pgConnection) {
         super(TableWithBloat.class, pgConnection, Diagnostic.BLOATED_TABLES);
     }
 
@@ -40,9 +39,8 @@ public class TablesWithBloatCheckOnHost extends AbstractCheckOnHost<TableWithBlo
      * @param pgContext check's context with the specified schema
      * @return list of bloated tables
      */
-    @Nonnull
     @Override
-    protected List<TableWithBloat> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<TableWithBloat> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final long tableSize = rs.getLong(TABLE_SIZE);

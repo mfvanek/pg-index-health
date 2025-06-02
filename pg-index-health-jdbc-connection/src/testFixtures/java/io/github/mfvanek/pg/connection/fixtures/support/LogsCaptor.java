@@ -17,18 +17,17 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 
 public final class LogsCaptor implements AutoCloseable {
 
     private final Logger logger;
     private final CapturingHandler handler;
 
-    public LogsCaptor(@Nonnull final Class<?> type) {
+    public LogsCaptor(final Class<?> type) {
         this(type, Level.INFO);
     }
 
-    public LogsCaptor(@Nonnull final Class<?> type, @Nonnull final Level level) {
+    public LogsCaptor(final Class<?> type, final Level level) {
         this.logger = Logger.getLogger(type.getName());
         this.handler = new CapturingHandler();
         this.handler.setLevel(level);
@@ -52,7 +51,6 @@ public final class LogsCaptor implements AutoCloseable {
         handler.clear();
     }
 
-    @Nonnull
     public List<LogRecord> getLogs() {
         return handler.getLogRecords();
     }

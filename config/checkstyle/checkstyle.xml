@@ -242,12 +242,15 @@
             <property name="regexp" value="true"/>
             <property name="illegalClasses"
                       value="^org\.springframework\.lang\.(NonNull|Nullable), ^org\.jetbrains\.annotations\.(NotNull|Nullable),
+                ^javax\.annotation\.(Nonnull|Nullable),
+                ^javax\.annotation\.concurrent\.Immutable,
+                ^javax\.annotation\.concurrent\.ThreadSafe,
                 ^io\.micrometer\.core\.lang\.(NonNull|Nullable),
                 ^org\.elasticsearch\.common\.Nullable, ^org\.apache\.thrift\.annotation\.Nullable,
                 ^org\.junit\.Test, ^org\.junit\.jupiter\.api\.Assertions, ^org\.junit\.Test, ^org\.junit\.jupiter\.api\.Assertions\..*,
                 ^org\.springframework\.boot\.test\.web\.client\.TestRestTemplate,^org\.springframework\.web\.client\.RestTemplate,^javax\.transaction\.Transactional,
                 ^org\.springframework\.test\.web\.servlet\.MockMvc"/>
-            <property name="illegalPkgs" value="^org\.hamcrest"/>
+            <property name="illegalPkgs" value="^org\.hamcrest, ^javax\.annotation"/>
         </module>
         <module name="IllegalImport">
             <property name="id" value="IllegalImportJavaIo"/>

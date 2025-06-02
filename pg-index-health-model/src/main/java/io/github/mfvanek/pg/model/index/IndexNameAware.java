@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.model.index;
 
-import javax.annotation.Nonnull;
-
 /**
  * Allows getting index name.
  *
@@ -25,6 +23,5 @@ public interface IndexNameAware {
      *
      * @return index name
      */
-    @Nonnull
     String getIndexName();
 }

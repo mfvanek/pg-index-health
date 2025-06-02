@@ -18,23 +18,20 @@ import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.List;
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * Representation of a database table with its columns.
+ * An immutable representation of a database table with its columns.
  * Table can have zero or more columns.
  *
  * @author Ivan Vakhrushev
  * @since 0.14.6
  */
-@Immutable
 public final class TableWithColumns extends AbstractTableAware implements ColumnsAware, Comparable<TableWithColumns> {
 
     private final List<Column> columns;
 
-    private TableWithColumns(@Nonnull final Table table,
-                             @Nonnull final List<Column> columns) {
+    private TableWithColumns(final Table table,
+                             final List<Column> columns) {
         super(table);
         final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columns, "columns cannot be null"));
         Validators.validateThatTableIsTheSame(table.getTableName(), defensiveCopy);
@@ -46,7 +43,6 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      *
      * @return columns of table
      */
-    @Nonnull
     @Override
     public List<ColumnNameAware> getColumns() {
         return List.copyOf(columns);
@@ -55,7 +51,6 @@ public final class TableWithColumns extends AbstractTableAware implements Column
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return TableWithColumns.class.getSimpleName() + '{' +
@@ -92,7 +87,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(@Nonnull final TableWithColumns other) {
+    public int compareTo(final TableWithColumns other) {
         Objects.requireNonNull(other, "other cannot be null");
         return table.compareTo(other.table);
     }
@@ -103,8 +98,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param table the table reference
      * @return a {@code TableWithColumns} with an empty column list
      */
-    @Nonnull
-    public static TableWithColumns withoutColumns(@Nonnull final Table table) {
+    public static TableWithColumns withoutColumns(final Table table) {
         return new TableWithColumns(table, List.of());
     }
 
@@ -115,9 +109,8 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName table name; should be non-blank.
      * @return a {@code TableWithColumns} with no columns
      */
-    @Nonnull
-    public static TableWithColumns withoutColumns(@Nonnull final PgContext pgContext,
-                                                  @Nonnull final String tableName) {
+    public static TableWithColumns withoutColumns(final PgContext pgContext,
+                                                  final String tableName) {
         return new TableWithColumns(Table.of(pgContext, tableName), List.of());
     }
 
@@ -128,9 +121,8 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param columns the list of columns (must not be null)
      * @return a {@code TableWithColumns} instance
      */
-    @Nonnull
-    public static TableWithColumns of(@Nonnull final Table table,
-                                      @Nonnull final List<Column> columns) {
+    public static TableWithColumns of(final Table table,
+                                      final List<Column> columns) {
         return new TableWithColumns(table, columns);
     }
 
@@ -141,9 +133,8 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param column the single column
      * @return a {@code TableWithColumns} with one column
      */
-    @Nonnull
-    public static TableWithColumns ofSingle(@Nonnull final Table table,
-                                            @Nonnull final Column column) {
+    public static TableWithColumns ofSingle(final Table table,
+                                            final Column column) {
         return of(table, List.of(column));
     }
 
@@ -155,10 +146,9 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one non-nullable column
      */
-    @Nonnull
-    public static TableWithColumns ofNotNullColumn(@Nonnull final PgContext pgContext,
-                                                   @Nonnull final String tableName,
-                                                   @Nonnull final String columnName) {
+    public static TableWithColumns ofNotNullColumn(final PgContext pgContext,
+                                                   final String tableName,
+                                                   final String columnName) {
         return ofSingle(Table.of(pgContext, tableName), Column.ofNotNull(pgContext, tableName, columnName));
     }
 
@@ -170,10 +160,9 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one nullable column
      */
-    @Nonnull
-    public static TableWithColumns ofNullableColumn(@Nonnull final PgContext pgContext,
-                                                    @Nonnull final String tableName,
-                                                    @Nonnull final String columnName) {
+    public static TableWithColumns ofNullableColumn(final PgContext pgContext,
+                                                    final String tableName,
+                                                    final String columnName) {
         return ofSingle(Table.of(pgContext, tableName), Column.ofNullable(pgContext, tableName, columnName));
     }
 }

@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.core.fixtures.support;
 
 import io.github.mfvanek.pg.connection.exception.PgSqlException;
 import io.github.mfvanek.pg.model.context.PgContext;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,14 +21,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
 
     protected static final long AMOUNT_OF_TRIES = 101L;
 
-    protected long getSeqScansForAccounts(@Nonnull final PgContext pgContext) {
+    protected long getSeqScansForAccounts(final PgContext pgContext) {
         final String sqlQuery =
             "select psat.relname::text as table_name, coalesce(psat.seq_scan, 0) as seq_scan\n" +
                 "from pg_catalog.pg_stat_all_tables psat\n" +
@@ -44,7 +43,7 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         }
     }
 
-    protected boolean existsStatisticsForTable(@Nonnull final String schemaName, @Nonnull final String tableName) {
+    protected boolean existsStatisticsForTable(final String schemaName, final String tableName) {
         final String sqlQuery =
             "select exists (select 1 from pg_catalog.pg_stats ps " +
                 "where ps.schemaname = ?::text and ps.tablename = ?::text);";
@@ -61,7 +60,7 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         }
     }
 
-    protected void tryToFindAccountByClientId(@Nonnull final String schemaName) {
+    protected void tryToFindAccountByClientId(final String schemaName) {
         try (Connection connection = getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
             for (int counter = 0; counter < AMOUNT_OF_TRIES; ++counter) {
@@ -92,7 +91,7 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         }
     }
 
-    protected void collectStatistics(@Nonnull final String schemaName) {
+    protected void collectStatistics(final String schemaName) {
         collectStatistics();
         waitForStatisticsCollector(schemaName);
     }

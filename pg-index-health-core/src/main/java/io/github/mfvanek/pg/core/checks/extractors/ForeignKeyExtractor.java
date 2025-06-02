@@ -20,7 +20,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_NAME;
 
@@ -36,16 +35,15 @@ public final class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey>
 
     private final String prefix;
 
-    private ForeignKeyExtractor(@Nonnull final String prefix) {
+    private ForeignKeyExtractor(final String prefix) {
         this.prefix = Objects.requireNonNull(prefix, "prefix cannot be null");
     }
 
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public ForeignKey extractData(@Nonnull final ResultSet resultSet) throws SQLException {
+    public ForeignKey extractData(final ResultSet resultSet) throws SQLException {
         final String tableName = resultSet.getString(TABLE_NAME);
         final String constraintName = resultSet.getString(getConstraintNameField());
         final Array columnsArray = resultSet.getArray(getColumnsField());
@@ -54,7 +52,6 @@ public final class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey>
         return ForeignKey.of(tableName, constraintName, columns);
     }
 
-    @Nonnull
     private String getConstraintNameField() {
         if (!prefix.isBlank()) {
             return prefix + "_" + CONSTRAINT_NAME;
@@ -62,7 +59,6 @@ public final class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey>
         return CONSTRAINT_NAME;
     }
 
-    @Nonnull
     private String getColumnsField() {
         if (!prefix.isBlank()) {
             return prefix + "_constraint_columns";
@@ -75,7 +71,6 @@ public final class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey>
      *
      * @return {@code ForeignKeyExtractor} instance
      */
-    @Nonnull
     public static ResultSetExtractor<ForeignKey> ofDefault() {
         return new ForeignKeyExtractor("");
     }
@@ -86,8 +81,7 @@ public final class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey>
      * @param prefix given prefix; must be non-null
      * @return {@code ForeignKeyExtractor} instance
      */
-    @Nonnull
-    public static ResultSetExtractor<ForeignKey> withPrefix(@Nonnull final String prefix) {
+    public static ResultSetExtractor<ForeignKey> withPrefix(final String prefix) {
         return new ForeignKeyExtractor(prefix);
     }
 }

@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 public final class ColumnsDataParser {
 
@@ -25,20 +24,17 @@ public final class ColumnsDataParser {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
-    public static List<Column> parseRawColumnsInForeignKeyOrIndex(@Nonnull final String tableName, @Nonnull final String... rawColumns) {
+    public static List<Column> parseRawColumnsInForeignKeyOrIndex(final String tableName, final String... rawColumns) {
         return parseRawColumnsData(tableName, true, rawColumns);
     }
 
-    @Nonnull
-    public static List<Column> parseRawColumnsInTable(@Nonnull final String tableName, @Nonnull final String... rawColumns) {
+    public static List<Column> parseRawColumnsInTable(final String tableName, final String... rawColumns) {
         return parseRawColumnsData(tableName, false, rawColumns);
     }
 
-    @Nonnull
-    private static List<Column> parseRawColumnsData(@Nonnull final String tableName,
+    private static List<Column> parseRawColumnsData(final String tableName,
                                                     final boolean cannotHaveZeroColumns,
-                                                    @Nonnull final String... rawColumns) {
+                                                    final String... rawColumns) {
         Validators.tableNameNotBlank(tableName);
         Objects.requireNonNull(rawColumns, "rawColumns cannot be null");
         if (cannotHaveZeroColumns && rawColumns.length == 0) {
@@ -49,8 +45,7 @@ public final class ColumnsDataParser {
             .collect(Collectors.toUnmodifiableList());
     }
 
-    @Nonnull
-    private static Column toColumn(@Nonnull final String tableName, @Nonnull final String rawColumnInfo) {
+    private static Column toColumn(final String tableName, final String rawColumnInfo) {
         final String[] columnInfo = rawColumnInfo.split(",");
         if (columnInfo.length != 2) {
             throw new IllegalArgumentException("Cannot parse column info from " + rawColumnInfo);

@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for indexes with null values on a specific host.
@@ -27,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public class IndexesWithNullValuesCheckOnHost extends AbstractCheckOnHost<IndexWithColumns> {
 
-    public IndexesWithNullValuesCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public IndexesWithNullValuesCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_NULL_VALUES);
     }
 
@@ -37,9 +36,8 @@ public class IndexesWithNullValuesCheckOnHost extends AbstractCheckOnHost<IndexW
      * @param pgContext check's context with the specified schema
      * @return list of indexes with null values
      */
-    @Nonnull
     @Override
-    protected List<IndexWithColumns> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String tableName = rs.getString(TABLE_NAME);
             final String indexName = rs.getString(INDEX_NAME);

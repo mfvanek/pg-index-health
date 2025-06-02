@@ -14,18 +14,15 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * Represents an unused database index with information about its usage and size.
+ * An immutable representation of an unused database index with information about its usage and size.
  * <p>
  * This class extends {@link Index} to include additional details on the
  * number of scans (or accesses) the index has had, providing insight into whether
  * the index is actively used or potentially redundant.
  * </p>
  */
-@Immutable
 public final class UnusedIndex extends AbstractIndexAware implements Comparable<UnusedIndex> {
 
     /**
@@ -33,7 +30,7 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
      */
     private final long indexScans;
 
-    private UnusedIndex(@Nonnull final Index index,
+    private UnusedIndex(final Index index,
                         final long indexScans) {
         super(index);
         this.indexScans = Validators.countNotNegative(indexScans, "indexScans");
@@ -51,7 +48,6 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return UnusedIndex.class.getSimpleName() + '{' +
@@ -89,7 +85,7 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(@Nonnull final UnusedIndex other) {
+    public int compareTo(final UnusedIndex other) {
         Objects.requireNonNull(other, "other cannot be null");
         return index.compareTo(other.index);
     }
@@ -105,9 +101,8 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
      * @throws NullPointerException     if {@code tableName} or {@code indexName} is null
      * @throws IllegalArgumentException if {@code indexScans} is negative
      */
-    @Nonnull
-    public static UnusedIndex of(@Nonnull final String tableName,
-                                 @Nonnull final String indexName,
+    public static UnusedIndex of(final String tableName,
+                                 final String indexName,
                                  final long indexSizeInBytes,
                                  final long indexScans) {
         return of(Index.of(tableName, indexName, indexSizeInBytes), indexScans);
@@ -124,10 +119,9 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
      * @return a new {@code UnusedIndex} instance
      * @since 0.14.3
      */
-    @Nonnull
-    public static UnusedIndex of(@Nonnull final PgContext pgContext,
-                                 @Nonnull final String tableName,
-                                 @Nonnull final String indexName,
+    public static UnusedIndex of(final PgContext pgContext,
+                                 final String tableName,
+                                 final String indexName,
                                  final long indexSizeInBytes,
                                  final long indexScans) {
         return of(Index.of(pgContext, tableName, indexName, indexSizeInBytes), indexScans);
@@ -141,9 +135,8 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
      * @return a new {@code UnusedIndex} instance
      * @since 0.14.3
      */
-    @Nonnull
-    public static UnusedIndex of(@Nonnull final String tableName,
-                                 @Nonnull final String indexName) {
+    public static UnusedIndex of(final String tableName,
+                                 final String indexName) {
         return of(tableName, indexName, 0L, 0L);
     }
 
@@ -156,10 +149,9 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
      * @return a new {@code UnusedIndex} instance
      * @since 0.14.3
      */
-    @Nonnull
-    public static UnusedIndex of(@Nonnull final PgContext pgContext,
-                                 @Nonnull final String tableName,
-                                 @Nonnull final String indexName) {
+    public static UnusedIndex of(final PgContext pgContext,
+                                 final String tableName,
+                                 final String indexName) {
         return of(pgContext, tableName, indexName, 0L, 0L);
     }
 
@@ -171,8 +163,7 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
      * @return a new {@code UnusedIndex} instance
      * @since 0.15.0
      */
-    @Nonnull
-    public static UnusedIndex of(@Nonnull final Index index,
+    public static UnusedIndex of(final Index index,
                                  final long indexScans) {
         return new UnusedIndex(index, indexScans);
     }

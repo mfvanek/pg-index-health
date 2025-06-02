@@ -44,8 +44,11 @@ After your PR with a new sql query is merged, you need to update git submodule:
 
 pg-index-health is a [multimodule Gradle](https://docs.gradle.org/current/userguide/multi_project_builds.html) project.  
 Domain model is located in a [pg-index-health-model](pg-index-health-model).
-All domain classes should be minimalistic and well-defined.
-They should include enough information to generate corrective SQL migrations via [pg-index-health-generator](pg-index-health-generator).
+
+Best practices:
+* All domain classes should be minimalistic and well-defined.
+* They should include enough information to generate corrective SQL migrations via [pg-index-health-generator](pg-index-health-generator).
+* We use [JSpecify](https://github.com/jspecify/jspecify) to mark up the code with `Nullable`/`NonNull` annotations.
 
 ### Add the code for the new check
 

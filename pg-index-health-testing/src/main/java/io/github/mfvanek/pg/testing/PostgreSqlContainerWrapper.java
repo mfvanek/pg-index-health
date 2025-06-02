@@ -19,11 +19,11 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public final class PostgreSqlContainerWrapper implements AutoCloseable, PostgresVersionAware {
@@ -32,8 +32,8 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
     private final PostgreSQLContainer<?> container;
     private final BasicDataSource dataSource;
 
-    PostgreSqlContainerWrapper(@Nonnull final PostgresVersionHolder pgVersion,
-                               @Nonnull final List<Map.Entry<String, String>> additionalParameters) {
+    PostgreSqlContainerWrapper(final PostgresVersionHolder pgVersion,
+                               final List<Map.Entry<String, String>> additionalParameters) {
         this.pgVersion = Objects.requireNonNull(pgVersion, "pgVersion cannot be null");
         //noinspection resource
         this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres") //NOSONAR
@@ -46,7 +46,7 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
         this.dataSource = PostgreSqlDataSourceHelper.buildDataSource(container);
     }
 
-    PostgreSqlContainerWrapper(@Nonnull final PostgresVersionHolder pgVersion) {
+    PostgreSqlContainerWrapper(final PostgresVersionHolder pgVersion) {
         this(pgVersion, List.of(
             Map.entry(ImportantParam.LOCK_TIMEOUT.getName(), "1000"),
             Map.entry(ImportantParam.SHARED_BUFFERS.getName(), "256MB"),
@@ -70,14 +70,12 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
         container.close();
     }
 
-    @Nonnull
-    private static String[] prepareCommandParts(@Nonnull final List<Map.Entry<String, String>> additionalParameters) {
+    private static String[] prepareCommandParts(final Collection<Map.Entry<String, String>> additionalParameters) {
         return additionalParameters.stream()
             .flatMap(kv -> Stream.of("-c", kv.getKey() + "=" + kv.getValue()))
             .toArray(String[]::new);
     }
 
-    @Nonnull
     public DataSource getDataSource() {
         return dataSource;
     }
@@ -86,17 +84,14 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
         return container.getFirstMappedPort();
     }
 
-    @Nonnull
     public String getUrl() {
         return container.getJdbcUrl();
     }
 
-    @Nonnull
     public String getUsername() {
         return container.getUsername();
     }
 
-    @Nonnull
     public String getPassword() {
         return container.getPassword();
     }
@@ -132,7 +127,6 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
      *
      * @return {@code PostgreSqlContainerWrapper}
      */
-    @Nonnull
     public static PostgreSqlContainerWrapper withDefaultVersion() {
         return new PostgreSqlContainerWrapper(PostgresVersionHolder.forSingleNode());
     }
@@ -143,8 +137,7 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
      * @param pgVersion given PostgreSQL version
      * @return {@code PostgreSqlContainerWrapper}
      */
-    @Nonnull
-    public static PostgreSqlContainerWrapper withVersion(@Nonnull final String pgVersion) {
+    public static PostgreSqlContainerWrapper withVersion(final String pgVersion) {
         return new PostgreSqlContainerWrapper(PostgresVersionHolder.forSingleNode(pgVersion));
     }
 }

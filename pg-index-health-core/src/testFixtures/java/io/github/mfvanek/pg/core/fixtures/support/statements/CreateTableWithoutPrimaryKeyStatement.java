@@ -13,11 +13,9 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class CreateTableWithoutPrimaryKeyStatement extends AbstractDbStatement {
 
-    @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("create table if not exists {schemaName}.bad_clients (" +
@@ -29,7 +27,7 @@ public class CreateTableWithoutPrimaryKeyStatement extends AbstractDbStatement {
     }
 
     @Override
-    public void postExecute(@Nonnull final Statement statement, @Nonnull final String schemaName) throws SQLException {
+    public void postExecute(final Statement statement, final String schemaName) throws SQLException {
         throwExceptionIfTableDoesNotExist(statement, "bad_clients", schemaName);
     }
 }

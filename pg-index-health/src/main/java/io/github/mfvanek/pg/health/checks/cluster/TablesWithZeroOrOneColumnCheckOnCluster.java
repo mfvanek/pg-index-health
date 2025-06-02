@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.TablesWithZeroOrOneColumnCheckOnHost;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for tables with zero or one column on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class TablesWithZeroOrOneColumnCheckOnCluster extends AbstractCheckOnCluster<TableWithColumns> {
 
-    public TablesWithZeroOrOneColumnCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public TablesWithZeroOrOneColumnCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesWithZeroOrOneColumnCheckOnHost::new);
     }
 }

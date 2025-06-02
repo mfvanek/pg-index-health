@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.model.sequence;
 
-import javax.annotation.Nonnull;
-
 /**
  * Represents an object that is aware of a database sequence name.
  * Classes implementing this interface provide a method to retrieve the name of a sequence.
@@ -26,6 +24,5 @@ public interface SequenceNameAware {
      *
      * @return the name of the sequence, never null
      */
-    @Nonnull
     String getSequenceName();
 }

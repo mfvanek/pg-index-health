@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for foreign keys where the type of the constrained column does not match the type in the referenced table on a specific host.
@@ -33,7 +32,7 @@ import javax.annotation.Nonnull;
  */
 public class ForeignKeysWithUnmatchedColumnTypeCheckOnHost extends AbstractCheckOnHost<ForeignKey> {
 
-    public ForeignKeysWithUnmatchedColumnTypeCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public ForeignKeysWithUnmatchedColumnTypeCheckOnHost(final PgConnection pgConnection) {
         super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE);
     }
 
@@ -45,9 +44,8 @@ public class ForeignKeysWithUnmatchedColumnTypeCheckOnHost extends AbstractCheck
      * @param pgContext check's context with the specified schema; must not be null
      * @return list of foreign keys where the type of the constrained column does not match the type in the referenced table
      */
-    @Nonnull
     @Override
-    protected List<ForeignKey> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<ForeignKey> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, ForeignKeyExtractor.ofDefault());
     }
 }

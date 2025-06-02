@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.generator;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * SQL query generator for dropping a default value on given column.
@@ -23,13 +22,12 @@ import javax.annotation.Nonnull;
  */
 final class DropDefaultValueGenerator extends AbstractOptionsAwareSqlGenerator<ColumnNameAware> {
 
-    DropDefaultValueGenerator(@Nonnull final GeneratingOptions options) {
+    DropDefaultValueGenerator(final GeneratingOptions options) {
         super(options);
     }
 
-    @Nonnull
     @Override
-    public String generate(@Nonnull final ColumnNameAware column) {
+    public String generate(final ColumnNameAware column) {
         Objects.requireNonNull(column, "column cannot be null");
         return keyword("alter table ") +
             keyword("if exists ") +
