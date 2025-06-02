@@ -18,10 +18,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
-@Immutable
 final class PostgreSqlClusterAliasHolder {
 
     static final Duration STARTUP_TIMEOUT = Duration.ofSeconds(40L);
@@ -37,19 +34,16 @@ final class PostgreSqlClusterAliasHolder {
         this.standbyAlias = String.format(Locale.ROOT, "pg-%s-1", uuid);
     }
 
-    @Nonnull
     String getPrimaryAlias() {
         return primaryAlias;
     }
 
-    @Nonnull
     String getStandbyAlias() {
         return standbyAlias;
     }
 
-    @Nonnull
     Map<String, String> createPrimaryEnvVarsMap(
-        @Nonnull final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder
+        final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder
     ) {
         final Map<String, String> envVarsMap = createCommonEnvVarsMap(builder);
         envVarsMap.put("REPMGR_NODE_NAME", primaryAlias);
@@ -57,9 +51,8 @@ final class PostgreSqlClusterAliasHolder {
         return envVarsMap;
     }
 
-    @Nonnull
     Map<String, String> createStandbyEnvVarsMap(
-        @Nonnull final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder
+        final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder
     ) {
         final Map<String, String> envVarsMap = createCommonEnvVarsMap(builder);
         envVarsMap.put("REPMGR_NODE_NAME", standbyAlias);
@@ -67,23 +60,20 @@ final class PostgreSqlClusterAliasHolder {
         return envVarsMap;
     }
 
-    @Nonnull
     WaitStrategy getWaitStrategyForPrimary() {
         return new LogMessageWaitStrategy()
             .withRegEx(".*Starting repmgrd.*\\s")
             .withStartupTimeout(STARTUP_TIMEOUT);
     }
 
-    @Nonnull
     WaitStrategy getWaitStrategyForStandBy() {
         return new LogMessageWaitStrategy()
             .withRegEx(".*starting monitoring of node.*\\s")
             .withStartupTimeout(STARTUP_TIMEOUT);
     }
 
-    @Nonnull
     private Map<String, String> createCommonEnvVarsMap(
-        @Nonnull final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder
+        final PostgreSqlClusterWrapper.PostgreSqlClusterBuilder builder
     ) {
         final Map<String, String> envVarsMap = new HashMap<>();
         envVarsMap.put("POSTGRESQL_POSTGRES_PASSWORD", "adminpassword");

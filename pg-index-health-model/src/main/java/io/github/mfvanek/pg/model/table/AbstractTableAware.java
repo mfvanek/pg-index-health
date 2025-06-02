@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * Abstract base class for database objects that are associated with a specific table.
@@ -29,14 +28,13 @@ abstract class AbstractTableAware implements DbObject, TableSizeAware {
      */
     protected final Table table;
 
-    AbstractTableAware(@Nonnull final Table table) {
+    AbstractTableAware(final Table table) {
         this.table = Objects.requireNonNull(table, "table cannot be null");
     }
 
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public final String getName() {
         return table.getName();
@@ -45,7 +43,6 @@ abstract class AbstractTableAware implements DbObject, TableSizeAware {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public final PgObjectType getObjectType() {
         return table.getObjectType();
@@ -54,7 +51,6 @@ abstract class AbstractTableAware implements DbObject, TableSizeAware {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public final String getTableName() {
         return table.getTableName();

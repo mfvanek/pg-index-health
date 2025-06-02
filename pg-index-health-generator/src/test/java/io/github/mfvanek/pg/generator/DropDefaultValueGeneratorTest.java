@@ -12,9 +12,8 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
-
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -63,7 +62,7 @@ class DropDefaultValueGeneratorTest {
             .isEqualTo("ALTER TABLE IF EXISTS s1.t1 ALTER COLUMN col1 DROP DEFAULT;");
     }
 
-    @Nonnull
+    @NonNull
     private ColumnNameAware column() {
         return Column.ofNotNull("s1.t1", "col1");
     }

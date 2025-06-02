@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * An abstraction of sql query executor without schema.
@@ -25,8 +24,7 @@ import javax.annotation.Nonnull;
 @FunctionalInterface
 public interface StatisticsQueryExecutor {
 
-    @Nonnull
-    <T> List<T> executeQuery(@Nonnull PgConnection pgConnection,
-                             @Nonnull String sqlQuery,
-                             @Nonnull ResultSetExtractor<T> rse);
+    <T> List<T> executeQuery(PgConnection pgConnection,
+                             String sqlQuery,
+                             ResultSetExtractor<T> rse);
 }

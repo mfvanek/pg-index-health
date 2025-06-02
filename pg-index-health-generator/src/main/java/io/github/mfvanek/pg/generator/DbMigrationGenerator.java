@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.generator;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Database migrations generator.
@@ -31,6 +30,5 @@ public interface DbMigrationGenerator<T extends TableNameAware> {
      * @return a list of generated sql migrations
      * @since 0.10.0
      */
-    @Nonnull
-    List<String> generate(@Nonnull List<T> rows);
+    List<String> generate(List<T> rows);
 }

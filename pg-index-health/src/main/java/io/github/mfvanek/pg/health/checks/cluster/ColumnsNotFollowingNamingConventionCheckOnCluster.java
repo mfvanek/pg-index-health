@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
 import io.github.mfvanek.pg.model.column.Column;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for columns whose names do not follow naming convention (that have to be enclosed in double-quotes) on all hosts in the cluster.
  * <p>
@@ -27,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class ColumnsNotFollowingNamingConventionCheckOnCluster extends AbstractCheckOnCluster<Column> {
 
-    public ColumnsNotFollowingNamingConventionCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public ColumnsNotFollowingNamingConventionCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ColumnsNotFollowingNamingConventionCheckOnHost::new);
     }
 }

@@ -12,12 +12,12 @@ package io.github.mfvanek.pg.health.logger;
 
 import io.github.mfvanek.pg.model.units.MemoryUnit;
 import io.github.mfvanek.pg.model.validation.Validators;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.annotation.Nonnull;
 
 /**
  * A listing of exclusions for {@link HealthLogger}.
@@ -114,7 +114,6 @@ public final class Exclusions {
      *
      * @return a collection of table names to exclude
      */
-    @Nonnull
     public Collection<String> getTableNameExclusions() {
         return Set.copyOf(tableNameExclusions);
     }
@@ -124,7 +123,6 @@ public final class Exclusions {
      *
      * @return a collection of index names to exclude
      */
-    @Nonnull
     public Collection<String> getIndexNameExclusions() {
         return Set.copyOf(indexNameExclusions);
     }
@@ -134,7 +132,6 @@ public final class Exclusions {
      *
      * @return a collection of sequence names to exclude
      */
-    @Nonnull
     public Collection<String> getSequenceNameExclusions() {
         return Set.copyOf(sequenceNameExclusions);
     }
@@ -160,7 +157,6 @@ public final class Exclusions {
      *
      * @return an empty {@code Exclusions} object
      */
-    @Nonnull
     public static Exclusions empty() {
         return builder().build();
     }
@@ -170,7 +166,6 @@ public final class Exclusions {
      *
      * @return a {@link Builder} instance
      */
-    @Nonnull
     public static Builder builder() {
         return new Builder();
     }
@@ -182,12 +177,11 @@ public final class Exclusions {
 
         private static final String THRESHOLD_UNITS_COUNT = "thresholdUnitsCount";
 
-        private Exclusions template = new Exclusions();
+        private @Nullable Exclusions template = new Exclusions();
 
         private Builder() {
         }
 
-        @Nonnull
         private Exclusions template() {
             if (this.template == null) {
                 throw new IllegalStateException("Exclusions object has already been built");
@@ -201,7 +195,6 @@ public final class Exclusions {
          * @param indexSizeThresholdInBytes the threshold value in bytes
          * @return this {@link Builder} instance
          */
-        @Nonnull
         public Builder withIndexSizeThreshold(final long indexSizeThresholdInBytes) {
             template().indexSizeThresholdInBytes = Validators.sizeNotNegative(indexSizeThresholdInBytes, "indexSizeThresholdInBytes");
             return this;
@@ -214,7 +207,6 @@ public final class Exclusions {
          * @param unit                the memory unit (e.g., bytes, kilobytes)
          * @return this {@link Builder} instance
          */
-        @Nonnull
         public Builder withIndexSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
             final long indexSizeInBytes = unit.convertToBytes(Validators.argumentNotNegative(thresholdUnitsCount, THRESHOLD_UNITS_COUNT));
             return withIndexSizeThreshold(indexSizeInBytes);
@@ -226,7 +218,6 @@ public final class Exclusions {
          * @param tableSizeThresholdInBytes the threshold value in bytes
          * @return this {@link Builder} instance
          */
-        @Nonnull
         public Builder withTableSizeThreshold(final long tableSizeThresholdInBytes) {
             template().tableSizeThresholdInBytes = Validators.sizeNotNegative(tableSizeThresholdInBytes, "tableSizeThresholdInBytes");
             return this;
@@ -239,7 +230,6 @@ public final class Exclusions {
          * @param unit                the memory unit (e.g., bytes, kilobytes)
          * @return this {@link Builder} instance
          */
-        @Nonnull
         public Builder withTableSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
             final long tableSizeInBytes = unit.convertToBytes(Validators.argumentNotNegative(thresholdUnitsCount, THRESHOLD_UNITS_COUNT));
             return withTableSizeThreshold(tableSizeInBytes);
@@ -251,7 +241,6 @@ public final class Exclusions {
          * @param bloatSizeThresholdInBytes the threshold value in bytes
          * @return this {@link Builder} instance
          */
-        @Nonnull
         public Builder withBloatSizeThreshold(final long bloatSizeThresholdInBytes) {
             template().bloatSizeThresholdInBytes = Validators.sizeNotNegative(bloatSizeThresholdInBytes, "bloatSizeThresholdInBytes");
             return this;
@@ -264,7 +253,6 @@ public final class Exclusions {
          * @param unit                the memory unit (e.g., bytes, kilobytes)
          * @return this {@link Builder} instance
          */
-        @Nonnull
         public Builder withBloatSizeThreshold(final int thresholdUnitsCount, final MemoryUnit unit) {
             final long indexBloatSizeInBytes = unit.convertToBytes(Validators.argumentNotNegative(thresholdUnitsCount, THRESHOLD_UNITS_COUNT));
             return withBloatSizeThreshold(indexBloatSizeInBytes);
@@ -276,7 +264,6 @@ public final class Exclusions {
          * @param bloatPercentageThreshold the bloat percentage threshold
          * @return this {@link Builder} instance
          */
-        @Nonnull
         public Builder withBloatPercentageThreshold(final double bloatPercentageThreshold) {
             template().bloatPercentageThreshold = Validators.validPercent(bloatPercentageThreshold, "bloatPercentageThreshold");
             return this;
@@ -288,8 +275,7 @@ public final class Exclusions {
          * @param indexNameExclusions a collection of index names to exclude
          * @return this {@link Builder} instance
          */
-        @Nonnull
-        public Builder withIndexes(@Nonnull final Collection<String> indexNameExclusions) {
+        public Builder withIndexes(final Collection<String> indexNameExclusions) {
             template().indexNameExclusions.addAll(validateExclusions(indexNameExclusions, "indexNameExclusions"));
             return this;
         }
@@ -300,8 +286,7 @@ public final class Exclusions {
          * @param indexNameExclusion the index name to exclude
          * @return this {@link Builder} instance
          */
-        @Nonnull
-        public Builder withIndex(@Nonnull final String indexNameExclusion) {
+        public Builder withIndex(final String indexNameExclusion) {
             withIndexes(Set.of(indexNameExclusion));
             return this;
         }
@@ -312,8 +297,7 @@ public final class Exclusions {
          * @param tableNameExclusions a collection of table names to exclude
          * @return this {@link Builder} instance
          */
-        @Nonnull
-        public Builder withTables(@Nonnull final Collection<String> tableNameExclusions) {
+        public Builder withTables(final Collection<String> tableNameExclusions) {
             template().tableNameExclusions.addAll(validateExclusions(tableNameExclusions, "tableNameExclusions"));
             return this;
         }
@@ -324,8 +308,7 @@ public final class Exclusions {
          * @param tableNameExclusion the table name to exclude
          * @return this {@link Builder} instance
          */
-        @Nonnull
-        public Builder withTable(@Nonnull final String tableNameExclusion) {
+        public Builder withTable(final String tableNameExclusion) {
             withTables(Set.of(tableNameExclusion));
             return this;
         }
@@ -336,8 +319,7 @@ public final class Exclusions {
          * @param sequenceNameExclusions a collection of sequence names to exclude
          * @return this {@link Builder} instance
          */
-        @Nonnull
-        public Builder withSequences(@Nonnull final Collection<String> sequenceNameExclusions) {
+        public Builder withSequences(final Collection<String> sequenceNameExclusions) {
             template().sequenceNameExclusions.addAll(validateExclusions(sequenceNameExclusions, "sequenceNameExclusions"));
             return this;
         }
@@ -348,8 +330,7 @@ public final class Exclusions {
          * @param sequenceNameExclusion the sequence name to exclude
          * @return this {@link Builder} instance
          */
-        @Nonnull
-        public Builder withSequence(@Nonnull final String sequenceNameExclusion) {
+        public Builder withSequence(final String sequenceNameExclusion) {
             withSequences(Set.of(sequenceNameExclusion));
             return this;
         }
@@ -360,16 +341,14 @@ public final class Exclusions {
          * @return the constructed {@link Exclusions} object
          * @throws IllegalStateException if the builder is reused after building
          */
-        @Nonnull
         public Exclusions build() {
             final Exclusions exclusions = template();
             template = null;
             return exclusions;
         }
 
-        @Nonnull
-        private Set<String> validateExclusions(@Nonnull final Collection<String> exclusions,
-                                               @Nonnull final String argumentName) {
+        private Set<String> validateExclusions(final Collection<String> exclusions,
+                                               final String argumentName) {
             final Set<String> defensiveCopy = Set.copyOf(Objects.requireNonNull(exclusions, argumentName));
             for (final String exclusion : defensiveCopy) {
                 Validators.notBlank(exclusion, argumentName);

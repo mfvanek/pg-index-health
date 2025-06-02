@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.model.units.MemoryUnit;
 import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.awaitility.Awaitility;
+import org.jspecify.annotations.Nullable;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.WaitStrategy;
@@ -26,8 +27,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.sql.DataSource;
 
 /**
@@ -51,10 +50,9 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     private final BasicDataSource dataSourceForPrimary;
     private final BasicDataSource dataSourceForStandBy;
 
-    private PostgreSqlClusterWrapper(@Nonnull final PostgreSqlClusterBuilder builder) {
-        this.pgVersion = builder.getPostgresVersion() != null ?
-            PostgresVersionHolder.forCluster(builder.getPostgresVersion()) :
-            PostgresVersionHolder.forCluster();
+    private PostgreSqlClusterWrapper(final PostgreSqlClusterBuilder builder) {
+        final String version = builder.getPostgresVersion();
+        this.pgVersion = version != null ? PostgresVersionHolder.forCluster(version) : PostgresVersionHolder.forCluster();
         this.network = Network.newNetwork();
 
         final PostgreSqlClusterAliasHolder aliases = new PostgreSqlClusterAliasHolder();
@@ -105,42 +103,30 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         containerForPrimary.close();
     }
 
-    @Nonnull
     public DataSource getDataSourceForPrimary() {
-        throwErrorIfNotInitialized();
         return dataSourceForPrimary;
     }
 
-    @Nonnull
     public DataSource getDataSourceForStandBy() {
-        throwErrorIfNotInitialized();
         return dataSourceForStandBy;
     }
 
-    @Nonnull
     public String getFirstContainerJdbcUrl() {
-        throwErrorIfNotInitialized();
         return containerForPrimary.getJdbcUrl();
     }
 
-    @Nonnull
     public String getSecondContainerJdbcUrl() {
-        throwErrorIfNotInitialized();
         return containerForStandBy.getJdbcUrl();
     }
 
-    @Nonnull
     public String getCommonUrlToPrimary() {
-        throwErrorIfNotInitialized();
         return PgUrlParser.buildCommonUrlToPrimary(containerForPrimary.getJdbcUrl(), containerForStandBy.getJdbcUrl());
     }
 
-    @Nonnull
     public String getUsername() {
         return containerForPrimary.getUsername();
     }
 
-    @Nonnull
     public String getPassword() {
         return containerForPrimary.getPassword();
     }
@@ -164,7 +150,6 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         return true;
     }
 
-    @Nonnull
     private PostgresBitnamiRepmgrContainer createContainerAndInitWith(
         final Map<String, String> envVars,
         final String alias,
@@ -183,14 +168,6 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
             .waitingFor(waitStrategy);
     }
 
-    @ExcludeFromJacocoGeneratedReport
-    private void throwErrorIfNotInitialized() {
-        if (containerForPrimary == null || dataSourceForPrimary == null || containerForStandBy == null || dataSourceForStandBy == null) {
-            throw new AssertionError("not initialized");
-        }
-    }
-
-    @Nonnull
     public static PostgreSqlClusterBuilder builder() {
         return new PostgreSqlClusterBuilder();
     }
@@ -206,22 +183,19 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         private String username = "customuser";
         private String password = "custompassword";
         private String databaseName = "customdatabase";
-        private String postgresVersion;
+        private @Nullable String postgresVersion;
 
         private PostgreSqlClusterBuilder() {
         }
 
-        @Nonnull
         public String getUsername() {
             return username;
         }
 
-        @Nonnull
         public String getPassword() {
             return password;
         }
 
-        @Nonnull
         public String getDatabaseName() {
             return databaseName;
         }
@@ -231,26 +205,22 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
             return postgresVersion;
         }
 
-        @Nonnull
-        public PostgreSqlClusterBuilder withUsername(@Nonnull final String username) {
+        public PostgreSqlClusterBuilder withUsername(final String username) {
             this.username = Objects.requireNonNull(username, "username cannot be null");
             return this;
         }
 
-        @Nonnull
-        public PostgreSqlClusterBuilder withPassword(@Nonnull final String password) {
+        public PostgreSqlClusterBuilder withPassword(final String password) {
             this.password = Objects.requireNonNull(password, "password cannot be null");
             return this;
         }
 
-        @Nonnull
-        public PostgreSqlClusterBuilder withDatabaseName(@Nonnull final String databaseName) {
+        public PostgreSqlClusterBuilder withDatabaseName(final String databaseName) {
             this.databaseName = Objects.requireNonNull(databaseName, "databaseName cannot be null");
             return this;
         }
 
-        @Nonnull
-        public PostgreSqlClusterBuilder withPostgresVersion(@Nonnull final String postgresVersion) {
+        public PostgreSqlClusterBuilder withPostgresVersion(final String postgresVersion) {
             this.postgresVersion = Objects.requireNonNull(postgresVersion, "postgresVersion cannot be null");
             return this;
         }
@@ -260,7 +230,6 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
          *
          * @return PostgreSqlClusterWrapper
          */
-        @Nonnull
         public PostgreSqlClusterWrapper build() {
             return new PostgreSqlClusterWrapper(this);
         }

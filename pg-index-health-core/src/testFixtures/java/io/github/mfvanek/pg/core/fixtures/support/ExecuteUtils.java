@@ -17,7 +17,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public final class ExecuteUtils {
@@ -26,8 +25,8 @@ public final class ExecuteUtils {
         throw new UnsupportedOperationException();
     }
 
-    public static void executeOnDatabase(@Nonnull final DataSource dataSource,
-                                         @Nonnull final DbStatement callback) {
+    public static void executeOnDatabase(final DataSource dataSource,
+                                         final DbStatement callback) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             callback.execute(statement);
@@ -36,8 +35,8 @@ public final class ExecuteUtils {
         }
     }
 
-    public static void executeInTransaction(@Nonnull final DataSource dataSource,
-                                            @Nonnull final Collection<? extends DbStatement> dbStatements) {
+    public static void executeInTransaction(final DataSource dataSource,
+                                            final Collection<? extends DbStatement> dbStatements) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             connection.setAutoCommit(false);

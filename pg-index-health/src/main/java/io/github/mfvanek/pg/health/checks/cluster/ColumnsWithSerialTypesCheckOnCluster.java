@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for columns of serial types that are not primary keys on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class ColumnsWithSerialTypesCheckOnCluster extends AbstractCheckOnCluster<ColumnWithSerialType> {
 
-    public ColumnsWithSerialTypesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public ColumnsWithSerialTypesCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ColumnsWithSerialTypesCheckOnHost::new);
     }
 }

@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for columns whose names do not follow naming convention (that have to be enclosed in double-quotes) on a specific host.
@@ -30,7 +29,7 @@ import javax.annotation.Nonnull;
  */
 public class ColumnsNotFollowingNamingConventionCheckOnHost extends AbstractCheckOnHost<Column> {
 
-    public ColumnsNotFollowingNamingConventionCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public ColumnsNotFollowingNamingConventionCheckOnHost(final PgConnection pgConnection) {
         super(Column.class, pgConnection, Diagnostic.COLUMNS_NOT_FOLLOWING_NAMING_CONVENTION);
     }
 
@@ -40,9 +39,8 @@ public class ColumnsNotFollowingNamingConventionCheckOnHost extends AbstractChec
      * @param pgContext check's context with the specified schema
      * @return list of columns whose names do not follow naming convention
      */
-    @Nonnull
     @Override
-    protected List<Column> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<Column> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, ColumnExtractor.of());
     }
 }

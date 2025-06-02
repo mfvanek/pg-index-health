@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.annotation.Nonnull;
 
 /**
  * A mapper from raw data to {@link DuplicatedForeignKeys} model.
@@ -30,7 +29,7 @@ public final class DuplicatedForeignKeysExtractor implements ResultSetExtractor<
     private final ResultSetExtractor<ForeignKey> defaultExtractor;
     private final ResultSetExtractor<ForeignKey> duplicateKeyExtractor;
 
-    private DuplicatedForeignKeysExtractor(@Nonnull final String prefix) {
+    private DuplicatedForeignKeysExtractor(final String prefix) {
         this.defaultExtractor = ForeignKeyExtractor.ofDefault();
         this.duplicateKeyExtractor = ForeignKeyExtractor.withPrefix(prefix);
     }
@@ -38,9 +37,8 @@ public final class DuplicatedForeignKeysExtractor implements ResultSetExtractor<
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public DuplicatedForeignKeys extractData(@Nonnull final ResultSet resultSet) throws SQLException {
+    public DuplicatedForeignKeys extractData(final ResultSet resultSet) throws SQLException {
         final ForeignKey first = defaultExtractor.extractData(resultSet);
         final ForeignKey second = duplicateKeyExtractor.extractData(resultSet);
         return DuplicatedForeignKeys.of(first, second);
@@ -52,8 +50,7 @@ public final class DuplicatedForeignKeysExtractor implements ResultSetExtractor<
      * @param prefix given prefix; must be non-null
      * @return {@code DuplicatedForeignKeysExtractor} instance
      */
-    @Nonnull
-    public static ResultSetExtractor<DuplicatedForeignKeys> of(@Nonnull final String prefix) {
+    public static ResultSetExtractor<DuplicatedForeignKeys> of(final String prefix) {
         return new DuplicatedForeignKeysExtractor(prefix);
     }
 }

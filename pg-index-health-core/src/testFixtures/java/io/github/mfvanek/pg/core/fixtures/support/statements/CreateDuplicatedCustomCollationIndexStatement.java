@@ -11,11 +11,9 @@
 package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public class CreateDuplicatedCustomCollationIndexStatement extends AbstractDbStatement {
 
-    @Nonnull
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("create index if not exists i_accounts_account_number " +

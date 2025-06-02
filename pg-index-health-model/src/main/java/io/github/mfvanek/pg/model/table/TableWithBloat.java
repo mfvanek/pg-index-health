@@ -15,21 +15,18 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * Represents database table with information about bloat.
+ * An immutable representation of a database table with information about bloat.
  *
  * @author Ivan Vakhrushev
  */
-@Immutable
 public final class TableWithBloat extends AbstractTableAware implements BloatAware, Comparable<TableWithBloat> {
 
     private final long bloatSizeInBytes;
     private final double bloatPercentage;
 
-    private TableWithBloat(@Nonnull final Table table,
+    private TableWithBloat(final Table table,
                            final long bloatSizeInBytes,
                            final double bloatPercentage) {
         super(table);
@@ -56,7 +53,6 @@ public final class TableWithBloat extends AbstractTableAware implements BloatAwa
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return TableWithBloat.class.getSimpleName() + '{' +
@@ -94,7 +90,7 @@ public final class TableWithBloat extends AbstractTableAware implements BloatAwa
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(@Nonnull final TableWithBloat other) {
+    public int compareTo(final TableWithBloat other) {
         Objects.requireNonNull(other, "other cannot be null");
         return table.compareTo(other.table);
     }
@@ -108,8 +104,7 @@ public final class TableWithBloat extends AbstractTableAware implements BloatAwa
      * @param bloatPercentage  bloat percentage in the range from 0 to 100 inclusive.
      * @return {@code TableWithBloat}
      */
-    @Nonnull
-    public static TableWithBloat of(@Nonnull final String tableName,
+    public static TableWithBloat of(final String tableName,
                                     final long tableSizeInBytes,
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
@@ -128,9 +123,8 @@ public final class TableWithBloat extends AbstractTableAware implements BloatAwa
      * @return {@code TableWithBloat}
      * @since 0.14.3
      */
-    @Nonnull
-    public static TableWithBloat of(@Nonnull final PgContext pgContext,
-                                    @Nonnull final String tableName,
+    public static TableWithBloat of(final PgContext pgContext,
+                                    final String tableName,
                                     final long tableSizeInBytes,
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
@@ -146,9 +140,8 @@ public final class TableWithBloat extends AbstractTableAware implements BloatAwa
      * @return {@code TableWithBloat}
      * @since 0.14.3
      */
-    @Nonnull
-    public static TableWithBloat of(@Nonnull final PgContext pgContext,
-                                    @Nonnull final String tableName) {
+    public static TableWithBloat of(final PgContext pgContext,
+                                    final String tableName) {
         return of(pgContext, tableName, 0L, 0L, 0.0);
     }
 
@@ -161,8 +154,7 @@ public final class TableWithBloat extends AbstractTableAware implements BloatAwa
      * @return {@code TableWithBloat}
      * @since 0.7.0
      */
-    @Nonnull
-    public static TableWithBloat of(@Nonnull final Table table,
+    public static TableWithBloat of(final Table table,
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
         return new TableWithBloat(table, bloatSizeInBytes, bloatPercentage);

@@ -13,8 +13,6 @@ package io.github.mfvanek.pg.health.logger;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 
 import java.util.Locale;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * An adapter for the {@link LoggingKey} interface that provides simple logging keys
@@ -23,7 +21,6 @@ import javax.annotation.concurrent.Immutable;
  * <p>This class implements the {@link LoggingKey} interface by deriving the key name,
  * sub-key name, and description from the given {@link Diagnostic} object.</p>
  */
-@Immutable
 public final class SimpleLoggingKeyAdapter implements LoggingKey {
 
     /**
@@ -31,14 +28,13 @@ public final class SimpleLoggingKeyAdapter implements LoggingKey {
      */
     private final Diagnostic diagnostic;
 
-    private SimpleLoggingKeyAdapter(@Nonnull final Diagnostic diagnostic) {
+    private SimpleLoggingKeyAdapter(final Diagnostic diagnostic) {
         this.diagnostic = diagnostic;
     }
 
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getKeyName() {
         return "db_indexes_health";
@@ -47,7 +43,6 @@ public final class SimpleLoggingKeyAdapter implements LoggingKey {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getSubKeyName() {
         return diagnostic.name().toLowerCase(Locale.ROOT);
@@ -56,7 +51,6 @@ public final class SimpleLoggingKeyAdapter implements LoggingKey {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getDescription() {
         return getSubKeyName().replace('_', ' ');
@@ -68,8 +62,7 @@ public final class SimpleLoggingKeyAdapter implements LoggingKey {
      * @param diagnostic the diagnostic instance, must not be {@code null}.
      * @return a new {@link SimpleLoggingKeyAdapter} instance.
      */
-    @Nonnull
-    public static LoggingKey of(@Nonnull final Diagnostic diagnostic) {
+    public static LoggingKey of(final Diagnostic diagnostic) {
         return new SimpleLoggingKeyAdapter(diagnostic);
     }
 }

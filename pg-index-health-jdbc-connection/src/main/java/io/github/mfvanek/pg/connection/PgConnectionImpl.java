@@ -14,12 +14,11 @@ import io.github.mfvanek.pg.connection.exception.PgSqlException;
 import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.connection.host.PgUrlParser;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.sql.DataSource;
 
 /**
@@ -33,7 +32,7 @@ public class PgConnectionImpl implements PgConnection {
     private final DataSource dataSource;
     private final PgHost host;
 
-    private PgConnectionImpl(@Nonnull final DataSource dataSource, @Nonnull final PgHost host) {
+    private PgConnectionImpl(final DataSource dataSource, final PgHost host) {
         this.dataSource = validateDataSource(dataSource);
         this.host = Objects.requireNonNull(host, "host cannot be null");
     }
@@ -42,7 +41,6 @@ public class PgConnectionImpl implements PgConnection {
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
     public DataSource getDataSource() {
         return dataSource;
     }
@@ -50,7 +48,6 @@ public class PgConnectionImpl implements PgConnection {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public PgHost getHost() {
         return host;
@@ -84,7 +81,6 @@ public class PgConnectionImpl implements PgConnection {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return PgConnectionImpl.class.getSimpleName() + '{' +
@@ -101,8 +97,7 @@ public class PgConnectionImpl implements PgConnection {
      * @see DataSource
      * @see PgHost
      */
-    @Nonnull
-    public static PgConnection of(@Nonnull final DataSource dataSource, @Nonnull final PgHost host) {
+    public static PgConnection of(final DataSource dataSource, final PgHost host) {
         return new PgConnectionImpl(dataSource, host);
     }
 
@@ -116,10 +111,9 @@ public class PgConnectionImpl implements PgConnection {
      * @see java.sql.DatabaseMetaData
      * @since 0.14.2
      */
-    @Nonnull
-    public static PgConnection ofUrl(@Nonnull final DataSource dataSource, @Nullable final String databaseUrl) {
+    public static PgConnection ofUrl(final DataSource dataSource, @Nullable final String databaseUrl) {
         final PgHost host;
-        if (needToGetUrlFromMetaData(databaseUrl)) {
+        if (databaseUrl == null || needToGetUrlFromMetaData(databaseUrl)) {
             try (Connection connection = validateDataSource(dataSource).getConnection()) {
                 host = PgHostImpl.ofUrl(connection.getMetaData().getURL());
             } catch (SQLException ex) {
@@ -131,14 +125,12 @@ public class PgConnectionImpl implements PgConnection {
         return new PgConnectionImpl(dataSource, host);
     }
 
-    @Nonnull
-    private static DataSource validateDataSource(@Nonnull final DataSource dataSource) {
+    private static DataSource validateDataSource(final DataSource dataSource) {
         return Objects.requireNonNull(dataSource, "dataSource cannot be null");
     }
 
-    private static boolean needToGetUrlFromMetaData(@Nullable final String databaseUrl) {
-        return databaseUrl == null ||
-            databaseUrl.isBlank() ||
+    private static boolean needToGetUrlFromMetaData(final String databaseUrl) {
+        return databaseUrl.isBlank() ||
             databaseUrl.startsWith(PgUrlParser.TESTCONTAINERS_PG_URL_PREFIX);
     }
 }

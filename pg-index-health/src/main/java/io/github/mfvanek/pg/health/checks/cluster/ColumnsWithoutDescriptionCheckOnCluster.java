@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.model.column.Column;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for columns without description on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class ColumnsWithoutDescriptionCheckOnCluster extends AbstractCheckOnCluster<Column> {
 
-    public ColumnsWithoutDescriptionCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public ColumnsWithoutDescriptionCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ColumnsWithoutDescriptionCheckOnHost::new);
     }
 }

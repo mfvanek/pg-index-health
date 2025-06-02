@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.function.StoredFunction;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for procedures/functions without description on a specific host.
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class FunctionsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<StoredFunction> {
 
-    public FunctionsWithoutDescriptionCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public FunctionsWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
         super(StoredFunction.class, pgConnection, Diagnostic.FUNCTIONS_WITHOUT_DESCRIPTION);
     }
 
@@ -36,9 +35,8 @@ public class FunctionsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<
      * @param pgContext check's context with the specified schema
      * @return list of procedures/functions without description
      */
-    @Nonnull
     @Override
-    protected List<StoredFunction> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<StoredFunction> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, rs -> {
             final String functionName = rs.getString("function_name");
             final String functionSignature = rs.getString("function_signature");

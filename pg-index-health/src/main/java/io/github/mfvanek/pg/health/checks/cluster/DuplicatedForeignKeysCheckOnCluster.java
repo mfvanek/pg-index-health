@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for duplicated (completely identical) foreign keys on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class DuplicatedForeignKeysCheckOnCluster extends AbstractCheckOnCluster<DuplicatedForeignKeys> {
 
-    public DuplicatedForeignKeysCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public DuplicatedForeignKeysCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, DuplicatedForeignKeysCheckOnHost::new);
     }
 }

@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for primary keys that are most likely natural keys on all hosts in the cluster.
  * <p>
@@ -27,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
-    public PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost::new);
     }
 }

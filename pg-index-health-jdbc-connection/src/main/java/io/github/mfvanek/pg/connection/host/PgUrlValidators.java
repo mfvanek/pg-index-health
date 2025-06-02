@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.connection.host;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * Utility class providing validation methods for PostgreSQL connection string (URL).
@@ -32,8 +31,7 @@ public final class PgUrlValidators {
      * @return the validated PostgreSQL URL.
      * @throws IllegalArgumentException if the URL is blank or does not start with the expected header.
      */
-    @Nonnull
-    public static String pgUrlNotBlankAndValid(@Nonnull final String pgUrl, @Nonnull final String argumentName) {
+    public static String pgUrlNotBlankAndValid(final String pgUrl, final String argumentName) {
         Validators.notBlank(pgUrl, argumentName);
         if (!Objects.requireNonNull(pgUrl).startsWith(PgUrlParser.URL_HEADER)) {
             throw new IllegalArgumentException(argumentName + " has invalid format");
@@ -47,8 +45,7 @@ public final class PgUrlValidators {
      * @param pgUrl the PostgreSQL URL to validate; must not be {@code null} or blank.
      * @return the validated PostgreSQL URL.
      */
-    @Nonnull
-    static String pgUrlNotBlankAndValid(@Nonnull final String pgUrl) {
+    static String pgUrlNotBlankAndValid(final String pgUrl) {
         return pgUrlNotBlankAndValid(pgUrl, "pgUrl");
     }
 
@@ -59,8 +56,7 @@ public final class PgUrlValidators {
      * @return the validated hostname.
      * @throws IllegalArgumentException if the hostname is blank.
      */
-    @Nonnull
-    static String hostNameNotBlank(@Nonnull final String hostName) {
+    static String hostNameNotBlank(final String hostName) {
         Validators.notBlank(hostName, "hostName");
         return hostName;
     }

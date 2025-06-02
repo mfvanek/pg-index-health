@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 /**
  * An abstract check on database structure.
@@ -40,8 +39,7 @@ public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAw
      * @return list of deviations from the specified rule
      * @see PgContext
      */
-    @Nonnull
-    List<T> check(@Nonnull PgContext pgContext, @Nonnull Predicate<? super T> exclusionsFilter);
+    List<T> check(PgContext pgContext, Predicate<? super T> exclusionsFilter);
 
     /**
      * Executes the check in the specified schema without filtering results.
@@ -50,8 +48,7 @@ public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAw
      * @return list of deviations from the specified rule
      * @see PgContext
      */
-    @Nonnull
-    default List<T> check(@Nonnull final PgContext pgContext) {
+    default List<T> check(final PgContext pgContext) {
         return check(pgContext, item -> true);
     }
 
@@ -61,7 +58,6 @@ public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAw
      * @return list of deviations from the specified rule
      * @see PgContext#ofDefault()
      */
-    @Nonnull
     default List<T> check() {
         return check(PgContext.ofDefault(), item -> true);
     }
@@ -73,8 +69,7 @@ public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAw
      * @param exclusionsFilter predicate to filter out unnecessary results
      * @return list of deviations from the specified rule
      */
-    @Nonnull
-    default List<T> check(@Nonnull final Collection<? extends PgContext> pgContexts, @Nonnull final Predicate<? super T> exclusionsFilter) {
+    default List<T> check(final Collection<PgContext> pgContexts, final Predicate<? super T> exclusionsFilter) {
         return pgContexts.stream()
             .map(ctx -> check(ctx, exclusionsFilter))
             .flatMap(List::stream)

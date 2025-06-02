@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * Base class for all migration generators.
@@ -38,9 +37,8 @@ abstract class AbstractDbMigrationGenerator<T extends TableNameAware> implements
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public final List<String> generate(@Nonnull final List<T> rows) {
+    public final List<String> generate(final List<T> rows) {
         Objects.requireNonNull(rows, "rows cannot be null");
 
         final List<String> migrations = new ArrayList<>(rows.size());
@@ -57,6 +55,5 @@ abstract class AbstractDbMigrationGenerator<T extends TableNameAware> implements
      * @param row the row from which to generate a migration script, must not be null
      * @return the generated migration script
      */
-    @Nonnull
-    protected abstract String generate(@Nonnull T row);
+    protected abstract String generate(T row);
 }

@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.core.utils;
 
 import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
+import io.github.mfvanek.pg.core.utils.exception.ReadQueryFromFileException;
 import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -51,9 +52,9 @@ class SqlQueryReaderTest {
     @Test
     void getQueryFromFileShouldFailWithFileNotFound() {
         assertThatThrownBy(() -> SqlQueryReader.getQueryFromFile("unknown_file.sql"))
-            .isInstanceOf(RuntimeException.class)
+            .isInstanceOf(ReadQueryFromFileException.class)
             .hasCauseInstanceOf(FileNotFoundException.class)
-            .hasMessage("java.io.FileNotFoundException: unknown_file.sql");
+            .hasMessage("Error occurred while reading sql query from file unknown_file.sql");
     }
 
     @SuppressWarnings("ConstantConditions")

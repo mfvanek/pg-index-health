@@ -20,24 +20,21 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * Parameters for connecting to the database.
+ * Immutable parameters for connecting to the database.
  *
  * @author Ivan Vakhrushev
  */
-@Immutable
 public final class ConnectionCredentials {
 
     private final SortedSet<String> connectionUrls;
     private final String userName;
     private final String password;
 
-    private ConnectionCredentials(@Nonnull final Collection<String> connectionUrls,
-                                  @Nonnull final String userName,
-                                  @Nonnull final String password) {
+    private ConnectionCredentials(final Collection<String> connectionUrls,
+                                  final String userName,
+                                  final String password) {
         final List<String> defensiveCopy = new ArrayList<>(Objects.requireNonNull(connectionUrls, "connectionUrls cannot be null"));
         PgConnectionValidators.connectionUrlsNotEmptyAndValid(defensiveCopy);
         this.connectionUrls = Collections.unmodifiableSortedSet(new TreeSet<>(defensiveCopy));
@@ -50,7 +47,6 @@ public final class ConnectionCredentials {
      *
      * @return connection urls
      */
-    @Nonnull
     public Collection<String> getConnectionUrls() {
         return connectionUrls;
     }
@@ -60,7 +56,6 @@ public final class ConnectionCredentials {
      *
      * @return the name of the user
      */
-    @Nonnull
     public String getUserName() {
         return userName;
     }
@@ -70,7 +65,6 @@ public final class ConnectionCredentials {
      *
      * @return the user's password
      */
-    @Nonnull
     public String getPassword() {
         return password;
     }
@@ -105,7 +99,6 @@ public final class ConnectionCredentials {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return ConnectionCredentials.class.getSimpleName() + '{' +
@@ -123,10 +116,9 @@ public final class ConnectionCredentials {
      * @param password       the password for authentication; must not be null or blank.
      * @return a new {@link ConnectionCredentials} instance.
      */
-    @Nonnull
-    public static ConnectionCredentials of(@Nonnull final Collection<String> connectionUrls,
-                                           @Nonnull final String userName,
-                                           @Nonnull final String password) {
+    public static ConnectionCredentials of(final Collection<String> connectionUrls,
+                                           final String userName,
+                                           final String password) {
         return new ConnectionCredentials(connectionUrls, userName, password);
     }
 
@@ -138,10 +130,9 @@ public final class ConnectionCredentials {
      * @param password the password for authentication; must not be null or blank.
      * @return a new {@link ConnectionCredentials} instance containing the validated URL.
      */
-    @Nonnull
-    public static ConnectionCredentials ofUrl(@Nonnull final String writeUrl,
-                                              @Nonnull final String userName,
-                                              @Nonnull final String password) {
+    public static ConnectionCredentials ofUrl(final String writeUrl,
+                                              final String userName,
+                                              final String password) {
         final Set<String> connectionUrls = Set.of(PgUrlValidators.pgUrlNotBlankAndValid(writeUrl, "writeUrl"));
         return new ConnectionCredentials(connectionUrls, userName, password);
     }

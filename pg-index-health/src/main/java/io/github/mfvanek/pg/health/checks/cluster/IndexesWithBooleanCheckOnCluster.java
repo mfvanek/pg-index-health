@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithBooleanCheckOnHost;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for indexes that contain boolean values on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class IndexesWithBooleanCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
-    public IndexesWithBooleanCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public IndexesWithBooleanCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, IndexesWithBooleanCheckOnHost::new);
     }
 }

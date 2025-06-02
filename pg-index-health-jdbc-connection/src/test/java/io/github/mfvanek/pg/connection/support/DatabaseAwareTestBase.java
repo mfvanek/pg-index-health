@@ -15,25 +15,25 @@ import io.github.mfvanek.pg.connection.PgConnectionImpl;
 import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.testing.PostgreSqlContainerWrapper;
+import org.jspecify.annotations.NonNull;
 
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public abstract class DatabaseAwareTestBase {
 
     private static final PostgreSqlContainerWrapper POSTGRES = PostgreSqlContainerWrapper.withDefaultVersion();
 
-    @Nonnull
+    @NonNull
     protected static PgConnection getPgConnection() {
         return PgConnectionImpl.of(getDataSource(), getHost());
     }
 
-    @Nonnull
+    @NonNull
     protected static PgHost getHost() {
         return PgHostImpl.ofUrl(POSTGRES.getUrl());
     }
 
-    @Nonnull
+    @NonNull
     protected static DataSource getDataSource() {
         return POSTGRES.getDataSource();
     }

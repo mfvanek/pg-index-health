@@ -31,7 +31,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 
 /**
  * Check for unused indexes on all hosts in the cluster.
@@ -46,26 +45,25 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
     private final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory;
     private final Map<PgHost, StatisticsMaintenanceOnHost> statistics;
 
-    public UnusedIndexesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public UnusedIndexesCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, UnusedIndexesCheckOnHost::new, UnusedIndexesCheckOnCluster::getResultAsIntersection);
         this.statisticsOnHostFactory = StatisticsMaintenanceOnHostImpl::new;
         this.statistics = new HashMap<>();
     }
 
     @Override
-    protected void doBeforeExecuteOnHost(@Nonnull final PgConnection connectionToHost) {
+    protected void doBeforeExecuteOnHost(final PgConnection connectionToHost) {
         logLastStatsResetDate(connectionToHost);
         super.doBeforeExecuteOnHost(connectionToHost);
     }
 
-    private void logLastStatsResetDate(@Nonnull final PgConnection connectionToHost) {
+    private void logLastStatsResetDate(final PgConnection connectionToHost) {
         final String resetDateLogMessage = getLastStatsResetDateLogMessage(computeStatisticsForHostIfNeed(connectionToHost));
         LOGGER.info(resetDateLogMessage);
     }
 
-    @Nonnull
     static List<UnusedIndex> getResultAsIntersection(
-        @Nonnull final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts) {
+        final List<List<UnusedIndex>> potentiallyUnusedIndexesFromAllHosts) {
         LOGGER.fine(() -> "potentiallyUnusedIndexesFromAllHosts = " + potentiallyUnusedIndexesFromAllHosts);
         Collection<UnusedIndex> unusedIndexes = null;
         for (final List<UnusedIndex> unusedIndexesFromHost : potentiallyUnusedIndexesFromAllHosts) {
@@ -80,8 +78,7 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
         return result;
     }
 
-    @Nonnull
-    static String getLastStatsResetDateLogMessage(@Nonnull final StatisticsMaintenanceOnHost statisticsMaintenance) {
+    static String getLastStatsResetDateLogMessage(final StatisticsMaintenanceOnHost statisticsMaintenance) {
         Objects.requireNonNull(statisticsMaintenance, "statisticsMaintenance cannot be null");
         final Optional<OffsetDateTime> statsResetTimestamp = statisticsMaintenance.getLastStatsResetTimestamp();
         if (statsResetTimestamp.isPresent()) {
@@ -91,8 +88,7 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
         return "Statistics have never been reset on this host";
     }
 
-    @Nonnull
-    private StatisticsMaintenanceOnHost computeStatisticsForHostIfNeed(@Nonnull final PgConnection connectionToHost) {
+    private StatisticsMaintenanceOnHost computeStatisticsForHostIfNeed(final PgConnection connectionToHost) {
         return statistics.computeIfAbsent(connectionToHost.getHost(), h -> statisticsOnHostFactory.apply(connectionToHost));
     }
 }

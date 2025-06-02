@@ -14,15 +14,12 @@ import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Locale;
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * Represents a context for running maintenance queries.
+ * An immutable representation of a context for running maintenance queries.
  *
  * @author Ivan Vakhrushev
  */
-@Immutable
 public final class PgContext {
 
     /**
@@ -42,7 +39,7 @@ public final class PgContext {
     private final double bloatPercentageThreshold;
     private final double remainingPercentageThreshold;
 
-    private PgContext(@Nonnull final String schemaName, final double bloatPercentageThreshold, final double remainingPercentageThreshold) {
+    private PgContext(final String schemaName, final double bloatPercentageThreshold, final double remainingPercentageThreshold) {
         this.schemaName = Validators.notBlank(schemaName, "schemaName").toLowerCase(Locale.ROOT);
         this.bloatPercentageThreshold = Validators.validPercent(bloatPercentageThreshold, "bloatPercentageThreshold");
         this.remainingPercentageThreshold = Validators.validPercent(remainingPercentageThreshold, "remainingPercentageThreshold");
@@ -53,7 +50,6 @@ public final class PgContext {
      *
      * @return schema name
      */
-    @Nonnull
     public String getSchemaName() {
         return schemaName;
     }
@@ -88,7 +84,6 @@ public final class PgContext {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return PgContext.class.getSimpleName() + '{' +
@@ -104,8 +99,7 @@ public final class PgContext {
      * @param objectName given object name
      * @return object name with schema for non default schemas
      */
-    @Nonnull
-    public String enrichWithSchema(@Nonnull final String objectName) {
+    public String enrichWithSchema(final String objectName) {
         Validators.notBlank(objectName, "objectName");
 
         if (isDefaultSchema()) {
@@ -115,8 +109,7 @@ public final class PgContext {
         return enrichWithSchemaIfNeed(objectName);
     }
 
-    @Nonnull
-    private String enrichWithSchemaIfNeed(@Nonnull final String objectName) {
+    private String enrichWithSchemaIfNeed(final String objectName) {
         final String prefix = schemaName + ".";
         if (objectName.toLowerCase(Locale.ROOT).startsWith(prefix)) {
             return objectName;
@@ -134,8 +127,7 @@ public final class PgContext {
      * @param remainingPercentageThreshold the specified remaining percentage threshold
      * @return {@code PgContext}
      */
-    @Nonnull
-    public static PgContext of(@Nonnull final String schemaName,
+    public static PgContext of(final String schemaName,
                                final double bloatPercentageThreshold,
                                final double remainingPercentageThreshold) {
         return new PgContext(schemaName, bloatPercentageThreshold, remainingPercentageThreshold);
@@ -149,8 +141,7 @@ public final class PgContext {
      * @return {@code PgContext}
      * @see PgContext#DEFAULT_REMAINING_PERCENTAGE_THRESHOLD
      */
-    @Nonnull
-    public static PgContext of(@Nonnull final String schemaName,
+    public static PgContext of(final String schemaName,
                                final double bloatPercentageThreshold) {
         return new PgContext(schemaName, bloatPercentageThreshold, DEFAULT_REMAINING_PERCENTAGE_THRESHOLD);
     }
@@ -162,8 +153,7 @@ public final class PgContext {
      * @return {@code PgContext}
      * @see PgContext#DEFAULT_BLOAT_PERCENTAGE_THRESHOLD
      */
-    @Nonnull
-    public static PgContext of(@Nonnull final String schemaName) {
+    public static PgContext of(final String schemaName) {
         return of(schemaName, DEFAULT_BLOAT_PERCENTAGE_THRESHOLD);
     }
 
@@ -175,7 +165,6 @@ public final class PgContext {
      * @see PgContext#DEFAULT_REMAINING_PERCENTAGE_THRESHOLD
      * @since 0.15.0
      */
-    @Nonnull
     public static PgContext ofDefault() {
         return of(DEFAULT_SCHEMA_NAME);
     }
@@ -188,8 +177,7 @@ public final class PgContext {
      * @return the fully qualified object name with schema information
      * @since 0.14.3
      */
-    @Nonnull
-    public static String enrichWith(@Nonnull final String objectName, @Nonnull final PgContext pgContext) {
+    public static String enrichWith(final String objectName, final PgContext pgContext) {
         Objects.requireNonNull(pgContext, "pgContext cannot be null");
         return pgContext.enrichWithSchema(objectName);
     }

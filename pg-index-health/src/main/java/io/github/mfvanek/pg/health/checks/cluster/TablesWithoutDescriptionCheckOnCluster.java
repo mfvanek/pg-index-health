@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.model.table.Table;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for tables without description on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class TablesWithoutDescriptionCheckOnCluster extends AbstractCheckOnCluster<Table> {
 
-    public TablesWithoutDescriptionCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public TablesWithoutDescriptionCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesWithoutDescriptionCheckOnHost::new);
     }
 }

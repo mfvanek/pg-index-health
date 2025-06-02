@@ -12,9 +12,8 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
-
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -51,7 +50,7 @@ class DropSequenceGeneratorTest {
             .isEqualTo("DROP SEQUENCE IF EXISTS s1.seq1;");
     }
 
-    @Nonnull
+    @NonNull
     private ColumnWithSerialType column() {
         return ColumnWithSerialType.ofSerial(Column.ofNotNull("s1.t1", "col1"), "s1.seq1");
     }

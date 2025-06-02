@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.model.column.Column;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_NAME;
 
@@ -33,9 +32,8 @@ public final class ColumnExtractor implements ResultSetExtractor<Column> {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public Column extractData(@Nonnull final ResultSet resultSet) throws SQLException {
+    public Column extractData(final ResultSet resultSet) throws SQLException {
         final String tableName = resultSet.getString(TABLE_NAME);
         final String columnName = resultSet.getString("column_name");
         final boolean columnNotNull = resultSet.getBoolean("column_not_null");
@@ -50,7 +48,6 @@ public final class ColumnExtractor implements ResultSetExtractor<Column> {
      *
      * @return {@code ColumnExtractor} instance
      */
-    @Nonnull
     public static ResultSetExtractor<Column> of() {
         return new ColumnExtractor();
     }

@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.connection.exception;
 
 import java.sql.SQLException;
-import javax.annotation.Nonnull;
 
 /**
  * Custom unchecked exception for SQL errors.
@@ -28,7 +27,7 @@ public class PgSqlException extends RuntimeException {
      *
      * @param cause the {@link SQLException} that caused this exception; must not be {@code null}.
      */
-    public PgSqlException(@Nonnull final SQLException cause) {
+    public PgSqlException(final SQLException cause) {
         super(cause.getMessage(), cause);
     }
 }

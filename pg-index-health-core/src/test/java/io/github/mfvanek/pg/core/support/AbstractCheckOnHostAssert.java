@@ -21,16 +21,15 @@ import org.assertj.core.api.ListAssert;
 import org.assertj.core.util.CheckReturnValue;
 
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
 
 @SuppressWarnings({"PMD.LinguisticNaming", "checkstyle:AbstractClassName"})
 public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAssert<AbstractCheckOnHostAssert<E>, DatabaseCheckOnHost<E>> {
 
-    protected AbstractCheckOnHostAssert(@Nonnull final DatabaseCheckOnHost<E> abstractCheckOnHost) {
+    protected AbstractCheckOnHostAssert(final DatabaseCheckOnHost<E> abstractCheckOnHost) {
         super(abstractCheckOnHost, AbstractCheckOnHostAssert.class);
     }
 
-    public <T> AbstractCheckOnHostAssert<E> hasType(@Nonnull final Class<T> type) {
+    public <T> AbstractCheckOnHostAssert<E> hasType(final Class<T> type) {
         isNotNull();
         if (!actual.getType().isAssignableFrom(type)) {
             failWithMessage("Expected type %s but was %s", type, actual.getType());
@@ -38,7 +37,7 @@ public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAsser
         return this;
     }
 
-    public AbstractCheckOnHostAssert<E> hasDiagnostic(@Nonnull final Diagnostic diagnostic) {
+    public AbstractCheckOnHostAssert<E> hasDiagnostic(final Diagnostic diagnostic) {
         isNotNull();
         if (actual.getDiagnostic() != diagnostic) {
             failWithMessage("Expected diagnostic %s but was %s", diagnostic, actual.getDiagnostic());
@@ -46,7 +45,7 @@ public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAsser
         return this;
     }
 
-    public AbstractCheckOnHostAssert<E> hasHost(@Nonnull final PgHost host) {
+    public AbstractCheckOnHostAssert<E> hasHost(final PgHost host) {
         isNotNull();
         if (!actual.getHost().equals(host)) {
             failWithMessage("Expected host %s but was %s", host, actual.getHost());
@@ -77,19 +76,19 @@ public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAsser
     }
 
     @CheckReturnValue
-    public ListAssert<E> executing(@Nonnull final PgContext pgContext) {
+    public ListAssert<E> executing(final PgContext pgContext) {
         isNotNull();
         return Assertions.assertThat(actual.check(pgContext));
     }
 
     @CheckReturnValue
-    public ListAssert<E> executing(@Nonnull final PgContext pgContext, @Nonnull final Predicate<? super E> exclusionsFilter) {
+    public ListAssert<E> executing(final PgContext pgContext, final Predicate<? super E> exclusionsFilter) {
         isNotNull();
         return Assertions.assertThat(actual.check(pgContext, exclusionsFilter));
     }
 
     @CheckReturnValue
-    public static <T extends DbObject> AbstractCheckOnHostAssert<T> assertThat(@Nonnull final DatabaseCheckOnHost<T> actual) {
+    public static <T extends DbObject> AbstractCheckOnHostAssert<T> assertThat(final DatabaseCheckOnHost<T> actual) {
         return new AbstractCheckOnHostAssert<>(actual);
     }
 }

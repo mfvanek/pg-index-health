@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.model.table.Table;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.annotation.Nonnull;
 
 /**
  * A mapper from raw data to {@link Table} model.
@@ -34,9 +33,8 @@ public final class TableExtractor implements ResultSetExtractor<Table> {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public Table extractData(@Nonnull final ResultSet resultSet) throws SQLException {
+    public Table extractData(final ResultSet resultSet) throws SQLException {
         final String tableName = resultSet.getString(TABLE_NAME);
         final long tableSize = resultSet.getLong(TABLE_SIZE);
         return Table.of(tableName, tableSize);
@@ -47,7 +45,6 @@ public final class TableExtractor implements ResultSetExtractor<Table> {
      *
      * @return {@code TableExtractor} instance
      */
-    @Nonnull
     public static ResultSetExtractor<Table> of() {
         return new TableExtractor();
     }

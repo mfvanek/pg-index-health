@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.testing.PostgreSqlClusterWrapper;
 
 import java.time.Duration;
-import javax.annotation.Nonnull;
 
 /**
  * Provides access to HA postgresql cluster nodes.
@@ -38,12 +37,10 @@ final class PgConnectionAwareCluster implements AutoCloseable {
         postgresCluster.close();
     }
 
-    @Nonnull
     public PgConnection getFirstPgConnection() {
         return PgConnectionImpl.of(postgresCluster.getDataSourceForPrimary(), PgHostImpl.ofUrl(postgresCluster.getFirstContainerJdbcUrl()));
     }
 
-    @Nonnull
     public PgConnection getSecondPgConnection() {
         return PgConnectionImpl.of(postgresCluster.getDataSourceForStandBy(), PgHostImpl.ofUrl(postgresCluster.getSecondContainerJdbcUrl()));
     }

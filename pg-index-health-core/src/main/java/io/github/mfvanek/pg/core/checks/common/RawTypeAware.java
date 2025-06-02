@@ -12,8 +12,6 @@ package io.github.mfvanek.pg.core.checks.common;
 
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
-import javax.annotation.Nonnull;
-
 /**
  * Allows getting information about original generic type.
  *
@@ -28,6 +26,5 @@ public interface RawTypeAware<T extends DbObject> {
      *
      * @return java type representing database object
      */
-    @Nonnull
     Class<T> getType();
 }

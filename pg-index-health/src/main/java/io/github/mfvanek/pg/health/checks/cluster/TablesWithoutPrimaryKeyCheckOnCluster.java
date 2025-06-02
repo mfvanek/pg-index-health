@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.model.table.Table;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for tables without primary key on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class TablesWithoutPrimaryKeyCheckOnCluster extends AbstractCheckOnCluster<Table> {
 
-    public TablesWithoutPrimaryKeyCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public TablesWithoutPrimaryKeyCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesWithoutPrimaryKeyCheckOnHost::new);
     }
 }

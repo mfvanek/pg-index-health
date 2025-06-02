@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for foreign keys without associated indexes on a specific host.
@@ -27,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public class ForeignKeysNotCoveredWithIndexCheckOnHost extends AbstractCheckOnHost<ForeignKey> {
 
-    public ForeignKeysNotCoveredWithIndexCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public ForeignKeysNotCoveredWithIndexCheckOnHost(final PgConnection pgConnection) {
         super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX);
     }
 
@@ -39,9 +38,8 @@ public class ForeignKeysNotCoveredWithIndexCheckOnHost extends AbstractCheckOnHo
      * @param pgContext check's context with the specified schema
      * @return list of foreign keys without associated indexes
      */
-    @Nonnull
     @Override
-    protected List<ForeignKey> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<ForeignKey> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, ForeignKeyExtractor.ofDefault());
     }
 }

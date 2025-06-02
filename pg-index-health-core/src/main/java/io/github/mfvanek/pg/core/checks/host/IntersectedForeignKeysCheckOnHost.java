@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for intersected (partially identical) foreign keys on a specific host.
@@ -33,7 +32,7 @@ public class IntersectedForeignKeysCheckOnHost extends AbstractCheckOnHost<Dupli
      *
      * @param pgConnection connection to the PostgreSQL database, must not be null
      */
-    public IntersectedForeignKeysCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public IntersectedForeignKeysCheckOnHost(final PgConnection pgConnection) {
         super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.INTERSECTED_FOREIGN_KEYS);
     }
 
@@ -44,9 +43,8 @@ public class IntersectedForeignKeysCheckOnHost extends AbstractCheckOnHost<Dupli
      * @return list of intersected foreign keys
      * @see DuplicatedForeignKeysCheckOnHost
      */
-    @Nonnull
     @Override
-    protected List<DuplicatedForeignKeys> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<DuplicatedForeignKeys> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, DuplicatedForeignKeysExtractor.of("intersected"));
     }
 }

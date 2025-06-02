@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * Abstract base class for database objects that are associated with a specific index.
@@ -30,14 +29,13 @@ abstract class AbstractIndexAware implements DbObject, TableNameAware, IndexSize
      */
     protected final Index index;
 
-    AbstractIndexAware(@Nonnull final Index index) {
+    AbstractIndexAware(final Index index) {
         this.index = Objects.requireNonNull(index, "index cannot be null");
     }
 
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public final String getTableName() {
         return index.getTableName();
@@ -46,7 +44,6 @@ abstract class AbstractIndexAware implements DbObject, TableNameAware, IndexSize
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public final String getName() {
         return index.getName();
@@ -55,7 +52,6 @@ abstract class AbstractIndexAware implements DbObject, TableNameAware, IndexSize
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public final PgObjectType getObjectType() {
         return index.getObjectType();
@@ -72,7 +68,6 @@ abstract class AbstractIndexAware implements DbObject, TableNameAware, IndexSize
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public final String getIndexName() {
         return index.getIndexName();

@@ -21,15 +21,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailabilityPgConnectionFactory {
 
     private final PgConnectionFactory pgConnectionFactory;
     private final PrimaryHostDeterminer primaryHostDeterminer;
 
-    public HighAvailabilityPgConnectionFactoryImpl(@Nonnull final PgConnectionFactory pgConnectionFactory,
-                                                   @Nonnull final PrimaryHostDeterminer primaryHostDeterminer) {
+    public HighAvailabilityPgConnectionFactoryImpl(final PgConnectionFactory pgConnectionFactory,
+                                                   final PrimaryHostDeterminer primaryHostDeterminer) {
         this.pgConnectionFactory = Objects.requireNonNull(pgConnectionFactory);
         this.primaryHostDeterminer = Objects.requireNonNull(primaryHostDeterminer);
     }
@@ -37,9 +36,8 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public HighAvailabilityPgConnection of(@Nonnull final ConnectionCredentials credentials) {
+    public HighAvailabilityPgConnection of(final ConnectionCredentials credentials) {
         Objects.requireNonNull(credentials, "credentials cannot be null");
         final Map<String, PgConnection> connectionsToAllHostsInCluster = new LinkedHashMap<>();
         credentials.getConnectionUrls().forEach(
@@ -48,9 +46,9 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
         return HighAvailabilityPgConnectionImpl.of(connectionToPrimary, connectionsToAllHostsInCluster.values());
     }
 
-    private void addDataSourcesForAllHostsFromUrl(@Nonnull final Map<String, PgConnection> connectionsToAllHostsInCluster,
-                                                  @Nonnull final String anyUrl,
-                                                  @Nonnull final ConnectionCredentials credentials) {
+    private void addDataSourcesForAllHostsFromUrl(final Map<String, PgConnection> connectionsToAllHostsInCluster,
+                                                  final String anyUrl,
+                                                  final ConnectionCredentials credentials) {
         final List<Map.Entry<String, String>> allHosts = PgUrlParser.extractNameWithPortAndUrlForEachHost(anyUrl);
         for (final Map.Entry<String, String> host : allHosts) {
             connectionsToAllHostsInCluster.computeIfAbsent(host.getKey(),

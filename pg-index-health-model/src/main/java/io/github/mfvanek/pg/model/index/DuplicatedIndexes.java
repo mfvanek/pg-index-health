@@ -16,21 +16,19 @@ import io.github.mfvanek.pg.model.index.utils.DuplicatedIndexesParser;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * A representation of duplicated indexes in a database.
+ * An immutable representation of duplicated indexes in a database.
  *
  * @author Ivan Vakhrushev
  * @see TableNameAware
  */
-@Immutable
 public final class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware {
 
     private static final Comparator<Index> INDEX_WITH_SIZE_COMPARATOR =
@@ -42,7 +40,7 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     private final long totalSize;
     private final List<String> indexesNames;
 
-    private DuplicatedIndexes(@Nonnull final List<Index> duplicatedIndexes) {
+    private DuplicatedIndexes(final Collection<Index> duplicatedIndexes) {
         final List<Index> defensiveCopy = List.copyOf(Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes cannot be null"));
         Validators.validateThatTableIsTheSame(defensiveCopy);
         this.indexes = defensiveCopy.stream()
@@ -59,7 +57,6 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return String.join(",", indexesNames);
@@ -68,7 +65,6 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public PgObjectType getObjectType() {
         return PgObjectType.INDEX;
@@ -78,7 +74,6 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
     public String getTableName() {
         return indexes.get(0).getTableName();
     }
@@ -88,7 +83,6 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
      *
      * @return list of duplicated indexes
      */
-    @Nonnull
     public List<Index> getDuplicatedIndexes() {
         return indexes;
     }
@@ -96,7 +90,6 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public List<Index> getIndexes() {
         return List.copyOf(indexes);
@@ -148,7 +141,6 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return DuplicatedIndexes.class.getSimpleName() + '{' +
@@ -164,8 +156,7 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
      * @param duplicatedIndexes list of duplicated indexes; should be non-null.
      * @return {@code DuplicatedIndexes}
      */
-    @Nonnull
-    public static DuplicatedIndexes of(@Nonnull final List<Index> duplicatedIndexes) {
+    public static DuplicatedIndexes of(final Collection<Index> duplicatedIndexes) {
         return new DuplicatedIndexes(duplicatedIndexes);
     }
 
@@ -176,8 +167,7 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
      * @param duplicatedAsString duplicated indexes as a raw string; should be non-blank.
      * @return {@code DuplicatedIndexes}
      */
-    @Nonnull
-    public static DuplicatedIndexes of(@Nonnull final String tableName, @Nonnull final String duplicatedAsString) {
+    public static DuplicatedIndexes of(final String tableName, final String duplicatedAsString) {
         Validators.tableNameNotBlank(tableName);
         final List<Map.Entry<String, Long>> indexesWithNameAndSize = DuplicatedIndexesParser.parseAsIndexNameAndSize(
             Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
@@ -195,10 +185,9 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
      * @param otherIndexes other indexes.
      * @return {@code DuplicatedIndexes}
      */
-    @Nonnull
-    public static DuplicatedIndexes of(@Nonnull final Index firstIndex,
-                                       @Nonnull final Index secondIndex,
-                                       @Nonnull final Index... otherIndexes) {
+    public static DuplicatedIndexes of(final Index firstIndex,
+                                       final Index secondIndex,
+                                       final Index... otherIndexes) {
         return new DuplicatedIndexes(DuplicatedIndexesParser.combine(firstIndex, secondIndex, otherIndexes));
     }
 }

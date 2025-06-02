@@ -24,7 +24,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,8 +57,8 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
         }
     }
 
-    private long getRowsCount(@Nonnull final String schemaName,
-                              @Nonnull final String tableName) {
+    private long getRowsCount(final String schemaName,
+                              final String tableName) {
         try (Connection connection = getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet resultSet = statement.executeQuery(

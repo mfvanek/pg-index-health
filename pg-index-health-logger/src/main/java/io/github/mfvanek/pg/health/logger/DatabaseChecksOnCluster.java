@@ -47,7 +47,6 @@ import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * A class that aggregates various database checks on a PostgreSQL cluster.
@@ -74,7 +73,7 @@ public final class DatabaseChecksOnCluster {
      * @param haPgConnection a high-availability PostgreSQL connection used for performing the checks
      * @throws NullPointerException if {@code haPgConnection} is null
      */
-    public DatabaseChecksOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public DatabaseChecksOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         this.checks = List.of(
             new TablesWithBloatCheckOnCluster(haPgConnection),
             new TablesWithMissingIndexesCheckOnCluster(haPgConnection),
@@ -116,7 +115,6 @@ public final class DatabaseChecksOnCluster {
      *
      * @return an immutable list of {@link DatabaseCheckOnCluster} instances
      */
-    @Nonnull
     public List<DatabaseCheckOnCluster<? extends DbObject>> getAll() {
         return checks;
     }

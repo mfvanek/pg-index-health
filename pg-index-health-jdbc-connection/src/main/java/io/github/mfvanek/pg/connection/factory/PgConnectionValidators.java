@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Collection;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * Utility class providing validation methods for PostgreSQL connection parameters.
@@ -35,8 +34,7 @@ final class PgConnectionValidators {
      * @return the validated username.
      * @throws IllegalArgumentException if the username is blank.
      */
-    @Nonnull
-    static String userNameNotBlank(@Nonnull final String userName) {
+    static String userNameNotBlank(final String userName) {
         Validators.notBlank(userName, "userName");
         return userName;
     }
@@ -48,8 +46,7 @@ final class PgConnectionValidators {
      * @return the validated password.
      * @throws IllegalArgumentException if the password is blank.
      */
-    @Nonnull
-    static String passwordNotBlank(@Nonnull final String password) {
+    static String passwordNotBlank(final String password) {
         Validators.notBlank(password, "password");
         return password;
     }
@@ -60,7 +57,7 @@ final class PgConnectionValidators {
      * @param connectionUrls the collection of connection URLs; must not be {@code null} or empty.
      * @throws IllegalArgumentException if the collection is empty or any URL is invalid.
      */
-    static void connectionUrlsNotEmptyAndValid(@Nonnull final Collection<String> connectionUrls) {
+    static void connectionUrlsNotEmptyAndValid(final Collection<String> connectionUrls) {
         Objects.requireNonNull(connectionUrls, "connectionUrls");
         if (connectionUrls.isEmpty()) {
             throw new IllegalArgumentException("connectionUrls have to contain at least one url");

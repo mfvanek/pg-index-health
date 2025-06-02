@@ -17,5 +17,5 @@ dependencies {
 
     testRuntimeOnly(libs.postgresql)
 
-    testFixturesImplementation(libs.jsr305)
+    testFixturesImplementation(libs.jspecify)
 }

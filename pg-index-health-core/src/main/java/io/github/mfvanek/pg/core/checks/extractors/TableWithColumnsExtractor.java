@@ -20,7 +20,6 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_NAME;
 import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_SIZE;
@@ -39,9 +38,8 @@ public final class TableWithColumnsExtractor implements ResultSetExtractor<Table
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
-    public TableWithColumns extractData(@Nonnull final ResultSet resultSet) throws SQLException {
+    public TableWithColumns extractData(final ResultSet resultSet) throws SQLException {
         final String tableName = resultSet.getString(TABLE_NAME);
         final long tableSize = resultSet.getLong(TABLE_SIZE);
         final Array columnsArray = resultSet.getArray("columns");
@@ -55,7 +53,6 @@ public final class TableWithColumnsExtractor implements ResultSetExtractor<Table
      *
      * @return {@code TableWithColumnsExtractor} instance
      */
-    @Nonnull
     public static ResultSetExtractor<TableWithColumns> of() {
         return new TableWithColumnsExtractor();
     }

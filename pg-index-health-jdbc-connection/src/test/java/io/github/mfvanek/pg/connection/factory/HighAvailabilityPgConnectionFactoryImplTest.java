@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.connection.factory;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminer;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +21,6 @@ import org.mockito.Mockito;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -140,7 +140,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
     }
 
     @SuppressWarnings("DirectInvocationOnMock")
-    private void checkPrimary(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    private void checkPrimary(@NonNull final HighAvailabilityPgConnection haPgConnection) {
         assertThat(haPgConnection.getConnectionToPrimary())
             .isNotNull()
             .satisfies(c -> verify(primaryHostDeterminer).isPrimary(c));

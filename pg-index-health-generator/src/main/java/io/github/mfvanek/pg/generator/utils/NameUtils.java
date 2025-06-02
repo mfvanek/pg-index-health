@@ -12,16 +12,13 @@ package io.github.mfvanek.pg.generator.utils;
 
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
-import javax.annotation.Nonnull;
-
 public final class NameUtils {
 
     private NameUtils() {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
-    public static String getTableNameWithoutSchema(@Nonnull final TableNameAware tableNameAware) {
+    public static String getTableNameWithoutSchema(final TableNameAware tableNameAware) {
         final String tableName = tableNameAware.getTableName();
         final int index = tableName.indexOf('.');
         final boolean containsSchema = index >= 0;

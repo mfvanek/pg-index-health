@@ -17,17 +17,14 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * A base representation of database index.
+ * An immutable representation of database index.
  *
  * @author Ivan Vakhrushev
  * @see TableNameAware
  * @see IndexSizeAware
  */
-@Immutable
 public final class Index implements DbObject, TableNameAware, IndexSizeAware, Comparable<Index> {
 
     private final String tableName;
@@ -41,7 +38,7 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
      * @param indexName        the name of this index; must be non-blank.
      * @param indexSizeInBytes size of the index in bytes; must be non-negative.
      */
-    private Index(@Nonnull final String tableName, @Nonnull final String indexName, final long indexSizeInBytes) {
+    private Index(final String tableName, final String indexName, final long indexSizeInBytes) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.indexName = Validators.indexNameNotBlank(indexName);
         this.indexSizeInBytes = Validators.sizeNotNegative(indexSizeInBytes, "indexSizeInBytes");
@@ -50,7 +47,6 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return getIndexName();
@@ -59,7 +55,6 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public PgObjectType getObjectType() {
         return PgObjectType.INDEX;
@@ -69,7 +64,6 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
     public String getTableName() {
         return tableName;
     }
@@ -78,7 +72,6 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
     public String getIndexName() {
         return indexName;
     }
@@ -94,7 +87,6 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return Index.class.getSimpleName() + '{' + innerToString() + '}';
@@ -105,7 +97,6 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
      *
      * @return string representation of the internal fields of this class
      */
-    @Nonnull
     String innerToString() {
         return "tableName='" + tableName + '\'' +
             ", indexName='" + indexName + '\'' +
@@ -142,7 +133,7 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(@Nonnull final Index other) {
+    public int compareTo(final Index other) {
         Objects.requireNonNull(other, "other cannot be null");
         if (!tableName.equals(other.tableName)) {
             return tableName.compareTo(other.tableName);
@@ -159,9 +150,8 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
      * @return {@code Index}
      * @since 0.15.0
      */
-    @Nonnull
-    public static Index of(@Nonnull final String tableName,
-                           @Nonnull final String indexName,
+    public static Index of(final String tableName,
+                           final String indexName,
                            final long indexSizeInBytes) {
         return new Index(tableName, indexName, indexSizeInBytes);
     }
@@ -176,10 +166,9 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
      * @return {@code Index}
      * @since 0.15.0
      */
-    @Nonnull
-    public static Index of(@Nonnull final PgContext pgContext,
-                           @Nonnull final String tableName,
-                           @Nonnull final String indexName,
+    public static Index of(final PgContext pgContext,
+                           final String tableName,
+                           final String indexName,
                            final long indexSizeInBytes) {
         return of(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext), indexSizeInBytes);
     }
@@ -191,9 +180,8 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
      * @param indexName index name; should be non-blank.
      * @return {@code Index}
      */
-    @Nonnull
-    public static Index of(@Nonnull final String tableName,
-                           @Nonnull final String indexName) {
+    public static Index of(final String tableName,
+                           final String indexName) {
         return of(tableName, indexName, 0L);
     }
 
@@ -206,10 +194,9 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
      * @return {@code Index}
      * @since 0.14.3
      */
-    @Nonnull
-    public static Index of(@Nonnull final PgContext pgContext,
-                           @Nonnull final String tableName,
-                           @Nonnull final String indexName) {
+    public static Index of(final PgContext pgContext,
+                           final String tableName,
+                           final String indexName) {
         return of(pgContext, tableName, indexName, 0L);
     }
 }

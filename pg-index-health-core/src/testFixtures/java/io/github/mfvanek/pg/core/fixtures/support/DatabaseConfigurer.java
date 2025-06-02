@@ -10,11 +10,8 @@
 
 package io.github.mfvanek.pg.core.fixtures.support;
 
-import javax.annotation.Nonnull;
-
 @FunctionalInterface
 public interface DatabaseConfigurer {
 
-    @Nonnull
-    DatabasePopulator configure(@Nonnull DatabasePopulator databasePopulator);
+    DatabasePopulator configure(DatabasePopulator databasePopulator);
 }

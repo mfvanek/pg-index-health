@@ -12,8 +12,6 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 
-import javax.annotation.Nonnull;
-
 /**
  * Migration generator for removing default value and sequence on columns of serial types.
  *
@@ -25,14 +23,13 @@ public class ColumnWithSerialTypeMigrationGenerator extends AbstractDbMigrationG
     private final DropDefaultValueGenerator dropDefaultValueGenerator;
     private final DropSequenceGenerator dropSequenceGenerator;
 
-    public ColumnWithSerialTypeMigrationGenerator(@Nonnull final GeneratingOptions options) {
+    public ColumnWithSerialTypeMigrationGenerator(final GeneratingOptions options) {
         this.dropDefaultValueGenerator = new DropDefaultValueGenerator(options);
         this.dropSequenceGenerator = new DropSequenceGenerator(options);
     }
 
     @Override
-    @Nonnull
-    protected String generate(@Nonnull final ColumnWithSerialType column) {
+    protected String generate(final ColumnWithSerialType column) {
         return dropDefaultValueGenerator.generate(column) +
             System.lineSeparator() +
             dropSequenceGenerator.generate(column);

@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.index.IndexSizeAware;
 
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * A predicate that filters out small indexes based on a specified size threshold.
@@ -28,7 +26,6 @@ import javax.annotation.concurrent.Immutable;
  * @see AbstractFilterBySize
  * @since 0.13.3
  */
-@Immutable
 public final class SkipSmallIndexesPredicate extends AbstractFilterBySize {
 
     private SkipSmallIndexesPredicate(final long thresholdInBytes) {
@@ -44,7 +41,7 @@ public final class SkipSmallIndexesPredicate extends AbstractFilterBySize {
      * @return {@code true} if the table size is greater than or equal to the threshold, or if the object is not {@code IndexSizeAware}; {@code false} otherwise.
      */
     @Override
-    public boolean test(@Nonnull final DbObject dbObject) {
+    public boolean test(final DbObject dbObject) {
         if (thresholdInBytes == 0L) {
             return true;
         }
@@ -61,7 +58,6 @@ public final class SkipSmallIndexesPredicate extends AbstractFilterBySize {
      * @param thresholdInBytes the minimum index size in bytes required for an index to pass the filter; must be non-negative.
      * @return a predicate that filters out indexes smaller than the specified size threshold.
      */
-    @Nonnull
     public static Predicate<DbObject> of(final long thresholdInBytes) {
         return new SkipSmallIndexesPredicate(thresholdInBytes);
     }

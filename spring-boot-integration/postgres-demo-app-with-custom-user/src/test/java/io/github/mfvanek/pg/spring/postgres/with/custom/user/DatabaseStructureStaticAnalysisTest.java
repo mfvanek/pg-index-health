@@ -20,6 +20,7 @@ import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.predicates.SkipLiquibaseTablesPredicate;
 import io.github.mfvanek.pg.model.table.Table;
 import org.assertj.core.api.ListAssert;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +36,7 @@ import static org.assertj.core.api.InstanceOfAssertFactories.list;
 class DatabaseStructureStaticAnalysisTest {
 
     @Autowired
-    private List<DatabaseCheckOnHost<? extends DbObject>> checks;
+    private List<DatabaseCheckOnHost<? extends @NonNull DbObject>> checks;
 
     @Test
     void checksShouldWorkForPublicSchema() {

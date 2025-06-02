@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Check for tables without primary key on a specific host.
@@ -27,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public class TablesWithoutPrimaryKeyCheckOnHost extends AbstractCheckOnHost<Table> {
 
-    public TablesWithoutPrimaryKeyCheckOnHost(@Nonnull final PgConnection pgConnection) {
+    public TablesWithoutPrimaryKeyCheckOnHost(final PgConnection pgConnection) {
         super(Table.class, pgConnection, Diagnostic.TABLES_WITHOUT_PRIMARY_KEY);
     }
 
@@ -37,9 +36,8 @@ public class TablesWithoutPrimaryKeyCheckOnHost extends AbstractCheckOnHost<Tabl
      * @param pgContext check's context with the specified schema
      * @return list of tables without primary key
      */
-    @Nonnull
     @Override
-    protected List<Table> doCheck(@Nonnull final PgContext pgContext) {
+    protected List<Table> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, TableExtractor.of());
     }
 }

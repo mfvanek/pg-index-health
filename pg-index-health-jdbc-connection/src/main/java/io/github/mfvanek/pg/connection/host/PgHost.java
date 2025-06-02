@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.connection.host;
 
-import javax.annotation.Nonnull;
-
 /**
  * An abstraction of database host.
  * <p>
@@ -27,7 +25,6 @@ public interface PgHost {
      *
      * @return connection url to the host
      */
-    @Nonnull
     String getPgUrl();
 
     /**
@@ -35,7 +32,6 @@ public interface PgHost {
      *
      * @return host name
      */
-    @Nonnull
     String getName();
 
     /**

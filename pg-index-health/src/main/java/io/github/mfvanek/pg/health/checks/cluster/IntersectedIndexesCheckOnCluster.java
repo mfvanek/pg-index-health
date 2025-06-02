@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.IntersectedIndexesCheckOnHost;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for intersected (partially identical) indexes on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class IntersectedIndexesCheckOnCluster extends AbstractCheckOnCluster<DuplicatedIndexes> {
 
-    public IntersectedIndexesCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public IntersectedIndexesCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, IntersectedIndexesCheckOnHost::new);
     }
 }

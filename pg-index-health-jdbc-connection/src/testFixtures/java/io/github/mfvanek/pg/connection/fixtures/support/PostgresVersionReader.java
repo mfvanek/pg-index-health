@@ -16,7 +16,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public final class PostgresVersionReader {
@@ -25,8 +24,7 @@ public final class PostgresVersionReader {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
-    public static String readVersion(@Nonnull final DataSource dataSource) {
+    public static String readVersion(final DataSource dataSource) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet resultSet = statement.executeQuery("show server_version")) {

@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.generator.utils;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 
 public final class StringUtils {
 
@@ -31,8 +30,7 @@ public final class StringUtils {
      * @param maxWidth maximum length of result String, must be positive
      * @return truncated String
      */
-    @Nonnull
-    public static String truncate(@Nonnull final String str, final int maxWidth) {
+    public static String truncate(final String str, final int maxWidth) {
         Objects.requireNonNull(str, "str cannot be null");
         if (maxWidth < 0) {
             throw new IllegalArgumentException("maxWith cannot be negative");

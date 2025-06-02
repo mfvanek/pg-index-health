@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.spring.postgres.config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import io.github.mfvanek.pg.testing.PostgresVersionHolder;
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -21,7 +22,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 @Configuration(proxyBeanMethods = false)
@@ -39,8 +39,8 @@ public class DatabaseConfig {
     }
 
     @Bean
-    public DataSource dataSource(@Nonnull final JdbcDatabaseContainer<?> jdbcDatabaseContainer,
-                                 @Nonnull final Environment environment) {
+    public DataSource dataSource(@NonNull final JdbcDatabaseContainer<?> jdbcDatabaseContainer,
+                                 @NonNull final Environment environment) {
         ConfigurableEnvironmentMutator.addDatasourceUrlIfNeed(jdbcDatabaseContainer, environment);
         final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(jdbcDatabaseContainer.getJdbcUrl());

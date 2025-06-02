@@ -19,9 +19,11 @@ import java.sql.Statement;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
+/**
+ * Standard implementation of a service that determines if a given database connection is established with a primary host.
+ */
 public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
 
     private static final Logger LOGGER = Logger.getLogger(PrimaryHostDeterminerImpl.class.getName());
@@ -31,7 +33,7 @@ public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
      * {@inheritDoc}
      */
     @Override
-    public boolean isPrimary(@Nonnull final PgConnection pgConnection) {
+    public boolean isPrimary(final PgConnection pgConnection) {
         Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
         LOGGER.fine(() -> String.format(Locale.ROOT, "Executing on host %s query: %s", pgConnection.getHost(), SQL_QUERY));
 

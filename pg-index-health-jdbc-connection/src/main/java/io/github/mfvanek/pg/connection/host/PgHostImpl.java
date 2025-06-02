@@ -13,16 +13,13 @@ package io.github.mfvanek.pg.connection.host;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * A standard implementation of {@code PgHost} interface.
+ * An immutable standard implementation of {@code PgHost} interface.
  *
  * @author Ivan Vakhrushev
  * @see PgHost
  */
-@Immutable
 public final class PgHostImpl implements PgHost {
 
     private final String pgUrl;
@@ -30,8 +27,8 @@ public final class PgHostImpl implements PgHost {
     private final int port;
     private final boolean maybePrimary;
 
-    private PgHostImpl(@Nonnull final String pgUrl,
-                       @Nonnull final String hostName,
+    private PgHostImpl(final String pgUrl,
+                       final String hostName,
                        final int port,
                        final boolean maybePrimary) {
         this.pgUrl = PgUrlValidators.pgUrlNotBlankAndValid(pgUrl);
@@ -43,7 +40,6 @@ public final class PgHostImpl implements PgHost {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getPgUrl() {
         return pgUrl;
@@ -52,7 +48,6 @@ public final class PgHostImpl implements PgHost {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String getName() {
         return hostName;
@@ -103,7 +98,6 @@ public final class PgHostImpl implements PgHost {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return PgHostImpl.class.getSimpleName() + '{' +
@@ -120,8 +114,7 @@ public final class PgHostImpl implements PgHost {
      * @param pgUrl connection string to a database in JDBC format
      * @return {@code PgHost}
      */
-    @Nonnull
-    public static PgHost ofUrl(@Nonnull final String pgUrl) {
+    public static PgHost ofUrl(final String pgUrl) {
         final List<Map.Entry<String, Integer>> extractHostNames = PgUrlParser.extractHostNames(pgUrl);
         if (extractHostNames.size() > 1) {
             throw new IllegalArgumentException("pgUrl couldn't contain multiple hosts");

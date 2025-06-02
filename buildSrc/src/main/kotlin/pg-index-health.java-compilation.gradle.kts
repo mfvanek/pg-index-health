@@ -13,10 +13,14 @@ plugins {
     id("jacoco")
 }
 
+configurations.compileClasspath {
+    exclude("com.google.code.findbugs", "jsr305")
+}
+
 private val versionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
 dependencies {
-    versionCatalog.findLibrary("jsr305").ifPresent {
+    versionCatalog.findLibrary("jspecify").ifPresent {
         implementation(it)
     }
 

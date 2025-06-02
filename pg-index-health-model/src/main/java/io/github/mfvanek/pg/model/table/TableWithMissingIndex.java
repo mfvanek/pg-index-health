@@ -14,15 +14,12 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * Representation of a table in a database with additional information on reads amount via index or sequential scans.
+ * An immutable representation of a table in a database with additional information on reads amount via index or sequential scans.
  *
  * @author Ivan Vakhrushev
  */
-@Immutable
 public final class TableWithMissingIndex extends AbstractTableAware implements Comparable<TableWithMissingIndex> {
 
     /**
@@ -37,7 +34,7 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      */
     private final long indexScans;
 
-    private TableWithMissingIndex(@Nonnull final Table table,
+    private TableWithMissingIndex(final Table table,
                                   final long seqScans,
                                   final long indexScans) {
         super(table);
@@ -66,7 +63,6 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return TableWithMissingIndex.class.getSimpleName() + '{' +
@@ -105,7 +101,7 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(@Nonnull final TableWithMissingIndex other) {
+    public int compareTo(final TableWithMissingIndex other) {
         Objects.requireNonNull(other, "other cannot be null");
         return table.compareTo(other.table);
     }
@@ -119,8 +115,7 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      * @param indexScans       number of index scans initiated on this table; should be non-negative.
      * @return {@code TableWithMissingIndex}
      */
-    @Nonnull
-    public static TableWithMissingIndex of(@Nonnull final String tableName,
+    public static TableWithMissingIndex of(final String tableName,
                                            final long tableSizeInBytes,
                                            final long seqScans,
                                            final long indexScans) {
@@ -135,8 +130,7 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      * @return {@code TableWithMissingIndex}
      * @since 0.15.0
      */
-    @Nonnull
-    public static TableWithMissingIndex of(@Nonnull final String tableName) {
+    public static TableWithMissingIndex of(final String tableName) {
         return of(tableName, 0L, 0L, 0L);
     }
 
@@ -151,9 +145,8 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      * @return {@code TableWithMissingIndex}
      * @since 0.14.3
      */
-    @Nonnull
-    public static TableWithMissingIndex of(@Nonnull final PgContext pgContext,
-                                           @Nonnull final String tableName,
+    public static TableWithMissingIndex of(final PgContext pgContext,
+                                           final String tableName,
                                            final long tableSizeInBytes,
                                            final long seqScans,
                                            final long indexScans) {
@@ -169,9 +162,8 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      * @return {@code TableWithMissingIndex}
      * @since 0.15.0
      */
-    @Nonnull
-    public static TableWithMissingIndex of(@Nonnull final PgContext pgContext,
-                                           @Nonnull final String tableName) {
+    public static TableWithMissingIndex of(final PgContext pgContext,
+                                           final String tableName) {
         return of(pgContext, tableName, 0L, 0L, 0L);
     }
 
@@ -184,8 +176,7 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      * @return {@code TableWithMissingIndex}
      * @since 0.7.0
      */
-    @Nonnull
-    public static TableWithMissingIndex of(@Nonnull final Table table,
+    public static TableWithMissingIndex of(final Table table,
                                            final long seqScans,
                                            final long indexScans) {
         return new TableWithMissingIndex(table, seqScans, indexScans);

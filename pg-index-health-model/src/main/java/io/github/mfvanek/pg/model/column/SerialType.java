@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * A mapping to PostgreSQL serial types.
@@ -48,7 +47,7 @@ public enum SerialType {
 
     private final String columnType;
 
-    SerialType(@Nonnull final String columnType) {
+    SerialType(final String columnType) {
         this.columnType = Objects.requireNonNull(columnType);
     }
 
@@ -57,7 +56,6 @@ public enum SerialType {
      *
      * @return the column type as a string, never {@code null}
      */
-    @Nonnull
     public String getColumnType() {
         return columnType;
     }
@@ -65,7 +63,6 @@ public enum SerialType {
     /**
      * {@inheritDoc}
      */
-    @Nonnull
     @Override
     public String toString() {
         return SerialType.class.getSimpleName() + '{' +
@@ -79,8 +76,7 @@ public enum SerialType {
      * @param pgColumnType PostgreSQL serial column type; should be non-null.
      * @return {@code SerialType}
      */
-    @Nonnull
-    public static SerialType valueFrom(@Nonnull final String pgColumnType) {
+    public static SerialType valueFrom(final String pgColumnType) {
         Objects.requireNonNull(pgColumnType, "pgColumnType cannot be null");
         final SerialType serialType = VALUES.get(pgColumnType);
         if (serialType == null) {

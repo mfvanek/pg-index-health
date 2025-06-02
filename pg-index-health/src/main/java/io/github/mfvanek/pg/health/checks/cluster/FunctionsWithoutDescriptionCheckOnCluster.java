@@ -14,8 +14,6 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.FunctionsWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.model.function.StoredFunction;
 
-import javax.annotation.Nonnull;
-
 /**
  * Check for procedures/functions without description on all hosts in the cluster.
  *
@@ -24,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class FunctionsWithoutDescriptionCheckOnCluster extends AbstractCheckOnCluster<StoredFunction> {
 
-    public FunctionsWithoutDescriptionCheckOnCluster(@Nonnull final HighAvailabilityPgConnection haPgConnection) {
+    public FunctionsWithoutDescriptionCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, FunctionsWithoutDescriptionCheckOnHost::new);
     }
 }

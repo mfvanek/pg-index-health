@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.core.utils;
 
+import io.github.mfvanek.pg.core.utils.exception.ReadQueryFromFileException;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.io.FileNotFoundException;
@@ -18,7 +19,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 
 public final class SqlQueryReader {
 
@@ -28,8 +28,7 @@ public final class SqlQueryReader {
         throw new UnsupportedOperationException();
     }
 
-    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
-    public static String getQueryFromFile(@Nonnull final String sqlFileName) {
+    public static String getQueryFromFile(final String sqlFileName) {
         final String fileName = validateSqlFileName(sqlFileName);
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         try (InputStream inputStream = classLoader.getResourceAsStream("sql/" + fileName)) {
@@ -40,12 +39,11 @@ public final class SqlQueryReader {
             LOGGER.finest(() -> "Query from file " + sqlQueryFromFile);
             return NamedParametersParser.parse(sqlQueryFromFile);
         } catch (IOException ex) {
-            throw new RuntimeException(ex); //NOSONAR
+            throw new ReadQueryFromFileException(sqlFileName, ex);
         }
     }
 
-    @Nonnull
-    private static String validateSqlFileName(@Nonnull final String sqlFileName) {
+    private static String validateSqlFileName(final String sqlFileName) {
         final String fileName = Validators.notBlank(sqlFileName, "sqlFileName").toLowerCase(Locale.ROOT);
         if (!fileName.endsWith(".sql")) {
             throw new IllegalArgumentException("only *.sql files are supported");

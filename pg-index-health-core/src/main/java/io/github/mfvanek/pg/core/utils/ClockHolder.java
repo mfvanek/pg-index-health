@@ -15,7 +15,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 
 /**
  * Utility class to work with {@link Clock}.
@@ -37,9 +36,9 @@ public final class ClockHolder {
      *
      * @return {@code Clock} instance
      */
-    @Nonnull
+    @SuppressWarnings("NullAway")
     public static Clock clock() {
-        return CLOCK_REFERENCE.get();
+        return CLOCK_REFERENCE.get(); // cannot be null
     }
 
     /**
@@ -48,8 +47,7 @@ public final class ClockHolder {
      * @param newClock the new value
      * @return the previous value of clock
      */
-    @Nonnull
-    public static Clock setClock(@Nonnull final Clock newClock) {
+    public static Clock setClock(final Clock newClock) {
         Objects.requireNonNull(newClock, "newClock cannot be null");
         final Clock oldClock = CLOCK_REFERENCE.getAndSet(newClock);
         LOGGER.fine(() -> String.format(Locale.ROOT, "Set new clock %s. Old clock was %s", newClock, oldClock));
