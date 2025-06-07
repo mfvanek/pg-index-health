@@ -10,6 +10,8 @@
 
 package io.github.mfvanek.pg.generator;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -18,36 +20,36 @@ import java.util.Objects;
  * @author Ivan Vakhrushev
  * @since 0.5.0
  */
-public class GeneratingOptions {
+public final class GeneratingOptions {
 
     /**
      * Neediness to build indexes concurrently.
      */
-    private final boolean concurrently;
+    private boolean concurrently;
     /**
      * Neediness to exclude null values from indexes to be built.
      */
-    private final boolean excludeNulls;
+    private boolean excludeNulls;
     /**
      * Neediness to break long generated sql queries into lines.
      */
-    private final boolean breakLines;
+    private boolean breakLines;
     /**
      * Indentation size for new lines.
      */
-    private final int indentation;
+    private int indentation;
     /**
      * Neediness to use capital letters for SQL operators and keywords.
      */
-    private final boolean uppercaseForKeywords;
+    private boolean uppercaseForKeywords;
     /**
      * Neediness to add "without_nulls" part to the generated index name.
      */
-    private final boolean nameWithoutNulls;
+    private boolean nameWithoutNulls;
     /**
      * Position of "idx" in the generated index name.
      */
-    private final IdxPosition idxPosition;
+    private IdxPosition idxPosition;
 
     private GeneratingOptions(final boolean concurrently,
                               final boolean excludeNulls,
@@ -117,21 +119,24 @@ public class GeneratingOptions {
         return new Builder();
     }
 
-    public static class Builder {
+    public static final class Builder {
 
-        private boolean concurrently = true;
-        private boolean excludeNulls = true;
-        private boolean breakLines = true;
-        private int indentation = 4;
-        private boolean uppercaseForKeywords;
-        private boolean nameWithoutNulls = true;
-        private IdxPosition idxPosition = IdxPosition.SUFFIX;
+        private @Nullable GeneratingOptions template = new GeneratingOptions(true, true, true, 4, false, true, IdxPosition.SUFFIX);
 
         private Builder() {
         }
 
         public GeneratingOptions build() {
-            return new GeneratingOptions(concurrently, excludeNulls, breakLines, indentation, uppercaseForKeywords, nameWithoutNulls, idxPosition);
+            final GeneratingOptions generatingOptions = template();
+            template = null;
+            return generatingOptions;
+        }
+
+        private GeneratingOptions template() {
+            if (this.template == null) {
+                throw new IllegalStateException("GeneratingOptions object has already been built");
+            }
+            return this.template;
         }
 
         /**
@@ -140,7 +145,7 @@ public class GeneratingOptions {
          * @return builder object
          */
         public Builder concurrently() {
-            this.concurrently = true;
+            template().concurrently = true;
             return this;
         }
 
@@ -150,74 +155,58 @@ public class GeneratingOptions {
          * @return builder object
          */
         public Builder normally() {
-            this.concurrently = false;
+            template().concurrently = false;
             return this;
         }
 
         public Builder excludeNulls() {
-            this.excludeNulls = true;
+            template().excludeNulls = true;
             return this;
         }
 
         public Builder includeNulls() {
-            this.excludeNulls = false;
+            template().excludeNulls = false;
             return this;
         }
 
         public Builder breakLines() {
-            this.breakLines = true;
+            template().breakLines = true;
             return this;
         }
 
         public Builder doNotBreakLines() {
-            this.breakLines = false;
+            template().breakLines = false;
             return this;
         }
 
         public Builder withIndentation(final int indentation) {
-            this.indentation = validateIndentation(indentation);
+            template().indentation = validateIndentation(indentation);
             return this;
         }
 
         public Builder uppercaseForKeywords() {
-            this.uppercaseForKeywords = true;
+            template().uppercaseForKeywords = true;
             return this;
         }
 
         public Builder lowercaseForKeywords() {
-            this.uppercaseForKeywords = false;
+            template().uppercaseForKeywords = false;
             return this;
         }
 
         public Builder nameWithoutNulls() {
-            this.nameWithoutNulls = true;
+            template().nameWithoutNulls = true;
             return this;
         }
 
         public Builder doNotNameWithoutNulls() {
-            this.nameWithoutNulls = false;
+            template().nameWithoutNulls = false;
             return this;
         }
 
         public Builder withIdxPosition(final IdxPosition idxPosition) {
-            this.idxPosition = Objects.requireNonNull(idxPosition, "idxPosition cannot be null");
+            template().idxPosition = Objects.requireNonNull(idxPosition, "idxPosition cannot be null");
             return this;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return Builder.class.getSimpleName() + '{' +
-                "concurrently=" + concurrently +
-                ", excludeNulls=" + excludeNulls +
-                ", breakLines=" + breakLines +
-                ", indentation=" + indentation +
-                ", uppercaseForKeywords=" + uppercaseForKeywords +
-                ", nameWithoutNulls=" + nameWithoutNulls +
-                ", idxPosition=" + idxPosition +
-                '}';
         }
 
         private static int validateIndentation(final int indentation) {
