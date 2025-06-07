@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.spring;
 
 import io.github.mfvanek.pg.model.validation.Validators;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 /**
@@ -21,7 +20,6 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
  * @author Ivan Vakhrushev
  * @since 2021.08.29
  */
-@ConstructorBinding
 @ConfigurationProperties(prefix = "pg.index.health.test")
 public class DatabaseStructureHealthProperties {
 
