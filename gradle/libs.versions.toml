@@ -1,5 +1,5 @@
 [versions]
-spring-boot = "2.7.18"
+spring-boot = "3.3.12"
 detekt = "1.23.8"
 commons-lang3 = "3.17.0"
 assertj = "3.27.3"
@@ -11,7 +11,7 @@ forbiddenapis = "3.9"
 [libraries]
 jspecify = "org.jspecify:jspecify:1.0.0"
 postgresql = "org.postgresql:postgresql:42.7.6"
-slf4j-simple = "org.slf4j:slf4j-simple:1.7.36" # to be compatible with Spring Boot 2.7.X
+slf4j-simple = "org.slf4j:slf4j-simple:2.0.17" # to be compatible with Spring Boot 3.3.X
 apache-commons-dbcp2 = "org.apache.commons:commons-dbcp2:2.13.0"
 awaitility = "org.awaitility:awaitility:4.3.0"
 apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commons-lang3" }
