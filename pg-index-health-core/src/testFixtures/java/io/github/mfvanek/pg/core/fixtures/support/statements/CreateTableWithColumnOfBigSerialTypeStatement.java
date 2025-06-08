@@ -18,12 +18,14 @@ public class CreateTableWithColumnOfBigSerialTypeStatement extends AbstractDbSta
 
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("create table if not exists {schemaName}.bad_accounts (" +
-            "id bigserial not null primary key, " +
-            "name varchar(255) not null," +
-            // not null constraint will be added for all serial columns
-            "real_client_id bigserial," +
-            "real_account_id bigserial)");
+        return List.of("""
+            create table if not exists {schemaName}.bad_accounts (
+                id bigserial not null primary key,
+                name varchar(255) not null,
+                /* not null constraint will be added for all serial columns */
+                real_client_id bigserial,
+                real_account_id bigserial
+            )""");
     }
 
     @Override

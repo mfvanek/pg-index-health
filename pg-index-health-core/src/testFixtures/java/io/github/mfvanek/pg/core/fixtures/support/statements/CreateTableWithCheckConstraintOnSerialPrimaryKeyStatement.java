@@ -16,11 +16,12 @@ public class CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement extends A
 
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of(
-            "create table if not exists {schemaName}.another_table(" +
-                "id bigserial primary key, " +
-                "constraint not_reserved_id check (id > 1000), " +
-                "constraint less_than_million check (id < 1000000));"
+        return List.of("""
+            create table if not exists {schemaName}.another_table(
+                id bigserial primary key,
+                constraint not_reserved_id check (id > 1000),
+                constraint less_than_million check (id < 1000000)
+            );"""
         );
     }
 }

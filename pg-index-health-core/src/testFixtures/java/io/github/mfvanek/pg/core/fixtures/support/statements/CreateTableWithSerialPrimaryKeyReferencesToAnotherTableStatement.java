@@ -17,12 +17,14 @@ public class CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement ex
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create table if not exists {schemaName}.test_table(" +
-                "id bigserial, " +
-                "num bigserial, " +
-                "constraint test_table_pkey_id primary key (id), " +
-                "constraint test_table_fkey_other_id foreign key (id) references {schemaName}.another_table (id), " +
-                "constraint test_table_fkey_one_more_id foreign key (id) references {schemaName}.one_more_table (id));"
+            """
+                create table if not exists {schemaName}.test_table(
+                    id bigserial,
+                    num bigserial,
+                    constraint test_table_pkey_id primary key (id),
+                    constraint test_table_fkey_other_id foreign key (id) references {schemaName}.another_table (id),
+                    constraint test_table_fkey_one_more_id foreign key (id) references {schemaName}.one_more_table (id)
+                );"""
         );
     }
 }

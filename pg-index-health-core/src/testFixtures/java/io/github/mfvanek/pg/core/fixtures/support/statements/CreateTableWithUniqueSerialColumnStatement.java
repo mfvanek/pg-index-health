@@ -17,11 +17,12 @@ public class CreateTableWithUniqueSerialColumnStatement extends AbstractDbStatem
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create table if not exists {schemaName}.one_more_table(" +
-                "id bigserial, " +
-                "constraint unique_id unique (id), " +
-                "constraint not_reserved_id check (id > 1000), " +
-                "constraint less_than_million check (id < 1000000));"
+            """
+                create table if not exists {schemaName}.one_more_table(
+                    id bigserial,
+                    constraint unique_id unique (id),
+                    constraint not_reserved_id check (id > 1000),
+                    constraint less_than_million check (id < 1000000));"""
         );
     }
 }

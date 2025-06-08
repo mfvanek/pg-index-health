@@ -17,13 +17,15 @@ public class CreatePartitionedTableWithDroppedColumnStatement extends AbstractDb
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create table if not exists {schemaName}.tp(" +
-                "ref_type bigint not null," +
-                "entity_id varchar(64) not null" +
-                ") partition by range (ref_type);",
+            """
+                create table if not exists {schemaName}.tp(
+                    ref_type bigint not null,
+                    entity_id varchar(64) not null
+                ) partition by range (ref_type);""",
             "alter table if exists {schemaName}.tp drop column entity_id;",
-            "create table if not exists {schemaName}.tp_default " +
-                "partition of {schemaName}.tp default;"
+            """
+                create table if not exists {schemaName}.tp_default
+                    partition of {schemaName}.tp default;"""
         );
     }
 }

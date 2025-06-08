@@ -93,8 +93,9 @@ class ExclusionsTest {
     void toStringTest() {
         final Exclusions e = Exclusions.empty();
         assertThat(e)
-            .hasToString("Exclusions{indexNameExclusions=[], tableNameExclusions=[], sequenceNameExclusions=[], " +
-                "indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, bloatSizeThresholdInBytes=0, bloatPercentageThreshold=0.0}");
+            .hasToString("""
+                Exclusions{indexNameExclusions=[], tableNameExclusions=[], sequenceNameExclusions=[], \
+                indexSizeThresholdInBytes=0, tableSizeThresholdInBytes=0, bloatSizeThresholdInBytes=0, bloatPercentageThreshold=0.0}""");
     }
 
     @Test

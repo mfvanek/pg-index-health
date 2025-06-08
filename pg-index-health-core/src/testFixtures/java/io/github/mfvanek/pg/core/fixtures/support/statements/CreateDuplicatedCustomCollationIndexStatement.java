@@ -16,7 +16,8 @@ public class CreateDuplicatedCustomCollationIndexStatement extends AbstractDbSta
 
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("create index if not exists i_accounts_account_number " +
-            "on {schemaName}.accounts (account_number collate {schemaName}.\"C.UTF-8\")");
+        return List.of("""
+            create index if not exists i_accounts_account_number
+                on {schemaName}.accounts (account_number collate {schemaName}."C.UTF-8")""");
     }
 }
