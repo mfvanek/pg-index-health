@@ -112,11 +112,10 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
             return true;
         }
 
-        if (!(other instanceof Index)) {
+        if (!(other instanceof final Index that)) {
             return false;
         }
 
-        final Index that = (Index) other;
         return Objects.equals(tableName, that.tableName) &&
             Objects.equals(indexName, that.indexName);
     }

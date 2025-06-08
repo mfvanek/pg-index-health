@@ -67,11 +67,10 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
             return true;
         }
 
-        if (!(other instanceof IndexWithColumns)) {
+        if (!(other instanceof final IndexWithColumns that)) {
             return false;
         }
 
-        final IndexWithColumns that = (IndexWithColumns) other;
         return Objects.equals(index, that.index);
     }
 

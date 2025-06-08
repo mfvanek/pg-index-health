@@ -97,11 +97,10 @@ public final class Constraint implements DbObject, ConstraintNameAware {
             return true;
         }
 
-        if (!(other instanceof Constraint)) {
+        if (!(other instanceof final Constraint that)) {
             return false;
         }
 
-        final Constraint that = (Constraint) other;
         return Objects.equals(tableName, that.tableName) &&
             Objects.equals(constraintName, that.constraintName);
     }

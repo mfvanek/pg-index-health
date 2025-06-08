@@ -51,12 +51,10 @@ public final class SkipByConstraintNamePredicate implements Predicate<DbObject> 
         if (constraintNamesToSkip.isEmpty()) {
             return true;
         }
-        if (dbObject instanceof ConstraintNameAware) {
-            final ConstraintNameAware c = (ConstraintNameAware) dbObject;
+        if (dbObject instanceof final ConstraintNameAware c) {
             return !constraintNamesToSkip.contains(c.getConstraintName().toLowerCase(Locale.ROOT));
         }
-        if (dbObject instanceof ConstraintsAware) {
-            final ConstraintsAware cs = (ConstraintsAware) dbObject;
+        if (dbObject instanceof final ConstraintsAware cs) {
             for (final ConstraintNameAware c : cs.getConstraints()) {
                 if (constraintNamesToSkip.contains(c.getConstraintName().toLowerCase(Locale.ROOT))) {
                     return false;

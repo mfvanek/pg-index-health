@@ -86,11 +86,10 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
             return true;
         }
 
-        if (!(other instanceof StoredFunction)) {
+        if (!(other instanceof final StoredFunction that)) {
             return false;
         }
 
-        final StoredFunction that = (StoredFunction) other;
         return Objects.equals(functionName, that.functionName) &&
             Objects.equals(functionSignature, that.functionSignature);
     }

@@ -59,13 +59,11 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
         if (fullyQualifiedIndexNamesToSkip.isEmpty()) {
             return true;
         }
-        if (dbObject instanceof IndexNameAware) {
-            final IndexNameAware i = (IndexNameAware) dbObject;
+        if (dbObject instanceof final IndexNameAware i) {
             return !fullyQualifiedIndexNamesToSkip.contains(i.getIndexName().toLowerCase(Locale.ROOT));
         }
-        if (dbObject instanceof IndexesAware) {
-            final IndexesAware i = (IndexesAware) dbObject;
-            for (final Index index : i.getIndexes()) {
+        if (dbObject instanceof final IndexesAware is) {
+            for (final Index index : is.getIndexes()) {
                 if (fullyQualifiedIndexNamesToSkip.contains(index.getIndexName().toLowerCase(Locale.ROOT))) {
                     return false;
                 }

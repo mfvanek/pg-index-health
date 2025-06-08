@@ -51,10 +51,9 @@ public final class SkipBloatUnderThresholdPredicate implements Predicate<DbObjec
         if (sizeThresholdInBytes == 0L && percentageThreshold == 0.0) {
             return true;
         }
-        if (!(dbObject instanceof BloatAware)) {
+        if (!(dbObject instanceof final BloatAware bloatAware)) {
             return true;
         }
-        final BloatAware bloatAware = (BloatAware) dbObject;
         return bloatAware.getBloatSizeInBytes() >= sizeThresholdInBytes &&
             bloatAware.getBloatPercentage() >= percentageThreshold;
     }

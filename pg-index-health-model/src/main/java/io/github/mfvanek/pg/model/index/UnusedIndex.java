@@ -65,11 +65,10 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
             return true;
         }
 
-        if (!(other instanceof UnusedIndex)) {
+        if (!(other instanceof final UnusedIndex that)) {
             return false;
         }
 
-        final UnusedIndex that = (UnusedIndex) other;
         return Objects.equals(index, that.index);
     }
 

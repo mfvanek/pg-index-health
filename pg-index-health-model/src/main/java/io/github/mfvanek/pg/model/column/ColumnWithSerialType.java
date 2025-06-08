@@ -119,11 +119,10 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
             return true;
         }
 
-        if (!(other instanceof ColumnWithSerialType)) {
+        if (!(other instanceof final ColumnWithSerialType that)) {
             return false;
         }
 
-        final ColumnWithSerialType that = (ColumnWithSerialType) other;
         return Objects.equals(column, that.column) &&
             Objects.equals(serialType, that.serialType) &&
             Objects.equals(sequenceName, that.sequenceName);

@@ -104,11 +104,10 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
             return true;
         }
 
-        if (!(other instanceof Column)) {
+        if (!(other instanceof final Column that)) {
             return false;
         }
 
-        final Column that = (Column) other;
         return notNull == that.notNull &&
             Objects.equals(tableName, that.tableName) &&
             Objects.equals(columnName, that.columnName);

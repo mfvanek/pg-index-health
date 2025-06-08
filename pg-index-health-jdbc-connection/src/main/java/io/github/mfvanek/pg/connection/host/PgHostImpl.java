@@ -79,12 +79,11 @@ public final class PgHostImpl implements PgHost {
         }
 
         // Ignoring Liskov substitution principle
-        if (!(other instanceof PgHostImpl)) {
+        if (!(other instanceof final PgHostImpl that)) {
             return false;
         }
 
-        final PgHostImpl pgHost = (PgHostImpl) other;
-        return port == pgHost.port && Objects.equals(hostName, pgHost.hostName);
+        return port == that.port && Objects.equals(hostName, that.hostName);
     }
 
     /**

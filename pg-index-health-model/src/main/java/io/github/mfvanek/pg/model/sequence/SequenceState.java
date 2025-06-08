@@ -100,11 +100,10 @@ public final class SequenceState implements DbObject, SequenceNameAware {
             return true;
         }
 
-        if (!(other instanceof SequenceState)) {
+        if (!(other instanceof final SequenceState that)) {
             return false;
         }
 
-        final SequenceState that = (SequenceState) other;
         return Objects.equals(sequenceName, that.sequenceName);
     }
 

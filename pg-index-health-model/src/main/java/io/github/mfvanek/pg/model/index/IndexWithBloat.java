@@ -71,11 +71,10 @@ public final class IndexWithBloat extends AbstractIndexAware implements BloatAwa
             return true;
         }
 
-        if (!(other instanceof IndexWithBloat)) {
+        if (!(other instanceof final IndexWithBloat that)) {
             return false;
         }
 
-        final IndexWithBloat that = (IndexWithBloat) other;
         return Objects.equals(index, that.index);
     }
 

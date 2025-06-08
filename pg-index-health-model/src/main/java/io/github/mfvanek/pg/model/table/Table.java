@@ -91,11 +91,10 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
             return true;
         }
 
-        if (!(other instanceof Table)) {
+        if (!(other instanceof final Table that)) {
             return false;
         }
 
-        final Table that = (Table) other;
         return Objects.equals(tableName, that.tableName);
     }
 

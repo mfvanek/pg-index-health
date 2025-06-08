@@ -62,11 +62,10 @@ public class PgConnectionImpl implements PgConnection {
             return true;
         }
 
-        if (!(other instanceof PgConnection)) {
+        if (!(other instanceof final PgConnection that)) {
             return false;
         }
 
-        final PgConnection that = (PgConnection) other;
         return Objects.equals(host, that.getHost());
     }
 

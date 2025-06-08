@@ -93,11 +93,10 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
             return true;
         }
 
-        if (!(other instanceof DuplicatedForeignKeys)) {
+        if (!(other instanceof final DuplicatedForeignKeys that)) {
             return false;
         }
 
-        final DuplicatedForeignKeys that = (DuplicatedForeignKeys) other;
         return Objects.equals(foreignKeys, that.foreignKeys);
     }
 

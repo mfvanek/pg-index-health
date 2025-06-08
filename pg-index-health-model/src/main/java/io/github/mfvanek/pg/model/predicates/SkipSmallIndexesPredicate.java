@@ -45,10 +45,9 @@ public final class SkipSmallIndexesPredicate extends AbstractFilterBySize {
         if (thresholdInBytes == 0L) {
             return true;
         }
-        if (!(dbObject instanceof IndexSizeAware)) {
+        if (!(dbObject instanceof final IndexSizeAware indexSizeAware)) {
             return true;
         }
-        final IndexSizeAware indexSizeAware = (IndexSizeAware) dbObject;
         return indexSizeAware.getIndexSizeInBytes() >= thresholdInBytes;
     }
 

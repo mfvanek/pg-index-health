@@ -122,11 +122,10 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
             return true;
         }
 
-        if (!(other instanceof DuplicatedIndexes)) {
+        if (!(other instanceof final DuplicatedIndexes that)) {
             return false;
         }
 
-        final DuplicatedIndexes that = (DuplicatedIndexes) other;
         return Objects.equals(indexes, that.indexes);
     }
 
