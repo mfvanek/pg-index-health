@@ -109,4 +109,8 @@
     <Match>
         <Bug pattern="IMC_IMMATURE_CLASS_COLLECTION_RETURN"/>
     </Match>
+    <Match>
+        <Bug pattern="VA_FORMAT_STRING_USES_NEWLINE"/>
+        <Class name="io.github.mfvanek.pg.core.fixtures.support.statements.AbstractDbStatement"/>
+    </Match>
 </FindBugsFilter>

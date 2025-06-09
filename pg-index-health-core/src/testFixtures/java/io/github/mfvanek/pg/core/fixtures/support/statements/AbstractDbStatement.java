@@ -27,13 +27,14 @@ public abstract class AbstractDbStatement implements DbStatement {
     ) throws SQLException {
         final String checkQuery = String.format(Locale.ROOT, """
             select exists (
-               select 1
-               from pg_catalog.pg_class c
-               join pg_catalog.pg_namespace n on n.oid = c.relnamespace
-               where n.nspname = '%s'
-               and c.relname = '%s'
-               and c.relkind = 'r'
-               );""", schemaName, tableName);
+                select 1
+                from pg_catalog.pg_class c
+                join pg_catalog.pg_namespace n on n.oid = c.relnamespace
+                where
+                    n.nspname = '%s'
+                    and c.relname = '%s'
+                    and c.relkind = 'r'
+            );""", schemaName, tableName);
         try (ResultSet rs = statement.executeQuery(checkQuery)) {
             if (rs.next()) {
                 final boolean schemaExists = rs.getBoolean(1);
@@ -41,7 +42,8 @@ public abstract class AbstractDbStatement implements DbStatement {
                     return;
                 }
             }
-            throw new IllegalStateException(String.format(Locale.ROOT, "Table with name '%s' in schema '%s' wasn't created", tableName, schemaName));
+            throw new IllegalStateException(
+                String.format(Locale.ROOT, "Table with name '%s' in schema '%s' wasn't created", tableName, schemaName));
         }
     }
 
