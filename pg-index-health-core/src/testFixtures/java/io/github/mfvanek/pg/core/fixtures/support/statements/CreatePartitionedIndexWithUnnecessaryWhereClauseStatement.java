@@ -19,7 +19,7 @@ public class CreatePartitionedIndexWithUnnecessaryWhereClauseStatement extends A
         return List.of(
             """
                 create table if not exists {schemaName}.one_partitioned(
-                    first-ref" bigint not null,
+                    "first-ref" bigint not null,
                     second_ref  bigint not null
                 ) partition by range (second_ref);""",
             """

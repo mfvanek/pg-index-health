@@ -23,12 +23,12 @@ public class CreateBadlyNamedObjectsStatement extends AbstractDbStatement {
                 );""",
             """
                 create table if not exists {schemaName}."bad-table-two"(
-                    bad-ref-id" int not null primary key,
+                    "bad-ref-id" int not null primary key,
                     description text
                 );""",
             """
                 alter table if exists {schemaName}."bad-table-two"
-                    add constraint "bad-table-two-fk-bad-ref-id" \
+                    add constraint "bad-table-two-fk-bad-ref-id"
                     foreign key ("bad-ref-id") references {schemaName}."bad-table" ("bad-id") not valid;""",
             """
                 create or replace function {schemaName}."bad-add"(a integer, b integer) returns integer
