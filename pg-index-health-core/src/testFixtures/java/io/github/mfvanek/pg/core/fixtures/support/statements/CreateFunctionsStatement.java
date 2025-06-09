@@ -17,16 +17,18 @@ public class CreateFunctionsStatement extends AbstractDbStatement {
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create or replace function {schemaName}.add(a integer, b integer) returns integer " +
-                "as 'select $1 + $2;' " +
-                "language sql " +
-                "immutable " +
-                "returns null on null input;",
-            "create or replace function {schemaName}.add(a int, b int, c int) returns int " +
-                "as 'select $1 + $2 + $3;' " +
-                "language sql " +
-                "immutable " +
-                "returns null on null input;"
+            """
+                create or replace function {schemaName}.add(a integer, b integer) returns integer
+                    as 'select $1 + $2;'
+                    language sql
+                    immutable
+                    returns null on null input;""",
+            """
+                create or replace function {schemaName}.add(a int, b int, c int) returns int
+                    as 'select $1 + $2 + $3;'
+                    language sql
+                    immutable
+                    returns null on null input;"""
         );
     }
 }
