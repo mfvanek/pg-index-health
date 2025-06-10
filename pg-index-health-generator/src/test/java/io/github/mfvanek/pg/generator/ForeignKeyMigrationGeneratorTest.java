@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.generator;
 
+import io.github.mfvanek.pg.generator.support.GeneratorTestBase;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ import static io.github.mfvanek.pg.generator.PgIdentifierNameGeneratorTest.nulla
 import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGeneratorTest.severalColumnsWithNulls;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ForeignKeyMigrationGeneratorTest {
+class ForeignKeyMigrationGeneratorTest extends GeneratorTestBase {
 
     @Test
     void generateForSingleForeignKey() {
@@ -27,10 +28,11 @@ class ForeignKeyMigrationGeneratorTest {
         final List<String> result = generator.generate(List.of(nullableColumnWithSchema()));
         assertThat(result)
             .hasSize(1)
-            .containsExactly("/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
-                "create index concurrently if not exists table_with_very_very_very_long_name_3202677_without_nulls_idx" + System.lineSeparator() +
-                "    on schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name) " +
-                "where column_with_very_very_very_long_name is not null;");
+            .containsExactly(normalizeEndings("""
+                /* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */
+                create index concurrently if not exists table_with_very_very_very_long_name_3202677_without_nulls_idx
+                    on schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name) \
+                where column_with_very_very_very_long_name is not null;"""));
     }
 
     @Test
@@ -40,13 +42,16 @@ class ForeignKeyMigrationGeneratorTest {
         assertThat(result)
             .hasSize(3)
             .containsExactly(
-                "create index concurrently if not exists custom_table_custom_column_1_custom_column_22_without_nulls_idx" + System.lineSeparator() +
-                    "    on custom_table (custom_column_1, custom_column_22) where custom_column_22 is not null;",
-                "create index concurrently if not exists custom_table_custom_column_1_custom_column_22_without_nulls_idx" + System.lineSeparator() +
-                    "    on custom_table (custom_column_1, custom_column_22) where custom_column_22 is not null;",
-                "/* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */" + System.lineSeparator() +
-                    "create index concurrently if not exists table_with_very_very_very_long_name_3202677_without_nulls_idx" + System.lineSeparator() +
-                    "    on schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name) " +
-                    "where column_with_very_very_very_long_name is not null;");
+                normalizeEndings("""
+                    create index concurrently if not exists custom_table_custom_column_1_custom_column_22_without_nulls_idx
+                        on custom_table (custom_column_1, custom_column_22) where custom_column_22 is not null;"""),
+                normalizeEndings("""
+                    create index concurrently if not exists custom_table_custom_column_1_custom_column_22_without_nulls_idx
+                        on custom_table (custom_column_1, custom_column_22) where custom_column_22 is not null;"""),
+                normalizeEndings("""
+                    /* table_with_very_very_very_long_name_column_with_very_very_very_long_name_without_nulls_idx */
+                    create index concurrently if not exists table_with_very_very_very_long_name_3202677_without_nulls_idx
+                        on schema_name_that_should_be_omitted.table_with_very_very_very_long_name (column_with_very_very_very_long_name) \
+                    where column_with_very_very_very_long_name is not null;"""));
     }
 }
