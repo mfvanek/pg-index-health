@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.core.statistics;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.core.utils.QueryExecutors;
-import org.jspecify.annotations.Nullable;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -61,8 +60,8 @@ public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnH
     @Override
     public Optional<OffsetDateTime> getLastStatsResetTimestamp() {
         final String query = "select stats_reset from pg_stat_database where datname = current_database()";
-        final List<@Nullable OffsetDateTime> statsResetTimes = queryExecutor.executeQuery(pgConnection, query,
+        final List<OffsetDateTime> statsResetTimes = queryExecutor.executeQuery(pgConnection, query,
             rs -> rs.getObject(1, OffsetDateTime.class));
-        return Optional.ofNullable(statsResetTimes.get(0));
+        return Optional.ofNullable(statsResetTimes.isEmpty() ? null : statsResetTimes.get(0));
     }
 }
