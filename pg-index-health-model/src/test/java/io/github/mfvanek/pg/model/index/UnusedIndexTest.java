@@ -105,7 +105,7 @@ class UnusedIndexTest {
             .verify();
     }
 
-    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings("ConstantConditions")
     @Test
     void compareToTest() {
         final UnusedIndex first = UnusedIndex.of("t1", "i1", 1L, 2L);

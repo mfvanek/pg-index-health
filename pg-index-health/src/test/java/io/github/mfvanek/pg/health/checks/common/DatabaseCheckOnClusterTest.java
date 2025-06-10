@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.health.checks.common;
 
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -31,7 +32,7 @@ class DatabaseCheckOnClusterTest {
     @SuppressWarnings("unchecked")
     @Test
     void check() {
-        final DatabaseCheckOnCluster<Table> check = (DatabaseCheckOnCluster<Table>) Mockito.spy(DatabaseCheckOnCluster.class);
+        final DatabaseCheckOnCluster<Table> check = (DatabaseCheckOnCluster<@NonNull Table>) Mockito.spy(DatabaseCheckOnCluster.class);
         Mockito.when(check.check(any(PgContext.class), any()))
             .thenAnswer(invocation -> {
                 final PgContext ctx = invocation.getArgument(0);

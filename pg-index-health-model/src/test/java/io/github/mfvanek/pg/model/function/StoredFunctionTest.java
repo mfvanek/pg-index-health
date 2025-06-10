@@ -147,7 +147,7 @@ class StoredFunctionTest {
         final StoredFunction second = StoredFunction.ofNoArgs("f1");
         final StoredFunction third = StoredFunction.ofNoArgs("f3");
 
-        //noinspection ResultOfMethodCallIgnored,ConstantConditions
+        // noinspection ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("other cannot be null");

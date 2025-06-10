@@ -18,11 +18,12 @@ import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ListAssert;
 import org.assertj.core.util.CheckReturnValue;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Predicate;
 
 @SuppressWarnings({"PMD.LinguisticNaming", "checkstyle:AbstractClassName"})
-public class AbstractCheckOnClusterAssert<E extends DbObject> extends AbstractAssert<AbstractCheckOnClusterAssert<E>, DatabaseCheckOnCluster<E>> {
+public class AbstractCheckOnClusterAssert<E extends @NonNull DbObject> extends AbstractAssert<AbstractCheckOnClusterAssert<E>, DatabaseCheckOnCluster<E>> {
 
     protected AbstractCheckOnClusterAssert(final DatabaseCheckOnCluster<E> abstractCheckOnCluster) {
         super(abstractCheckOnCluster, AbstractCheckOnClusterAssert.class);
@@ -79,7 +80,7 @@ public class AbstractCheckOnClusterAssert<E extends DbObject> extends AbstractAs
     }
 
     @CheckReturnValue
-    public static <T extends DbObject> AbstractCheckOnClusterAssert<T> assertThat(final DatabaseCheckOnCluster<T> actual) {
+    public static <T extends @NonNull DbObject> AbstractCheckOnClusterAssert<T> assertThat(final DatabaseCheckOnCluster<T> actual) {
         return new AbstractCheckOnClusterAssert<>(actual);
     }
 }

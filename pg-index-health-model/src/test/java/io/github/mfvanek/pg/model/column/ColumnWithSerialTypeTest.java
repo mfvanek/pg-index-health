@@ -168,7 +168,7 @@ class ColumnWithSerialTypeTest {
         final ColumnWithSerialType forth = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c2"), "s2");
         final ColumnWithSerialType fifth = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c1"), "s2");
 
-        //noinspection ResultOfMethodCallIgnored,ConstantConditions
+        // noinspection ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("other cannot be null");

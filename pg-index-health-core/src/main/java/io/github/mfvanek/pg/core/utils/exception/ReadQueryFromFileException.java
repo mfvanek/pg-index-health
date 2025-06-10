@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.core.utils.exception;
 
 import java.io.IOException;
+import java.io.Serial;
 
 /**
  * Custom unchecked exception for IO errors while reading sql query from file.
@@ -20,6 +21,7 @@ import java.io.IOException;
  */
 public class ReadQueryFromFileException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = 2030407491772154787L;
 
     public ReadQueryFromFileException(final String sqlFileName, final IOException cause) {

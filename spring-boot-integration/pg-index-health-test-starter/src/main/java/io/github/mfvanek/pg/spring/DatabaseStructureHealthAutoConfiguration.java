@@ -48,7 +48,7 @@ public class DatabaseStructureHealthAutoConfiguration {
      * Constructs a new instance of {@code DatabaseStructureHealthAutoConfiguration}.
      *
      * @param properties the {@link DatabaseStructureHealthProperties} containing
-     *                   the configuration for this auto-configuration (must not be null)
+     *                   the configuration for this autoconfiguration (must not be null)
      */
     public DatabaseStructureHealthAutoConfiguration(final DatabaseStructureHealthProperties properties) {
         this.properties = properties;

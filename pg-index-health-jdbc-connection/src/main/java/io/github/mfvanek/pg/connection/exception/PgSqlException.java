@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.connection.exception;
 
+import java.io.Serial;
 import java.sql.SQLException;
 
 /**
@@ -20,6 +21,7 @@ import java.sql.SQLException;
  */
 public class PgSqlException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = -8740709401886468019L;
 
     /**
