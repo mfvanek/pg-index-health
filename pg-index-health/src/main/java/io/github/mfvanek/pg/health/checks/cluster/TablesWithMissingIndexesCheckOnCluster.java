@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * Check for tables with missing indexes on all hosts in the cluster.
@@ -39,7 +38,7 @@ public class TablesWithMissingIndexesCheckOnCluster extends AbstractCheckOnClust
             .flatMap(Collection::stream)
             .distinct()
             .sorted()
-            .collect(Collectors.toList());
+            .toList();
         LOGGER.fine(() -> "Union result " + result);
         return result;
     }
