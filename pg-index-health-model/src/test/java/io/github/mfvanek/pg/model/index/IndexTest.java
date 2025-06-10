@@ -130,7 +130,7 @@ class IndexTest {
             .verify();
     }
 
-    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings("ConstantConditions")
     @Test
     void compareToTest() {
         final Index first = Index.of("t1", "i1");

@@ -70,11 +70,10 @@ public final class TableWithBloat extends AbstractTableAware implements BloatAwa
             return true;
         }
 
-        if (!(other instanceof TableWithBloat)) {
+        if (!(other instanceof final TableWithBloat that)) {
             return false;
         }
 
-        final TableWithBloat that = (TableWithBloat) other;
         return Objects.equals(table, that.table);
     }
 

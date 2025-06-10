@@ -45,10 +45,9 @@ public final class SkipSmallTablesPredicate extends AbstractFilterBySize {
         if (thresholdInBytes == 0L) {
             return true;
         }
-        if (!(dbObject instanceof TableSizeAware)) {
+        if (!(dbObject instanceof final TableSizeAware tableSizeAware)) {
             return true;
         }
-        final TableSizeAware tableSizeAware = (TableSizeAware) dbObject;
         return tableSizeAware.getTableSizeInBytes() >= thresholdInBytes;
     }
 

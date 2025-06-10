@@ -17,10 +17,14 @@ public class AddInvalidForeignKeyStatement extends AbstractDbStatement {
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "alter table if exists {schemaName}.accounts " +
-                "add constraint c_accounts_fk_client_id_not_validated_yet foreign key (client_id) references {schemaName}.clients (id) not valid;",
-            "alter table if exists {schemaName}.accounts " +
-                "add constraint c_accounts_chk_client_id_not_validated_yet check (client_id > 0) not valid;"
+            """
+                alter table if exists {schemaName}.accounts
+                    add constraint c_accounts_fk_client_id_not_validated_yet
+                    foreign key (client_id) references {schemaName}.clients (id) not valid;""",
+            """
+                alter table if exists {schemaName}.accounts
+                    add constraint c_accounts_chk_client_id_not_validated_yet
+                    check (client_id > 0) not valid;"""
         );
     }
 }

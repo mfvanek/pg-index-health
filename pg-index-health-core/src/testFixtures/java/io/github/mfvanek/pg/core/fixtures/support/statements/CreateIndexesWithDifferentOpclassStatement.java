@@ -17,10 +17,12 @@ public class CreateIndexesWithDifferentOpclassStatement extends AbstractDbStatem
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create index if not exists i_clients_last_name " +
-                "on {schemaName}.clients using btree(lower(last_name))",
-            "create index if not exists i_clients_last_name_ops " +
-                "on {schemaName}.clients using btree(lower(last_name) text_pattern_ops)"
+            """
+                create index if not exists i_clients_last_name
+                    on {schemaName}.clients using btree(lower(last_name))""",
+            """
+                create index if not exists i_clients_last_name_ops
+                    on {schemaName}.clients using btree(lower(last_name) text_pattern_ops)"""
         );
     }
 }

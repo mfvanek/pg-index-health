@@ -51,12 +51,10 @@ public final class SkipByColumnNamePredicate implements Predicate<DbObject> {
         if (columnNamesToSkip.isEmpty()) {
             return true;
         }
-        if (dbObject instanceof ColumnNameAware) {
-            final ColumnNameAware c = (ColumnNameAware) dbObject;
+        if (dbObject instanceof final ColumnNameAware c) {
             return !columnNamesToSkip.contains(c.getColumnName().toLowerCase(Locale.ROOT));
         }
-        if (dbObject instanceof ColumnsAware) {
-            final ColumnsAware cs = (ColumnsAware) dbObject;
+        if (dbObject instanceof final ColumnsAware cs) {
             for (final ColumnNameAware c : cs.getColumns()) {
                 if (columnNamesToSkip.contains(c.getColumnName().toLowerCase(Locale.ROOT))) {
                     return false;

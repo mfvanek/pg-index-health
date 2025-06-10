@@ -107,11 +107,10 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
             return true;
         }
 
-        if (!(other instanceof ForeignKey)) {
+        if (!(other instanceof final ForeignKey that)) {
             return false;
         }
 
-        final ForeignKey that = (ForeignKey) other;
         return Objects.equals(constraint, that.constraint);
     }
 

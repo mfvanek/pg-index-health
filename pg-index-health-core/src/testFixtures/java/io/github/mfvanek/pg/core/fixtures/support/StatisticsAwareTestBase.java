@@ -27,10 +27,10 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
     protected static final long AMOUNT_OF_TRIES = 101L;
 
     protected long getSeqScansForAccounts(final PgContext pgContext) {
-        final String sqlQuery =
-            "select psat.relname::text as table_name, coalesce(psat.seq_scan, 0) as seq_scan\n" +
-                "from pg_catalog.pg_stat_all_tables psat\n" +
-                "where psat.schemaname = ?::text and psat.relname = 'accounts'::text;";
+        final String sqlQuery = """
+            select psat.relname::text as table_name, coalesce(psat.seq_scan, 0) as seq_scan
+            from pg_catalog.pg_stat_all_tables psat
+            where psat.schemaname = ?::text and psat.relname = 'accounts'::text;""";
         try (Connection connection = getDataSource().getConnection();
              PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
             statement.setString(1, pgContext.getSchemaName());
@@ -44,9 +44,9 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
     }
 
     protected boolean existsStatisticsForTable(final String schemaName, final String tableName) {
-        final String sqlQuery =
-            "select exists (select 1 from pg_catalog.pg_stats ps " +
-                "where ps.schemaname = ?::text and ps.tablename = ?::text);";
+        final String sqlQuery = """
+                select exists (select 1 from pg_catalog.pg_stats ps
+                where ps.schemaname = ?::text and ps.tablename = ?::text);""";
         try (Connection connection = getDataSource().getConnection();
              PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
             statement.setString(1, schemaName);

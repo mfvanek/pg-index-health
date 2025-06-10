@@ -81,11 +81,10 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
             return true;
         }
 
-        if (!(other instanceof TableWithMissingIndex)) {
+        if (!(other instanceof final TableWithMissingIndex that)) {
             return false;
         }
 
-        final TableWithMissingIndex that = (TableWithMissingIndex) other;
         return Objects.equals(table, that.table);
     }
 

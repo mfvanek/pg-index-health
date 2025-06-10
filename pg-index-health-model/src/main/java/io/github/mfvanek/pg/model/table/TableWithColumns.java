@@ -67,11 +67,10 @@ public final class TableWithColumns extends AbstractTableAware implements Column
             return true;
         }
 
-        if (!(other instanceof TableWithColumns)) {
+        if (!(other instanceof final TableWithColumns that)) {
             return false;
         }
 
-        final TableWithColumns that = (TableWithColumns) other;
         return Objects.equals(table, that.table);
     }
 

@@ -96,8 +96,11 @@ class DuplicatedIndexesTest {
             Index.of("t", "i1", 101L),
             Index.of("t", "i2", 202L)));
         assertThat(indexes)
-            .hasToString("DuplicatedIndexes{tableName='t', totalSize=606, indexes=[" + "Index{tableName='t', indexName='i1', indexSizeInBytes=101}, " +
-                "Index{tableName='t', indexName='i2', indexSizeInBytes=202}, " + "Index{tableName='t', indexName='i3', indexSizeInBytes=303}]}");
+            .hasToString("""
+                DuplicatedIndexes{tableName='t', totalSize=606, indexes=[\
+                Index{tableName='t', indexName='i1', indexSizeInBytes=101}, \
+                Index{tableName='t', indexName='i2', indexSizeInBytes=202}, \
+                Index{tableName='t', indexName='i3', indexSizeInBytes=303}]}""");
     }
 
     @SuppressWarnings("ConstantConditions")

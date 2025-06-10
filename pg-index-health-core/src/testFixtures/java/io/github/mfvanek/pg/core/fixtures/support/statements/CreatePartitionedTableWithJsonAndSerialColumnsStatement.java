@@ -17,16 +17,18 @@ public class CreatePartitionedTableWithJsonAndSerialColumnsStatement extends Abs
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create table if not exists {schemaName}.parent(" +
-                "ref_type varchar(32)," +
-                "ref_value varchar(64)," +
-                "creation_date timestamp with time zone not null," +
-                "entity_id varchar(64) not null," +
-                "real_client_id bigserial," +
-                "raw_data json" +
-                ") partition by range (creation_date);",
-            "create table if not exists {schemaName}.partition_default " +
-                "partition of {schemaName}.parent default;"
+            """
+                create table if not exists {schemaName}.parent(
+                    ref_type varchar(32),
+                    ref_value varchar(64),
+                    creation_date timestamp with time zone not null,
+                    entity_id varchar(64) not null,
+                    real_client_id bigserial,
+                    raw_data json
+                ) partition by range (creation_date);""",
+            """
+                create table if not exists {schemaName}.partition_default
+                    partition of {schemaName}.parent default;"""
         );
     }
 }

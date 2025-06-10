@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.generator;
 
+import io.github.mfvanek.pg.generator.support.GeneratorTestBase;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import org.jspecify.annotations.NonNull;
@@ -20,7 +21,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class ColumnWithSerialTypeMigrationGeneratorTest {
+class ColumnWithSerialTypeMigrationGeneratorTest extends GeneratorTestBase {
 
     @SuppressWarnings("ConstantConditions")
     @Test
@@ -36,9 +37,10 @@ class ColumnWithSerialTypeMigrationGeneratorTest {
 
         assertThat(generator.generate(List.of(column())))
             .hasSize(1)
-            .containsExactly("alter table if exists s1.t1" + System.lineSeparator() +
-                "    alter column col1 drop default;" + System.lineSeparator() +
-                "drop sequence if exists s1.seq1;");
+            .containsExactly(normalizeEndings("""
+                alter table if exists s1.t1
+                    alter column col1 drop default;
+                drop sequence if exists s1.seq1;"""));
     }
 
     @Test
@@ -48,12 +50,16 @@ class ColumnWithSerialTypeMigrationGeneratorTest {
 
         assertThat(generator.generate(List.of(column(), secondColumn)))
             .hasSize(2)
-            .containsExactly("alter table if exists s1.t1" + System.lineSeparator() +
-                    "    alter column col1 drop default;" + System.lineSeparator() +
-                    "drop sequence if exists s1.seq1;",
-                "alter table if exists s2.t2" + System.lineSeparator() +
-                    "    alter column col2 drop default;" + System.lineSeparator() +
-                    "drop sequence if exists s2.seq2;");
+            .containsExactly(
+                normalizeEndings("""
+                    alter table if exists s1.t1
+                        alter column col1 drop default;
+                    drop sequence if exists s1.seq1;"""),
+                normalizeEndings("""
+                    alter table if exists s2.t2
+                        alter column col2 drop default;
+                    drop sequence if exists s2.seq2;""")
+            );
     }
 
     @NonNull

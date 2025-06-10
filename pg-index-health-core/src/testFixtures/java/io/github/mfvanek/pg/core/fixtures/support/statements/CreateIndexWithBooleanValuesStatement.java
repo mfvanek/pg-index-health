@@ -17,10 +17,12 @@ public class CreateIndexWithBooleanValuesStatement extends AbstractDbStatement {
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create index if not exists i_accounts_deleted " +
-                "on {schemaName}.accounts (deleted)",
-            "create unique index if not exists i_accounts_account_number_deleted " +
-                "on {schemaName}.accounts (account_number, deleted)"
+            """
+                create index if not exists i_accounts_deleted
+                    on {schemaName}.accounts (deleted)""",
+            """
+                create unique index if not exists i_accounts_account_number_deleted
+                    on {schemaName}.accounts (account_number, deleted)"""
         );
     }
 }

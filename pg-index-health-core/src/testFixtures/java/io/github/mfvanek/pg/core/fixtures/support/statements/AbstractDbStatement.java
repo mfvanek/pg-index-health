@@ -25,14 +25,16 @@ public abstract class AbstractDbStatement implements DbStatement {
         final String tableName,
         final String schemaName
     ) throws SQLException {
-        final String checkQuery = String.format(Locale.ROOT, "select exists (%n" +
-            "   select 1 %n" +
-            "   from pg_catalog.pg_class c%n" +
-            "   join pg_catalog.pg_namespace n on n.oid = c.relnamespace%n" +
-            "   where n.nspname = '%s'%n" +
-            "   and c.relname = '%s'%n" +
-            "   and c.relkind = 'r'%n" +
-            "   );", schemaName, tableName);
+        final String checkQuery = String.format(Locale.ROOT, """
+            select exists (
+                select 1
+                from pg_catalog.pg_class c
+                join pg_catalog.pg_namespace n on n.oid = c.relnamespace
+                where
+                    n.nspname = '%s'
+                    and c.relname = '%s'
+                    and c.relkind = 'r'
+            );""", schemaName, tableName);
         try (ResultSet rs = statement.executeQuery(checkQuery)) {
             if (rs.next()) {
                 final boolean schemaExists = rs.getBoolean(1);
@@ -40,7 +42,8 @@ public abstract class AbstractDbStatement implements DbStatement {
                     return;
                 }
             }
-            throw new IllegalStateException(String.format(Locale.ROOT, "Table with name '%s' in schema '%s' wasn't created", tableName, schemaName));
+            throw new IllegalStateException(
+                String.format(Locale.ROOT, "Table with name '%s' in schema '%s' wasn't created", tableName, schemaName));
         }
     }
 

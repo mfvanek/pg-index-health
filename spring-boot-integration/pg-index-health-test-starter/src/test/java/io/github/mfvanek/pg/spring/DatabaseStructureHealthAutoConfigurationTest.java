@@ -221,9 +221,10 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
                 .withInitializer(AutoConfigurationTestBase::initialize);
             assertThatThrownBy(() -> contextRunner.run(this::assertThatPgConnectionIsValid))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Unstarted application context org.springframework.boot.test.context.assertj.AssertableApplicationContext[" +
-                    "startupFailure=org.springframework.beans.factory.BeanCreationException] failed to start")
-                .hasStackTraceContaining("Factory method 'pgConnection' threw exception; nested exception is io.github.mfvanek.pg.connection.exception.PgSqlException");
+                .hasMessage("""
+                    Unstarted application context org.springframework.boot.test.context.assertj.AssertableApplicationContext[\
+                    startupFailure=org.springframework.beans.factory.BeanCreationException] failed to start""")
+                .hasStackTraceContaining("Factory method 'pgConnection' threw exception with message: null");
         }
     }
 

@@ -17,11 +17,13 @@ public class CreateBadlyNamedPartitionedTableStatement extends AbstractDbStateme
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create table if not exists {schemaName}.\"one-partitioned\"(" +
-                "\"bad-id\" bigserial not null primary key" +
-                ") partition by range (\"bad-id\");",
-            "create table if not exists {schemaName}.\"one-default\" " +
-                "partition of {schemaName}.\"one-partitioned\" default;"
+            """
+                create table if not exists {schemaName}."one-partitioned"(
+                    "bad-id" bigserial not null primary key
+                ) partition by range ("bad-id");""",
+            """
+                create table if not exists {schemaName}."one-default"
+                    partition of {schemaName}."one-partitioned" default;"""
         );
     }
 }

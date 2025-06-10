@@ -58,4 +58,15 @@ class StatisticsMaintenanceOnHostImplUnitTest {
         assertThat(maintenance.resetStatistics())
             .isFalse();
     }
+
+    @Test
+    void getLastStatsResetTimestampShouldReturnEmptyOptionalWhenNoResultFromDatabase() {
+        final PgConnection connectionMock = Mockito.mock(PgConnection.class);
+        final StatisticsQueryExecutor executorMock = Mockito.mock(StatisticsQueryExecutor.class);
+        final StatisticsMaintenanceOnHost maintenance = new StatisticsMaintenanceOnHostImpl(connectionMock, executorMock);
+        Mockito.when(executorMock.executeQuery(any(), any(), any()))
+            .thenReturn(List.of());
+        assertThat(maintenance.getLastStatsResetTimestamp())
+            .isEmpty();
+    }
 }

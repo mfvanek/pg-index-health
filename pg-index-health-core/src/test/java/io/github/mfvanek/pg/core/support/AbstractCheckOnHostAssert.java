@@ -19,11 +19,12 @@ import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ListAssert;
 import org.assertj.core.util.CheckReturnValue;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Predicate;
 
 @SuppressWarnings({"PMD.LinguisticNaming", "checkstyle:AbstractClassName"})
-public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAssert<AbstractCheckOnHostAssert<E>, DatabaseCheckOnHost<E>> {
+public class AbstractCheckOnHostAssert<E extends @NonNull DbObject> extends AbstractAssert<AbstractCheckOnHostAssert<E>, DatabaseCheckOnHost<E>> {
 
     protected AbstractCheckOnHostAssert(final DatabaseCheckOnHost<E> abstractCheckOnHost) {
         super(abstractCheckOnHost, AbstractCheckOnHostAssert.class);
@@ -88,7 +89,7 @@ public class AbstractCheckOnHostAssert<E extends DbObject> extends AbstractAsser
     }
 
     @CheckReturnValue
-    public static <T extends DbObject> AbstractCheckOnHostAssert<T> assertThat(final DatabaseCheckOnHost<T> actual) {
+    public static <T extends @NonNull DbObject> AbstractCheckOnHostAssert<T> assertThat(final DatabaseCheckOnHost<T> actual) {
         return new AbstractCheckOnHostAssert<>(actual);
     }
 }

@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.generator;
 
+import io.github.mfvanek.pg.generator.support.GeneratorTestBase;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import org.jspecify.annotations.NonNull;
@@ -18,7 +19,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class DropDefaultValueGeneratorTest {
+class DropDefaultValueGeneratorTest extends GeneratorTestBase {
 
     @SuppressWarnings("ConstantConditions")
     @Test
@@ -37,8 +38,9 @@ class DropDefaultValueGeneratorTest {
     void generateForColumnLowerCase() {
         final DropDefaultValueGenerator generator = new DropDefaultValueGenerator(GeneratingOptions.builder().build());
         assertThat(generator.generate(column()))
-            .isEqualTo("alter table if exists s1.t1" + System.lineSeparator() +
-                "    alter column col1 drop default;");
+            .isEqualTo(normalizeEndings("""
+                alter table if exists s1.t1
+                    alter column col1 drop default;"""));
     }
 
     @Test

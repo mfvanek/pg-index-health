@@ -87,11 +87,10 @@ class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitna
             return true;
         }
 
-        if (!(other instanceof PostgresBitnamiRepmgrContainer)) {
+        if (!(other instanceof final PostgresBitnamiRepmgrContainer that)) {
             return false;
         }
 
-        final PostgresBitnamiRepmgrContainer that = (PostgresBitnamiRepmgrContainer) other;
         return Objects.equals(envVars, that.envVars);
     }
 

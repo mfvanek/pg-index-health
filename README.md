@@ -31,8 +31,10 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 
 ### Supported Java versions
 
-Supports [Java 11](https://www.java.com/en/) and above  
-For **Java 8** compatible version take a look at release [0.7.0](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.7.0) and lower
+Supports [Java 17](https://www.java.com/en/) and above.
+
+- For **Java 11** compatible version take a look at release [0.15.0](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.15.0) and lower.
+- For **Java 8** compatible version take a look at release [0.7.0](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.7.0) and lower.
 
 ## Available checks
 
@@ -264,6 +266,7 @@ internal class DatabaseStructureStaticAnalysisTest {
 | 2.5.x       | 8       | 0.5.x — 0.6.x                |
 | 2.6.x       | 8       | 0.7.x                        |
 | 2.7.x       | 11      | 0.8.x — 0.15.x               |
+| 3.3.x       | 17      | 0.20.x                       |
 
 #### Spring Boot 3 compatibility
 

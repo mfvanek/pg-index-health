@@ -18,12 +18,14 @@ public class CreateTableWithoutPrimaryKeyStatement extends AbstractDbStatement {
 
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("create table if not exists {schemaName}.bad_clients (" +
-            "id bigint not null, " +
-            "name varchar(255) not null," +
-            "real_client_id integer," +
-            "email varchar(200)," +
-            "phone varchar(51))");
+        return List.of("""
+            create table if not exists {schemaName}.bad_clients (
+                id bigint not null,
+                name varchar(255) not null,
+                real_client_id integer,
+                email varchar(200),
+                phone varchar(51)
+            )""");
     }
 
     @Override

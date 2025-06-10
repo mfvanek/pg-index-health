@@ -113,7 +113,7 @@ class TableTest {
             .verify();
     }
 
-    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings("ConstantConditions")
     @Test
     void compareToTest() {
         final Table first = Table.of("t1", 22L);

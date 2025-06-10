@@ -17,20 +17,25 @@ public class CreatePartitionedTableWithVarcharStatement extends AbstractDbStatem
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create table if not exists {schemaName}.tp(" +
-                "creation_date timestamp not null," +
-                "ref_type varchar(36) not null," +
-                "entity_id varchar(36) not null," +
-                "primary key (creation_date, ref_type, entity_id)" +
-                ") partition by range (creation_date);",
-            "create table if not exists {schemaName}.tp_default " +
-                "partition of {schemaName}.tp default;",
-            "create table if not exists {schemaName}.tp_good (" +
-                "creation_date timestamp not null," +
-                "entity_id uuid not null," +
-                "primary key (creation_date, entity_id)" +
-                ") partition by range (creation_date);",
-            "create table if not exists {schemaName}.\"tp_good-default\" partition of {schemaName}.tp_good default;"
+            """
+                create table if not exists {schemaName}.tp(
+                    creation_date timestamp not null,
+                    ref_type varchar(36) not null,
+                    entity_id varchar(36) not null,
+                    primary key (creation_date, ref_type, entity_id)
+                ) partition by range (creation_date);""",
+            """
+                create table if not exists {schemaName}.tp_default
+                    partition of {schemaName}.tp default;""",
+            """
+                create table if not exists {schemaName}.tp_good (
+                    creation_date timestamp not null,
+                    entity_id uuid not null,
+                    primary key (creation_date, entity_id)
+                ) partition by range (creation_date);""",
+            """
+                create table if not exists {schemaName}."tp_good-default"
+                    partition of {schemaName}.tp_good default;"""
         );
     }
 }

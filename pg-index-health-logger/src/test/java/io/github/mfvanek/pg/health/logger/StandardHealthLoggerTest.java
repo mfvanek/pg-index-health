@@ -150,11 +150,9 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
         return new SimpleLoggingKeyPredicate(SimpleLoggingKeyAdapter.of(diagnostic));
     }
 
-    private static class SimpleLoggingKeyPredicate implements Predicate<String> {
+    private record SimpleLoggingKeyPredicate(LoggingKey key) implements Predicate<String> {
 
-        private final LoggingKey key;
-
-        SimpleLoggingKeyPredicate(final LoggingKey key) {
+        private SimpleLoggingKeyPredicate(final LoggingKey key) {
             this.key = Objects.requireNonNull(key);
         }
 

@@ -16,8 +16,9 @@ public class CreateSuitableIndexForForeignKeyStatement extends AbstractDbStateme
 
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("create index if not exists " +
-            "i_accounts_client_id_account_number on {schemaName}.accounts (client_id, account_number)"
+        return List.of("""
+            create index if not exists
+                i_accounts_client_id_account_number on {schemaName}.accounts (client_id, account_number)"""
         );
     }
 }

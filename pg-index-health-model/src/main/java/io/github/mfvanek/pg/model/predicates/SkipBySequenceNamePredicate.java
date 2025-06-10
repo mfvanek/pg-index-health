@@ -49,8 +49,7 @@ public final class SkipBySequenceNamePredicate implements Predicate<DbObject> {
      */
     @Override
     public boolean test(final DbObject dbObject) {
-        if (!fullyQualifiedSequenceNamesToSkip.isEmpty() && dbObject instanceof SequenceNameAware) {
-            final SequenceNameAware s = (SequenceNameAware) dbObject;
+        if (!fullyQualifiedSequenceNamesToSkip.isEmpty() && dbObject instanceof final SequenceNameAware s) {
             return !fullyQualifiedSequenceNamesToSkip.contains(s.getSequenceName().toLowerCase(Locale.ROOT));
         }
         return true;

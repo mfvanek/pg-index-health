@@ -365,8 +365,12 @@ public final class DatabasePopulator implements AutoCloseable {
     private void createInvalidIndex() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute(String.format(Locale.ROOT, "create unique index concurrently if not exists " +
-                "i_clients_last_name_first_name on %s.clients (last_name, first_name)", schemaName));
+            statement.execute(
+                String.format(
+                    Locale.ROOT,
+                    "create unique index concurrently if not exists i_clients_last_name_first_name on %s.clients (last_name, first_name)",
+                    schemaName)
+            );
         } catch (SQLException ignored) {
             // do nothing, just skip error
         }

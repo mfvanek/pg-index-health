@@ -122,7 +122,7 @@ class TableWithBloatTest {
             .verify();
     }
 
-    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings("ConstantConditions")
     @Test
     void compareToTest() {
         final long tableSize = 22L;

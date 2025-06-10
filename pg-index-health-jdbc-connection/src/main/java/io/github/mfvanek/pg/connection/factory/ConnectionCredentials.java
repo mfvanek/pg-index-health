@@ -78,11 +78,10 @@ public final class ConnectionCredentials {
             return true;
         }
 
-        if (!(other instanceof ConnectionCredentials)) {
+        if (!(other instanceof final ConnectionCredentials that)) {
             return false;
         }
 
-        final ConnectionCredentials that = (ConnectionCredentials) other;
         return Objects.equals(connectionUrls, that.connectionUrls) &&
             Objects.equals(userName, that.userName) &&
             Objects.equals(password, that.password);

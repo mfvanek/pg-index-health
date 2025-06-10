@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -56,7 +55,7 @@ public final class DuplicatedIndexesParser {
                 final String sizeAsString = a[1].trim().substring("size=".length());
                 return Map.entry(indexName, Long.valueOf(sizeAsString));
             })
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 
     /**
@@ -79,6 +78,6 @@ public final class DuplicatedIndexesParser {
         }
         final Stream<T> basePart = Stream.of(firstObject, secondObject);
         return Stream.concat(basePart, Stream.of(otherObjects))
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 }

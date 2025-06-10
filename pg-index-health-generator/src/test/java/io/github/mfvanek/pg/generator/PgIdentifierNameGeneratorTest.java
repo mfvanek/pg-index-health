@@ -239,8 +239,7 @@ class PgIdentifierNameGeneratorTest {
 
     @NonNull
     static ForeignKey notNullColumnWithZeroHash() {
-        return ForeignKey.ofNotNullColumn("table_with_very_very_very_long_name_that_is_even_longer",
-            "cn", "corrugatestendentiousness");
+        return ForeignKey.ofNotNullColumn("table_with_very_very_very_long_name_that_is_even_longer", "cn", "corrugatestendentiousness");
     }
 
     @NonNull

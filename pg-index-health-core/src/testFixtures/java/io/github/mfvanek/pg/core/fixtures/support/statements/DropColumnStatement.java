@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import io.github.mfvanek.pg.model.validation.Validators;
 
 import java.util.List;
+import java.util.Locale;
 
 public class DropColumnStatement extends AbstractDbStatement {
 
@@ -26,6 +27,8 @@ public class DropColumnStatement extends AbstractDbStatement {
 
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("alter table if exists {schemaName}." + tableName + " drop column " + columnName);
+        return List.of(
+            String.format(Locale.ROOT, "alter table if exists {schemaName}.%s drop column %s", tableName, columnName)
+        );
     }
 }

@@ -112,7 +112,7 @@ class IndexWithBloatTest {
             .verify();
     }
 
-    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings("ConstantConditions")
     @Test
     void compareToTest() {
         final IndexWithBloat first = IndexWithBloat.of("t1", "i1", 22L, 11L, 50);

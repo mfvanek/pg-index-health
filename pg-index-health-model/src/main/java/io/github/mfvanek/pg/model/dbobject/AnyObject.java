@@ -57,11 +57,10 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
             return true;
         }
 
-        if (!(other instanceof AnyObject)) {
+        if (!(other instanceof final AnyObject that)) {
             return false;
         }
 
-        final AnyObject that = (AnyObject) other;
         return Objects.equals(objectName, that.objectName) &&
             Objects.equals(objectType, that.objectType);
     }

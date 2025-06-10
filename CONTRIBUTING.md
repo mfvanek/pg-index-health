@@ -1,6 +1,6 @@
 ## Building and testing
 
-Java >= 11 is required.
+Java >= 17 is required.
 
 1. Clone the repository
 

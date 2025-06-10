@@ -137,7 +137,7 @@ class ColumnTest {
         final Column second = Column.ofNotNull("t1", "c2");
         final Column third = Column.ofNotNull("t2", "c1");
 
-        //noinspection ResultOfMethodCallIgnored,ConstantConditions
+        // noinspection ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("other cannot be null");

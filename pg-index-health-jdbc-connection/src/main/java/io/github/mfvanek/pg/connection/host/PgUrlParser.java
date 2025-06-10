@@ -83,7 +83,7 @@ public final class PgUrlParser {
             .distinct()
             .sorted()
             .map(h -> Map.entry(h, URL_HEADER + h + dbNameWithParamsForReplica))
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 
     /**
@@ -118,7 +118,7 @@ public final class PgUrlParser {
             })
             .distinct()
             .sorted(Map.Entry.comparingByKey())
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 
     /**

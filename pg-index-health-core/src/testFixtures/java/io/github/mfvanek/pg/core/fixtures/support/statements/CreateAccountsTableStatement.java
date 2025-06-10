@@ -18,12 +18,14 @@ public class CreateAccountsTableStatement extends AbstractDbStatement {
     protected List<String> getSqlToExecute() {
         return List.of(
             "create sequence if not exists {schemaName}.accounts_seq",
-            "create table if not exists {schemaName}.accounts (" +
-                "id bigint not null primary key default nextval('{schemaName}.accounts_seq')," +
-                "client_id bigint not null," +
-                "account_number varchar(50) not null unique," +
-                "account_balance numeric(22,2) not null default 0," +
-                "deleted boolean not null default false)"
+            """
+                create table if not exists {schemaName}.accounts (
+                    id bigint not null primary key default nextval('{schemaName}.accounts_seq'),
+                    client_id bigint not null,
+                    account_number varchar(50) not null unique,
+                    account_balance numeric(22,2) not null default 0,
+                    deleted boolean not null default false
+                )"""
         );
     }
 }

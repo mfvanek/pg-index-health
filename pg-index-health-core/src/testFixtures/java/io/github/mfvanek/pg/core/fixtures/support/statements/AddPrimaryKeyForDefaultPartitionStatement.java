@@ -16,9 +16,9 @@ public class AddPrimaryKeyForDefaultPartitionStatement extends AbstractDbStateme
 
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of(
-            "alter table if exists {schemaName}.custom_entity_reference_with_very_very_very_long_name_1_default " +
-                "add primary key (ref_type, ref_value, creation_date, entity_id);"
+        return List.of("""
+            alter table if exists {schemaName}.custom_entity_reference_with_very_very_very_long_name_1_default
+                add primary key (ref_type, ref_value, creation_date, entity_id);"""
         );
     }
 }

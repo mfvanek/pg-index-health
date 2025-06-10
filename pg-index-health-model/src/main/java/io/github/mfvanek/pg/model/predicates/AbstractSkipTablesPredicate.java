@@ -71,8 +71,7 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      */
     @Override
     public boolean test(final DbObject dbObject) {
-        if (!fullyQualifiedTableNamesToSkip.isEmpty() && dbObject instanceof TableNameAware) {
-            final TableNameAware t = (TableNameAware) dbObject;
+        if (!fullyQualifiedTableNamesToSkip.isEmpty() && dbObject instanceof final TableNameAware t) {
             return !fullyQualifiedTableNamesToSkip.contains(t.getTableName().toLowerCase(Locale.ROOT));
         }
         return true;

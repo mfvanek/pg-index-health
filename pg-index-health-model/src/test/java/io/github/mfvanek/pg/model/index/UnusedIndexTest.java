@@ -37,14 +37,14 @@ class UnusedIndexTest {
     void testToString() {
         final PgContext ctx = PgContext.of("tst");
         assertThat(UnusedIndex.of("t", "i", 1L, 2L))
-            .hasToString("UnusedIndex{tableName='t', indexName='i', " + "indexSizeInBytes=1, indexScans=2}");
+            .hasToString("UnusedIndex{tableName='t', indexName='i', indexSizeInBytes=1, indexScans=2}");
         assertThat(UnusedIndex.of(ctx, "t", "i", 1L, 2L))
-            .hasToString("UnusedIndex{tableName='tst.t', indexName='tst.i', " + "indexSizeInBytes=1, indexScans=2}");
+            .hasToString("UnusedIndex{tableName='tst.t', indexName='tst.i', indexSizeInBytes=1, indexScans=2}");
 
         assertThat(UnusedIndex.of("t", "i"))
-            .hasToString("UnusedIndex{tableName='t', indexName='i', " + "indexSizeInBytes=0, indexScans=0}");
+            .hasToString("UnusedIndex{tableName='t', indexName='i', indexSizeInBytes=0, indexScans=0}");
         assertThat(UnusedIndex.of(ctx, "t", "i"))
-            .hasToString("UnusedIndex{tableName='tst.t', indexName='tst.i', " + "indexSizeInBytes=0, indexScans=0}");
+            .hasToString("UnusedIndex{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, indexScans=0}");
     }
 
     @Test
@@ -105,7 +105,7 @@ class UnusedIndexTest {
             .verify();
     }
 
-    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings("ConstantConditions")
     @Test
     void compareToTest() {
         final UnusedIndex first = UnusedIndex.of("t1", "i1", 1L, 2L);

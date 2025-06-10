@@ -142,7 +142,7 @@ class IndexWithColumnsTest {
             .verify();
     }
 
-    @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings("ConstantConditions")
     @Test
     void compareToTest() {
         final Column column = Column.ofNullable("t1", "f");

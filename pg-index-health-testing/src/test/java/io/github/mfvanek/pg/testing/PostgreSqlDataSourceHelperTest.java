@@ -41,7 +41,7 @@ class PostgreSqlDataSourceHelperTest {
                 .isNotNull()
                 .satisfies(ds -> {
                     assertThat(ds.getUrl()).isEqualTo("test url");
-                    assertThat(ds.getUsername()).isEqualTo("some user name");
+                    assertThat(ds.getUserName()).isEqualTo("some user name");
                     assertThat(ds.getPassword()).isEqualTo("test password");
                     assertThat(ds.getDriverClassName()).isEqualTo("some postgresql driver");
                 });

@@ -16,8 +16,10 @@ public class AddDuplicatedForeignKeysStatement extends AbstractDbStatement {
 
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("alter table if exists {schemaName}.accounts " +
-            "add constraint c_accounts_fk_client_id_duplicate foreign key (client_id) references {schemaName}.clients (id);"
+        return List.of("""
+            alter table if exists {schemaName}.accounts
+                add constraint c_accounts_fk_client_id_duplicate
+                foreign key (client_id) references {schemaName}.clients (id);"""
         );
     }
 }
