@@ -19,11 +19,11 @@ public class CreateForeignKeyOnNullableColumnStatement extends AbstractDbStateme
         return List.of(
             """
                 alter table if exists {schemaName}.bad_clients
-                    add constraint c_bad_clients_fk_real_client_id \
+                    add constraint c_bad_clients_fk_real_client_id
                     foreign key (real_client_id) references {schemaName}.clients (id);""",
             """
                 alter table if exists {schemaName}.bad_clients
-                    add constraint c_bad_clients_fk_email_phone \
+                    add constraint c_bad_clients_fk_email_phone
                     foreign key (email, phone) references {schemaName}.clients (email, phone);"""
         );
     }

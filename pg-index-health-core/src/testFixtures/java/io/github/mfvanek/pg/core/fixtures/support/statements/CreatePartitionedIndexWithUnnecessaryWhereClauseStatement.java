@@ -23,7 +23,7 @@ public class CreatePartitionedIndexWithUnnecessaryWhereClauseStatement extends A
                     second_ref  bigint not null
                 ) partition by range (second_ref);""",
             """
-                create index if not exists "idx_second_ref_first-ref" \
+                create index if not exists "idx_second_ref_first-ref"
                     on {schemaName}.one_partitioned (second_ref, "first-ref")
                     where "first-ref" is not null;""",
             "create table if not exists {schemaName}.one_default partition of {schemaName}.one_partitioned default;"

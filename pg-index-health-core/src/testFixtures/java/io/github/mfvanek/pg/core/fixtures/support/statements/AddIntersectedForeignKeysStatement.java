@@ -27,11 +27,11 @@ public class AddIntersectedForeignKeysStatement extends AbstractDbStatement {
                 )""",
             """
                 alter table if exists {schemaName}.client_preferences
-                    add constraint c_client_preferences_email_phone_fk \
+                    add constraint c_client_preferences_email_phone_fk
                     foreign key (email, phone) references {schemaName}.clients (email, phone)""",
             """
                 alter table if exists {schemaName}.client_preferences
-                    add constraint c_client_preferences_phone_email_fk \
+                    add constraint c_client_preferences_phone_email_fk
                     foreign key (phone, email) references {schemaName}.clients (phone, email)"""
         );
     }

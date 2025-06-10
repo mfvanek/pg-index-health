@@ -18,7 +18,7 @@ public class AddDuplicatedForeignKeysToPartitionedTableStatement extends Abstrac
     protected List<String> getSqlToExecute() {
         return List.of("""
             alter table if exists {schemaName}.t1
-                add constraint t1_ref_type_fk_duplicate \
+                add constraint t1_ref_type_fk_duplicate
                 foreign key (ref_type) references {schemaName}.dict(ref_type);"""
         );
     }

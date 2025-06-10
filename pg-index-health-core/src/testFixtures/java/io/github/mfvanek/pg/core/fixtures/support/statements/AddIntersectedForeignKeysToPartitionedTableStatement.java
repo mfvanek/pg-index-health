@@ -21,7 +21,7 @@ public class AddIntersectedForeignKeysToPartitionedTableStatement extends Abstra
             "create unique index if not exists idx_dict_ref_type_ref_value on {schemaName}.dict (ref_type, ref_value);",
             """
                 alter table if exists {schemaName}.t1
-                    add constraint t1_ref_type_ref_value_fk \
+                    add constraint t1_ref_type_ref_value_fk
                     foreign key (ref_type, ref_value) references {schemaName}.dict(ref_type, ref_value);"""
         );
     }
