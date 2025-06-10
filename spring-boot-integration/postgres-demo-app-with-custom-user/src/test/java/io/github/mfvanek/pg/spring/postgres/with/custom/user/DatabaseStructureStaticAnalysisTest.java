@@ -69,25 +69,19 @@ class DatabaseStructureStaticAnalysisTest {
                     .as(c.getDiagnostic().name());
 
                 switch (c.getDiagnostic()) {
-                    case TABLES_NOT_LINKED_TO_OTHERS:
-                        listAssert
-                            .hasSize(1)
-                            .asInstanceOf(list(Table.class))
-                            .containsExactly(Table.of(ctx, "warehouse"));
-                        break;
+                    case TABLES_NOT_LINKED_TO_OTHERS -> listAssert
+                        .hasSize(1)
+                        .asInstanceOf(list(Table.class))
+                        .containsExactly(Table.of(ctx, "warehouse"));
 
-                    case PRIMARY_KEYS_WITH_SERIAL_TYPES:
-                        listAssert
-                            .hasSize(1)
-                            .asInstanceOf(list(ColumnWithSerialType.class))
-                            .containsExactly(
-                                ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "warehouse", "id"), SerialType.BIG_SERIAL, "warehouse_id_seq")
-                            );
-                        break;
+                    case PRIMARY_KEYS_WITH_SERIAL_TYPES -> listAssert
+                        .hasSize(1)
+                        .asInstanceOf(list(ColumnWithSerialType.class))
+                        .containsExactly(
+                            ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "warehouse", "id"), SerialType.BIG_SERIAL, "warehouse_id_seq")
+                        );
 
-                    default:
-                        listAssert.isEmpty();
-                        break;
+                    default -> listAssert.isEmpty();
                 }
             });
     }
@@ -105,28 +99,21 @@ class DatabaseStructureStaticAnalysisTest {
                     .as(c.getDiagnostic().name());
 
                 switch (c.getDiagnostic()) {
-                    case TABLES_WITHOUT_DESCRIPTION:
-                    case TABLES_NOT_LINKED_TO_OTHERS:
-                        listAssert.hasSize(1)
-                            .asInstanceOf(list(Table.class))
-                            .containsExactly(Table.of(ctx, "additional_table"));
-                        break;
+                    case TABLES_WITHOUT_DESCRIPTION, TABLES_NOT_LINKED_TO_OTHERS -> listAssert
+                        .hasSize(1)
+                        .asInstanceOf(list(Table.class))
+                        .containsExactly(Table.of(ctx, "additional_table"));
 
-                    case COLUMNS_WITHOUT_DESCRIPTION:
-                        listAssert.hasSize(2);
-                        break;
+                    case COLUMNS_WITHOUT_DESCRIPTION -> listAssert.hasSize(2);
 
-                    case PRIMARY_KEYS_WITH_SERIAL_TYPES:
-                        listAssert.hasSize(1)
-                            .asInstanceOf(list(ColumnWithSerialType.class))
-                            .containsExactly(
-                                ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "additional_table", "id"), SerialType.BIG_SERIAL, "additional_table_id_seq")
-                            );
-                        break;
+                    case PRIMARY_KEYS_WITH_SERIAL_TYPES -> listAssert
+                        .hasSize(1)
+                        .asInstanceOf(list(ColumnWithSerialType.class))
+                        .containsExactly(
+                            ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "additional_table", "id"), SerialType.BIG_SERIAL, "additional_table_id_seq")
+                        );
 
-                    default:
-                        listAssert.isEmpty();
-                        break;
+                    default -> listAssert.isEmpty();
                 }
             });
     }
