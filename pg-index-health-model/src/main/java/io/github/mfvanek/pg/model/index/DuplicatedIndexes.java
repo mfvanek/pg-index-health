@@ -21,7 +21,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * An immutable representation of duplicated indexes in a database.
@@ -45,13 +44,13 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
         Validators.validateThatTableIsTheSame(defensiveCopy);
         this.indexes = defensiveCopy.stream()
             .sorted(INDEX_WITH_SIZE_COMPARATOR)
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
         this.totalSize = this.indexes.stream()
             .mapToLong(Index::getIndexSizeInBytes)
             .sum();
         this.indexesNames = this.indexes.stream()
             .map(Index::getIndexName)
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 
     /**
@@ -172,7 +171,7 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
             Validators.notBlank(duplicatedAsString, "duplicatedAsString"));
         final List<Index> duplicatedIndexes = indexesWithNameAndSize.stream()
             .map(e -> Index.of(tableName, e.getKey(), e.getValue()))
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
         return new DuplicatedIndexes(duplicatedIndexes);
     }
 

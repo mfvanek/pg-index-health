@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.validation.Validators;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public final class ColumnsDataParser {
 
@@ -42,7 +41,7 @@ public final class ColumnsDataParser {
         }
         return Arrays.stream(rawColumns)
             .map(c -> toColumn(tableName, c))
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 
     private static Column toColumn(final String tableName, final String rawColumnInfo) {

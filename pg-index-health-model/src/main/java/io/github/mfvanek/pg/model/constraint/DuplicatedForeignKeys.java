@@ -19,7 +19,6 @@ import io.github.mfvanek.pg.model.validation.Validators;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * An immutable representation of duplicated foreign keys in a database.
@@ -39,7 +38,7 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
         this.foreignKeys = defensiveCopy;
         this.foreignKeysNames = this.foreignKeys.stream()
             .map(ForeignKey::getConstraintName)
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 
     /**
