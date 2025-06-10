@@ -19,7 +19,6 @@ import io.github.mfvanek.pg.model.dbobject.DbObject;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * An abstract check on database structure.
@@ -73,7 +72,7 @@ public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAw
         return pgContexts.stream()
             .map(ctx -> check(ctx, exclusionsFilter))
             .flatMap(List::stream)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     /**

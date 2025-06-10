@@ -25,7 +25,6 @@ import java.sql.ResultSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * An abstract class for all database checks performed on a specific host.
@@ -95,7 +94,7 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
     public final List<T> check(final PgContext pgContext, final Predicate<? super T> exclusionsFilter) {
         return doCheck(pgContext).stream()
             .filter(exclusionsFilter)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     /**
