@@ -18,7 +18,7 @@ import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
  * @author Ivan Vakhrushev
  * @since 0.6.2
  */
-public class ColumnWithSerialTypeMigrationGenerator extends AbstractDbMigrationGenerator<ColumnWithSerialType> {
+public final class ColumnWithSerialTypeMigrationGenerator extends AbstractDbMigrationGenerator<ColumnWithSerialType> {
 
     private final DropDefaultValueGenerator dropDefaultValueGenerator;
     private final DropSequenceGenerator dropSequenceGenerator;
