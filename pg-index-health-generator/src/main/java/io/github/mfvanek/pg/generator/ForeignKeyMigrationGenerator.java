@@ -18,7 +18,7 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
  * @author Ivan Vakhrushev
  * @since 0.5.0
  */
-public class ForeignKeyMigrationGenerator extends AbstractDbMigrationGenerator<ForeignKey> {
+public final class ForeignKeyMigrationGenerator extends AbstractDbMigrationGenerator<ForeignKey> {
 
     private final PgIndexOnForeignKeyGenerator generator;
 

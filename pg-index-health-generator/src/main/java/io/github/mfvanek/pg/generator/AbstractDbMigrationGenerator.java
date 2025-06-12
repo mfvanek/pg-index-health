@@ -12,9 +12,10 @@ package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Base class for all migration generators.
@@ -41,11 +42,11 @@ abstract class AbstractDbMigrationGenerator<T extends TableNameAware> implements
     public final List<String> generate(final List<T> rows) {
         Objects.requireNonNull(rows, "rows cannot be null");
 
-        final List<String> migrations = new ArrayList<>(rows.size());
+        final Set<String> migrations = new LinkedHashSet<>(rows.size());
         for (final T row : rows) {
             migrations.add(generate(row));
         }
-        return migrations;
+        return List.copyOf(migrations);
     }
 
     /**
