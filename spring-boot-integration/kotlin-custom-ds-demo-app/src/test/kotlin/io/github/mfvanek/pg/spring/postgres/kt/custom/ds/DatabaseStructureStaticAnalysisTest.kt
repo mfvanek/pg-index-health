@@ -43,10 +43,9 @@ internal class DatabaseStructureStaticAnalysisTest {
                     .`as`(check.diagnostic.name)
 
                 when (check.diagnostic) {
-                    Diagnostic.TABLES_NOT_LINKED_TO_OTHERS ->
-                        listAssert
-                            .hasSize(1)
-                            .containsExactly(Table.of("warehouse"))
+                    Diagnostic.TABLES_NOT_LINKED_TO_OTHERS -> listAssert
+                        .hasSize(1)
+                        .containsExactly(Table.of("warehouse"))
 
                     else -> listAssert.isEmpty()
                 }

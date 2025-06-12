@@ -104,13 +104,19 @@ class DatabaseStructureStaticAnalysisTest {
                         .asInstanceOf(list(Table.class))
                         .containsExactly(Table.of(ctx, "additional_table"));
 
-                    case COLUMNS_WITHOUT_DESCRIPTION -> listAssert.hasSize(2);
+                    case COLUMNS_WITHOUT_DESCRIPTION -> listAssert
+                        .hasSize(2)
+                        .asInstanceOf(list(Column.class))
+                        .containsExactly(
+                            Column.ofNotNull(ctx, "additional_table", "id"),
+                            Column.ofNotNull(ctx, "additional_table", "name")
+                        );
 
                     case PRIMARY_KEYS_WITH_SERIAL_TYPES -> listAssert
                         .hasSize(1)
                         .asInstanceOf(list(ColumnWithSerialType.class))
                         .containsExactly(
-                            ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "additional_table", "id"), SerialType.BIG_SERIAL, "additional_table_id_seq")
+                            ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "additional_table", "id"), "additional_table_id_seq")
                         );
 
                     default -> listAssert.isEmpty();
