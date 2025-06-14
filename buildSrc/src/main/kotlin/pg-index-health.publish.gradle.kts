@@ -8,66 +8,41 @@
  * Licensed under the Apache License 2.0
  */
 
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
-    id("maven-publish")
+    id("com.vanniktech.maven.publish")
     id("signing")
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            suppressPomMetadataWarningsFor("testFixturesApiElements")
-            suppressPomMetadataWarningsFor("testFixturesRuntimeElements")
-            versionMapping {
-                usage("java-api") {
-                    fromResolutionOf("runtimeClasspath")
-                }
-                usage("java-runtime") {
-                    fromResolutionResult()
-                }
-            }
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.S01)
+    //publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
 
-            pom {
-                name.set(project.name)
-                description.set(project.provider(project::getDescription))
-                url.set("https://github.com/mfvanek/pg-index-health")
-                licenses {
-                    license {
-                        name.set("Apache License Version 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0")
-                    }
-                }
-
-                developers {
-                    developer {
-                        id.set("mfvanek")
-                        name.set("Ivan Vakhrushev")
-                        email.set("mfvanek@gmail.com")
-                    }
-                }
-
-                scm {
-                    connection.set("scm:git:https://github.com/mfvanek/pg-index-health.git")
-                    developerConnection.set("scm:git@github.com:mfvanek/pg-index-health.git")
-                    url.set("https://github.com/mfvanek/pg-index-health")
-                }
+    pom {
+        name.set(project.name)
+        description.set(project.provider(project::getDescription))
+        inceptionYear.set("2019")
+        url.set("https://github.com/mfvanek/pg-index-health")
+        licenses {
+            license {
+                name.set("Apache License Version 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0")
+                distribution.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
             }
         }
-    }
-
-    repositories {
-        maven {
-            val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-            val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots")
-            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-
-            val sonatypeUsername: String by project
-            val sonatypePassword: String by project
-            credentials {
-                username = sonatypeUsername
-                password = sonatypePassword
+        developers {
+            developer {
+                id.set("mfvanek")
+                name.set("Ivan Vakhrushev")
+                email.set("mfvanek@gmail.com")
             }
+        }
+        scm {
+            connection.set("scm:git:https://github.com/mfvanek/pg-index-health.git")
+            developerConnection.set("scm:git@github.com:mfvanek/pg-index-health.git")
+            url.set("https://github.com/mfvanek/pg-index-health")
         }
     }
 }
@@ -75,6 +50,6 @@ publishing {
 signing {
     if (!version.toString().endsWith("SNAPSHOT")) {
         useGpgCmd()
-        sign(publishing.publications["mavenJava"])
+        sign(publishing.publications)
     }
 }

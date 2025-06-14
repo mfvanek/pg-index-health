@@ -1,3 +1,6 @@
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
 /*
  * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
  * https://github.com/mfvanek/pg-index-health
@@ -14,4 +17,13 @@ plugins {
     id("pg-index-health.java-conventions")
     id("pg-index-health.forbidden-apis")
     id("pg-index-health.publish")
+}
+
+mavenPublishing {
+    configure(
+        JavaLibrary(
+            javadocJar = JavadocJar.Javadoc(),
+            sourcesJar = true,
+        )
+    )
 }
