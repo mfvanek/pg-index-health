@@ -16,8 +16,7 @@ plugins {
 }
 
 mavenPublishing {
-    publishToMavenCentral(SonatypeHost.S01)
-    //publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral(SonatypeHost.DEFAULT)
     signAllPublications()
 
     pom {
