@@ -10,12 +10,12 @@ forbiddenapis = "3.9"
 
 [libraries]
 jspecify = "org.jspecify:jspecify:1.0.0"
-postgresql = "org.postgresql:postgresql:42.7.6"
+postgresql = "org.postgresql:postgresql:42.7.7"
 slf4j-simple = "org.slf4j:slf4j-simple:2.0.17" # to be compatible with Spring Boot 3.3.X
 apache-commons-dbcp2 = "org.apache.commons:commons-dbcp2:2.13.0"
 awaitility = "org.awaitility:awaitility:4.3.0"
 apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commons-lang3" }
-equalsverifier = "nl.jqno.equalsverifier:equalsverifier:4.0.1"
+equalsverifier = "nl.jqno.equalsverifier:equalsverifier:4.0.2"
 spring-boot-starter-root = { group = "org.springframework.boot", name = "spring-boot-starter", version.ref = "spring-boot" }
 spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "spring-boot" }
 spring-boot-autoconfigure-processor = { group = "org.springframework.boot", name = "spring-boot-autoconfigure-processor", version.ref = "spring-boot" }

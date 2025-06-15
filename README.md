@@ -139,10 +139,9 @@ Using Maven:
 
 ## How to use
 
-There are three main scenarios of using **pg-index-health** in your projects:
-* unit\functional testing (see **standard test** in section below);
-* collecting indexes health data and monitoring bloat;
-* analysis of database configuration.
+There are two main scenarios of using **pg-index-health** in your projects:
+* unit\functional testing (see **standard test** in section below) locally and in CI for compliance of the database structure with best practices;
+* collecting indexes, tables and sequences health data and bloat monitoring in runtime on production.
 
 All these cases are covered with examples in the [pg-index-health-demo](https://github.com/mfvanek/pg-index-health-demo) project.
 

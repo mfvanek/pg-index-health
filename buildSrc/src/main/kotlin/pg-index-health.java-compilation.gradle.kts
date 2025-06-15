@@ -45,8 +45,6 @@ java {
     // Don't forget about Kotlin app
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
-    withJavadocJar()
-    withSourcesJar()
 }
 
 tasks {
