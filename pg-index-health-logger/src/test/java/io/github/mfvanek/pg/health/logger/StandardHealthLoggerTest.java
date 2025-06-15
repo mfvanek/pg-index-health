@@ -53,7 +53,8 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
         .withBadlyNamedObjects()
         .withVarcharInsteadOfUuid()
         .withUnnecessaryWhereClause()
-        .withNaturalKeys();
+        .withNaturalKeys()
+        .withMoneyColumn();
 
     private final HealthLogger healthLogger = new StandardHealthLogger(
         getConnectionCredentials(), new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()), DatabaseChecksOnCluster::new);
@@ -115,11 +116,12 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "foreign_keys_with_unmatched_column_type:2",
                         "tables_with_zero_or_one_column:8",
                         "objects_not_following_naming_convention:18",
-                        "columns_not_following_naming_convention:6",
+                        "columns_not_following_naming_convention:7",
                         "primary_keys_with_varchar:3",
                         "columns_with_fixed_length_varchar:17",
                         "indexes_with_unnecessary_where_clause:2",
-                        "primary_keys_that_most_likely_natural_keys:6"
+                        "primary_keys_that_most_likely_natural_keys:6",
+                        "columns_with_money_type:1"
                     );
             }
         );

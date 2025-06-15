@@ -24,6 +24,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForei
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddInvalidForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAccountsAndClientsStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddMoneyColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddNotValidConstraintToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddPrimaryKeyForDefaultPartitionStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJsonTypeStatement;
@@ -348,6 +349,10 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withNaturalKeys() {
         return register(139, new CreateTableWithNaturalKeyStatement());
+    }
+
+    public DatabasePopulator withMoneyColumn() {
+        return register(140, new AddMoneyColumnStatement());
     }
 
     public void populate() {

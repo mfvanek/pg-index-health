@@ -22,6 +22,7 @@ public class CreatePartitionedTableWithVarcharStatement extends AbstractDbStatem
                     creation_date timestamp not null,
                     ref_type varchar(36) not null,
                     entity_id varchar(36) not null,
+                    account_balance money not null default 0,
                     primary key (creation_date, ref_type, entity_id)
                 ) partition by range (creation_date);""",
             """

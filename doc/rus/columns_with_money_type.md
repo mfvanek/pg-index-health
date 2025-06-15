@@ -36,7 +36,7 @@ create table if not exists demo."bad-money"
 (
     id bigint generated always as identity primary key,
     "amount-bad" money not null,
-    amount numeric(19, 2) null,
+    amount numeric(22, 2) null,
     currency_code text not null
 );
 
@@ -44,7 +44,7 @@ create table if not exists demo."bad-money_partitioned"
 (
     id uuid not null primary key,
     "amount-bad" money not null,
-    amount numeric(19, 2) null,
+    amount numeric(22, 2) null,
     currency_code text not null
 ) partition by hash (id);
 
