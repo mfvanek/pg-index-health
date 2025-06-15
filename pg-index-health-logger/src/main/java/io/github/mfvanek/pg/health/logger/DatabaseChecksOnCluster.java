@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.health.checks.cluster.BtreeIndexesOnArrayColumnsChec
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsNotFollowingNamingConventionCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithFixedLengthVarcharCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithJsonTypeCheckOnCluster;
+import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithMoneyTypeCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithSerialTypesCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithoutDescriptionCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.DuplicatedForeignKeysCheckOnCluster;
@@ -106,7 +107,8 @@ public final class DatabaseChecksOnCluster {
             new PrimaryKeysWithVarcharCheckOnCluster(haPgConnection),
             new ColumnsWithFixedLengthVarcharCheckOnCluster(haPgConnection),
             new IndexesWithUnnecessaryWhereClauseCheckOnCluster(haPgConnection),
-            new PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster(haPgConnection)
+            new PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster(haPgConnection),
+            new ColumnsWithMoneyTypeCheckOnCluster(haPgConnection)
         );
     }
 

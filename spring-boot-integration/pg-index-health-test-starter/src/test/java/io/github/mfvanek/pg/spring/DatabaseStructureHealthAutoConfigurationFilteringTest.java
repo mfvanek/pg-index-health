@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHo
 import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedForeignKeysCheckOnHost;
@@ -136,7 +137,8 @@ class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigur
             PrimaryKeysWithVarcharCheckOnHost.class,
             ColumnsWithFixedLengthVarcharCheckOnHost.class,
             IndexesWithUnnecessaryWhereClauseCheckOnHost.class,
-            PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost.class
+            PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost.class,
+            ColumnsWithMoneyTypeCheckOnHost.class
         );
     }
 }

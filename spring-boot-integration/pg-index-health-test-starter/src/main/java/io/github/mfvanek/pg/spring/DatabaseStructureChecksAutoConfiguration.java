@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHo
 import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedForeignKeysCheckOnHost;
@@ -284,6 +285,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost primaryKeysThatMostLikelyNaturalKeysCheckOnHost(final PgConnection pgConnection) {
         return new PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(ColumnsWithMoneyTypeCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public ColumnsWithMoneyTypeCheckOnHost columnsWithMoneyTypeCheckOnHost(final PgConnection pgConnection) {
+        return new ColumnsWithMoneyTypeCheckOnHost(pgConnection);
     }
 
     @Bean
