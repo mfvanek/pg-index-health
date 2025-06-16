@@ -54,7 +54,8 @@ public enum Diagnostic implements CheckTypeAware {
     PRIMARY_KEYS_WITH_VARCHAR("primary_keys_with_varchar.sql"),
     COLUMNS_WITH_FIXED_LENGTH_VARCHAR("columns_with_fixed_length_varchar.sql"),
     INDEXES_WITH_UNNECESSARY_WHERE_CLAUSE("indexes_with_unnecessary_where_clause.sql"),
-    PRIMARY_KEYS_THAT_MOST_LIKELY_NATURAL_KEYS("primary_keys_that_most_likely_natural_keys.sql");
+    PRIMARY_KEYS_THAT_MOST_LIKELY_NATURAL_KEYS("primary_keys_that_most_likely_natural_keys.sql"),
+    COLUMNS_WITH_MONEY_TYPE("columns_with_money_type.sql");
 
     private final ExecutionTopology executionTopology;
     private final String sqlQueryFileName;
