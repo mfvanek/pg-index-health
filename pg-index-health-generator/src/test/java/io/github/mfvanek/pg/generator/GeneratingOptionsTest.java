@@ -2,8 +2,8 @@
  * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
  * https://github.com/mfvanek/pg-index-health
  *
- * This file is a part of "pg-index-health" - a Java library for
- * analyzing and maintaining indexes health in PostgreSQL databases.
+ * This file is a part of "pg-index-health" - an embeddable schema linter for PostgreSQL
+ * that detects common anti-patterns and promotes best practices.
  *
  * Licensed under the Apache License 2.0
  */
@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.generator;
 
 import org.junit.jupiter.api.Test;
 
-import static io.github.mfvanek.pg.generator.GeneratingOptions.builder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -21,10 +20,10 @@ class GeneratingOptionsTest {
 
     @Test
     void testToString() {
-        assertThat(builder().build())
+        assertThat(GeneratingOptions.builder().build())
             .hasToString("GeneratingOptions{concurrently=true, excludeNulls=true, breakLines=true, indentation=4, uppercaseForKeywords=false, nameWithoutNulls=true, idxPosition=SUFFIX}");
 
-        assertThat(builder()
+        assertThat(GeneratingOptions.builder()
             .normally()
             .includeNulls()
             .doNotBreakLines()
@@ -35,7 +34,7 @@ class GeneratingOptionsTest {
             .build())
             .hasToString("GeneratingOptions{concurrently=false, excludeNulls=false, breakLines=false, indentation=2, uppercaseForKeywords=true, nameWithoutNulls=false, idxPosition=PREFIX}");
 
-        assertThat(builder()
+        assertThat(GeneratingOptions.builder()
             .concurrently()
             .excludeNulls()
             .breakLines()
@@ -49,7 +48,7 @@ class GeneratingOptionsTest {
 
     @Test
     void cannotBuildTwice() {
-        final GeneratingOptions.Builder builder = builder();
+        final GeneratingOptions.Builder builder = GeneratingOptions.builder();
         assertThatCode(builder::build)
             .as("First call")
             .doesNotThrowAnyException();
@@ -66,65 +65,65 @@ class GeneratingOptionsTest {
 
     @Test
     void normallyAndConcurrentlyShouldWork() {
-        assertThat(builder().build().isConcurrently())
+        assertThat(GeneratingOptions.builder().build().isConcurrently())
             .isTrue();
-        assertThat(builder().normally().build().isConcurrently())
+        assertThat(GeneratingOptions.builder().normally().build().isConcurrently())
             .isFalse();
-        assertThat(builder().concurrently().build().isConcurrently())
+        assertThat(GeneratingOptions.builder().concurrently().build().isConcurrently())
             .isTrue();
     }
 
     @Test
     void includeNullsAndExcludeNullsShouldWork() {
-        assertThat(builder().build().isExcludeNulls())
+        assertThat(GeneratingOptions.builder().build().isExcludeNulls())
             .isTrue();
-        assertThat(builder().includeNulls().build().isExcludeNulls())
+        assertThat(GeneratingOptions.builder().includeNulls().build().isExcludeNulls())
             .isFalse();
-        assertThat(builder().excludeNulls().build().isExcludeNulls())
+        assertThat(GeneratingOptions.builder().excludeNulls().build().isExcludeNulls())
             .isTrue();
     }
 
     @Test
     void breakLinesShouldWork() {
-        assertThat(builder().build().isBreakLines())
+        assertThat(GeneratingOptions.builder().build().isBreakLines())
             .isTrue();
-        assertThat(builder().doNotBreakLines().build().isBreakLines())
+        assertThat(GeneratingOptions.builder().doNotBreakLines().build().isBreakLines())
             .isFalse();
-        assertThat(builder().breakLines().build().isBreakLines())
+        assertThat(GeneratingOptions.builder().breakLines().build().isBreakLines())
             .isTrue();
     }
 
     @Test
     void withIndentationShouldWork() {
-        assertThat(builder().build().getIndentation())
+        assertThat(GeneratingOptions.builder().build().getIndentation())
             .isEqualTo(4);
-        assertThat(builder().withIndentation(2).build().getIndentation())
+        assertThat(GeneratingOptions.builder().withIndentation(2).build().getIndentation())
             .isEqualTo(2);
     }
 
     @Test
     void caseForKeywordsShouldWork() {
-        assertThat(builder().build().isUppercaseForKeywords())
+        assertThat(GeneratingOptions.builder().build().isUppercaseForKeywords())
             .isFalse();
-        assertThat(builder().uppercaseForKeywords().build().isUppercaseForKeywords())
+        assertThat(GeneratingOptions.builder().uppercaseForKeywords().build().isUppercaseForKeywords())
             .isTrue();
-        assertThat(builder().lowercaseForKeywords().build().isUppercaseForKeywords())
+        assertThat(GeneratingOptions.builder().lowercaseForKeywords().build().isUppercaseForKeywords())
             .isFalse();
     }
 
     @Test
     void nameWithoutNullsShouldWork() {
-        assertThat(builder().build().isNameWithoutNulls())
+        assertThat(GeneratingOptions.builder().build().isNameWithoutNulls())
             .isTrue();
-        assertThat(builder().doNotNameWithoutNulls().build().isNameWithoutNulls())
+        assertThat(GeneratingOptions.builder().doNotNameWithoutNulls().build().isNameWithoutNulls())
             .isFalse();
-        assertThat(builder().nameWithoutNulls().build().isNameWithoutNulls())
+        assertThat(GeneratingOptions.builder().nameWithoutNulls().build().isNameWithoutNulls())
             .isTrue();
     }
 
     @Test
     void withIdxPositionShouldWork() {
-        assertThat(builder().build())
+        assertThat(GeneratingOptions.builder().build())
             .satisfies(o -> {
                 assertThat(o.getIdxPosition())
                     .isEqualTo(IdxPosition.SUFFIX);
@@ -132,7 +131,7 @@ class GeneratingOptionsTest {
                     .isTrue();
             });
 
-        assertThat(builder().withIdxPosition(IdxPosition.NONE).build())
+        assertThat(GeneratingOptions.builder().withIdxPosition(IdxPosition.NONE).build())
             .satisfies(o -> {
                 assertThat(o.getIdxPosition())
                     .isEqualTo(IdxPosition.NONE);
@@ -143,7 +142,7 @@ class GeneratingOptionsTest {
 
     @Test
     void withInvalidArguments() {
-        final GeneratingOptions.Builder builder = builder();
+        final GeneratingOptions.Builder builder = GeneratingOptions.builder();
 
         assertThatThrownBy(() -> builder.withIndentation(-1))
             .isInstanceOf(IllegalArgumentException.class)
@@ -160,11 +159,11 @@ class GeneratingOptionsTest {
 
     @Test
     void withValidIndentation() {
-        assertThat(builder().withIndentation(0).build())
+        assertThat(GeneratingOptions.builder().withIndentation(0).build())
             .isNotNull()
             .satisfies(b -> assertThat(b.getIndentation()).isZero());
 
-        assertThat(builder().withIndentation(8).build())
+        assertThat(GeneratingOptions.builder().withIndentation(8).build())
             .isNotNull()
             .satisfies(b -> assertThat(b.getIndentation()).isEqualTo(8));
     }
