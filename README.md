@@ -1,5 +1,6 @@
 # ![pg-index-health](https://github.com/mfvanek/pg-index-health/blob/master/logo.png "pg-index-health")
-**pg-index-health** is a Java library for analyzing and maintaining indexes and tables health in [PostgreSQL](https://www.postgresql.org/) databases.
+
+**pg-index-health** is an embeddable schema linter for PostgreSQL that detects common anti-patterns and promotes best practices.
 
 [![Java CI](https://github.com/mfvanek/pg-index-health/actions/workflows/tests.yml/badge.svg)](https://github.com/mfvanek/pg-index-health/actions/workflows/tests.yml "Java CI")
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.mfvanek/pg-index-health.svg)](https://search.maven.org/artifact/io.github.mfvanek/pg-index-health/ "Maven Central")
@@ -15,30 +16,17 @@
 
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fmfvanek%2Fpg-index-health%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/mfvanek/pg-index-health/master)
 
-## Supported PostgreSQL versions
+## What is this?
 
-[![PostgreSQL 13](https://img.shields.io/badge/PostgreSQL-13-green.svg)](https://www.postgresql.org/about/news/postgresql-13-released-2077/ "PostgreSQL 13")
-[![PostgreSQL 14](https://img.shields.io/badge/PostgreSQL-14-green.svg)](https://www.postgresql.org/about/news/postgresql-14-released-2318/ "PostgreSQL 14")
-[![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-green.svg)](https://www.postgresql.org/about/news/postgresql-15-released-2526/ "PostgreSQL 15")
-[![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-green.svg)](https://www.postgresql.org/about/news/postgresql-16-released-2715/ "PostgreSQL 16")
-[![PostgreSQL 17](https://img.shields.io/badge/PostgreSQL-17-green.svg)](https://www.postgresql.org/about/news/postgresql-17-released-2936/ "PostgreSQL 17")
+**pg-index-health** is a Java library designed to analyze PostgreSQL database schemas and help developers build efficient, reliable applications.
 
-### Support for previous versions of PostgreSQL
+It scans database structures to identify common schema-level pitfalls that often go unnoticed until they cause problems in production.
 
-Compatibility with PostgreSQL versions **10**, **11** and **12** is no longer guaranteed, but it is very likely.  
-We focus only on the currently maintained versions of PostgreSQL.  
-For more information please see [PostgreSQL Versioning Policy](https://www.postgresql.org/support/versioning/).
-
-### Supported Java versions
-
-Supports [Java 17](https://www.java.com/en/) and above.
-
-- For **Java 11** compatible version take a look at release [0.15.0](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.15.0) and lower.
-- For **Java 8** compatible version take a look at release [0.7.0](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.7.0) and lower.
+By embedding **pg-index-health** into your CI/CD pipeline, you can proactively catch schema design flaws, enforce consistency, and adhere to PostgreSQL best practices before they impact performance or reliability.
 
 ## Available checks
 
-All checks can be divided into 2 groups:
+All checks can be divided into two groups:
 
 1. Runtime checks (those that make sense to perform only on a production database with real data and statistics).  
    Runtime checks usually [require aggregating data from all nodes in the cluster](https://github.com/mfvanek/pg-index-health/blob/3e9a63cc2a04799f3e97c9bec9b684ababca8db7/pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/common/Diagnostic.java#L162).
@@ -95,7 +83,7 @@ They work with finite database state (after all migrations are applied).
 
 ### Runtime checks
 
-**pg_index_health** utilizes [the Cumulative Statistics System](https://www.postgresql.org/docs/current/monitoring-stats.html) 
+**pg-index-health** utilizes [the Cumulative Statistics System](https://www.postgresql.org/docs/current/monitoring-stats.html) 
 (formerly known as [PostgreSQL's statistics collector](https://www.postgresql.org/docs/14/monitoring-stats.html)).
 
 You can call `pg_stat_reset()` on each host to reset all statistics counters for the current database to zero
@@ -124,19 +112,6 @@ Using Maven:
   <version>0.20.1</version>
 </dependency>
 ```
-
-## Articles and publications
-
-### In English
-
-* [pg-index-health – a static analysis tool for you PostgreSQL database](https://dev.to/mfvanek/pg-index-health-a-static-analysis-tool-for-you-postgresql-database-2no5)
-
-### In Russian
-
-* [pg-index-health – static analysis of the structure of PostgreSQL databases](https://habr.com/ru/articles/871546/)
-* [Index health in PostgreSQL through the eyes of a Java developer](https://habr.com/ru/post/490824/)
-* [DBA: finding useless indexes](https://habr.com/ru/companies/tensor/articles/488104/)
-* [The series of articles "Static analysis of the database structure"](https://habr.com/ru/articles/800121/)
 
 ## How to use
 
@@ -379,6 +354,40 @@ class DatabaseStructureStaticAnalysisTest {
   added support for [Spring Boot 3.0](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#auto-configuration-files)
 * Starting from [0.10.2](https://github.com/mfvanek/pg-index-health-test-starter/releases/tag/v.0.10.2)
   added support for [Spring Boot 3.2](https://github.com/spring-projects/spring-framework/wiki/Upgrading-to-Spring-Framework-6.x#parameter-name-retention)
+
+## Supported PostgreSQL versions
+
+[![PostgreSQL 13](https://img.shields.io/badge/PostgreSQL-13-green.svg)](https://www.postgresql.org/about/news/postgresql-13-released-2077/ "PostgreSQL 13")
+[![PostgreSQL 14](https://img.shields.io/badge/PostgreSQL-14-green.svg)](https://www.postgresql.org/about/news/postgresql-14-released-2318/ "PostgreSQL 14")
+[![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-green.svg)](https://www.postgresql.org/about/news/postgresql-15-released-2526/ "PostgreSQL 15")
+[![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-green.svg)](https://www.postgresql.org/about/news/postgresql-16-released-2715/ "PostgreSQL 16")
+[![PostgreSQL 17](https://img.shields.io/badge/PostgreSQL-17-green.svg)](https://www.postgresql.org/about/news/postgresql-17-released-2936/ "PostgreSQL 17")
+
+### Support for previous versions of PostgreSQL
+
+Compatibility with PostgreSQL versions **10**, **11** and **12** is no longer guaranteed, but it is very likely.  
+We focus only on the currently maintained versions of PostgreSQL.  
+For more information please see [PostgreSQL Versioning Policy](https://www.postgresql.org/support/versioning/).
+
+## Supported Java versions
+
+Supports [Java 17](https://www.java.com/en/) and above.
+
+- For **Java 11** compatible version take a look at release [0.15.0](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.15.0) and lower.
+- For **Java 8** compatible version take a look at release [0.7.0](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.7.0) and lower.
+
+## Articles and publications
+
+### In English
+
+* [pg-index-health – a static analysis tool for you PostgreSQL database](https://dev.to/mfvanek/pg-index-health-a-static-analysis-tool-for-you-postgresql-database-2no5)
+
+### In Russian
+
+* [pg-index-health – static analysis of the structure of PostgreSQL databases](https://habr.com/ru/articles/871546/)
+* [Index health in PostgreSQL through the eyes of a Java developer](https://habr.com/ru/post/490824/)
+* [DBA: finding useless indexes](https://habr.com/ru/companies/tensor/articles/488104/)
+* [The series of articles "Static analysis of the database structure"](https://habr.com/ru/articles/800121/)
 
 ## Questions, issues, feature requests and contributions
 
