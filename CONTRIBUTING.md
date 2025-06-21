@@ -73,7 +73,7 @@ Implement a new class extending [AbstractCheckOnCluster](pg-index-health/src/mai
 
 ### Further steps
 
-1. Update readme and add information about the new check
+1. Update [available_checks.md](doc/available_checks.md) and add information about the new check
 2. Update [Spring Boot starter](spring-boot-integration%2Fpg-index-health-test-starter).
 3. Add sample code to the demo apps ([first](https://github.com/mfvanek/pg-index-health-demo/tree/master/pg-index-health-demo-without-spring), [second](https://github.com/mfvanek/pg-index-health-demo/tree/master/pg-index-health-spring-boot-demo)).
    Use a locally built pg-index-health version and send a draft PR.
