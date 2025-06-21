@@ -386,3 +386,13 @@ class DatabaseStructureStaticAnalysisTest {
 * Contributions are always welcome! Please see [contributing guide](CONTRIBUTING.md) for more details.
 * We utilize [Testcontainers](https://www.testcontainers.org/) for testing **pg-index-health**. 
 So you need to have [Docker](https://www.docker.com/) installed on your machine.
+
+## Similar solutions
+
+- [PostgreSQL Wiki - Don't Do This](https://wiki.postgresql.org/wiki/Don%27t_Do_This) — a short list of common mistakes.
+- [db_verifier](https://github.com/sdblist/db_verifier) — scripts to check the database structure for errors or non-recommended practices.
+- [SchemaCrawler Linter](https://www.schemacrawler.com/lint.html) — a free database schema linter.
+- [Squawk](https://github.com/sbdchd/squawk) — a linter for Postgres migrations.
+- [schemalint](https://github.com/kristiandupont/schemalint) — a Postgres databases schema linter.
+- [index-digest](https://github.com/macbre/index-digest) — a database linter for MySQL and MariaDB.
+- [Azimutt](https://azimutt.app/features/analysis) — a linter for database.
