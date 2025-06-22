@@ -45,14 +45,16 @@ public final class ColumnsDataParser {
     }
 
     private static Column toColumn(final String tableName, final String rawColumnInfo) {
-        final String[] columnInfo = rawColumnInfo.split(",");
-        if (columnInfo.length != 2) {
+        final int lastCommaPosition = rawColumnInfo.lastIndexOf(',');
+        if (lastCommaPosition == -1) {
             throw new IllegalArgumentException("Cannot parse column info from " + rawColumnInfo);
         }
-        final boolean notNullColumn = Boolean.parseBoolean(columnInfo[1].trim());
+        final String nullability = rawColumnInfo.substring(lastCommaPosition + 1).trim();
+        final boolean notNullColumn = Boolean.parseBoolean(nullability);
+        final String columnName = rawColumnInfo.substring(0, lastCommaPosition).trim();
         if (notNullColumn) {
-            return Column.ofNotNull(tableName, columnInfo[0].trim());
+            return Column.ofNotNull(tableName, columnName);
         }
-        return Column.ofNullable(tableName, columnInfo[0].trim());
+        return Column.ofNullable(tableName, columnName);
     }
 }

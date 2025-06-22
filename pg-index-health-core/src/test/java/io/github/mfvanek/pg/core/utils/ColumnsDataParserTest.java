@@ -39,9 +39,9 @@ class ColumnsDataParserTest {
         assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "abracadabra"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Cannot parse column info from abracadabra");
-        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "a, b, c"))
+        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "a; b; c"))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("Cannot parse column info from a, b, c");
+            .hasMessage("Cannot parse column info from a; b; c");
     }
 
     @Test
@@ -73,6 +73,17 @@ class ColumnsDataParserTest {
             .containsExactly(
                 Column.ofNotNull("t", "c1"),
                 Column.ofNullable("t", "c2"))
+            .isUnmodifiable();
+    }
+
+    @Test
+    void shouldWorkWithExpressions() {
+        assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "id,true", "\"date_trunc('day'::text, ts)\",true", "name,false"))
+            .hasSize(3)
+            .containsExactly(
+                Column.ofNotNull("t", "id"),
+                Column.ofNotNull("t", "\"date_trunc('day'::text, ts)\""),
+                Column.ofNullable("t", "name"))
             .isUnmodifiable();
     }
 }
