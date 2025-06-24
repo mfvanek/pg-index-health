@@ -47,9 +47,9 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHostTest extends DatabaseAwareT
                 .executing(ctx)
                 .hasSize(3)
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "t2_composite", "t2_composite_pkey", 0L,
+                    IndexWithColumns.ofColumns(ctx, "t2_composite", "t2_composite_pkey",
                         List.of(Column.ofNotNull(ctx, "t2_composite", "passport_series"), Column.ofNotNull(ctx, "t2_composite", "passport_number"))),
-                    IndexWithColumns.ofColumns(ctx, "t3_composite", "t3_composite_pkey", 0L,
+                    IndexWithColumns.ofColumns(ctx, "t3_composite", "t3_composite_pkey",
                         List.of(Column.ofNotNull(ctx, "t3_composite", "app_id"), Column.ofNotNull(ctx, "t3_composite", "app_number"))),
                     IndexWithColumns.ofNotNull(ctx, "\"times-of-creation\"", "\"times-of-creation_pkey\"", "\"time-of-creation\"")
                 );

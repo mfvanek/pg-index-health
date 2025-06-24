@@ -66,6 +66,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithFixe
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIdentityPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithNaturalKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithTimestampInTheMiddleStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithUniqueSerialColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithoutPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.DbStatement;
@@ -353,6 +354,10 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withMoneyColumn() {
         return register(140, new AddMoneyColumnStatement());
+    }
+
+    public DatabasePopulator withTimestampInTheMiddle() {
+        return register(141, new CreateTableWithTimestampInTheMiddleStatement());
     }
 
     public void populate() {

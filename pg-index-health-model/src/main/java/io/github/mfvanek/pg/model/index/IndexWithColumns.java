@@ -210,6 +210,23 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
     }
 
     /**
+     * Constructs an {@code IndexWithColumns} object with zero size, given columns and context.
+     *
+     * @param pgContext the schema context to enrich table and index name; must be non-null.
+     * @param tableName table name; should be non-blank.
+     * @param indexName index name; should be non-blank.
+     * @param columns   columns in index; must be non-null.
+     * @return {@code IndexWithColumns}
+     * @since 0.20.2
+     */
+    public static IndexWithColumns ofColumns(final PgContext pgContext,
+                                             final String tableName,
+                                             final String indexName,
+                                             final List<Column> columns) {
+        return ofColumns(pgContext, tableName, indexName, 0L, columns);
+    }
+
+    /**
      * Constructs an {@code IndexWithColumns} object with given index and columns.
      *
      * @param index   index; must be non-null.

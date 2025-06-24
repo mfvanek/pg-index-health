@@ -47,7 +47,7 @@ class PrimaryKeysWithVarcharCheckOnHostTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(3)
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "t_link", "t_link_pkey", 0L, List.of(Column.ofNotNull(ctx, "t_link", "id_long"), Column.ofNotNull(ctx, "t_link", "\"id-short\""))),
+                    IndexWithColumns.ofColumns(ctx, "t_link", "t_link_pkey", List.of(Column.ofNotNull(ctx, "t_link", "id_long"), Column.ofNotNull(ctx, "t_link", "\"id-short\""))),
                     IndexWithColumns.ofSingle(ctx, "t_varchar_long", "t_varchar_long_pkey", 0L, Column.ofNotNull(ctx, "t_varchar_long", "id_long")),
                     IndexWithColumns.ofSingle(ctx, "\"t-varchar-short\"", "\"t-varchar-short_pkey\"", 0L, Column.ofNotNull(ctx, "\"t-varchar-short\"", "\"id-short\""))
                 );
@@ -66,7 +66,7 @@ class PrimaryKeysWithVarcharCheckOnHostTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "tp", "tp_pkey", 0L, List.of(
+                    IndexWithColumns.ofColumns(ctx, "tp", "tp_pkey", List.of(
                         Column.ofNotNull(ctx, "tp", "creation_date"),
                         Column.ofNotNull(ctx, "tp", "ref_type"),
                         Column.ofNotNull(ctx, "tp", "entity_id")))

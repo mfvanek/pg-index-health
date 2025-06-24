@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -40,13 +41,41 @@ class IndexesWithTimestampInTheMiddleCheckOnHostTest extends DatabaseAwareTestBa
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void onDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withTimestampInTheMiddle, ctx -> {
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(3)
+                .containsExactly(
+                    IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_expr_first", List.of(
+                        Column.ofNotNull(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\""),
+                        Column.ofNotNull(ctx, "\"t-multi\"", "id"),
+                        Column.ofNullable(ctx, "\"t-multi\"", "name"))),
+                    IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_expr_mid", List.of(
+                        Column.ofNotNull(ctx, "\"t-multi\"", "id"),
+                        Column.ofNotNull(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\""),
+                        Column.ofNullable(ctx, "\"t-multi\"", "name"))),
+                    IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_mid", List.of(
+                        Column.ofNotNull(ctx, "\"t-multi\"", "id"),
+                        Column.ofNullable(ctx, "\"t-multi\"", "ts"),
+                        Column.ofNullable(ctx, "\"t-multi\"", "name")))
+                );
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "\"t-multi\""))
+                .isEmpty();
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "tp", "i_tp_creation_date_entity_id_ref_type", 0L, List.of(
+                    IndexWithColumns.ofColumns(ctx, "tp", "i_tp_creation_date_entity_id_ref_type", List.of(
                         Column.ofNotNull(ctx, "tp", "creation_date"),
                         Column.ofNotNull(ctx, "tp", "entity_id"),
                         Column.ofNotNull(ctx, "tp", "ref_type")
