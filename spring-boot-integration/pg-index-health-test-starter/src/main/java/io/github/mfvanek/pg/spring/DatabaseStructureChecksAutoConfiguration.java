@@ -26,6 +26,7 @@ import io.github.mfvanek.pg.core.checks.host.FunctionsWithoutDescriptionCheckOnH
 import io.github.mfvanek.pg.core.checks.host.IndexesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithBooleanCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithNullValuesCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.IndexesWithTimestampInTheMiddleCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithUnnecessaryWhereClauseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IntersectedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IntersectedIndexesCheckOnHost;
@@ -292,6 +293,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public ColumnsWithMoneyTypeCheckOnHost columnsWithMoneyTypeCheckOnHost(final PgConnection pgConnection) {
         return new ColumnsWithMoneyTypeCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(IndexesWithTimestampInTheMiddleCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public IndexesWithTimestampInTheMiddleCheckOnHost indexesWithTimestampInTheMiddleCheckOnHost(final PgConnection pgConnection) {
+        return new IndexesWithTimestampInTheMiddleCheckOnHost(pgConnection);
     }
 
     @Bean
