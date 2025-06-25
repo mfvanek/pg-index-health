@@ -23,18 +23,12 @@ public class CreateTableWithTimestampInTheMiddleStatement extends AbstractDbStat
                     ts timestamp,
                     name text
                 );""",
-            """
-                create index idx_multi_mid on {schemaName}."t-multi" (id, ts, name);""",
-            """
-                create index idx_multi_end on {schemaName}."t-multi" (id, name, ts);""",
-            """
-                create index idx_multi_none on {schemaName}."t-multi" (id, name);""",
-            """                
-                create index idx_multi_expr_mid on {schemaName}."t-multi" (id, date_trunc('day', ts), name);""",
-            """
-                create index idx_multi_expr_first on {schemaName}."t-multi" (date_trunc('day', ts), id, name);""",
-            """                
-                create unique index idx_unique_ts on {schemaName}."t-multi" (id, ts, id);"""
+            "create index idx_multi_mid on {schemaName}.\"t-multi\" (id, ts, name);",
+            "create index idx_multi_end on {schemaName}.\"t-multi\" (id, name, ts);",
+            "create index idx_multi_none on {schemaName}.\"t-multi\" (id, name);",
+            "create index idx_multi_expr_mid on {schemaName}.\"t-multi\" (id, date_trunc('day', ts), name);",
+            "create index idx_multi_expr_first on {schemaName}.\"t-multi\" (date_trunc('day', ts), id, name);",
+            "create unique index idx_unique_ts on {schemaName}.\"t-multi\" (id, ts, id);"
         );
     }
 }
