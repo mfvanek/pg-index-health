@@ -87,6 +87,8 @@ class IndexWithColumnsTest {
             .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=22, columns=[Column{tableName='tst.t', columnName='f', notNull=false}]}");
         assertThat(IndexWithColumns.ofColumns(ctx, "t", "i", 22L, List.of(column)))
             .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=22, columns=[Column{tableName='tst.t', columnName='f', notNull=false}]}");
+        assertThat(IndexWithColumns.ofColumns(ctx, "t", "i", List.of(column)))
+            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='f', notNull=false}]}");
         assertThat(IndexWithColumns.ofNullable(ctx, "t", "i", "c"))
             .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='c', notNull=false}]}");
         assertThat(IndexWithColumns.ofNotNull(ctx, "t", "i", "c"))

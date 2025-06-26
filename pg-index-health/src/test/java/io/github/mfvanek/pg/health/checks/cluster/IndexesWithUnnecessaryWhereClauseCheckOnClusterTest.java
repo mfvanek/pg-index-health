@@ -47,7 +47,7 @@ class IndexesWithUnnecessaryWhereClauseCheckOnClusterTest extends DatabaseAwareT
                 .hasSize(2)
                 .containsExactly(
                     IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_id_ref", 0L, Column.ofNotNull(ctx, "t1", "id_ref")),
-                    IndexWithColumns.ofColumns(ctx, "t2", "\"idx_t2_first-ref_second_ref\"", 0L, List.of(
+                    IndexWithColumns.ofColumns(ctx, "t2", "\"idx_t2_first-ref_second_ref\"", List.of(
                         Column.ofNotNull(ctx, "t2", "second_ref"), Column.ofNotNull(ctx, "t2", "\"first-ref\"")))
                 );
 
@@ -65,7 +65,7 @@ class IndexesWithUnnecessaryWhereClauseCheckOnClusterTest extends DatabaseAwareT
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "one_partitioned", "\"idx_second_ref_first-ref\"", 0L, List.of(
+                    IndexWithColumns.ofColumns(ctx, "one_partitioned", "\"idx_second_ref_first-ref\"", List.of(
                         Column.ofNotNull(ctx, "one_partitioned", "second_ref"), Column.ofNotNull(ctx, "one_partitioned", "\"first-ref\"")))
                 )
         );

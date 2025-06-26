@@ -45,6 +45,7 @@ All checks can be divided into two groups:
 | 31 | Indexes with unnecessary where-clause on not null column                                                                           | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_unnecessary_where_clause.sql)      |
 | 32 | Primary keys that are most likely natural keys                                                                                     | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_that_most_likely_natural_keys.sql) |
 | 33 | Columns with [money](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_money) type                                      | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_money_type.sql)                    |
+| 34 | Indexes with a [timestamp in the middle](https://habr.com/ru/companies/tensor/articles/488104/)                                    | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_timestamp_in_the_middle.sql)       |
 
 ### Raw sql queries to use with another languages
 

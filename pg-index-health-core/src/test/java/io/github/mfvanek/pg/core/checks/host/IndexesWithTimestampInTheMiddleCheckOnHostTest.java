@@ -26,15 +26,15 @@ import java.util.List;
 
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
-class PrimaryKeysWithVarcharCheckOnHostTest extends DatabaseAwareTestBase {
+class IndexesWithTimestampInTheMiddleCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<IndexWithColumns> check = new PrimaryKeysWithVarcharCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<IndexWithColumns> check = new IndexesWithTimestampInTheMiddleCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
             .hasType(IndexWithColumns.class)
-            .hasDiagnostic(Diagnostic.PRIMARY_KEYS_WITH_VARCHAR)
+            .hasDiagnostic(Diagnostic.INDEXES_WITH_TIMESTAMP_IN_THE_MIDDLE)
             .hasHost(getHost())
             .isStatic();
     }
@@ -42,18 +42,27 @@ class PrimaryKeysWithVarcharCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withSerialType().withBadlyNamedObjects().withVarcharInsteadOfUuid(), ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withTimestampInTheMiddle, ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(3)
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "t_link", "t_link_pkey", List.of(Column.ofNotNull(ctx, "t_link", "id_long"), Column.ofNotNull(ctx, "t_link", "\"id-short\""))),
-                    IndexWithColumns.ofSingle(ctx, "t_varchar_long", "t_varchar_long_pkey", 0L, Column.ofNotNull(ctx, "t_varchar_long", "id_long")),
-                    IndexWithColumns.ofSingle(ctx, "\"t-varchar-short\"", "\"t-varchar-short_pkey\"", 0L, Column.ofNotNull(ctx, "\"t-varchar-short\"", "\"id-short\""))
+                    IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_expr_first", List.of(
+                        Column.ofNotNull(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\""),
+                        Column.ofNotNull(ctx, "\"t-multi\"", "id"),
+                        Column.ofNullable(ctx, "\"t-multi\"", "name"))),
+                    IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_expr_mid", List.of(
+                        Column.ofNotNull(ctx, "\"t-multi\"", "id"),
+                        Column.ofNotNull(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\""),
+                        Column.ofNullable(ctx, "\"t-multi\"", "name"))),
+                    IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_mid", List.of(
+                        Column.ofNotNull(ctx, "\"t-multi\"", "id"),
+                        Column.ofNullable(ctx, "\"t-multi\"", "ts"),
+                        Column.ofNullable(ctx, "\"t-multi\"", "name")))
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("t_link", "t_varchar_long", "\"t-varchar-short\"")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "\"t-multi\""))
                 .isEmpty();
         });
     }
@@ -66,10 +75,11 @@ class PrimaryKeysWithVarcharCheckOnHostTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "tp", "tp_pkey", List.of(
+                    IndexWithColumns.ofColumns(ctx, "tp", "i_tp_creation_date_entity_id_ref_type", List.of(
                         Column.ofNotNull(ctx, "tp", "creation_date"),
-                        Column.ofNotNull(ctx, "tp", "ref_type"),
-                        Column.ofNotNull(ctx, "tp", "entity_id")))
+                        Column.ofNotNull(ctx, "tp", "entity_id"),
+                        Column.ofNotNull(ctx, "tp", "ref_type")
+                    ))
                 )
         );
     }

@@ -11,46 +11,10 @@
 package io.github.mfvanek.pg.spring;
 
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
-import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.ColumnsWithSerialTypesCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.ColumnsWithoutDescriptionCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.DuplicatedForeignKeysCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.DuplicatedIndexesCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.ForeignKeysNotCoveredWithIndexCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.ForeignKeysWithUnmatchedColumnTypeCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.FunctionsWithoutDescriptionCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.IndexesWithBloatCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.IndexesWithBooleanCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.IndexesWithNullValuesCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.IndexesWithUnnecessaryWhereClauseCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.IntersectedForeignKeysCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.IntersectedIndexesCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.InvalidIndexesCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.NotValidConstraintsCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.ObjectsNotFollowingNamingConventionCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.PossibleObjectNameOverflowCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithSerialTypesCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithVarcharCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.TablesWithZeroOrOneColumnCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
-import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.FilteredClassLoader;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -101,44 +65,5 @@ class DatabaseStructureHealthAutoConfigurationFilteringTest extends AutoConfigur
                     .filteredOn(beanNamesFilter)
                     .isEmpty();
             });
-    }
-
-    private static List<Class<?>> getCheckTypes() {
-        return List.of(
-            DuplicatedIndexesCheckOnHost.class,
-            ForeignKeysNotCoveredWithIndexCheckOnHost.class,
-            IndexesWithBloatCheckOnHost.class,
-            IndexesWithNullValuesCheckOnHost.class,
-            IntersectedIndexesCheckOnHost.class,
-            InvalidIndexesCheckOnHost.class,
-            TablesWithBloatCheckOnHost.class,
-            TablesWithMissingIndexesCheckOnHost.class,
-            TablesWithoutPrimaryKeyCheckOnHost.class,
-            UnusedIndexesCheckOnHost.class,
-            TablesWithoutDescriptionCheckOnHost.class,
-            ColumnsWithoutDescriptionCheckOnHost.class,
-            ColumnsWithJsonTypeCheckOnHost.class,
-            ColumnsWithSerialTypesCheckOnHost.class,
-            FunctionsWithoutDescriptionCheckOnHost.class,
-            IndexesWithBooleanCheckOnHost.class,
-            NotValidConstraintsCheckOnHost.class,
-            BtreeIndexesOnArrayColumnsCheckOnHost.class,
-            StatisticsMaintenanceOnHost.class,
-            SequenceOverflowCheckOnHost.class,
-            PrimaryKeysWithSerialTypesCheckOnHost.class,
-            DuplicatedForeignKeysCheckOnHost.class,
-            IntersectedForeignKeysCheckOnHost.class,
-            PossibleObjectNameOverflowCheckOnHost.class,
-            TablesNotLinkedToOthersCheckOnHost.class,
-            ForeignKeysWithUnmatchedColumnTypeCheckOnHost.class,
-            TablesWithZeroOrOneColumnCheckOnHost.class,
-            ObjectsNotFollowingNamingConventionCheckOnHost.class,
-            ColumnsNotFollowingNamingConventionCheckOnHost.class,
-            PrimaryKeysWithVarcharCheckOnHost.class,
-            ColumnsWithFixedLengthVarcharCheckOnHost.class,
-            IndexesWithUnnecessaryWhereClauseCheckOnHost.class,
-            PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost.class,
-            ColumnsWithMoneyTypeCheckOnHost.class
-        );
     }
 }
