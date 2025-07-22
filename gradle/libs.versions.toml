@@ -26,7 +26,7 @@ detekt-libraries = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules
 testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
 forbiddenapis = { group = "de.thetaphi", name = "forbiddenapis", version.ref = "forbiddenapis" }
 detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
-liquibase-core = "org.liquibase:liquibase-core:4.32.0"
+liquibase-core = "org.liquibase:liquibase-core:4.33.0"
 liquibase-sessionlock = "com.github.blagerweij:liquibase-sessionlock:1.6.9"
 
 [plugins]
