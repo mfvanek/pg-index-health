@@ -12,7 +12,12 @@ package io.github.mfvanek.pg.model.jackson;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
+import java.io.Serial;
+
 public class PgIndexHealthModelModule extends SimpleModule {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public PgIndexHealthModelModule() {
         super(PgIndexHealthModelModule.class.getSimpleName(), ModuleVersion.VERSION);

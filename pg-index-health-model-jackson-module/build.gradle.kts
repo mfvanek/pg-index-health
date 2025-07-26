@@ -19,6 +19,16 @@ val generateModuleVersion by tasks.registering {
         val versionJava = outputDir.get().file("io/github/mfvanek/pg/model/jackson/ModuleVersion.java").asFile
         versionJava.parentFile.mkdirs()
         versionJava.writeText("""
+            /*
+             * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
+             * https://github.com/mfvanek/pg-index-health
+             *
+             * This file is a part of "pg-index-health" - an embeddable schema linter for PostgreSQL
+             * that detects common anti-patterns and promotes best practices.
+             *
+             * Licensed under the Apache License 2.0
+             */
+
             package io.github.mfvanek.pg.model.jackson;
 
             import com.fasterxml.jackson.core.Version;
