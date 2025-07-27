@@ -16,7 +16,7 @@ val generateModuleVersion by tasks.registering {
     outputs.dir(outputDir)
 
     doLast {
-        val versionJava = outputDir.get().file("io/github/mfvanek/pg/model/jackson/ModuleVersion.java").asFile
+        val versionJava = outputDir.get().file("io/github/mfvanek/pg/model/jackson/generated/ModuleVersion.java").asFile
         versionJava.parentFile.mkdirs()
         versionJava.writeText("""
             /*
@@ -29,10 +29,11 @@ val generateModuleVersion by tasks.registering {
              * Licensed under the Apache License 2.0
              */
 
-            package io.github.mfvanek.pg.model.jackson;
+            package io.github.mfvanek.pg.model.jackson.generated;
 
             import com.fasterxml.jackson.core.Version;
 
+            @io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport
             public final class ModuleVersion {
                 public static final Version VERSION = new Version(${project.version.toString().replace(".", ", ")}, null, "${project.group}", "${project.name}");
             }

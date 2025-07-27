@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.context;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -80,6 +81,49 @@ class PgContextTest {
             .hasToString("PgContext{schemaName='public', bloatPercentageThreshold=10.0, remainingPercentageThreshold=10.0}");
         assertThat(PgContext.of("s", 11, 15.0))
             .hasToString("PgContext{schemaName='s', bloatPercentageThreshold=11.0, remainingPercentageThreshold=15.0}");
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testEqualsAndHashCode() {
+        final PgContext first = PgContext.of("s", 99.0, 99.0);
+        final PgContext theSame = PgContext.of("s", 99.0, 99.0);
+        final PgContext second = PgContext.of("d", 99.0, 99.0);
+        final PgContext third = PgContext.of("s", 10.0, 99.0);
+        final PgContext forth = PgContext.of("s", 99.0, 10.0);
+
+        assertThat(first.equals(null)).isFalse();
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertThat(first.equals(Integer.MAX_VALUE)).isFalse();
+
+        // self
+        assertThat(first)
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
+
+        // the same
+        assertThat(theSame)
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
+
+        // others
+        assertThat(second)
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
+
+        assertThat(third)
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
+
+        assertThat(forth)
+            .isNotEqualTo(first)
+            .doesNotHaveSameHashCodeAs(first);
+    }
+
+    @Test
+    void equalsHashCodeShouldAdhereContracts() {
+        EqualsVerifier.forClass(PgContext.class)
+            .verify();
     }
 
     @Test

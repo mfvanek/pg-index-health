@@ -9,9 +9,9 @@
  */
 
 /**
- * An additional testing classes and interfaces.
+ * Custom annotations.
  */
 @NullMarked
-package io.github.mfvanek.pg.testing.annotations;
+package io.github.mfvanek.pg.model.annotations;
 
 import org.jspecify.annotations.NullMarked;
