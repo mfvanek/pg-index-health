@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.testing;
 
+import io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport;
 import io.github.mfvanek.pg.model.settings.ImportantParam;
 import io.github.mfvanek.pg.model.units.MemoryUnit;
-import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
