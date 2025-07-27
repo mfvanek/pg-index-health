@@ -9,9 +9,9 @@
  */
 
 /**
- * Context-related serializers and deserializers.
+ * Database object-related serializers and deserializers.
  */
 @NullMarked
-package io.github.mfvanek.pg.model.jackson.context;
+package io.github.mfvanek.pg.model.jackson.dbobject;
 
 import org.jspecify.annotations.NullMarked;
