@@ -11,8 +11,8 @@
 package io.github.mfvanek.pg.testing;
 
 import io.github.mfvanek.pg.connection.host.PgUrlParser;
+import io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport;
 import io.github.mfvanek.pg.model.units.MemoryUnit;
-import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.awaitility.Awaitility;
 import org.jspecify.annotations.Nullable;
@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 /**
- * This wrapper provides postgres containers as part of HA cluster with repmgr configured.
+ * This wrapper provides postgres containers as part of the HA cluster with repmgr configured.
  * <p>
  * If master goes down, repmgr will ensure any of the standby nodes takes the primary role.
  *
@@ -132,7 +132,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     }
 
     /**
-     * Stops first container in the cluster and waits for auto failover.
+     * Stops the first container in the cluster and waits for auto failover.
      *
      * @return always true
      */
@@ -226,7 +226,7 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
         }
 
         /**
-         * Creates a PostgresSqlClusterWrapper with a given parameters.
+         * Creates a PostgresSqlClusterWrapper with given parameters.
          *
          * @return PostgreSqlClusterWrapper
          */

@@ -10,12 +10,12 @@
 
 package io.github.mfvanek.pg.testing;
 
-import io.github.mfvanek.pg.testing.annotations.ExcludeFromJacocoGeneratedReport;
+import io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport;
 
 import java.util.Objects;
 
 /**
- * A helper class to obtain PostgreSQL version to run with Testcontainers.
+ * A helper class to obtain a PostgreSQL version to run with Testcontainers.
  *
  * @author Ivan Vakhrushev
  */
