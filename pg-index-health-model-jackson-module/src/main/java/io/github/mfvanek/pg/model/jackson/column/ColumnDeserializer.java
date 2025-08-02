@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.io.IOException;
@@ -34,8 +35,8 @@ public class ColumnDeserializer extends JsonDeserializer<Column> {
     public Column deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final JsonNode node = p.getCodec().readTree(p);
         final String tableName = node.get(TableNameAware.TABLE_NAME_FIELD).asText();
-        final String columnName = node.get(Column.COLUMN_NAME_FIELD).asText();
-        final boolean notNull = node.get(Column.NOT_NULL_FIELD).asBoolean();
+        final String columnName = node.get(ColumnNameAware.COLUMN_NAME_FIELD).asText();
+        final boolean notNull = node.get(ColumnNameAware.NOT_NULL_FIELD).asBoolean();
         if (notNull) {
             return Column.ofNotNull(tableName, columnName);
         }

@@ -26,16 +26,6 @@ import java.util.Objects;
  */
 public final class Column implements DbObject, ColumnNameAware, Comparable<Column> {
 
-    /**
-     * Represents the name of the column field.
-     */
-    public static final String COLUMN_NAME_FIELD = "columnName";
-    /**
-     * Represents a constant for identifying a "not null" column constraint.
-     * It signifies that a column cannot contain null values.
-     */
-    public static final String NOT_NULL_FIELD = "notNull";
-
     private final String tableName;
     private final String columnName;
     private final boolean notNull;
@@ -100,9 +90,9 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      */
     @Override
     public String toString() {
-        return Column.class.getSimpleName() + "{tableName='" + tableName + '\'' +
-            ", columnName='" + columnName + '\'' +
-            ", notNull=" + notNull + '}';
+        return Column.class.getSimpleName() + '{' + TABLE_NAME_FIELD + "='" + tableName + '\'' +
+            ", " + COLUMN_NAME_FIELD + "='" + columnName + '\'' +
+            ", " + NOT_NULL_FIELD + '=' + notNull + '}';
     }
 
     /**

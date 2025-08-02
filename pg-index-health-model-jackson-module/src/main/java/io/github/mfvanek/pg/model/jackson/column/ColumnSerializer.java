@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.io.IOException;
@@ -33,8 +34,8 @@ public class ColumnSerializer extends JsonSerializer<Column> {
     public void serialize(final Column value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
         gen.writeStringField(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
-        gen.writeStringField(Column.COLUMN_NAME_FIELD, value.getColumnName());
-        gen.writeBooleanField(Column.NOT_NULL_FIELD, value.isNotNull());
+        gen.writeStringField(ColumnNameAware.COLUMN_NAME_FIELD, value.getColumnName());
+        gen.writeBooleanField(ColumnNameAware.NOT_NULL_FIELD, value.isNotNull());
         gen.writeEndObject();
     }
 }
