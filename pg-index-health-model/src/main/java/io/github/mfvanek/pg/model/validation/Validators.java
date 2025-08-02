@@ -50,7 +50,7 @@ public final class Validators {
      * @throws IllegalArgumentException if the table name is blank
      */
     public static String tableNameNotBlank(final String tableName) {
-        return notBlank(tableName, "tableName");
+        return notBlank(tableName, TableNameAware.TABLE_NAME_FIELD);
     }
 
     /**

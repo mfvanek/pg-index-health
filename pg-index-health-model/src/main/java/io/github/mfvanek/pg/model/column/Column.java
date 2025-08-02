@@ -18,13 +18,23 @@ import io.github.mfvanek.pg.model.validation.Validators;
 import java.util.Objects;
 
 /**
- * An immutable representation of a column in database table/index/foreign key.
+ * An immutable representation of a column in a database table /index/foreign key.
  * Column always belongs to a table/index/foreign key.
  *
  * @author Ivan Vakhrushev
  * @since 0.5.0
  */
 public final class Column implements DbObject, ColumnNameAware, Comparable<Column> {
+
+    /**
+     * Represents the name of the column field.
+     */
+    public static final String COLUMN_NAME_FIELD = "columnName";
+    /**
+     * Represents a constant for identifying a "not null" column constraint.
+     * It signifies that a column cannot contain null values.
+     */
+    public static final String NOT_NULL_FIELD = "notNull";
 
     private final String tableName;
     private final String columnName;
@@ -35,13 +45,13 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      *
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
-     * @param notNull    whether column is not null or nullable
+     * @param notNull    whether a column is not null or nullable
      */
     private Column(final String tableName,
                    final String columnName,
                    final boolean notNull) {
         this.tableName = Validators.tableNameNotBlank(tableName);
-        this.columnName = Validators.notBlank(columnName, "columnName");
+        this.columnName = Validators.notBlank(columnName, COLUMN_NAME_FIELD);
         this.notNull = notNull;
     }
 

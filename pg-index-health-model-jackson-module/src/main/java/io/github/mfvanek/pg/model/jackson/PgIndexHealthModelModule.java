@@ -11,8 +11,11 @@
 package io.github.mfvanek.pg.model.jackson;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
+import io.github.mfvanek.pg.model.jackson.column.ColumnDeserializer;
+import io.github.mfvanek.pg.model.jackson.column.ColumnSerializer;
 import io.github.mfvanek.pg.model.jackson.context.PgContextDeserializer;
 import io.github.mfvanek.pg.model.jackson.context.PgContextSerializer;
 import io.github.mfvanek.pg.model.jackson.dbobject.AnyObjectDeserializer;
@@ -34,5 +37,8 @@ public class PgIndexHealthModelModule extends SimpleModule {
 
         addSerializer(AnyObject.class, new AnyObjectSerializer());
         addDeserializer(AnyObject.class, new AnyObjectDeserializer());
+
+        addSerializer(Column.class, new ColumnSerializer());
+        addDeserializer(Column.class, new ColumnDeserializer());
     }
 }
