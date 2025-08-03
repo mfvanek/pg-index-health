@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 public interface ConstraintNameAware extends TableNameAware {
 
     /**
+     * A constant representing the field name for the database constraint.
+     */
+    String CONSTRAINT_NAME_FIELD = "constraintName";
+
+    /**
      * Retrieves the name of the database constraint associated with this entity.
      *
      * @return the name of the constraint as a non-null {@link String}.

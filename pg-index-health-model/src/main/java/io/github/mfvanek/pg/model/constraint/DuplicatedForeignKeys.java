@@ -113,7 +113,7 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
     @Override
     public String toString() {
         return DuplicatedForeignKeys.class.getSimpleName() + '{' +
-            "tableName='" + getTableName() + '\'' +
+            TABLE_NAME_FIELD + "='" + getTableName() + '\'' +
             ", foreignKeys=" + foreignKeys +
             '}';
     }
