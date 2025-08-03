@@ -90,7 +90,8 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      */
     @Override
     public String toString() {
-        return Column.class.getSimpleName() + '{' + TABLE_NAME_FIELD + "='" + tableName + '\'' +
+        return Column.class.getSimpleName() + '{' +
+            TABLE_NAME_FIELD + "='" + tableName + '\'' +
             ", " + COLUMN_NAME_FIELD + "='" + columnName + '\'' +
             ", " + NOT_NULL_FIELD + '=' + notNull + '}';
     }
