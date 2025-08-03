@@ -64,7 +64,7 @@ class ColumnWithSerialTypeTest {
                 assertThat(c.getSequenceName())
                     .isEqualTo("s1");
                 assertThat(c.getColumn())
-                    .isEqualTo(Column.ofNotNull("t1", "c1"));
+                    .isEqualTo(Column.ofNullable("t1", "c1"));
             });
     }
 

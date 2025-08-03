@@ -18,7 +18,7 @@ import io.github.mfvanek.pg.model.validation.Validators;
 import java.util.Objects;
 
 /**
- * An immutable representation of a column in a database table /index/foreign key.
+ * An immutable representation of a column in a database table/index/foreign key.
  * Column always belongs to a table/index/foreign key.
  *
  * @author Ivan Vakhrushev
