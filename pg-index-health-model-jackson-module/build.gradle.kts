@@ -9,6 +9,8 @@ dependencies {
     api(project(":pg-index-health-model"))
     implementation(platform(libs.jackson.bom))
     implementation("com.fasterxml.jackson.core:jackson-databind")
+
+    testImplementation("io.github.classgraph:classgraph:4.8.181")
 }
 
 val generateModuleVersion by tasks.registering {
