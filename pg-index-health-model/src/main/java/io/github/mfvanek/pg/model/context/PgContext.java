@@ -34,15 +34,27 @@ public final class PgContext {
      * Default sequence remaining values percentage threshold.
      */
     public static final double DEFAULT_REMAINING_PERCENTAGE_THRESHOLD = 10.0;
+    /**
+     * Represents the name of the schema field used for database operations or context within PostgreSQL schema management.
+     */
+    public static final String SCHEMA_NAME_FIELD = "schemaName";
+    /**
+     * Represents the field name for the bloat percentage threshold setting.
+     */
+    public static final String BLOAT_PERCENTAGE_THRESHOLD_FIELD = "bloatPercentageThreshold";
+    /**
+     * A constant field name used to represent the remaining percentage threshold in a PostgreSQL schema context.
+     */
+    public static final String REMAINING_PERCENTAGE_THRESHOLD_FIELD = "remainingPercentageThreshold";
 
     private final String schemaName;
     private final double bloatPercentageThreshold;
     private final double remainingPercentageThreshold;
 
     private PgContext(final String schemaName, final double bloatPercentageThreshold, final double remainingPercentageThreshold) {
-        this.schemaName = Validators.notBlank(schemaName, "schemaName").toLowerCase(Locale.ROOT);
-        this.bloatPercentageThreshold = Validators.validPercent(bloatPercentageThreshold, "bloatPercentageThreshold");
-        this.remainingPercentageThreshold = Validators.validPercent(remainingPercentageThreshold, "remainingPercentageThreshold");
+        this.schemaName = Validators.notBlank(schemaName, SCHEMA_NAME_FIELD).toLowerCase(Locale.ROOT);
+        this.bloatPercentageThreshold = Validators.validPercent(bloatPercentageThreshold, BLOAT_PERCENTAGE_THRESHOLD_FIELD);
+        this.remainingPercentageThreshold = Validators.validPercent(remainingPercentageThreshold, REMAINING_PERCENTAGE_THRESHOLD_FIELD);
     }
 
     /**
@@ -87,17 +99,43 @@ public final class PgContext {
     @Override
     public String toString() {
         return PgContext.class.getSimpleName() + '{' +
-            "schemaName='" + schemaName + '\'' +
-            ", bloatPercentageThreshold=" + bloatPercentageThreshold +
-            ", remainingPercentageThreshold=" + remainingPercentageThreshold +
+            SCHEMA_NAME_FIELD + "='" + schemaName + '\'' +
+            ", " + BLOAT_PERCENTAGE_THRESHOLD_FIELD + '=' + bloatPercentageThreshold +
+            ", " + REMAINING_PERCENTAGE_THRESHOLD_FIELD + '=' + remainingPercentageThreshold +
             '}';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (!(other instanceof final PgContext that)) {
+            return false;
+        }
+
+        return Objects.equals(schemaName, that.schemaName) &&
+            Double.compare(bloatPercentageThreshold, that.bloatPercentageThreshold) == 0 &&
+            Double.compare(remainingPercentageThreshold, that.remainingPercentageThreshold) == 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(schemaName, bloatPercentageThreshold, remainingPercentageThreshold);
     }
 
     /**
      * Complement the given object (table or index) name with the specified schema name if it is necessary.
      *
      * @param objectName given object name
-     * @return object name with schema for non default schemas
+     * @return object name with schema for non-default schemas
      */
     public String enrichWithSchema(final String objectName) {
         Validators.notBlank(objectName, "objectName");
@@ -134,7 +172,7 @@ public final class PgContext {
     }
 
     /**
-     * Creates {@code PgContext} for given schema with given bloat percentage threshold.
+     * Creates {@code PgContext} for given schema with a given bloat percentage threshold.
      *
      * @param schemaName               given database schema
      * @param bloatPercentageThreshold given bloat percentage threshold; should be greater or equals to zero
@@ -147,7 +185,7 @@ public final class PgContext {
     }
 
     /**
-     * Creates {@code PgContext} for given schema with default bloat percentage threshold.
+     * Creates {@code PgContext} for given schema with a default bloat percentage threshold.
      *
      * @param schemaName given database schema
      * @return {@code PgContext}
@@ -158,7 +196,7 @@ public final class PgContext {
     }
 
     /**
-     * Creates {@code PgContext} for default schema with default bloat percentage threshold.
+     * Creates {@code PgContext} for default schema with a default bloat percentage threshold.
      *
      * @return {@code PgContext}
      * @see PgContext#DEFAULT_BLOAT_PERCENTAGE_THRESHOLD

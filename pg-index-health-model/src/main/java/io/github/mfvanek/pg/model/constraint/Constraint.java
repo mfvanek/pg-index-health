@@ -28,6 +28,11 @@ import java.util.Objects;
  */
 public final class Constraint implements DbObject, ConstraintNameAware {
 
+    /**
+     * A constant representing the field name for the type of constraint.
+     */
+    public static final String CONSTRAINT_TYPE_FIELD = "constraintType";
+
     private final String tableName;
     private final String constraintName;
     private final ConstraintType constraintType;
@@ -44,8 +49,8 @@ public final class Constraint implements DbObject, ConstraintNameAware {
         final String constraintName,
         final ConstraintType constraintType) {
         this.tableName = Validators.tableNameNotBlank(tableName);
-        this.constraintName = Validators.notBlank(constraintName, "constraintName");
-        this.constraintType = Objects.requireNonNull(constraintType, "constraintType cannot be null");
+        this.constraintName = Validators.notBlank(constraintName, CONSTRAINT_NAME_FIELD);
+        this.constraintType = Objects.requireNonNull(constraintType, CONSTRAINT_TYPE_FIELD + " cannot be null");
     }
 
     /**
@@ -119,8 +124,8 @@ public final class Constraint implements DbObject, ConstraintNameAware {
      * @return string representation of the internal fields of this class
      */
     String innerToString() {
-        return "tableName='" + tableName + '\'' +
-            ", constraintName='" + constraintName + '\'';
+        return TABLE_NAME_FIELD + "='" + tableName + '\'' +
+            ", " + CONSTRAINT_NAME_FIELD + "='" + constraintName + '\'';
     }
 
     /**
@@ -130,7 +135,7 @@ public final class Constraint implements DbObject, ConstraintNameAware {
     public String toString() {
         return Constraint.class.getSimpleName() + '{' +
             innerToString() +
-            ", constraintType=" + constraintType +
+            ", " + CONSTRAINT_TYPE_FIELD + '=' + constraintType +
             '}';
     }
 

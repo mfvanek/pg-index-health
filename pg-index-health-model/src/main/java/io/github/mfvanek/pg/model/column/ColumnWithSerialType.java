@@ -28,6 +28,19 @@ import java.util.Objects;
  */
 public final class ColumnWithSerialType implements DbObject, ColumnNameAware, SequenceNameAware, Comparable<ColumnWithSerialType> {
 
+    /**
+     * Represents the constant value for identifying the "column" field.
+     */
+    public static final String COLUMN_FIELD = "column";
+    /**
+     * The field name representing the type of serial column in a database.
+     */
+    public static final String SERIAL_TYPE_FIELD = "serialType";
+    /**
+     * Represents the field name for storing the name of the sequence associated with a serial column in a database object.
+     */
+    public static final String SEQUENCE_NAME_FIELD = "sequenceName";
+
     private final Column column;
     private final SerialType serialType;
     private final String sequenceName;
@@ -35,9 +48,9 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     private ColumnWithSerialType(final Column column,
                                  final SerialType serialType,
                                  final String sequenceName) {
-        this.column = Objects.requireNonNull(column, "column cannot be null");
-        this.serialType = Objects.requireNonNull(serialType, "serialType cannot be null");
-        this.sequenceName = Validators.notBlank(sequenceName, "sequenceName");
+        this.column = Objects.requireNonNull(column, COLUMN_FIELD + " cannot be null");
+        this.serialType = Objects.requireNonNull(serialType, SERIAL_TYPE_FIELD + " cannot be null");
+        this.sequenceName = Validators.notBlank(sequenceName, SEQUENCE_NAME_FIELD);
     }
 
     /**
@@ -90,7 +103,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     }
 
     /**
-     * Retrieves name of the associated sequence.
+     * Retrieves the name of the associated sequence.
      *
      * @return name of the associated sequence
      */
@@ -100,13 +113,25 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     }
 
     /**
+     * Retrieves the associated column.
+     *
+     * @return the column object
+     * @author Ivan Vakhrushev
+     * @since 0.20.3
+     */
+    public Column getColumn() {
+        return column;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public String toString() {
-        return ColumnWithSerialType.class.getSimpleName() + "{column=" + column +
-            ", serialType=" + serialType +
-            ", sequenceName='" + sequenceName + '\'' +
+        return ColumnWithSerialType.class.getSimpleName() + '{' +
+            COLUMN_FIELD + '=' + column +
+            ", " + SERIAL_TYPE_FIELD + '=' + serialType +
+            ", " + SEQUENCE_NAME_FIELD + "='" + sequenceName + '\'' +
             '}';
     }
 
@@ -152,7 +177,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     }
 
     /**
-     * Constructs a {@code ColumnWithSerialType} object of given serial type.
+     * Constructs a {@code ColumnWithSerialType} object of a given serial type.
      *
      * @param column       column; should be non-null.
      * @param serialType   column serial type; should be non-null.
@@ -166,7 +191,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     }
 
     /**
-     * Constructs a {@code ColumnWithSerialType} object of given serial type and context.
+     * Constructs a {@code ColumnWithSerialType} object of a given serial type and context.
      *
      * @param pgContext    the schema context to enrich table name; must be non-null.
      * @param column       column; should be non-null.

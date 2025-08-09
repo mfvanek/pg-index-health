@@ -24,12 +24,15 @@ import java.util.Objects;
  */
 public final class AnyObject implements DbObject, Comparable<AnyObject> {
 
+    public static final String OBJECT_NAME_FIELD = "objectName";
+    public static final String OBJECT_TYPE_FIELD = "objectType";
+
     private final String objectName;
     private final PgObjectType objectType;
 
     private AnyObject(final String objectName, final PgObjectType objectType) {
-        this.objectName = Validators.notBlank(objectName, "objectName");
-        this.objectType = Objects.requireNonNull(objectType, "objectType cannot be null");
+        this.objectName = Validators.notBlank(objectName, OBJECT_NAME_FIELD);
+        this.objectType = Objects.requireNonNull(objectType, OBJECT_TYPE_FIELD + " cannot be null");
     }
 
     /**
@@ -79,8 +82,8 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
     @Override
     public String toString() {
         return AnyObject.class.getSimpleName() + '{' +
-            "objectName='" + objectName + '\'' +
-            ", objectType=" + objectType +
+            OBJECT_NAME_FIELD + "='" + objectName + '\'' +
+            ", " + OBJECT_TYPE_FIELD + '=' + objectType +
             '}';
     }
 
@@ -99,7 +102,7 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
     /**
      * Constructs an {@code AnyObject} instance.
      *
-     * @param objectName name of object in a database; should be non-blank.
+     * @param objectName name of an object in a database; should be non-blank.
      * @param objectType type of object in a database; should be non-null.
      * @return {@code AnyObject} instance
      */
@@ -112,7 +115,7 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
      * Constructs an {@code AnyObject} instance with given context.
      *
      * @param pgContext  the schema context to enrich object name; must be non-null.
-     * @param objectName name of object in a database; should be non-blank.
+     * @param objectName name of an object in a database; should be non-blank.
      * @param objectType type of object in a database; should be non-null.
      * @return {@code AnyObject} instance
      * @since 0.14.4
@@ -126,7 +129,7 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
     /**
      * Constructs an {@code AnyObject} instance.
      *
-     * @param objectName name of object in a database; should be non-blank.
+     * @param objectName name of an object in a database; should be non-blank.
      * @param objectType literal type of object in a database; should be non-null.
      * @return {@code AnyObject} instance
      */

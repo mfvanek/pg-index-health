@@ -98,7 +98,7 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
      * @return string representation of the internal fields of this class
      */
     String innerToString() {
-        return "tableName='" + tableName + '\'' +
+        return TABLE_NAME_FIELD + "='" + tableName + '\'' +
             ", indexName='" + indexName + '\'' +
             ", indexSizeInBytes=" + indexSizeInBytes;
     }

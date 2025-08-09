@@ -70,7 +70,7 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      * @return string representation of the internal fields of this class
      */
     String innerToString() {
-        return "tableName='" + tableName + '\'' +
+        return TABLE_NAME_FIELD + "='" + tableName + '\'' +
             ", tableSizeInBytes=" + tableSizeInBytes;
     }
 

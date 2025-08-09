@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.testing.annotations;
+package io.github.mfvanek.pg.model.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -20,6 +20,6 @@ import java.lang.annotation.Target;
  * See <a href="https://github.com/jacoco/jacoco/issues/814">issue</a>
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface ExcludeFromJacocoGeneratedReport {
 }

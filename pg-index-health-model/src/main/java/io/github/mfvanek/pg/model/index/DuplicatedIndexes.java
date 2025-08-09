@@ -142,7 +142,7 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     @Override
     public String toString() {
         return DuplicatedIndexes.class.getSimpleName() + '{' +
-            "tableName='" + getTableName() + '\'' +
+            TABLE_NAME_FIELD + "='" + getTableName() + '\'' +
             ", totalSize=" + totalSize +
             ", indexes=" + indexes +
             '}';

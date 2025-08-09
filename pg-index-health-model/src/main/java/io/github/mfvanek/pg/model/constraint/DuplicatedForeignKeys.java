@@ -29,11 +29,16 @@ import java.util.Objects;
  */
 public final class DuplicatedForeignKeys implements DbObject, TableNameAware, ConstraintsAware {
 
+    /**
+     * Represents the field name used to store information about foreign keys in the context of duplicated foreign key constraints.
+     */
+    public static final String FOREIGN_KEYS_FIELD = "foreignKeys";
+
     private final List<ForeignKey> foreignKeys;
     private final List<String> foreignKeysNames;
 
     private DuplicatedForeignKeys(final Collection<ForeignKey> foreignKeys) {
-        final List<ForeignKey> defensiveCopy = List.copyOf(Objects.requireNonNull(foreignKeys, "foreignKeys cannot be null"));
+        final List<ForeignKey> defensiveCopy = List.copyOf(Objects.requireNonNull(foreignKeys, FOREIGN_KEYS_FIELD + " cannot be null"));
         Validators.validateThatTableIsTheSame(defensiveCopy);
         this.foreignKeys = defensiveCopy;
         this.foreignKeysNames = this.foreignKeys.stream()
@@ -113,13 +118,13 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
     @Override
     public String toString() {
         return DuplicatedForeignKeys.class.getSimpleName() + '{' +
-            "tableName='" + getTableName() + '\'' +
-            ", foreignKeys=" + foreignKeys +
+            TABLE_NAME_FIELD + "='" + getTableName() + '\'' +
+            ", " + FOREIGN_KEYS_FIELD + '=' + foreignKeys +
             '}';
     }
 
     /**
-     * Constructs an {@code DuplicatedForeignKeys} object from given list of foreign keys.
+     * Constructs an {@code DuplicatedForeignKeys} object from a given list of foreign keys.
      *
      * @param foreignKeys list of duplicated foreign keys; should be non-null.
      * @return {@code DuplicatedForeignKeys}
