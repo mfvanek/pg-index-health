@@ -58,6 +58,8 @@ class ForeignKeyTest {
             .isEqualTo(PgObjectType.CONSTRAINT);
         assertThat(foreignKey.getConstraintType())
             .isEqualTo(ConstraintType.FOREIGN_KEY);
+        assertThat(foreignKey.getConstraint())
+            .isEqualTo(Constraint.ofType("t", "c_t_order_id", ConstraintType.FOREIGN_KEY));
     }
 
     @Test

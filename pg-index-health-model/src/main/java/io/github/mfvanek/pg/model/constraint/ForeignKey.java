@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * An immutable representation of foreign key in a database.
+ * An immutable representation of a foreign key in a database.
  *
  * @author Ivan Vakhrushev
  * @see TableNameAware
@@ -31,16 +31,26 @@ import java.util.Objects;
  */
 public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsAware {
 
+    /**
+     * Represents the name of the field that defines a database constraint.
+     */
+    public static final String CONSTRAINT_FIELD = "constraint";
+    /**
+     * Represents the field name used to store the columns included in a foreign key constraint.
+     */
+    public static final String COLUMNS_IN_CONSTRAINT_FIELD = "columnsInConstraint";
+
     private final Constraint constraint;
     private final List<Column> columnsInConstraint;
 
     private ForeignKey(final Constraint constraint,
                        final List<Column> columnsInConstraint) {
-        this.constraint = Objects.requireNonNull(constraint, "constraint cannot be null");
+        this.constraint = Objects.requireNonNull(constraint, CONSTRAINT_FIELD + " cannot be null");
         if (this.constraint.getConstraintType() != ConstraintType.FOREIGN_KEY) {
-            throw new IllegalArgumentException("constraint must be foreign key");
+            throw new IllegalArgumentException(CONSTRAINT_FIELD + " must be foreign key");
         }
-        final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columnsInConstraint, "columnsInConstraint cannot be null"));
+        final List<Column> defensiveCopy = List.copyOf(
+            Objects.requireNonNull(columnsInConstraint, COLUMNS_IN_CONSTRAINT_FIELD + " cannot be null"));
         Validators.validateThatNotEmpty(defensiveCopy);
         Validators.validateThatTableIsTheSame(constraint.getTableName(), defensiveCopy);
         this.columnsInConstraint = defensiveCopy;
@@ -87,6 +97,17 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     }
 
     /**
+     * Retrieves the constraint associated with this foreign key.
+     *
+     * @return the constraint object associated with the foreign key
+     * @author Ivan Vakhrushev
+     * @since 0.20.3
+     */
+    public Constraint getConstraint() {
+        return constraint;
+    }
+
+    /**
      * Retrieves columns of foreign key constraint (one or more).
      *
      * @return columns of foreign key constraint
@@ -129,7 +150,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     public String toString() {
         return ForeignKey.class.getSimpleName() + '{' +
             constraint.innerToString() +
-            ", columnsInConstraint=" + columnsInConstraint +
+            ", " + COLUMNS_IN_CONSTRAINT_FIELD + '=' + columnsInConstraint +
             '}';
     }
 
@@ -145,17 +166,31 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     }
 
     /**
+     * Creates a new {@code ForeignKey} object with the specified {@code Constraint} and associated columns.
+     *
+     * @param constraint          the underlying constraint to be associated with the foreign key; must be non-null.
+     * @param columnsInConstraint a list of columns that are part of the constraint; must be non-null and non-empty.
+     * @return a new instance of {@code ForeignKey}.
+     * @author Ivan Vakhrushev
+     * @since 0.20.3
+     */
+    public static ForeignKey of(final Constraint constraint,
+                                final List<Column> columnsInConstraint) {
+        return new ForeignKey(constraint, columnsInConstraint);
+    }
+
+    /**
      * Constructs a {@code ForeignKey} object with given columns.
      *
      * @param tableName           table name; should be non-blank.
      * @param constraintName      constraint name; should be non-blank.
-     * @param columnsInConstraint list of columns that are included in constraint; should be non-empty.
+     * @param columnsInConstraint a list of columns that are included in constraint; should be non-empty.
      * @return {@code ForeignKey}
      */
     public static ForeignKey of(final String tableName,
                                 final String constraintName,
                                 final List<Column> columnsInConstraint) {
-        return new ForeignKey(toConstraint(tableName, constraintName), columnsInConstraint);
+        return of(toConstraint(tableName, constraintName), columnsInConstraint);
     }
 
     /**
@@ -164,7 +199,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param pgContext           the schema context to enrich table name; must be non-null.
      * @param tableName           table name; should be non-blank.
      * @param constraintName      constraint name; should be non-blank.
-     * @param columnsInConstraint list of columns that are included in constraint; should be non-empty.
+     * @param columnsInConstraint a list of columns that are included in constraint; should be non-empty.
      * @return {@code ForeignKey}
      * @since 0.14.5
      */
@@ -172,20 +207,20 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                 final String tableName,
                                 final String constraintName,
                                 final List<Column> columnsInConstraint) {
-        return new ForeignKey(toConstraint(pgContext, tableName, constraintName), columnsInConstraint);
+        return of(toConstraint(pgContext, tableName, constraintName), columnsInConstraint);
     }
 
     /**
      * Constructs a {@code ForeignKey} object with given {@code Constraint} and {@code Column}.
      *
-     * @param constraint underlying constraint that is included in foreign key; must be non-null.
+     * @param constraint underlying constraint that is included in a foreign key; must be non-null.
      * @param column     column that is included in constraint; must be non-null.
      * @return {@code ForeignKey}
      * @since 0.15.0
      */
     public static ForeignKey ofColumn(final Constraint constraint,
                                       final Column column) {
-        return new ForeignKey(constraint, List.of(Objects.requireNonNull(column, "column cannot be null")));
+        return of(constraint, List.of(Objects.requireNonNull(column, "column cannot be null")));
     }
 
     /**
