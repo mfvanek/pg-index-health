@@ -9,9 +9,9 @@
  */
 
 /**
- * Stored procedure/function-related classes and interfaces.
+ * Stored procedure/function-related serializers and deserializers.
  */
 @NullMarked
-package io.github.mfvanek.pg.model.function;
+package io.github.mfvanek.pg.model.jackson.function;
 
 import org.jspecify.annotations.NullMarked;
