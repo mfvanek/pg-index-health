@@ -41,7 +41,7 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
     private Index(final String tableName, final String indexName, final long indexSizeInBytes) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.indexName = Validators.indexNameNotBlank(indexName);
-        this.indexSizeInBytes = Validators.sizeNotNegative(indexSizeInBytes, "indexSizeInBytes");
+        this.indexSizeInBytes = Validators.sizeNotNegative(indexSizeInBytes, INDEX_SIZE_IN_BYTES_FIELD);
     }
 
     /**
@@ -99,8 +99,8 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
      */
     String innerToString() {
         return TABLE_NAME_FIELD + "='" + tableName + '\'' +
-            ", indexName='" + indexName + '\'' +
-            ", indexSizeInBytes=" + indexSizeInBytes;
+            ", " + INDEX_NAME_FIELD + "='" + indexName + '\'' +
+            ", " + INDEX_SIZE_IN_BYTES_FIELD + '=' + indexSizeInBytes;
     }
 
     /**

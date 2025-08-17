@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.validation;
 
 import io.github.mfvanek.pg.model.dbobject.DbObject;
+import io.github.mfvanek.pg.model.index.IndexNameAware;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.Collection;
@@ -61,7 +62,7 @@ public final class Validators {
      * @throws IllegalArgumentException if the index name is blank
      */
     public static String indexNameNotBlank(final String indexName) {
-        return notBlank(indexName, "indexName");
+        return notBlank(indexName, IndexNameAware.INDEX_NAME_FIELD);
     }
 
     /**

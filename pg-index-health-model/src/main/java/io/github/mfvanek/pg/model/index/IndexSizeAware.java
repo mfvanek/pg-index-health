@@ -21,6 +21,11 @@ import io.github.mfvanek.pg.model.table.TableSizeAware;
 public interface IndexSizeAware extends IndexNameAware {
 
     /**
+     * Represents the field name used for retrieving the size of an index in bytes.
+     */
+    String INDEX_SIZE_IN_BYTES_FIELD = "indexSizeInBytes";
+
+    /**
      * Retrieves index size in bytes.
      *
      * @return index size in bytes
