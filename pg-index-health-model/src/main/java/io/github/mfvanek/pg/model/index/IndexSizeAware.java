@@ -24,6 +24,10 @@ public interface IndexSizeAware extends IndexNameAware {
      * Represents the field name used for retrieving the size of an index in bytes.
      */
     String INDEX_SIZE_IN_BYTES_FIELD = "indexSizeInBytes";
+    /**
+     * The name of the field that defines an index.
+     */
+    String INDEX_FIELD = "index";
 
     /**
      * Retrieves index size in bytes.

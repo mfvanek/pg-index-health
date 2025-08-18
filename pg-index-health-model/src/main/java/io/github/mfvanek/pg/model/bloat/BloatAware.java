@@ -11,11 +11,20 @@
 package io.github.mfvanek.pg.model.bloat;
 
 /**
- * Allows getting information about bloat in database.
+ * Allows getting information about bloat in a database.
  *
  * @author Ivan Vakhrushev
  */
 public interface BloatAware {
+
+    /**
+     * Constant representing the field name for bloat size in bytes.
+     */
+    String BLOAT_SIZE_IN_BYTES_FIELD = "bloatSizeInBytes";
+    /**
+     * Constant representing the field name for bloat percentage.
+     */
+    String BLOAT_PERCENTAGE_FIELD = "bloatPercentage";
 
     /**
      * Retrieves bloat amount in bytes.

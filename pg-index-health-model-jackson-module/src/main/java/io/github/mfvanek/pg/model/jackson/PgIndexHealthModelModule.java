@@ -20,6 +20,7 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
 import io.github.mfvanek.pg.model.function.StoredFunction;
 import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.jackson.column.ColumnDeserializer;
 import io.github.mfvanek.pg.model.jackson.column.ColumnSerializer;
 import io.github.mfvanek.pg.model.jackson.column.ColumnWithSerialTypeDeserializer;
@@ -39,10 +40,12 @@ import io.github.mfvanek.pg.model.jackson.function.StoredFunctionSerializer;
 import io.github.mfvanek.pg.model.jackson.generated.ModuleVersion;
 import io.github.mfvanek.pg.model.jackson.index.IndexDeserializer;
 import io.github.mfvanek.pg.model.jackson.index.IndexSerializer;
+import io.github.mfvanek.pg.model.jackson.index.IndexWithBloatDeserializer;
+import io.github.mfvanek.pg.model.jackson.index.IndexWithBloatSerializer;
 
 import java.io.Serial;
 
-@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
 public class PgIndexHealthModelModule extends SimpleModule {
 
     @Serial
@@ -77,5 +80,8 @@ public class PgIndexHealthModelModule extends SimpleModule {
 
         addSerializer(Index.class, new IndexSerializer());
         addDeserializer(Index.class, new IndexDeserializer());
+
+        addSerializer(IndexWithBloat.class, new IndexWithBloatSerializer());
+        addDeserializer(IndexWithBloat.class, new IndexWithBloatDeserializer());
     }
 }

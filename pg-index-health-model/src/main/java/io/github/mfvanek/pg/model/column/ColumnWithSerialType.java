@@ -113,13 +113,13 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     }
 
     /**
-     * Retrieves the associated column.
+     * Retrieves the current instance as a {@code Column}.
      *
-     * @return the column object
+     * @return the {@code Column} associated with this instance
      * @author Ivan Vakhrushev
      * @since 0.20.3
      */
-    public Column getColumn() {
+    public Column toColumn() {
         return column;
     }
 

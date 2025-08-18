@@ -30,7 +30,7 @@ abstract class AbstractIndexAware implements DbObject, TableNameAware, IndexSize
     protected final Index index;
 
     AbstractIndexAware(final Index index) {
-        this.index = Objects.requireNonNull(index, "index cannot be null");
+        this.index = Objects.requireNonNull(index, INDEX_FIELD + " cannot be null");
     }
 
     /**
@@ -71,5 +71,16 @@ abstract class AbstractIndexAware implements DbObject, TableNameAware, IndexSize
     @Override
     public final String getIndexName() {
         return index.getIndexName();
+    }
+
+    /**
+     * Returns the {@link Index} instance associated with this object.
+     *
+     * @return the associated {@code Index} instance
+     * @author Ivan Vakhrushev
+     * @since 0.20.3
+     */
+    public final Index toIndex() {
+        return index;
     }
 }

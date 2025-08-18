@@ -30,8 +30,8 @@ public final class IndexWithBloat extends AbstractIndexAware implements BloatAwa
                            final long bloatSizeInBytes,
                            final double bloatPercentage) {
         super(index);
-        this.bloatSizeInBytes = Validators.sizeNotNegative(bloatSizeInBytes, "bloatSizeInBytes");
-        this.bloatPercentage = Validators.validPercent(bloatPercentage, "bloatPercentage");
+        this.bloatSizeInBytes = Validators.sizeNotNegative(bloatSizeInBytes, BLOAT_SIZE_IN_BYTES_FIELD);
+        this.bloatPercentage = Validators.validPercent(bloatPercentage, BLOAT_PERCENTAGE_FIELD);
     }
 
     /**
@@ -57,8 +57,8 @@ public final class IndexWithBloat extends AbstractIndexAware implements BloatAwa
     public String toString() {
         return IndexWithBloat.class.getSimpleName() + '{' +
             index.innerToString() +
-            ", bloatSizeInBytes=" + bloatSizeInBytes +
-            ", bloatPercentage=" + bloatPercentage +
+            ", " + BLOAT_SIZE_IN_BYTES_FIELD + '=' + bloatSizeInBytes +
+            ", " + BLOAT_PERCENTAGE_FIELD + '=' + bloatPercentage +
             '}';
     }
 

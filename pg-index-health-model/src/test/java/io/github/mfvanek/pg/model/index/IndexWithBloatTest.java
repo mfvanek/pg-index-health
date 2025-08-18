@@ -30,6 +30,8 @@ class IndexWithBloatTest {
             .isEqualTo(2L);
         assertThat(bloat.getObjectType())
             .isEqualTo(PgObjectType.INDEX);
+        assertThat(bloat.toIndex())
+            .isEqualTo(Index.of("t", "i", 10L));
     }
 
     @Test

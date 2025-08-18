@@ -31,7 +31,7 @@ public class ColumnWithSerialTypeSerializer extends JsonSerializer<ColumnWithSer
     @Override
     public void serialize(final ColumnWithSerialType value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
-        serializers.defaultSerializeField(ColumnWithSerialType.COLUMN_FIELD, value.getColumn(), gen);
+        serializers.defaultSerializeField(ColumnWithSerialType.COLUMN_FIELD, value.toColumn(), gen);
         gen.writeStringField(ColumnWithSerialType.SERIAL_TYPE_FIELD, value.getSerialType().name());
         gen.writeStringField(ColumnWithSerialType.SEQUENCE_NAME_FIELD, value.getSequenceName());
         gen.writeEndObject();
