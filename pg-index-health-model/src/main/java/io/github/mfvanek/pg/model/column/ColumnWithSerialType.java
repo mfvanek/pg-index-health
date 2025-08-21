@@ -36,10 +36,6 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * The field name representing the type of serial column in a database.
      */
     public static final String SERIAL_TYPE_FIELD = "serialType";
-    /**
-     * Represents the field name for storing the name of the sequence associated with a serial column in a database object.
-     */
-    public static final String SEQUENCE_NAME_FIELD = "sequenceName";
 
     private final Column column;
     private final SerialType serialType;

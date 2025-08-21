@@ -27,6 +27,15 @@ import java.util.Objects;
  */
 public final class SequenceState implements DbObject, SequenceNameAware {
 
+    /**
+     * Represents the field name for storing the data type of the sequence.
+     */
+    public static final String DATA_TYPE_FIELD = "dataType";
+    /**
+     * Represents the field name for storing the remaining percentage of the sequence value.
+     */
+    public static final String REMAINING_PERCENTAGE_FIELD = "remainingPercentage";
+
     private final String sequenceName;
     private final String dataType;
     private final double remainingPercentage;
@@ -36,21 +45,19 @@ public final class SequenceState implements DbObject, SequenceNameAware {
      *
      * @param sequenceName        sequence name; should be non-blank.
      * @param dataType            data type; should be non-blank.
-     * @param remainingPercentage remaining percentage; in the range from 0 to 100 inclusive.
+     * @param remainingPercentage the remaining percentage; in the range from 0 to 100 inclusive.
      */
     private SequenceState(final String sequenceName,
                           final String dataType,
                           final double remainingPercentage
     ) {
-        this.sequenceName = Validators.notBlank(sequenceName, "sequenceName");
-        this.dataType = Validators.notBlank(dataType, "dataType");
-        this.remainingPercentage = Validators.validPercent(remainingPercentage, "remainingPercentage");
+        this.sequenceName = Validators.notBlank(sequenceName, SEQUENCE_NAME_FIELD);
+        this.dataType = Validators.notBlank(dataType, DATA_TYPE_FIELD);
+        this.remainingPercentage = Validators.validPercent(remainingPercentage, REMAINING_PERCENTAGE_FIELD);
     }
 
     /**
-     * Returns the name of the sequence.
-     *
-     * @return the name of the sequence.
+     * {@inheritDoc}
      */
     @Override
     public String getSequenceName() {
@@ -121,9 +128,9 @@ public final class SequenceState implements DbObject, SequenceNameAware {
     @Override
     public String toString() {
         return SequenceState.class.getSimpleName() + '{' +
-            "sequenceName='" + sequenceName + '\'' +
-            ", dataType='" + dataType + '\'' +
-            ", remainingPercentage=" + remainingPercentage +
+            SEQUENCE_NAME_FIELD + "='" + sequenceName + '\'' +
+            ", " + DATA_TYPE_FIELD + "='" + dataType + '\'' +
+            ", " + REMAINING_PERCENTAGE_FIELD + '=' + remainingPercentage +
             '}';
     }
 
@@ -132,7 +139,7 @@ public final class SequenceState implements DbObject, SequenceNameAware {
      *
      * @param sequenceName        sequence name; should be non-blank.
      * @param dataType            data type; should be non-blank.
-     * @param remainingPercentage remaining percentage; in the range from 0 to 100 inclusive.
+     * @param remainingPercentage the remaining percentage; in the range from 0 to 100 inclusive.
      * @return {@code SequenceState}
      */
     public static SequenceState of(final String sequenceName,
@@ -147,7 +154,7 @@ public final class SequenceState implements DbObject, SequenceNameAware {
      * @param pgContext           the schema context to enrich sequence name; must be non-null.
      * @param sequenceName        sequence name; should be non-blank.
      * @param dataType            data type; should be non-blank.
-     * @param remainingPercentage remaining percentage; in the range from 0 to 100 inclusive.
+     * @param remainingPercentage the remaining percentage; in the range from 0 to 100 inclusive.
      * @return {@code SequenceState}
      * @since 0.14.3
      */

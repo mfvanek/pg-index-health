@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.column.SerialType;
+import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 
 import java.io.IOException;
 
@@ -38,7 +39,7 @@ public class ColumnWithSerialTypeDeserializer extends JsonDeserializer<ColumnWit
         final JsonNode node = codec.readTree(p);
         final Column column = codec.treeToValue(node.get(ColumnWithSerialType.COLUMN_FIELD), Column.class);
         final SerialType serialType = SerialType.valueOf(node.get(ColumnWithSerialType.SERIAL_TYPE_FIELD).asText());
-        final String sequenceName = node.get(ColumnWithSerialType.SEQUENCE_NAME_FIELD).asText();
+        final String sequenceName = node.get(SequenceNameAware.SEQUENCE_NAME_FIELD).asText();
         return ColumnWithSerialType.of(column, serialType, sequenceName);
     }
 }
