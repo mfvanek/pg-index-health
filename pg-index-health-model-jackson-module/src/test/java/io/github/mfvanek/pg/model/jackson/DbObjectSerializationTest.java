@@ -11,10 +11,14 @@
 package io.github.mfvanek.pg.model.jackson;
 
 import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 class DbObjectSerializationTest {
@@ -24,26 +28,30 @@ class DbObjectSerializationTest {
     @Test
     void completenessTest() {
         try (ScanResult scan = new ClassGraph()
-            .enableClassInfo()
+            .enableAllInfo()
             .acceptPackages("io.github.mfvanek.pg.model")
             .scan()) {
 
-            scan.getClassesImplementing(DbObject.class.getName())
-                .filter(classInfo -> !classInfo.isAbstract() && !classInfo.isInterface())
-                .forEach(classInfo -> {
-                    final String baseName = classInfo.getSimpleName();
-                    final String packageName = classInfo.getPackageName();
-                    final String packageSuffix = packageName.substring(packageName.lastIndexOf('.') + 1);
-                    final String serializerClass = JSON_MODULE_PACKAGE + '.' + packageSuffix + '.' + baseName + "Serializer";
-                    final String deserializerClass = JSON_MODULE_PACKAGE + '.' + packageSuffix + '.' + baseName + "Deserializer";
+            final List<ClassInfo> classes = scan.getClassesImplementing(DbObject.class.getName())
+                .filter(classInfo -> !classInfo.isAbstract() && !classInfo.isInterface());
 
-                    assertThatCode(() -> Class.forName(serializerClass))
-                        .as("Serializer not found for " + classInfo.getName())
-                        .doesNotThrowAnyException();
-                    assertThatCode(() -> Class.forName(deserializerClass))
-                        .as("Deserializer not found for " + classInfo.getName())
-                        .doesNotThrowAnyException();
-                });
+            assertThat(classes)
+                .hasSize(17);
+
+            classes.forEach(classInfo -> {
+                final String baseName = classInfo.getSimpleName();
+                final String packageName = classInfo.getPackageName();
+                final String packageSuffix = packageName.substring(packageName.lastIndexOf('.') + 1);
+                final String serializerClass = JSON_MODULE_PACKAGE + '.' + packageSuffix + '.' + baseName + "Serializer";
+                final String deserializerClass = JSON_MODULE_PACKAGE + '.' + packageSuffix + '.' + baseName + "Deserializer";
+
+                assertThatCode(() -> Class.forName(serializerClass))
+                    .as("Serializer not found for " + classInfo.getName())
+                    .doesNotThrowAnyException();
+                assertThatCode(() -> Class.forName(deserializerClass))
+                    .as("Deserializer not found for " + classInfo.getName())
+                    .doesNotThrowAnyException();
+            });
         }
     }
 }

@@ -26,6 +26,11 @@ import java.util.Objects;
 public final class UnusedIndex extends AbstractIndexAware implements Comparable<UnusedIndex> {
 
     /**
+     * Represents the field name for the number of scans performed on an index.
+     */
+    public static final String INDEX_SCANS_FIELD = "indexScans";
+
+    /**
      * The number of scans performed on this index.
      */
     private final long indexScans;
@@ -33,7 +38,7 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
     private UnusedIndex(final Index index,
                         final long indexScans) {
         super(index);
-        this.indexScans = Validators.countNotNegative(indexScans, "indexScans");
+        this.indexScans = Validators.countNotNegative(indexScans, INDEX_SCANS_FIELD);
     }
 
     /**
@@ -52,7 +57,7 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
     public String toString() {
         return UnusedIndex.class.getSimpleName() + '{' +
             index.innerToString() +
-            ", indexScans=" + indexScans +
+            ", " + INDEX_SCANS_FIELD + '=' + indexScans +
             '}';
     }
 
