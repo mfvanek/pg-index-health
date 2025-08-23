@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -140,7 +141,7 @@ class IndexWithColumnsTest {
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(IndexWithColumns.class)
-            .withIgnoredFields("columns")
+            .withIgnoredFields(ColumnsAware.COLUMNS_FIELD)
             .verify();
     }
 
@@ -177,6 +178,6 @@ class IndexWithColumnsTest {
         final List<Column> columns = List.of(
             Column.ofNullable("t3", "t"),
             Column.ofNullable("t3", "f"));
-        return IndexWithColumns.ofColumns("t3", "i3", 2, columns);
+        return IndexWithColumns.ofColumns("t3", "i3", 2L, columns);
     }
 }

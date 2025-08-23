@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.core.checks.extractors;
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.core.utils.ColumnsDataParser;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import java.sql.Array;
@@ -43,7 +44,7 @@ public final class IndexWithColumnsExtractor implements ResultSetExtractor<Index
         final String tableName = resultSet.getString(TABLE_NAME);
         final String indexName = resultSet.getString(INDEX_NAME);
         final long indexSize = resultSet.getLong(INDEX_SIZE);
-        final Array columnsArray = resultSet.getArray("columns");
+        final Array columnsArray = resultSet.getArray(ColumnsAware.COLUMNS_FIELD);
         final String[] rawColumns = (String[]) columnsArray.getArray();
         final List<Column> columns = ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex(tableName, rawColumns);
         return IndexWithColumns.ofColumns(tableName, indexName, indexSize, columns);

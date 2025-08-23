@@ -28,7 +28,7 @@ class ForeignKeySerializerTest extends ObjectMapperTestBase {
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"constraint":{"tableName":"demo.orders","constraintName":"client_id_fk","constraintType":"FOREIGN_KEY"},\
-                "columnsInConstraint":[{"tableName":"demo.orders","columnName":"client_id","notNull":true}]}""");
+                "columns":[{"tableName":"demo.orders","columnName":"client_id","notNull":true}]}""");
         final ForeignKey restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), ForeignKey.class);
         assertThat(restored)
             .isEqualTo(original)

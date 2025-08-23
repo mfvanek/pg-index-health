@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.jackson.constraint;
+package io.github.mfvanek.pg.model.jackson.index;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
@@ -18,32 +18,33 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
-import io.github.mfvanek.pg.model.constraint.Constraint;
-import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.index.IndexSizeAware;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
- * A deserializer for {@link ForeignKey} objects, enabling JSON deserialization into immutable {@code ForeignKey} instances.
+ * A deserializer for {@link IndexWithColumns} objects, enabling JSON deserialization into immutable {@code IndexWithColumns} instances.
  *
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-public class ForeignKeyDeserializer extends JsonDeserializer<ForeignKey> {
+public class IndexWithColumnsDeserializer extends JsonDeserializer<IndexWithColumns> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ForeignKey deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public IndexWithColumns deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
-        final Constraint constraint = codec.treeToValue(node.get(ForeignKey.CONSTRAINT_FIELD), Constraint.class);
+        final Index index = codec.treeToValue(node.get(IndexSizeAware.INDEX_FIELD), Index.class);
         final JavaType listType = ctxt.getTypeFactory().constructCollectionType(List.class, Column.class);
         try (JsonParser columnsParser = node.get(ColumnsAware.COLUMNS_FIELD).traverse(codec)) {
             final List<Column> columns = codec.readValue(columnsParser, listType);
-            return ForeignKey.of(constraint, columns);
+            return IndexWithColumns.of(index, columns);
         }
     }
 }

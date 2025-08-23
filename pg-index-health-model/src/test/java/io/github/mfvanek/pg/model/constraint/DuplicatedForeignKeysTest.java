@@ -35,8 +35,8 @@ class DuplicatedForeignKeysTest {
         assertThat(foreignKeys)
             .hasToString("""
                 DuplicatedForeignKeys{tableName='t1', foreignKeys=[\
-                ForeignKey{tableName='t1', constraintName='c1', columnsInConstraint=[Column{tableName='t1', columnName='col1', notNull=true}]}, \
-                ForeignKey{tableName='t1', constraintName='c2', columnsInConstraint=[Column{tableName='t1', columnName='col1', notNull=true}]}]}""");
+                ForeignKey{tableName='t1', constraintName='c1', columns=[Column{tableName='t1', columnName='col1', notNull=true}]}, \
+                ForeignKey{tableName='t1', constraintName='c2', columns=[Column{tableName='t1', columnName='col1', notNull=true}]}]}""");
     }
 
     @Test

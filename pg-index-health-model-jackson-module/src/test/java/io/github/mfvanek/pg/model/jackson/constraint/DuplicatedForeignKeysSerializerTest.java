@@ -29,8 +29,8 @@ class DuplicatedForeignKeysSerializerTest extends ObjectMapperTestBase {
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"tableName":"t1","foreignKeys":[\
-                {"constraint":{"tableName":"t1","constraintName":"c1","constraintType":"FOREIGN_KEY"},"columnsInConstraint":[{"tableName":"t1","columnName":"col1","notNull":true}]},\
-                {"constraint":{"tableName":"t1","constraintName":"c2","constraintType":"FOREIGN_KEY"},"columnsInConstraint":[{"tableName":"t1","columnName":"col1","notNull":true}]}]}""");
+                {"constraint":{"tableName":"t1","constraintName":"c1","constraintType":"FOREIGN_KEY"},"columns":[{"tableName":"t1","columnName":"col1","notNull":true}]},\
+                {"constraint":{"tableName":"t1","constraintName":"c2","constraintType":"FOREIGN_KEY"},"columns":[{"tableName":"t1","columnName":"col1","notNull":true}]}]}""");
         final DuplicatedForeignKeys restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), DuplicatedForeignKeys.class);
         assertThat(restored)
             .isEqualTo(original);

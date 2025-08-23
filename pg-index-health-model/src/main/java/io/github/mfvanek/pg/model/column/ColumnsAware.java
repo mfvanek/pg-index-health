@@ -23,6 +23,11 @@ import java.util.List;
 public interface ColumnsAware {
 
     /**
+     * Represents the field name used for storing a list of columns in the context of a database object.
+     */
+    String COLUMNS_FIELD = "columns";
+
+    /**
      * Retrieves a list of {@link Column} instances associated with this object.
      *
      * @return a non-null list of columns

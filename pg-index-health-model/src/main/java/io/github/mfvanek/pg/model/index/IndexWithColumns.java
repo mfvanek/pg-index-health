@@ -32,7 +32,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
     private IndexWithColumns(final Index index,
                              final List<Column> columns) {
         super(index);
-        final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columns, "columns cannot be null"));
+        final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columns, COLUMNS_FIELD + " cannot be null"));
         Validators.validateThatTableIsTheSame(index.getTableName(), defensiveCopy);
         this.columns = defensiveCopy;
     }
@@ -54,7 +54,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
     public String toString() {
         return IndexWithColumns.class.getSimpleName() + '{' +
             index.innerToString() +
-            ", columns=" + columns +
+            ", " + COLUMNS_FIELD + '=' + columns +
             '}';
     }
 

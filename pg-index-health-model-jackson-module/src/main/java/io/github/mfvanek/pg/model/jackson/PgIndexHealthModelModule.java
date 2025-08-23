@@ -22,6 +22,7 @@ import io.github.mfvanek.pg.model.function.StoredFunction;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.jackson.column.ColumnDeserializer;
 import io.github.mfvanek.pg.model.jackson.column.ColumnSerializer;
 import io.github.mfvanek.pg.model.jackson.column.ColumnWithSerialTypeDeserializer;
@@ -45,6 +46,8 @@ import io.github.mfvanek.pg.model.jackson.index.IndexDeserializer;
 import io.github.mfvanek.pg.model.jackson.index.IndexSerializer;
 import io.github.mfvanek.pg.model.jackson.index.IndexWithBloatDeserializer;
 import io.github.mfvanek.pg.model.jackson.index.IndexWithBloatSerializer;
+import io.github.mfvanek.pg.model.jackson.index.IndexWithColumnsDeserializer;
+import io.github.mfvanek.pg.model.jackson.index.IndexWithColumnsSerializer;
 import io.github.mfvanek.pg.model.jackson.sequence.SequenceStateDeserializer;
 import io.github.mfvanek.pg.model.jackson.sequence.SequenceStateSerializer;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
@@ -89,6 +92,9 @@ public class PgIndexHealthModelModule extends SimpleModule {
 
         addSerializer(IndexWithBloat.class, new IndexWithBloatSerializer());
         addDeserializer(IndexWithBloat.class, new IndexWithBloatDeserializer());
+
+        addSerializer(IndexWithColumns.class, new IndexWithColumnsSerializer());
+        addDeserializer(IndexWithColumns.class, new IndexWithColumnsDeserializer());
 
         addSerializer(DuplicatedIndexes.class, new DuplicatedIndexesSerializer());
         addDeserializer(DuplicatedIndexes.class, new DuplicatedIndexesDeserializer());

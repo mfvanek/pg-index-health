@@ -8,31 +8,32 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.jackson.constraint;
+package io.github.mfvanek.pg.model.jackson.index;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
-import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.index.IndexSizeAware;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 import java.io.IOException;
 
 /**
- * A custom JSON serializer for the {@link ForeignKey} class.
+ * A custom JSON serializer for the {@link IndexWithColumns} class.
  *
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-public class ForeignKeySerializer extends JsonSerializer<ForeignKey> {
+public class IndexWithColumnsSerializer extends JsonSerializer<IndexWithColumns> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final ForeignKey value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final IndexWithColumns value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
-        serializers.defaultSerializeField(ForeignKey.CONSTRAINT_FIELD, value.getConstraint(), gen);
+        serializers.defaultSerializeField(IndexSizeAware.INDEX_FIELD, value.toIndex(), gen);
         serializers.defaultSerializeField(ColumnsAware.COLUMNS_FIELD, value.getColumns(), gen);
         gen.writeEndObject();
     }

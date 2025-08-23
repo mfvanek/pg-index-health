@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.core.checks.extractors;
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.core.utils.ColumnsDataParser;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
 
@@ -42,7 +43,7 @@ public final class TableWithColumnsExtractor implements ResultSetExtractor<Table
     public TableWithColumns extractData(final ResultSet resultSet) throws SQLException {
         final String tableName = resultSet.getString(TABLE_NAME);
         final long tableSize = resultSet.getLong(TABLE_SIZE);
-        final Array columnsArray = resultSet.getArray("columns");
+        final Array columnsArray = resultSet.getArray(ColumnsAware.COLUMNS_FIELD);
         final String[] rawColumns = (String[]) columnsArray.getArray();
         final List<Column> columns = ColumnsDataParser.parseRawColumnsInTable(tableName, rawColumns);
         return TableWithColumns.of(Table.of(tableName, tableSize), columns);

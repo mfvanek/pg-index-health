@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.core.checks.extractors;
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.core.utils.ColumnsDataParser;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 
 import java.sql.Array;
@@ -63,7 +64,7 @@ public final class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey>
         if (!prefix.isBlank()) {
             return prefix + "_constraint_columns";
         }
-        return "columns";
+        return ColumnsAware.COLUMNS_FIELD;
     }
 
     /**
