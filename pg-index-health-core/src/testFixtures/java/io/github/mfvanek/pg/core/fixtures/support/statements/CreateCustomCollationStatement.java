@@ -38,8 +38,8 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
     }
 
     private boolean isCollationExist(final Statement statement, final String collation) {
-        try (ResultSet rs = statement.executeQuery(String.format(
-            Locale.ROOT, "select exists(select 1 from pg_catalog.pg_collation as pgc where pgc.collname = '%s'::text)", collation))) {
+        try (ResultSet rs = statement.executeQuery(String.format(Locale.ROOT,
+            "select exists(select 1 from pg_catalog.pg_collation as pgc where pgc.collname = '%s'::text)", collation))) {
             rs.next();
             return rs.getBoolean(1);
         } catch (SQLException e) {
@@ -52,7 +52,7 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
         if (!isCollationExist(statement, ICU_COLLATION)) {
             throw new IllegalStateException(String.format(Locale.ROOT, "System collation '%s' not found", ICU_COLLATION));
         }
-        statement.execute(String.format
-            (Locale.ROOT, "create collation %s.\"%s\" from \"%s\";", SchemaNameHolder.getSchemaName(), customCollation, ICU_COLLATION));
+        statement.execute(String.format(Locale.ROOT,
+            "create collation %s.\"%s\" from \"%s\";", SchemaNameHolder.getSchemaName(), customCollation, ICU_COLLATION));
     }
 }
