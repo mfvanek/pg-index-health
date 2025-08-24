@@ -23,6 +23,15 @@ import java.util.Objects;
 public final class TableWithMissingIndex extends AbstractTableAware implements Comparable<TableWithMissingIndex> {
 
     /**
+     * Represents the field name used to store information about sequential scans.
+     */
+    public static final String SEQ_SCANS_FIELD = "seqScans";
+    /**
+     * Represents the field name used to store information about index scans.
+     */
+    public static final String INDEX_SCANS_FIELD = "indexScans";
+
+    /**
      * The number of sequential scans performed on the table.
      * Normally, indexes should be used primarily when accessing a table.
      * If there are few or no indexes in the table, then seqScans will be larger than indexScans.
@@ -38,8 +47,8 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
                                   final long seqScans,
                                   final long indexScans) {
         super(table);
-        this.seqScans = Validators.countNotNegative(seqScans, "seqScans");
-        this.indexScans = Validators.countNotNegative(indexScans, "indexScans");
+        this.seqScans = Validators.countNotNegative(seqScans, SEQ_SCANS_FIELD);
+        this.indexScans = Validators.countNotNegative(indexScans, INDEX_SCANS_FIELD);
     }
 
     /**
@@ -67,8 +76,8 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
     public String toString() {
         return TableWithMissingIndex.class.getSimpleName() + '{' +
             table.innerToString() +
-            ", seqScans=" + seqScans +
-            ", indexScans=" + indexScans +
+            ", " + SEQ_SCANS_FIELD + '=' + seqScans +
+            ", " + INDEX_SCANS_FIELD + '=' + indexScans +
             '}';
     }
 
@@ -110,8 +119,8 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      *
      * @param tableName        table name; should be non-blank.
      * @param tableSizeInBytes table size in bytes; should be positive or zero.
-     * @param seqScans         number of sequential scans initiated on this table; should be non-negative.
-     * @param indexScans       number of index scans initiated on this table; should be non-negative.
+     * @param seqScans         the number of sequential scans initiated on this table; should be non-negative.
+     * @param indexScans       the number of index scans initiated on this table; should be non-negative.
      * @return {@code TableWithMissingIndex}
      */
     public static TableWithMissingIndex of(final String tableName,
@@ -139,8 +148,8 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      * @param pgContext        the schema context to enrich table name; must be non-null.
      * @param tableName        table name; should be non-blank.
      * @param tableSizeInBytes table size in bytes; should be positive or zero.
-     * @param seqScans         number of sequential scans initiated on this table; should be non-negative.
-     * @param indexScans       number of index scans initiated on this table; should be non-negative.
+     * @param seqScans         the number of sequential scans initiated on this table; should be non-negative.
+     * @param indexScans       the number of index scans initiated on this table; should be non-negative.
      * @return {@code TableWithMissingIndex}
      * @since 0.14.3
      */
@@ -170,8 +179,8 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      * Constructs a {@code TableWithMissingIndex} object.
      *
      * @param table      table; should be non-null.
-     * @param seqScans   number of sequential scans initiated on this table; should be non-negative.
-     * @param indexScans number of index scans initiated on this table; should be non-negative.
+     * @param seqScans   the number of sequential scans initiated on this table; should be non-negative.
+     * @param indexScans the number of index scans initiated on this table; should be non-negative.
      * @return {@code TableWithMissingIndex}
      * @since 0.7.0
      */
