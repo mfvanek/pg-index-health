@@ -13,7 +13,7 @@ plugins {
     id("pg-index-health.pitest")
 }
 
-description = "Spring Boot Starter for pg-index-health-core library"
+description = "pg-index-health-test-starter is a Spring Boot Starter for pg-index-health-core library"
 
 dependencies {
     api(project(":pg-index-health-model"))

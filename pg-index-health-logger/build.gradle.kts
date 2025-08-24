@@ -2,7 +2,7 @@ plugins {
     id("pg-index-health.java-library")
 }
 
-description = "pg-index-health-logger is a Java library for collecting and logging health state in PostgreSQL databases."
+description = "pg-index-health-logger is a Java library for collecting and logging schema health state in PostgreSQL databases."
 
 dependencies {
     api(project(":pg-index-health-model"))
