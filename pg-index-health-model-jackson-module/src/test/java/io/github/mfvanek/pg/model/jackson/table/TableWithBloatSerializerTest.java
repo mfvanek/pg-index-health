@@ -8,31 +8,31 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.jackson.index;
+package io.github.mfvanek.pg.model.jackson.table;
 
-import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
+import io.github.mfvanek.pg.model.table.TableWithBloat;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class IndexWithBloatSerializerTest extends ObjectMapperTestBase {
+class TableWithBloatSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() throws IOException {
-        final IndexWithBloat original = IndexWithBloat.of("t1", "i1", 100L, 40L, 40.01);
+        final TableWithBloat original = TableWithBloat.of("demo.table1", 143L, 256L, 56.78);
         assertThat(objectMapper.writeValueAsString(original))
-            .isEqualTo("{\"index\":{\"tableName\":\"t1\",\"indexName\":\"i1\",\"indexSizeInBytes\":100},\"bloatSizeInBytes\":40,\"bloatPercentage\":40.01}");
-        final IndexWithBloat restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), IndexWithBloat.class);
+            .isEqualTo("{\"table\":{\"tableName\":\"demo.table1\",\"tableSizeInBytes\":143},\"bloatSizeInBytes\":256,\"bloatPercentage\":56.78}");
+        final TableWithBloat restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), TableWithBloat.class);
         assertThat(restored)
             .isEqualTo(original)
             .satisfies(t -> {
                 assertThat(t.getBloatSizeInBytes())
-                    .isEqualTo(40L);
+                    .isEqualTo(256L);
                 assertThat(t.getBloatPercentage())
-                    .isEqualTo(40.01);
+                    .isEqualTo(56.78);
             });
     }
 }

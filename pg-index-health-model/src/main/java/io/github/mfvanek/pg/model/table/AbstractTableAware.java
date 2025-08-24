@@ -29,7 +29,7 @@ abstract class AbstractTableAware implements DbObject, TableSizeAware {
     protected final Table table;
 
     AbstractTableAware(final Table table) {
-        this.table = Objects.requireNonNull(table, "table cannot be null");
+        this.table = Objects.requireNonNull(table, TABLE_FIELD + " cannot be null");
     }
 
     /**
@@ -62,5 +62,16 @@ abstract class AbstractTableAware implements DbObject, TableSizeAware {
     @Override
     public final long getTableSizeInBytes() {
         return table.getTableSizeInBytes();
+    }
+
+    /**
+     * Returns the {@code Table} instance associated with this object.
+     *
+     * @return the {@code Table} instance
+     * @author Ivan Vakhrushev
+     * @since 0.20.3
+     */
+    public final Table toTable() {
+        return table;
     }
 }
