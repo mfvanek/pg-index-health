@@ -53,11 +53,14 @@ import io.github.mfvanek.pg.model.jackson.index.UnusedIndexDeserializer;
 import io.github.mfvanek.pg.model.jackson.index.UnusedIndexSerializer;
 import io.github.mfvanek.pg.model.jackson.sequence.SequenceStateDeserializer;
 import io.github.mfvanek.pg.model.jackson.sequence.SequenceStateSerializer;
+import io.github.mfvanek.pg.model.jackson.table.TableDeserializer;
+import io.github.mfvanek.pg.model.jackson.table.TableSerializer;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
+import io.github.mfvanek.pg.model.table.Table;
 
 import java.io.Serial;
 
-@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "checkstyle:ExecutableStatementCount"})
 public class PgIndexHealthModelModule extends SimpleModule {
 
     @Serial
@@ -107,5 +110,8 @@ public class PgIndexHealthModelModule extends SimpleModule {
 
         addSerializer(SequenceState.class, new SequenceStateSerializer());
         addDeserializer(SequenceState.class, new SequenceStateDeserializer());
+
+        addSerializer(Table.class, new TableSerializer());
+        addDeserializer(Table.class, new TableDeserializer());
     }
 }

@@ -21,6 +21,11 @@ import io.github.mfvanek.pg.model.index.IndexSizeAware;
 public interface TableSizeAware extends TableNameAware {
 
     /**
+     * Represents the field name used for retrieving the size of a table in bytes.
+     */
+    String TABLE_SIZE_IN_BYTES_FIELD = "tableSizeInBytes";
+
+    /**
      * Retrieves table size in bytes.
      *
      * @return table size in bytes

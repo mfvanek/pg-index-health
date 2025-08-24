@@ -29,7 +29,7 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
 
     private Table(final String tableName, final long tableSizeInBytes) {
         this.tableName = Validators.tableNameNotBlank(tableName);
-        this.tableSizeInBytes = Validators.sizeNotNegative(tableSizeInBytes, "tableSizeInBytes");
+        this.tableSizeInBytes = Validators.sizeNotNegative(tableSizeInBytes, TABLE_SIZE_IN_BYTES_FIELD);
     }
 
     /**
@@ -71,7 +71,7 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
      */
     String innerToString() {
         return TABLE_NAME_FIELD + "='" + tableName + '\'' +
-            ", tableSizeInBytes=" + tableSizeInBytes;
+            ", " + TABLE_SIZE_IN_BYTES_FIELD + '=' + tableSizeInBytes;
     }
 
     /**
