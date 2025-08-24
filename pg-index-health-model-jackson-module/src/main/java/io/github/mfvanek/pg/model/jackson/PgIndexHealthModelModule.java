@@ -57,9 +57,12 @@ import io.github.mfvanek.pg.model.jackson.table.TableDeserializer;
 import io.github.mfvanek.pg.model.jackson.table.TableSerializer;
 import io.github.mfvanek.pg.model.jackson.table.TableWithBloatDeserializer;
 import io.github.mfvanek.pg.model.jackson.table.TableWithBloatSerializer;
+import io.github.mfvanek.pg.model.jackson.table.TableWithColumnsDeserializer;
+import io.github.mfvanek.pg.model.jackson.table.TableWithColumnsSerializer;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
+import io.github.mfvanek.pg.model.table.TableWithColumns;
 
 import java.io.Serial;
 
@@ -119,5 +122,8 @@ public class PgIndexHealthModelModule extends SimpleModule {
 
         addSerializer(TableWithBloat.class, new TableWithBloatSerializer());
         addDeserializer(TableWithBloat.class, new TableWithBloatDeserializer());
+
+        addSerializer(TableWithColumns.class, new TableWithColumnsSerializer());
+        addDeserializer(TableWithColumns.class, new TableWithColumnsDeserializer());
     }
 }
