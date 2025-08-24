@@ -71,7 +71,7 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
         if (pgVersion != null) {
             return pgVersion;
         }
-        return "17.4";
+        return "17.6";
     }
 
     /**
@@ -97,7 +97,7 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
     /**
      * Creates {@code PostgresVersionHolder} for Bitnami cluster installation.
      * The version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
-     * otherwise the default version {@code 17.4.0} is used.
+     * otherwise the default version {@code 17.6.0} is used.
      *
      * @return {@code PostgresVersionHolder}
      */
@@ -106,7 +106,7 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
     }
 
     /**
-     * Creates {@code PostgresVersionHolder} with given version for Bitnami cluster installation.
+     * Creates {@code PostgresVersionHolder} with the given version for Bitnami cluster installation.
      *
      * @param pgVersion given PostgreSQL version
      * @return {@code PostgresVersionHolder}
@@ -119,7 +119,7 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
     /**
      * Creates {@code PostgresVersionHolder} for single node installation.
      * The version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
-     * otherwise the default version {@code 17.4} is used.
+     * otherwise the default version {@code 17.6} is used.
      *
      * @return {@code PostgresVersionHolder}
      */
@@ -128,7 +128,7 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
     }
 
     /**
-     * Creates {@code PostgresVersionHolder} with given version for single node installation.
+     * Creates {@code PostgresVersionHolder} with the given version for single node installation.
      *
      * @param pgVersion given PostgreSQL version
      * @return {@code PostgresVersionHolder}

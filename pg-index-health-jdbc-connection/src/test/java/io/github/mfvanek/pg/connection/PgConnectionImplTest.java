@@ -132,7 +132,7 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
             .isNotNull()
             .isEqualTo(getHost());
 
-        final PgConnection third = PgConnectionImpl.ofUrl(getDataSource(), "jdbc:tc:postgresql:17.4:///demo");
+        final PgConnection third = PgConnectionImpl.ofUrl(getDataSource(), "jdbc:tc:postgresql:17.6:///demo");
         assertThat(third.getHost())
             .isNotNull()
             .isEqualTo(getHost());

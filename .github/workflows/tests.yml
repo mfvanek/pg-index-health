@@ -12,7 +12,7 @@ jobs:
             fail-fast: false
             matrix:
                 # bitnami without subscription supports only latest version
-                pg_version: [ "13.18", "14.15", "15.10", "16.6", "17.4" ]
+                pg_version: [ "13.22", "14.19", "15.14", "16.10", "17.6" ]
         env:
             TEST_PG_VERSION: ${{ matrix.pg_version }}
         runs-on: ubuntu-latest
@@ -44,17 +44,17 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-gradle-
             -   name: Build with Gradle and analyze
-                if: matrix.pg_version == '16.6'
+                if: matrix.pg_version == '16.10'
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
                     STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
                 run: ./gradlew build sonarqube --info
             -   name: Build with Gradle
-                if: matrix.pg_version != '16.6'
+                if: matrix.pg_version != '16.10'
                 run: ./gradlew build
             -   name: Upload coverage to Codecov
-                if: matrix.pg_version == '16.6'
+                if: matrix.pg_version == '16.10'
                 uses: codecov/codecov-action@v5
                 with:
                     token: ${{ secrets.CODECOV_TOKEN }}
