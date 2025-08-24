@@ -149,12 +149,12 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
             '}';
     }
 
-    private static Constraint toConstraint(final String tableName,
+    private static Constraint asConstraint(final String tableName,
                                            final String constraintName) {
         return Constraint.ofType(tableName, constraintName, ConstraintType.FOREIGN_KEY);
     }
 
-    private static Constraint toConstraint(final PgContext pgContext,
+    private static Constraint asConstraint(final PgContext pgContext,
                                            final String tableName,
                                            final String constraintName) {
         return Constraint.ofType(pgContext, tableName, constraintName, ConstraintType.FOREIGN_KEY);
@@ -185,7 +185,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     public static ForeignKey of(final String tableName,
                                 final String constraintName,
                                 final List<Column> columns) {
-        return of(toConstraint(tableName, constraintName), columns);
+        return of(asConstraint(tableName, constraintName), columns);
     }
 
     /**
@@ -202,7 +202,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                 final String tableName,
                                 final String constraintName,
                                 final List<Column> columns) {
-        return of(toConstraint(pgContext, tableName, constraintName), columns);
+        return of(asConstraint(pgContext, tableName, constraintName), columns);
     }
 
     /**
@@ -229,7 +229,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     public static ForeignKey ofColumn(final String tableName,
                                       final String constraintName,
                                       final Column column) {
-        return ofColumn(toConstraint(tableName, constraintName), column);
+        return ofColumn(asConstraint(tableName, constraintName), column);
     }
 
     /**
@@ -246,7 +246,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                       final String tableName,
                                       final String constraintName,
                                       final Column column) {
-        return ofColumn(toConstraint(pgContext, tableName, constraintName), column);
+        return ofColumn(asConstraint(pgContext, tableName, constraintName), column);
     }
 
     /**
