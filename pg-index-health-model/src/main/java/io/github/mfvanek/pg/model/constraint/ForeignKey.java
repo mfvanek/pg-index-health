@@ -98,7 +98,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @author Ivan Vakhrushev
      * @since 0.20.3
      */
-    public Constraint getConstraint() {
+    public Constraint toConstraint() {
         return constraint;
     }
 

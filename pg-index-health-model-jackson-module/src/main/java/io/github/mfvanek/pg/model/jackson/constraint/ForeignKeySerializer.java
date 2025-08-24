@@ -32,7 +32,7 @@ public class ForeignKeySerializer extends JsonSerializer<ForeignKey> {
     @Override
     public void serialize(final ForeignKey value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
-        serializers.defaultSerializeField(ForeignKey.CONSTRAINT_FIELD, value.getConstraint(), gen);
+        serializers.defaultSerializeField(ForeignKey.CONSTRAINT_FIELD, value.toConstraint(), gen);
         serializers.defaultSerializeField(ColumnsAware.COLUMNS_FIELD, value.getColumns(), gen);
         gen.writeEndObject();
     }
