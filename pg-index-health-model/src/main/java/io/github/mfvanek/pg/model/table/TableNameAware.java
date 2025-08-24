@@ -19,6 +19,12 @@ package io.github.mfvanek.pg.model.table;
 public interface TableNameAware {
 
     /**
+     * Represents the name of the table field as a constant string.
+     * Can be used as an identifier or reference for table name fields.
+     */
+    String TABLE_NAME_FIELD = "tableName";
+
+    /**
      * Retrieves table name.
      *
      * @return table name

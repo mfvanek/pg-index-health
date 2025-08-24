@@ -42,6 +42,8 @@ class ColumnWithSerialTypeTest {
                     .isEqualTo("s1");
                 assertThat(c.getObjectType())
                     .isEqualTo(PgObjectType.TABLE);
+                assertThat(c.toColumn())
+                    .isEqualTo(Column.ofNotNull("t1", "c1"));
             });
 
         final ColumnWithSerialType theSameButNullable = prepareNullable();
@@ -61,6 +63,8 @@ class ColumnWithSerialTypeTest {
                     .isEqualTo(SerialType.SERIAL);
                 assertThat(c.getSequenceName())
                     .isEqualTo("s1");
+                assertThat(c.toColumn())
+                    .isEqualTo(Column.ofNullable("t1", "c1"));
             });
     }
 

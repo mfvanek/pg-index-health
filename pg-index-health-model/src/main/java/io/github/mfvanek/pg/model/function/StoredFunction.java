@@ -25,12 +25,21 @@ import java.util.Objects;
  */
 public final class StoredFunction implements DbObject, Comparable<StoredFunction> {
 
+    /**
+     * Constant representing the field name for a stored procedure or function name within the {@link StoredFunction} class.
+     */
+    public static final String FUNCTION_NAME_FIELD = "functionName";
+    /**
+     * Constant representing the field name for a function's signature.
+     */
+    public static final String FUNCTION_SIGNATURE_FIELD = "functionSignature";
+
     private final String functionName;
     private final String functionSignature;
 
     private StoredFunction(final String functionName, final String functionSignature) {
-        this.functionName = Validators.notBlank(functionName, "functionName");
-        this.functionSignature = Objects.requireNonNull(functionSignature, "functionSignature cannot be null")
+        this.functionName = Validators.notBlank(functionName, FUNCTION_NAME_FIELD);
+        this.functionSignature = Objects.requireNonNull(functionSignature, FUNCTION_SIGNATURE_FIELD + " cannot be null")
             .trim(); // can be empty
     }
 
@@ -73,8 +82,10 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
      */
     @Override
     public String toString() {
-        return StoredFunction.class.getSimpleName() + "{functionName='" + functionName + '\'' +
-            ", functionSignature='" + functionSignature + "'}";
+        return StoredFunction.class.getSimpleName() + '{' +
+            FUNCTION_NAME_FIELD + "='" + functionName + '\'' +
+            ", " + FUNCTION_SIGNATURE_FIELD + "='" + functionSignature +
+            "'}";
     }
 
     /**

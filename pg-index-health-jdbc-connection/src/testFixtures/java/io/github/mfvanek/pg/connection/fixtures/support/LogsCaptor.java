@@ -44,11 +44,7 @@ public final class LogsCaptor implements AutoCloseable {
     @Override
     public void close() {
         logger.removeHandler(handler);
-        clear();
-    }
-
-    public void clear() {
-        handler.clear();
+        handler.close();
     }
 
     public List<LogRecord> getLogs() {
@@ -76,12 +72,8 @@ public final class LogsCaptor implements AutoCloseable {
             records.clear();
         }
 
-        public List<LogRecord> getLogRecords() {
+        private List<LogRecord> getLogRecords() {
             return List.copyOf(records);
-        }
-
-        public void clear() {
-            records.clear();
         }
     }
 }

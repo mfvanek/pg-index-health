@@ -10,7 +10,10 @@
 
 package io.github.mfvanek.pg.model.validation;
 
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
+import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
+import io.github.mfvanek.pg.model.index.IndexNameAware;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.util.Collection;
@@ -50,7 +53,7 @@ public final class Validators {
      * @throws IllegalArgumentException if the table name is blank
      */
     public static String tableNameNotBlank(final String tableName) {
-        return notBlank(tableName, "tableName");
+        return notBlank(tableName, TableNameAware.TABLE_NAME_FIELD);
     }
 
     /**
@@ -61,7 +64,7 @@ public final class Validators {
      * @throws IllegalArgumentException if the index name is blank
      */
     public static String indexNameNotBlank(final String indexName) {
-        return notBlank(indexName, "indexName");
+        return notBlank(indexName, IndexNameAware.INDEX_NAME_FIELD);
     }
 
     /**
@@ -164,13 +167,13 @@ public final class Validators {
     /**
      * Ensures the provided list is not empty.
      *
-     * @param columnsInConstraint the list to check
-     * @param <T>                 the type of the list elements
+     * @param columns the list to check
+     * @param <T>     the type of the list elements
      * @throws IllegalArgumentException if the list is empty
      */
-    public static <T> void validateThatNotEmpty(final Collection<T> columnsInConstraint) {
-        if (columnsInConstraint.isEmpty()) {
-            throw new IllegalArgumentException("columnsInConstraint cannot be empty");
+    public static <T extends ColumnNameAware> void validateThatNotEmpty(final Collection<T> columns) {
+        if (columns.isEmpty()) {
+            throw new IllegalArgumentException(ColumnsAware.COLUMNS_FIELD + " cannot be empty");
         }
     }
 

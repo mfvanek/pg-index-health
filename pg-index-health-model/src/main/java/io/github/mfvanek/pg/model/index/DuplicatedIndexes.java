@@ -30,6 +30,15 @@ import java.util.Objects;
  */
 public final class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware {
 
+    /**
+     * Represents the field name used to store information about indexes.
+     */
+    public static final String INDEXES_FIELD = "indexes";
+    /**
+     * Represents the field name used to store the total size of duplicated indexes.
+     */
+    public static final String TOTAL_SIZE_FIELD = "totalSize";
+
     private static final Comparator<Index> INDEX_WITH_SIZE_COMPARATOR =
         Comparator.comparing(Index::getTableName)
             .thenComparing(Index::getIndexName)
@@ -39,8 +48,8 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     private final long totalSize;
     private final List<String> indexesNames;
 
-    private DuplicatedIndexes(final Collection<Index> duplicatedIndexes) {
-        final List<Index> defensiveCopy = List.copyOf(Objects.requireNonNull(duplicatedIndexes, "duplicatedIndexes cannot be null"));
+    private DuplicatedIndexes(final Collection<Index> indexes) {
+        final List<Index> defensiveCopy = List.copyOf(Objects.requireNonNull(indexes, INDEXES_FIELD + " cannot be null"));
         Validators.validateThatTableIsTheSame(defensiveCopy);
         this.indexes = defensiveCopy.stream()
             .sorted(INDEX_WITH_SIZE_COMPARATOR)
@@ -78,10 +87,12 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     }
 
     /**
-     * Retrieves raw list of duplicated indexes.
+     * Retrieves a raw list of duplicated indexes.
      *
      * @return list of duplicated indexes
+     * @deprecated since 0.20.3, use {@link #getIndexes()} instead
      */
+    @Deprecated(since = "0.20.3", forRemoval = true)
     public List<Index> getDuplicatedIndexes() {
         return indexes;
     }
@@ -91,11 +102,11 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
      */
     @Override
     public List<Index> getIndexes() {
-        return List.copyOf(indexes);
+        return indexes;
     }
 
     /**
-     * Retrieves total size in bytes of all duplicated indexes.
+     * Retrieves the total size in bytes of all duplicated indexes.
      *
      * @return size in bytes
      */
@@ -142,14 +153,14 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     @Override
     public String toString() {
         return DuplicatedIndexes.class.getSimpleName() + '{' +
-            "tableName='" + getTableName() + '\'' +
-            ", totalSize=" + totalSize +
-            ", indexes=" + indexes +
+            TABLE_NAME_FIELD + "='" + getTableName() + '\'' +
+            ", " + TOTAL_SIZE_FIELD + '=' + totalSize +
+            ", " + INDEXES_FIELD + '=' + indexes +
             '}';
     }
 
     /**
-     * Constructs an {@code DuplicatedIndexes} object from given list of indexes.
+     * Constructs an {@code DuplicatedIndexes} object from a given list of indexes.
      *
      * @param duplicatedIndexes list of duplicated indexes; should be non-null.
      * @return {@code DuplicatedIndexes}
@@ -159,7 +170,7 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     }
 
     /**
-     * Constructs an {@code DuplicatedIndexes} object from given table name and raw string queried from database.
+     * Constructs an {@code DuplicatedIndexes} object from given table name and raw string queried from a database.
      *
      * @param tableName          table name; should be non-blank.
      * @param duplicatedAsString duplicated indexes as a raw string; should be non-blank.
@@ -178,8 +189,8 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     /**
      * Constructs an {@code DuplicatedIndexes} object from given indexes.
      *
-     * @param firstIndex   first index; should be non-null.
-     * @param secondIndex  second index; should be non-null.
+     * @param firstIndex   the first index; should be non-null.
+     * @param secondIndex  the second index; should be non-null.
      * @param otherIndexes other indexes.
      * @return {@code DuplicatedIndexes}
      */

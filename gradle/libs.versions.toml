@@ -1,11 +1,11 @@
 [versions]
-spring-boot = "3.3.12"
+spring-boot = "3.3.13"
 detekt = "1.23.8"
 commons-lang3 = "3.18.0"
-assertj = "3.27.3"
+assertj = "3.27.4"
 testcontainers = "1.21.3"
-junit = "5.13.1"
-mockito = "5.18.0"
+junit = "5.13.4"
+mockito = "5.19.0"
 forbiddenapis = "3.9"
 
 [libraries]
@@ -15,7 +15,7 @@ slf4j-simple = "org.slf4j:slf4j-simple:2.0.17" # to be compatible with Spring Bo
 apache-commons-dbcp2 = "org.apache.commons:commons-dbcp2:2.13.0"
 awaitility = "org.awaitility:awaitility:4.3.0"
 apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commons-lang3" }
-equalsverifier = "nl.jqno.equalsverifier:equalsverifier:4.0.7"
+equalsverifier = "nl.jqno.equalsverifier:equalsverifier:4.0.9"
 spring-boot-starter-root = { group = "org.springframework.boot", name = "spring-boot-starter", version.ref = "spring-boot" }
 spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "spring-boot" }
 spring-boot-autoconfigure-processor = { group = "org.springframework.boot", name = "spring-boot-autoconfigure-processor", version.ref = "spring-boot" }
@@ -28,7 +28,9 @@ forbiddenapis = { group = "de.thetaphi", name = "forbiddenapis", version.ref = "
 detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 liquibase-core = "org.liquibase:liquibase-core:4.33.0"
 liquibase-sessionlock = "com.github.blagerweij:liquibase-sessionlock:1.6.9"
+jackson-bom = "com.fasterxml.jackson:jackson-bom:2.17.3" # to be compatible with Spring Boot 3.3.X
 
 [plugins]
 spring-boot-gradlePlugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.7" }
+lombok = { id = "io.freefair.lombok", version = "8.14.2" }

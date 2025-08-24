@@ -27,17 +27,17 @@ plugins {
 }
 
 dependencies {
-    errorprone("com.google.errorprone:error_prone_core:2.38.0")
-    errorprone("com.uber.nullaway:nullaway:0.12.7")
+    errorprone("com.google.errorprone:error_prone_core:2.41.0")
+    errorprone("com.uber.nullaway:nullaway:0.12.9")
 
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.10")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.13")
 }
 
 tasks.withType<JavaCompile>().configureEach {
     options.errorprone {
         disableWarningsInGeneratedCode.set(true)
-        disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType", "TruthSelfEquals")
+        disable("StringSplitter", "ImmutableEnumChecker", "FutureReturnValueIgnored", "EqualsIncompatibleType", "TruthSelfEquals", "BooleanLiteral")
         option("NullAway:OnlyNullMarked", "true")
         error("NullAway")
         if (name.lowercase().contains("test")) {
@@ -100,7 +100,7 @@ tasks {
 }
 
 checkstyle {
-    toolVersion = "10.24.0"
+    toolVersion = "11.0.0"
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     maxWarnings = 0
@@ -108,14 +108,14 @@ checkstyle {
 }
 
 pmd {
-    toolVersion = "7.14.0"
+    toolVersion = "7.16.0"
     isConsoleOutput = true
     ruleSetFiles = files("${rootDir}/config/pmd/pmd.xml")
     ruleSets = listOf()
 }
 
 spotbugs {
-    toolVersion.set("4.9.3")
+    toolVersion.set("4.9.4")
     showProgress.set(true)
     effort.set(Effort.MAX)
     reportLevel.set(Confidence.LOW)

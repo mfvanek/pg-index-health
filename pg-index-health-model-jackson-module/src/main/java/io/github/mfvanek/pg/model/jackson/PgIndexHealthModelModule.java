@@ -1,0 +1,135 @@
+/*
+ * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health
+ *
+ * This file is a part of "pg-index-health" - an embeddable schema linter for PostgreSQL
+ * that detects common anti-patterns and promotes best practices.
+ *
+ * Licensed under the Apache License 2.0
+ */
+
+package io.github.mfvanek.pg.model.jackson;
+
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.constraint.Constraint;
+import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
+import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.dbobject.AnyObject;
+import io.github.mfvanek.pg.model.function.StoredFunction;
+import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
+import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.index.IndexWithBloat;
+import io.github.mfvanek.pg.model.index.IndexWithColumns;
+import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.jackson.column.ColumnDeserializer;
+import io.github.mfvanek.pg.model.jackson.column.ColumnSerializer;
+import io.github.mfvanek.pg.model.jackson.column.ColumnWithSerialTypeDeserializer;
+import io.github.mfvanek.pg.model.jackson.column.ColumnWithSerialTypeSerializer;
+import io.github.mfvanek.pg.model.jackson.constraint.ConstraintDeserializer;
+import io.github.mfvanek.pg.model.jackson.constraint.ConstraintSerializer;
+import io.github.mfvanek.pg.model.jackson.constraint.DuplicatedForeignKeysDeserializer;
+import io.github.mfvanek.pg.model.jackson.constraint.DuplicatedForeignKeysSerializer;
+import io.github.mfvanek.pg.model.jackson.constraint.ForeignKeyDeserializer;
+import io.github.mfvanek.pg.model.jackson.constraint.ForeignKeySerializer;
+import io.github.mfvanek.pg.model.jackson.context.PgContextDeserializer;
+import io.github.mfvanek.pg.model.jackson.context.PgContextSerializer;
+import io.github.mfvanek.pg.model.jackson.dbobject.AnyObjectDeserializer;
+import io.github.mfvanek.pg.model.jackson.dbobject.AnyObjectSerializer;
+import io.github.mfvanek.pg.model.jackson.function.StoredFunctionDeserializer;
+import io.github.mfvanek.pg.model.jackson.function.StoredFunctionSerializer;
+import io.github.mfvanek.pg.model.jackson.generated.ModuleVersion;
+import io.github.mfvanek.pg.model.jackson.index.DuplicatedIndexesDeserializer;
+import io.github.mfvanek.pg.model.jackson.index.DuplicatedIndexesSerializer;
+import io.github.mfvanek.pg.model.jackson.index.IndexDeserializer;
+import io.github.mfvanek.pg.model.jackson.index.IndexSerializer;
+import io.github.mfvanek.pg.model.jackson.index.IndexWithBloatDeserializer;
+import io.github.mfvanek.pg.model.jackson.index.IndexWithBloatSerializer;
+import io.github.mfvanek.pg.model.jackson.index.IndexWithColumnsDeserializer;
+import io.github.mfvanek.pg.model.jackson.index.IndexWithColumnsSerializer;
+import io.github.mfvanek.pg.model.jackson.index.UnusedIndexDeserializer;
+import io.github.mfvanek.pg.model.jackson.index.UnusedIndexSerializer;
+import io.github.mfvanek.pg.model.jackson.sequence.SequenceStateDeserializer;
+import io.github.mfvanek.pg.model.jackson.sequence.SequenceStateSerializer;
+import io.github.mfvanek.pg.model.jackson.table.TableDeserializer;
+import io.github.mfvanek.pg.model.jackson.table.TableSerializer;
+import io.github.mfvanek.pg.model.jackson.table.TableWithBloatDeserializer;
+import io.github.mfvanek.pg.model.jackson.table.TableWithBloatSerializer;
+import io.github.mfvanek.pg.model.jackson.table.TableWithColumnsDeserializer;
+import io.github.mfvanek.pg.model.jackson.table.TableWithColumnsSerializer;
+import io.github.mfvanek.pg.model.jackson.table.TableWithMissingIndexDeserializer;
+import io.github.mfvanek.pg.model.jackson.table.TableWithMissingIndexSerializer;
+import io.github.mfvanek.pg.model.sequence.SequenceState;
+import io.github.mfvanek.pg.model.table.Table;
+import io.github.mfvanek.pg.model.table.TableWithBloat;
+import io.github.mfvanek.pg.model.table.TableWithColumns;
+import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
+
+import java.io.Serial;
+
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "checkstyle:ExecutableStatementCount"})
+public class PgIndexHealthModelModule extends SimpleModule {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    public PgIndexHealthModelModule() {
+        super(PgIndexHealthModelModule.class.getSimpleName(), ModuleVersion.VERSION);
+
+        addSerializer(PgContext.class, new PgContextSerializer());
+        addDeserializer(PgContext.class, new PgContextDeserializer());
+
+        addSerializer(AnyObject.class, new AnyObjectSerializer());
+        addDeserializer(AnyObject.class, new AnyObjectDeserializer());
+
+        addSerializer(Column.class, new ColumnSerializer());
+        addDeserializer(Column.class, new ColumnDeserializer());
+
+        addSerializer(ColumnWithSerialType.class, new ColumnWithSerialTypeSerializer());
+        addDeserializer(ColumnWithSerialType.class, new ColumnWithSerialTypeDeserializer());
+
+        addSerializer(Constraint.class, new ConstraintSerializer());
+        addDeserializer(Constraint.class, new ConstraintDeserializer());
+
+        addSerializer(ForeignKey.class, new ForeignKeySerializer());
+        addDeserializer(ForeignKey.class, new ForeignKeyDeserializer());
+
+        addSerializer(DuplicatedForeignKeys.class, new DuplicatedForeignKeysSerializer());
+        addDeserializer(DuplicatedForeignKeys.class, new DuplicatedForeignKeysDeserializer());
+
+        addSerializer(StoredFunction.class, new StoredFunctionSerializer());
+        addDeserializer(StoredFunction.class, new StoredFunctionDeserializer());
+
+        addSerializer(Index.class, new IndexSerializer());
+        addDeserializer(Index.class, new IndexDeserializer());
+
+        addSerializer(IndexWithBloat.class, new IndexWithBloatSerializer());
+        addDeserializer(IndexWithBloat.class, new IndexWithBloatDeserializer());
+
+        addSerializer(IndexWithColumns.class, new IndexWithColumnsSerializer());
+        addDeserializer(IndexWithColumns.class, new IndexWithColumnsDeserializer());
+
+        addSerializer(UnusedIndex.class, new UnusedIndexSerializer());
+        addDeserializer(UnusedIndex.class, new UnusedIndexDeserializer());
+
+        addSerializer(DuplicatedIndexes.class, new DuplicatedIndexesSerializer());
+        addDeserializer(DuplicatedIndexes.class, new DuplicatedIndexesDeserializer());
+
+        addSerializer(SequenceState.class, new SequenceStateSerializer());
+        addDeserializer(SequenceState.class, new SequenceStateDeserializer());
+
+        addSerializer(Table.class, new TableSerializer());
+        addDeserializer(Table.class, new TableDeserializer());
+
+        addSerializer(TableWithBloat.class, new TableWithBloatSerializer());
+        addDeserializer(TableWithBloat.class, new TableWithBloatDeserializer());
+
+        addSerializer(TableWithColumns.class, new TableWithColumnsSerializer());
+        addDeserializer(TableWithColumns.class, new TableWithColumnsDeserializer());
+
+        addSerializer(TableWithMissingIndex.class, new TableWithMissingIndexSerializer());
+        addDeserializer(TableWithMissingIndex.class, new TableWithMissingIndexDeserializer());
+    }
+}

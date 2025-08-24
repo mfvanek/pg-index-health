@@ -108,7 +108,7 @@ class DuplicatedIndexesTest {
     void withoutIndexes() {
         assertThatThrownBy(() -> DuplicatedIndexes.of(null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("duplicatedIndexes cannot be null");
+            .hasMessage("indexes cannot be null");
 
         final List<Index> firstIndexes = List.of();
         assertThatThrownBy(() -> DuplicatedIndexes.of(firstIndexes))

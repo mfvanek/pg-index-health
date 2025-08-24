@@ -34,6 +34,8 @@ class TableWithBloatTest {
             .isEqualTo(25);
         assertThat(bloat.getObjectType())
             .isEqualTo(PgObjectType.TABLE);
+        assertThat(bloat.toTable())
+            .isEqualTo(Table.of("t1", 10L));
     }
 
     @Test

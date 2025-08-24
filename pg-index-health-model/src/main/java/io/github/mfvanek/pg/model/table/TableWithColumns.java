@@ -33,7 +33,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
     private TableWithColumns(final Table table,
                              final List<Column> columns) {
         super(table);
-        final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columns, "columns cannot be null"));
+        final List<Column> defensiveCopy = List.copyOf(Objects.requireNonNull(columns, COLUMNS_FIELD + " cannot be null"));
         Validators.validateThatTableIsTheSame(table.getTableName(), defensiveCopy);
         this.columns = defensiveCopy;
     }
@@ -41,7 +41,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
     /**
      * Retrieves columns of table (zero or more).
      *
-     * @return columns of table
+     * @return columns of the table
      */
     @Override
     public List<ColumnNameAware> getColumns() {
@@ -55,7 +55,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
     public String toString() {
         return TableWithColumns.class.getSimpleName() + '{' +
             table.innerToString() +
-            ", columns=" + columns + '}';
+            ", " + COLUMNS_FIELD + '=' + columns + '}';
     }
 
     /**

@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.table;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -132,7 +133,7 @@ class TableWithColumnsTest {
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(TableWithColumns.class)
-            .withIgnoredFields("columns")
+            .withIgnoredFields(ColumnsAware.COLUMNS_FIELD)
             .verify();
     }
 

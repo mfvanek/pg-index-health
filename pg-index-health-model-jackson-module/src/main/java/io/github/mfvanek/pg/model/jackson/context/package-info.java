@@ -9,9 +9,9 @@
  */
 
 /**
- * An additional testing classes and interfaces.
+ * Context-related serializers and deserializers.
  */
 @NullMarked
-package io.github.mfvanek.pg.testing.annotations;
+package io.github.mfvanek.pg.model.jackson.context;
 
 import org.jspecify.annotations.NullMarked;

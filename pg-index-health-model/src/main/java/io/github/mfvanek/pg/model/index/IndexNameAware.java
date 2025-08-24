@@ -19,6 +19,11 @@ package io.github.mfvanek.pg.model.index;
 public interface IndexNameAware {
 
     /**
+     * Constant representing the field name for index names in a database entity.
+     */
+    String INDEX_NAME_FIELD = "indexName";
+
+    /**
      * Retrieves index name.
      *
      * @return index name

@@ -20,6 +20,11 @@ package io.github.mfvanek.pg.model.sequence;
 public interface SequenceNameAware {
 
     /**
+     * Represents the field name for storing the name of the sequence.
+     */
+    String SEQUENCE_NAME_FIELD = "sequenceName";
+
+    /**
      * Retrieves the name of the sequence associated with the implementing object.
      *
      * @return the name of the sequence, never null
