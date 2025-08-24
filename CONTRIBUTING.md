@@ -15,11 +15,11 @@ Java >= 17 is required.
    **You need to have [Docker](https://www.docker.com/) up and running**.
     
 By default, [PostgreSQL 17.4 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
-Set `TEST_PG_VERSION` environment variable to use any of other available PostgreSQL version:
+Set `TEST_PG_VERSION` environment variable to use any of another available PostgreSQL version:
 ```
 TEST_PG_VERSION=11.20-alpine
 ```
-List of all available PostgreSQL versions can be found [here](https://hub.docker.com/_/postgres).
+The list of all available PostgreSQL versions can be found [here](https://hub.docker.com/_/postgres).
 
 ## Implementing a new check
 
@@ -29,24 +29,26 @@ Each database structure check starts with an SQL query to the [pg_catalog](https
 
 1. SQL queries for checks are located in a separate repository https://github.com/mfvanek/pg-index-health-sql
 2. That repository is pulled into the current project as a [git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
-3. [SQLFluff](https://github.com/sqlfluff/sqlfluff) is used as a linter for all sql queries
+3. [SQLFluff](https://github.com/sqlfluff/sqlfluff) is used as a linter for all SQL queries
 4. All queries must be schema-aware (see [example](https://github.com/mfvanek/pg-index-health-sql/blob/6a5b823d2f86f3fed946f073de93a20245b8d312/sql/duplicated_indexes.sql#L23))
 
 ### Update git submodule
 
-After your PR with a new sql query is merged, you need to update git submodule:
+After your PR with a new SQL query is merged, you need to update the git submodule:
 
 ```shell
   git submodule foreach --recursive git pull origin master
 ```
 
-### Extend domain model (if needed)
+### Extend the domain model (if needed)
 
 pg-index-health is a [multimodule Gradle](https://docs.gradle.org/current/userguide/multi_project_builds.html) project.  
 Domain model is located in a [pg-index-health-model](pg-index-health-model).
 
 Best practices:
 * All domain classes should be minimalistic and well-defined.
+* All domain classes should have a [Jackson serializer and deserializer](pg-index-health-model-jackson-module).
+* All domain classes should have a [builder](https://www.baeldung.com/java-builder-pattern).
 * They should include enough information to generate corrective SQL migrations via [pg-index-health-generator](pg-index-health-generator).
 * We use [JSpecify](https://github.com/jspecify/jspecify) to mark up the code with `Nullable`/`NonNull` annotations.
 
@@ -68,8 +70,8 @@ Implement a new class extending [AbstractCheckOnCluster](pg-index-health/src/mai
 
 * Your code must be 100% covered.
 * Mutation tests via [pitest](https://pitest.org/) should work.
-* Behavior of new check should be tested for partitioned tables.
-* Behavior of new check should be tested with [quoted identifiers](https://www.postgresql.org/docs/17/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS).
+* Behavior of the new check should be tested for partitioned tables.
+* Behavior of the new check should be tested with [quoted identifiers](https://www.postgresql.org/docs/17/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS).
 
 ### Further steps
 
