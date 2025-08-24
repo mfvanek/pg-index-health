@@ -13,35 +13,11 @@ dependencies {
     testImplementation("io.github.classgraph:classgraph:4.8.181")
 }
 
-val generateModuleVersion by tasks.registering {
-    val outputDir = layout.buildDirectory.dir("generated/sources/version")
-    outputs.dir(outputDir)
-
-    doLast {
-        val versionJava = outputDir.get().file("io/github/mfvanek/pg/model/jackson/generated/ModuleVersion.java").asFile
-        versionJava.parentFile.mkdirs()
-        versionJava.writeText("""
-            /*
-             * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
-             * https://github.com/mfvanek/pg-index-health
-             *
-             * This file is a part of "pg-index-health" - an embeddable schema linter for PostgreSQL
-             * that detects common anti-patterns and promotes best practices.
-             *
-             * Licensed under the Apache License 2.0
-             */
-
-            package io.github.mfvanek.pg.model.jackson.generated;
-
-            import com.fasterxml.jackson.core.Version;
-
-            @io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport
-            public final class ModuleVersion {
-                public static final Version VERSION = new Version(${project.version.toString().replace(".", ", ")}, null, "${project.group}", "${project.name}");
-            }
-
-        """.trimIndent())
-    }
+val generateModuleVersion = tasks.register<GenerateModuleVersionTask>("generateModuleVersion") {
+    moduleGroup.set(project.group.toString())
+    moduleName.set(project.name)
+    moduleVersion.set(project.version.toString())
+    outputDir.set(layout.buildDirectory.dir("generated/sources/version"))
 }
 
 sourceSets["main"].java.srcDir(generateModuleVersion.map { it.outputs.files })

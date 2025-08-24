@@ -2,7 +2,7 @@ plugins {
     id("pg-index-health.java-library")
 }
 
-description = "pg-index-health-core is a Java library for analyzing and maintaining indexes and tables health in PostgreSQL databases on a specific host."
+description = "pg-index-health-core is an embeddable schema linter for PostgreSQL that detects common anti-patterns and promotes best practices on a specific host."
 
 dependencies {
     api(project(":pg-index-health-model"))

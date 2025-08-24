@@ -4,7 +4,7 @@ spring:
     main:
         banner-mode: off
     datasource:
-        url: jdbc:tc:postgresql:17.4:///demo_for_pg_index_health_starter
+        url: jdbc:tc:postgresql:17.6:///demo_for_pg_index_health_starter
         driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
 
 logging:
