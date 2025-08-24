@@ -1,6 +1,6 @@
 # Publishing Guide
 
-On the current stage we publish new versions of the project from a local machine and raise the version manually.
+At the current stage we publish new versions of the project from a local machine and raise the version manually.
 
 ## Before Publishing
 
@@ -21,6 +21,22 @@ Make sure that the `master` branch is up to date and builds successfully on your
 
 ```shell
 ./gradlew build
+```
+
+### Prepare the root `gradle.properties`
+
+Find [the root gradle.properties](https://docs.gradle.org/current/userguide/build_environment.html) file on your local machine.
+
+You need to add the following properties:
+
+```properties
+signing.gnupg.executable=gpg
+signing.gnupg.useLegacyGpg=false
+signing.gnupg.keyName=<key name>
+signing.gnupg.passphrase=<key passphrase>
+systemProp.org.gradle.internal.publish.checksums.insecure=true
+mavenCentralUsername=<sonatype username>
+mavenCentralPassword=<sonatype password>
 ```
 
 ## Publish to Maven Local
@@ -53,4 +69,5 @@ Track their appearance in [Maven repo](https://repo.maven.apache.org/maven2/io/g
 
 Then manually create a [new release on GitHub](https://github.com/mfvanek/pg-index-health/releases).
 
-After that create a new pull request to update the `README.md` file with the latest version.
+After that create a new pull request to update the `README.md` file with the latest published version.
+Also update the root `build.gradle.kts` and raise the version for the next development iteration.
