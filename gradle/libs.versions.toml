@@ -1,5 +1,5 @@
 [versions]
-spring-boot = "3.3.13"
+spring-boot = "3.5.5"
 detekt = "1.23.8"
 commons-lang3 = "3.18.0"
 assertj = "3.27.4"
