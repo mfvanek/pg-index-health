@@ -21,7 +21,6 @@ import java.util.Objects;
  *
  * @author Ivan Vakhrushev
  */
-@SuppressWarnings("checkstyle:EqualsHashCode")
 public final class TableWithBloat extends AbstractTableAware implements BloatAware, Comparable<TableWithBloat> {
 
     private final long bloatSizeInBytes;

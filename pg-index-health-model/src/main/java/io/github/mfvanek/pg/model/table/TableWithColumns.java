@@ -26,7 +26,6 @@ import java.util.Objects;
  * @author Ivan Vakhrushev
  * @since 0.14.6
  */
-@SuppressWarnings("checkstyle:EqualsHashCode")
 public final class TableWithColumns extends AbstractTableAware implements ColumnsAware, Comparable<TableWithColumns> {
 
     private final List<Column> columns;

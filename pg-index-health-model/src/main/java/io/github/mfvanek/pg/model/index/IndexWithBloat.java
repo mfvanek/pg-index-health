@@ -21,7 +21,6 @@ import java.util.Objects;
  *
  * @author Ivan Vakhrushev
  */
-@SuppressWarnings("checkstyle:EqualsHashCode")
 public final class IndexWithBloat extends AbstractIndexAware implements BloatAware, Comparable<IndexWithBloat> {
 
     private final long bloatSizeInBytes;

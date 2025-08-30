@@ -19,7 +19,6 @@ import java.util.Objects;
  * @see Column
  * @since 0.20.3
  */
-@SuppressWarnings("checkstyle:EqualsHashCode")
 public final class ColumnWithType extends AbstractColumnAware implements Comparable<ColumnWithType> {
 
     private ColumnWithType(final Column column,

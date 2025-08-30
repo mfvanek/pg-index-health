@@ -24,7 +24,6 @@ import java.util.Objects;
  * @see Column
  * @since 0.6.2
  */
-@SuppressWarnings("checkstyle:EqualsHashCode")
 public final class ColumnWithSerialType extends AbstractColumnAware implements SequenceNameAware, Comparable<ColumnWithSerialType> {
 
     /**
