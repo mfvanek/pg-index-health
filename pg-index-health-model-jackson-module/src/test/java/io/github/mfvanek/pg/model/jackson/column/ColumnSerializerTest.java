@@ -27,8 +27,8 @@ class ColumnSerializerTest extends ObjectMapperTestBase {
             .isEqualTo("{\"tableName\":\"table1\",\"columnName\":\"column1\",\"notNull\":true}");
         final Column restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), Column.class);
         assertThat(restored)
-            .isEqualTo(original)
-            .satisfies(c -> assertThat(c.isNotNull()).isTrue());
+            .usingRecursiveComparison()
+            .isEqualTo(original);
     }
 
     @Test
@@ -38,7 +38,7 @@ class ColumnSerializerTest extends ObjectMapperTestBase {
             .isEqualTo("{\"tableName\":\"table2\",\"columnName\":\"column2\",\"notNull\":false}");
         final Column restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), Column.class);
         assertThat(restored)
-            .isEqualTo(original)
-            .satisfies(c -> assertThat(c.isNotNull()).isFalse());
+            .usingRecursiveComparison()
+            .isEqualTo(original);
     }
 }

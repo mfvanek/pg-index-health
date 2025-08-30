@@ -20,6 +20,7 @@ import java.util.Objects;
  *
  * @author Ivan Vakhrushev
  */
+@SuppressWarnings("checkstyle:EqualsHashCode")
 public final class TableWithMissingIndex extends AbstractTableAware implements Comparable<TableWithMissingIndex> {
 
     /**

@@ -11,8 +11,6 @@
 package io.github.mfvanek.pg.model.column;
 
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.dbobject.DbObject;
-import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
@@ -26,67 +24,23 @@ import java.util.Objects;
  * @see Column
  * @since 0.6.2
  */
-public final class ColumnWithSerialType implements DbObject, ColumnNameAware, SequenceNameAware, Comparable<ColumnWithSerialType> {
+@SuppressWarnings("checkstyle:EqualsHashCode")
+public final class ColumnWithSerialType extends AbstractColumnAware implements SequenceNameAware, Comparable<ColumnWithSerialType> {
 
-    /**
-     * Represents the constant value for identifying the "column" field.
-     */
-    public static final String COLUMN_FIELD = "column";
     /**
      * The field name representing the type of serial column in a database.
      */
     public static final String SERIAL_TYPE_FIELD = "serialType";
 
-    private final Column column;
     private final SerialType serialType;
     private final String sequenceName;
 
     private ColumnWithSerialType(final Column column,
                                  final SerialType serialType,
                                  final String sequenceName) {
-        this.column = Objects.requireNonNull(column, COLUMN_FIELD + " cannot be null");
-        this.serialType = Objects.requireNonNull(serialType, SERIAL_TYPE_FIELD + " cannot be null");
+        super(column, Objects.requireNonNull(serialType, SERIAL_TYPE_FIELD + " cannot be null").getColumnType());
+        this.serialType = serialType;
         this.sequenceName = Validators.notBlank(sequenceName, SEQUENCE_NAME_FIELD);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getName() {
-        return column.getName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PgObjectType getObjectType() {
-        return column.getObjectType();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getTableName() {
-        return column.getTableName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getColumnName() {
-        return column.getColumnName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isNotNull() {
-        return column.isNotNull();
     }
 
     /**
@@ -109,23 +63,12 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     }
 
     /**
-     * Retrieves the current instance as a {@code Column}.
-     *
-     * @return the {@code Column} associated with this instance
-     * @author Ivan Vakhrushev
-     * @since 0.20.3
-     */
-    public Column toColumn() {
-        return column;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public String toString() {
         return ColumnWithSerialType.class.getSimpleName() + '{' +
-            COLUMN_FIELD + '=' + column +
+            innerToString() +
             ", " + SERIAL_TYPE_FIELD + '=' + serialType +
             ", " + SEQUENCE_NAME_FIELD + "='" + sequenceName + '\'' +
             '}';
@@ -144,9 +87,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
             return false;
         }
 
-        return Objects.equals(column, that.column) &&
-            Objects.equals(serialType, that.serialType) &&
-            Objects.equals(sequenceName, that.sequenceName);
+        return Objects.equals(column, that.column);
     }
 
     /**
@@ -154,7 +95,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      */
     @Override
     public int hashCode() {
-        return Objects.hash(column, serialType, sequenceName);
+        return Objects.hash(column);
     }
 
     /**

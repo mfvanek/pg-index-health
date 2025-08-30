@@ -27,6 +27,7 @@ class UnusedIndexSerializerTest extends ObjectMapperTestBase {
             .isEqualTo("{\"index\":{\"tableName\":\"t1\",\"indexName\":\"i1\",\"indexSizeInBytes\":100},\"indexScans\":4567}");
         final UnusedIndex restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), UnusedIndex.class);
         assertThat(restored)
+            .usingRecursiveComparison()
             .isEqualTo(original);
     }
 }

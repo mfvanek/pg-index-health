@@ -23,6 +23,7 @@ import java.util.Objects;
  * the index is actively used or potentially redundant.
  * </p>
  */
+@SuppressWarnings("checkstyle:EqualsHashCode")
 public final class UnusedIndex extends AbstractIndexAware implements Comparable<UnusedIndex> {
 
     /**

@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnTypeAware;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.column.SerialType;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
@@ -37,7 +38,7 @@ public class ColumnWithSerialTypeDeserializer extends JsonDeserializer<ColumnWit
     public ColumnWithSerialType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
-        final Column column = codec.treeToValue(node.get(ColumnWithSerialType.COLUMN_FIELD), Column.class);
+        final Column column = codec.treeToValue(node.get(ColumnTypeAware.COLUMN_FIELD), Column.class);
         final SerialType serialType = SerialType.valueOf(node.get(ColumnWithSerialType.SERIAL_TYPE_FIELD).asText());
         final String sequenceName = node.get(SequenceNameAware.SEQUENCE_NAME_FIELD).asText();
         return ColumnWithSerialType.of(column, serialType, sequenceName);

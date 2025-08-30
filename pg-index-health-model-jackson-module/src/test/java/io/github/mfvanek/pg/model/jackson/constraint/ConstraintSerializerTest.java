@@ -28,7 +28,7 @@ class ConstraintSerializerTest extends ObjectMapperTestBase {
             .isEqualTo("{\"tableName\":\"demo.orders\",\"constraintName\":\"order_amount_check\",\"constraintType\":\"CHECK\"}");
         final Constraint restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), Constraint.class);
         assertThat(restored)
-            .isEqualTo(original)
-            .satisfies(c -> assertThat(c.getConstraintType()).isEqualTo(ConstraintType.CHECK));
+            .usingRecursiveComparison()
+            .isEqualTo(original);
     }
 }

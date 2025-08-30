@@ -27,6 +27,7 @@ class IndexSerializerTest extends ObjectMapperTestBase {
             .isEqualTo("{\"tableName\":\"demo.custom_table\",\"indexName\":\"demo.custom_index\",\"indexSizeInBytes\":123}");
         final Index restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), Index.class);
         assertThat(restored)
+            .usingRecursiveComparison()
             .isEqualTo(original);
     }
 }

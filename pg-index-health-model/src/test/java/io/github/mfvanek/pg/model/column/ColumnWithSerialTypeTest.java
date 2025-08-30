@@ -71,7 +71,7 @@ class ColumnWithSerialTypeTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidValuesShouldThrowException() {
-        assertThatThrownBy(() -> ColumnWithSerialType.of(null, null, null))
+        assertThatThrownBy(() -> ColumnWithSerialType.of(null, SerialType.SERIAL, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("column cannot be null");
 
@@ -96,21 +96,31 @@ class ColumnWithSerialTypeTest {
     @Test
     void toStringTest() {
         assertThat(prepare())
-            .hasToString("ColumnWithSerialType{column=Column{tableName='t1', columnName='c1', notNull=true}, serialType=SerialType{columnType='serial'}, sequenceName='s1'}");
+            .hasToString("""
+                ColumnWithSerialType{column=Column{tableName='t1', columnName='c1', notNull=true}, \
+                columnType='serial', serialType=SerialType{columnType='serial'}, sequenceName='s1'}""");
 
         final PgContext ctx = PgContext.of("tst");
         final Column col = Column.ofNotNull(ctx, "t2", "c2");
         assertThat(ColumnWithSerialType.of(ctx, col, SerialType.SMALL_SERIAL, "s2"))
-            .hasToString("ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, serialType=SerialType{columnType='smallserial'}, sequenceName='tst.s2'}");
+            .hasToString("""
+                ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, \
+                columnType='smallserial', serialType=SerialType{columnType='smallserial'}, sequenceName='tst.s2'}""");
 
         assertThat(ColumnWithSerialType.ofBigSerial(ctx, col, "s3"))
-            .hasToString("ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, serialType=SerialType{columnType='bigserial'}, sequenceName='tst.s3'}");
+            .hasToString("""
+                ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, \
+                columnType='bigserial', serialType=SerialType{columnType='bigserial'}, sequenceName='tst.s3'}""");
 
         assertThat(ColumnWithSerialType.ofSerial(ctx, col, "s4"))
-            .hasToString("ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, serialType=SerialType{columnType='serial'}, sequenceName='tst.s4'}");
+            .hasToString("""
+                ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, \
+                columnType='serial', serialType=SerialType{columnType='serial'}, sequenceName='tst.s4'}""");
 
         assertThat(ColumnWithSerialType.ofSmallSerial(ctx, col, "s5"))
-            .hasToString("ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, serialType=SerialType{columnType='smallserial'}, sequenceName='tst.s5'}");
+            .hasToString("""
+                ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, \
+                columnType='smallserial', serialType=SerialType{columnType='smallserial'}, sequenceName='tst.s5'}""");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -147,18 +157,21 @@ class ColumnWithSerialTypeTest {
             .isNotEqualTo(first)
             .doesNotHaveSameHashCodeAs(first);
 
+        // ignores serial type
         assertThat(third)
-            .isNotEqualTo(first)
-            .doesNotHaveSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
+        // ignores sequence name
         assertThat(forth)
-            .isNotEqualTo(first)
-            .doesNotHaveSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
     }
 
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(ColumnWithSerialType.class)
+            .withIgnoredFields(ColumnTypeAware.COLUMN_TYPE_FIELD, ColumnWithSerialType.SERIAL_TYPE_FIELD, ColumnWithSerialType.SEQUENCE_NAME_FIELD)
             .verify();
     }
 

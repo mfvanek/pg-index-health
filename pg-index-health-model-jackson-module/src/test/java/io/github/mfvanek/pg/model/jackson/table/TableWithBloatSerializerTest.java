@@ -27,12 +27,7 @@ class TableWithBloatSerializerTest extends ObjectMapperTestBase {
             .isEqualTo("{\"table\":{\"tableName\":\"demo.table1\",\"tableSizeInBytes\":143},\"bloatSizeInBytes\":256,\"bloatPercentage\":56.78}");
         final TableWithBloat restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), TableWithBloat.class);
         assertThat(restored)
-            .isEqualTo(original)
-            .satisfies(t -> {
-                assertThat(t.getBloatSizeInBytes())
-                    .isEqualTo(256L);
-                assertThat(t.getBloatPercentage())
-                    .isEqualTo(56.78);
-            });
+            .usingRecursiveComparison()
+            .isEqualTo(original);
     }
 }

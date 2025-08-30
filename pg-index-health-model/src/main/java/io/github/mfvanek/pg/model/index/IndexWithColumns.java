@@ -25,6 +25,7 @@ import java.util.Objects;
  * @author Ivan Vakhrushev
  * @since 0.11.0
  */
+@SuppressWarnings("checkstyle:EqualsHashCode")
 public final class IndexWithColumns extends AbstractIndexAware implements ColumnsAware, Comparable<IndexWithColumns> {
 
     private final List<Column> columns;

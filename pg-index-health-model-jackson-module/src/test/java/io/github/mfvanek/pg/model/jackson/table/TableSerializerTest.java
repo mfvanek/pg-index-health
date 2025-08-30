@@ -27,6 +27,7 @@ class TableSerializerTest extends ObjectMapperTestBase {
             .isEqualTo("{\"tableName\":\"demo.table1\",\"tableSizeInBytes\":143}");
         final Table restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), Table.class);
         assertThat(restored)
+            .usingRecursiveComparison()
             .isEqualTo(original);
     }
 }
