@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckO
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithSerialTypesCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithTimestampOrTimetzTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedIndexesCheckOnHost;
@@ -300,6 +301,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public IndexesWithTimestampInTheMiddleCheckOnHost indexesWithTimestampInTheMiddleCheckOnHost(final PgConnection pgConnection) {
         return new IndexesWithTimestampInTheMiddleCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(ColumnsWithTimestampOrTimetzTypeCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public ColumnsWithTimestampOrTimetzTypeCheckOnHost columnsWithTimestampOrTimetzTypeCheckOnHost(final PgConnection pgConnection) {
+        return new ColumnsWithTimestampOrTimetzTypeCheckOnHost(pgConnection);
     }
 
     @Bean

@@ -27,6 +27,7 @@ class SequenceStateSerializerTest extends ObjectMapperTestBase {
             .isEqualTo("{\"sequenceName\":\"demo.seq1\",\"dataType\":\"bigint\",\"remainingPercentage\":83.21}");
         final SequenceState restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), SequenceState.class);
         assertThat(restored)
+            .usingRecursiveComparison()
             .isEqualTo(original);
     }
 }

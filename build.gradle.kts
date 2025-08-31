@@ -14,8 +14,8 @@ allprojects {
     version = "0.20.3"
 
     repositories {
-        mavenLocal()
         mavenCentral()
+        mavenLocal()
     }
 }
 

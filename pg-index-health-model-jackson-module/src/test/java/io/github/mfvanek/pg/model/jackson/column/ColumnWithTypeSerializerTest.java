@@ -8,24 +8,25 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.jackson.table;
+package io.github.mfvanek.pg.model.jackson.column;
 
+import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
-import io.github.mfvanek.pg.model.table.TableWithBloat;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TableWithBloatSerializerTest extends ObjectMapperTestBase {
+class ColumnWithTypeSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() throws IOException {
-        final TableWithBloat original = TableWithBloat.of("demo.table1", 143L, 256L, 56.78);
+        final ColumnWithType original = ColumnWithType.ofUuid(Column.ofNotNull("t1", "c1"));
         assertThat(objectMapper.writeValueAsString(original))
-            .isEqualTo("{\"table\":{\"tableName\":\"demo.table1\",\"tableSizeInBytes\":143},\"bloatSizeInBytes\":256,\"bloatPercentage\":56.78}");
-        final TableWithBloat restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), TableWithBloat.class);
+            .isEqualTo("{\"column\":{\"tableName\":\"t1\",\"columnName\":\"c1\",\"notNull\":true},\"columnType\":\"uuid\"}");
+        final ColumnWithType restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), ColumnWithType.class);
         assertThat(restored)
             .usingRecursiveComparison()
             .isEqualTo(original);

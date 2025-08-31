@@ -25,9 +25,12 @@ class ColumnWithSerialTypeSerializerTest extends ObjectMapperTestBase {
     void serializationShouldWork() throws IOException {
         final ColumnWithSerialType original = ColumnWithSerialType.ofSmallSerial(Column.ofNotNull("t1", "c1"), "seq1");
         assertThat(objectMapper.writeValueAsString(original))
-            .isEqualTo("{\"column\":{\"tableName\":\"t1\",\"columnName\":\"c1\",\"notNull\":true},\"serialType\":\"SMALL_SERIAL\",\"sequenceName\":\"seq1\"}");
+            .isEqualTo("""
+                {"column":{"tableName":"t1","columnName":"c1","notNull":true},\
+                "columnType":"smallserial","serialType":"SMALL_SERIAL","sequenceName":"seq1"}""");
         final ColumnWithSerialType restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), ColumnWithSerialType.class);
         assertThat(restored)
+            .usingRecursiveComparison()
             .isEqualTo(original);
     }
 }

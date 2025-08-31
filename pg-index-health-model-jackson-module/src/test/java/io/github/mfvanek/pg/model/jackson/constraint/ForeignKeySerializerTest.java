@@ -10,8 +10,6 @@
 
 package io.github.mfvanek.pg.model.jackson.constraint;
 
-import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.constraint.ConstraintType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
@@ -31,12 +29,7 @@ class ForeignKeySerializerTest extends ObjectMapperTestBase {
                 "columns":[{"tableName":"demo.orders","columnName":"client_id","notNull":true}]}""");
         final ForeignKey restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), ForeignKey.class);
         assertThat(restored)
-            .isEqualTo(original)
-            .satisfies(c -> {
-                assertThat(c.getConstraintType()).isEqualTo(ConstraintType.FOREIGN_KEY);
-                assertThat(c.getColumns())
-                    .hasSize(1)
-                    .containsExactly(Column.ofNotNull("demo.orders", "client_id"));
-            });
+            .usingRecursiveComparison()
+            .isEqualTo(original);
     }
 }

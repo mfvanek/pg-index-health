@@ -35,6 +35,7 @@ class IndexWithColumnsSerializerTest extends ObjectMapperTestBase {
                 {"tableName":"t3","columnName":"f","notNull":false}]}""");
         final IndexWithColumns restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), IndexWithColumns.class);
         assertThat(restored)
+            .usingRecursiveComparison()
             .isEqualTo(original);
     }
 }

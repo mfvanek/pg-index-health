@@ -27,12 +27,7 @@ class IndexWithBloatSerializerTest extends ObjectMapperTestBase {
             .isEqualTo("{\"index\":{\"tableName\":\"t1\",\"indexName\":\"i1\",\"indexSizeInBytes\":100},\"bloatSizeInBytes\":40,\"bloatPercentage\":40.01}");
         final IndexWithBloat restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), IndexWithBloat.class);
         assertThat(restored)
-            .isEqualTo(original)
-            .satisfies(t -> {
-                assertThat(t.getBloatSizeInBytes())
-                    .isEqualTo(40L);
-                assertThat(t.getBloatPercentage())
-                    .isEqualTo(40.01);
-            });
+            .usingRecursiveComparison()
+            .isEqualTo(original);
     }
 }

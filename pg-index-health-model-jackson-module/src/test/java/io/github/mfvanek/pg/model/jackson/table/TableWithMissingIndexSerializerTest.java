@@ -27,12 +27,7 @@ class TableWithMissingIndexSerializerTest extends ObjectMapperTestBase {
             .isEqualTo("{\"table\":{\"tableName\":\"t\",\"tableSizeInBytes\":113},\"seqScans\":255,\"indexScans\":344}");
         final TableWithMissingIndex restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), TableWithMissingIndex.class);
         assertThat(restored)
-            .isEqualTo(original)
-            .satisfies(t -> {
-                assertThat(t.getSeqScans())
-                    .isEqualTo(255L);
-                assertThat(t.getIndexScans())
-                    .isEqualTo(344L);
-            });
+            .usingRecursiveComparison()
+            .isEqualTo(original);
     }
 }

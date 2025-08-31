@@ -35,6 +35,7 @@ class TableWithColumnsSerializerTest extends ObjectMapperTestBase {
                 {"tableName":"t1","columnName":"c2","notNull":true}]}""");
         final TableWithColumns restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), TableWithColumns.class);
         assertThat(restored)
+            .usingRecursiveComparison()
             .isEqualTo(original);
     }
 
@@ -45,6 +46,7 @@ class TableWithColumnsSerializerTest extends ObjectMapperTestBase {
             .isEqualTo("{\"table\":{\"tableName\":\"t1\",\"tableSizeInBytes\":123},\"columns\":[]}");
         final TableWithColumns restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), TableWithColumns.class);
         assertThat(restored)
+            .usingRecursiveComparison()
             .isEqualTo(original);
     }
 }

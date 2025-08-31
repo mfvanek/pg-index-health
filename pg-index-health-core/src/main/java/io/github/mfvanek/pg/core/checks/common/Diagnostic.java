@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.core.utils.QueryExecutors;
 import java.util.Objects;
 
 /**
- * A list of all supported diagnostics with corresponding sql queries and query executors.
+ * A list of all supported diagnostics with corresponding SQL queries and query executors.
  *
  * @author Ivan Vakhrushev
  * @see QueryExecutor
@@ -56,7 +56,8 @@ public enum Diagnostic implements CheckTypeAware {
     INDEXES_WITH_UNNECESSARY_WHERE_CLAUSE("indexes_with_unnecessary_where_clause.sql"),
     PRIMARY_KEYS_THAT_MOST_LIKELY_NATURAL_KEYS("primary_keys_that_most_likely_natural_keys.sql"),
     COLUMNS_WITH_MONEY_TYPE("columns_with_money_type.sql"),
-    INDEXES_WITH_TIMESTAMP_IN_THE_MIDDLE("indexes_with_timestamp_in_the_middle.sql");
+    INDEXES_WITH_TIMESTAMP_IN_THE_MIDDLE("indexes_with_timestamp_in_the_middle.sql"),
+    COLUMNS_WITH_TIMESTAMP_OR_TIMETZ_TYPE("columns_with_timestamp_or_timetz_type.sql");
 
     private final ExecutionTopology executionTopology;
     private final String sqlQueryFileName;
@@ -67,8 +68,8 @@ public enum Diagnostic implements CheckTypeAware {
      * Creates a {@code Diagnostic} instance.
      *
      * @param executionTopology the place where the diagnostic should be executed
-     * @param sqlQueryFileName  the associated sql query file name; must be non-null
-     * @param queryExecutor     the lambda which executes the associated sql query
+     * @param sqlQueryFileName  the associated SQL query file name; must be non-null
+     * @param queryExecutor     the lambda which executes the associated SQL query
      * @param runtimeCheck      whether this is a runtime diagnostic or static
      */
     Diagnostic(final ExecutionTopology executionTopology,
@@ -84,8 +85,8 @@ public enum Diagnostic implements CheckTypeAware {
     /**
      * Creates a {@code Diagnostic} instance.
      *
-     * @param sqlQueryFileName the associated sql query file name; must be non-null
-     * @param queryExecutor    the lambda which executes the associated sql query
+     * @param sqlQueryFileName the associated SQL query file name; must be non-null
+     * @param queryExecutor    the lambda which executes the associated SQL query
      * @param runtimeCheck     whether this is a runtime diagnostic or static
      */
     Diagnostic(final String sqlQueryFileName,
@@ -98,7 +99,7 @@ public enum Diagnostic implements CheckTypeAware {
      * Creates a schema-aware runtime {@code Diagnostic} instance.
      *
      * @param executionTopology the place where the diagnostic should be executed
-     * @param sqlQueryFileName  the associated sql query file name; must be non-null
+     * @param sqlQueryFileName  the associated SQL query file name; must be non-null
      */
     Diagnostic(final ExecutionTopology executionTopology,
                final String sqlQueryFileName) {
@@ -108,7 +109,7 @@ public enum Diagnostic implements CheckTypeAware {
     /**
      * Creates a schema-aware static {@code Diagnostic} instance with ExecutionTopology.ON_PRIMARY.
      *
-     * @param sqlQueryFileName the associated sql query file name; must be non-null
+     * @param sqlQueryFileName the associated SQL query file name; must be non-null
      */
     Diagnostic(final String sqlQueryFileName) {
         this(ExecutionTopology.ON_PRIMARY, sqlQueryFileName, QueryExecutors::executeQueryWithSchema, false);
@@ -124,16 +125,16 @@ public enum Diagnostic implements CheckTypeAware {
     }
 
     /**
-     * Retrieves the associated sql query file name.
+     * Retrieves the associated SQL query file name.
      *
-     * @return sql query file name
+     * @return SQL query file name
      */
     public String getSqlQueryFileName() {
         return sqlQueryFileName;
     }
 
     /**
-     * Retrieves the lambda which executes the associated sql query.
+     * Retrieves the lambda which executes the associated SQL query.
      *
      * @return {@code QueryExecutor}
      */

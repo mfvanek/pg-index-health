@@ -36,7 +36,7 @@ class DbObjectSerializationTest {
                 .filter(classInfo -> !classInfo.isAbstract() && !classInfo.isInterface());
 
             assertThat(classes)
-                .hasSize(17);
+                .hasSize(18);
 
             classes.forEach(classInfo -> {
                 final String baseName = classInfo.getSimpleName();
