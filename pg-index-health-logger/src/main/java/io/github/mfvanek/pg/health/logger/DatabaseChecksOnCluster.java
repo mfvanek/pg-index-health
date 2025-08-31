@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithFixedLengthVarcharC
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithJsonTypeCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithMoneyTypeCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithSerialTypesCheckOnCluster;
+import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithTimestampOrTimetzTypeCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithoutDescriptionCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.DuplicatedForeignKeysCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.DuplicatedIndexesCheckOnCluster;
@@ -110,7 +111,8 @@ public final class DatabaseChecksOnCluster {
             new IndexesWithUnnecessaryWhereClauseCheckOnCluster(haPgConnection),
             new PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster(haPgConnection),
             new ColumnsWithMoneyTypeCheckOnCluster(haPgConnection),
-            new IndexesWithTimestampInTheMiddleCheckOnCluster(haPgConnection)
+            new IndexesWithTimestampInTheMiddleCheckOnCluster(haPgConnection),
+            new ColumnsWithTimestampOrTimetzTypeCheckOnCluster(haPgConnection)
         );
     }
 

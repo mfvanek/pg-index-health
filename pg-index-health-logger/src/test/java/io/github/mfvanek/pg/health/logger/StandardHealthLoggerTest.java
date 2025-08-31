@@ -101,7 +101,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "unused_indexes:19",
                         "tables_with_missing_indexes:0",
                         "tables_without_description:21",
-                        "columns_without_description:50",
+                        "columns_without_description:51",
                         "columns_with_json_type:1",
                         "columns_with_serial_types:3",
                         "functions_without_description:3",
@@ -123,7 +123,8 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "indexes_with_unnecessary_where_clause:2",
                         "primary_keys_that_most_likely_natural_keys:6",
                         "columns_with_money_type:1",
-                        "indexes_with_timestamp_in_the_middle:3"
+                        "indexes_with_timestamp_in_the_middle:3",
+                        "columns_with_timestamp_or_timetz_type:4"
                     );
             }
         );

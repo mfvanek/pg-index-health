@@ -48,7 +48,7 @@ All checks can be divided into two groups:
 | 34 | Indexes with a [timestamp in the middle](https://habr.com/ru/companies/tensor/articles/488104/)                                    | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_timestamp_in_the_middle.sql)       |
 | 35 | Columns with a [timestamp](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_timestamp_.28without_time_zone.29) type      | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_timestamp_or_timetz_type.sql)      |
 
-### Raw sql queries to use with another languages
+### Raw SQL queries to use with other languages
 
 See [pg-index-health-sql](https://github.com/mfvanek/pg-index-health-sql) project.
 
@@ -57,7 +57,7 @@ See [pg-index-health-sql](https://github.com/mfvanek/pg-index-health-sql) projec
 ### Static checks
 
 Static checks are based on [information schema](https://www.postgresql.org/docs/current/information-schema.html)/[system catalogs](https://www.postgresql.org/docs/current/catalogs.html).
-They work with finite database state (after all migrations are applied).
+They work with a finite database state (after all migrations are applied).
 
 ### Runtime checks
 

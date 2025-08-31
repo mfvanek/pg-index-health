@@ -21,6 +21,7 @@ public class CreateTableWithTimestampInTheMiddleStatement extends AbstractDbStat
                 create table if not exists {schemaName}."t-multi" (
                     id int primary key,
                     ts timestamp,
+                    created_at timetz,
                     name text
                 );""",
             "create index idx_multi_mid on {schemaName}.\"t-multi\" (id, ts, name);",

@@ -18,6 +18,7 @@ import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckO
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithSerialTypesCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithTimestampOrTimetzTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedIndexesCheckOnHost;
@@ -150,7 +151,8 @@ abstract class AutoConfigurationTestBase {
             IndexesWithUnnecessaryWhereClauseCheckOnHost.class,
             PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost.class,
             ColumnsWithMoneyTypeCheckOnHost.class,
-            IndexesWithTimestampInTheMiddleCheckOnHost.class
+            IndexesWithTimestampInTheMiddleCheckOnHost.class,
+            ColumnsWithTimestampOrTimetzTypeCheckOnHost.class
         );
     }
 }
