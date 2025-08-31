@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.model.jackson;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
@@ -28,6 +29,8 @@ import io.github.mfvanek.pg.model.jackson.column.ColumnDeserializer;
 import io.github.mfvanek.pg.model.jackson.column.ColumnSerializer;
 import io.github.mfvanek.pg.model.jackson.column.ColumnWithSerialTypeDeserializer;
 import io.github.mfvanek.pg.model.jackson.column.ColumnWithSerialTypeSerializer;
+import io.github.mfvanek.pg.model.jackson.column.ColumnWithTypeDeserializer;
+import io.github.mfvanek.pg.model.jackson.column.ColumnWithTypeSerializer;
 import io.github.mfvanek.pg.model.jackson.constraint.ConstraintDeserializer;
 import io.github.mfvanek.pg.model.jackson.constraint.ConstraintSerializer;
 import io.github.mfvanek.pg.model.jackson.constraint.DuplicatedForeignKeysDeserializer;
@@ -86,6 +89,9 @@ public class PgIndexHealthModelModule extends SimpleModule {
 
         addSerializer(Column.class, new ColumnSerializer());
         addDeserializer(Column.class, new ColumnDeserializer());
+
+        addSerializer(ColumnWithType.class, new ColumnWithTypeSerializer());
+        addDeserializer(ColumnWithType.class, new ColumnWithTypeDeserializer());
 
         addSerializer(ColumnWithSerialType.class, new ColumnWithSerialTypeSerializer());
         addDeserializer(ColumnWithSerialType.class, new ColumnWithSerialTypeDeserializer());
