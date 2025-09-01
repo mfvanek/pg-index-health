@@ -28,7 +28,7 @@ forbiddenapis = { group = "de.thetaphi", name = "forbiddenapis", version.ref = "
 detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 liquibase-core = "org.liquibase:liquibase-core:4.33.0"
 liquibase-sessionlock = "com.github.blagerweij:liquibase-sessionlock:1.6.9"
-jackson-bom = "com.fasterxml.jackson:jackson-bom:2.17.3" # to be compatible with Spring Boot 3.3.X
+jackson-bom = "com.fasterxml.jackson:jackson-bom:2.20.0" # to be compatible with Spring Boot 3.3.X
 
 [plugins]
 spring-boot-gradlePlugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
