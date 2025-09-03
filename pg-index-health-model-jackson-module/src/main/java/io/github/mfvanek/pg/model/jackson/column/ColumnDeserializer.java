@@ -12,11 +12,10 @@ package io.github.mfvanek.pg.model.jackson.column;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
-import io.github.mfvanek.pg.model.table.TableNameAware;
+import io.github.mfvanek.pg.model.jackson.common.ModelDeserializer;
 
 import java.io.IOException;
 
@@ -26,7 +25,7 @@ import java.io.IOException;
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-public class ColumnDeserializer extends JsonDeserializer<Column> {
+public class ColumnDeserializer extends ModelDeserializer<Column> {
 
     /**
      * {@inheritDoc}
@@ -34,9 +33,9 @@ public class ColumnDeserializer extends JsonDeserializer<Column> {
     @Override
     public Column deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final JsonNode node = p.getCodec().readTree(p);
-        final String tableName = node.get(TableNameAware.TABLE_NAME_FIELD).asText();
-        final String columnName = node.get(ColumnNameAware.COLUMN_NAME_FIELD).asText();
-        final boolean notNull = node.get(ColumnNameAware.NOT_NULL_FIELD).asBoolean();
+        final String tableName = getTableName(ctxt, node);
+        final String columnName = getStringField(ctxt, node, ColumnNameAware.COLUMN_NAME_FIELD);
+        final boolean notNull = getBooleanField(ctxt, node, ColumnNameAware.NOT_NULL_FIELD);
         if (notNull) {
             return Column.ofNotNull(tableName, columnName);
         }
