@@ -13,12 +13,12 @@ package io.github.mfvanek.pg.model.jackson.column;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnTypeAware;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.column.SerialType;
+import io.github.mfvanek.pg.model.jackson.common.ModelDeserializer;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 
 import java.io.IOException;
@@ -29,7 +29,7 @@ import java.io.IOException;
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-public class ColumnWithSerialTypeDeserializer extends JsonDeserializer<ColumnWithSerialType> {
+public class ColumnWithSerialTypeDeserializer extends ModelDeserializer<ColumnWithSerialType> {
 
     /**
      * {@inheritDoc}
@@ -39,8 +39,8 @@ public class ColumnWithSerialTypeDeserializer extends JsonDeserializer<ColumnWit
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final Column column = codec.treeToValue(node.get(ColumnTypeAware.COLUMN_FIELD), Column.class);
-        final SerialType serialType = SerialType.valueOf(node.get(ColumnWithSerialType.SERIAL_TYPE_FIELD).asText());
-        final String sequenceName = node.get(SequenceNameAware.SEQUENCE_NAME_FIELD).asText();
+        final SerialType serialType = SerialType.valueOf(getStringField(ctxt, node, ColumnWithSerialType.SERIAL_TYPE_FIELD));
+        final String sequenceName = getStringField(ctxt, node, SequenceNameAware.SEQUENCE_NAME_FIELD);
         return ColumnWithSerialType.of(column, serialType, sequenceName);
     }
 }

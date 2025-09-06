@@ -118,4 +118,28 @@ public abstract class ModelDeserializer<T extends DbObject> extends JsonDeserial
         }
         return booleanNode.asBoolean();
     }
+
+    /**
+     * Retrieves the value of a specified field from a JSON node as a {@code long}.
+     * <p>
+     * This method ensures the field exists, is not {@code null}, and is of type long.
+     * If the field is missing, {@code null}, or not a long, an input mismatch is reported
+     * to the {@link DeserializationContext}, resulting in a {@link JsonMappingException}.
+     *
+     * @param ctxt      the deserialization context used for error reporting
+     * @param rootNode  the root JSON node containing the field
+     * @param fieldName the name of the field to retrieve from {@code rootNode}
+     * @return the value of the specified field as a {@code long}
+     * @throws JsonMappingException if the field is missing, {@code null}, or not a long
+     */
+    protected final long getLongField(final DeserializationContext ctxt,
+                                      final JsonNode rootNode,
+                                      final String fieldName) throws JsonMappingException {
+        final JsonNode longNode = getNotNullNode(ctxt, rootNode, fieldName);
+        if (!longNode.canConvertToLong()) {
+            final String msg = String.format(Locale.ROOT, "Field '%s' must be a long", fieldName);
+            throw MismatchedInputException.from(ctxt.getParser(), this.handledType(), msg);
+        }
+        return longNode.asLong();
+    }
 }

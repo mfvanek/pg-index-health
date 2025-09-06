@@ -13,11 +13,11 @@ package io.github.mfvanek.pg.model.jackson.index;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
+import io.github.mfvanek.pg.model.jackson.common.ModelDeserializer;
 
 import java.io.IOException;
 
@@ -27,7 +27,7 @@ import java.io.IOException;
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-public class UnusedIndexDeserializer extends JsonDeserializer<UnusedIndex> {
+public class UnusedIndexDeserializer extends ModelDeserializer<UnusedIndex> {
 
     /**
      * {@inheritDoc}
@@ -37,7 +37,7 @@ public class UnusedIndexDeserializer extends JsonDeserializer<UnusedIndex> {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final Index index = codec.treeToValue(node.get(IndexSizeAware.INDEX_FIELD), Index.class);
-        final long indexScans = node.get(UnusedIndex.INDEX_SCANS_FIELD).asLong();
+        final long indexScans = getLongField(ctxt, node, UnusedIndex.INDEX_SCANS_FIELD);
         return UnusedIndex.of(index, indexScans);
     }
 }

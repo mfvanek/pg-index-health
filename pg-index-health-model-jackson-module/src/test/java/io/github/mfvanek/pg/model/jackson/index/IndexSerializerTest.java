@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.jackson.index;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class IndexSerializerTest extends ObjectMapperTestBase {
 
@@ -29,5 +31,34 @@ class IndexSerializerTest extends ObjectMapperTestBase {
         assertThat(restored)
             .usingRecursiveComparison()
             .isEqualTo(original);
+    }
+
+    @Test
+    void deserializationShouldThrowExceptionOnMissingFields() {
+        assertThatThrownBy(() -> objectMapper.readValue("{}", Index.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: tableName");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"tableName\":\"table1\"}", Index.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: indexName");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"tableName\":\"table1\",\"indexName\":\"index1\"}", Index.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: indexSizeInBytes");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"tableName\":\"table1\",\"indexName\":\"index1\",\"indexSizeInBytes\":null}", Index.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: indexSizeInBytes");
+    }
+
+    @Test
+    void deserializationShouldThrowExceptionOnWrongFieldType() {
+        assertThatThrownBy(() -> objectMapper.readValue("{\"tableName\":11}", Index.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Field 'tableName' must be a string");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"tableName\":\"table1\",\"indexName\":12}", Index.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Field 'indexName' must be a string");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"tableName\":\"table1\",\"indexName\":\"index1\",\"indexSizeInBytes\":\"13\"}", Index.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Field 'indexSizeInBytes' must be a long");
     }
 }

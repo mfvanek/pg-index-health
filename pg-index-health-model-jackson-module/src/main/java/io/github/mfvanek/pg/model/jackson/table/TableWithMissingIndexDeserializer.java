@@ -13,8 +13,8 @@ package io.github.mfvanek.pg.model.jackson.table;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.github.mfvanek.pg.model.jackson.common.ModelDeserializer;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableSizeAware;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
@@ -27,7 +27,7 @@ import java.io.IOException;
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-public class TableWithMissingIndexDeserializer extends JsonDeserializer<TableWithMissingIndex> {
+public class TableWithMissingIndexDeserializer extends ModelDeserializer<TableWithMissingIndex> {
 
     /**
      * {@inheritDoc}
@@ -37,8 +37,8 @@ public class TableWithMissingIndexDeserializer extends JsonDeserializer<TableWit
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final Table table = codec.treeToValue(node.get(TableSizeAware.TABLE_FIELD), Table.class);
-        final long seqScans = node.get(TableWithMissingIndex.SEQ_SCANS_FIELD).asLong();
-        final long indexScans = node.get(TableWithMissingIndex.INDEX_SCANS_FIELD).asLong();
+        final long seqScans = getLongField(ctxt, node, TableWithMissingIndex.SEQ_SCANS_FIELD);
+        final long indexScans = getLongField(ctxt, node, TableWithMissingIndex.INDEX_SCANS_FIELD);
         return TableWithMissingIndex.of(table, seqScans, indexScans);
     }
 }

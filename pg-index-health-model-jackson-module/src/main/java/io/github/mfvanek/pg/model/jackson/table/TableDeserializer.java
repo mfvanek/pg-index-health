@@ -34,7 +34,7 @@ public class TableDeserializer extends ModelDeserializer<Table> {
     public Table deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final JsonNode node = p.getCodec().readTree(p);
         final String tableName = getTableName(ctxt, node);
-        final long tableSizeInBytes = node.get(TableSizeAware.TABLE_SIZE_IN_BYTES_FIELD).asLong();
+        final long tableSizeInBytes = getLongField(ctxt, node, TableSizeAware.TABLE_SIZE_IN_BYTES_FIELD);
         return Table.of(tableName, tableSizeInBytes);
     }
 }
