@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.jackson.column;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ColumnWithSerialTypeSerializerTest extends ObjectMapperTestBase {
 
@@ -32,5 +34,21 @@ class ColumnWithSerialTypeSerializerTest extends ObjectMapperTestBase {
         assertThat(restored)
             .usingRecursiveComparison()
             .isEqualTo(original);
+    }
+
+    @Test
+    void deserializationShouldThrowExceptionOnMissingFields() {
+        assertThatThrownBy(() -> objectMapper.readValue("{}", ColumnWithSerialType.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: column");
+        assertThatThrownBy(() -> objectMapper.readValue("""
+            {"column":{"tableName":"t1","columnName":"c1","notNull":true}}""", ColumnWithSerialType.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: serialType");
+        assertThatThrownBy(() -> objectMapper.readValue("""
+            {"column":{"tableName":"t1","columnName":"c1","notNull":true},\
+            "columnType":"smallserial","serialType":"SMALL_SERIAL"}""", ColumnWithSerialType.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: sequenceName");
     }
 }

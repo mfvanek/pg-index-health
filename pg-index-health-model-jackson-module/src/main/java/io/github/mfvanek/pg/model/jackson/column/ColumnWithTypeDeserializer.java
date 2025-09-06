@@ -36,7 +36,7 @@ public class ColumnWithTypeDeserializer extends ModelDeserializer<ColumnWithType
     public ColumnWithType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
-        final Column column = codec.treeToValue(node.get(ColumnTypeAware.COLUMN_FIELD), Column.class);
+        final Column column = getColumn(codec, node, ctxt);
         final String columnType = getStringField(ctxt, node, ColumnTypeAware.COLUMN_TYPE_FIELD);
         return ColumnWithType.of(column, columnType);
     }

@@ -10,14 +10,18 @@
 
 package io.github.mfvanek.pg.model.jackson.common;
 
+import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnTypeAware;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
+import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -69,6 +73,24 @@ public abstract class ModelDeserializer<T extends DbObject> extends JsonDeserial
     protected final String getTableName(final DeserializationContext ctxt,
                                         final JsonNode rootNode) throws JsonMappingException {
         return getStringField(ctxt, rootNode, TableNameAware.TABLE_NAME_FIELD);
+    }
+
+    /**
+     * Extracts a {@link Column} object from the given JSON root node using the provided codec.
+     * This method ensures the required field for constructing the {@link Column} is present
+     * and non-null within the root node. If the field is missing or null, an input mismatch
+     * is reported to the deserialization context.
+     *
+     * @param codec    the object codec used to transform JSON tree nodes into Java objects
+     * @param rootNode the root JSON node containing the object data
+     * @param ctxt     the deserialization context used for error reporting
+     * @return the {@link Column} object deserialized from the specified JSON node
+     * @throws IOException if an I/O error occurs during deserialization
+     */
+    protected final Column getColumn(final ObjectCodec codec,
+                                     final JsonNode rootNode,
+                                     final DeserializationContext ctxt) throws IOException {
+        return codec.treeToValue(getNotNullNode(ctxt, rootNode, ColumnTypeAware.COLUMN_FIELD), Column.class);
     }
 
     /**
