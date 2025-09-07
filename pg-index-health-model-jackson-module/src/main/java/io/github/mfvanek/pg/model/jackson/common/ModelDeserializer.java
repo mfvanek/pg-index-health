@@ -21,8 +21,10 @@ import io.github.mfvanek.pg.model.column.ColumnTypeAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableNameAware;
+import io.github.mfvanek.pg.model.table.TableSizeAware;
 
 import java.io.IOException;
 import java.util.List;
@@ -88,7 +90,7 @@ public abstract class ModelDeserializer<T extends DbObject> extends AbstractDese
     protected final Index getIndex(final ObjectCodec codec,
                                    final JsonNode rootNode,
                                    final DeserializationContext ctxt) throws IOException {
-        return codec.treeToValue(getNotNullNode(ctxt, rootNode, Index.INDEX_FIELD), Index.class);
+        return codec.treeToValue(getNotNullNode(ctxt, rootNode, IndexSizeAware.INDEX_FIELD), Index.class);
     }
 
     /**
@@ -106,7 +108,7 @@ public abstract class ModelDeserializer<T extends DbObject> extends AbstractDese
     protected final Table getTable(final ObjectCodec codec,
                                    final JsonNode rootNode,
                                    final DeserializationContext ctxt) throws IOException {
-        return codec.treeToValue(getNotNullNode(ctxt, rootNode, Table.TABLE_FIELD), Table.class);
+        return codec.treeToValue(getNotNullNode(ctxt, rootNode, TableSizeAware.TABLE_FIELD), Table.class);
     }
 
     /**
