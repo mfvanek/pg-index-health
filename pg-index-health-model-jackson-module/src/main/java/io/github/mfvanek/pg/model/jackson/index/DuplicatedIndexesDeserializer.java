@@ -14,10 +14,10 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.Index;
+import io.github.mfvanek.pg.model.jackson.common.ModelDeserializer;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-public class DuplicatedIndexesDeserializer extends JsonDeserializer<DuplicatedIndexes> {
+public class DuplicatedIndexesDeserializer extends ModelDeserializer<DuplicatedIndexes> {
 
     /**
      * {@inheritDoc}
@@ -38,8 +38,9 @@ public class DuplicatedIndexesDeserializer extends JsonDeserializer<DuplicatedIn
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final JavaType listType = ctxt.getTypeFactory().constructCollectionType(List.class, Index.class);
-        try (JsonParser columnsParser = node.get(DuplicatedIndexes.INDEXES_FIELD).traverse(codec)) {
-            final List<Index> duplicatedIndexes = codec.readValue(columnsParser, listType);
+        final JsonNode indexesNode = getNotNullNode(ctxt, node, DuplicatedIndexes.INDEXES_FIELD);
+        try (JsonParser duplicatedIndexesParser = indexesNode.traverse(codec)) {
+            final List<Index> duplicatedIndexes = codec.readValue(duplicatedIndexesParser, listType);
             return DuplicatedIndexes.of(duplicatedIndexes);
         }
     }

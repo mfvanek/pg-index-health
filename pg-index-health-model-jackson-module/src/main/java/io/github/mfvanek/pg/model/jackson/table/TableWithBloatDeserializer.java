@@ -13,11 +13,10 @@ package io.github.mfvanek.pg.model.jackson.table;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.bloat.BloatAware;
+import io.github.mfvanek.pg.model.jackson.common.ModelDeserializer;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.model.table.TableSizeAware;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 
 import java.io.IOException;
@@ -28,7 +27,7 @@ import java.io.IOException;
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-public class TableWithBloatDeserializer extends JsonDeserializer<TableWithBloat> {
+public class TableWithBloatDeserializer extends ModelDeserializer<TableWithBloat> {
 
     /**
      * {@inheritDoc}
@@ -37,9 +36,9 @@ public class TableWithBloatDeserializer extends JsonDeserializer<TableWithBloat>
     public TableWithBloat deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
-        final Table table = codec.treeToValue(node.get(TableSizeAware.TABLE_FIELD), Table.class);
-        final long bloatSizeInBytes = node.get(BloatAware.BLOAT_SIZE_IN_BYTES_FIELD).asLong();
-        final double bloatPercentage = node.get(BloatAware.BLOAT_PERCENTAGE_FIELD).asDouble();
+        final Table table = getTable(codec, node, ctxt);
+        final long bloatSizeInBytes = getLongField(ctxt, node, BloatAware.BLOAT_SIZE_IN_BYTES_FIELD);
+        final double bloatPercentage = getDoubleField(ctxt, node, BloatAware.BLOAT_PERCENTAGE_FIELD);
         return TableWithBloat.of(table, bloatSizeInBytes, bloatPercentage);
     }
 }

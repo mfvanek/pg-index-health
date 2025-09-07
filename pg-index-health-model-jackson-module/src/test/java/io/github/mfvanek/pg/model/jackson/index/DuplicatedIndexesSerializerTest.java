@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.jackson.index;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class DuplicatedIndexesSerializerTest extends ObjectMapperTestBase {
 
@@ -35,5 +37,12 @@ class DuplicatedIndexesSerializerTest extends ObjectMapperTestBase {
         final DuplicatedIndexes restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), DuplicatedIndexes.class);
         assertThat(restored)
             .isEqualTo(original);
+    }
+
+    @Test
+    void deserializationShouldThrowExceptionOnMissingFields() {
+        assertThatThrownBy(() -> objectMapper.readValue("{}", DuplicatedIndexes.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: indexes");
     }
 }

@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.jackson.constraint;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class DuplicatedForeignKeysSerializerTest extends ObjectMapperTestBase {
 
@@ -34,5 +36,12 @@ class DuplicatedForeignKeysSerializerTest extends ObjectMapperTestBase {
         final DuplicatedForeignKeys restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), DuplicatedForeignKeys.class);
         assertThat(restored)
             .isEqualTo(original);
+    }
+
+    @Test
+    void deserializationShouldThrowExceptionOnMissingFields() {
+        assertThatThrownBy(() -> objectMapper.readValue("{}", DuplicatedForeignKeys.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: foreignKeys");
     }
 }

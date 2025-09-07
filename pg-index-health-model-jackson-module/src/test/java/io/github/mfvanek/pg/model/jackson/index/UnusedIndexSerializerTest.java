@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.jackson.index;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UnusedIndexSerializerTest extends ObjectMapperTestBase {
 
@@ -29,5 +31,15 @@ class UnusedIndexSerializerTest extends ObjectMapperTestBase {
         assertThat(restored)
             .usingRecursiveComparison()
             .isEqualTo(original);
+    }
+
+    @Test
+    void deserializationShouldThrowExceptionOnMissingFields() {
+        assertThatThrownBy(() -> objectMapper.readValue("{}", UnusedIndex.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: index");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"index\":{\"tableName\":\"t1\",\"indexName\":\"i1\",\"indexSizeInBytes\":100}}", UnusedIndex.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: indexScans");
     }
 }

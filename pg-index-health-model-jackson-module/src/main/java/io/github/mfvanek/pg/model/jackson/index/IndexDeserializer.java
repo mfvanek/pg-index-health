@@ -12,12 +12,11 @@ package io.github.mfvanek.pg.model.jackson.index;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexNameAware;
 import io.github.mfvanek.pg.model.index.IndexSizeAware;
-import io.github.mfvanek.pg.model.table.TableNameAware;
+import io.github.mfvanek.pg.model.jackson.common.ModelDeserializer;
 
 import java.io.IOException;
 
@@ -27,7 +26,7 @@ import java.io.IOException;
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-public class IndexDeserializer extends JsonDeserializer<Index> {
+public class IndexDeserializer extends ModelDeserializer<Index> {
 
     /**
      * {@inheritDoc}
@@ -35,9 +34,9 @@ public class IndexDeserializer extends JsonDeserializer<Index> {
     @Override
     public Index deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final JsonNode node = p.getCodec().readTree(p);
-        final String tableName = node.get(TableNameAware.TABLE_NAME_FIELD).asText();
-        final String indexName = node.get(IndexNameAware.INDEX_NAME_FIELD).asText();
-        final long indexSizeInBytes = node.get(IndexSizeAware.INDEX_SIZE_IN_BYTES_FIELD).asLong();
+        final String tableName = getTableName(ctxt, node);
+        final String indexName = getStringField(ctxt, node, IndexNameAware.INDEX_NAME_FIELD);
+        final long indexSizeInBytes = getLongField(ctxt, node, IndexSizeAware.INDEX_SIZE_IN_BYTES_FIELD);
         return Index.of(tableName, indexName, indexSizeInBytes);
     }
 }

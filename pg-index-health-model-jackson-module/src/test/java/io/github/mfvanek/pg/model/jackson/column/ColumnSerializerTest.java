@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.jackson.column;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ColumnSerializerTest extends ObjectMapperTestBase {
 
@@ -40,5 +42,34 @@ class ColumnSerializerTest extends ObjectMapperTestBase {
         assertThat(restored)
             .usingRecursiveComparison()
             .isEqualTo(original);
+    }
+
+    @Test
+    void deserializationShouldThrowExceptionOnMissingFields() {
+        assertThatThrownBy(() -> objectMapper.readValue("{}", Column.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: tableName");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"tableName\":\"table1\"}", Column.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: columnName");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"tableName\":\"table1\",\"columnName\":\"column1\"}", Column.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: notNull");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"tableName\":\"table1\",\"columnName\":\"column1\",\"notNull\":null}", Column.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: notNull");
+    }
+
+    @Test
+    void deserializationShouldThrowExceptionOnWrongFieldType() {
+        assertThatThrownBy(() -> objectMapper.readValue("{\"tableName\":11}", Column.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Field 'tableName' must be a string");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"tableName\":\"table1\",\"columnName\":12}", Column.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Field 'columnName' must be a string");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"tableName\":\"table1\",\"columnName\":\"column1\",\"notNull\":13}", Column.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Field 'notNull' must be a boolean");
     }
 }
