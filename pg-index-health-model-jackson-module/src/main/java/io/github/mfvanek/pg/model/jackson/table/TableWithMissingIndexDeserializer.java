@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.jackson.common.ModelDeserializer;
 import io.github.mfvanek.pg.model.table.Table;
-import io.github.mfvanek.pg.model.table.TableSizeAware;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 
 import java.io.IOException;
@@ -36,7 +35,7 @@ public class TableWithMissingIndexDeserializer extends ModelDeserializer<TableWi
     public TableWithMissingIndex deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
-        final Table table = codec.treeToValue(node.get(TableSizeAware.TABLE_FIELD), Table.class);
+        final Table table = getTable(codec, node, ctxt);
         final long seqScans = getLongField(ctxt, node, TableWithMissingIndex.SEQ_SCANS_FIELD);
         final long indexScans = getLongField(ctxt, node, TableWithMissingIndex.INDEX_SCANS_FIELD);
         return TableWithMissingIndex.of(table, seqScans, indexScans);

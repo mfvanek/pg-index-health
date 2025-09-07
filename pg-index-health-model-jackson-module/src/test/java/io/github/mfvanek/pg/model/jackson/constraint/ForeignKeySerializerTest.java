@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.jackson.constraint;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ForeignKeySerializerTest extends ObjectMapperTestBase {
 
@@ -31,5 +33,21 @@ class ForeignKeySerializerTest extends ObjectMapperTestBase {
         assertThat(restored)
             .usingRecursiveComparison()
             .isEqualTo(original);
+    }
+
+    @Test
+    void deserializationShouldThrowExceptionOnMissingFields() {
+        assertThatThrownBy(() -> objectMapper.readValue("{}", ForeignKey.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: constraint");
+        assertThatThrownBy(() -> objectMapper.readValue("""
+            {"constraint":{"tableName":"demo.orders","constraintName":"client_id_fk","constraintType":"FOREIGN_KEY"}}""", ForeignKey.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: columns");
+        assertThatThrownBy(() -> objectMapper.readValue("""
+            {"constraint":{"tableName":"demo.orders","constraintName":"client_id_fk","constraintType":"FOREIGN_KEY"},\
+            "columns":null}""", ForeignKey.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: columns");
     }
 }

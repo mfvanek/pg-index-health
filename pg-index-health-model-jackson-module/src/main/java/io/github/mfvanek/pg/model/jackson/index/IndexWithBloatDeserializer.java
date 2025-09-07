@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.bloat.BloatAware;
 import io.github.mfvanek.pg.model.index.Index;
-import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.jackson.common.ModelDeserializer;
 
@@ -37,9 +36,9 @@ public class IndexWithBloatDeserializer extends ModelDeserializer<IndexWithBloat
     public IndexWithBloat deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
-        final Index index = codec.treeToValue(node.get(IndexSizeAware.INDEX_FIELD), Index.class);
+        final Index index = getIndex(codec, node, ctxt);
         final long bloatSizeInBytes = getLongField(ctxt, node, BloatAware.BLOAT_SIZE_IN_BYTES_FIELD);
-        final double bloatPercentage = node.get(BloatAware.BLOAT_PERCENTAGE_FIELD).asDouble();
+        final double bloatPercentage = getDoubleField(ctxt, node, BloatAware.BLOAT_PERCENTAGE_FIELD);
         return IndexWithBloat.of(index, bloatSizeInBytes, bloatPercentage);
     }
 }

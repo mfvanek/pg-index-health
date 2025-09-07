@@ -41,6 +41,12 @@ class SequenceStateSerializerTest extends ObjectMapperTestBase {
         assertThatThrownBy(() -> objectMapper.readValue("{\"sequenceName\":\"seq1\"}", SequenceState.class))
             .isInstanceOf(MismatchedInputException.class)
             .hasMessageStartingWith("Missing required field: dataType");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"sequenceName\":\"seq1\",\"dataType\":\"bigint\"}", SequenceState.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: remainingPercentage");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"sequenceName\":\"seq1\",\"dataType\":\"bigint\",\"remainingPercentage\":null}", SequenceState.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: remainingPercentage");
     }
 
     @Test
@@ -51,5 +57,17 @@ class SequenceStateSerializerTest extends ObjectMapperTestBase {
         assertThatThrownBy(() -> objectMapper.readValue("{\"sequenceName\":\"seq1\",\"dataType\":12}", SequenceState.class))
             .isInstanceOf(MismatchedInputException.class)
             .hasMessageStartingWith("Field 'dataType' must be a string");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"sequenceName\":\"seq1\",\"dataType\":\"bigint\",\"remainingPercentage\":\"1\"}", SequenceState.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Field 'remainingPercentage' must be a double");
+    }
+
+    @Test
+    void acceptsNumbers() throws IOException {
+        final String json = "{\"sequenceName\":\"seq1\",\"dataType\":\"bigint\",\"remainingPercentage\":88}";
+        final SequenceState restored = objectMapper.readValue(json, SequenceState.class);
+        assertThat(restored)
+            .usingRecursiveComparison()
+            .isEqualTo(SequenceState.of("seq1", "bigint", 88.0));
     }
 }

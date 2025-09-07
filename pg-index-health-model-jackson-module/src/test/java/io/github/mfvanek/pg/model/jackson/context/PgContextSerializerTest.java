@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.jackson.context;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PgContextSerializerTest extends ObjectMapperTestBase {
 
@@ -28,5 +30,18 @@ class PgContextSerializerTest extends ObjectMapperTestBase {
         final PgContext restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), PgContext.class);
         assertThat(restored)
             .isEqualTo(original);
+    }
+
+    @Test
+    void deserializationShouldThrowExceptionOnMissingFields() {
+        assertThatThrownBy(() -> objectMapper.readValue("{}", PgContext.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: schemaName");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"schemaName\":\"demo\"}", PgContext.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: bloatPercentageThreshold");
+        assertThatThrownBy(() -> objectMapper.readValue("{\"schemaName\":\"demo\",\"bloatPercentageThreshold\":0.15}", PgContext.class))
+            .isInstanceOf(MismatchedInputException.class)
+            .hasMessageStartingWith("Missing required field: remainingPercentageThreshold");
     }
 }

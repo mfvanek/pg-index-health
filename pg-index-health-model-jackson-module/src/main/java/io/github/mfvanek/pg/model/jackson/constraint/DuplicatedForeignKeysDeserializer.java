@@ -14,10 +14,10 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.jackson.common.ModelDeserializer;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-public class DuplicatedForeignKeysDeserializer extends JsonDeserializer<DuplicatedForeignKeys> {
+public class DuplicatedForeignKeysDeserializer extends ModelDeserializer<DuplicatedForeignKeys> {
 
     /**
      * {@inheritDoc}
@@ -38,7 +38,8 @@ public class DuplicatedForeignKeysDeserializer extends JsonDeserializer<Duplicat
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final JavaType listType = ctxt.getTypeFactory().constructCollectionType(List.class, ForeignKey.class);
-        try (JsonParser columnsParser = node.get(DuplicatedForeignKeys.FOREIGN_KEYS_FIELD).traverse(codec)) {
+        final JsonNode foreignKeysNode = getNotNullNode(ctxt, node, DuplicatedForeignKeys.FOREIGN_KEYS_FIELD);
+        try (JsonParser columnsParser = foreignKeysNode.traverse(codec)) {
             final List<ForeignKey> foreignKeys = codec.readValue(columnsParser, listType);
             return DuplicatedForeignKeys.of(foreignKeys);
         }

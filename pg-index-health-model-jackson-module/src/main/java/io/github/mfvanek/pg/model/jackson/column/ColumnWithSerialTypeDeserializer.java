@@ -38,8 +38,8 @@ public class ColumnWithSerialTypeDeserializer extends ModelDeserializer<ColumnWi
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final Column column = getColumn(codec, node, ctxt);
-        final SerialType serialType = SerialType.valueOf(getStringField(ctxt, node, ColumnWithSerialType.SERIAL_TYPE_FIELD));
+        final String serialType = getStringField(ctxt, node, ColumnWithSerialType.SERIAL_TYPE_FIELD);
         final String sequenceName = getStringField(ctxt, node, SequenceNameAware.SEQUENCE_NAME_FIELD);
-        return ColumnWithSerialType.of(column, serialType, sequenceName);
+        return ColumnWithSerialType.of(column, SerialType.valueOf(serialType), sequenceName);
     }
 }

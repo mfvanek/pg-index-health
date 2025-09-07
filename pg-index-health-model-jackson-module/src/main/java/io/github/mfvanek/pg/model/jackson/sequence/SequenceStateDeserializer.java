@@ -35,7 +35,7 @@ public class SequenceStateDeserializer extends ModelDeserializer<SequenceState> 
         final JsonNode node = p.getCodec().readTree(p);
         final String sequenceName = getStringField(ctxt, node, SequenceNameAware.SEQUENCE_NAME_FIELD);
         final String dataType = getStringField(ctxt, node, SequenceState.DATA_TYPE_FIELD);
-        final double remainingPercentage = node.get(SequenceState.REMAINING_PERCENTAGE_FIELD).asDouble();
+        final double remainingPercentage = getDoubleField(ctxt, node, SequenceState.REMAINING_PERCENTAGE_FIELD);
         return SequenceState.of(sequenceName, dataType, remainingPercentage);
     }
 }
