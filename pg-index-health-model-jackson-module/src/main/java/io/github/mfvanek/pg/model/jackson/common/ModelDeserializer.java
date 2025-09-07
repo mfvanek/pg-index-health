@@ -36,6 +36,8 @@ import java.util.List;
  * validation utilities.
  *
  * @param <T> the type of {@link DbObject} being deserialized
+ * @author Ivan Vakhrushev
+ * @since 0.20.3
  */
 public abstract class ModelDeserializer<T extends DbObject> extends AbstractDeserializer<T> {
 

@@ -18,6 +18,14 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
 import java.util.Locale;
 
+/**
+ * Base class for custom Jackson deserializers. Provides utility methods for
+ * extracting and validating fields from JSON nodes.
+ *
+ * @param <T> the type of object to be deserialized
+ * @author Ivan Vakhrushev
+ * @since 0.20.3
+ */
 public abstract class AbstractDeserializer<T> extends JsonDeserializer<T> {
 
     /**
