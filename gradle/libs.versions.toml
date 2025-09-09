@@ -15,7 +15,7 @@ slf4j-simple = "org.slf4j:slf4j-simple:2.0.17" # to be compatible with Spring Bo
 apache-commons-dbcp2 = "org.apache.commons:commons-dbcp2:2.13.0"
 awaitility = "org.awaitility:awaitility:4.3.0"
 apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commons-lang3" }
-equalsverifier = "nl.jqno.equalsverifier:equalsverifier:4.0.9"
+equalsverifier = "nl.jqno.equalsverifier:equalsverifier:4.1"
 spring-boot-starter-root = { group = "org.springframework.boot", name = "spring-boot-starter", version.ref = "spring-boot" }
 spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "spring-boot" }
 spring-boot-autoconfigure-processor = { group = "org.springframework.boot", name = "spring-boot-autoconfigure-processor", version.ref = "spring-boot" }
