@@ -33,11 +33,24 @@ dependencies {
     }
 }
 
-tasks.withType<KotlinCompile> {
-    compilerOptions {
-        freeCompilerArgs.add("-Xjsr305=strict")
-        freeCompilerArgs.add("-Xnullability-annotations=@org.jspecify.annotations:strict")
-        jvmTarget = JvmTarget.JVM_17
+tasks {
+    withType<KotlinCompile> {
+        compilerOptions {
+            freeCompilerArgs.add("-Xjsr305=strict")
+            freeCompilerArgs.add("-Xnullability-annotations=@org.jspecify.annotations:strict")
+            jvmTarget = JvmTarget.JVM_17
+        }
+    }
+
+    withType<Detekt>().configureEach {
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+        }
+    }
+
+   named("detekt") {
+        dependsOn(detektTest)
     }
 }
 
@@ -45,11 +58,4 @@ detekt {
     toolVersion = versionCatalog.findVersion("detekt").get().requiredVersion
     config.setFrom(file("${rootDir}/config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
-}
-
-tasks.withType<Detekt>().configureEach {
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-    }
 }
