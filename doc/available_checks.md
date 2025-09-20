@@ -47,6 +47,7 @@ All checks can be divided into two groups:
 | 33 | Columns with [money](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_money) type                                      | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_money_type.sql)                    |
 | 34 | Indexes with a [timestamp in the middle](https://habr.com/ru/companies/tensor/articles/488104/)                                    | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_timestamp_in_the_middle.sql)       |
 | 35 | Columns with a [timestamp](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_timestamp_.28without_time_zone.29) type      | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_timestamp_or_timetz_type.sql)      |
+| 36 | Tables where the primary key columns are not first                                                                                 | static             | yes                                                         | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_where_primary_key_columns_not_first.sql) |
 
 ### Raw SQL queries to use with other languages
 
