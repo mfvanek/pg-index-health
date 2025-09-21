@@ -26,9 +26,9 @@ public interface LoggingKey {
     String getKeyName();
 
     /**
-     * Gets the name of the sub-key associated with this key.
+     * Gets the name of the subkey associated with this key.
      *
-     * @return the sub-key name, never {@code null}.
+     * @return the subkey name, never {@code null}.
      */
     String getSubKeyName();
 

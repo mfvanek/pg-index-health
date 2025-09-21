@@ -50,6 +50,7 @@ import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * A class that aggregates various database checks on a PostgreSQL cluster.
@@ -65,7 +66,7 @@ import java.util.List;
  * @see DatabaseCheckOnCluster
  */
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
-public final class DatabaseChecksOnCluster {
+public final class DatabaseChecksOnCluster implements Supplier<List<DatabaseCheckOnCluster<? extends DbObject>>> {
 
     private final List<DatabaseCheckOnCluster<? extends DbObject>> checks;
 
@@ -121,7 +122,16 @@ public final class DatabaseChecksOnCluster {
      *
      * @return an immutable list of {@link DatabaseCheckOnCluster} instances
      */
+    @Deprecated(since = "0.20.3", forRemoval = true)
     public List<DatabaseCheckOnCluster<? extends DbObject>> getAll() {
+        return get();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<DatabaseCheckOnCluster<? extends DbObject>> get() {
         return checks;
     }
 }

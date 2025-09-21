@@ -29,6 +29,9 @@ public class StandardHealthLogger extends AbstractHealthLogger {
         super(credentials, connectionFactory, databaseChecksFactory);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String writeToLog(final LoggingKey key, final int value) {
         return key.getSubKeyName() + ":" + value;

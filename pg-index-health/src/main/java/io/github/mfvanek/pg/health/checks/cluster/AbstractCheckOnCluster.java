@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 /**
- * An abstract class for all database checks performed on entire cluster.
+ * An abstract class for all database checks performed on the entire cluster.
  *
  * @param <T> represents an object in a database associated with a table
  * @author Ivan Vakhrushev

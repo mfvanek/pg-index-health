@@ -167,7 +167,7 @@ public enum Diagnostic implements CheckTypeAware {
      */
     public enum ExecutionTopology {
         /**
-         * Only on primary host.
+         * Only on the primary host.
          */
         ON_PRIMARY,
         /**

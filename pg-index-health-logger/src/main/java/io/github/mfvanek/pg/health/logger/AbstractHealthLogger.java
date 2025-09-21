@@ -62,7 +62,7 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         final DatabaseChecksOnCluster databaseChecksOnCluster = databaseChecksFactory.apply(haPgConnection);
         final Predicate<DbObject> jointFilters = prepareFilters(exclusions, pgContext);
         final List<String> logResult = new ArrayList<>();
-        for (final DatabaseCheckOnCluster<? extends DbObject> check : databaseChecksOnCluster.getAll()) {
+        for (final DatabaseCheckOnCluster<? extends DbObject> check : databaseChecksOnCluster.get()) {
             final LoggingKey key = SimpleLoggingKeyAdapter.of(check.getDiagnostic());
             final List<? extends DbObject> checkResult = check.check(pgContext, jointFilters);
             if (checkResult.isEmpty()) {
@@ -84,6 +84,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
             .and(SkipSmallIndexesPredicate.of(exclusions.getIndexSizeThresholdInBytes()));
     }
 
+    /**
+     * Writes the provided key and value to a log.
+     *
+     * @param key the {@code LoggingKey} object representing the key to be logged; must not be {@code null}.
+     * @param value the integer value associated with the key that will be logged.
+     * @return a message indicating the result of the logging operation; never {@code null}.
+     */
     protected abstract String writeToLog(LoggingKey key, int value);
 
     private String writeZeroToLog(final LoggingKey key) {
