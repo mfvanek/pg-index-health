@@ -40,6 +40,7 @@ import io.github.mfvanek.pg.health.checks.cluster.PrimaryKeysWithSerialTypesChec
 import io.github.mfvanek.pg.health.checks.cluster.PrimaryKeysWithVarcharCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.SequenceOverflowCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.TablesNotLinkedToOthersCheckOnCluster;
+import io.github.mfvanek.pg.health.checks.cluster.TablesWherePrimaryKeyColumnsNotFirstCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.TablesWithBloatCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.TablesWithMissingIndexesCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.cluster.TablesWithZeroOrOneColumnCheckOnCluster;
@@ -113,7 +114,8 @@ public final class DatabaseChecksOnCluster implements Supplier<List<DatabaseChec
             new PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster(haPgConnection),
             new ColumnsWithMoneyTypeCheckOnCluster(haPgConnection),
             new IndexesWithTimestampInTheMiddleCheckOnCluster(haPgConnection),
-            new ColumnsWithTimestampOrTimetzTypeCheckOnCluster(haPgConnection)
+            new ColumnsWithTimestampOrTimetzTypeCheckOnCluster(haPgConnection),
+            new TablesWherePrimaryKeyColumnsNotFirstCheckOnCluster(haPgConnection)
         );
     }
 

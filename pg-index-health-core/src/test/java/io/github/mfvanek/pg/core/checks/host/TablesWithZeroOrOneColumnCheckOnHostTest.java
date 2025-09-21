@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,7 +28,7 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class TablesWithZeroOrOneColumnCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<TableWithColumns> check = new TablesWithZeroOrOneColumnCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull TableWithColumns> check = new TablesWithZeroOrOneColumnCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {

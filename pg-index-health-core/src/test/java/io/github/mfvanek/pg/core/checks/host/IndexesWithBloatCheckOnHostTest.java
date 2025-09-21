@@ -20,6 +20,7 @@ import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipSmallIndexesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.assertj.core.api.Assertions;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -30,7 +31,7 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class IndexesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
 
-    private final DatabaseCheckOnHost<IndexWithBloat> check = new IndexesWithBloatCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull IndexWithBloat> check = new IndexesWithBloatCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {

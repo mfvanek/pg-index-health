@@ -19,6 +19,7 @@ import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -29,7 +30,7 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class UnusedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<UnusedIndex> check = new UnusedIndexesCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull UnusedIndex> check = new UnusedIndexesCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
