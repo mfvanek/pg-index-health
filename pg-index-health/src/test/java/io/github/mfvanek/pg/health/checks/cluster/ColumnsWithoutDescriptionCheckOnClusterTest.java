@@ -108,9 +108,10 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
         executeTestOnDatabase(schemaName, DatabasePopulator::withPartitionedTableWithoutComments, ctx ->
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
-                .hasSize(4)
+                .hasSize(5)
                 .containsExactly(
                     Column.ofNotNull(ctx, expectedTableName, "creation_date"),
+                    Column.ofNullable(ctx, expectedTableName, "description"),
                     Column.ofNotNull(ctx, expectedTableName, "entity_id"),
                     Column.ofNotNull(ctx, expectedTableName, "ref_type"),
                     Column.ofNotNull(ctx, expectedTableName, "ref_value")));

@@ -40,6 +40,7 @@ import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithSerialTypesCheckOnHo
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.TablesWherePrimaryKeyColumnsNotFirstCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithZeroOrOneColumnCheckOnHost;
@@ -308,6 +309,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public ColumnsWithTimestampOrTimetzTypeCheckOnHost columnsWithTimestampOrTimetzTypeCheckOnHost(final PgConnection pgConnection) {
         return new ColumnsWithTimestampOrTimetzTypeCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(TablesWherePrimaryKeyColumnsNotFirstCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public TablesWherePrimaryKeyColumnsNotFirstCheckOnHost tablesWherePrimaryKeyColumnsNotFirstCheckOnHost(final PgConnection pgConnection) {
+        return new TablesWherePrimaryKeyColumnsNotFirstCheckOnHost(pgConnection);
     }
 
     @Bean
