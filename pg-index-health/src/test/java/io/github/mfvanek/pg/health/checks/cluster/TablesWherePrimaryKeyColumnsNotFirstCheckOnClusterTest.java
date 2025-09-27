@@ -8,47 +8,53 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.core.checks.host;
+package io.github.mfvanek.pg.health.checks.cluster;
 
-import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
+import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.Table;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
+import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
-class TablesNotLinkedToOthersCheckOnHostTest extends DatabaseAwareTestBase {
+class TablesWherePrimaryKeyColumnsNotFirstCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<@NonNull Table> check = new TablesNotLinkedToOthersCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull Table> check = new TablesWherePrimaryKeyColumnsNotFirstCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
             .hasType(Table.class)
-            .hasDiagnostic(Diagnostic.TABLES_NOT_LINKED_TO_OTHERS)
-            .hasHost(getHost())
+            .hasDiagnostic(Diagnostic.TABLES_WHERE_PRIMARY_KEY_COLUMNS_NOT_FIRST)
             .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withMaterializedView().withTableWithoutPrimaryKey(), ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withNaturalKeys, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
-                .containsExactly(Table.of(ctx, "bad_clients"));
+                .hasSize(2)
+                .containsExactly(
+                    Table.of(ctx, "t2_composite"),
+                    Table.of(ctx, "\"times-of-creation\"")
+                ));
+    }
 
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldIgnoreTablesWithoutPrimaryKey(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withTableWithoutPrimaryKey, ctx ->
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_clients"))
-                .isEmpty();
-        });
+                .executing(ctx)
+                .isEmpty());
     }
 
     @ParameterizedTest

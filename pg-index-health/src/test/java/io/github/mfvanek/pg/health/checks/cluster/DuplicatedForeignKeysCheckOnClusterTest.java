@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -25,7 +26,7 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class DuplicatedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<DuplicatedForeignKeys> check = new DuplicatedForeignKeysCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull DuplicatedForeignKeys> check = new DuplicatedForeignKeysCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {

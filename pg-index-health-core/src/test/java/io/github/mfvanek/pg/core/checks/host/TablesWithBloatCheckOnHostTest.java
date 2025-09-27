@@ -18,6 +18,7 @@ import io.github.mfvanek.pg.model.predicates.SkipBloatUnderThresholdPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import org.assertj.core.api.Assertions;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -28,7 +29,7 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class TablesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
 
-    private final DatabaseCheckOnHost<TableWithBloat> check = new TablesWithBloatCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull TableWithBloat> check = new TablesWithBloatCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {

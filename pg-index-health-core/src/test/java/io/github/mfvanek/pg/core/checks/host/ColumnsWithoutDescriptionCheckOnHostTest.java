@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,7 +28,7 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<Column> check = new ColumnsWithoutDescriptionCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull Column> check = new ColumnsWithoutDescriptionCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
@@ -108,9 +109,10 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, DatabasePopulator::withPartitionedTableWithoutComments, ctx ->
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
-                .hasSize(4)
+                .hasSize(5)
                 .containsExactly(
                     Column.ofNotNull(ctx, expectedTableName, "creation_date"),
+                    Column.ofNullable(ctx, expectedTableName, "description"),
                     Column.ofNotNull(ctx, expectedTableName, "entity_id"),
                     Column.ofNotNull(ctx, expectedTableName, "ref_type"),
                     Column.ofNotNull(ctx, expectedTableName, "ref_value")));

@@ -19,6 +19,7 @@ import io.github.mfvanek.pg.model.constraint.ConstraintType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.assertj.core.api.Assertions;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -29,7 +30,7 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<Constraint> check = new NotValidConstraintsCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull Constraint> check = new NotValidConstraintsCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {

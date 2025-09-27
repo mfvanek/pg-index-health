@@ -43,7 +43,7 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
     protected static final String BLOAT_PERCENTAGE = "bloat_percentage";
 
     /**
-     * An original java type representing database object.
+     * An original java type representing a database object.
      */
     private final Class<T> type;
     /**
@@ -107,7 +107,7 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
     protected abstract List<T> doCheck(PgContext pgContext);
 
     /**
-     * Executes query associated with diagnostic and extracts result.
+     * Executes a query associated with a diagnostic and extracts the result.
      *
      * @param pgContext check's context with the specified schema; must not be null
      * @param rse       the extractor used to extract results from the {@link ResultSet}; must not be null

@@ -57,7 +57,8 @@ public enum Diagnostic implements CheckTypeAware {
     PRIMARY_KEYS_THAT_MOST_LIKELY_NATURAL_KEYS("primary_keys_that_most_likely_natural_keys.sql"),
     COLUMNS_WITH_MONEY_TYPE("columns_with_money_type.sql"),
     INDEXES_WITH_TIMESTAMP_IN_THE_MIDDLE("indexes_with_timestamp_in_the_middle.sql"),
-    COLUMNS_WITH_TIMESTAMP_OR_TIMETZ_TYPE("columns_with_timestamp_or_timetz_type.sql");
+    COLUMNS_WITH_TIMESTAMP_OR_TIMETZ_TYPE("columns_with_timestamp_or_timetz_type.sql"),
+    TABLES_WHERE_PRIMARY_KEY_COLUMNS_NOT_FIRST("tables_where_primary_key_columns_not_first.sql");
 
     private final ExecutionTopology executionTopology;
     private final String sqlQueryFileName;
@@ -167,7 +168,7 @@ public enum Diagnostic implements CheckTypeAware {
      */
     public enum ExecutionTopology {
         /**
-         * Only on primary host.
+         * Only on the primary host.
          */
         ON_PRIMARY,
         /**

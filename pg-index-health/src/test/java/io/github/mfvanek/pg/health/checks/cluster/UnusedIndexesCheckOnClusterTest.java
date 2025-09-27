@@ -23,6 +23,7 @@ import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.assertj.core.api.Assertions;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -39,7 +40,7 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<UnusedIndex> check = new UnusedIndexesCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull UnusedIndex> check = new UnusedIndexesCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {

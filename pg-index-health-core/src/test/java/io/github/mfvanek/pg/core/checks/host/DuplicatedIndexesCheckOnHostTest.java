@@ -18,6 +18,7 @@ import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -26,7 +27,7 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class DuplicatedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<DuplicatedIndexes> check = new DuplicatedIndexesCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull DuplicatedIndexes> check = new DuplicatedIndexesCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {

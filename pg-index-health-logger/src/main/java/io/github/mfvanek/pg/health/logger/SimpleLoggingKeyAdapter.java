@@ -19,7 +19,7 @@ import java.util.Locale;
  * based on a {@link Diagnostic} instance.
  *
  * <p>This class implements the {@link LoggingKey} interface by deriving the key name,
- * sub-key name, and description from the given {@link Diagnostic} object.</p>
+ * subkey name, and description from the given {@link Diagnostic} object.</p>
  */
 public final class SimpleLoggingKeyAdapter implements LoggingKey {
 

@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.core.checks.common;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 /**
- * Allows getting information about original generic type.
+ * Allows getting information about the original generic type.
  *
  * @param <T> represents an object in a database associated with a table
  * @author Ivan Vakhrushev

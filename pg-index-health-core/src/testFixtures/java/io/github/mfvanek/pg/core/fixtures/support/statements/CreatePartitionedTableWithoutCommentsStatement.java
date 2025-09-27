@@ -19,6 +19,7 @@ public class CreatePartitionedTableWithoutCommentsStatement extends AbstractDbSt
         return List.of(
             """
                 create table if not exists {schemaName}.custom_entity_reference_with_very_very_very_long_name(
+                    description text,
                     ref_type varchar(32) not null,
                     ref_value varchar(64) not null,
                     creation_date timestamp with time zone not null,

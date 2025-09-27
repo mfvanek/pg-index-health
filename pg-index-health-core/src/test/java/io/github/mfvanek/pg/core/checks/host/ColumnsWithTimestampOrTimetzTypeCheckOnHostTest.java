@@ -18,6 +18,7 @@ import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -26,7 +27,7 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class ColumnsWithTimestampOrTimetzTypeCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<ColumnWithType> check = new ColumnsWithTimestampOrTimetzTypeCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull ColumnWithType> check = new ColumnsWithTimestampOrTimetzTypeCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {

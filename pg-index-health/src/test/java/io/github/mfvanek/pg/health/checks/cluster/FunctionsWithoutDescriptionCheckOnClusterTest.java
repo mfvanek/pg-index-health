@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.function.StoredFunction;
 import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,7 +27,7 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<StoredFunction> check = new FunctionsWithoutDescriptionCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull StoredFunction> check = new FunctionsWithoutDescriptionCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {

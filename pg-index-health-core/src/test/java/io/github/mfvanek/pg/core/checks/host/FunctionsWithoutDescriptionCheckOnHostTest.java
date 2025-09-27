@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.function.StoredFunction;
 import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,7 +27,7 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class FunctionsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<StoredFunction> check = new FunctionsWithoutDescriptionCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull StoredFunction> check = new FunctionsWithoutDescriptionCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {

@@ -101,7 +101,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "unused_indexes:19",
                         "tables_with_missing_indexes:0",
                         "tables_without_description:21",
-                        "columns_without_description:51",
+                        "columns_without_description:54",
                         "columns_with_json_type:1",
                         "columns_with_serial_types:3",
                         "functions_without_description:3",
@@ -115,7 +115,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "possible_object_name_overflow:2",
                         "tables_not_linked_to_others:10",
                         "foreign_keys_with_unmatched_column_type:2",
-                        "tables_with_zero_or_one_column:8",
+                        "tables_with_zero_or_one_column:7",
                         "objects_not_following_naming_convention:21",
                         "columns_not_following_naming_convention:7",
                         "primary_keys_with_varchar:3",
@@ -124,7 +124,8 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "primary_keys_that_most_likely_natural_keys:6",
                         "columns_with_money_type:1",
                         "indexes_with_timestamp_in_the_middle:3",
-                        "columns_with_timestamp_or_timetz_type:4"
+                        "columns_with_timestamp_or_timetz_type:4",
+                        "tables_where_primary_key_columns_not_first:2"
                     );
             }
         );

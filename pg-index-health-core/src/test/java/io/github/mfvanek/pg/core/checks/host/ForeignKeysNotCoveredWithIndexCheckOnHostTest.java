@@ -19,6 +19,7 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipByConstraintNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -29,7 +30,7 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<ForeignKey> check = new ForeignKeysNotCoveredWithIndexCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull ForeignKey> check = new ForeignKeysNotCoveredWithIndexCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {

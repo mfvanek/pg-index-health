@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -24,7 +25,7 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class ColumnsWithMoneyTypeCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<Column> check = new ColumnsWithMoneyTypeCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull Column> check = new ColumnsWithMoneyTypeCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
