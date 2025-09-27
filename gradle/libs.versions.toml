@@ -10,7 +10,7 @@ forbiddenapis = "3.9"
 
 [libraries]
 jspecify = "org.jspecify:jspecify:1.0.0"
-postgresql = "org.postgresql:postgresql:42.7.7"
+postgresql = "org.postgresql:postgresql:42.7.8"
 slf4j-simple = "org.slf4j:slf4j-simple:2.0.17" # to be compatible with Spring Boot 3.3.X
 apache-commons-dbcp2 = "org.apache.commons:commons-dbcp2:2.13.0"
 awaitility = "org.awaitility:awaitility:4.3.0"
