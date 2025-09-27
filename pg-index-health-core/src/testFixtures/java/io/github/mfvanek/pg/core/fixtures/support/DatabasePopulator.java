@@ -60,6 +60,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateProceduresSta
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSuitableIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWhereAllColumnsNullableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithFixedLengthVarcharStatement;
@@ -358,6 +359,10 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withTimestampInTheMiddle() {
         return register(141, new CreateTableWithTimestampInTheMiddleStatement());
+    }
+
+    public DatabasePopulator withTableWhereAllColumnsNullable() {
+        return register(144, new CreateTableWhereAllColumnsNullableStatement());
     }
 
     public void populate() {
