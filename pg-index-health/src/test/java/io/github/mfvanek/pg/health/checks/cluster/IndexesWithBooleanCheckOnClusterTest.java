@@ -19,6 +19,7 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,7 +28,7 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<IndexWithColumns> check = new IndexesWithBooleanCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull IndexWithColumns> check = new IndexesWithBooleanCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {

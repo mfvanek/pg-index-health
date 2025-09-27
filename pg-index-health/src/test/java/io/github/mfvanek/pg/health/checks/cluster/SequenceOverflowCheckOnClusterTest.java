@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipBySequenceNamePredicate;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,7 +28,7 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class SequenceOverflowCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<SequenceState> check = new SequenceOverflowCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull SequenceState> check = new SequenceOverflowCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {

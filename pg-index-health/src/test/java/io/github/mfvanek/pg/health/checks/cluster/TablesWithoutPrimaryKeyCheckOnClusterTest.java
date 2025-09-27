@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.Table;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -24,7 +25,7 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<Table> check = new TablesWithoutPrimaryKeyCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull Table> check = new TablesWithoutPrimaryKeyCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {

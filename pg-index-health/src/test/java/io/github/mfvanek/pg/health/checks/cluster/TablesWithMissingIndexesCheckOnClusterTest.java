@@ -19,6 +19,7 @@ import io.github.mfvanek.pg.model.predicates.SkipSmallTablesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import org.assertj.core.api.Assertions;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -30,7 +31,7 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase {
 
-    private final DatabaseCheckOnCluster<TableWithMissingIndex> check = new TablesWithMissingIndexesCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull TableWithMissingIndex> check = new TablesWithMissingIndexesCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {

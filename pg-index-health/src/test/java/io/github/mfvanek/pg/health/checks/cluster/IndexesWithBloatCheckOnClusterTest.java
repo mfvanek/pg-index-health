@@ -21,6 +21,7 @@ import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipSmallIndexesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.assertj.core.api.Assertions;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -31,7 +32,7 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
 
-    private final DatabaseCheckOnCluster<IndexWithBloat> check = new IndexesWithBloatCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull IndexWithBloat> check = new IndexesWithBloatCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {

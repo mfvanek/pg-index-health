@@ -18,6 +18,7 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -28,7 +29,7 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class ObjectsNotFollowingNamingConventionCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<AnyObject> check = new ObjectsNotFollowingNamingConventionCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull AnyObject> check = new ObjectsNotFollowingNamingConventionCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {

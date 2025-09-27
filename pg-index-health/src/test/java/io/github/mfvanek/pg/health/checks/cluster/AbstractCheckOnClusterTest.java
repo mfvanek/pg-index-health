@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -29,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SuppressWarnings("checkstyle:AbstractClassName")
 class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final AbstractCheckOnCluster<IndexWithColumns> check = new IndexesWithNullValuesCheckOnCluster(getHaPgConnection());
+    private final AbstractCheckOnCluster<@NonNull IndexWithColumns> check = new IndexesWithNullValuesCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldThrowExceptionIfMapperNotPassedForCrossClusterCheck() {
@@ -52,7 +53,7 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
         }
     }
 
-    static class WrongCheck extends AbstractCheckOnCluster<UnusedIndex> {
+    static class WrongCheck extends AbstractCheckOnCluster<@NonNull UnusedIndex> {
 
         WrongCheck(final HighAvailabilityPgConnection haPgConnection) {
             super(haPgConnection, UnusedIndexesCheckOnHost::new);

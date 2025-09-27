@@ -22,9 +22,11 @@ public class CreateTableWithNaturalKeyStatement extends AbstractDbStatement {
                     id int not null primary key);""",
             """
                 create table if not exists {schemaName}."times-of-creation" (
+                    description text not null,
                     "time-of-creation" timestamptz not null primary key);""",
             """
                 create table if not exists {schemaName}.t2_composite (
+                    issue_date timestamptz not null,
                     passport_series text not null,
                     passport_number text not null,
                     primary key (passport_series, passport_number)
@@ -32,6 +34,7 @@ public class CreateTableWithNaturalKeyStatement extends AbstractDbStatement {
             """
                 create table if not exists {schemaName}.t3_composite (
                     app_id uuid not null,
+                    column_in_the_middle text,
                     app_number text not null,
                     primary key (app_id, app_number)
                 );"""

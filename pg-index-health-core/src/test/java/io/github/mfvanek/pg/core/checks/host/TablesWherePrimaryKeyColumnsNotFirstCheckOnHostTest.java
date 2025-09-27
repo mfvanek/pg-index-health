@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.Table;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
@@ -40,12 +39,14 @@ class TablesWherePrimaryKeyColumnsNotFirstCheckOnHostTest extends DatabaseAwareT
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withTableWithoutPrimaryKey(), ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withNaturalKeys, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
-                .containsExactly(Table.of(ctx, "bad_clients")); // TODO
-        });
+                .hasSize(2)
+                .containsExactly(
+                    Table.of(ctx, "t2_composite"),
+                    Table.of(ctx, "\"times-of-creation\"")
+                ));
     }
 
     @ParameterizedTest

@@ -14,10 +14,8 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
-import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.predicates.SkipByColumnNamePredicate;
-import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
+import io.github.mfvanek.pg.model.table.Table;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,42 +23,35 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
-class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
+class TablesWherePrimaryKeyColumnsNotFirstCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<@NonNull Column> check = new ColumnsWithJsonTypeCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull Table> check = new TablesWherePrimaryKeyColumnsNotFirstCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(Column.class)
-            .hasDiagnostic(Diagnostic.COLUMNS_WITH_JSON_TYPE)
+            .hasType(Table.class)
+            .hasDiagnostic(Diagnostic.TABLES_WHERE_PRIMARY_KEY_COLUMNS_NOT_FIRST)
             .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withJsonType(), ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withNaturalKeys, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
-                .containsExactly(Column.ofNullable(ctx.enrichWithSchema("clients"), "info"));
-
-            assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
-                .isEmpty();
-
-            assertThat(check)
-                .executing(ctx, SkipByColumnNamePredicate.ofName("info"))
-                .isEmpty();
-        });
+                .hasSize(2)
+                .containsExactly(
+                    Table.of(ctx, "t2_composite"),
+                    Table.of(ctx, "\"times-of-creation\"")
+                ));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldIgnoreDroppedColumns(final String schemaName) {
-        // withData - skipped here below
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withJsonType().withDroppedInfoColumn(), ctx ->
+    void shouldIgnoreTablesWithoutPrimaryKey(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withTableWithoutPrimaryKey, ctx ->
             assertThat(check)
                 .executing(ctx)
                 .isEmpty());
@@ -69,11 +60,11 @@ class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withJsonAndSerialColumnsInPartitionedTable, ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withPartitionedTableWithoutComments(), ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
-                    Column.ofNullable(ctx, "parent", "raw_data")));
+                    Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name")));
     }
 }
