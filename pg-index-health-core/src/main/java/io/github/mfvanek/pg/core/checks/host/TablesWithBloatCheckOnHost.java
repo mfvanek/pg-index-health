@@ -25,6 +25,11 @@ import java.util.List;
  */
 public class TablesWithBloatCheckOnHost extends AbstractCheckOnHost<TableWithBloat> {
 
+    /**
+     * Constructs a new instance of {@code TablesWithBloatCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public TablesWithBloatCheckOnHost(final PgConnection pgConnection) {
         super(TableWithBloat.class, pgConnection, Diagnostic.BLOATED_TABLES);
     }

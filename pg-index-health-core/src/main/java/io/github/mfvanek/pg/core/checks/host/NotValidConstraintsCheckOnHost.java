@@ -28,6 +28,11 @@ import static io.github.mfvanek.pg.core.checks.extractors.ForeignKeyExtractor.CO
  */
 public class NotValidConstraintsCheckOnHost extends AbstractCheckOnHost<Constraint> {
 
+    /**
+     * Constructs a new instance of {@code NotValidConstraintsCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public NotValidConstraintsCheckOnHost(final PgConnection pgConnection) {
         super(Constraint.class, pgConnection, Diagnostic.NOT_VALID_CONSTRAINTS);
     }

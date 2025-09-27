@@ -25,6 +25,11 @@ import java.util.List;
  */
 public class FunctionsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<StoredFunction> {
 
+    /**
+     * Constructs a new instance of {@code FunctionsWithoutDescriptionCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public FunctionsWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
         super(StoredFunction.class, pgConnection, Diagnostic.FUNCTIONS_WITHOUT_DESCRIPTION);
     }

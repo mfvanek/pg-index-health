@@ -26,6 +26,11 @@ import java.util.List;
  */
 public class ForeignKeysNotCoveredWithIndexCheckOnHost extends AbstractCheckOnHost<ForeignKey> {
 
+    /**
+     * Constructs a new instance of {@code ForeignKeysNotCoveredWithIndexCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public ForeignKeysNotCoveredWithIndexCheckOnHost(final PgConnection pgConnection) {
         super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX);
     }

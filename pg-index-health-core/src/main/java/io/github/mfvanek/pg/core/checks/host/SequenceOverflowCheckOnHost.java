@@ -25,6 +25,11 @@ import java.util.List;
  */
 public class SequenceOverflowCheckOnHost extends AbstractCheckOnHost<SequenceState> {
 
+    /**
+     * Constructs a new instance of {@code SequenceOverflowCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public SequenceOverflowCheckOnHost(final PgConnection pgConnection) {
         super(SequenceState.class, pgConnection, Diagnostic.SEQUENCE_OVERFLOW);
     }

@@ -25,6 +25,11 @@ import java.util.List;
  */
 public class DuplicatedIndexesCheckOnHost extends AbstractCheckOnHost<DuplicatedIndexes> {
 
+    /**
+     * Constructs a new instance of {@code DuplicatedIndexesCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public DuplicatedIndexesCheckOnHost(final PgConnection pgConnection) {
         super(DuplicatedIndexes.class, pgConnection, Diagnostic.DUPLICATED_INDEXES);
     }

@@ -35,6 +35,11 @@ import java.util.List;
  */
 public class PossibleObjectNameOverflowCheckOnHost extends AbstractCheckOnHost<AnyObject> {
 
+    /**
+     * Constructs a new instance of {@code PossibleObjectNameOverflowCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public PossibleObjectNameOverflowCheckOnHost(final PgConnection pgConnection) {
         super(AnyObject.class, pgConnection, Diagnostic.POSSIBLE_OBJECT_NAME_OVERFLOW);
     }

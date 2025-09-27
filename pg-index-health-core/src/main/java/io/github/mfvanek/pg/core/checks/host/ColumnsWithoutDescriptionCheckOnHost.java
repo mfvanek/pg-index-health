@@ -26,6 +26,11 @@ import java.util.List;
  */
 public class ColumnsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Column> {
 
+    /**
+     * Constructs a new instance of {@code ColumnsWithoutDescriptionCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public ColumnsWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
         super(Column.class, pgConnection, Diagnostic.COLUMNS_WITHOUT_DESCRIPTION);
     }

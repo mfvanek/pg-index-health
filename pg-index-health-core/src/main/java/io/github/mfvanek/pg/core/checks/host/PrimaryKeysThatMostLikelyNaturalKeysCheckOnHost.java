@@ -19,7 +19,7 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import java.util.List;
 
 /**
- * Check for primary keys that are most likely natural keys on a specific host.
+ * Check for primary keys that are the most likely natural keys on a specific host.
  * <p>
  * It is better to use surrogate keys instead of natural ones.
  *
@@ -29,6 +29,11 @@ import java.util.List;
  */
 public class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost extends AbstractCheckOnHost<IndexWithColumns> {
 
+    /**
+     * Constructs a new instance of {@code PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithColumns.class, pgConnection, Diagnostic.PRIMARY_KEYS_THAT_MOST_LIKELY_NATURAL_KEYS);
     }

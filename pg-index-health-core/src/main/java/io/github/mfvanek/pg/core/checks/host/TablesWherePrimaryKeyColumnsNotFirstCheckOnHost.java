@@ -28,6 +28,11 @@ import java.util.List;
  */
 public class TablesWherePrimaryKeyColumnsNotFirstCheckOnHost extends AbstractCheckOnHost<Table> {
 
+    /**
+     * Constructs a new instance of {@code TablesWherePrimaryKeyColumnsNotFirstCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public TablesWherePrimaryKeyColumnsNotFirstCheckOnHost(final PgConnection pgConnection) {
         super(Table.class, pgConnection, Diagnostic.TABLES_WHERE_PRIMARY_KEY_COLUMNS_NOT_FIRST);
     }

@@ -25,6 +25,11 @@ import java.util.List;
  */
 public class InvalidIndexesCheckOnHost extends AbstractCheckOnHost<Index> {
 
+    /**
+     * Constructs a new instance of {@code InvalidIndexesCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public InvalidIndexesCheckOnHost(final PgConnection pgConnection) {
         super(Index.class, pgConnection, Diagnostic.INVALID_INDEXES);
     }

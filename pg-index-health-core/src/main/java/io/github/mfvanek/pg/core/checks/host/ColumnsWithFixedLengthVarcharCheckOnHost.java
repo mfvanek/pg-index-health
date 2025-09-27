@@ -19,13 +19,18 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import java.util.List;
 
 /**
- * Check for columns with fixed length varchar type on a specific host.
+ * Check for columns with a fixed length varchar type on a specific host.
  *
  * @author Diana Gilfanova
  * @since 0.14.6
  */
 public class ColumnsWithFixedLengthVarcharCheckOnHost extends AbstractCheckOnHost<Column> {
 
+    /**
+     * Constructs a new instance of {@code ColumnsWithFixedLengthVarcharCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public ColumnsWithFixedLengthVarcharCheckOnHost(final PgConnection pgConnection) {
         super(Column.class, pgConnection, Diagnostic.COLUMNS_WITH_FIXED_LENGTH_VARCHAR);
     }
@@ -35,7 +40,7 @@ public class ColumnsWithFixedLengthVarcharCheckOnHost extends AbstractCheckOnHos
      * These are candidates for conversion to the varchar or text type.
      *
      * @param pgContext check's context with the specified schema
-     * @return list of columns with fixed length varchar type
+     * @return list of columns with a fixed length varchar type
      */
     @Override
     protected List<Column> doCheck(final PgContext pgContext) {

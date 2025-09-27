@@ -28,9 +28,9 @@ import java.util.List;
 public class IntersectedForeignKeysCheckOnHost extends AbstractCheckOnHost<DuplicatedForeignKeys> {
 
     /**
-     * Creates a new {@code IntersectedForeignKeysCheckOnHost} object.
+     * Constructs a new instance of {@code IntersectedForeignKeysCheckOnHost}.
      *
-     * @param pgConnection connection to the PostgreSQL database, must not be null
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public IntersectedForeignKeysCheckOnHost(final PgConnection pgConnection) {
         super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.INTERSECTED_FOREIGN_KEYS);

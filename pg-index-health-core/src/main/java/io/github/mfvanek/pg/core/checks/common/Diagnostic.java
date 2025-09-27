@@ -58,7 +58,8 @@ public enum Diagnostic implements CheckTypeAware {
     COLUMNS_WITH_MONEY_TYPE("columns_with_money_type.sql"),
     INDEXES_WITH_TIMESTAMP_IN_THE_MIDDLE("indexes_with_timestamp_in_the_middle.sql"),
     COLUMNS_WITH_TIMESTAMP_OR_TIMETZ_TYPE("columns_with_timestamp_or_timetz_type.sql"),
-    TABLES_WHERE_PRIMARY_KEY_COLUMNS_NOT_FIRST("tables_where_primary_key_columns_not_first.sql");
+    TABLES_WHERE_PRIMARY_KEY_COLUMNS_NOT_FIRST("tables_where_primary_key_columns_not_first.sql"),
+    TABLES_WHERE_ALL_COLUMNS_NULLABLE_EXCEPT_PK("tables_where_all_columns_nullable_except_pk.sql");
 
     private final ExecutionTopology executionTopology;
     private final String sqlQueryFileName;

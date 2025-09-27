@@ -72,12 +72,19 @@ import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 
 import java.io.Serial;
 
+/**
+ * Provides a custom Jackson module to support the serialization and deserialization of PostgreSQL-related entities.
+ */
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "checkstyle:ExecutableStatementCount"})
 public class PgIndexHealthModelModule extends SimpleModule {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Constructs a new instance of the PgIndexHealthModelModule and initializes custom serializers and deserializers
+     * for various PostgreSQL health-related model types.
+     */
     public PgIndexHealthModelModule() {
         super(PgIndexHealthModelModule.class.getSimpleName(), ModuleVersion.VERSION);
 

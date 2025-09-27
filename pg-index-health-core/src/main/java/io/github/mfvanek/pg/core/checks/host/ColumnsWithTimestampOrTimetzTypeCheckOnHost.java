@@ -26,6 +26,11 @@ import java.util.List;
  */
 public class ColumnsWithTimestampOrTimetzTypeCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {
 
+    /**
+     * Constructs a new instance of {@code ColumnsWithTimestampOrTimetzTypeCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public ColumnsWithTimestampOrTimetzTypeCheckOnHost(final PgConnection pgConnection) {
         super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_TIMESTAMP_OR_TIMETZ_TYPE);
     }

@@ -36,6 +36,11 @@ import java.util.List;
  */
 public class PrimaryKeysWithVarcharCheckOnHost extends AbstractCheckOnHost<IndexWithColumns> {
 
+    /**
+     * Constructs a new instance of {@code PrimaryKeysWithVarcharCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public PrimaryKeysWithVarcharCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithColumns.class, pgConnection, Diagnostic.PRIMARY_KEYS_WITH_VARCHAR);
     }

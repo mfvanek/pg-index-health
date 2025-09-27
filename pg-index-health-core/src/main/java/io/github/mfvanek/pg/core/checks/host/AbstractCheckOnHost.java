@@ -55,6 +55,13 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
      */
     private final Diagnostic diagnostic;
 
+    /**
+     * Constructs an instance of AbstractCheckOnHost with the specified parameters.
+     *
+     * @param type         the type of the entity being checked; must not be null
+     * @param pgConnection the PostgreSQL connection associated with this check; must not be null
+     * @param diagnostic   the diagnostic defining the check configuration; must not be null
+     */
     protected AbstractCheckOnHost(final Class<T> type,
                                   final PgConnection pgConnection,
                                   final Diagnostic diagnostic) {

@@ -29,6 +29,11 @@ import java.util.List;
  */
 public class TablesNotLinkedToOthersCheckOnHost extends AbstractCheckOnHost<Table> {
 
+    /**
+     * Constructs a new instance of {@code TablesNotLinkedToOthersCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public TablesNotLinkedToOthersCheckOnHost(final PgConnection pgConnection) {
         super(Table.class, pgConnection, Diagnostic.TABLES_NOT_LINKED_TO_OTHERS);
     }

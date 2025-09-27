@@ -25,6 +25,11 @@ import java.util.List;
  */
 public class IndexesWithBloatCheckOnHost extends AbstractCheckOnHost<IndexWithBloat> {
 
+    /**
+     * Constructs a new instance of {@code IndexesWithBloatCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public IndexesWithBloatCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithBloat.class, pgConnection, Diagnostic.BLOATED_INDEXES);
     }
