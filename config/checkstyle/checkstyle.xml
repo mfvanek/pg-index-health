@@ -10,7 +10,7 @@
         <property name="fileNamePattern" value="module\-info\.java$"/>
     </module>
     <module name="SuppressWarningsFilter"/>
-    <!-- <module name="JavadocPackage"/> invalid -->
+    <!-- <module name="JavadocPackage"/> invalid due to tests and test fixtures -->
     <module name="FileTabCharacter"/>
     <module name="FileLength"/>
     <module name="LineLength">
@@ -284,13 +284,12 @@
             <property name="target" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
         </module>
         <module name="JavadocMethod">
-            <property name="accessModifiers" value="public"/>
+            <property name="accessModifiers" value="public, protected"/>
             <property name="allowMissingParamTags" value="true"/>
             <property name="allowMissingReturnTag" value="true"/>
             <property name="allowedAnnotations" value="Override, Test"/>
-            <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF"/>
         </module>
-        <!-- <module name="MissingJavadocMethod"/> invalid -->
+        <!-- <module name="MissingJavadocMethod"/> invalid right now -->
         <module name="MissingJavadocPackage"/>
         <module name="JavadocType"/>
         <!-- <module name="JavadocVariable"/> invalid -->

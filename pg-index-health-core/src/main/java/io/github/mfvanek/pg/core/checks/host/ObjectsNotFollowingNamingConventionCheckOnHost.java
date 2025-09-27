@@ -29,6 +29,11 @@ import java.util.List;
  */
 public class ObjectsNotFollowingNamingConventionCheckOnHost extends AbstractCheckOnHost<AnyObject> {
 
+    /**
+     * Constructs a new instance of {@code ObjectsNotFollowingNamingConventionCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public ObjectsNotFollowingNamingConventionCheckOnHost(final PgConnection pgConnection) {
         super(AnyObject.class, pgConnection, Diagnostic.OBJECTS_NOT_FOLLOWING_NAMING_CONVENTION);
     }

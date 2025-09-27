@@ -25,6 +25,11 @@ import java.util.List;
  */
 public class TablesWithMissingIndexesCheckOnHost extends AbstractCheckOnHost<TableWithMissingIndex> {
 
+    /**
+     * Constructs a new instance of {@code TablesWithMissingIndexesCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public TablesWithMissingIndexesCheckOnHost(final PgConnection pgConnection) {
         super(TableWithMissingIndex.class, pgConnection, Diagnostic.TABLES_WITH_MISSING_INDEXES);
     }

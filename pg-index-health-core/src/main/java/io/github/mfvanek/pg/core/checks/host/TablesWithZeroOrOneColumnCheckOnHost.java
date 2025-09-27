@@ -27,6 +27,11 @@ import java.util.List;
  */
 public class TablesWithZeroOrOneColumnCheckOnHost extends AbstractCheckOnHost<TableWithColumns> {
 
+    /**
+     * Constructs a new instance of {@code TablesWithZeroOrOneColumnCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public TablesWithZeroOrOneColumnCheckOnHost(final PgConnection pgConnection) {
         super(TableWithColumns.class, pgConnection, Diagnostic.TABLES_WITH_ZERO_OR_ONE_COLUMN);
     }

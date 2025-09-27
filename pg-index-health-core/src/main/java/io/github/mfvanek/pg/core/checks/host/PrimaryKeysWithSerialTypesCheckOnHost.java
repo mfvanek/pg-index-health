@@ -28,6 +28,11 @@ import java.util.List;
  */
 public class PrimaryKeysWithSerialTypesCheckOnHost extends AbstractCheckOnHost<ColumnWithSerialType> {
 
+    /**
+     * Constructs a new instance of {@code PrimaryKeysWithSerialTypesCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public PrimaryKeysWithSerialTypesCheckOnHost(final PgConnection pgConnection) {
         super(ColumnWithSerialType.class, pgConnection, Diagnostic.PRIMARY_KEYS_WITH_SERIAL_TYPES);
     }

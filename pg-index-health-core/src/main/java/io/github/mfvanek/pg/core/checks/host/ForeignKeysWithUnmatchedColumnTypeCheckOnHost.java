@@ -32,6 +32,11 @@ import java.util.List;
  */
 public class ForeignKeysWithUnmatchedColumnTypeCheckOnHost extends AbstractCheckOnHost<ForeignKey> {
 
+    /**
+     * Constructs a new instance of {@code ForeignKeysWithUnmatchedColumnTypeCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public ForeignKeysWithUnmatchedColumnTypeCheckOnHost(final PgConnection pgConnection) {
         super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE);
     }

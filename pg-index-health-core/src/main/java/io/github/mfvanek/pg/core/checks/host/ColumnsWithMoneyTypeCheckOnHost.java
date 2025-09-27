@@ -26,16 +26,21 @@ import java.util.List;
  */
 public class ColumnsWithMoneyTypeCheckOnHost extends AbstractCheckOnHost<Column> {
 
+    /**
+     * Constructs a new instance of {@code ColumnsWithMoneyTypeCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public ColumnsWithMoneyTypeCheckOnHost(final PgConnection pgConnection) {
         super(Column.class, pgConnection, Diagnostic.COLUMNS_WITH_MONEY_TYPE);
     }
 
     /**
-     * Returns columns with money type in the specified schema.
+     * Returns columns with a money type in the specified schema.
      * These are candidates for conversion to the {@code numeric} type.
      *
      * @param pgContext check's context with the specified schema
-     * @return list of columns with money type
+     * @return list of columns with a money type
      * @see <a href="https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_money">Do not use money</a>
      */
     @Override

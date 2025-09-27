@@ -19,22 +19,27 @@ import io.github.mfvanek.pg.model.table.Table;
 import java.util.List;
 
 /**
- * Check for tables without primary key on a specific host.
+ * Check for tables without a primary key on a specific host.
  *
  * @author Ivan Vakhrushev
  * @since 0.6.0
  */
 public class TablesWithoutPrimaryKeyCheckOnHost extends AbstractCheckOnHost<Table> {
 
+    /**
+     * Constructs a new instance of {@code TablesWithoutPrimaryKeyCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public TablesWithoutPrimaryKeyCheckOnHost(final PgConnection pgConnection) {
         super(Table.class, pgConnection, Diagnostic.TABLES_WITHOUT_PRIMARY_KEY);
     }
 
     /**
-     * Returns tables without primary key in the specified schema.
+     * Returns tables without a primary key in the specified schema.
      *
      * @param pgContext check's context with the specified schema
-     * @return list of tables without primary key
+     * @return list of tables without a primary key
      */
     @Override
     protected List<Table> doCheck(final PgContext pgContext) {

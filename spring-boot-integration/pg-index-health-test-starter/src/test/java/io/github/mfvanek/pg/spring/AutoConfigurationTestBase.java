@@ -41,6 +41,7 @@ import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithSerialTypesCheckOnHo
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWherePrimaryKeyColumnsNotFirstCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
@@ -154,7 +155,8 @@ abstract class AutoConfigurationTestBase {
             ColumnsWithMoneyTypeCheckOnHost.class,
             IndexesWithTimestampInTheMiddleCheckOnHost.class,
             ColumnsWithTimestampOrTimetzTypeCheckOnHost.class,
-            TablesWherePrimaryKeyColumnsNotFirstCheckOnHost.class
+            TablesWherePrimaryKeyColumnsNotFirstCheckOnHost.class,
+            TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost.class
         );
     }
 }

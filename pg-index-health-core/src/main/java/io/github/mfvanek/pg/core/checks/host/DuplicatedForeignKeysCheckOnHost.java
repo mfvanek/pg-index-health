@@ -27,9 +27,9 @@ import java.util.List;
 public class DuplicatedForeignKeysCheckOnHost extends AbstractCheckOnHost<DuplicatedForeignKeys> {
 
     /**
-     * Creates a new {@code DuplicatedForeignKeysCheckOnHost} object.
+     * Constructs a new instance of {@code DuplicatedForeignKeysCheckOnHost}.
      *
-     * @param pgConnection connection to the PostgreSQL database, must not be null
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public DuplicatedForeignKeysCheckOnHost(final PgConnection pgConnection) {
         super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.DUPLICATED_FOREIGN_KEYS);

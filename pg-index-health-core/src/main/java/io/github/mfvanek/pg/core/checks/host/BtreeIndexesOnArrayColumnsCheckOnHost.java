@@ -28,6 +28,11 @@ import java.util.List;
  */
 public class BtreeIndexesOnArrayColumnsCheckOnHost extends AbstractCheckOnHost<IndexWithColumns> {
 
+    /**
+     * Constructs a new instance of {@code BtreeIndexesOnArrayColumnsCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public BtreeIndexesOnArrayColumnsCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithColumns.class, pgConnection, Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS);
     }

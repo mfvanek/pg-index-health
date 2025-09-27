@@ -26,6 +26,11 @@ import java.util.List;
  */
 public class IndexesWithNullValuesCheckOnHost extends AbstractCheckOnHost<IndexWithColumns> {
 
+    /**
+     * Constructs a new instance of {@code IndexesWithNullValuesCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public IndexesWithNullValuesCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_NULL_VALUES);
     }

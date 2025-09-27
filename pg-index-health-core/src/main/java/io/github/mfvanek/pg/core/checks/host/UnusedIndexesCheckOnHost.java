@@ -25,6 +25,11 @@ import java.util.List;
  */
 public class UnusedIndexesCheckOnHost extends AbstractCheckOnHost<UnusedIndex> {
 
+    /**
+     * Constructs a new instance of {@code UnusedIndexesCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public UnusedIndexesCheckOnHost(final PgConnection pgConnection) {
         super(UnusedIndex.class, pgConnection, Diagnostic.UNUSED_INDEXES);
     }

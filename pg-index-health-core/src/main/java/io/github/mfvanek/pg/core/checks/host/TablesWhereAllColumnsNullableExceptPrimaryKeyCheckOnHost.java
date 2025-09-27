@@ -19,28 +19,29 @@ import io.github.mfvanek.pg.model.table.Table;
 import java.util.List;
 
 /**
- * Check for tables without description on a specific host.
+ * Check for tables that have all columns besides the primary key that are nullable on a specific host.
+ * <p>
+ * Such tables may contain no useful data and could indicate a schema design smell.
  *
  * @author Ivan Vakhrushev
- * @since 0.6.0
+ * @since 0.20.3
  */
-public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Table> {
+public class TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost extends AbstractCheckOnHost<Table> {
 
     /**
-     * Constructs a new instance of {@code TablesWithoutDescriptionCheckOnHost}.
+     * Constructs a new instance of {@code TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost}.
      *
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
-    public TablesWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
-        super(Table.class, pgConnection, Diagnostic.TABLES_WITHOUT_DESCRIPTION);
+    public TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost(final PgConnection pgConnection) {
+        super(Table.class, pgConnection, Diagnostic.TABLES_WHERE_ALL_COLUMNS_NULLABLE_EXCEPT_PK);
     }
 
     /**
-     * Returns tables without description (comment) in the specified schema.
+     * Returns tables that have all columns besides the primary key that are nullable in the specified schema.
      *
-     * @param pgContext check's context with the specified schema
-     * @return list of tables without description
-     * @see <a href="https://www.postgresql.org/docs/current/sql-comment.html">SQL Commands - COMMENT</a>
+     * @param pgContext check's context with the specified schema; must not be null
+     * @return list of tables that have all columns besides the primary key that are nullable
      */
     @Override
     protected List<Table> doCheck(final PgContext pgContext) {

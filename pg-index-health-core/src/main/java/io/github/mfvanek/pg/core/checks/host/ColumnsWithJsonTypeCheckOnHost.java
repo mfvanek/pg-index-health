@@ -26,6 +26,11 @@ import java.util.List;
  */
 public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<Column> {
 
+    /**
+     * Constructs a new instance of {@code ColumnsWithJsonTypeCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public ColumnsWithJsonTypeCheckOnHost(final PgConnection pgConnection) {
         super(Column.class, pgConnection, Diagnostic.COLUMNS_WITH_JSON_TYPE);
     }

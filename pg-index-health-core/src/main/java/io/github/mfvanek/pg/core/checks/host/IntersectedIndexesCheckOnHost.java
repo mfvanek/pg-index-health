@@ -25,6 +25,11 @@ import java.util.List;
  */
 public class IntersectedIndexesCheckOnHost extends AbstractCheckOnHost<DuplicatedIndexes> {
 
+    /**
+     * Constructs a new instance of {@code IntersectedIndexesCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public IntersectedIndexesCheckOnHost(final PgConnection pgConnection) {
         super(DuplicatedIndexes.class, pgConnection, Diagnostic.INTERSECTED_INDEXES);
     }

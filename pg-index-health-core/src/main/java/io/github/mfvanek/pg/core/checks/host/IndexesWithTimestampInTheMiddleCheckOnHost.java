@@ -26,6 +26,11 @@ import java.util.List;
  */
 public class IndexesWithTimestampInTheMiddleCheckOnHost extends AbstractCheckOnHost<IndexWithColumns> {
 
+    /**
+     * Constructs a new instance of {@code IndexesWithTimestampInTheMiddleCheckOnHost}.
+     *
+     * @param pgConnection the connection to the PostgreSQL database; must not be null
+     */
     public IndexesWithTimestampInTheMiddleCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_TIMESTAMP_IN_THE_MIDDLE);
     }
