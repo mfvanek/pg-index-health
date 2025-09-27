@@ -40,6 +40,7 @@ import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithSerialTypesCheckOnHo
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWherePrimaryKeyColumnsNotFirstCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
@@ -316,6 +317,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public TablesWherePrimaryKeyColumnsNotFirstCheckOnHost tablesWherePrimaryKeyColumnsNotFirstCheckOnHost(final PgConnection pgConnection) {
         return new TablesWherePrimaryKeyColumnsNotFirstCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost tablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost(final PgConnection pgConnection) {
+        return new TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost(pgConnection);
     }
 
     @Bean

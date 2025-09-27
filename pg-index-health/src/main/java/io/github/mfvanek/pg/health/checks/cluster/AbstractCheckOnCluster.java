@@ -45,11 +45,26 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
     private final Map<PgHost, DatabaseCheckOnHost<T>> checksOnHosts;
     private final @Nullable Function<List<List<T>>, List<T>> acrossClusterResultsMapper;
 
+    /**
+     * Constructs an instance of AbstractCheckOnCluster.
+     *
+     * @param haPgConnection       the high-availability connection to the PostgreSQL cluster. Cannot be null.
+     * @param checkOnHostFactory   a factory function to create a host-specific check instance. Cannot be null.
+     */
     protected AbstractCheckOnCluster(final HighAvailabilityPgConnection haPgConnection,
                                      final Function<PgConnection, DatabaseCheckOnHost<T>> checkOnHostFactory) {
         this(haPgConnection, checkOnHostFactory, null);
     }
 
+    /**
+     * Constructs an instance of {@code AbstractCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster. Cannot be null.
+     * @param checkOnHostFactory a factory function to create a host-specific check instance. Cannot be null.
+     * @param acrossClusterResultsMapper a function to map results collected from all cluster nodes to a unified representation. Can be null for non-across-cluster diagnostics.
+     * @throws NullPointerException if {@code haPgConnection} or {@code checkOnHostFactory} is null.
+     * @throws IllegalArgumentException if {@code acrossClusterResultsMapper} is null for across-cluster diagnostics.
+     */
     protected AbstractCheckOnCluster(final HighAvailabilityPgConnection haPgConnection,
                                      final Function<PgConnection, DatabaseCheckOnHost<T>> checkOnHostFactory,
                                      @Nullable final Function<List<List<T>>, List<T>> acrossClusterResultsMapper) {
@@ -90,6 +105,12 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
         return executeOnPrimary(pgContext, exclusionsFilter);
     }
 
+    /**
+     * Executes specific actions or preparations before performing an operation on a given host.
+     *
+     * @param connectionToHost the PostgreSQL connection object representing the host
+     *                         on which the operation will be executed. Cannot be null.
+     */
     protected void doBeforeExecuteOnHost(final PgConnection connectionToHost) {
         LOGGER.fine(() -> "Going to execute on host " + connectionToHost.getHost().getName());
     }

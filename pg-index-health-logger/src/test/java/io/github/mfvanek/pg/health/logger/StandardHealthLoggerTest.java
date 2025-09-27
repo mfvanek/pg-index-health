@@ -55,7 +55,8 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
         .withUnnecessaryWhereClause()
         .withNaturalKeys()
         .withMoneyColumn()
-        .withTimestampInTheMiddle();
+        .withTimestampInTheMiddle()
+        .withTableWhereAllColumnsNullable();
 
     private final HealthLogger healthLogger = new StandardHealthLogger(
         getConnectionCredentials(), new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()), DatabaseChecksOnCluster::new);
@@ -93,15 +94,15 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "invalid_indexes:1",
                         "duplicated_indexes:2",
                         "foreign_keys_without_index:8",
-                        "tables_without_primary_key:5",
+                        "tables_without_primary_key:6",
                         "indexes_with_null_values:1",
                         "bloated_indexes:19",
                         "bloated_tables:4",
                         "intersected_indexes:18",
                         "unused_indexes:19",
                         "tables_with_missing_indexes:0",
-                        "tables_without_description:21",
-                        "columns_without_description:54",
+                        "tables_without_description:25",
+                        "columns_without_description:63",
                         "columns_with_json_type:1",
                         "columns_with_serial_types:3",
                         "functions_without_description:3",
@@ -113,19 +114,20 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "duplicated_foreign_keys:3",
                         "intersected_foreign_keys:1",
                         "possible_object_name_overflow:2",
-                        "tables_not_linked_to_others:10",
+                        "tables_not_linked_to_others:14",
                         "foreign_keys_with_unmatched_column_type:2",
-                        "tables_with_zero_or_one_column:7",
-                        "objects_not_following_naming_convention:21",
+                        "tables_with_zero_or_one_column:8",
+                        "objects_not_following_naming_convention:26",
                         "columns_not_following_naming_convention:7",
                         "primary_keys_with_varchar:3",
                         "columns_with_fixed_length_varchar:17",
                         "indexes_with_unnecessary_where_clause:2",
-                        "primary_keys_that_most_likely_natural_keys:6",
+                        "primary_keys_that_most_likely_natural_keys:7",
                         "columns_with_money_type:1",
                         "indexes_with_timestamp_in_the_middle:3",
                         "columns_with_timestamp_or_timetz_type:4",
-                        "tables_where_primary_key_columns_not_first:2"
+                        "tables_where_primary_key_columns_not_first:3",
+                        "tables_where_all_columns_nullable_except_pk:5"
                     );
             }
         );
