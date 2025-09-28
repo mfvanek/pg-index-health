@@ -36,6 +36,7 @@ public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
      * which is a standard implementation of the {@code PrimaryHostDeterminer} interface.
      */
     public PrimaryHostDeterminerImpl() {
+        // explicitly declared constructor for javadoc
     }
 
     /**

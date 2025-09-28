@@ -34,6 +34,7 @@ public class PgConnectionFactoryImpl implements PgConnectionFactory {
      * database connections and data sources.
      */
     public PgConnectionFactoryImpl() {
+        // explicitly declared constructor for javadoc
     }
 
     /**
