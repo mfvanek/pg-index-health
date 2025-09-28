@@ -47,8 +47,7 @@ class ColumnsWithMoneyTypeCheckOnHostTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ColumnWithType.of(Column.ofNullable(ctx, "accounts", "\"account_balance-bad\""), "money")
-                )
-        );
+                ));
     }
 
     @ParameterizedTest
@@ -61,7 +60,6 @@ class ColumnsWithMoneyTypeCheckOnHostTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ColumnWithType.of(Column.ofNotNull(ctx, "tp", "account_balance"), "money")
-                )
-        );
+                ));
     }
 }
