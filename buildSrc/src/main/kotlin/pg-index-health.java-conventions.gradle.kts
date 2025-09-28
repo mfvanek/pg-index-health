@@ -89,8 +89,8 @@ tasks {
 
     withType<SpotBugsTask>().configureEach {
         reports {
-            create("xml") { enabled = true }
-            create("html") { enabled = true }
+            create("xml") { required = true }
+            create("html") { required = true }
         }
     }
 
@@ -100,7 +100,7 @@ tasks {
 }
 
 checkstyle {
-    toolVersion = "11.0.0"
+    toolVersion = "11.0.1"
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     maxWarnings = 0
@@ -108,7 +108,7 @@ checkstyle {
 }
 
 pmd {
-    toolVersion = "7.16.0"
+    toolVersion = "7.17.0"
     isConsoleOutput = true
     ruleSetFiles = files("${rootDir}/config/pmd/pmd.xml")
     ruleSets = listOf()
