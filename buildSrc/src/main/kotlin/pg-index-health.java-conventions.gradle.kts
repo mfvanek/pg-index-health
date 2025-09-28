@@ -27,11 +27,11 @@ plugins {
 }
 
 dependencies {
-    errorprone("com.google.errorprone:error_prone_core:2.41.0")
-    errorprone("com.uber.nullaway:nullaway:0.12.9")
+    errorprone("com.google.errorprone:error_prone_core:2.42.0")
+    errorprone("com.uber.nullaway:nullaway:0.12.10")
 
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.13")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.14")
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -89,8 +89,8 @@ tasks {
 
     withType<SpotBugsTask>().configureEach {
         reports {
-            create("xml") { enabled = true }
-            create("html") { enabled = true }
+            create("xml") { required = true }
+            create("html") { required = true }
         }
     }
 
@@ -100,7 +100,7 @@ tasks {
 }
 
 checkstyle {
-    toolVersion = "11.0.0"
+    toolVersion = "11.0.1"
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     maxWarnings = 0
@@ -108,14 +108,14 @@ checkstyle {
 }
 
 pmd {
-    toolVersion = "7.16.0"
+    toolVersion = "7.17.0"
     isConsoleOutput = true
     ruleSetFiles = files("${rootDir}/config/pmd/pmd.xml")
     ruleSets = listOf()
 }
 
 spotbugs {
-    toolVersion.set("4.9.4")
+    toolVersion.set("4.9.6")
     showProgress.set(true)
     effort.set(Effort.MAX)
     reportLevel.set(Confidence.LOW)

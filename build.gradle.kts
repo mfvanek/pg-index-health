@@ -4,7 +4,7 @@ plugins {
     id("java")
     id("jacoco-report-aggregation")
     id("org.sonarqube")
-    id("com.github.ben-manes.versions") version "0.52.0"
+    id("com.github.ben-manes.versions") version "0.53.0"
 }
 
 description = "pg-index-health build"
@@ -31,7 +31,7 @@ dependencies {
 
 tasks{
     wrapper {
-        gradleVersion = "8.14.3"
+        gradleVersion = "9.1.0"
     }
 
     check {
