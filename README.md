@@ -55,7 +55,7 @@ Using Maven:
 ## How to use
 
 There are two main scenarios of using **pg-index-health** in your projects:
-* unit\functional testing (see **standard test** in section below) locally and in CI for compliance of the database structure with best practices;
+* unit\functional testing (see **standard test** in a section below) locally and in CI for compliance of the database structure with best practices;
 * collecting indexes, tables and sequences health data and bloat monitoring in runtime on production.
 
 All these cases are covered with examples in the [pg-index-health-demo](https://github.com/mfvanek/pg-index-health-demo) project.
@@ -286,6 +286,7 @@ class DatabaseStructureStaticAnalysisTest {
 | 2.6.x       | 8       | 0.7.x                        |
 | 2.7.x       | 11      | 0.8.x — 0.15.x               |
 | 3.3.x       | 17      | 0.20.x                       |
+| 3.4.x       | 17      | 0.30.x                       |
 
 #### Spring Boot 3 compatibility
 
