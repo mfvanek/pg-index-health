@@ -18,10 +18,28 @@ import java.util.Locale;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
 
+/**
+ * A concrete implementation of the {@link PgConnectionFactory} interface.
+ * Provides methods to create PostgreSQL-specific database connections and data sources.
+ * This class utilizes internal helper methods to configure and construct {@link PgConnection}
+ * and {@link DataSource} instances based on provided connection details.
+ */
 public class PgConnectionFactoryImpl implements PgConnectionFactory {
 
     private static final Logger LOGGER = Logger.getLogger(PgConnectionFactoryImpl.class.getName());
 
+    /**
+     * Default constructor for the {@code PgConnectionFactoryImpl} class.
+     * Initializes an instance of the connection factory for creating PostgreSQL
+     * database connections and data sources.
+     */
+    public PgConnectionFactoryImpl() {
+        // explicitly declared constructor for javadoc
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PgConnection forUrl(final String pgUrl,
                                final String userName,
@@ -32,6 +50,9 @@ public class PgConnectionFactoryImpl implements PgConnectionFactory {
         return PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl(pgUrl));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DataSource dataSourceFor(final String pgUrl,
                                     final String userName,

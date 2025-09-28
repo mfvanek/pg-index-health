@@ -26,6 +26,9 @@ public final class ForeignKeyMigrationGenerator extends AbstractDbMigrationGener
         this.generator = new PgIndexOnForeignKeyGenerator(options);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String generate(final ForeignKey foreignKey) {
         return generator.generate(foreignKey);

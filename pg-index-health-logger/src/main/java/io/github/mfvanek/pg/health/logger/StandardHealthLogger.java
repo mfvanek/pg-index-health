@@ -23,6 +23,14 @@ import java.util.function.Function;
  */
 public class StandardHealthLogger extends AbstractHealthLogger {
 
+    /**
+     * Constructs an instance of {@code StandardHealthLogger}, which outputs a summary
+     * of database health to an array of strings. This class extends {@code AbstractHealthLogger}.
+     *
+     * @param credentials the database connection credentials, including connection URLs, username, and password
+     * @param connectionFactory the factory for creating high-availability PostgreSQL connections
+     * @param databaseChecksFactory a factory function for generating database check operations on a cluster
+     */
     public StandardHealthLogger(final ConnectionCredentials credentials,
                                 final HighAvailabilityPgConnectionFactory connectionFactory,
                                 final Function<HighAvailabilityPgConnection, DatabaseChecksOnCluster> databaseChecksFactory) {

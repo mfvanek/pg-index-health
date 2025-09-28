@@ -24,7 +24,13 @@ import java.util.Objects;
  */
 public final class AnyObject implements DbObject, Comparable<AnyObject> {
 
+    /**
+     * A constant representing the field name for an object's name in a database.
+     */
     public static final String OBJECT_NAME_FIELD = "objectName";
+    /**
+     * A constant representing the field name for an object's type in a database.
+     */
     public static final String OBJECT_TYPE_FIELD = "objectType";
 
     private final String objectName;

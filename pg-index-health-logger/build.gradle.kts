@@ -1,5 +1,6 @@
 plugins {
     id("pg-index-health.java-library")
+    id("pg-index-health.mandatory-javadoc")
 }
 
 description = "pg-index-health-logger is a Java library for collecting and logging schema health state in PostgreSQL databases."

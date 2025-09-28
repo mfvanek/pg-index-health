@@ -22,11 +22,25 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * Implementation of {@code HighAvailabilityPgConnectionFactory} for creating connections to
+ * high-availability PostgreSQL clusters. This implementation ensures connections to both
+ * the primary host and all replicas within the cluster.
+ */
 public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailabilityPgConnectionFactory {
 
     private final PgConnectionFactory pgConnectionFactory;
     private final PrimaryHostDeterminer primaryHostDeterminer;
 
+    /**
+     * Constructs an instance of {@code HighAvailabilityPgConnectionFactoryImpl}.
+     *
+     * @param pgConnectionFactory the {@code PgConnectionFactory} used for establishing connections to PostgreSQL
+     *                            databases; must not be {@code null}
+     * @param primaryHostDeterminer the {@code PrimaryHostDeterminer} to identify the primary host in a PostgreSQL
+     *                              cluster; must not be {@code null}
+     * @throws NullPointerException if {@code pgConnectionFactory} or {@code primaryHostDeterminer} is {@code null}
+     */
     public HighAvailabilityPgConnectionFactoryImpl(final PgConnectionFactory pgConnectionFactory,
                                                    final PrimaryHostDeterminer primaryHostDeterminer) {
         this.pgConnectionFactory = Objects.requireNonNull(pgConnectionFactory);

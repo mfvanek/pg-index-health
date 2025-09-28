@@ -29,6 +29,12 @@ import java.util.Locale;
 public abstract class AbstractDeserializer<T> extends JsonDeserializer<T> {
 
     /**
+     * Constructs the deserializer.
+     */
+    protected AbstractDeserializer() {
+    }
+
+    /**
      * Retrieves the child node with the given {@code fieldName} from the provided
      * {@code rootNode}, ensuring that it exists and is not {@code null}.
      * <p>

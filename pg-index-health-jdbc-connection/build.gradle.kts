@@ -1,6 +1,7 @@
 plugins {
     id("pg-index-health.java-library")
     id("pg-index-health.pitest")
+    id("pg-index-health.mandatory-javadoc")
 }
 
 description = "pg-index-health-jdbc-connection is an abstraction of a connection to a high availability PostgreSQL cluster."
