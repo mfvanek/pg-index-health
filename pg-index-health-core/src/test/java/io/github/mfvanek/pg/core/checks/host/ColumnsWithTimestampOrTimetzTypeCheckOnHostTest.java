@@ -47,7 +47,7 @@ class ColumnsWithTimestampOrTimetzTypeCheckOnHostTest extends DatabaseAwareTestB
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.ofTimestamp(Column.ofNullable(ctx, "\"t-multi\"", "created_at")),
+                    ColumnWithType.of(Column.ofNullable(ctx, "\"t-multi\"", "created_at"), "time with time zone"),
                     ColumnWithType.ofTimestamp(Column.ofNullable(ctx, "\"t-multi\"", "ts"))
                 );
 
