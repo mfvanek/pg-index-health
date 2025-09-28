@@ -31,6 +31,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
+/**
+ * Abstract implementation of the {@link HealthLogger} interface.
+ * Provides a base structure for logging the health of indexes and tables
+ * in a PostgreSQL database, using various filters and connection settings.
+ * Concrete implementations must define the behavior for writing log data.
+ */
 public abstract class AbstractHealthLogger implements HealthLogger {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractHealthLogger.class.getName());
@@ -39,6 +45,13 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     private final HighAvailabilityPgConnectionFactory connectionFactory;
     private final Function<HighAvailabilityPgConnection, DatabaseChecksOnCluster> databaseChecksFactory;
 
+    /**
+     * Constructs an instance of {@code AbstractHealthLogger} with the specified parameters.
+     *
+     * @param credentials the credentials required to connect to the database; must not be null.
+     * @param connectionFactory the factory to create connections for high availability PostgreSQL clusters; must not be null.
+     * @param databaseChecksFactory the factory function to create database checks on the cluster; must not be null.
+     */
     @SuppressWarnings("WeakerAccess")
     protected AbstractHealthLogger(final ConnectionCredentials credentials,
                                    final HighAvailabilityPgConnectionFactory connectionFactory,

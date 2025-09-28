@@ -23,11 +23,22 @@ public final class ColumnWithSerialTypeMigrationGenerator extends AbstractDbMigr
     private final DropDefaultValueGenerator dropDefaultValueGenerator;
     private final DropSequenceGenerator dropSequenceGenerator;
 
+    /**
+     * Constructs a migration generator for handling columns with serial types. It initializes
+     * components for generating SQL queries to drop default values and associated sequences
+     * on such columns.
+     *
+     * @param options the options to configure the generation of SQL queries, such as formatting
+     *                and optional behaviors.
+     */
     public ColumnWithSerialTypeMigrationGenerator(final GeneratingOptions options) {
         this.dropDefaultValueGenerator = new DropDefaultValueGenerator(options);
         this.dropSequenceGenerator = new DropSequenceGenerator(options);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String generate(final ColumnWithSerialType column) {
         return dropDefaultValueGenerator.generate(column) +

@@ -30,6 +30,15 @@ public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
     private static final String SQL_QUERY = "select not pg_is_in_recovery()";
 
     /**
+     * Default constructor for the PrimaryHostDeterminerImpl class.
+     * <p>
+     * Initializes a new instance of the PrimaryHostDeterminerImpl class,
+     * which is a standard implementation of the {@code PrimaryHostDeterminer} interface.
+     */
+    public PrimaryHostDeterminerImpl() {
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

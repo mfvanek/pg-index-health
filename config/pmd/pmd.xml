@@ -23,6 +23,7 @@
         <exclude name="ShortVariable"/>
         <exclude name="CallSuperInConstructor"/>
         <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
+        <exclude name="UnnecessaryConstructor"/>
     </rule>
 
     <rule ref="category/java/codestyle.xml/ClassNamingConventions">

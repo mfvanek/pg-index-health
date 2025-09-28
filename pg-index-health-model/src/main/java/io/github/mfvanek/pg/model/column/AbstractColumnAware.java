@@ -24,7 +24,13 @@ import java.util.Objects;
  */
 abstract class AbstractColumnAware implements DbObject, ColumnTypeAware {
 
+    /**
+     * The column associated with this instance.
+     */
     protected final Column column;
+    /**
+     * The type of the column.
+     */
     protected final String columnType;
 
     protected AbstractColumnAware(final Column column,
