@@ -28,6 +28,11 @@ public class TablesWithMissingIndexesCheckOnCluster extends AbstractCheckOnClust
 
     private static final Logger LOGGER = Logger.getLogger(TablesWithMissingIndexesCheckOnCluster.class.getName());
 
+    /**
+     * Constructs a new instance of {@code TablesWithMissingIndexesCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public TablesWithMissingIndexesCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesWithMissingIndexesCheckOnHost::new, TablesWithMissingIndexesCheckOnCluster::getResultAsUnion);
     }

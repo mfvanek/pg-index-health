@@ -16,6 +16,11 @@ import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
+/**
+ * This interface provides methods for managing database statistics within a cluster.
+ * It extends {@code StatisticsAware}, enabling operations for resetting statistics and
+ * fetching their last reset timestamp, specifically for cluster-wide usage.
+ */
 public interface DatabaseManagement extends StatisticsAware {
 
     /**

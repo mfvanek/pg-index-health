@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.table.TableWithBloat;
  */
 public class TablesWithBloatCheckOnCluster extends AbstractCheckOnCluster<TableWithBloat> {
 
+    /**
+     * Constructs a new instance of {@code TablesWithBloatCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public TablesWithBloatCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesWithBloatCheckOnHost::new);
     }

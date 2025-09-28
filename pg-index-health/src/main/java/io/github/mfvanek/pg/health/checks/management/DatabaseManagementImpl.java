@@ -37,6 +37,13 @@ public class DatabaseManagementImpl implements DatabaseManagement {
     private final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory;
     private final Map<PgHost, StatisticsMaintenanceOnHost> statistics;
 
+    /**
+     * Constructs an instance of {@code DatabaseManagementImpl}.
+     *
+     * @param haPgConnection          the high-availability connection to the PostgreSQL cluster; must not be null
+     * @param statisticsOnHostFactory a factory function for creating {@code StatisticsMaintenanceOnHost} instances given a {@code PgConnection}; must not be null
+     * @throws NullPointerException if {@code haPgConnection} or {@code statisticsOnHostFactory} is null
+     */
     public DatabaseManagementImpl(final HighAvailabilityPgConnection haPgConnection,
                                   final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory) {
         this.haPgConnection = Objects.requireNonNull(haPgConnection, "haPgConnection cannot be null");

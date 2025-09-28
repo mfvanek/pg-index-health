@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
@@ -25,12 +26,12 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class ColumnsWithFixedLengthVarcharCheckTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<@NonNull Column> check = new ColumnsWithFixedLengthVarcharCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull ColumnWithType> check = new ColumnsWithFixedLengthVarcharCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(Column.class)
+            .hasType(ColumnWithType.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_FIXED_LENGTH_VARCHAR)
             .hasHost(getHost())
             .isStatic();
@@ -43,13 +44,15 @@ class ColumnsWithFixedLengthVarcharCheckTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(6)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactlyInAnyOrder(
-                    Column.ofNotNull(ctx, "accounts", "account_number"),
-                    Column.ofNotNull(ctx, "clients", "first_name"),
-                    Column.ofNotNull(ctx, "clients", "last_name"),
-                    Column.ofNullable(ctx, "clients", "middle_name"),
-                    Column.ofNotNull(ctx, "clients", "phone"),
-                    Column.ofNotNull(ctx, "clients", "email")));
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "accounts", "account_number")),
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "first_name")),
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "last_name")),
+                    ColumnWithType.ofVarchar(Column.ofNullable(ctx, "clients", "middle_name")),
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "phone")),
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "email"))
+                ));
     }
 
     @ParameterizedTest
@@ -59,13 +62,14 @@ class ColumnsWithFixedLengthVarcharCheckTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(5)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactlyInAnyOrder(
-                    Column.ofNotNull(ctx, "clients", "first_name"),
-                    Column.ofNotNull(ctx, "clients", "last_name"),
-                    Column.ofNullable(ctx, "clients", "middle_name"),
-                    Column.ofNotNull(ctx, "clients", "phone"),
-                    Column.ofNotNull(ctx, "clients", "email"))
-        );
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "first_name")),
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "last_name")),
+                    ColumnWithType.ofVarchar(Column.ofNullable(ctx, "clients", "middle_name")),
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "phone")),
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "email"))
+                ));
     }
 
     @ParameterizedTest
@@ -75,9 +79,10 @@ class ColumnsWithFixedLengthVarcharCheckTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(8)
+                .usingRecursiveFieldByFieldElementComparator()
                 .contains(
-                    Column.ofNotNull(ctx, "tp", "ref_type"),
-                    Column.ofNotNull(ctx, "tp", "entity_id"))
-        );
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "tp", "ref_type")),
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "tp", "entity_id"))
+                ));
     }
 }

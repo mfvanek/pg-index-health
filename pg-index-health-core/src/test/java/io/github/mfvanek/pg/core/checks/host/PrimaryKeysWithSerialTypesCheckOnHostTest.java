@@ -49,6 +49,7 @@ class PrimaryKeysWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ColumnWithSerialType.of(
                         ctx, Column.ofNotNull(ctx, "bad_accounts", "id"), SerialType.BIG_SERIAL, "bad_accounts_id_seq"
@@ -87,6 +88,7 @@ class PrimaryKeysWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, tableName, "entity_id"), SerialType.BIG_SERIAL, sequenceName)
                 );

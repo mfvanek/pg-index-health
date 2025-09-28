@@ -12,19 +12,19 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
-import io.github.mfvanek.pg.core.checks.extractors.ColumnExtractor;
-import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
 
 /**
- * Check for columns with {@code json} type on a specific host.
+ * Check for columns with {@code JSON} type on a specific host.
  *
  * @author Ivan Vakhrushev
  * @since 0.6.1
  */
-public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<Column> {
+public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {
 
     /**
      * Constructs a new instance of {@code ColumnsWithJsonTypeCheckOnHost}.
@@ -32,19 +32,19 @@ public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<Column> 
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ColumnsWithJsonTypeCheckOnHost(final PgConnection pgConnection) {
-        super(Column.class, pgConnection, Diagnostic.COLUMNS_WITH_JSON_TYPE);
+        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_JSON_TYPE);
     }
 
     /**
-     * Returns columns with json type in the specified schema.
+     * Returns columns with JSON type in the specified schema.
      * These are candidates for conversion to the {@code jsonb} type.
      *
      * @param pgContext check's context with the specified schema
-     * @return list of columns with json type
+     * @return list of columns with JSON type
      * @see <a href="https://www.postgresql.org/docs/current/datatype-json.html">JSON Types</a>
      */
     @Override
-    protected List<Column> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ColumnExtractor.of());
+    protected List<ColumnWithType> doCheck(final PgContext pgContext) {
+        return executeQuery(pgContext, ColumnWithTypeExtractor.of());
     }
 }

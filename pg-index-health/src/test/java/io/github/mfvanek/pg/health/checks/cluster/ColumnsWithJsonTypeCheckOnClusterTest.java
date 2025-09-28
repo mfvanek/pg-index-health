@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipByColumnNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -27,12 +28,12 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<@NonNull Column> check = new ColumnsWithJsonTypeCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull ColumnWithType> check = new ColumnsWithJsonTypeCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(Column.class)
+            .hasType(ColumnWithType.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_JSON_TYPE)
             .isStatic();
     }
@@ -44,7 +45,10 @@ class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(Column.ofNullable(ctx.enrichWithSchema("clients"), "info"));
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactly(
+                    ColumnWithType.of(Column.ofNullable(ctx, "clients", "info"), "json")
+                );
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
@@ -73,7 +77,9 @@ class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNullable(ctx, "parent", "raw_data")));
+                    ColumnWithType.of(Column.ofNullable(ctx, "parent", "raw_data"), "json")
+                ));
     }
 }

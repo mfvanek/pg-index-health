@@ -23,6 +23,11 @@ import io.github.mfvanek.pg.model.dbobject.AnyObject;
  */
 public class PossibleObjectNameOverflowCheckOnCluster extends AbstractCheckOnCluster<AnyObject> {
 
+    /**
+     * Constructs a new instance of {@code PossibleObjectNameOverflowCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public PossibleObjectNameOverflowCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, PossibleObjectNameOverflowCheckOnHost::new);
     }

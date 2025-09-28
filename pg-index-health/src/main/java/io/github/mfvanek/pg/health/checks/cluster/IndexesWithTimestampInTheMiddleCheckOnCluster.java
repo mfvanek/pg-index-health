@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
  */
 public class IndexesWithTimestampInTheMiddleCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
+    /**
+     * Constructs a new instance of {@code IndexesWithTimestampInTheMiddleCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public IndexesWithTimestampInTheMiddleCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, IndexesWithTimestampInTheMiddleCheckOnHost::new);
     }

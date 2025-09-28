@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
-import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 
 /**
  * Check for columns with {@code json} type on all hosts in the cluster.
@@ -20,8 +20,13 @@ import io.github.mfvanek.pg.model.column.Column;
  * @author Ivan Vakhrushev
  * @since 0.6.1
  */
-public class ColumnsWithJsonTypeCheckOnCluster extends AbstractCheckOnCluster<Column> {
+public class ColumnsWithJsonTypeCheckOnCluster extends AbstractCheckOnCluster<ColumnWithType> {
 
+    /**
+     * Constructs a new instance of {@code ColumnsWithJsonTypeCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public ColumnsWithJsonTypeCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ColumnsWithJsonTypeCheckOnHost::new);
     }

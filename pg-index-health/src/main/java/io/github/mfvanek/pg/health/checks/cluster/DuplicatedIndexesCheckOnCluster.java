@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
  */
 public class DuplicatedIndexesCheckOnCluster extends AbstractCheckOnCluster<DuplicatedIndexes> {
 
+    /**
+     * Constructs a new instance of {@code DuplicatedIndexesCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public DuplicatedIndexesCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, DuplicatedIndexesCheckOnHost::new);
     }

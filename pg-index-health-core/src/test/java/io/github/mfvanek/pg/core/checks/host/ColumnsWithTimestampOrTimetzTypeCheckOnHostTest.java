@@ -45,6 +45,7 @@ class ColumnsWithTimestampOrTimetzTypeCheckOnHostTest extends DatabaseAwareTestB
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ColumnWithType.ofTimestamp(Column.ofNullable(ctx, "\"t-multi\"", "created_at")),
                     ColumnWithType.ofTimestamp(Column.ofNullable(ctx, "\"t-multi\"", "ts"))
@@ -63,6 +64,7 @@ class ColumnsWithTimestampOrTimetzTypeCheckOnHostTest extends DatabaseAwareTestB
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ColumnWithType.ofTimestamp(Column.ofNotNull(ctx, "tp", "creation_date")),
                     ColumnWithType.ofTimestamp(Column.ofNotNull(ctx, "tp_good", "creation_date"))

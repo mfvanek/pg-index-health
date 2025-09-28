@@ -25,6 +25,11 @@ import io.github.mfvanek.pg.model.table.Table;
  */
 public class TablesNotLinkedToOthersCheckOnCluster extends AbstractCheckOnCluster<Table> {
 
+    /**
+     * Constructs a new instance of {@code TablesNotLinkedToOthersCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public TablesNotLinkedToOthersCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesNotLinkedToOthersCheckOnHost::new);
     }
