@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +35,7 @@ class DatabaseChecksOnClusterTest extends DatabaseAwareTestBase {
     @Test
     @DisplayName("For each diagnostic should exist check")
     void completenessTest() {
-        final List<DatabaseCheckOnCluster<? extends DbObject>> checks = checksOnCluster.getAll();
+        final List<DatabaseCheckOnCluster<? extends @NonNull DbObject>> checks = checksOnCluster.get();
         assertThat(checks)
             .hasSameSizeAs(Diagnostic.values());
         final Set<Diagnostic> diagnostics = checks.stream()
@@ -47,7 +48,7 @@ class DatabaseChecksOnClusterTest extends DatabaseAwareTestBase {
     @Test
     @DisplayName("Each check should return nothing on empty database")
     void onEmptyDatabaseEachCheckShouldReturnNothing() {
-        for (final DatabaseCheckOnCluster<? extends DbObject> check : checksOnCluster.getAll()) {
+        for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checksOnCluster.get()) {
             assertThat(check.check())
                 .isEmpty();
         }
@@ -62,7 +63,7 @@ class DatabaseChecksOnClusterTest extends DatabaseAwareTestBase {
             Diagnostic.COLUMNS_WITH_FIXED_LENGTH_VARCHAR
         );
         for (final String schemaName : SCHEMAS) {
-            for (final DatabaseCheckOnCluster<? extends DbObject> check : checksOnCluster.getAll()) {
+            for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checksOnCluster.get()) {
                 if (!exclusions.contains(check.getDiagnostic())) {
                     executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(),
                         ctx ->
