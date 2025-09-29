@@ -15,13 +15,18 @@ import io.github.mfvanek.pg.core.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.model.table.Table;
 
 /**
- * Check for tables without primary key on all hosts in the cluster.
+ * Check for tables without a primary key on all hosts in the cluster.
  *
  * @author Ivan Vakhrushev
  * @since 0.6.0
  */
 public class TablesWithoutPrimaryKeyCheckOnCluster extends AbstractCheckOnCluster<Table> {
 
+    /**
+     * Constructs a new instance of {@code TablesWithoutPrimaryKeyCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public TablesWithoutPrimaryKeyCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesWithoutPrimaryKeyCheckOnHost::new);
     }

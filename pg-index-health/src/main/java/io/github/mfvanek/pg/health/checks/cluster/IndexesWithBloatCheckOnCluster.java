@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.index.IndexWithBloat;
  */
 public class IndexesWithBloatCheckOnCluster extends AbstractCheckOnCluster<IndexWithBloat> {
 
+    /**
+     * Constructs a new instance of {@code IndexesWithBloatCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public IndexesWithBloatCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, IndexesWithBloatCheckOnHost::new);
     }

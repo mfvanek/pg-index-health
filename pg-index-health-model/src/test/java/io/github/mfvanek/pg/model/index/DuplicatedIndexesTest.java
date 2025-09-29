@@ -49,7 +49,7 @@ class DuplicatedIndexesTest {
         assertThat(indexes).isNotNull();
         assertThat(indexes.getTotalSize()).isEqualTo(606L);
 
-        assertThat(indexes.getDuplicatedIndexes())
+        assertThat(indexes.getIndexes())
             .hasSize(3)
             .containsExactly(
                 Index.of("t1", "i1", 101L),
@@ -72,11 +72,6 @@ class DuplicatedIndexesTest {
 
         final Index fourth = Index.of("t1", "i4", 404L);
         sourceIndexes.add(fourth);
-
-        assertThat(indexes.getDuplicatedIndexes())
-            .hasSize(3)
-            .doesNotContain(fourth)
-            .isUnmodifiable();
 
         assertThat(indexes.getIndexes())
             .hasSize(3)
@@ -227,8 +222,7 @@ class DuplicatedIndexesTest {
             Index.of("t", "i1", 1L),
             Index.of("t", "i2", 2L),
             Index.of("t", "i4", 4L));
-        assertThat(indexes).isNotNull();
-        assertThat(indexes.getDuplicatedIndexes())
+        assertThat(indexes.getIndexes())
             .hasSize(4)
             .containsExactly(
                 Index.of("t", "i1", 1L),

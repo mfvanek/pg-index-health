@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.core.checks.host.PrimaryKeysThatMostLikelyNaturalKey
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 /**
- * Check for primary keys that are most likely natural keys on all hosts in the cluster.
+ * Check for primary keys that are the most likely natural keys on all hosts in the cluster.
  * <p>
  * It is better to use surrogate keys instead of natural ones.
  *
@@ -25,6 +25,11 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
  */
 public class PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
+    /**
+     * Constructs a new instance of {@code PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost::new);
     }

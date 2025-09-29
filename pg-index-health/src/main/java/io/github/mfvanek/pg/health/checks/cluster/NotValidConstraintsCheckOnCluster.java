@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.constraint.Constraint;
  */
 public class NotValidConstraintsCheckOnCluster extends AbstractCheckOnCluster<Constraint> {
 
+    /**
+     * Constructs a new instance of {@code NotValidConstraintsCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public NotValidConstraintsCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, NotValidConstraintsCheckOnHost::new);
     }

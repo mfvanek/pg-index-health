@@ -87,17 +87,6 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     }
 
     /**
-     * Retrieves a raw list of duplicated indexes.
-     *
-     * @return list of duplicated indexes
-     * @deprecated since 0.20.3, use {@link #getIndexes()} instead
-     */
-    @Deprecated(since = "0.20.3", forRemoval = true)
-    public List<Index> getDuplicatedIndexes() {
-        return indexes;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override

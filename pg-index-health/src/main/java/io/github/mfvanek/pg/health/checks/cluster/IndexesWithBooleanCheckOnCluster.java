@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
  */
 public class IndexesWithBooleanCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
+    /**
+     * Constructs a new instance of {@code IndexesWithBooleanCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public IndexesWithBooleanCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, IndexesWithBooleanCheckOnHost::new);
     }

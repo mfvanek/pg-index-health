@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
  */
 public class ForeignKeysNotCoveredWithIndexCheckOnCluster extends AbstractCheckOnCluster<ForeignKey> {
 
+    /**
+     * Constructs a new instance of {@code ForeignKeysNotCoveredWithIndexCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public ForeignKeysNotCoveredWithIndexCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ForeignKeysNotCoveredWithIndexCheckOnHost::new);
     }

@@ -28,6 +28,11 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
  */
 public class ForeignKeysWithUnmatchedColumnTypeCheckOnCluster extends AbstractCheckOnCluster<ForeignKey> {
 
+    /**
+     * Constructs a new instance of {@code ForeignKeysWithUnmatchedColumnTypeCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public ForeignKeysWithUnmatchedColumnTypeCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ForeignKeysWithUnmatchedColumnTypeCheckOnHost::new);
     }

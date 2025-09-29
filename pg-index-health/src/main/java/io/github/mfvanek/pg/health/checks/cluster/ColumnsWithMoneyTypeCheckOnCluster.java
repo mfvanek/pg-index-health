@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
-import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 
 /**
  * Check for columns with {@code money} type on all hosts in the cluster.
@@ -20,8 +20,13 @@ import io.github.mfvanek.pg.model.column.Column;
  * @author Ivan Vakhrushev
  * @since 0.20.1
  */
-public class ColumnsWithMoneyTypeCheckOnCluster extends AbstractCheckOnCluster<Column> {
+public class ColumnsWithMoneyTypeCheckOnCluster extends AbstractCheckOnCluster<ColumnWithType> {
 
+    /**
+     * Constructs a new instance of {@code ColumnsWithMoneyTypeCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public ColumnsWithMoneyTypeCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ColumnsWithMoneyTypeCheckOnHost::new);
     }

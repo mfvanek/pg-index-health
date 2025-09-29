@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
  */
 public class DuplicatedForeignKeysCheckOnCluster extends AbstractCheckOnCluster<DuplicatedForeignKeys> {
 
+    /**
+     * Constructs a new instance of {@code DuplicatedForeignKeysCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public DuplicatedForeignKeysCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, DuplicatedForeignKeysCheckOnHost::new);
     }

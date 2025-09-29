@@ -12,8 +12,8 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
-import io.github.mfvanek.pg.core.checks.extractors.ColumnExtractor;
-import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
  * @author Ivan Vakhrushev
  * @since 0.20.1
  */
-public class ColumnsWithMoneyTypeCheckOnHost extends AbstractCheckOnHost<Column> {
+public class ColumnsWithMoneyTypeCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {
 
     /**
      * Constructs a new instance of {@code ColumnsWithMoneyTypeCheckOnHost}.
@@ -32,7 +32,7 @@ public class ColumnsWithMoneyTypeCheckOnHost extends AbstractCheckOnHost<Column>
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ColumnsWithMoneyTypeCheckOnHost(final PgConnection pgConnection) {
-        super(Column.class, pgConnection, Diagnostic.COLUMNS_WITH_MONEY_TYPE);
+        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_MONEY_TYPE);
     }
 
     /**
@@ -44,7 +44,7 @@ public class ColumnsWithMoneyTypeCheckOnHost extends AbstractCheckOnHost<Column>
      * @see <a href="https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_money">Do not use money</a>
      */
     @Override
-    protected List<Column> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ColumnExtractor.of());
+    protected List<ColumnWithType> doCheck(final PgContext pgContext) {
+        return executeQuery(pgContext, ColumnWithTypeExtractor.of());
     }
 }

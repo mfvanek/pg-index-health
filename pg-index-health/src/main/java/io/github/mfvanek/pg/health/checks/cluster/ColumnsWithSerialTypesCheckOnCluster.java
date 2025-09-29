@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
  */
 public class ColumnsWithSerialTypesCheckOnCluster extends AbstractCheckOnCluster<ColumnWithSerialType> {
 
+    /**
+     * Constructs a new instance of {@code ColumnsWithSerialTypesCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public ColumnsWithSerialTypesCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ColumnsWithSerialTypesCheckOnHost::new);
     }

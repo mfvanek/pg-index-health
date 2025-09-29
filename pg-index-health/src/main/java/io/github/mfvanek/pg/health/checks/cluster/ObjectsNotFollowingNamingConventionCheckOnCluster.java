@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.core.checks.host.ObjectsNotFollowingNamingConvention
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
 
 /**
- * Check for objects whose names do not follow naming convention (that have to be enclosed in double-quotes) on all hosts in the cluster.
+ * Check for objects whose names do not follow the naming convention (that have to be enclosed in double-quotes) on all hosts in the cluster.
  * <p>
  * You should avoid using quoted identifiers.
  *
@@ -25,6 +25,11 @@ import io.github.mfvanek.pg.model.dbobject.AnyObject;
  */
 public class ObjectsNotFollowingNamingConventionCheckOnCluster extends AbstractCheckOnCluster<AnyObject> {
 
+    /**
+     * Constructs a new instance of {@code ObjectsNotFollowingNamingConventionCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public ObjectsNotFollowingNamingConventionCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ObjectsNotFollowingNamingConventionCheckOnHost::new);
     }

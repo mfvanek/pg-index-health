@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.function.StoredFunction;
  */
 public class FunctionsWithoutDescriptionCheckOnCluster extends AbstractCheckOnCluster<StoredFunction> {
 
+    /**
+     * Constructs a new instance of {@code FunctionsWithoutDescriptionCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public FunctionsWithoutDescriptionCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, FunctionsWithoutDescriptionCheckOnHost::new);
     }

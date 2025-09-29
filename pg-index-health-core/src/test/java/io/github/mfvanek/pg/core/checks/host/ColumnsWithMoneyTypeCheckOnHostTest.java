@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
@@ -25,12 +26,12 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class ColumnsWithMoneyTypeCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<@NonNull Column> check = new ColumnsWithMoneyTypeCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull ColumnWithType> check = new ColumnsWithMoneyTypeCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(Column.class)
+            .hasType(ColumnWithType.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_MONEY_TYPE)
             .hasHost(getHost())
             .isStatic();
@@ -43,8 +44,9 @@ class ColumnsWithMoneyTypeCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNullable(ctx, "accounts", "\"account_balance-bad\"")
+                    ColumnWithType.of(Column.ofNullable(ctx, "accounts", "\"account_balance-bad\""), "money")
                 ));
     }
 
@@ -55,8 +57,9 @@ class ColumnsWithMoneyTypeCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "tp", "account_balance")
+                    ColumnWithType.of(Column.ofNotNull(ctx, "tp", "account_balance"), "money")
                 ));
     }
 }

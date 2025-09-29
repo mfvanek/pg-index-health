@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.index.Index;
  */
 public class InvalidIndexesCheckOnCluster extends AbstractCheckOnCluster<Index> {
 
+    /**
+     * Constructs a new instance of {@code InvalidIndexesCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public InvalidIndexesCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, InvalidIndexesCheckOnHost::new);
     }

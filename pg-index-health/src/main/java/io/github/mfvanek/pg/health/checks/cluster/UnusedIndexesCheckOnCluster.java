@@ -45,12 +45,20 @@ public class UnusedIndexesCheckOnCluster extends AbstractCheckOnCluster<UnusedIn
     private final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory;
     private final Map<PgHost, StatisticsMaintenanceOnHost> statistics;
 
+    /**
+     * Constructs a new instance of {@code UnusedIndexesCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public UnusedIndexesCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, UnusedIndexesCheckOnHost::new, UnusedIndexesCheckOnCluster::getResultAsIntersection);
         this.statisticsOnHostFactory = StatisticsMaintenanceOnHostImpl::new;
         this.statistics = new HashMap<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doBeforeExecuteOnHost(final PgConnection connectionToHost) {
         logLastStatsResetDate(connectionToHost);
