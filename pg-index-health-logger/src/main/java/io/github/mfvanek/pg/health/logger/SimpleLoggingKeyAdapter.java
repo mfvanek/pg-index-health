@@ -10,26 +10,26 @@
 
 package io.github.mfvanek.pg.health.logger;
 
-import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.common.CheckNameAware;
 
 import java.util.Locale;
 
 /**
  * An adapter for the {@link LoggingKey} interface that provides simple logging keys
- * based on a {@link Diagnostic} instance.
+ * based on a {@link CheckNameAware} instance.
  *
  * <p>This class implements the {@link LoggingKey} interface by deriving the key name,
- * subkey name, and description from the given {@link Diagnostic} object.</p>
+ * subkey name, and description from the given {@link CheckNameAware} object.</p>
  */
 public final class SimpleLoggingKeyAdapter implements LoggingKey {
 
     /**
-     * The diagnostic instance used to derive logging key details.
+     * The check instance used to derive logging key details.
      */
-    private final Diagnostic diagnostic;
+    private final CheckNameAware check;
 
-    private SimpleLoggingKeyAdapter(final Diagnostic diagnostic) {
-        this.diagnostic = diagnostic;
+    private SimpleLoggingKeyAdapter(final CheckNameAware check) {
+        this.check = check;
     }
 
     /**
@@ -45,7 +45,7 @@ public final class SimpleLoggingKeyAdapter implements LoggingKey {
      */
     @Override
     public String getSubKeyName() {
-        return diagnostic.name().toLowerCase(Locale.ROOT);
+        return check.getName().toLowerCase(Locale.ROOT);
     }
 
     /**
@@ -57,12 +57,12 @@ public final class SimpleLoggingKeyAdapter implements LoggingKey {
     }
 
     /**
-     * Creates a new {@link LoggingKey} instance for the specified {@link Diagnostic}.
+     * Creates a new {@link LoggingKey} instance for the specified {@link CheckNameAware}.
      *
-     * @param diagnostic the diagnostic instance, must not be {@code null}.
+     * @param check the check instance; must not be null.
      * @return a new {@link SimpleLoggingKeyAdapter} instance.
      */
-    public static LoggingKey of(final Diagnostic diagnostic) {
-        return new SimpleLoggingKeyAdapter(diagnostic);
+    public static LoggingKey of(final CheckNameAware check) {
+        return new SimpleLoggingKeyAdapter(check);
     }
 }

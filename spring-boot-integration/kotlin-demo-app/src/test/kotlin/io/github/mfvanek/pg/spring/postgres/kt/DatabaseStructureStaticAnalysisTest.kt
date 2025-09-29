@@ -49,7 +49,7 @@ internal class DatabaseStructureStaticAnalysisTest {
             .filter { it.isStatic }
             .forEach {
                 assertThat(it.check(exclusions))
-                    .`as`(it.diagnostic.name)
+                    .`as`(it.name)
                     .isEmpty()
             }
     }

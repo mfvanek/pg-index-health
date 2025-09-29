@@ -19,36 +19,36 @@ import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DatabaseChecksOnClusterTest extends DatabaseAwareTestBase {
+class StandardChecksOnClusterTest extends DatabaseAwareTestBase {
 
     private static final String[] SCHEMAS = {PgContext.DEFAULT_SCHEMA_NAME, "custom"};
 
-    private final DatabaseChecksOnCluster checksOnCluster = new DatabaseChecksOnCluster(getHaPgConnection());
+    private final StandardChecksOnCluster checksOnCluster = new StandardChecksOnCluster();
 
     @Test
     @DisplayName("For each diagnostic should exist check")
     void completenessTest() {
-        final List<DatabaseCheckOnCluster<? extends @NonNull DbObject>> checks = checksOnCluster.get();
+        final List<DatabaseCheckOnCluster<? extends @NonNull DbObject>> checks = checksOnCluster.apply(getHaPgConnection());
         assertThat(checks)
             .hasSameSizeAs(Diagnostic.values());
-        final Set<Diagnostic> diagnostics = checks.stream()
-            .map(DatabaseCheckOnCluster::getDiagnostic)
+        final Set<String> checkNames = checks.stream()
+            .map(DatabaseCheckOnCluster::getName)
             .collect(Collectors.toUnmodifiableSet());
-        assertThat(diagnostics)
+        assertThat(checkNames)
             .hasSameSizeAs(Diagnostic.values());
     }
 
     @Test
     @DisplayName("Each check should return nothing on empty database")
     void onEmptyDatabaseEachCheckShouldReturnNothing() {
-        for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checksOnCluster.get()) {
+        for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checksOnCluster.apply(getHaPgConnection())) {
             assertThat(check.check())
                 .isEmpty();
         }
@@ -56,19 +56,20 @@ class DatabaseChecksOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void onDatabaseWithoutThemCheckShouldReturnNothing() {
-        final Set<Diagnostic> exclusions = EnumSet.of(
-            Diagnostic.BLOATED_INDEXES,
-            Diagnostic.BLOATED_TABLES,
-            Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX,
-            Diagnostic.COLUMNS_WITH_FIXED_LENGTH_VARCHAR
-        );
+        final Set<String> exclusions = Stream.of(
+                Diagnostic.BLOATED_INDEXES,
+                Diagnostic.BLOATED_TABLES,
+                Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX,
+                Diagnostic.COLUMNS_WITH_FIXED_LENGTH_VARCHAR
+            )
+            .map(Diagnostic::getName)
+            .collect(Collectors.toUnmodifiableSet());
         for (final String schemaName : SCHEMAS) {
-            for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checksOnCluster.get()) {
-                if (!exclusions.contains(check.getDiagnostic())) {
-                    executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(),
-                        ctx ->
-                            assertThat(check.check(ctx))
-                                .isEmpty());
+            for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checksOnCluster.apply(getHaPgConnection())) {
+                if (!exclusions.contains(check.getName())) {
+                    executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(), ctx ->
+                        assertThat(check.check(ctx))
+                            .isEmpty());
                 }
             }
         }

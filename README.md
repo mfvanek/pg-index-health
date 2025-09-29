@@ -143,7 +143,7 @@ class DatabaseStructureStaticAnalysisTest {
             .filter(DatabaseCheckOnHost::isStatic)
             .forEach(c ->
                 assertThat(c.check(exclusions))
-                    .as(c.getDiagnostic().name())
+                    .as(c.getName())
                     .isEmpty());
     }
 }
@@ -245,7 +245,7 @@ class DatabaseStructureStaticAnalysisTest {
             .filter(DatabaseCheckOnHost::isStatic)
             .forEach(c -> {
                 final ListAssert<? extends DbObject> listAssert = assertThat(c.check(ctx))
-                    .as(c.getDiagnostic().name());
+                    .as(c.getName());
 
                 switch (c.getDiagnostic()) {
                     case TABLES_WITHOUT_DESCRIPTION, TABLES_NOT_LINKED_TO_OTHERS -> listAssert

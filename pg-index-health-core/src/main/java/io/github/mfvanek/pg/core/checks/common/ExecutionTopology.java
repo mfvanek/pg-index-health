@@ -11,18 +11,18 @@
 package io.github.mfvanek.pg.core.checks.common;
 
 /**
- * Allows getting information about rule related to the check.
+ * Defines the place where the diagnostic should be executed.
  *
  * @author Ivan Vakhrushev
  * @since 0.6.0
  */
-public interface DiagnosticAware {
-
+public enum ExecutionTopology {
     /**
-     * Retrieves the diagnostic - a rule related to the check.
-     *
-     * @return diagnostic
-     * @see Diagnostic
+     * Only on the primary host.
      */
-    Diagnostic getDiagnostic();
+    ON_PRIMARY,
+    /**
+     * Across the entire database cluster.
+     */
+    ACROSS_CLUSTER
 }

@@ -59,7 +59,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
         .withTableWhereAllColumnsNullable();
 
     private final HealthLogger healthLogger = new StandardHealthLogger(
-        getConnectionCredentials(), new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()), DatabaseChecksOnCluster::new);
+        getConnectionCredentials(), new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()), new StandardChecksOnCluster());
 
     @Test
     void completenessTest() {

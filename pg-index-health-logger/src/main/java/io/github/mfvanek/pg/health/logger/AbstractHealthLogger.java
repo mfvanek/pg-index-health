@@ -43,19 +43,19 @@ public abstract class AbstractHealthLogger implements HealthLogger {
 
     private final ConnectionCredentials credentials;
     private final HighAvailabilityPgConnectionFactory connectionFactory;
-    private final Function<HighAvailabilityPgConnection, DatabaseChecksOnCluster> databaseChecksFactory;
+    private final Function<HighAvailabilityPgConnection, List<DatabaseCheckOnCluster<? extends DbObject>>> databaseChecksFactory;
 
     /**
      * Constructs an instance of {@code AbstractHealthLogger} with the specified parameters.
      *
-     * @param credentials the credentials required to connect to the database; must not be null.
-     * @param connectionFactory the factory to create connections for high availability PostgreSQL clusters; must not be null.
+     * @param credentials           the credentials required to connect to the database; must not be null.
+     * @param connectionFactory     the factory to create connections for high-availability PostgreSQL clusters; must not be null.
      * @param databaseChecksFactory the factory function to create database checks on the cluster; must not be null.
      */
     @SuppressWarnings("WeakerAccess")
     protected AbstractHealthLogger(final ConnectionCredentials credentials,
                                    final HighAvailabilityPgConnectionFactory connectionFactory,
-                                   final Function<HighAvailabilityPgConnection, DatabaseChecksOnCluster> databaseChecksFactory) {
+                                   final Function<HighAvailabilityPgConnection, List<DatabaseCheckOnCluster<? extends DbObject>>> databaseChecksFactory) {
         this.credentials = Objects.requireNonNull(credentials, "credentials cannot be null");
         this.connectionFactory = Objects.requireNonNull(connectionFactory, "connectionFactory cannot be null");
         this.databaseChecksFactory = Objects.requireNonNull(databaseChecksFactory, "databaseChecksFactory cannot be null");
@@ -72,11 +72,11 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         // The main idea here is to create haPgConnection for a short period of time.
         // This helps to avoid dealing with failover/switch-over situations that occur in real clusters.
         final HighAvailabilityPgConnection haPgConnection = connectionFactory.of(credentials);
-        final DatabaseChecksOnCluster databaseChecksOnCluster = databaseChecksFactory.apply(haPgConnection);
+        final List<DatabaseCheckOnCluster<? extends DbObject>> databaseChecksOnCluster = databaseChecksFactory.apply(haPgConnection);
         final Predicate<DbObject> jointFilters = prepareFilters(exclusions, pgContext);
         final List<String> logResult = new ArrayList<>();
-        for (final DatabaseCheckOnCluster<? extends DbObject> check : databaseChecksOnCluster.get()) {
-            final LoggingKey key = SimpleLoggingKeyAdapter.of(check.getDiagnostic());
+        for (final DatabaseCheckOnCluster<? extends DbObject> check : databaseChecksOnCluster) {
+            final LoggingKey key = SimpleLoggingKeyAdapter.of(check);
             final List<? extends DbObject> checkResult = check.check(pgContext, jointFilters);
             if (checkResult.isEmpty()) {
                 logResult.add(writeZeroToLog(key));
@@ -100,9 +100,9 @@ public abstract class AbstractHealthLogger implements HealthLogger {
     /**
      * Writes the provided key and value to a log.
      *
-     * @param key the {@code LoggingKey} object representing the key to be logged; must not be {@code null}.
+     * @param key   the {@code LoggingKey} object representing the key to be logged; must not be null.
      * @param value the integer value associated with the key that will be logged.
-     * @return a message indicating the result of the logging operation; never {@code null}.
+     * @return a message indicating the result of the logging operation; never null.
      */
     protected abstract String writeToLog(LoggingKey key, int value);
 

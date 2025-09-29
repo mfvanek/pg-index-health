@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.health.checks.common;
 
 import io.github.mfvanek.pg.core.checks.common.CheckTypeAware;
-import io.github.mfvanek.pg.core.checks.common.DiagnosticAware;
 import io.github.mfvanek.pg.core.checks.common.RawTypeAware;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
@@ -21,14 +20,16 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * An abstract check on database structure.
+ * Represents a check (or diagnostic) to be performed across the entire PostgreSQL cluster.
  *
- * @param <T> any database object associated with a table (table itself, index, column, constraint)
+ * @param <T> the type of the database object being checked, extending {@link DbObject}
  * @author Ivan Vakhrushev
+ * @see CheckTypeAware
+ * @see RawTypeAware
  * @see DbObject
  * @since 0.6.0
  */
-public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAware, CheckTypeAware, RawTypeAware<T> {
+public interface DatabaseCheckOnCluster<T extends DbObject> extends CheckTypeAware, RawTypeAware<T> {
 
     /**
      * Executes the check in the specified schema.
@@ -73,13 +74,5 @@ public interface DatabaseCheckOnCluster<T extends DbObject> extends DiagnosticAw
             .map(ctx -> check(ctx, exclusionsFilter))
             .flatMap(List::stream)
             .toList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    default boolean isRuntime() {
-        return getDiagnostic().isRuntime();
     }
 }

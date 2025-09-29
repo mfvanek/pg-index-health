@@ -52,35 +52,30 @@ import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
- * A class that aggregates various database checks on a PostgreSQL cluster.
- * <p>
- * This class initializes a list of database checks to be performed on the cluster,
- * such as checks for bloat, missing indexes, unused indexes, invalid constraints,
- * and other structural and metadata issues.
- * <p>
- * Each check is represented by an instance of {@link DatabaseCheckOnCluster} or its subclasses,
- * and they are executed against the database cluster using a shared {@link HighAvailabilityPgConnection}.
+ * A utility class that provides standard checks or diagnostics to be performed across a PostgreSQL cluster.
  *
  * @author Ivan Vakhrushev
  * @see DatabaseCheckOnCluster
  */
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
-public final class DatabaseChecksOnCluster implements Supplier<List<DatabaseCheckOnCluster<? extends DbObject>>> {
-
-    private final List<DatabaseCheckOnCluster<? extends DbObject>> checks;
+public final class StandardChecksOnCluster implements Function<HighAvailabilityPgConnection, List<DatabaseCheckOnCluster<? extends DbObject>>> {
 
     /**
-     * Constructs an instance of {@code DatabaseChecksOnCluster} and initializes
-     * a predefined list of checks to be performed on the PostgreSQL cluster.
-     *
-     * @param haPgConnection a high-availability PostgreSQL connection used for performing the checks
-     * @throws NullPointerException if {@code haPgConnection} is null
+     * Constructs an instance of {@code StandardChecksOnCluster}.
      */
-    public DatabaseChecksOnCluster(final HighAvailabilityPgConnection haPgConnection) {
-        this.checks = List.of(
+    public StandardChecksOnCluster() {
+        // explicitly declared constructor for javadoc
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<DatabaseCheckOnCluster<? extends DbObject>> apply(final HighAvailabilityPgConnection haPgConnection) {
+        return List.of(
             new TablesWithBloatCheckOnCluster(haPgConnection),
             new TablesWithMissingIndexesCheckOnCluster(haPgConnection),
             new TablesWithoutPrimaryKeyCheckOnCluster(haPgConnection),
@@ -119,13 +114,5 @@ public final class DatabaseChecksOnCluster implements Supplier<List<DatabaseChec
             new TablesWherePrimaryKeyColumnsNotFirstCheckOnCluster(haPgConnection),
             new TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnCluster(haPgConnection)
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<DatabaseCheckOnCluster<? extends DbObject>> get() {
-        return checks;
     }
 }

@@ -14,7 +14,7 @@ import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
-import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.common.ExecutionTopology;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
@@ -30,13 +30,17 @@ import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 /**
- * An abstract class for all database checks performed on the entire cluster.
+ * An abstract base class for performing database checks across the entire PostgreSQL cluster.
+ * Ensures that the defined checks can be executed either on a specific host or across all hosts in the cluster.
+ * <p>
+ * This class provides default implementations for retrieving the type of check, diagnostic details, and procedures
+ * for executing checks across PostgreSQL cluster setups, prioritizing high availability.
  *
- * @param <T> represents an object in a database associated with a table
+ * @param <T> the type of database object involved in the check
  * @author Ivan Vakhrushev
  * @since 0.6.0
  */
-abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseCheckOnCluster<T> {
+public abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseCheckOnCluster<T> {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractCheckOnCluster.class.getName());
 
@@ -48,8 +52,8 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
     /**
      * Constructs an instance of AbstractCheckOnCluster.
      *
-     * @param haPgConnection       the high-availability connection to the PostgreSQL cluster. Cannot be null.
-     * @param checkOnHostFactory   a factory function to create a host-specific check instance. Cannot be null.
+     * @param haPgConnection     the high-availability connection to the PostgreSQL cluster. Cannot be null.
+     * @param checkOnHostFactory a factory function to create a host-specific check instance. Cannot be null.
      */
     protected AbstractCheckOnCluster(final HighAvailabilityPgConnection haPgConnection,
                                      final Function<PgConnection, DatabaseCheckOnHost<T>> checkOnHostFactory) {
@@ -59,10 +63,10 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
     /**
      * Constructs an instance of {@code AbstractCheckOnCluster}.
      *
-     * @param haPgConnection the high-availability connection to the PostgreSQL cluster. Cannot be null.
-     * @param checkOnHostFactory a factory function to create a host-specific check instance. Cannot be null.
+     * @param haPgConnection             the high-availability connection to the PostgreSQL cluster. Cannot be null.
+     * @param checkOnHostFactory         a factory function to create a host-specific check instance. Cannot be null.
      * @param acrossClusterResultsMapper a function to map results collected from all cluster nodes to a unified representation. Can be null for non-across-cluster diagnostics.
-     * @throws NullPointerException if {@code haPgConnection} or {@code checkOnHostFactory} is null.
+     * @throws NullPointerException     if {@code haPgConnection} or {@code checkOnHostFactory} is null.
      * @throws IllegalArgumentException if {@code acrossClusterResultsMapper} is null for across-cluster diagnostics.
      */
     protected AbstractCheckOnCluster(final HighAvailabilityPgConnection haPgConnection,
@@ -73,9 +77,17 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
         this.checksOnHosts = new HashMap<>();
         this.acrossClusterResultsMapper = acrossClusterResultsMapper;
         final DatabaseCheckOnHost<T> checkOnPrimary = computeCheckForPrimaryIfNeed();
-        if (acrossClusterResultsMapper == null && checkOnPrimary.getDiagnostic().isAcrossCluster()) {
-            throw new IllegalArgumentException("acrossClusterResultsMapper cannot be null for diagnostic " + checkOnPrimary.getDiagnostic());
+        if (acrossClusterResultsMapper == null && checkOnPrimary.isAcrossCluster()) {
+            throw new IllegalArgumentException("acrossClusterResultsMapper cannot be null");
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName() {
+        return computeCheckForPrimaryIfNeed().getName();
     }
 
     /**
@@ -90,8 +102,16 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
      * {@inheritDoc}
      */
     @Override
-    public final Diagnostic getDiagnostic() {
-        return computeCheckForPrimaryIfNeed().getDiagnostic();
+    public boolean isRuntime() {
+        return computeCheckForPrimaryIfNeed().isRuntime();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ExecutionTopology getExecutionTopology() {
+        return computeCheckForPrimaryIfNeed().getExecutionTopology();
     }
 
     /**
@@ -99,7 +119,7 @@ abstract class AbstractCheckOnCluster<T extends DbObject> implements DatabaseChe
      */
     @Override
     public final List<T> check(final PgContext pgContext, final Predicate<? super T> exclusionsFilter) {
-        if (getDiagnostic().isAcrossCluster()) {
+        if (isAcrossCluster()) {
             return executeOnCluster(pgContext, exclusionsFilter);
         }
         return executeOnPrimary(pgContext, exclusionsFilter);

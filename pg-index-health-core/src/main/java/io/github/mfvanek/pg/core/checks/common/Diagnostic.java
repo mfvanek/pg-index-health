@@ -15,13 +15,13 @@ import io.github.mfvanek.pg.core.utils.QueryExecutors;
 import java.util.Objects;
 
 /**
- * A list of all supported diagnostics with corresponding SQL queries and query executors.
+ * A list of standard diagnostics with corresponding SQL queries and query executors.
  *
  * @author Ivan Vakhrushev
  * @see QueryExecutor
  * @see QueryExecutors
  */
-public enum Diagnostic implements CheckTypeAware {
+public enum Diagnostic implements CheckInfo {
 
     BLOATED_INDEXES("bloated_indexes.sql", QueryExecutors::executeQueryWithBloatThreshold, true),
     BLOATED_TABLES("bloated_tables.sql", QueryExecutors::executeQueryWithBloatThreshold, true),
@@ -118,39 +118,35 @@ public enum Diagnostic implements CheckTypeAware {
     }
 
     /**
-     * Retrieves the place where the diagnostic should be executed.
-     *
-     * @return {@code ExecutionTopology}
+     * {@inheritDoc}
      */
+    @Override
+    public String getName() {
+        return name();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public ExecutionTopology getExecutionTopology() {
         return executionTopology;
     }
 
     /**
-     * Retrieves the associated SQL query file name.
-     *
-     * @return SQL query file name
+     * {@inheritDoc}
      */
+    @Override
     public String getSqlQueryFileName() {
         return sqlQueryFileName;
     }
 
     /**
-     * Retrieves the lambda which executes the associated SQL query.
-     *
-     * @return {@code QueryExecutor}
+     * {@inheritDoc}
      */
+    @Override
     public QueryExecutor getQueryExecutor() {
         return queryExecutor;
-    }
-
-    /**
-     * Shows whether diagnostic results should be collected from all nodes in the cluster.
-     *
-     * @return true if diagnostic results should be collected from all nodes in the cluster
-     */
-    public boolean isAcrossCluster() {
-        return executionTopology == ExecutionTopology.ACROSS_CLUSTER;
     }
 
     /**
@@ -159,22 +155,5 @@ public enum Diagnostic implements CheckTypeAware {
     @Override
     public boolean isRuntime() {
         return runtimeCheck;
-    }
-
-    /**
-     * Defines the place where the diagnostic should be executed.
-     *
-     * @author Ivan Vakhrushev
-     * @since 0.6.0
-     */
-    public enum ExecutionTopology {
-        /**
-         * Only on the primary host.
-         */
-        ON_PRIMARY,
-        /**
-         * Across the entire database cluster.
-         */
-        ACROSS_CLUSTER
     }
 }

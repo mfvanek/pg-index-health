@@ -40,8 +40,8 @@ public class AbstractCheckOnHostAssert<E extends @NonNull DbObject> extends Abst
 
     public AbstractCheckOnHostAssert<E> hasDiagnostic(final Diagnostic diagnostic) {
         isNotNull();
-        if (actual.getDiagnostic() != diagnostic) {
-            failWithMessage("Expected diagnostic %s but was %s", diagnostic, actual.getDiagnostic());
+        if (diagnostic.getName().equals(actual.getName())) {
+            failWithMessage("Expected diagnostic %s but was %s", diagnostic, actual.getName());
         }
         return this;
     }
@@ -57,7 +57,7 @@ public class AbstractCheckOnHostAssert<E extends @NonNull DbObject> extends Abst
     public AbstractCheckOnHostAssert<E> isStatic() {
         isNotNull();
         if (!actual.isStatic()) {
-            failWithMessage("Expected diagnostic should be STATIC but was %s", actual.getDiagnostic());
+            failWithMessage("Expected diagnostic should be STATIC but was %s", actual.isStatic());
         }
         return this;
     }
@@ -65,7 +65,7 @@ public class AbstractCheckOnHostAssert<E extends @NonNull DbObject> extends Abst
     public AbstractCheckOnHostAssert<E> isRuntime() {
         isNotNull();
         if (!actual.isRuntime()) {
-            failWithMessage("Expected diagnostic should be RUNTIME but was %s", actual.getDiagnostic());
+            failWithMessage("Expected diagnostic should be RUNTIME but was %s", actual.isRuntime());
         }
         return this;
     }
