@@ -40,7 +40,7 @@ public class AbstractCheckOnHostAssert<E extends @NonNull DbObject> extends Abst
 
     public AbstractCheckOnHostAssert<E> hasDiagnostic(final Diagnostic diagnostic) {
         isNotNull();
-        if (diagnostic.getName().equals(actual.getName())) {
+        if (!diagnostic.getName().equals(actual.getName())) {
             failWithMessage("Expected diagnostic %s but was %s", diagnostic, actual.getName());
         }
         return this;
