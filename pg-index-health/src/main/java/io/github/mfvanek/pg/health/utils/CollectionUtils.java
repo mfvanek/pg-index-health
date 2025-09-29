@@ -27,8 +27,8 @@ public final class CollectionUtils {
     /**
      * Returns a {@link Collection} containing the intersection of the given {@link Collection}s.
      *
-     * @param first  the first collection, cannot be null
-     * @param second the second collection, cannot be null
+     * @param first  the first collection; cannot be null
+     * @param second the second collection; cannot be null
      * @param <T>    the generic type that is able to represent the types contained in both input collections.
      * @return the intersection of the two collections
      */

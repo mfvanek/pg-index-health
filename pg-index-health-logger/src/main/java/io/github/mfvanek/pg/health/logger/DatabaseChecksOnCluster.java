@@ -122,17 +122,6 @@ public final class DatabaseChecksOnCluster implements Supplier<List<DatabaseChec
     }
 
     /**
-     * Returns the list of all configured database checks.
-     *
-     * @return an immutable list of {@link DatabaseCheckOnCluster} instances
-     * @deprecated since 0.20.3, use {@link #get()} instead
-     */
-    @Deprecated(since = "0.20.3", forRemoval = true)
-    public List<DatabaseCheckOnCluster<? extends DbObject>> getAll() {
-        return get();
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override

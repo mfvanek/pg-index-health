@@ -12,8 +12,8 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
-import io.github.mfvanek.pg.core.checks.extractors.ColumnExtractor;
-import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
  * @author Diana Gilfanova
  * @since 0.14.6
  */
-public class ColumnsWithFixedLengthVarcharCheckOnHost extends AbstractCheckOnHost<Column> {
+public class ColumnsWithFixedLengthVarcharCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {
 
     /**
      * Constructs a new instance of {@code ColumnsWithFixedLengthVarcharCheckOnHost}.
@@ -32,7 +32,7 @@ public class ColumnsWithFixedLengthVarcharCheckOnHost extends AbstractCheckOnHos
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ColumnsWithFixedLengthVarcharCheckOnHost(final PgConnection pgConnection) {
-        super(Column.class, pgConnection, Diagnostic.COLUMNS_WITH_FIXED_LENGTH_VARCHAR);
+        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_FIXED_LENGTH_VARCHAR);
     }
 
     /**
@@ -43,7 +43,7 @@ public class ColumnsWithFixedLengthVarcharCheckOnHost extends AbstractCheckOnHos
      * @return list of columns with a fixed length varchar type
      */
     @Override
-    protected List<Column> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ColumnExtractor.of());
+    protected List<ColumnWithType> doCheck(final PgContext pgContext) {
+        return executeQuery(pgContext, ColumnWithTypeExtractor.of());
     }
 }

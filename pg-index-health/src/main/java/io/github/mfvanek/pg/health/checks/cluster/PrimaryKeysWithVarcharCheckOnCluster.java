@@ -17,7 +17,7 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
 /**
  * Check for primary keys with columns of fixed length varchar(32/36/38) type on all hosts in the cluster.
  * <p>
- * Usually these columns should use built-in uuid type.
+ * Usually these columns should use a built-in uuid type.
  * <p>
  * UUID representation:
  * <pre>{@code
@@ -32,6 +32,11 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
  */
 public class PrimaryKeysWithVarcharCheckOnCluster extends AbstractCheckOnCluster<IndexWithColumns> {
 
+    /**
+     * Constructs a new instance of {@code PrimaryKeysWithVarcharCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public PrimaryKeysWithVarcharCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, PrimaryKeysWithVarcharCheckOnHost::new);
     }

@@ -47,6 +47,7 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(ctx,
                         Column.ofNotNull(ctx, "bad_accounts", "real_account_id"), "bad_accounts_real_account_id_seq"),
@@ -70,6 +71,7 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(
                         Column.ofNotNull(ctx, "bad_accounts", "real_client_id"), ctx.enrichWithSchema("bad_accounts_real_client_id_seq"))
@@ -101,6 +103,7 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "one_more_table", "id"), "one_more_table_id_seq")
                 ));
@@ -113,6 +116,7 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(3)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "one_more_table", "id"), "one_more_table_id_seq"),
                     ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "test_table", "id"), "test_table_id_seq"),
@@ -127,7 +131,9 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "parent", "real_client_id"), "parent_real_client_id_seq")));
+                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "parent", "real_client_id"), "parent_real_client_id_seq")
+                ));
     }
 }

@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.column.Column;
  */
 public class ColumnsWithoutDescriptionCheckOnCluster extends AbstractCheckOnCluster<Column> {
 
+    /**
+     * Constructs a new instance of {@code ColumnsWithoutDescriptionCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public ColumnsWithoutDescriptionCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ColumnsWithoutDescriptionCheckOnHost::new);
     }

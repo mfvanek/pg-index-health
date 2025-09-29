@@ -24,6 +24,11 @@ import io.github.mfvanek.pg.model.table.Table;
  */
 public class TablesWherePrimaryKeyColumnsNotFirstCheckOnCluster extends AbstractCheckOnCluster<Table> {
 
+    /**
+     * Constructs a new instance of {@code TablesWherePrimaryKeyColumnsNotFirstCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public TablesWherePrimaryKeyColumnsNotFirstCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesWherePrimaryKeyColumnsNotFirstCheckOnHost::new);
     }

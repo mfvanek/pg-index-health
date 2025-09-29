@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
  */
 public class ColumnsWithTimestampOrTimetzTypeCheckOnCluster extends AbstractCheckOnCluster<ColumnWithType> {
 
+    /**
+     * Constructs a new instance of {@code ColumnsWithTimestampOrTimetzTypeCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public ColumnsWithTimestampOrTimetzTypeCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ColumnsWithTimestampOrTimetzTypeCheckOnHost::new);
     }

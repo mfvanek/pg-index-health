@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.sequence.SequenceState;
  */
 public class SequenceOverflowCheckOnCluster extends AbstractCheckOnCluster<SequenceState> {
 
+    /**
+     * Constructs a new instance of {@code SequenceOverflowCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public SequenceOverflowCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, SequenceOverflowCheckOnHost::new);
     }

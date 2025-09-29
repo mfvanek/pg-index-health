@@ -12,16 +12,21 @@ package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
-import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 
 /**
- * Check for columns with fixed length varchar type on all hosts in the cluster.
+ * Check for columns with a fixed length varchar type on all hosts in the cluster.
  *
  * @author Diana Gilfanova
  * @since 0.14.6
  */
-public class ColumnsWithFixedLengthVarcharCheckOnCluster extends AbstractCheckOnCluster<Column> {
+public class ColumnsWithFixedLengthVarcharCheckOnCluster extends AbstractCheckOnCluster<ColumnWithType> {
 
+    /**
+     * Constructs a new instance of {@code ColumnsWithFixedLengthVarcharCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public ColumnsWithFixedLengthVarcharCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ColumnsWithFixedLengthVarcharCheckOnHost::new);
     }

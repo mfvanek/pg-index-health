@@ -22,6 +22,11 @@ import io.github.mfvanek.pg.model.table.TableWithColumns;
  */
 public class TablesWithZeroOrOneColumnCheckOnCluster extends AbstractCheckOnCluster<TableWithColumns> {
 
+    /**
+     * Constructs a new instance of {@code TablesWithZeroOrOneColumnCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public TablesWithZeroOrOneColumnCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, TablesWithZeroOrOneColumnCheckOnHost::new);
     }

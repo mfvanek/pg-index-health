@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipByColumnNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -27,12 +28,12 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class ColumnsWithJsonTypeCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<@NonNull Column> check = new ColumnsWithJsonTypeCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull ColumnWithType> check = new ColumnsWithJsonTypeCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(Column.class)
+            .hasType(ColumnWithType.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_JSON_TYPE)
             .hasHost(getHost())
             .isStatic();
@@ -45,7 +46,10 @@ class ColumnsWithJsonTypeCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(Column.ofNullable(ctx.enrichWithSchema("clients"), "info"));
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactly(
+                    ColumnWithType.of(Column.ofNullable(ctx, "clients", "info"), "json")
+                );
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
@@ -75,6 +79,8 @@ class ColumnsWithJsonTypeCheckOnHostTest extends DatabaseAwareTestBase {
                 .executing(ctx)
                 .hasSize(1)
                 .containsExactly(
-                    Column.ofNullable(ctx, "parent", "raw_data")));
+                    ColumnWithType.of(Column.ofNullable(ctx, "parent", "raw_data"), "json")
+                )
+        );
     }
 }

@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConvention
 import io.github.mfvanek.pg.model.column.Column;
 
 /**
- * Check for columns whose names do not follow naming convention (that have to be enclosed in double-quotes) on all hosts in the cluster.
+ * Check for columns whose names do not follow the naming convention (that have to be enclosed in double-quotes) on all hosts in the cluster.
  * <p>
  * You should avoid using quoted column names.
  *
@@ -25,6 +25,11 @@ import io.github.mfvanek.pg.model.column.Column;
  */
 public class ColumnsNotFollowingNamingConventionCheckOnCluster extends AbstractCheckOnCluster<Column> {
 
+    /**
+     * Constructs a new instance of {@code ColumnsNotFollowingNamingConventionCheckOnCluster}.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     */
     public ColumnsNotFollowingNamingConventionCheckOnCluster(final HighAvailabilityPgConnection haPgConnection) {
         super(haPgConnection, ColumnsNotFollowingNamingConventionCheckOnHost::new);
     }
