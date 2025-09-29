@@ -33,4 +33,4 @@ jackson-bom = "com.fasterxml.jackson:jackson-bom:2.18.4.1" # to be compatible wi
 [plugins]
 spring-boot-gradlePlugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.7" }
-lombok = { id = "io.freefair.lombok", version = "8.14.2" }
+lombok = { id = "io.freefair.lombok", version = "9.0.0" }
