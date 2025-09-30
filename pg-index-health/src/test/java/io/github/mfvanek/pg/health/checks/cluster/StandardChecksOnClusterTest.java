@@ -30,12 +30,12 @@ class StandardChecksOnClusterTest extends DatabaseAwareTestBase {
 
     private static final String[] SCHEMAS = {PgContext.DEFAULT_SCHEMA_NAME, "custom"};
 
-    private final StandardChecksOnCluster checks = new StandardChecksOnCluster();
+    private final StandardChecksOnCluster checksFactory = new StandardChecksOnCluster();
 
     @Test
     @DisplayName("For each diagnostic should exist check")
     void completenessTest() {
-        final List<DatabaseCheckOnCluster<? extends @NonNull DbObject>> checks = this.checks.apply(getHaPgConnection());
+        final List<DatabaseCheckOnCluster<? extends @NonNull DbObject>> checks = checksFactory.apply(getHaPgConnection());
         assertThat(checks)
             .hasSameSizeAs(Diagnostic.values());
         final Set<String> checkNames = checks.stream()
@@ -48,7 +48,7 @@ class StandardChecksOnClusterTest extends DatabaseAwareTestBase {
     @Test
     @DisplayName("Each check should return nothing on empty database")
     void onEmptyDatabaseEachCheckShouldReturnNothing() {
-        for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checks.apply(getHaPgConnection())) {
+        for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checksFactory.apply(getHaPgConnection())) {
             assertThat(check.check())
                 .isEmpty();
         }
@@ -66,7 +66,7 @@ class StandardChecksOnClusterTest extends DatabaseAwareTestBase {
             .collect(Collectors.toUnmodifiableSet());
         for (final String schemaName : SCHEMAS) {
             executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(), ctx -> {
-                for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checks.apply(getHaPgConnection())) {
+                for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checksFactory.apply(getHaPgConnection())) {
                     if (!exclusions.contains(check.getName())) {
                         assertThat(check.check(ctx))
                             .isEmpty();
