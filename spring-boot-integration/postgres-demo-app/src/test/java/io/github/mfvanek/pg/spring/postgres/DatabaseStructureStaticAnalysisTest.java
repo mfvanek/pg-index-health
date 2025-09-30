@@ -54,7 +54,7 @@ class DatabaseStructureStaticAnalysisTest {
             .filter(DatabaseCheckOnHost::isStatic)
             .forEach(c ->
                 assertThat(c.check(exclusions))
-                    .as(c.getDiagnostic().name())
+                    .as(c.getName())
                     .isEmpty());
     }
 }

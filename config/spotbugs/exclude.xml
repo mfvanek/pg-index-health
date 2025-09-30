@@ -63,10 +63,7 @@
     </Match>
     <Match>
         <Bug pattern="NSE_NON_SYMMETRIC_EQUALS"/>
-        <Or>
-            <Class name="io.github.mfvanek.pg.connection.PgConnectionImpl"/>
-            <Class name="io.github.mfvanek.pg.model.settings.PgParamImpl"/>
-        </Or>
+        <Class name="io.github.mfvanek.pg.connection.PgConnectionImpl"/>
     </Match>
     <Match>
         <Bug pattern="UCPM_USE_CHARACTER_PARAMETERIZED_METHOD"/>

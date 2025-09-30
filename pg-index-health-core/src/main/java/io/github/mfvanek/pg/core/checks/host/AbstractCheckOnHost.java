@@ -12,8 +12,9 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.host.PgHost;
+import io.github.mfvanek.pg.core.checks.common.CheckInfo;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
-import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.common.ExecutionTopology;
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.core.checks.extractors.IndexWithSingleColumnExtractor;
 import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
@@ -27,19 +28,42 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
- * An abstract class for all database checks performed on a specific host.
+ * An abstract implementation of the {@link DatabaseCheckOnHost} interface, providing
+ * a framework for checks to be performed on database objects on a specific PostgreSQL host.
+ * <p>
+ * Subclasses are required to define the specific check logic in the {@link AbstractCheckOnHost#doCheck(PgContext)} method.
  *
- * @param <T> represents an object in a database associated with a table
+ * @param <T> the type of the database object on which the check is performed
  * @author Ivan Vakhrushev
  * @since 0.6.0
  */
-abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckOnHost<T> {
+public abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckOnHost<T> {
 
+    /**
+     * Represents the column name used to retrieve table names from the database result set.
+     * This is a constant referencing the {@code table_name} field defined in {@link TableExtractor}.
+     */
     protected static final String TABLE_NAME = TableExtractor.TABLE_NAME;
+    /**
+     * The name of the index column in the result set.
+     * This constant is used for extracting the index name from query results.
+     */
     protected static final String INDEX_NAME = IndexWithSingleColumnExtractor.INDEX_NAME;
+    /**
+     * Represents the column name used to retrieve table sizes from the database result set.
+     */
     protected static final String TABLE_SIZE = TableExtractor.TABLE_SIZE;
+    /**
+     * Represents the column name used to retrieve index sizes from the database result set.
+     */
     protected static final String INDEX_SIZE = IndexWithSingleColumnExtractor.INDEX_SIZE;
+    /**
+     * Represents the column name used to retrieve bloat size from the database result set.
+     */
     protected static final String BLOAT_SIZE = "bloat_size";
+    /**
+     * Represents the column name used to retrieve bloat percentage from the database result set.
+     */
     protected static final String BLOAT_PERCENTAGE = "bloat_percentage";
 
     /**
@@ -53,21 +77,21 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
     /**
      * A rule related to the check.
      */
-    private final Diagnostic diagnostic;
+    private final CheckInfo checkInfo;
 
     /**
      * Constructs an instance of AbstractCheckOnHost with the specified parameters.
      *
      * @param type         the type of the entity being checked; must not be null
      * @param pgConnection the PostgreSQL connection associated with this check; must not be null
-     * @param diagnostic   the diagnostic defining the check configuration; must not be null
+     * @param checkInfo    the diagnostic defining the check configuration; must not be null
      */
     protected AbstractCheckOnHost(final Class<T> type,
                                   final PgConnection pgConnection,
-                                  final Diagnostic diagnostic) {
+                                  final CheckInfo checkInfo) {
         this.type = Objects.requireNonNull(type, "type cannot be null");
         this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
-        this.diagnostic = Objects.requireNonNull(diagnostic, "diagnostic cannot be null");
+        this.checkInfo = Objects.requireNonNull(checkInfo, "checkInfo cannot be null");
     }
 
     /**
@@ -76,14 +100,6 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
     @Override
     public final Class<T> getType() {
         return type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final Diagnostic getDiagnostic() {
-        return diagnostic;
     }
 
     /**
@@ -105,6 +121,30 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName() {
+        return checkInfo.getName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isRuntime() {
+        return checkInfo.isRuntime();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ExecutionTopology getExecutionTopology() {
+        return checkInfo.getExecutionTopology();
+    }
+
+    /**
      * Executes the check in the specified schema.
      * All child classes must implement this method.
      *
@@ -122,7 +162,7 @@ abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckO
      */
     protected final List<T> executeQuery(final PgContext pgContext,
                                          final ResultSetExtractor<T> rse) {
-        final String sqlQuery = SqlQueryReader.getQueryFromFile(diagnostic.getSqlQueryFileName());
-        return diagnostic.getQueryExecutor().executeQuery(pgConnection, pgContext, sqlQuery, rse);
+        final String sqlQuery = SqlQueryReader.getQueryFromFile(checkInfo.getSqlQueryFileName());
+        return checkInfo.getQueryExecutor().executeQuery(pgConnection, pgContext, sqlQuery, rse);
     }
 }

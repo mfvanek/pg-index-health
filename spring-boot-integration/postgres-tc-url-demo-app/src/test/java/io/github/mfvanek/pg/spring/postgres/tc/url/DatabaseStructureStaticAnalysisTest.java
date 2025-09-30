@@ -43,7 +43,7 @@ class DatabaseStructureStaticAnalysisTest {
             .filter(DatabaseCheckOnHost::isStatic)
             .forEach(c -> {
                 assertThat(c.check())
-                    .as(c.getDiagnostic().name())
+                    .as(c.getName())
                     .isEmpty();
 
                 assertThat(c.getHost().getPgUrl())

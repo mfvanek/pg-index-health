@@ -40,10 +40,10 @@ internal class DatabaseStructureStaticAnalysisTest {
                 val ctx = PgContext.of("custom_ds_schema")
                 // Due to the use of spring.liquibase.default-schema, all names are resolved without a schema
                 val listAssert = assertThat(check.check(ctx, SkipLiquibaseTablesPredicate.ofDefault()))
-                    .`as`(check.diagnostic.name)
+                    .`as`(check.name)
 
-                when (check.diagnostic) {
-                    Diagnostic.TABLES_NOT_LINKED_TO_OTHERS ->
+                when (check.name) {
+                    "TABLES_NOT_LINKED_TO_OTHERS" ->
                         listAssert
                             .hasSize(1)
                             .containsExactly(Table.of("warehouse"))

@@ -18,14 +18,16 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * A check on database structure on a specific host.
+ * Represents a check (or diagnostic) to be performed on a specific PostgreSQL host.
+ * <p>
+ * The check aims to identify deviations from the defined rules within a database schema.
  *
- * @param <T> represents an object in a database associated with a table
+ * @param <T> the type of the database object being checked, extending {@link DbObject}
  * @author Ivan Vakhrushev
  * @see DbObject
  * @since 0.6.0
  */
-public interface DatabaseCheckOnHost<T extends DbObject> extends DiagnosticAware, CheckTypeAware, RawTypeAware<T>, HostAware {
+public interface DatabaseCheckOnHost<T extends DbObject> extends CheckTypeAware, TopologyAware, RawTypeAware<T>, HostAware {
 
     /**
      * Executes the check in the specified schema.
@@ -66,13 +68,5 @@ public interface DatabaseCheckOnHost<T extends DbObject> extends DiagnosticAware
      */
     default List<T> check(final Predicate<? super T> exclusionsFilter) {
         return check(PgContext.ofDefault(), exclusionsFilter);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    default boolean isRuntime() {
-        return getDiagnostic().isRuntime();
     }
 }

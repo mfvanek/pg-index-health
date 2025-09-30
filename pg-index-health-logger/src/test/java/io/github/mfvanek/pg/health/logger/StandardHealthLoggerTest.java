@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.health.logger;
 import io.github.mfvanek.pg.connection.PrimaryHostDeterminerImpl;
 import io.github.mfvanek.pg.connection.factory.HighAvailabilityPgConnectionFactoryImpl;
 import io.github.mfvanek.pg.connection.factory.PgConnectionFactoryImpl;
+import io.github.mfvanek.pg.core.checks.common.CheckNameAware;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseConfigurer;
 import io.github.mfvanek.pg.core.fixtures.support.StatisticsAwareTestBase;
@@ -59,7 +60,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
         .withTableWhereAllColumnsNullable();
 
     private final HealthLogger healthLogger = new StandardHealthLogger(
-        getConnectionCredentials(), new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()), DatabaseChecksOnCluster::new);
+        getConnectionCredentials(), new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), new PrimaryHostDeterminerImpl()), new StandardChecksOnCluster());
 
     @Test
     void completenessTest() {
@@ -148,14 +149,14 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
     }
 
     @NonNull
-    private static String getExpectedValueForDefaultSchema(final Diagnostic diagnostic) {
-        final LoggingKey key = SimpleLoggingKeyAdapter.of(diagnostic);
+    private static String getExpectedValueForDefaultSchema(final CheckNameAware check) {
+        final LoggingKey key = SimpleLoggingKeyAdapter.of(check);
         return key.getSubKeyName() + ":0";
     }
 
     @NonNull
-    private static Predicate<String> ofKey(final Diagnostic diagnostic) {
-        return new SimpleLoggingKeyPredicate(SimpleLoggingKeyAdapter.of(diagnostic));
+    private static Predicate<String> ofKey(final CheckNameAware check) {
+        return new SimpleLoggingKeyPredicate(SimpleLoggingKeyAdapter.of(check));
     }
 
     private record SimpleLoggingKeyPredicate(LoggingKey key) implements Predicate<String> {

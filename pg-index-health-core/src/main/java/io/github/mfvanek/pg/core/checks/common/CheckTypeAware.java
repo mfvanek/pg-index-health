@@ -11,19 +11,18 @@
 package io.github.mfvanek.pg.core.checks.common;
 
 /**
- * Allows getting information about check/diagnostic type.
+ * Allows getting information about check (diagnostic) type.
  *
  * @author Ivan Vakhrushev
  * @since 0.13.2
  */
-@FunctionalInterface
-public interface CheckTypeAware {
+public interface CheckTypeAware extends CheckNameAware {
 
     /**
      * Defines whether this check/diagnostic is runtime (make sense to perform only on a production database with real data and statistics).
      *
      * @return true if this is a runtime check
-     * @see Diagnostic.ExecutionTopology#ACROSS_CLUSTER
+     * @see ExecutionTopology#ACROSS_CLUSTER
      */
     boolean isRuntime();
 
