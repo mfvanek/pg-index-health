@@ -1,8 +1,9 @@
 plugins {
     id("pg-index-health.java-library")
+    id("pg-index-health.mandatory-javadoc")
 }
 
-description = "pg-index-health-testing is an auxiliary library that allows you to run a PostgreSQL cluster in tests."
+description = "pg-index-health-testing is an auxiliary library that allows you to run a PostgreSQL in tests."
 
 dependencies {
     api(project(":pg-index-health-model"))

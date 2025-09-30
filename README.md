@@ -26,7 +26,8 @@ By embedding **pg-index-health** into your CI/CD pipeline, you can proactively c
 
 ## Available checks
 
-A list of all available checks (rules/diagnostics) can be found [here](doc/available_checks.md).
+A list of all available checks (rules/diagnostics) can be found [here](doc/available_checks.md).  
+In code, you can get all checks through an instance of the [StandardChecksOnHost](pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/host/StandardChecksOnHost.java) or [StandardChecksOnCluster](pg-index-health/src/main/java/io/github/mfvanek/pg/health/checks/cluster/StandardChecksOnCluster.java) class.
 
 ## Installation
 

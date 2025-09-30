@@ -26,6 +26,17 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import javax.sql.DataSource;
 
+/**
+ * A wrapper around a PostgreSQL Testcontainers instance, providing easy access
+ * to its data source and configuration. This class implements {@code AutoCloseable}
+ * to ensure proper cleanup of resources after usage and provides version-aware
+ * capabilities through {@code PostgresVersionAware}.
+ * <p>
+ * The PostgreSQL container is initialized using the specified version via
+ * {@link PostgresVersionHolder} and optional additional configuration
+ * parameters. It starts the container upon creation and builds a
+ * data source for interacting with the database.
+ */
 public final class PostgreSqlContainerWrapper implements AutoCloseable, PostgresVersionAware {
 
     private final PostgresVersionHolder pgVersion;
@@ -76,22 +87,47 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
             .toArray(String[]::new);
     }
 
+    /**
+     * Retrieves the {@link DataSource} associated with this instance for connecting to the PostgreSQL container.
+     *
+     * @return the {@code DataSource} used for database connections
+     */
     public DataSource getDataSource() {
         return dataSource;
     }
 
+    /**
+     * Retrieves the first mapped port from the underlying PostgreSQL container.
+     *
+     * @return the first mapped port of the PostgreSQL container
+     */
     public int getPort() {
         return container.getFirstMappedPort();
     }
 
+    /**
+     * Retrieves the JDBC URL of the underlying PostgreSQL container.
+     *
+     * @return the JDBC URL as a {@code String}
+     */
     public String getUrl() {
         return container.getJdbcUrl();
     }
 
+    /**
+     * Retrieves the username used to access the PostgreSQL container.
+     *
+     * @return the username as a String
+     */
     public String getUsername() {
         return container.getUsername();
     }
 
+    /**
+     * Retrieves the password used to access the PostgreSQL container.
+     *
+     * @return the password as a String
+     */
     public String getPassword() {
         return container.getPassword();
     }

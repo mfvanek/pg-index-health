@@ -8,46 +8,9 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.health.logger;
+package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
-import io.github.mfvanek.pg.health.checks.cluster.BtreeIndexesOnArrayColumnsCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.ColumnsNotFollowingNamingConventionCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithFixedLengthVarcharCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithJsonTypeCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithMoneyTypeCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithSerialTypesCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithTimestampOrTimetzTypeCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.ColumnsWithoutDescriptionCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.DuplicatedForeignKeysCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.DuplicatedIndexesCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.ForeignKeysNotCoveredWithIndexCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.ForeignKeysWithUnmatchedColumnTypeCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.FunctionsWithoutDescriptionCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.IndexesWithBloatCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.IndexesWithBooleanCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.IndexesWithNullValuesCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.IndexesWithTimestampInTheMiddleCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.IndexesWithUnnecessaryWhereClauseCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.IntersectedForeignKeysCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.IntersectedIndexesCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.InvalidIndexesCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.NotValidConstraintsCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.ObjectsNotFollowingNamingConventionCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.PossibleObjectNameOverflowCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.PrimaryKeysThatMostLikelyNaturalKeysCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.PrimaryKeysWithSerialTypesCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.PrimaryKeysWithVarcharCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.SequenceOverflowCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.TablesNotLinkedToOthersCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.TablesWherePrimaryKeyColumnsNotFirstCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.TablesWithBloatCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.TablesWithMissingIndexesCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.TablesWithZeroOrOneColumnCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.TablesWithoutDescriptionCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.TablesWithoutPrimaryKeyCheckOnCluster;
-import io.github.mfvanek.pg.health.checks.cluster.UnusedIndexesCheckOnCluster;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
@@ -55,7 +18,7 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * A utility class that provides standard checks or diagnostics to be performed across a PostgreSQL cluster.
+ * A utility class that provides standard checks to be performed across a PostgreSQL cluster.
  *
  * @author Ivan Vakhrushev
  * @see DatabaseCheckOnCluster
@@ -71,7 +34,10 @@ public final class StandardChecksOnCluster implements Function<HighAvailabilityP
     }
 
     /**
-     * {@inheritDoc}
+     * Constructs the standard set of database checks for a given high-availability PostgreSQL connection.
+     *
+     * @param haPgConnection the high-availability connection to the PostgreSQL cluster; must not be null
+     * @return a list of database checks specific to a PostgreSQL cluster, where each check is an instance of {@code DatabaseCheckOnCluster<? extends DbObject>}
      */
     @Override
     public List<DatabaseCheckOnCluster<? extends DbObject>> apply(final HighAvailabilityPgConnection haPgConnection) {

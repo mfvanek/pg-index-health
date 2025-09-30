@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.core.checks.common.CheckNameAware;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseConfigurer;
 import io.github.mfvanek.pg.core.fixtures.support.StatisticsAwareTestBase;
+import io.github.mfvanek.pg.health.checks.cluster.StandardChecksOnCluster;
 import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
