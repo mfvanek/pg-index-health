@@ -6,7 +6,7 @@ services:
             POSTGRES_DB: "pgih-db"
             POSTGRES_USER: "pgih-db-user"
             POSTGRES_PASSWORD: "pgih-db-password"
-            PGDATA: "/var/lib/postgresql/data/pgdata"
+            PGDATA: "/var/lib/postgresql/18/docker/pgdata"
         volumes:
             - pgih-db-data:/var/lib/postgresql/18/docker
         ports:
