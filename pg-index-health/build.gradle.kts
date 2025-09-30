@@ -19,25 +19,3 @@ dependencies {
     testImplementation(libs.awaitility)
     testImplementation(libs.postgresql)
 }
-
-tasks {
-    test {
-        useJUnitPlatform {
-            excludeTags("cluster")
-        }
-    }
-}
-
-val clusterTest = tasks.register("clusterTest", Test::class) {
-    description = "Runs tests on PostgreSQL cluster."
-    group = "verification"
-    useJUnitPlatform {
-        includeTags("cluster")
-    }
-    maxParallelForks = 1 // important!
-    mustRunAfter(tasks.test)
-}
-
-tasks.build {
-    dependsOn(clusterTest)
-}
