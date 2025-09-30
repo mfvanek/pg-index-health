@@ -147,6 +147,7 @@ class DatabaseStructureStaticAnalysisTest {
                     .isEmpty());
     }
 }
+
 ```
 
 <details>
@@ -192,7 +193,7 @@ internal class DatabaseStructureStaticAnalysisTest {
             .filter { it.isStatic }
             .forEach {
                 assertThat(it.check(exclusions))
-                    .`as`(it.diagnostic.name)
+                    .`as`(it.name)
                     .isEmpty()
             }
     }
@@ -247,13 +248,13 @@ class DatabaseStructureStaticAnalysisTest {
                 final ListAssert<? extends DbObject> listAssert = assertThat(c.check(ctx))
                     .as(c.getName());
 
-                switch (c.getDiagnostic()) {
-                    case TABLES_WITHOUT_DESCRIPTION, TABLES_NOT_LINKED_TO_OTHERS -> listAssert
+                switch (c.getName()) {
+                    case "TABLES_WITHOUT_DESCRIPTION", "TABLES_NOT_LINKED_TO_OTHERS" -> listAssert
                         .hasSize(1)
                         .asInstanceOf(list(Table.class))
                         .containsExactly(Table.of(ctx, "additional_table"));
 
-                    case COLUMNS_WITHOUT_DESCRIPTION -> listAssert
+                    case "COLUMNS_WITHOUT_DESCRIPTION" -> listAssert
                         .hasSize(2)
                         .asInstanceOf(list(Column.class))
                         .containsExactly(
@@ -261,7 +262,7 @@ class DatabaseStructureStaticAnalysisTest {
                             Column.ofNotNull(ctx, "additional_table", "name")
                         );
 
-                    case PRIMARY_KEYS_WITH_SERIAL_TYPES -> listAssert
+                    case "PRIMARY_KEYS_WITH_SERIAL_TYPES" -> listAssert
                         .hasSize(1)
                         .asInstanceOf(list(ColumnWithSerialType.class))
                         .containsExactly(
