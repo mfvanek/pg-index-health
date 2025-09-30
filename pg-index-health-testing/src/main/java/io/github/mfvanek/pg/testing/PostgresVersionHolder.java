@@ -33,7 +33,7 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
     }
 
     /**
-     * Retrieves target PostgreSQL version to run with Testcontainers.
+     * Retrieves the target PostgreSQL version to run with Testcontainers.
      *
      * @return PostgreSQL version to run
      */
@@ -72,48 +72,6 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
             return pgVersion;
         }
         return "17.6";
-    }
-
-    /**
-     * Converts a standard PostgreSQL version string to a Bitnami version string.
-     * <p>
-     * This method takes a standard PostgreSQL version string, which may include a dash followed by additional
-     * identifiers (e.g., "13.3-1"), and converts it to a format suitable for Bitnami images.
-     * Bitnami uses semantic versioning with three digits, so this method ensures the version string
-     * ends with ".0".
-     * </p>
-     *
-     * @param pgVersion The PostgreSQL version string to be converted. Must not be null.
-     * @return The Bitnami-compatible version string, ensuring it has three digits.
-     * @throws NullPointerException if {@code pgVersion} is null.
-     */
-    public static String toBitnamiVersion(final String pgVersion) {
-        final int index = pgVersion.indexOf('-');
-        final String bitnamiVersion = index == -1 ? pgVersion : pgVersion.substring(0, index);
-        // Bitnami images use semantic versioning with three digits
-        return bitnamiVersion + ".0";
-    }
-
-    /**
-     * Creates {@code PostgresVersionHolder} for Bitnami cluster installation.
-     * The version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
-     * otherwise the default version {@code 17.6.0} is used.
-     *
-     * @return {@code PostgresVersionHolder}
-     */
-    public static PostgresVersionHolder forCluster() {
-        return new PostgresVersionHolder(toBitnamiVersion(preparePostgresVersion()));
-    }
-
-    /**
-     * Creates {@code PostgresVersionHolder} with the given version for Bitnami cluster installation.
-     *
-     * @param pgVersion given PostgreSQL version
-     * @return {@code PostgresVersionHolder}
-     * @since 0.9.2
-     */
-    public static PostgresVersionHolder forCluster(final String pgVersion) {
-        return new PostgresVersionHolder(toBitnamiVersion(pgVersion));
     }
 
     /**
