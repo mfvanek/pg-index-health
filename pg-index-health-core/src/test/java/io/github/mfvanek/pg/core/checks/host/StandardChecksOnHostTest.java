@@ -8,11 +8,11 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.health.logger;
+package io.github.mfvanek.pg.core.checks.host;
 
+import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import org.jspecify.annotations.NonNull;
@@ -26,20 +26,20 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class StandardChecksOnClusterTest extends DatabaseAwareTestBase {
+class StandardChecksOnHostTest extends DatabaseAwareTestBase {
 
     private static final String[] SCHEMAS = {PgContext.DEFAULT_SCHEMA_NAME, "custom"};
 
-    private final StandardChecksOnCluster checksOnCluster = new StandardChecksOnCluster();
+    private final StandardChecksOnHost checks = new StandardChecksOnHost();
 
     @Test
     @DisplayName("For each diagnostic should exist check")
     void completenessTest() {
-        final List<DatabaseCheckOnCluster<? extends @NonNull DbObject>> checks = checksOnCluster.apply(getHaPgConnection());
+        final List<DatabaseCheckOnHost<? extends @NonNull DbObject>> checks = this.checks.apply(getPgConnection());
         assertThat(checks)
             .hasSameSizeAs(Diagnostic.values());
         final Set<String> checkNames = checks.stream()
-            .map(DatabaseCheckOnCluster::getName)
+            .map(DatabaseCheckOnHost::getName)
             .collect(Collectors.toUnmodifiableSet());
         assertThat(checkNames)
             .hasSameSizeAs(Diagnostic.values());
@@ -48,7 +48,7 @@ class StandardChecksOnClusterTest extends DatabaseAwareTestBase {
     @Test
     @DisplayName("Each check should return nothing on empty database")
     void onEmptyDatabaseEachCheckShouldReturnNothing() {
-        for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checksOnCluster.apply(getHaPgConnection())) {
+        for (final DatabaseCheckOnHost<? extends @NonNull DbObject> check : checks.apply(getPgConnection())) {
             assertThat(check.check())
                 .isEmpty();
         }
@@ -65,13 +65,14 @@ class StandardChecksOnClusterTest extends DatabaseAwareTestBase {
             .map(Diagnostic::getName)
             .collect(Collectors.toUnmodifiableSet());
         for (final String schemaName : SCHEMAS) {
-            for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checksOnCluster.apply(getHaPgConnection())) {
-                if (!exclusions.contains(check.getName())) {
-                    executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(), ctx ->
+            executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(), ctx -> {
+                for (final DatabaseCheckOnHost<? extends @NonNull DbObject> check : checks.apply(getPgConnection())) {
+                    if (!exclusions.contains(check.getName())) {
                         assertThat(check.check(ctx))
-                            .isEmpty());
+                            .isEmpty();
+                    }
                 }
-            }
+            });
         }
     }
 }
