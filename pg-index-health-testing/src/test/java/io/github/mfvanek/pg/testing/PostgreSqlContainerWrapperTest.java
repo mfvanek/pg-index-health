@@ -35,6 +35,8 @@ class PostgreSqlContainerWrapperTest {
                         .isNotBlank();
                     assertThat(c.getPassword())
                         .isNotBlank();
+                    assertThat(c.getMountVolume())
+                        .isEqualTo("/var/lib/postgresql/18/docker");
                 });
         }
     }
@@ -62,6 +64,8 @@ class PostgreSqlContainerWrapperTest {
                         .isTrue();
                     assertThat(c.isCumulativeStatisticsSystemSupported())
                         .isTrue();
+                    assertThat(c.getMountVolume())
+                        .isEqualTo("/var/lib/postgresql/data");
                 });
         }
     }

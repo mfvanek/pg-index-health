@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.testing;
 
 import io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -65,19 +66,31 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
         return isProceduresSupported() && getMajorVersion() >= 14;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getMountVolume() {
+        final int majorVersion = getMajorVersion();
+        if (majorVersion >= 18) {
+            return String.format(Locale.ROOT, "/var/lib/postgresql/%d/docker", majorVersion);
+        }
+        return "/var/lib/postgresql/data";
+    }
+
     @ExcludeFromJacocoGeneratedReport
     private static String preparePostgresVersion() {
         final String pgVersion = System.getenv("TEST_PG_VERSION");
         if (pgVersion != null) {
             return pgVersion;
         }
-        return "17.6";
+        return "18.0";
     }
 
     /**
      * Creates {@code PostgresVersionHolder} for single node installation.
      * The version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
-     * otherwise the default version {@code 17.6} is used.
+     * otherwise the default version {@code 18.0} is used.
      *
      * @return {@code PostgresVersionHolder}
      */

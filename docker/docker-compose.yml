@@ -1,6 +1,6 @@
 services:
     postgres:
-        image: postgres:17.6
+        image: postgres:18.0
         shm_size: "2gb"
         environment:
             POSTGRES_DB: "pgih-db"
@@ -8,7 +8,7 @@ services:
             POSTGRES_PASSWORD: "pgih-db-password"
             PGDATA: "/var/lib/postgresql/data/pgdata"
         volumes:
-            - pgih-db-data:/var/lib/postgresql/data
+            - pgih-db-data:/var/lib/postgresql/18/docker
         ports:
             - "6432:5432"
 

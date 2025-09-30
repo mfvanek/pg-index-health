@@ -50,7 +50,7 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
         this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres") //NOSONAR
             .withTag(pgVersion.getVersion()))
             .withSharedMemorySize(MemoryUnit.MB.convertToBytes(512))
-            .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
+            .withTmpFs(Map.of(pgVersion.getMountVolume(), "rw"))
             .withCommand(prepareCommandParts(additionalParameters))
             .waitingFor(Wait.defaultWaitStrategy());
         this.container.start();
@@ -157,9 +157,17 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getMountVolume() {
+        return pgVersion.getMountVolume();
+    }
+
+    /**
      * Creates {@code PostgreSqlContainerWrapper} with the default PostgreSQL version.
      * The default version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
-     * otherwise the default version {@code 17.6} is used.
+     * otherwise the default version {@code 18.0} is used.
      *
      * @return {@code PostgreSqlContainerWrapper}
      */

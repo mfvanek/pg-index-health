@@ -41,4 +41,12 @@ public interface PostgresVersionAware {
      * @since 0.7.0
      */
     boolean isOutParametersInProcedureSupported();
+
+    /**
+     * Retrieves the mount volume for the PostgreSQL container.
+     *
+     * @return the mount volume path as a string
+     * @since 0.30.0
+     */
+    String getMountVolume();
 }
