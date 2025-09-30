@@ -18,7 +18,7 @@ package io.github.mfvanek.pg.core.checks.common;
  * @author Ivan Vakhrushev
  * @since 0.30.0
  */
-public interface CheckInfo extends CheckTypeAware {
+public interface CheckInfo extends CheckTypeAware, TopologyAware {
 
     /**
      * Retrieves the associated SQL query file name.

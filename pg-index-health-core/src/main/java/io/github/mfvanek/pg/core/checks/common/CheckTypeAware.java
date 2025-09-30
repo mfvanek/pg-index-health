@@ -34,20 +34,4 @@ public interface CheckTypeAware extends CheckNameAware {
     default boolean isStatic() {
         return !isRuntime();
     }
-
-    /**
-     * Retrieves the place where the diagnostic should be executed.
-     *
-     * @return {@code ExecutionTopology}
-     */
-    ExecutionTopology getExecutionTopology();
-
-    /**
-     * Shows whether diagnostic results should be collected from all nodes in the cluster.
-     *
-     * @return true if diagnostic results should be collected from all nodes in the cluster
-     */
-    default boolean isAcrossCluster() {
-        return getExecutionTopology() == ExecutionTopology.ACROSS_CLUSTER;
-    }
 }

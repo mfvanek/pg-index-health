@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.health.checks.common;
 
 import io.github.mfvanek.pg.core.checks.common.CheckTypeAware;
 import io.github.mfvanek.pg.core.checks.common.RawTypeAware;
+import io.github.mfvanek.pg.core.checks.common.TopologyAware;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
@@ -29,7 +30,7 @@ import java.util.function.Predicate;
  * @see DbObject
  * @since 0.6.0
  */
-public interface DatabaseCheckOnCluster<T extends DbObject> extends CheckTypeAware, RawTypeAware<T> {
+public interface DatabaseCheckOnCluster<T extends DbObject> extends CheckTypeAware, TopologyAware, RawTypeAware<T> {
 
     /**
      * Executes the check in the specified schema.

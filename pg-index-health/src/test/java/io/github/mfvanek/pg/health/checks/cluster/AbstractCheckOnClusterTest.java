@@ -37,7 +37,7 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
         final HighAvailabilityPgConnection haPgConnection = getHaPgConnection();
         assertThatThrownBy(() -> new WrongCheck(haPgConnection))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("acrossClusterResultsMapper cannot be null for diagnostic UNUSED_INDEXES");
+            .hasMessage("acrossClusterResultsMapper cannot be null");
     }
 
     @ParameterizedTest

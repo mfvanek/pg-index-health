@@ -27,7 +27,7 @@ import java.util.function.Predicate;
  * @see DbObject
  * @since 0.6.0
  */
-public interface DatabaseCheckOnHost<T extends DbObject> extends CheckTypeAware, RawTypeAware<T>, HostAware {
+public interface DatabaseCheckOnHost<T extends DbObject> extends CheckTypeAware, TopologyAware, RawTypeAware<T>, HostAware {
 
     /**
      * Executes the check in the specified schema.

@@ -12,10 +12,12 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.exception.PgSqlException;
 import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
+import io.github.mfvanek.pg.core.checks.common.ExecutionTopology;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.utils.QueryExecutors;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -30,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("checkstyle:AbstractClassName")
 class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final AbstractCheckOnHost<IndexWithColumns> check = new IndexesWithNullValuesCheckOnHost(getPgConnection());
+    private final AbstractCheckOnHost<@NonNull IndexWithColumns> check = new IndexesWithNullValuesCheckOnHost(getPgConnection());
 
     @ParameterizedTest
     @ValueSource(strings = PgContext.DEFAULT_SCHEMA_NAME)
@@ -53,6 +55,11 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
 
                 assertThat(check.check(t -> !"clients".equalsIgnoreCase(t.getTableName())))
                     .isEmpty();
+
+                assertThat(check.getExecutionTopology())
+                    .isEqualTo(ExecutionTopology.ON_PRIMARY);
+                assertThat(check.isAcrossCluster())
+                    .isFalse();
             });
         }
     }
