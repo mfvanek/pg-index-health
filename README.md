@@ -32,19 +32,13 @@ In code, you can get all checks through an instance of the [StandardChecksOnHost
 ## Installation
 
 Using Gradle:
-```groovy
-implementation 'io.github.mfvanek:pg-index-health:0.20.3'
-```
-
-<details>
-<summary>with Kotlin DSL</summary>
 
 ```kotlin
 implementation("io.github.mfvanek:pg-index-health:0.20.3")
 ```
-</details>
 
 Using Maven:
+
 ```xml
 <dependency>
   <groupId>io.github.mfvanek</groupId>
@@ -71,18 +65,9 @@ More examples you can find in [pg-index-health-demo](https://github.com/mfvanek/
 
 Using Gradle:
 
-```groovy
-testImplementation 'io.github.mfvanek:pg-index-health-test-starter:0.20.3'
-```
-
-<details>
-<summary>with Kotlin DSL</summary>
-
 ```kotlin
 testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.20.3")
 ```
-
-</details>
 
 Using Maven:
 
