@@ -42,7 +42,38 @@ class PostgreSqlContainerWrapperTest {
     }
 
     @Test
-    void withVersionShouldWork() {
+    void withNewVersionShouldWork() {
+        try (PostgreSqlContainerWrapper container = PostgreSqlContainerWrapper.withVersion("18.0")) {
+            assertThat(container)
+                .isNotNull()
+                .satisfies(c -> {
+                    assertThat(c.getDataSource())
+                        .isNotNull()
+                        .isInstanceOf(BasicDataSource.class);
+                    assertThat(c.getPort())
+                        .isPositive();
+                    assertThat(c.getUrl())
+                        .startsWith("jdbc:postgresql://");
+                    assertThat(c.getUsername())
+                        .isNotBlank();
+                    assertThat(c.getPassword())
+                        .isNotBlank();
+                    assertThat(c.isProceduresSupported())
+                        .isTrue();
+                    assertThat(c.isOutParametersInProcedureSupported())
+                        .isTrue();
+                    assertThat(c.isCumulativeStatisticsSystemSupported())
+                        .isTrue();
+                    assertThat(c.getMountVolume())
+                        .isEqualTo("/var/lib/postgresql/18/docker");
+                    assertThat(c.isNotNullConstraintsSupported())
+                        .isTrue();
+                });
+        }
+    }
+
+    @Test
+    void withOldVersionShouldWork() {
         try (PostgreSqlContainerWrapper container = PostgreSqlContainerWrapper.withVersion("17.6")) {
             assertThat(container)
                 .isNotNull()
