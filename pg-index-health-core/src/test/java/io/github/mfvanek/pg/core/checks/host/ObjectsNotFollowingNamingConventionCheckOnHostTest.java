@@ -23,7 +23,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
@@ -44,25 +46,34 @@ class ObjectsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withMaterializedView().withBadlyNamedObjects(), ctx -> {
+            final AnyObject[] baseExpected = {
+                AnyObject.ofType(ctx, "\"bad-table-two-fk-bad-ref-id\"", PgObjectType.CONSTRAINT),
+                AnyObject.ofType(ctx, "\"bad-table-two_pkey\"", PgObjectType.CONSTRAINT),
+                AnyObject.ofType(ctx, "\"bad-table_pkey\"", PgObjectType.CONSTRAINT),
+                AnyObject.ofType(ctx, "\"bad-add\"", PgObjectType.FUNCTION),
+                AnyObject.ofType(ctx, "\"bad-table-two_pkey\"", PgObjectType.INDEX),
+                AnyObject.ofType(ctx, "\"bad-table_pkey\"", PgObjectType.INDEX),
+                AnyObject.ofType(ctx, "\"accounts-materialized-view-with-length-63-1234567890-1234567890\"", PgObjectType.MATERIALIZED_VIEW),
+                AnyObject.ofType(ctx, "\"bad-table_bad-id_seq\"", PgObjectType.SEQUENCE),
+                AnyObject.ofType(ctx, "\"bad-table\"", PgObjectType.TABLE),
+                AnyObject.ofType(ctx, "\"bad-table-two\"", PgObjectType.TABLE)
+            };
+            final AnyObject[] notNullConstraints = {
+                AnyObject.ofType(ctx, "\"bad-table-two_bad-ref-id_not_null\"", PgObjectType.CONSTRAINT),
+                AnyObject.ofType(ctx, "\"bad-table_bad-id_not_null\"", PgObjectType.CONSTRAINT)
+            };
+            final AnyObject[] expected = isNotNullConstraintsSupported() ?
+                Stream.concat(Arrays.stream(baseExpected), Arrays.stream(notNullConstraints)).toArray(AnyObject[]::new) :
+                baseExpected;
+
             assertThat(check)
                 .executing(ctx)
-                .hasSize(10)
-                .containsExactlyInAnyOrder(
-                    AnyObject.ofType(ctx, "\"bad-table-two-fk-bad-ref-id\"", PgObjectType.CONSTRAINT),
-                    AnyObject.ofType(ctx, "\"bad-table-two_pkey\"", PgObjectType.CONSTRAINT),
-                    AnyObject.ofType(ctx, "\"bad-table_pkey\"", PgObjectType.CONSTRAINT),
-                    AnyObject.ofType(ctx, "\"bad-add\"", PgObjectType.FUNCTION),
-                    AnyObject.ofType(ctx, "\"bad-table-two_pkey\"", PgObjectType.INDEX),
-                    AnyObject.ofType(ctx, "\"bad-table_pkey\"", PgObjectType.INDEX),
-                    AnyObject.ofType(ctx, "\"accounts-materialized-view-with-length-63-1234567890-1234567890\"", PgObjectType.MATERIALIZED_VIEW),
-                    AnyObject.ofType(ctx, "\"bad-table_bad-id_seq\"", PgObjectType.SEQUENCE),
-                    AnyObject.ofType(ctx, "\"bad-table\"", PgObjectType.TABLE),
-                    AnyObject.ofType(ctx, "\"bad-table-two\"", PgObjectType.TABLE)
-                );
+                .hasSize(isNotNullConstraintsSupported() ? 12 : 10)
+                .containsExactlyInAnyOrder(expected);
 
             assertThat(check)
                 .executing(ctx, SkipDbObjectsByNamePredicate.of(ctx, List.of("\"bad-table\"", "\"bad-add\"")))
-                .hasSize(8);
+                .hasSize(isNotNullConstraintsSupported() ? 10 : 8);
         });
     }
 
@@ -72,7 +83,7 @@ class ObjectsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
         executeTestOnDatabase(schemaName, DatabasePopulator::withBadlyNamedPartitionedTable, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(7)
+                .hasSize(isNotNullConstraintsSupported() ? 9 : 7)
                 .containsExactly(
                     AnyObject.ofType(ctx, "\"one-default_pkey\"", PgObjectType.CONSTRAINT),
                     AnyObject.ofType(ctx, "\"one-partitioned_pkey\"", PgObjectType.CONSTRAINT),

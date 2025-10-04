@@ -68,4 +68,8 @@ public abstract class DatabaseAwareTestBase {
     protected static boolean isOutParametersInProcedureSupported() {
         return POSTGRES.isOutParametersInProcedureSupported();
     }
+
+    protected static boolean isNotNullConstraintsSupported() {
+        return POSTGRES.isNotNullConstraintsSupported();
+    }
 }
