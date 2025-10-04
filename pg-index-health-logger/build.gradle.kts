@@ -12,7 +12,6 @@ dependencies {
     api(project(":pg-index-health"))
 
     testImplementation(testFixtures(project(":pg-index-health-core")))
-    testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation("org.mockito:mockito-core")
     testImplementation(libs.postgresql)
 

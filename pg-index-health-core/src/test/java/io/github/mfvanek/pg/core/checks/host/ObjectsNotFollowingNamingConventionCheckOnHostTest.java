@@ -80,18 +80,26 @@ class ObjectsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withBadlyNamedPartitionedTable, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withBadlyNamedPartitionedTable, ctx -> {
+            final AnyObject[] baseExpected = {
+                AnyObject.ofType(ctx, "\"one-partitioned_pkey\"", PgObjectType.CONSTRAINT),
+                AnyObject.ofType(ctx, "\"one-default_pkey\"", PgObjectType.INDEX),
+                AnyObject.ofType(ctx, "\"one-partitioned_pkey\"", PgObjectType.PARTITIONED_INDEX),
+                AnyObject.ofType(ctx, "\"one-partitioned\"", PgObjectType.PARTITIONED_TABLE),
+                AnyObject.ofType(ctx, "\"one-partitioned_bad-id_seq\"", PgObjectType.SEQUENCE),
+                AnyObject.ofType(ctx, "\"one-default\"", PgObjectType.TABLE)
+            };
+            final AnyObject[] notNullConstraints = {
+                AnyObject.ofType(ctx, "\"one-partitioned_bad-id_not_null\"", PgObjectType.CONSTRAINT)
+            };
+            final AnyObject[] expected = isNotNullConstraintsSupported() ?
+                Stream.concat(Arrays.stream(baseExpected), Arrays.stream(notNullConstraints)).toArray(AnyObject[]::new) :
+                baseExpected;
+
             assertThat(check)
                 .executing(ctx)
-                .hasSize(isNotNullConstraintsSupported() ? 9 : 7)
-                .containsExactly(
-                    AnyObject.ofType(ctx, "\"one-default_pkey\"", PgObjectType.CONSTRAINT),
-                    AnyObject.ofType(ctx, "\"one-partitioned_pkey\"", PgObjectType.CONSTRAINT),
-                    AnyObject.ofType(ctx, "\"one-default_pkey\"", PgObjectType.INDEX),
-                    AnyObject.ofType(ctx, "\"one-partitioned_pkey\"", PgObjectType.PARTITIONED_INDEX),
-                    AnyObject.ofType(ctx, "\"one-partitioned\"", PgObjectType.PARTITIONED_TABLE),
-                    AnyObject.ofType(ctx, "\"one-partitioned_bad-id_seq\"", PgObjectType.SEQUENCE),
-                    AnyObject.ofType(ctx, "\"one-default\"", PgObjectType.TABLE)
-                ));
+                .hasSize(isNotNullConstraintsSupported() ? 7 : 6)
+                .containsExactlyInAnyOrder(expected);
+        });
     }
 }
