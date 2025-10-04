@@ -14,6 +14,8 @@ dependencies {
     testImplementation(testFixtures(project(":pg-index-health-core")))
     testImplementation("org.mockito:mockito-core")
     testImplementation(libs.postgresql)
+    testImplementation(libs.slf4j.simple)
+    testImplementation(libs.slf4j.jul)
 
     testCompileOnly(libs.forbiddenapis)
 }
