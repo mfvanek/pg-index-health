@@ -78,6 +78,14 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
         return "/var/lib/postgresql/data";
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isNotNullConstraintsSupported() {
+        return getMajorVersion() >= 18;
+    }
+
     @ExcludeFromJacocoGeneratedReport
     private static String preparePostgresVersion() {
         final String pgVersion = System.getenv("TEST_PG_VERSION");

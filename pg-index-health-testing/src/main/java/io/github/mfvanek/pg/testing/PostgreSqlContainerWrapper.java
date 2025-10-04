@@ -165,6 +165,14 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isNotNullConstraintsSupported() {
+        return pgVersion.isNotNullConstraintsSupported();
+    }
+
+    /**
      * Creates {@code PostgreSqlContainerWrapper} with the default PostgreSQL version.
      * The default version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
      * otherwise the default version {@code 18.0} is used.

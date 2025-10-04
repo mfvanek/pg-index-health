@@ -37,6 +37,8 @@ class PostgreSqlContainerWrapperTest {
                         .isNotBlank();
                     assertThat(c.getMountVolume())
                         .isEqualTo("/var/lib/postgresql/18/docker");
+                    assertThat(c.isNotNullConstraintsSupported())
+                        .isTrue();
                 });
         }
     }
@@ -66,6 +68,8 @@ class PostgreSqlContainerWrapperTest {
                         .isTrue();
                     assertThat(c.getMountVolume())
                         .isEqualTo("/var/lib/postgresql/data");
+                    assertThat(c.isNotNullConstraintsSupported())
+                        .isFalse();
                 });
         }
     }
