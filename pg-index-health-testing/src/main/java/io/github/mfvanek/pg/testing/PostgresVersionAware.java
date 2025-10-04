@@ -41,4 +41,20 @@ public interface PostgresVersionAware {
      * @since 0.7.0
      */
     boolean isOutParametersInProcedureSupported();
+
+    /**
+     * Retrieves the mount volume for the PostgreSQL container.
+     *
+     * @return the mount volume path as a string
+     * @since 0.30.0
+     */
+    String getMountVolume();
+
+    /**
+     * Checks whether <a href="https://www.postgresql.org/docs/18/release-18.html#RELEASE-18-CONSTRAINTS">NOT NULL</a> constraints are supported for the given PostgreSQL container.
+     *
+     * @return true for version 18 and higher
+     * @since 0.30.0
+     */
+    boolean isNotNullConstraintsSupported();
 }

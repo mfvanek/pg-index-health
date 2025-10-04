@@ -12,9 +12,10 @@ dependencies {
     api(project(":pg-index-health"))
 
     testImplementation(testFixtures(project(":pg-index-health-core")))
-    testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation("org.mockito:mockito-core")
     testImplementation(libs.postgresql)
+    testImplementation(libs.slf4j.simple)
+    testImplementation(libs.slf4j.jul)
 
     testCompileOnly(libs.forbiddenapis)
 }

@@ -23,7 +23,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
@@ -61,20 +63,28 @@ class PossibleObjectNameOverflowCheckOnClusterTest extends DatabaseAwareTestBase
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withVeryLongNamesInPartitionedTable, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withVeryLongNamesInPartitionedTable, ctx -> {
+            final AnyObject[] baseExpected = {
+                AnyObject.ofType(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_12_pkey", PgObjectType.CONSTRAINT),
+                AnyObject.ofType(ctx, "entity_default_long_1234567890_1234567890_1234567890_12345_pkey", PgObjectType.INDEX),
+                AnyObject.ofType(ctx, "entity_default_long_1234567890_123456789_ref_type_ref_value_idx", PgObjectType.INDEX),
+                AnyObject.ofType(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_12_pkey", PgObjectType.PARTITIONED_INDEX),
+                AnyObject.ofType(ctx, "idx_entity_long_1234567890_1234567890_1234567890_1234567890_123", PgObjectType.PARTITIONED_INDEX),
+                AnyObject.ofType(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_1234567", PgObjectType.PARTITIONED_TABLE),
+                AnyObject.ofType(ctx, "entity_long_1234567890_1234567890_1234567890_1234_entity_id_seq", PgObjectType.SEQUENCE),
+                AnyObject.ofType(ctx, "entity_default_long_1234567890_1234567890_1234567890_1234567890", PgObjectType.TABLE)
+            };
+            final AnyObject[] notNullConstraints = {
+                AnyObject.ofType(ctx, "entity_long_1234567890_1234567890_1234567890_entity_id_not_null", PgObjectType.CONSTRAINT)
+            };
+            final AnyObject[] expected = isNotNullConstraintsSupported() ?
+                Stream.concat(Arrays.stream(baseExpected), Arrays.stream(notNullConstraints)).toArray(AnyObject[]::new) :
+                baseExpected;
+
             assertThat(check)
                 .executing(ctx)
-                .hasSize(9)
-                .containsExactly(
-                    AnyObject.ofType(ctx, "entity_default_long_1234567890_1234567890_1234567890_12345_pkey", PgObjectType.CONSTRAINT),
-                    AnyObject.ofType(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_12_pkey", PgObjectType.CONSTRAINT),
-                    AnyObject.ofType(ctx, "entity_default_long_1234567890_1234567890_1234567890_12345_pkey", PgObjectType.INDEX),
-                    AnyObject.ofType(ctx, "entity_default_long_1234567890_123456789_ref_type_ref_value_idx", PgObjectType.INDEX),
-                    AnyObject.ofType(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_12_pkey", PgObjectType.PARTITIONED_INDEX),
-                    AnyObject.ofType(ctx, "idx_entity_long_1234567890_1234567890_1234567890_1234567890_123", PgObjectType.PARTITIONED_INDEX),
-                    AnyObject.ofType(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_1234567", PgObjectType.PARTITIONED_TABLE),
-                    AnyObject.ofType(ctx, "entity_long_1234567890_1234567890_1234567890_1234_entity_id_seq", PgObjectType.SEQUENCE),
-                    AnyObject.ofType(ctx, "entity_default_long_1234567890_1234567890_1234567890_1234567890", PgObjectType.TABLE)
-                ));
+                .hasSize(isNotNullConstraintsSupported() ? 9 : 8)
+                .containsExactlyInAnyOrder(expected);
+        });
     }
 }

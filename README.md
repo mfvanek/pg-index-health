@@ -32,19 +32,13 @@ In code, you can get all checks through an instance of the [StandardChecksOnHost
 ## Installation
 
 Using Gradle:
-```groovy
-implementation 'io.github.mfvanek:pg-index-health:0.20.3'
-```
-
-<details>
-<summary>with Kotlin DSL</summary>
 
 ```kotlin
 implementation("io.github.mfvanek:pg-index-health:0.20.3")
 ```
-</details>
 
 Using Maven:
+
 ```xml
 <dependency>
   <groupId>io.github.mfvanek</groupId>
@@ -71,18 +65,9 @@ More examples you can find in [pg-index-health-demo](https://github.com/mfvanek/
 
 Using Gradle:
 
-```groovy
-testImplementation 'io.github.mfvanek:pg-index-health-test-starter:0.20.3'
-```
-
-<details>
-<summary>with Kotlin DSL</summary>
-
 ```kotlin
 testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.20.3")
 ```
-
-</details>
 
 Using Maven:
 
@@ -304,10 +289,11 @@ class DatabaseStructureStaticAnalysisTest {
 [![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-green.svg)](https://www.postgresql.org/about/news/postgresql-15-released-2526/ "PostgreSQL 15")
 [![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-green.svg)](https://www.postgresql.org/about/news/postgresql-16-released-2715/ "PostgreSQL 16")
 [![PostgreSQL 17](https://img.shields.io/badge/PostgreSQL-17-green.svg)](https://www.postgresql.org/about/news/postgresql-17-released-2936/ "PostgreSQL 17")
+[![PostgreSQL 18](https://img.shields.io/badge/PostgreSQL-18-green.svg)](https://www.postgresql.org/about/news/postgresql-18-released-3142/ "PostgreSQL 18")
 
 ### Support for previous versions of PostgreSQL
 
-Compatibility with PostgreSQL versions **10**, **11** and **12** is no longer guaranteed, but it is very likely.  
+Compatibility with previous PostgreSQL versions is no longer guaranteed, but it is very likely.  
 We focus only on the currently maintained versions of PostgreSQL.  
 For more information please see [PostgreSQL Versioning Policy](https://www.postgresql.org/support/versioning/).
 

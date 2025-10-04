@@ -1,17 +1,20 @@
 [versions]
 spring-boot = "3.4.10"
+slf4j = "2.0.17" # to be compatible with Spring Boot 3.4.X
 detekt = "1.23.8"
 commons-lang3 = "3.19.0"
 assertj = "3.27.6"
 testcontainers = "1.21.3"
-junit = "5.13.4"
 mockito = "5.20.0"
 forbiddenapis = "3.9"
+junit = "5.13.4"
 
 [libraries]
 jspecify = "org.jspecify:jspecify:1.0.0"
 postgresql = "org.postgresql:postgresql:42.7.8"
-slf4j-simple = "org.slf4j:slf4j-simple:2.0.17" # to be compatible with Spring Boot 3.4.X
+jackson-bom = "com.fasterxml.jackson:jackson-bom:2.18.4.1" # to be compatible with Spring Boot 3.4.X
+slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
+slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" }
 apache-commons-dbcp2 = "org.apache.commons:commons-dbcp2:2.13.0"
 awaitility = "org.awaitility:awaitility:4.3.0"
 apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commons-lang3" }
@@ -28,7 +31,7 @@ forbiddenapis = { group = "de.thetaphi", name = "forbiddenapis", version.ref = "
 detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 liquibase-core = "org.liquibase:liquibase-core:4.33.0"
 liquibase-sessionlock = "com.github.blagerweij:liquibase-sessionlock:1.6.9"
-jackson-bom = "com.fasterxml.jackson:jackson-bom:2.18.4.1" # to be compatible with Spring Boot 3.4.X
+junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
 
 [plugins]
 spring-boot-gradlePlugin = { id = "org.springframework.boot", version.ref = "spring-boot" }

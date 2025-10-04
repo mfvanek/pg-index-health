@@ -14,10 +14,10 @@ Java >= 17 is required.
    This will build the project and run tests.  
    **You need to have [Docker](https://www.docker.com/) up and running**.
     
-By default, [PostgreSQL 17.6 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
+By default, [PostgreSQL 18.0 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
 Set `TEST_PG_VERSION` environment variable to use any of another available PostgreSQL version:
 ```
-TEST_PG_VERSION=11.20-alpine
+TEST_PG_VERSION=17.6-alpine
 ```
 The list of all available PostgreSQL versions can be found [here](https://hub.docker.com/_/postgres).
 
