@@ -19,11 +19,15 @@ public class CreateBadlyNamedPartitionedTableStatement extends AbstractDbStateme
         return List.of(
             """
                 create table if not exists {schemaName}."one-partitioned"(
-                    "bad-id" bigserial not null primary key
+                    "bad-id" bigserial not null primary key,
+                    description text
                 ) partition by range ("bad-id");""",
             """
                 create table if not exists {schemaName}."one-default"
-                    partition of {schemaName}."one-partitioned" default;"""
+                    partition of {schemaName}."one-partitioned" default;""",
+            """
+                alter table if exists {schemaName}."one-default"
+                add constraint "one-default_description_not_null" check (description is not null);"""
         );
     }
 }

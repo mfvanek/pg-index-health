@@ -32,17 +32,18 @@ dependencies {
     versionCatalog.findVersion("mockito").ifPresent {
         testImplementation(platform("org.mockito:mockito-bom:$it"))
     }
-    versionCatalog.findVersion("junit").ifPresent {
-        testImplementation(platform("org.junit:junit-bom:$it"))
+    versionCatalog.findLibrary("junit-bom").ifPresent {
+        testImplementation(platform(it))
     }
     testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 java {
-    // Don't forget about Kotlin app
+    // Remember about Kotlin app
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }

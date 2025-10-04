@@ -11,12 +11,16 @@ dependencies {
     testImplementation(project(":pg-index-health-testing"))
     testImplementation(testFixtures(project(":pg-index-health-model")))
     testImplementation(testFixtures(project(":pg-index-health-jdbc-connection")))
-    testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation("org.mockito:mockito-core")
     testImplementation(libs.postgresql)
+    testImplementation(libs.slf4j.simple)
+    testImplementation(libs.slf4j.jul)
 
     testFixturesImplementation(libs.jspecify)
     testFixturesImplementation(libs.apache.commons.lang3)
     testFixturesImplementation(libs.postgresql)
     testFixturesImplementation(project(":pg-index-health-testing"))
+    testFixturesImplementation(platform(libs.junit.bom))
+    testFixturesImplementation("org.junit.platform:junit-platform-launcher")
+    testFixturesImplementation(libs.slf4j.jul)
 }

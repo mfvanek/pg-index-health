@@ -119,7 +119,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "tables_not_linked_to_others:14",
                         "foreign_keys_with_unmatched_column_type:2",
                         "tables_with_zero_or_one_column:8",
-                        "objects_not_following_naming_convention:26",
+                        isNotNullConstraintsSupported() ? "objects_not_following_naming_convention:36" : "objects_not_following_naming_convention:26",
                         "columns_not_following_naming_convention:7",
                         "primary_keys_with_varchar:3",
                         "columns_with_fixed_length_varchar:17",

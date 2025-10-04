@@ -41,6 +41,6 @@ class PostgresTestcontainersUrlDemoApplicationTest {
 
         assertThat(environment.getProperty("spring.datasource.url"))
             .isNotBlank()
-            .isEqualTo("jdbc:tc:postgresql:17.6:///demo_for_pg_index_health_starter");
+            .isEqualTo("jdbc:tc:postgresql:18.0:///demo_for_pg_index_health_starter");
     }
 }

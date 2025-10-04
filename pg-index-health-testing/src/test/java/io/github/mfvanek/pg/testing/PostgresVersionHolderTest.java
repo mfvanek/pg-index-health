@@ -36,11 +36,12 @@ class PostgresVersionHolderTest {
                 assertThat(v.isOutParametersInProcedureSupported()).isFalse();
                 assertThat(v.isProceduresSupported()).isFalse();
                 assertThat(v.isCumulativeStatisticsSystemSupported()).isFalse();
+                assertThat(v.isNotNullConstraintsSupported()).isFalse();
             });
     }
 
     @Test
-    void newPostgresVersionsSupportEverything() {
+    void notNullConstraintsNotSupported() {
         assertThat(new PostgresVersionHolder("15.1"))
             .isNotNull()
             .satisfies(v -> {
@@ -48,6 +49,7 @@ class PostgresVersionHolderTest {
                 assertThat(v.isOutParametersInProcedureSupported()).isTrue();
                 assertThat(v.isProceduresSupported()).isTrue();
                 assertThat(v.isCumulativeStatisticsSystemSupported()).isTrue();
+                assertThat(v.isNotNullConstraintsSupported()).isFalse();
             });
     }
 
@@ -64,6 +66,19 @@ class PostgresVersionHolderTest {
     }
 
     @Test
+    void notNullConstraintsSupported() {
+        assertThat(new PostgresVersionHolder("18.0"))
+            .isNotNull()
+            .satisfies(v -> {
+                assertThat(v.getVersion()).isEqualTo("18.0");
+                assertThat(v.isOutParametersInProcedureSupported()).isTrue();
+                assertThat(v.isProceduresSupported()).isTrue();
+                assertThat(v.isCumulativeStatisticsSystemSupported()).isTrue();
+                assertThat(v.isNotNullConstraintsSupported()).isTrue();
+            });
+    }
+
+    @Test
     void forSingleNodeShouldBeEnvAware() {
         final PostgresVersionHolder versionHolder = PostgresVersionHolder.forSingleNode();
         assertThat(versionHolder)
@@ -73,7 +88,7 @@ class PostgresVersionHolderTest {
                 .isEqualTo(System.getenv("TEST_PG_VERSION"));
         } else {
             assertThat(versionHolder.getVersion())
-                .isEqualTo("17.6");
+                .isEqualTo("18.0");
         }
     }
 
