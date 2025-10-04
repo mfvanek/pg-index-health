@@ -81,6 +81,7 @@ class ObjectsNotFollowingNamingConventionCheckOnClusterTest extends DatabaseAwar
     void shouldWorkWithPartitionedTables(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withBadlyNamedPartitionedTable, ctx -> {
             final AnyObject[] baseExpected = {
+                AnyObject.ofType(ctx, "\"one-default_description_not_null\"", PgObjectType.CONSTRAINT),
                 AnyObject.ofType(ctx, "\"one-partitioned_pkey\"", PgObjectType.CONSTRAINT),
                 AnyObject.ofType(ctx, "\"one-default_pkey\"", PgObjectType.INDEX),
                 AnyObject.ofType(ctx, "\"one-partitioned_pkey\"", PgObjectType.PARTITIONED_INDEX),
@@ -97,7 +98,7 @@ class ObjectsNotFollowingNamingConventionCheckOnClusterTest extends DatabaseAwar
 
             assertThat(check)
                 .executing(ctx)
-                .hasSize(isNotNullConstraintsSupported() ? 7 : 6)
+                .hasSize(isNotNullConstraintsSupported() ? 8 : 7)
                 .containsExactlyInAnyOrder(expected);
         });
     }
