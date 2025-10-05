@@ -14,6 +14,8 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Locale;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("fast")
@@ -22,15 +24,13 @@ class SimpleLoggingKeyAdapterTest {
     @Test
     void conformityTest() {
         for (final Diagnostic diagnostic : Diagnostic.values()) {
-            final String sqlFileNameWithoutExtension = diagnostic.getSqlQueryFileName()
-                .substring(0, diagnostic.getSqlQueryFileName().length() - 4);
             final LoggingKey key = SimpleLoggingKeyAdapter.of(diagnostic);
             assertThat(key.getKeyName())
                 .isEqualTo("db_indexes_health");
             assertThat(key.getSubKeyName())
-                .isEqualTo(sqlFileNameWithoutExtension);
+                .isEqualTo(diagnostic.name().toLowerCase(Locale.ROOT));
             assertThat(key.getDescription())
-                .isEqualTo(sqlFileNameWithoutExtension.replace('_', ' '));
+                .isEqualTo(diagnostic.name().toLowerCase(Locale.ROOT).replace('_', ' '));
         }
     }
 
