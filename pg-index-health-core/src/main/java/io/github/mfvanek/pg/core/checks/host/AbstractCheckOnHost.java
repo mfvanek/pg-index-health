@@ -18,7 +18,6 @@ import io.github.mfvanek.pg.core.checks.common.ExecutionTopology;
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.core.checks.extractors.IndexWithSingleColumnExtractor;
 import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
-import io.github.mfvanek.pg.core.utils.SqlQueryReader;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
@@ -162,7 +161,7 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
      */
     protected final List<T> executeQuery(final PgContext pgContext,
                                          final ResultSetExtractor<T> rse) {
-        final String sqlQuery = SqlQueryReader.getQueryFromFile(checkInfo.getSqlQueryFileName());
+        final String sqlQuery = checkInfo.getSqlQuery();
         return checkInfo.getQueryExecutor().executeQuery(pgConnection, pgContext, sqlQuery, rse);
     }
 }

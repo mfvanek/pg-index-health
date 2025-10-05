@@ -12,6 +12,10 @@ package io.github.mfvanek.pg.core.utils;
 
 import io.github.mfvanek.pg.model.validation.Validators;
 
+/**
+ * Utility class for parsing SQL queries containing named parameters and replacing
+ * them with positional placeholders (e.g., '?').
+ */
 @SuppressWarnings({"PMD.AvoidReassigningLoopVariables", "PMD.CognitiveComplexity", "PMD.CyclomaticComplexity", "checkstyle:CyclomaticComplexity", "checkstyle:ModifiedControlVariable"})
 public final class NamedParametersParser {
 
@@ -115,6 +119,12 @@ public final class NamedParametersParser {
         }
     }
 
+    /**
+     * Parses the given SQL query, replacing named parameters with positional parameters.
+     *
+     * @param originalSqlQuery the original SQL query containing named parameters
+     * @return the SQL query with named parameters replaced by positional parameters
+     */
     public static String parse(final String originalSqlQuery) {
         return new NamedParametersParser(originalSqlQuery).doParse();
     }

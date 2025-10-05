@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.core.checks.common;
 
 import io.github.mfvanek.pg.core.utils.QueryExecutors;
+import io.github.mfvanek.pg.core.utils.SqlQueryReader;
 
 import java.util.Objects;
 
@@ -134,11 +135,20 @@ public enum Diagnostic implements CheckInfo {
     }
 
     /**
+     * Retrieves the associated SQL query file name.
+     *
+     * @return SQL query file name
+     */
+    public String getSqlQueryFileName() {
+        return sqlQueryFileName;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
-    public String getSqlQueryFileName() {
-        return sqlQueryFileName;
+    public String getSqlQuery() {
+        return SqlQueryReader.getQueryFromFile(sqlQueryFileName);
     }
 
     /**
