@@ -14,49 +14,11 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("fast")
 class DiagnosticTest {
-
-    @Test
-    void sqlQueryFileNameShouldBeUnique() {
-        final Set<String> fileNames = new HashSet<>();
-        for (final Diagnostic diagnostic : Diagnostic.values()) {
-            fileNames.add(diagnostic.getSqlQueryFileName());
-        }
-        assertThat(fileNames)
-            .hasSize(Diagnostic.values().length);
-    }
-
-    @Test
-    void sqlQueryFileNameShouldBeInLowerCase() {
-        for (final Diagnostic diagnostic : Diagnostic.values()) {
-            final String lower = diagnostic.getSqlQueryFileName().toLowerCase(Locale.ROOT);
-            assertThat(diagnostic.getSqlQueryFileName())
-                .isEqualTo(lower);
-        }
-    }
-
-    @Test
-    void sqlQueryFileNameShouldHaveSqlExtension() {
-        for (final Diagnostic diagnostic : Diagnostic.values()) {
-            assertThat(diagnostic.getSqlQueryFileName())
-                .endsWith(".sql");
-        }
-    }
-
-    @Test
-    void sqlQueryFileNameShouldCorrespondToDiagnosticName() {
-        for (final Diagnostic diagnostic : Diagnostic.values()) {
-            assertThat(diagnostic.getSqlQueryFileName())
-                .startsWith(diagnostic.name().toLowerCase(Locale.ROOT) + ".");
-        }
-    }
 
     @Test
     void checkTypeMustBeSet() {

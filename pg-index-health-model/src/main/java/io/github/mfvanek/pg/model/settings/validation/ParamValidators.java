@@ -22,12 +22,12 @@ public final class ParamValidators {
     }
 
     /**
-     * Validates that the given parameter value is not {@code null}, and returns the trimmed value.
+     * Validates that the given parameter value is not null, and returns the trimmed value.
      *
      * @param value   the parameter value to check
-     * @param message the exception message if the value is {@code null}
+     * @param message the exception message if the value is null
      * @return the trimmed, non-null parameter value
-     * @throws NullPointerException if {@code value} is {@code null}
+     * @throws NullPointerException if {@code value} is null
      */
     public static String paramValueNotNull(final String value, final String message) {
         return Objects.requireNonNull(value, message).trim();

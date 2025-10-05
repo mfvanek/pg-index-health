@@ -16,7 +16,7 @@ import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import java.util.List;
 
 /**
- * An abstraction of sql query executor without schema.
+ * An abstraction of SQL query executor without schema.
  *
  * @author Ivan Vakhrushev
  * @since 0.6.1
@@ -24,6 +24,16 @@ import java.util.List;
 @FunctionalInterface
 public interface StatisticsQueryExecutor {
 
+    /**
+     * Executes an SQL query on the given PostgreSQL connection and maps the result set
+     * into a list of objects using the provided {@code ResultSetExtractor}.
+     *
+     * @param <T>          the type of objects in the returned list
+     * @param pgConnection the PostgreSQL connection to be used for executing the query
+     * @param sqlQuery     the SQL query to be executed
+     * @param rse          the {@code ResultSetExtractor} used to map rows from the result set into objects of type {@code T}
+     * @return a list of objects of type {@code T} created by mapping rows from the result set
+     */
     <T> List<T> executeQuery(PgConnection pgConnection,
                              String sqlQuery,
                              ResultSetExtractor<T> rse);

@@ -24,7 +24,15 @@ import java.sql.SQLException;
  */
 public final class TableExtractor implements ResultSetExtractor<Table> {
 
+    /**
+     * Represents the column name "table_name" in a ResultSet.
+     * Used to extract the "table_name" field from query results when mapping to domain models like {@code Table}.
+     */
     public static final String TABLE_NAME = "table_name";
+    /**
+     * Represents the column name "table_size" in a ResultSet.
+     * Used to extract the "table_size" field from query results when mapping to domain models such as {@code Table}.
+     */
     public static final String TABLE_SIZE = "table_size";
 
     private TableExtractor() {

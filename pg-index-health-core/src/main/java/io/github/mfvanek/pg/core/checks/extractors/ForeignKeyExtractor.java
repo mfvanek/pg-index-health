@@ -32,6 +32,11 @@ import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_N
  */
 public final class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey> {
 
+    /**
+     * Represents the column name "constraint_name" in a ResultSet.
+     * Used to extract the "constraint_name" field from query results
+     * when extracting the {@code ForeignKey} model.
+     */
     public static final String CONSTRAINT_NAME = "constraint_name";
 
     private final String prefix;

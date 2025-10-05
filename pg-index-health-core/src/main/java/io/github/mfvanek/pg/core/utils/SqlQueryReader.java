@@ -56,6 +56,22 @@ public final class SqlQueryReader {
         }
     }
 
+    /**
+     * Constructs a SQL query by determining the corresponding SQL file name from the given check name
+     * and reading the query from that file.
+     *
+     * @param checkName the name of the check to generate the SQL file name, must not be null, empty, or blank
+     * @return the SQL query as a string after reading from the file and processing
+     */
+    public static String getQueryForCheck(final String checkName) {
+        final String sqlFileName = buildSqlFileName(checkName);
+        return getQueryFromFile(sqlFileName);
+    }
+
+    private static String buildSqlFileName(final String checkName) {
+        return Validators.notBlank(checkName, "checkName").toLowerCase(Locale.ROOT) + ".sql";
+    }
+
     private static String validateSqlFileName(final String sqlFileName) {
         final String fileName = Validators.notBlank(sqlFileName, "sqlFileName").toLowerCase(Locale.ROOT);
         if (!fileName.endsWith(".sql")) {

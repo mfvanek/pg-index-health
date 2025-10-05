@@ -17,16 +17,38 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Utility class for parsing raw column information and generating
+ * {@link Column} objects associated with a specific database table.
+ */
 public final class ColumnsDataParser {
 
     private ColumnsDataParser() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Parses raw column definitions and generates a list of {@code Column} objects
+     * related to a specific table, typically used within contexts such as foreign keys
+     * or indexes. The method enforces that at least one column must be provided.
+     *
+     * @param tableName  the name of the table to which the columns belong; must be non-blank.
+     * @param rawColumns the raw column definitions; each definition is expected to contain the column name followed by a comma and a boolean indicating nullability.
+     * @return a list of {@code Column} objects representing the parsed columns with their respective table association and nullability.
+     */
     public static List<Column> parseRawColumnsInForeignKeyOrIndex(final String tableName, final String... rawColumns) {
         return parseRawColumnsData(tableName, true, rawColumns);
     }
 
+    /**
+     * Parses raw column definitions and generates a list of {@code Column} objects
+     * associated with a specific table. This method allows for zero or more columns
+     * to be provided and determines nullability based on the input data.
+     *
+     * @param tableName  the name of the table to which the columns belong; must be non-blank.
+     * @param rawColumns the raw column definitions as strings; each definition is expected to specify the column name followed by a comma and a boolean indicating nullability.
+     * @return a list of {@code Column} objects representing the parsed column information with their associated table and nullability.
+     */
     public static List<Column> parseRawColumnsInTable(final String tableName, final String... rawColumns) {
         return parseRawColumnsData(tableName, false, rawColumns);
     }

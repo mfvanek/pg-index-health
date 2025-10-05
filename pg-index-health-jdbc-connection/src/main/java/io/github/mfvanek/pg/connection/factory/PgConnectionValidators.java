@@ -30,7 +30,7 @@ final class PgConnectionValidators {
     /**
      * Validates that a username is not blank.
      *
-     * @param userName the username to validate; must not be {@code null} or blank.
+     * @param userName the username to validate; must not be null or blank.
      * @return the validated username.
      * @throws IllegalArgumentException if the username is blank.
      */
@@ -42,7 +42,7 @@ final class PgConnectionValidators {
     /**
      * Validates that a password is not blank.
      *
-     * @param password the password to validate; must not be {@code null} or blank.
+     * @param password the password to validate; must not be null or blank.
      * @return the validated password.
      * @throws IllegalArgumentException if the password is blank.
      */
@@ -54,7 +54,7 @@ final class PgConnectionValidators {
     /**
      * Validates that a collection of PostgreSQL connection URLs is not empty and that each URL is valid.
      *
-     * @param connectionUrls the collection of connection URLs; must not be {@code null} or empty.
+     * @param connectionUrls the collection of connection URLs; must not be null or empty.
      * @throws IllegalArgumentException if the collection is empty or any URL is invalid.
      */
     static void connectionUrlsNotEmptyAndValid(final Collection<String> connectionUrls) {

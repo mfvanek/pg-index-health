@@ -32,7 +32,7 @@ public final class ClockHolder {
     }
 
     /**
-     * Allows to get currently set {@code Clock} instance.
+     * Allows getting currently set {@code Clock} instance.
      *
      * @return {@code Clock} instance
      */
@@ -45,7 +45,7 @@ public final class ClockHolder {
      * Atomically sets the {@link #CLOCK_REFERENCE} to {@code newClock} and returns the old value.
      *
      * @param newClock the new value
-     * @return the previous value of clock
+     * @return the previous value of a clock
      */
     public static Clock setClock(final Clock newClock) {
         Objects.requireNonNull(newClock, "newClock cannot be null");

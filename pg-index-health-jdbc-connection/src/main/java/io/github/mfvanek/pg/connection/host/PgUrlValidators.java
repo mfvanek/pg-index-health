@@ -26,7 +26,7 @@ public final class PgUrlValidators {
     /**
      * Validates that a PostgreSQL URL is not blank and has a valid format.
      *
-     * @param pgUrl        the PostgreSQL URL to validate; must not be {@code null} or blank.
+     * @param pgUrl        the PostgreSQL URL to validate; must not be null or blank.
      * @param argumentName the name of the argument being validated, for use in error messages.
      * @return the validated PostgreSQL URL.
      * @throws IllegalArgumentException if the URL is blank or does not start with the expected header.
@@ -42,7 +42,7 @@ public final class PgUrlValidators {
     /**
      * Validates that a PostgreSQL URL is not blank and has a valid format.
      *
-     * @param pgUrl the PostgreSQL URL to validate; must not be {@code null} or blank.
+     * @param pgUrl the PostgreSQL URL to validate; must not be null or blank.
      * @return the validated PostgreSQL URL.
      */
     static String pgUrlNotBlankAndValid(final String pgUrl) {
@@ -52,7 +52,7 @@ public final class PgUrlValidators {
     /**
      * Validates that a hostname is not blank.
      *
-     * @param hostName the hostname to validate; must not be {@code null} or blank.
+     * @param hostName the hostname to validate; must not be null or blank.
      * @return the validated hostname.
      * @throws IllegalArgumentException if the hostname is blank.
      */

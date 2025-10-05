@@ -50,7 +50,7 @@ public abstract class ModelDeserializer<T extends DbObject> extends AbstractDese
      * @param ctxt     the deserialization context, used for error reporting
      * @param rootNode the root JSON node containing the object data
      * @return the extracted table name as a {@link String}
-     * @throws JsonMappingException if the {@code tableName} field is missing, {@code null}, or not a string
+     * @throws JsonMappingException if the {@code tableName} field is missing, null, or not a string
      */
     protected final String getTableName(final DeserializationContext ctxt,
                                         final JsonNode rootNode) throws JsonMappingException {

@@ -27,7 +27,15 @@ import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_N
  */
 public final class IndexWithSingleColumnExtractor implements ResultSetExtractor<IndexWithColumns> {
 
+    /**
+     * Represents the column name "index_name" in a ResultSet.
+     * Used to extract the "index_name" field from query results when mapping to the {@code IndexWithColumns} model.
+     */
     public static final String INDEX_NAME = "index_name";
+    /**
+     * Represents the column name "index_size" in a ResultSet.
+     * Used to extract the "index_size" field from query results when mapping to the {@code IndexWithColumns} model.
+     */
     public static final String INDEX_SIZE = "index_size";
 
     private final ResultSetExtractor<Column> columnExtractor;

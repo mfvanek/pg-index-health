@@ -24,7 +24,15 @@ import java.sql.SQLException;
  */
 public final class AnyObjectExtractor implements ResultSetExtractor<AnyObject> {
 
+    /**
+     * Represents the column name "object_name" in a ResultSet.
+     * Used to extract the "object_name" field from query results when extracting the {@code AnyObject} model.
+     */
     public static final String OBJECT_NAME = "object_name";
+    /**
+     * Represents the column name "object_type" in a ResultSet.
+     * Used to extract the "object_type" field from query results when extracting the {@code AnyObject} model.
+     */
     public static final String OBJECT_TYPE = "object_type";
 
     private AnyObjectExtractor() {

@@ -18,7 +18,7 @@ public interface ParamNameAware {
     /**
      * Retrieves the name of the parameter.
      *
-     * @return the name of the parameter, never {@code null}
+     * @return the name of the parameter, never null
      */
     String getName();
 }
