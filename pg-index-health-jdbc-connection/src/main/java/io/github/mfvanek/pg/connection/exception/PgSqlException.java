@@ -27,7 +27,7 @@ public class PgSqlException extends RuntimeException {
     /**
      * Constructs a new {@code PgSqlException} with the specified cause.
      *
-     * @param cause the {@link SQLException} that caused this exception; must not be {@code null}.
+     * @param cause the {@link SQLException} that caused this exception; must not be null.
      */
     public PgSqlException(final SQLException cause) {
         super(cause.getMessage(), cause);

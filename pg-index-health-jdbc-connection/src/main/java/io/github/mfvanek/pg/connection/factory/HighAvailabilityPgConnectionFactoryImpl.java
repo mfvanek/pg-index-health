@@ -36,10 +36,10 @@ public class HighAvailabilityPgConnectionFactoryImpl implements HighAvailability
      * Constructs an instance of {@code HighAvailabilityPgConnectionFactoryImpl}.
      *
      * @param pgConnectionFactory the {@code PgConnectionFactory} used for establishing connections to PostgreSQL
-     *                            databases; must not be {@code null}
+     *                            databases; must not be null
      * @param primaryHostDeterminer the {@code PrimaryHostDeterminer} to identify the primary host in a PostgreSQL
-     *                              cluster; must not be {@code null}
-     * @throws NullPointerException if {@code pgConnectionFactory} or {@code primaryHostDeterminer} is {@code null}
+     *                              cluster; must not be null
+     * @throws NullPointerException if {@code pgConnectionFactory} or {@code primaryHostDeterminer} is null
      */
     public HighAvailabilityPgConnectionFactoryImpl(final PgConnectionFactory pgConnectionFactory,
                                                    final PrimaryHostDeterminer primaryHostDeterminer) {

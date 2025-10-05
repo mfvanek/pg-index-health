@@ -21,21 +21,21 @@ public interface LoggingKey {
     /**
      * Gets the name of the key.
      *
-     * @return the key name, never {@code null}.
+     * @return the key name, never null.
      */
     String getKeyName();
 
     /**
      * Gets the name of the subkey associated with this key.
      *
-     * @return the subkey name, never {@code null}.
+     * @return the subkey name, never null.
      */
     String getSubKeyName();
 
     /**
      * Gets the description of this key.
      *
-     * @return a description of the key, never {@code null}.
+     * @return a description of the key, never null.
      */
     String getDescription();
 }

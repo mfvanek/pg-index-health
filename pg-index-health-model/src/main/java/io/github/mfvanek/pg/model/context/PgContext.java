@@ -210,7 +210,7 @@ public final class PgContext {
     /**
      * Complement the given object name with the specified schema name if it is necessary.
      *
-     * @param objectName the name of the object to be enriched with schema information; must not be {@code null}
+     * @param objectName the name of the object to be enriched with schema information; must not be null
      * @param pgContext  the schema context to enrich object name; must be non-null.
      * @return the fully qualified object name with schema information
      * @since 0.14.3

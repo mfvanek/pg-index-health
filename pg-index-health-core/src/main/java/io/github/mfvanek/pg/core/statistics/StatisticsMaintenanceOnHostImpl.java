@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Implementation of the StatisticsMaintenanceOnHost interface, responsible for
+ * handling database statistics on a specific PostgreSQL host.
+ */
 public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnHost {
 
     /**
@@ -33,6 +37,13 @@ public class StatisticsMaintenanceOnHostImpl implements StatisticsMaintenanceOnH
         this.queryExecutor = Objects.requireNonNull(queryExecutor, "queryExecutor cannot be null");
     }
 
+    /**
+     * Constructs a new instance of the {@code StatisticsMaintenanceOnHostImpl} class, leveraging the provided
+     * {@link PgConnection} to manage database statistics on a specific PostgreSQL host. Uses a default query
+     * executor implementation for database operations.
+     *
+     * @param pgConnection the connection to a specific PostgreSQL host; must not be null
+     */
     public StatisticsMaintenanceOnHostImpl(final PgConnection pgConnection) {
         this(pgConnection, QueryExecutors::executeQuery);
     }

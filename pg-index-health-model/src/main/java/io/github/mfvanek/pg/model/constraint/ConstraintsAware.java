@@ -24,7 +24,7 @@ public interface ConstraintsAware {
     /**
      * Retrieves the list of database constraints associated with this entity.
      *
-     * @return a list of {@link ConstraintNameAware} objects. The list may be empty but will never be {@code null}.
+     * @return a list of {@link ConstraintNameAware} objects. The list may be empty but will never be null.
      */
     List<ConstraintNameAware> getConstraints();
 }

@@ -54,7 +54,7 @@ public enum SerialType {
     /**
      * Returns the string representation of this PostgreSQL serial type.
      *
-     * @return the column type as a string, never {@code null}
+     * @return the column type as a string, never null
      */
     public String getColumnType() {
         return columnType;
