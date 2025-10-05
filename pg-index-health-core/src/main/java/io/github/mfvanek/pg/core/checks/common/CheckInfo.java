@@ -21,11 +21,11 @@ package io.github.mfvanek.pg.core.checks.common;
 public interface CheckInfo extends CheckTypeAware, TopologyAware {
 
     /**
-     * Retrieves the associated SQL query file name.
+     * Retrieves the associated JDBC-compatible SQL query.
      *
-     * @return SQL query file name
+     * @return SQL query
      */
-    String getSqlQueryFileName();
+    String getSqlQuery();
 
     /**
      * Retrieves the lambda which executes the associated SQL query.

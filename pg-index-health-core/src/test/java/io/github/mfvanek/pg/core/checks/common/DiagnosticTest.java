@@ -101,4 +101,13 @@ class DiagnosticTest {
         assertThat(Diagnostic.UNUSED_INDEXES)
             .hasToString("UNUSED_INDEXES");
     }
+
+    @Test
+    void canReadQueryFromFile() {
+        for (final Diagnostic diagnostic : Diagnostic.values()) {
+            assertThat(diagnostic.getSqlQuery())
+                .isNotNull()
+                .startsWith("/*"); // copyright comment
+        }
+    }
 }
