@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.core.checks.common.CheckInfo;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.ExecutionTopology;
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
+import io.github.mfvanek.pg.core.checks.common.StandardCheckInfo;
 import io.github.mfvanek.pg.core.checks.extractors.IndexWithSingleColumnExtractor;
 import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -34,6 +35,7 @@ import java.util.function.Predicate;
  *
  * @param <T> the type of the database object on which the check is performed
  * @author Ivan Vakhrushev
+ * @see StandardCheckInfo
  * @since 0.6.0
  */
 public abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckOnHost<T> {
@@ -84,6 +86,7 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
      * @param type         the type of the entity being checked; must not be null
      * @param pgConnection the PostgreSQL connection associated with this check; must not be null
      * @param checkInfo    the diagnostic defining the check configuration; must not be null
+     * @see StandardCheckInfo
      */
     protected AbstractCheckOnHost(final Class<T> type,
                                   final PgConnection pgConnection,

@@ -11,9 +11,9 @@
 package io.github.mfvanek.pg.core.checks.common;
 
 import io.github.mfvanek.pg.core.utils.QueryExecutors;
-import io.github.mfvanek.pg.core.utils.SqlQueryReader;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * A list of standard diagnostics with corresponding SQL queries and query executors.
@@ -24,98 +24,64 @@ import java.util.Objects;
  */
 public enum Diagnostic implements CheckInfo {
 
-    BLOATED_INDEXES("bloated_indexes.sql", QueryExecutors::executeQueryWithBloatThreshold, true),
-    BLOATED_TABLES("bloated_tables.sql", QueryExecutors::executeQueryWithBloatThreshold, true),
-    DUPLICATED_INDEXES("duplicated_indexes.sql"),
-    FOREIGN_KEYS_WITHOUT_INDEX("foreign_keys_without_index.sql"),
-    INDEXES_WITH_NULL_VALUES("indexes_with_null_values.sql"),
-    INTERSECTED_INDEXES("intersected_indexes.sql"),
-    INVALID_INDEXES("invalid_indexes.sql"),
-    TABLES_WITH_MISSING_INDEXES(ExecutionTopology.ACROSS_CLUSTER, "tables_with_missing_indexes.sql"),
-    TABLES_WITHOUT_PRIMARY_KEY("tables_without_primary_key.sql"),
-    UNUSED_INDEXES(ExecutionTopology.ACROSS_CLUSTER, "unused_indexes.sql"),
-    TABLES_WITHOUT_DESCRIPTION("tables_without_description.sql"),
-    COLUMNS_WITHOUT_DESCRIPTION("columns_without_description.sql"),
-    COLUMNS_WITH_JSON_TYPE("columns_with_json_type.sql"),
-    COLUMNS_WITH_SERIAL_TYPES("columns_with_serial_types.sql"),
-    FUNCTIONS_WITHOUT_DESCRIPTION("functions_without_description.sql"),
-    INDEXES_WITH_BOOLEAN("indexes_with_boolean.sql"),
-    NOT_VALID_CONSTRAINTS("not_valid_constraints.sql"),
-    BTREE_INDEXES_ON_ARRAY_COLUMNS("btree_indexes_on_array_columns.sql"),
-    SEQUENCE_OVERFLOW("sequence_overflow.sql", QueryExecutors::executeQueryWithRemainingPercentageThreshold, true),
-    PRIMARY_KEYS_WITH_SERIAL_TYPES("primary_keys_with_serial_types.sql"),
-    DUPLICATED_FOREIGN_KEYS("duplicated_foreign_keys.sql"),
-    INTERSECTED_FOREIGN_KEYS("intersected_foreign_keys.sql"),
-    POSSIBLE_OBJECT_NAME_OVERFLOW("possible_object_name_overflow.sql"),
-    TABLES_NOT_LINKED_TO_OTHERS("tables_not_linked_to_others.sql"),
-    FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE("foreign_keys_with_unmatched_column_type.sql"),
-    TABLES_WITH_ZERO_OR_ONE_COLUMN("tables_with_zero_or_one_column.sql"),
-    OBJECTS_NOT_FOLLOWING_NAMING_CONVENTION("objects_not_following_naming_convention.sql"),
-    COLUMNS_NOT_FOLLOWING_NAMING_CONVENTION("columns_not_following_naming_convention.sql"),
-    PRIMARY_KEYS_WITH_VARCHAR("primary_keys_with_varchar.sql"),
-    COLUMNS_WITH_FIXED_LENGTH_VARCHAR("columns_with_fixed_length_varchar.sql"),
-    INDEXES_WITH_UNNECESSARY_WHERE_CLAUSE("indexes_with_unnecessary_where_clause.sql"),
-    PRIMARY_KEYS_THAT_MOST_LIKELY_NATURAL_KEYS("primary_keys_that_most_likely_natural_keys.sql"),
-    COLUMNS_WITH_MONEY_TYPE("columns_with_money_type.sql"),
-    INDEXES_WITH_TIMESTAMP_IN_THE_MIDDLE("indexes_with_timestamp_in_the_middle.sql"),
-    COLUMNS_WITH_TIMESTAMP_OR_TIMETZ_TYPE("columns_with_timestamp_or_timetz_type.sql"),
-    TABLES_WHERE_PRIMARY_KEY_COLUMNS_NOT_FIRST("tables_where_primary_key_columns_not_first.sql"),
-    TABLES_WHERE_ALL_COLUMNS_NULLABLE_EXCEPT_PK("tables_where_all_columns_nullable_except_pk.sql");
+    BLOATED_INDEXES(StandardCheckInfo::ofBloat),
+    BLOATED_TABLES(StandardCheckInfo::ofBloat),
+    DUPLICATED_INDEXES,
+    FOREIGN_KEYS_WITHOUT_INDEX,
+    INDEXES_WITH_NULL_VALUES,
+    INTERSECTED_INDEXES,
+    INVALID_INDEXES,
+    TABLES_WITH_MISSING_INDEXES(StandardCheckInfo::ofCluster),
+    TABLES_WITHOUT_PRIMARY_KEY,
+    UNUSED_INDEXES(StandardCheckInfo::ofCluster),
+    TABLES_WITHOUT_DESCRIPTION,
+    COLUMNS_WITHOUT_DESCRIPTION,
+    COLUMNS_WITH_JSON_TYPE,
+    COLUMNS_WITH_SERIAL_TYPES,
+    FUNCTIONS_WITHOUT_DESCRIPTION,
+    INDEXES_WITH_BOOLEAN,
+    NOT_VALID_CONSTRAINTS,
+    BTREE_INDEXES_ON_ARRAY_COLUMNS,
+    SEQUENCE_OVERFLOW(StandardCheckInfo::ofRemainingPercentage),
+    PRIMARY_KEYS_WITH_SERIAL_TYPES,
+    DUPLICATED_FOREIGN_KEYS,
+    INTERSECTED_FOREIGN_KEYS,
+    POSSIBLE_OBJECT_NAME_OVERFLOW,
+    TABLES_NOT_LINKED_TO_OTHERS,
+    FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE,
+    TABLES_WITH_ZERO_OR_ONE_COLUMN,
+    OBJECTS_NOT_FOLLOWING_NAMING_CONVENTION,
+    COLUMNS_NOT_FOLLOWING_NAMING_CONVENTION,
+    PRIMARY_KEYS_WITH_VARCHAR,
+    COLUMNS_WITH_FIXED_LENGTH_VARCHAR,
+    INDEXES_WITH_UNNECESSARY_WHERE_CLAUSE,
+    PRIMARY_KEYS_THAT_MOST_LIKELY_NATURAL_KEYS,
+    COLUMNS_WITH_MONEY_TYPE,
+    INDEXES_WITH_TIMESTAMP_IN_THE_MIDDLE,
+    COLUMNS_WITH_TIMESTAMP_OR_TIMETZ_TYPE,
+    TABLES_WHERE_PRIMARY_KEY_COLUMNS_NOT_FIRST,
+    TABLES_WHERE_ALL_COLUMNS_NULLABLE_EXCEPT_PK;
 
-    private final ExecutionTopology executionTopology;
-    private final String sqlQueryFileName;
-    private final QueryExecutor queryExecutor;
-    private final boolean runtimeCheck;
+    private final CheckInfo inner;
 
     /**
-     * Creates a {@code Diagnostic} instance.
-     *
-     * @param executionTopology the place where the diagnostic should be executed
-     * @param sqlQueryFileName  the associated SQL query file name; must be non-null
-     * @param queryExecutor     the lambda which executes the associated SQL query
-     * @param runtimeCheck      whether this is a runtime diagnostic or static
+     * Constructs a new instance of the Diagnostic class.
+     * This constructor initializes the inner field with a static CheckInfo instance based on the name of the current object.
      */
-    Diagnostic(final ExecutionTopology executionTopology,
-               final String sqlQueryFileName,
-               final QueryExecutor queryExecutor,
-               final boolean runtimeCheck) {
-        this.executionTopology = Objects.requireNonNull(executionTopology, "executionTopology cannot be null");
-        this.sqlQueryFileName = Objects.requireNonNull(sqlQueryFileName, "sqlQueryFileName cannot be null");
-        this.queryExecutor = Objects.requireNonNull(queryExecutor, "queryExecutor cannot be null");
-        this.runtimeCheck = runtimeCheck;
+    Diagnostic() {
+        this.inner = StandardCheckInfo.ofStatic(name());
     }
 
     /**
-     * Creates a {@code Diagnostic} instance.
+     * Constructs a new instance of the Diagnostic class with a factory for creating {@code CheckInfo}.
+     * The constructor initializes the inner field using a {@code CheckInfo} instance
+     * generated by applying the provided factory to the name of the current object.
      *
-     * @param sqlQueryFileName the associated SQL query file name; must be non-null
-     * @param queryExecutor    the lambda which executes the associated SQL query
-     * @param runtimeCheck     whether this is a runtime diagnostic or static
+     * @param checkInfoFactory a factory function that accepts a {@code String} (the name of the current object)
+     *                         and produces a {@code CheckInfo} instance; must not be null
      */
-    Diagnostic(final String sqlQueryFileName,
-               final QueryExecutor queryExecutor,
-               final boolean runtimeCheck) {
-        this(ExecutionTopology.ON_PRIMARY, sqlQueryFileName, queryExecutor, runtimeCheck);
-    }
-
-    /**
-     * Creates a schema-aware runtime {@code Diagnostic} instance.
-     *
-     * @param executionTopology the place where the diagnostic should be executed
-     * @param sqlQueryFileName  the associated SQL query file name; must be non-null
-     */
-    Diagnostic(final ExecutionTopology executionTopology,
-               final String sqlQueryFileName) {
-        this(executionTopology, sqlQueryFileName, QueryExecutors::executeQueryWithSchema, true);
-    }
-
-    /**
-     * Creates a schema-aware static {@code Diagnostic} instance with ExecutionTopology.ON_PRIMARY.
-     *
-     * @param sqlQueryFileName the associated SQL query file name; must be non-null
-     */
-    Diagnostic(final String sqlQueryFileName) {
-        this(ExecutionTopology.ON_PRIMARY, sqlQueryFileName, QueryExecutors::executeQueryWithSchema, false);
+    Diagnostic(final Function<String, CheckInfo> checkInfoFactory) {
+        this.inner = Objects.requireNonNull(checkInfoFactory).apply(name());
     }
 
     /**
@@ -123,7 +89,7 @@ public enum Diagnostic implements CheckInfo {
      */
     @Override
     public String getName() {
-        return name();
+        return inner.getName();
     }
 
     /**
@@ -131,16 +97,7 @@ public enum Diagnostic implements CheckInfo {
      */
     @Override
     public ExecutionTopology getExecutionTopology() {
-        return executionTopology;
-    }
-
-    /**
-     * Retrieves the associated SQL query file name.
-     *
-     * @return SQL query file name
-     */
-    public String getSqlQueryFileName() {
-        return sqlQueryFileName;
+        return inner.getExecutionTopology();
     }
 
     /**
@@ -148,7 +105,7 @@ public enum Diagnostic implements CheckInfo {
      */
     @Override
     public String getSqlQuery() {
-        return SqlQueryReader.getQueryFromFile(sqlQueryFileName);
+        return inner.getSqlQuery();
     }
 
     /**
@@ -156,7 +113,7 @@ public enum Diagnostic implements CheckInfo {
      */
     @Override
     public QueryExecutor getQueryExecutor() {
-        return queryExecutor;
+        return inner.getQueryExecutor();
     }
 
     /**
@@ -164,6 +121,6 @@ public enum Diagnostic implements CheckInfo {
      */
     @Override
     public boolean isRuntime() {
-        return runtimeCheck;
+        return inner.isRuntime();
     }
 }

@@ -36,7 +36,7 @@ class SqlQueryReaderTest {
         try (LogsCaptor ignored = new LogsCaptor(SqlQueryReader.class, Level.FINEST)) {
             final String query = SqlQueryReader.getQueryFromFile("bloated_tables.sql");
             assertThat(query)
-                .isNotNull()
+                .isNotBlank()
                 .hasSizeGreaterThan(1_000);
         }
     }
@@ -45,8 +45,24 @@ class SqlQueryReaderTest {
     void getQueryFromFileShouldFindFileInUppercase() {
         final String query = SqlQueryReader.getQueryFromFile("BLOATED_TABLES.SQL");
         assertThat(query)
-            .isNotNull()
+            .isNotBlank()
             .hasSizeGreaterThan(1_000);
+    }
+
+    @Test
+    void getQueryForCheckShouldWorkWithKnownChecks() {
+        final String query = SqlQueryReader.getQueryForCheck("SEQUENCE_OVERFLOW");
+        assertThat(query)
+            .isNotBlank()
+            .hasSizeGreaterThan(1_000);
+    }
+
+    @Test
+    void getQueryForCheckShouldThrowExceptionForUnknownChecks() {
+        assertThatThrownBy(() -> SqlQueryReader.getQueryForCheck("SEQUENCE_OVERFLOW2"))
+            .isInstanceOf(ReadQueryFromFileException.class)
+            .hasCauseInstanceOf(FileNotFoundException.class)
+            .hasMessage("Error occurred while reading sql query from file sequence_overflow2.sql");
     }
 
     @Test
