@@ -1,5 +1,6 @@
 plugins {
     id("pg-index-health.java-library")
+    id("pg-index-health.mandatory-javadoc")
 }
 
 description = "pg-index-health-core is an embeddable schema linter for PostgreSQL that detects common anti-patterns and promotes best practices on a specific host."
