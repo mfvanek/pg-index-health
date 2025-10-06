@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.extractors.DuplicatedIndexesExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 
@@ -42,10 +43,6 @@ public class IntersectedIndexesCheckOnHost extends AbstractCheckOnHost<Duplicate
      */
     @Override
     protected List<DuplicatedIndexes> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rs -> {
-            final String tableName = rs.getString(TABLE_NAME);
-            final String duplicatedAsString = rs.getString("intersected_indexes");
-            return DuplicatedIndexes.of(tableName, duplicatedAsString);
-        });
+        return executeQuery(pgContext, DuplicatedIndexesExtractor.of("intersected"));
     }
 }
