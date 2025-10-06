@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.extractors.StoredFunctionExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.function.StoredFunction;
 
@@ -42,10 +43,6 @@ public class FunctionsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<
      */
     @Override
     protected List<StoredFunction> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rs -> {
-            final String functionName = rs.getString("function_name");
-            final String functionSignature = rs.getString("function_signature");
-            return StoredFunction.of(functionName, functionSignature);
-        });
+        return executeQuery(pgContext, StoredFunctionExtractor.of());
     }
 }
