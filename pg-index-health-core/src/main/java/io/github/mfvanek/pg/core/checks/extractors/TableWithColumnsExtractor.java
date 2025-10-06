@@ -22,9 +22,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_NAME;
-import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_SIZE;
-
 /**
  * A mapper from raw data to {@link TableWithColumns} model.
  *
@@ -41,8 +38,8 @@ public final class TableWithColumnsExtractor implements ResultSetExtractor<Table
      */
     @Override
     public TableWithColumns extractData(final ResultSet resultSet) throws SQLException {
-        final String tableName = resultSet.getString(TABLE_NAME);
-        final long tableSize = resultSet.getLong(TABLE_SIZE);
+        final String tableName = resultSet.getString(TableExtractor.TABLE_NAME);
+        final long tableSize = resultSet.getLong(TableExtractor.TABLE_SIZE);
         final Array columnsArray = resultSet.getArray(ColumnsAware.COLUMNS_FIELD);
         final String[] rawColumns = (String[]) columnsArray.getArray();
         final List<Column> columns = ColumnsDataParser.parseRawColumnsInTable(tableName, rawColumns);

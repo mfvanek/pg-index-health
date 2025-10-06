@@ -17,8 +17,6 @@ import io.github.mfvanek.pg.model.validation.Validators;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_NAME;
-
 /**
  * A mapper from raw data to {@link DuplicatedIndexes} model.
  *
@@ -38,7 +36,7 @@ public final class DuplicatedIndexesExtractor implements ResultSetExtractor<Dupl
      */
     @Override
     public DuplicatedIndexes extractData(final ResultSet resultSet) throws SQLException {
-        final String tableName = resultSet.getString(TABLE_NAME);
+        final String tableName = resultSet.getString(TableExtractor.TABLE_NAME);
         final String duplicatedAsString = resultSet.getString(targetColumnName);
         return DuplicatedIndexes.of(tableName, duplicatedAsString);
     }

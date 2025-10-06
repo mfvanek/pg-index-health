@@ -17,8 +17,6 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_NAME;
-
 /**
  * A mapper from raw data with only one column to {@link IndexWithColumns} model.
  *
@@ -49,7 +47,7 @@ public final class IndexWithSingleColumnExtractor implements ResultSetExtractor<
      */
     @Override
     public IndexWithColumns extractData(final ResultSet resultSet) throws SQLException {
-        final String tableName = resultSet.getString(TABLE_NAME);
+        final String tableName = resultSet.getString(TableExtractor.TABLE_NAME);
         final String indexName = resultSet.getString(INDEX_NAME);
         final long indexSize = resultSet.getLong(INDEX_SIZE);
         final Column column = columnExtractor.extractData(resultSet);

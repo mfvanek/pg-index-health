@@ -58,14 +58,6 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
      * Represents the column name used to retrieve index sizes from the database result set.
      */
     protected static final String INDEX_SIZE = IndexWithSingleColumnExtractor.INDEX_SIZE;
-    /**
-     * Represents the column name used to retrieve bloat size from the database result set.
-     */
-    protected static final String BLOAT_SIZE = "bloat_size";
-    /**
-     * Represents the column name used to retrieve bloat percentage from the database result set.
-     */
-    protected static final String BLOAT_PERCENTAGE = "bloat_percentage";
 
     /**
      * An original java type representing a database object.

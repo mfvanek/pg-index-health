@@ -22,8 +22,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-import static io.github.mfvanek.pg.core.checks.extractors.TableExtractor.TABLE_NAME;
-
 /**
  * A mapper from raw data to {@link ForeignKey} model.
  *
@@ -50,7 +48,7 @@ public final class ForeignKeyExtractor implements ResultSetExtractor<ForeignKey>
      */
     @Override
     public ForeignKey extractData(final ResultSet resultSet) throws SQLException {
-        final String tableName = resultSet.getString(TABLE_NAME);
+        final String tableName = resultSet.getString(TableExtractor.TABLE_NAME);
         final String constraintName = resultSet.getString(getConstraintNameField());
         final Array columnsArray = resultSet.getArray(getColumnsField());
         final String[] rawColumns = (String[]) columnsArray.getArray();
