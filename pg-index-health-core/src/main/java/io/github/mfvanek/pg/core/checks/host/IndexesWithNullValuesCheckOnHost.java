@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
-import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.core.checks.extractors.IndexWithNullableColumnExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
@@ -43,13 +43,6 @@ public class IndexesWithNullValuesCheckOnHost extends AbstractCheckOnHost<IndexW
      */
     @Override
     protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rs -> {
-            final String tableName = rs.getString(TABLE_NAME);
-            final String indexName = rs.getString(INDEX_NAME);
-            final long indexSize = rs.getLong(INDEX_SIZE);
-            final String nullableField = rs.getString("nullable_fields");
-            final Column nullableColumn = Column.ofNullable(tableName, nullableField);
-            return IndexWithColumns.ofSingle(tableName, indexName, indexSize, nullableColumn);
-        });
+        return executeQuery(pgContext, IndexWithNullableColumnExtractor.of());
     }
 }
