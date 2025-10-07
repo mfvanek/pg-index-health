@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.extractors.SequenceStateExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 
@@ -43,11 +44,6 @@ public class SequenceOverflowCheckOnHost extends AbstractCheckOnHost<SequenceSta
      */
     @Override
     protected List<SequenceState> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rs -> {
-            final String sequenceName = rs.getString("sequence_name");
-            final String dataType = rs.getString("data_type");
-            final double remainingPercentage = rs.getDouble("remaining_percentage");
-            return SequenceState.of(sequenceName, dataType, remainingPercentage);
-        });
+        return executeQuery(pgContext, SequenceStateExtractor.of());
     }
 }

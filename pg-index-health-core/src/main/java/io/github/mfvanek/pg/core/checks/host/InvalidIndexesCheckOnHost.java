@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.extractors.IndexExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
 
@@ -43,11 +44,6 @@ public class InvalidIndexesCheckOnHost extends AbstractCheckOnHost<Index> {
      */
     @Override
     protected List<Index> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rs -> {
-            final String tableName = rs.getString(TABLE_NAME);
-            final String indexName = rs.getString(INDEX_NAME);
-            final long indexSize = rs.getLong(INDEX_SIZE);
-            return Index.of(tableName, indexName, indexSize);
-        });
+        return executeQuery(pgContext, IndexExtractor.of());
     }
 }

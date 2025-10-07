@@ -11,25 +11,21 @@
 package io.github.mfvanek.pg.core.checks.extractors;
 
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
-import io.github.mfvanek.pg.core.utils.ColumnsDataParser;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
-import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
- * A mapper from raw data with multiple columns to {@link IndexWithColumns} model.
+ * A mapper from raw data to {@link IndexWithColumns} model.
  *
  * @author Ivan Vakhrushev
- * @since 0.14.6
+ * @since 0.30.0
  */
-public final class IndexWithColumnsExtractor implements ResultSetExtractor<IndexWithColumns> {
+public final class IndexWithNullableColumnExtractor implements ResultSetExtractor<IndexWithColumns> {
 
-    private IndexWithColumnsExtractor() {
+    private IndexWithNullableColumnExtractor() {
     }
 
     /**
@@ -40,18 +36,17 @@ public final class IndexWithColumnsExtractor implements ResultSetExtractor<Index
         final String tableName = resultSet.getString(TableExtractor.TABLE_NAME);
         final String indexName = resultSet.getString(IndexExtractor.INDEX_NAME);
         final long indexSize = resultSet.getLong(IndexExtractor.INDEX_SIZE);
-        final Array columnsArray = resultSet.getArray(ColumnsAware.COLUMNS_FIELD);
-        final String[] rawColumns = (String[]) columnsArray.getArray();
-        final List<Column> columns = ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex(tableName, rawColumns);
-        return IndexWithColumns.ofColumns(tableName, indexName, indexSize, columns);
+        final String nullableField = resultSet.getString("nullable_fields");
+        final Column nullableColumn = Column.ofNullable(tableName, nullableField);
+        return IndexWithColumns.ofSingle(tableName, indexName, indexSize, nullableColumn);
     }
 
     /**
-     * Creates {@code IndexWithColumnsExtractor} instance.
+     * Creates {@code IndexWithNullableColumnExtractor} instance.
      *
-     * @return {@code IndexWithColumnsExtractor} instance
+     * @return {@code IndexWithNullableColumnExtractor} instance.
      */
     public static ResultSetExtractor<IndexWithColumns> of() {
-        return new IndexWithColumnsExtractor();
+        return new IndexWithNullableColumnExtractor();
     }
 }

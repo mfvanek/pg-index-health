@@ -19,7 +19,7 @@ import io.github.mfvanek.pg.model.table.TableWithColumns;
 import java.util.List;
 
 /**
- * Check for tables with zero or one column on a specific host.
+ * Check for tables with zero or one columns on a specific host.
  * This usually indicates a poor design of tables in the database or the presence of garbage.
  *
  * @author Ivan Vakhrushev

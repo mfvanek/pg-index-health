@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.extractors.TableWithBloatExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 
@@ -38,7 +39,7 @@ public class TablesWithBloatCheckOnHost extends AbstractCheckOnHost<TableWithBlo
      * Returns tables that are bloated in the specified schema.
      * <p>
      * Note: The database user on whose behalf this method will be executed
-     * have to have read permissions for the corresponding tables.
+     * has to have read permissions for the corresponding tables.
      * </p>
      *
      * @param pgContext check's context with the specified schema
@@ -46,12 +47,6 @@ public class TablesWithBloatCheckOnHost extends AbstractCheckOnHost<TableWithBlo
      */
     @Override
     protected List<TableWithBloat> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rs -> {
-            final String tableName = rs.getString(TABLE_NAME);
-            final long tableSize = rs.getLong(TABLE_SIZE);
-            final long bloatSize = rs.getLong(BLOAT_SIZE);
-            final double bloatPercentage = rs.getDouble(BLOAT_PERCENTAGE);
-            return TableWithBloat.of(tableName, tableSize, bloatSize, bloatPercentage);
-        });
+        return executeQuery(pgContext, TableWithBloatExtractor.of());
     }
 }

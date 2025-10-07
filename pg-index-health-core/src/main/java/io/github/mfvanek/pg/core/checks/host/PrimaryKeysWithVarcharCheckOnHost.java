@@ -19,9 +19,9 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import java.util.List;
 
 /**
- * Check for primary keys with columns of fixed length varchar(32/36/38) type on a specific host.
+ * Check for primary keys with columns of a fixed length varchar(32/36/38) type on a specific host.
  * <p>
- * Usually these columns should use built-in uuid type.
+ * Usually these columns should use a built-in uuid type.
  * <p>
  * UUID representation:
  * <pre>{@code

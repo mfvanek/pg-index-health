@@ -22,7 +22,7 @@ import java.util.List;
  * Check for tables that are not linked to other tables on a specific host.
  * <p>
  * These are often service tables that are not part of the project, or
- * tables that are no longer in use or were created by mistake, but were not deleted in a timely manner.
+ * tables that are no longer in use or were created by mistake but were not deleted in a timely manner.
  *
  * @author Ivan Vakhrushev
  * @since 0.13.2

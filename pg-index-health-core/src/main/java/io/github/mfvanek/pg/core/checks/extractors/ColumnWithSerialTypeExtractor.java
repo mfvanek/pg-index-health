@@ -18,8 +18,6 @@ import io.github.mfvanek.pg.model.column.SerialType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor.COLUMN_TYPE;
-
 /**
  * A mapper from raw data to {@link ColumnWithSerialType} model.
  */
@@ -37,7 +35,7 @@ public final class ColumnWithSerialTypeExtractor implements ResultSetExtractor<C
     @Override
     public ColumnWithSerialType extractData(final ResultSet resultSet) throws SQLException {
         final Column column = columnExtractor.extractData(resultSet);
-        final String columnType = resultSet.getString(COLUMN_TYPE);
+        final String columnType = resultSet.getString(ColumnWithTypeExtractor.COLUMN_TYPE);
         final String sequenceName = resultSet.getString("sequence_name");
         return ColumnWithSerialType.of(column, SerialType.valueFrom(columnType), sequenceName);
     }
