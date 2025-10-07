@@ -38,8 +38,8 @@ public final class IndexWithColumnsExtractor implements ResultSetExtractor<Index
     @Override
     public IndexWithColumns extractData(final ResultSet resultSet) throws SQLException {
         final String tableName = resultSet.getString(TableExtractor.TABLE_NAME);
-        final String indexName = resultSet.getString(IndexWithSingleColumnExtractor.INDEX_NAME);
-        final long indexSize = resultSet.getLong(IndexWithSingleColumnExtractor.INDEX_SIZE);
+        final String indexName = resultSet.getString(IndexExtractor.INDEX_NAME);
+        final long indexSize = resultSet.getLong(IndexExtractor.INDEX_SIZE);
         final Array columnsArray = resultSet.getArray(ColumnsAware.COLUMNS_FIELD);
         final String[] rawColumns = (String[]) columnsArray.getArray();
         final List<Column> columns = ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex(tableName, rawColumns);

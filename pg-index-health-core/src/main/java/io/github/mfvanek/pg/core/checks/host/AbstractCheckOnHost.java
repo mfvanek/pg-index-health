@@ -17,8 +17,6 @@ import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.ExecutionTopology;
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.core.checks.common.StandardCheckInfo;
-import io.github.mfvanek.pg.core.checks.extractors.IndexWithSingleColumnExtractor;
-import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
@@ -39,25 +37,6 @@ import java.util.function.Predicate;
  * @since 0.6.0
  */
 public abstract class AbstractCheckOnHost<T extends DbObject> implements DatabaseCheckOnHost<T> {
-
-    /**
-     * Represents the column name used to retrieve table names from the database result set.
-     * This is a constant referencing the {@code table_name} field defined in {@link TableExtractor}.
-     */
-    protected static final String TABLE_NAME = TableExtractor.TABLE_NAME;
-    /**
-     * The name of the index column in the result set.
-     * This constant is used for extracting the index name from query results.
-     */
-    protected static final String INDEX_NAME = IndexWithSingleColumnExtractor.INDEX_NAME;
-    /**
-     * Represents the column name used to retrieve table sizes from the database result set.
-     */
-    protected static final String TABLE_SIZE = TableExtractor.TABLE_SIZE;
-    /**
-     * Represents the column name used to retrieve index sizes from the database result set.
-     */
-    protected static final String INDEX_SIZE = IndexWithSingleColumnExtractor.INDEX_SIZE;
 
     /**
      * An original java type representing a database object.

@@ -42,8 +42,8 @@ public final class IndexWithBloatExtractor implements ResultSetExtractor<IndexWi
     @Override
     public IndexWithBloat extractData(final ResultSet resultSet) throws SQLException {
         final String tableName = resultSet.getString(TableExtractor.TABLE_NAME);
-        final String indexName = resultSet.getString(IndexWithSingleColumnExtractor.INDEX_NAME);
-        final long indexSize = resultSet.getLong(IndexWithSingleColumnExtractor.INDEX_SIZE);
+        final String indexName = resultSet.getString(IndexExtractor.INDEX_NAME);
+        final long indexSize = resultSet.getLong(IndexExtractor.INDEX_SIZE);
         final long bloatSize = resultSet.getLong(BLOAT_SIZE);
         final double bloatPercentage = resultSet.getDouble(BLOAT_PERCENTAGE);
         return IndexWithBloat.of(tableName, indexName, indexSize, bloatSize, bloatPercentage);

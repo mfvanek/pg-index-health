@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.extractors.UnusedIndexExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 
@@ -42,12 +43,6 @@ public class UnusedIndexesCheckOnHost extends AbstractCheckOnHost<UnusedIndex> {
      */
     @Override
     protected List<UnusedIndex> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rs -> {
-            final String tableName = rs.getString(TABLE_NAME);
-            final String indexName = rs.getString(INDEX_NAME);
-            final long indexSize = rs.getLong(INDEX_SIZE);
-            final long indexScans = rs.getLong("index_scans");
-            return UnusedIndex.of(tableName, indexName, indexSize, indexScans);
-        });
+        return executeQuery(pgContext, UnusedIndexExtractor.of());
     }
 }

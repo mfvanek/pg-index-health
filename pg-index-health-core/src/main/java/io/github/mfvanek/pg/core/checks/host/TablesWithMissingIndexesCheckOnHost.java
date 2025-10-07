@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.checks.extractors.TableWithMissingIndexExtractor;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 
@@ -42,12 +43,6 @@ public class TablesWithMissingIndexesCheckOnHost extends AbstractCheckOnHost<Tab
      */
     @Override
     protected List<TableWithMissingIndex> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rs -> {
-            final String tableName = rs.getString(TABLE_NAME);
-            final long tableSize = rs.getLong(TABLE_SIZE);
-            final long seqScans = rs.getLong("seq_scan");
-            final long indexScans = rs.getLong("idx_scan");
-            return TableWithMissingIndex.of(tableName, tableSize, seqScans, indexScans);
-        });
+        return executeQuery(pgContext, TableWithMissingIndexExtractor.of());
     }
 }

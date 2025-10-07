@@ -34,8 +34,8 @@ public final class IndexWithNullableColumnExtractor implements ResultSetExtracto
     @Override
     public IndexWithColumns extractData(final ResultSet resultSet) throws SQLException {
         final String tableName = resultSet.getString(TableExtractor.TABLE_NAME);
-        final String indexName = resultSet.getString(IndexWithSingleColumnExtractor.INDEX_NAME);
-        final long indexSize = resultSet.getLong(IndexWithSingleColumnExtractor.INDEX_SIZE);
+        final String indexName = resultSet.getString(IndexExtractor.INDEX_NAME);
+        final long indexSize = resultSet.getLong(IndexExtractor.INDEX_SIZE);
         final String nullableField = resultSet.getString("nullable_fields");
         final Column nullableColumn = Column.ofNullable(tableName, nullableField);
         return IndexWithColumns.ofSingle(tableName, indexName, indexSize, nullableColumn);
