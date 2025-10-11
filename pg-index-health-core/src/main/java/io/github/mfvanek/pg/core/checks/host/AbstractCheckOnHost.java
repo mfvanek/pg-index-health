@@ -27,7 +27,7 @@ import java.util.function.Predicate;
 
 /**
  * An abstract implementation of the {@link DatabaseCheckOnHost} interface, providing
- * a framework for checks to be performed on database objects on a specific PostgreSQL host.
+ * a framework for checks to be performed on a specific PostgreSQL host.
  * <p>
  * Subclasses are required to define the specific check logic in the {@link AbstractCheckOnHost#doCheck(PgContext)} method.
  *
@@ -41,15 +41,16 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
     /**
      * An original java type representing a database object.
      */
-    private final Class<T> type;
+    protected final Class<T> type;
     /**
      * A connection to a specific host in the cluster.
      */
-    private final PgConnection pgConnection;
+    protected final PgConnection pgConnection;
     /**
-     * A rule related to the check.
+     * Represents the configuration and metadata for a specific diagnostic or
+     * check to be performed on a PostgreSQL host.
      */
-    private final CheckInfo checkInfo;
+    protected final CheckInfo checkInfo;
 
     /**
      * Constructs an instance of AbstractCheckOnHost with the specified parameters.
