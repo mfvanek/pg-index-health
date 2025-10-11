@@ -29,6 +29,10 @@ By embedding **pg-index-health** into your CI/CD pipeline, you can proactively c
 A list of all available checks (rules/diagnostics) can be found [here](doc/available_checks.md).  
 In code, you can get all checks through an instance of the [StandardChecksOnHost](pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/host/StandardChecksOnHost.java) or [StandardChecksOnCluster](pg-index-health/src/main/java/io/github/mfvanek/pg/health/checks/cluster/StandardChecksOnCluster.java) class.
 
+### User-defined (custom) checks
+
+You can add your own database structure checks [as shown in the link](doc/custom_checks.md).
+
 ## Installation
 
 Using Gradle:
@@ -59,7 +63,7 @@ All these cases are covered with examples in the [pg-index-health-demo](https://
 
 There is a Spring Boot starter [pg-index-health-test-starter](spring-boot-integration%2Fpg-index-health-test-starter)
 for unit/integration testing as well.  
-More examples you can find in [pg-index-health-demo](https://github.com/mfvanek/pg-index-health-demo) project.
+More examples you can find in the [pg-index-health-demo](https://github.com/mfvanek/pg-index-health-demo) project.
 
 ### Starter installation
 
