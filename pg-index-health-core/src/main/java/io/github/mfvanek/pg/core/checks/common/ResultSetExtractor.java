@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * A mapper from raw data to domain model.
+ * A mapper from raw data to a domain model.
  *
  * @param <T> any type represents an object in a database
  * @author Ivan Vakhrushev
@@ -23,11 +23,26 @@ import java.sql.SQLException;
 public interface ResultSetExtractor<T> {
 
     /**
-     * Converts a row from database to an arbitrary domain model.
+     * Converts the current row of the given {@code ResultSet} to an arbitrary domain model.
      *
      * @param resultSet the ResultSet to extract data from
      * @return an arbitrary result object
      * @throws SQLException if an SQLException is encountered getting column values or navigating
      */
     T extractData(ResultSet resultSet) throws SQLException;
+
+    /**
+     * Converts the current row of the given {@code ResultSet} to an arbitrary domain model.
+     * <p>
+     * This method is compatible with Spring Framework's {@code RowMapper}.
+     *
+     * @param rs      the {@code ResultSet} to extract data from
+     * @param ignored the current row number in the {@code ResultSet}; will be ignored
+     * @return an instance of the domain model representing the current row
+     * @throws SQLException if an SQLException is encountered when accessing data from the {@code ResultSet}
+     * @since 0.30.0
+     */
+    default T mapRow(final ResultSet rs, final int ignored) throws SQLException {
+        return extractData(rs);
+    }
 }
