@@ -38,7 +38,7 @@ You can add your own database structure checks [as shown in the link](doc/custom
 Using Gradle:
 
 ```kotlin
-implementation("io.github.mfvanek:pg-index-health:0.20.3")
+implementation("io.github.mfvanek:pg-index-health:0.30.0")
 ```
 
 Using Maven:
@@ -47,7 +47,7 @@ Using Maven:
 <dependency>
   <groupId>io.github.mfvanek</groupId>
   <artifactId>pg-index-health</artifactId>
-  <version>0.20.3</version>
+  <version>0.30.0</version>
 </dependency>
 ```
 
@@ -70,7 +70,7 @@ More examples you can find in the [pg-index-health-demo](https://github.com/mfva
 Using Gradle:
 
 ```kotlin
-testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.20.3")
+testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.30.0")
 ```
 
 Using Maven:
@@ -79,7 +79,7 @@ Using Maven:
 <dependency>
     <groupId>io.github.mfvanek</groupId>
     <artifactId>pg-index-health-test-starter</artifactId>
-    <version>0.20.3</version>
+    <version>0.30.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -92,9 +92,6 @@ Add a standard test to your project [as shown in the link](doc/standard_test.md)
 
 | Spring Boot | Min JDK | pg-index-health-test-starter |
 |-------------|---------|------------------------------|
-| 2.4.x       | 8       | 0.3.x — 0.4.x                |
-| 2.5.x       | 8       | 0.5.x — 0.6.x                |
-| 2.6.x       | 8       | 0.7.x                        |
 | 2.7.x       | 11      | 0.8.x — 0.15.x               |
 | 3.3.x       | 17      | 0.20.x                       |
 | 3.4.x       | 17      | 0.30.x                       |
@@ -126,7 +123,6 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 Supports [Java 17](https://www.java.com/en/) and above.
 
 - For **Java 11** compatible version take a look at release [0.15.0](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.15.0) and lower.
-- For **Java 8** compatible version take a look at release [0.7.0](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.7.0) and lower.
 
 ## Articles and publications
 
