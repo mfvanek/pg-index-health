@@ -23,3 +23,26 @@
 
 Поддерживает секционированные таблицы.
 Проверка выполняется на самой секционированной таблице (родительской). Отдельные секции (потомки) игнорируются.
+
+# Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+create table if not exists demo."table_with_serial_pk"
+(
+    id bigserial not null primary key,
+    first_name text,
+    last_name text
+);
+
+create table if not exists demo."table_with_serial_pk_partitioned"
+(
+    id bigserial not null,
+    first_name text,
+    last_name text
+) partition by hash (name);
+
+create table if not exists demo."table_with_serial_pk_partitioned_hash_p0"
+    partition of demo."table_without_primary_key_partitioned"
+    for values with (modulus 4, remainder 0);
+```

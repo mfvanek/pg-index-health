@@ -17,3 +17,32 @@
 
 Поддерживает секционированные таблицы.
 Проверка выполняется на самой секционированной таблице (родительской). Отдельные секции (потомки) игнорируются.
+
+# Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+
+create table if not exists demo."table_without_description"
+(
+    id int not null primary key,
+    first_name text,
+    last_name text
+);
+
+comment on table demo."table_without_description" is '   ';"
+                    
+create table if not exists demo."table_without_description_partitioned"
+(
+    id int not null primary key,
+    first_name text,
+    last_name text
+) partition by range (id);
+
+comment on table demo."table_without_description_partitioned" is '';"
+
+create table if not exists demo."table_without_description_partitioned_1_10"
+    partition of demo."table_without_description"
+    for values from (1) to (10);
+```
+Перед проверкой нужно добавить в таблицы данные.

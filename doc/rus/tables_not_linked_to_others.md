@@ -20,3 +20,23 @@
 
 Поддерживает секционированные таблицы.
 Проверка выполняется на самой секционированной таблице (родительской). Отдельные секции (потомки) игнорируются.
+
+# Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+create table if not exists demo."client_without_fk"
+(
+    id bigint not null primary key,
+    first_name text,
+    last_name text
+);
+
+create table if not exists demo."account_without_fk_partitioned"
+(
+    id bigint not null primary key,
+    account_number varchar(50) not null unique,
+    client_id bigint not null,
+    created timestamp not null
+) partition by range (created);
+

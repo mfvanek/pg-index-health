@@ -24,3 +24,27 @@
 ## Поддержка секционированных таблиц
 
 Поддерживает секционированные таблицы. Проверка выполняется на каждой секции.
+
+# Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+create table if not exists demo."table_with_missing_index"
+(
+    id bigint not null primary key,
+    first_name text,
+    last_name text
+);
+
+create table if not exists demo."table_with_missing_index_partitioned"
+(
+    id int not null primary key,
+    first_name text,
+    last_name text
+) partition by range (id);
+
+create table if not exists demo."table_with_missing_index_partitioned_1_10"
+    partition of demo."duplicated_indexes_partitioned"
+    for values from (1) to (10);
+```
+Перед проверкой нужно добавить в таблицы данные.
