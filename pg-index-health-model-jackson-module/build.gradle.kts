@@ -10,7 +10,7 @@ dependencies {
     implementation(platform(libs.jackson.bom))
     implementation("com.fasterxml.jackson.core:jackson-databind")
 
-    testImplementation("io.github.classgraph:classgraph:4.8.181")
+    testImplementation("io.github.classgraph:classgraph:4.8.184")
 }
 
 val generateModuleVersion = tasks.register<GenerateModuleVersionTask>("generateModuleVersion") {
