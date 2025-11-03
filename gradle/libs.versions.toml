@@ -7,7 +7,7 @@ assertj = "3.27.6"
 testcontainers = "1.21.3"
 mockito = "5.20.0"
 forbiddenapis = "3.10"
-junit = "6.0.0"
+junit = "6.0.1"
 
 [libraries]
 jspecify = "org.jspecify:jspecify:1.0.0"
