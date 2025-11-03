@@ -12,7 +12,7 @@ junit = "6.0.0"
 [libraries]
 jspecify = "org.jspecify:jspecify:1.0.0"
 postgresql = "org.postgresql:postgresql:42.7.8"
-jackson-bom = "com.fasterxml.jackson:jackson-bom:2.18.4.1" # to be compatible with Spring Boot 3.4.X
+jackson-bom = "com.fasterxml.jackson:jackson-bom:2.20.1" # to be compatible with Spring Boot 3.4.X
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" }
 apache-commons-dbcp2 = "org.apache.commons:commons-dbcp2:2.13.0"
