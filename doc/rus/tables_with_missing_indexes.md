@@ -29,6 +29,7 @@
 
 ```sql
 create schema if not exists demo;
+
 create table if not exists demo."table_with_missing_index"
 (
     id bigint not null primary key,
@@ -38,13 +39,14 @@ create table if not exists demo."table_with_missing_index"
 
 create table if not exists demo."table_with_missing_index_partitioned"
 (
-    id int not null primary key,
+    id integer not null primary key,
     first_name text,
     last_name text
 ) partition by range (id);
 
-create table if not exists demo."table_with_missing_index_partitioned_1_10"
+create table if not exists demo."table_with_missing_index_partitioned_20"
     partition of demo."duplicated_indexes_partitioned"
-    for values from (1) to (10);
+    for values from (1) to (21);
+    
+insert into demo."table_with_missing_index_partitioned_1_20" (id, first_name, last_name) values (generate_series(1, 20),'first', 'last');
 ```
-Перед проверкой нужно добавить в таблицы данные.

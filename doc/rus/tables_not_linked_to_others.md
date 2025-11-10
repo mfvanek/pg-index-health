@@ -25,6 +25,7 @@
 
 ```sql
 create schema if not exists demo;
+
 create table if not exists demo."client_without_fk"
 (
     id bigint not null primary key,
@@ -37,6 +38,11 @@ create table if not exists demo."account_without_fk_partitioned"
     id bigint not null primary key,
     account_number varchar(50) not null unique,
     client_id bigint not null,
-    created timestamp not null
+    created timestamp with time zone not null
 ) partition by range (created);
+
+create table if not exists demo."account_without_fk_partitioned_Q3"
+    partition of demo."account_without_fk_partitioned"
+    for values from ('2025-07-01') to ('2025-10-01');
+```
 

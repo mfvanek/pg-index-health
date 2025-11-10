@@ -22,3 +22,37 @@ boolean  столбец может принимать только два зна
 
 Поддерживает секционированные таблицы.
 Проверка выполняется на самой секционированной таблице (родительской). Отдельные секции (потомки) игнорируются.
+
+# Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+
+create table if not exists demo."table_with_boolean_indexed"
+(
+    id bigint not null primary key,
+    first_name text,
+    last_name text,
+    account_number varchar(64),
+    created timestamp with time zone not null,
+    is_debtor boolean
+);
+
+create index concurrently if not exists i_is_debtor on demo."table_with_boolean_indexed" (is_debtor);
+
+create table if not exists demo."table_with_boolean_indexed_partitioned"
+(
+    id integer not null primary key,
+    first_name text,
+    last_name text,
+    account_number varchar(64),
+    created timestamp with time zone not null,
+    is_debtor boolean
+) partition by range (created);
+
+create index if not exists i_is_debtor_part on demo."table_with_boolean_indexed_partitioned" (is_debtor);
+
+create table if not exists demo."table_with_boolean_indexed_partitioned_2024"
+    partition of demo."duplicated_indexes_partitioned"
+    for values from ('2024-01-01') to ('2024-12-31');
+```

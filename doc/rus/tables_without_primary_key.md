@@ -35,7 +35,7 @@ create table if not exists demo."table_without_primary_key"
 
 create table if not exists demo."table_without_primary_key_partitioned"
 (
-    id int not null,
+    id integer not null,
     first_name text,
     last_name text
 ) partition by hash (name);

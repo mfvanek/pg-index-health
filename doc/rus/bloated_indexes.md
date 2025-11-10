@@ -34,3 +34,30 @@
 После этого вычисляется разница между фактическим и оцененным количеством страниц индекса и по ней процент раздутости индекса. 
 Если он превышает заданное значение (дефолтное составляет 10%), то индекс считается раздутым. Результаты сортируются по имени таблицы и имени индекса.
 
+# Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+
+create table if not exists demo."client_with_bloat"
+(
+    id bigint not null primary key,
+    first_name text,
+    last_name text
+);
+
+create table if not exists demo."account_with_bloat"
+(
+    id bigint not null primary key,
+    account_number varchar(50) not null unique,
+    client_id bigint not null references demo.client (id) on delete cascade
+);
+
+insert into demo."client_with_bloat" (id, first_name, last_name) values (generate_series(1, 1000),'first', 'last');
+
+insert into demo."account_with_bloat" (id, account_number, client_id) values (generate_series(1, 1000),'account number', generate_series(1, 1000));
+
+delete from demo."client_with_bloat" where id > 500;
+```
+
+

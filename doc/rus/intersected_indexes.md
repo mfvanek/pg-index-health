@@ -23,3 +23,38 @@
 
 Поддерживает секционированные таблицы.
 Проверка выполняется на самой секционированной таблице (родительской). Отдельные секции (потомки) игнорируются.
+
+# Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+
+create table if not exists demo."table_with_intersected_indexes"
+(
+    id bigint not null primary key,
+    first_name text,
+    last_name text,
+    phone varchar(15)
+);
+
+create index concurrently if not exists i_first_last_name on demo."table_with_intersected_indexes" (first_name, last_name);
+
+create index concurrently if not exists i_first_last_name_phone on demo."table_with_intersected_indexes" (first_name, last_name, phone);
+
+create table if not exists demo."table_with_intersected_indexes_partitioned"
+(
+    id bigint not null primary key,
+    first_name text,
+    last_name text,
+    phone varchar(15)
+) partition by hash (name);
+
+
+create index if not exists i_first_last_name_p on demo."table_with_intersected_indexes" (first_name, last_name);
+
+create index if not exists i_first_last_name_phone_p on demo."table_with_intersected_indexes" (first_name, last_name, phone);
+
+create table if not exists demo."table_with_intersected_indexes_partitioned_hash_p0"
+    partition of demo."table_with_intersected_indexes_partitioned"
+    for values with (modulus 4, remainder 0);
+```
