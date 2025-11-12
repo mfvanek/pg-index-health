@@ -36,4 +36,4 @@ junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
 [plugins]
 spring-boot-gradlePlugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.7" }
-lombok = { id = "io.freefair.lombok", version = "9.0.0" }
+lombok = { id = "io.freefair.lombok", version = "9.1.0" }
