@@ -24,3 +24,43 @@
 ## Поддержка секционированных таблиц
 
 Поддерживает секционированные таблицы. Проверка выполняется на каждой секции.
+
+# Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+
+create table if not exists demo."table_with_missing_index"
+(
+    id bigint not null primary key,
+    first_name text,
+    last_name text
+);
+
+insert into demo."table_with_missing_index" (id, first_name, last_name) values (generate_series(1, 20),'first', 'last');
+
+insert into demo."table_with_missing_index" (id, first_name, last_name) values (generate_series(21, 27),'next first', 'next last');
+
+create table if not exists demo."table_with_missing_index_partitioned"
+(
+    id integer not null primary key,
+    first_name text,
+    last_name text
+) partition by range (id);
+
+create table if not exists demo."table_with_missing_index_partitioned_1_20"
+    partition of demo."duplicated_indexes_partitioned"
+    for values from (1) to (21);
+    
+create table if not exists demo."table_with_missing_index_partitioned_1_30"
+    partition of demo."duplicated_indexes_partitioned"
+    for values from (21) to (31);
+    
+insert into demo."table_with_missing_index_partitioned_1_20" (id, first_name, last_name) values (generate_series(1, 20),'first', 'last');
+
+insert into demo."table_with_missing_index_1_30" (id, first_name, last_name) values (generate_series(21, 27),'next first', 'next last');
+
+select * from demo."table_with_missing_index" where first_name = 'first name';
+
+select * from demo."table_with_missing_index_partitioned" where first_name = 'first name';
+```

@@ -33,12 +33,12 @@ create table if not exists demo.empty
 
 create table if not exists demo.one
 (
-    ref_type int not null primary key
+    ref_type integer not null primary key
 );
 
 create table if not exists demo.two
 (
-    ref_type    int not null primary key,
+    ref_type  integer not null primary key,
     description text
 );
 
