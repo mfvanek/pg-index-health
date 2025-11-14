@@ -33,7 +33,7 @@ create table if not exists demo."entity_long_1234567890_1234567890_1234567890_12
     entity_id bigserial primary key
 );
 
-create table if not exists demo."entity_long_1234567890_1234567890_1234567890_1234567890_1234567"
+create table if not exists demo."entity_long_1234567890_1234567890_1234567890_1234567890_1234568"
 (
     ref_type varchar(32),
     ref_value varchar(64),
@@ -41,8 +41,8 @@ create table if not exists demo."entity_long_1234567890_1234567890_1234567890_12
 ) partition by range (entity_id);
 
 create index if not exists idx_entity_long_1234567890_1234567890_1234567890_1234567890_123
-    on {schemaName}.entity_long_1234567890_1234567890_1234567890_1234567890_1234567 (ref_type, ref_value);
+    on demo.entity_long_1234567890_1234567890_1234567890_1234567890_1234567 (ref_type, ref_value);
 
-create table if not exists {schemaName}.entity_default_long_1234567890_1234567890_1234567890_1234567890
-    partition of {schemaName}.entity_long_1234567890_1234567890_1234567890_1234567890_1234567 default;
+create table if not exists demo.entity_default_long_1234567890_1234567890_1234567890_1234567890
+    partition of demo.entity_long_1234567890_1234567890_1234567890_1234567890_1234567 default;
 ```

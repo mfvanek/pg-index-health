@@ -37,7 +37,7 @@ create table if not exists demo."table_with_serial_pk"
 
 create table if not exists demo."table_with_serial_pk_partitioned"
 (
-    id serial not null,
+    id serial not null primary key,
     first_name text,
     last_name text
 ) partition by hash (name);

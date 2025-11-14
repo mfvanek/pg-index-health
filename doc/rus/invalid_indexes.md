@@ -84,5 +84,5 @@ create table if not exists demo."table_with_invalid_indexes_partitioned_hash_1_1
     partition of demo."table_with_invalid_indexes_partitioned"
     for values from (1) to (10);
     
-create unique index concurrently if not exists i_first_last_name_p on demo."table_with_invalid_indexes" (first_name, last_name);
+create unique index concurrently if not exists i_first_last_name_p on demo."table_with_invalid_indexes_partitioned_hash_1_100" (first_name, last_name);
 ```

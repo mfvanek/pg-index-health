@@ -50,9 +50,9 @@ create table if not exists demo."table_with_intersected_indexes_partitioned"
 ) partition by hash (name);
 
 
-create index if not exists i_first_last_name_p on demo."table_with_intersected_indexes" (first_name, last_name);
+create index if not exists i_first_last_name_p on demo."table_with_intersected_indexes_partitioned" (first_name, last_name);
 
-create index if not exists i_first_last_name_phone_p on demo."table_with_intersected_indexes" (first_name, last_name, phone);
+create index if not exists i_first_last_name_phone_p on demo."table_with_intersected_indexes_partitioned" (first_name, last_name, phone);
 
 create table if not exists demo."table_with_intersected_indexes_partitioned_hash_p0"
     partition of demo."table_with_intersected_indexes_partitioned"

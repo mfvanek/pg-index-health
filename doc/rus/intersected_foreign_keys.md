@@ -59,11 +59,11 @@ call_time_start timestamp with time zone not null,
 call_time_end timestamp with time zone not null
 ) partition by range (id);
 
-alter table if exists demo.client_preferences
+alter table if exists demo."client_preferences_with_redundant_fk_partitioned"
 add constraint c_client_preferences_email_phone_fk
 foreign key (email, phone) references demo.clients (email, phone);
 
-alter table if exists demo.client_preferences
+alter table if exists demo."client_preferences_with_redundant_fk_partitioned"
 add constraint c_client_preferences_phone_email_fk
 foreign key (phone, email) references demo.clients (phone, email);
 

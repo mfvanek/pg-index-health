@@ -38,7 +38,7 @@ create table if not exists demo."table_with_boolean_indexed"
     is_debtor boolean
 );
 
-create index concurrently if not exists i_is_debtor on demo."table_with_boolean_indexed" (is_debtor);
+create index if not exists i_is_debtor on demo."table_with_boolean_indexed" (is_debtor);
 
 create table if not exists demo."table_with_boolean_indexed_partitioned"
 (

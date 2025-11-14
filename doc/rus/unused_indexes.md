@@ -61,5 +61,7 @@ create table if not exists demo."duplicated_indexes_partitioned_1_20"
     partition of demo."duplicated_indexes_partitioned"
     for values from (1) to (21);
     
-insert into demo."duplicated_indexes_partitioned_1_20" (id, first_name, last_name) values (generate_series(1, 20),'first', 'last');
+insert into demo."duplicated_indexes" (id, first_name, last_name) values (generate_series(1, 20),'first', 'last');
+
+insert into demo."duplicated_indexes_partitioned" (id, first_name, last_name) values (generate_series(1, 20),'first', 'last');
 ```
