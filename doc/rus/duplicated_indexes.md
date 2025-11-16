@@ -24,3 +24,37 @@ PostgreSQL не умеет отслеживать такие ситуации и
 
 Поддерживает секционированные таблицы.
 Проверка выполняется на самой секционированной таблице (родительской). Отдельные секции (потомки) игнорируются.
+
+# Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+
+create table if not exists demo."table_with_duplicated_indexes"
+(
+    id bigint not null primary key,
+    first_name text,
+    last_name text,
+    passport text unique not null
+);
+
+create index if not exists i_duplicated on demo."table_with_duplicated_indexes" (id);
+
+create index if not exists i_passport_duplicated on demo."table_with_duplicated_indexes" (passport);
+
+create table if not exists demo."table_with_duplicated_indexes_partitioned"
+(
+    id bigint not null,
+    first_name text,
+    last_name text,
+    passport text unique not null
+) partition by hash (name);
+
+create index if not exists i_duplicated_p on demo."table_with_duplicated_indexes_partitioned" (id);
+
+create index if not exists i_passport_duplicated_p on demo."table_with_duplicated_indexes_partitioned" (passport);
+
+create table if not exists demo."table_with_duplicated_indexes_partitioned_hash_p0"
+    partition of demo."table_with_duplicated_indexes_partitioned"
+    for values with (modulus 4, remainder 0);
+```

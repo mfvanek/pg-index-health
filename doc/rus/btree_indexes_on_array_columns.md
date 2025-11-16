@@ -23,3 +23,39 @@ b-tree индекс на таких столбцах эффективен, ес�
 
 Поддерживает секционированные таблицы.
 Проверка выполняется на самой секционированной таблице (родительской). Отдельные секции (потомки) игнорируются.
+
+# Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+
+create table if not exists demo."table_with_b-tree_index_on_array"
+(
+    id bigint not null,
+    login text,
+    roles text[]
+);
+
+create index if not exists roles_btree_idx
+    on demo."table_with_b-tree_index_on_array"(roles) where roles is not null;
+    
+create index if not exists login_roles_btree_idx
+    on demo."table_with_b-tree_index_on_array"(login, roles);
+
+create table if not exists demo."table_with_b-tree_index_on_array_partitioned"
+(
+    id bigint not null,
+    login text,
+    roles text[]
+) partition by hash (login);
+
+create index if not exists roles_btree_idx
+    on demo."table_with_b-tree_index_on_array_partitioned"(roles) where roles is not null;
+    
+create index if not exists login_roles_btree_idx
+    on demo."table_with_b-tree_index_on_array_partitioned"(login, roles);
+
+create table if not exists demo."table_with_b-tree_index_on_array_hash_p0"
+    partition of demo."table_with_b-tree_index_on_array_partitioned"
+    for values with (modulus 4, remainder 0);
+```
