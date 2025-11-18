@@ -10,6 +10,6 @@ spring:
 pgih:
     custom:
         datasource:
-            jdbc-url: jdbc:tc:postgresql:18.0:///demo_for_pg_index_health_starter?TC_INITSCRIPT=init.sql
+            jdbc-url: jdbc:tc:postgresql:18.1:///demo_for_pg_index_health_starter?TC_INITSCRIPT=init.sql
             driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
             maximum-pool-size: 5
