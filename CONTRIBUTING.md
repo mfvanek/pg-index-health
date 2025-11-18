@@ -70,7 +70,8 @@ Implement a new class extending [AbstractCheckOnCluster](pg-index-health/src/mai
 
 * Your code must be 100% covered.
 * Mutation tests via [pitest](https://pitest.org/) should work.
-* Behavior of the new check should be tested for partitioned tables.
+* Behavior of the new check should be tested for ordinary (non-partitioned) tables/indexes.
+* Behavior of the new check should be tested for partitioned tables (if applicable).
 * Behavior of the new check should be tested with [quoted identifiers](https://www.postgresql.org/docs/17/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS).
 
 ### Further steps

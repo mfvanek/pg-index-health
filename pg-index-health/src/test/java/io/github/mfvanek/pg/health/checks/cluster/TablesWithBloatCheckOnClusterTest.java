@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.core.fixtures.support.StatisticsAwareTestBase;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -63,6 +64,25 @@ class TablesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
             assertThat(check)
                 .executing(ctx, SkipBloatUnderThresholdPredicate.of(0L, 0.1))
                 .isEmpty();
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withBloatInPartitionedTable, ctx -> {
+            collectStatistics(schemaName, List.of("orders_partitioned", "order_item_partitioned"));
+            Assertions.assertThat(existsStatisticsForTable(schemaName, "orders_partitioned"))
+                .isTrue();
+
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(2)
+                .containsExactly(
+                    TableWithBloat.of(ctx, "order_item_default"),
+                    TableWithBloat.of(ctx, "orders_default"))
+                .allMatch(t -> t.getTableSizeInBytes() > 0L) // real size doesn't matter
+                .allMatch(t -> t.getBloatPercentage() > 10.0 && t.getBloatSizeInBytes() > 0L);
         });
     }
 }

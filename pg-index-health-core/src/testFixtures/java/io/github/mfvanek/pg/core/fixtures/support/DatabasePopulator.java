@@ -48,6 +48,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDi
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedIndexWithUnnecessaryWhereClauseStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithDroppedColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithJsonAndSerialColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNullableFieldsStatement;
@@ -363,6 +364,10 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withTableWhereAllColumnsNullable() {
         return register(144, new CreateTableWhereAllColumnsNullableStatement());
+    }
+
+    public DatabasePopulator withBloatInPartitionedTable() {
+        return register(145, new CreatePartitionedTableForBloatStatement());
     }
 
     public void populate() {

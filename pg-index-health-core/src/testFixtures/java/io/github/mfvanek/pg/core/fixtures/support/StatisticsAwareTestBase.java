@@ -19,6 +19,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -45,8 +47,8 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
 
     protected boolean existsStatisticsForTable(final String schemaName, final String tableName) {
         final String sqlQuery = """
-                select exists (select 1 from pg_catalog.pg_stats ps
-                where ps.schemaname = ?::text and ps.tablename = ?::text);""";
+            select exists (select 1 from pg_catalog.pg_stats ps
+            where ps.schemaname = ?::text and ps.tablename = ?::text);""";
         try (Connection connection = getDataSource().getConnection();
              PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
             statement.setString(1, schemaName);
@@ -72,10 +74,11 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         collectStatistics(schemaName);
     }
 
-    private void waitForStatisticsCollector(@Nullable final String schemaName) {
+    private void waitForStatisticsCollector(@Nullable final String schemaName,
+                                            final Collection<String> tableNames) {
         for (int i = 1; i <= 4; ++i) {
             sleep();
-            if (schemaName != null && existsStatisticsForTable(schemaName, "clients") && existsStatisticsForTable(schemaName, "accounts")) {
+            if (schemaName != null && tableNames.stream().allMatch(t -> existsStatisticsForTable(schemaName, t))) {
                 return;
             }
         }
@@ -91,13 +94,18 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         }
     }
 
+    protected void collectStatistics(final String schemaName, final Collection<String> tableNames) {
+        collectStatistics();
+        waitForStatisticsCollector(schemaName, tableNames);
+    }
+
     protected void collectStatistics(final String schemaName) {
         collectStatistics();
-        waitForStatisticsCollector(schemaName);
+        waitForStatisticsCollector(schemaName, List.of("clients", "accounts"));
     }
 
     protected void collectStatistics() {
         ExecuteUtils.executeOnDatabase(getDataSource(), statement -> statement.execute("vacuum analyze"));
-        waitForStatisticsCollector(null);
+        waitForStatisticsCollector(null, List.of());
     }
 }
