@@ -43,9 +43,10 @@ class ForeignKeysWithUnmatchedColumnTypeCheckOnClusterTest extends DatabaseAware
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
-                .containsExactlyInAnyOrder(
-                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id"),
-                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_email_phone", "phone")
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactly(
+                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_email_phone", "phone"),
+                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id")
                 );
 
             assertThat(check)
@@ -61,6 +62,7 @@ class ForeignKeysWithUnmatchedColumnTypeCheckOnClusterTest extends DatabaseAware
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type")
                 ));
