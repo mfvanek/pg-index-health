@@ -45,6 +45,7 @@ class DuplicatedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("totalSize", "indexes.indexSizeInBytes")
                 .containsExactly(
                     DuplicatedIndexes.of(
                         Index.of(ctx, "accounts", "accounts_account_number_key"),
@@ -99,6 +100,7 @@ class DuplicatedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedIndexes.of(
                         Index.of(ctx, "t1", "idx_t1_deleted"),
