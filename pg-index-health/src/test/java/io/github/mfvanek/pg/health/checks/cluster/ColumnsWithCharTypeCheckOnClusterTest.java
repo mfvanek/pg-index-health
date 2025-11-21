@@ -8,12 +8,12 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.core.checks.host;
+package io.github.mfvanek.pg.health.checks.cluster;
 
-import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
+import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -23,18 +23,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
+import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
-class ColumnsWithCharTypeCheckOnHostTest extends DatabaseAwareTestBase {
+class ColumnsWithCharTypeCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<@NonNull ColumnWithType> check = new ColumnsWithCharTypeCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull ColumnWithType> check = new ColumnsWithCharTypeCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
             .hasType(ColumnWithType.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_CHAR_TYPE)
-            .hasHost(getHost())
             .isStatic();
     }
 
