@@ -26,7 +26,12 @@ public class CreateClientsTableStatement extends AbstractDbStatement {
                     middle_name varchar(255),
                     info jsonb,
                     email varchar(200) not null,
-                    phone varchar(50) not null
+                    phone varchar(50) not null,
+                    gender char not null,
+                    home_address char(2000),
+                    contact_person character(500),
+                    nickname bpchar(200),
+                    safe_word bpchar
                 )""",
             "create unique index if not exists i_clients_email_phone on {schemaName}.clients (email, phone)",
             "comment on column {schemaName}.clients.email is 'Customer''s email';",

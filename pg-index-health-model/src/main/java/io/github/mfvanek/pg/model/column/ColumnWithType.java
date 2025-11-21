@@ -129,6 +129,17 @@ public final class ColumnWithType extends AbstractColumnAware implements Compara
     }
 
     /**
+     * Constructs a {@code ColumnWithType} object with the "character" type for the specified column.
+     *
+     * @param column the column for which the type is being specified; must be non-null.
+     * @return a {@code ColumnWithType} object with the "character" type.
+     * @see <a href="https://www.postgresql.org/docs/current/datatype.html">Data Types</a>
+     */
+    public static ColumnWithType ofCharacter(final Column column) {
+        return of(column, "character");
+    }
+
+    /**
      * Constructs a {@code ColumnWithType} object with the "text" type for the specified column.
      *
      * @param column the column for which the type is being specified; must be non-null.

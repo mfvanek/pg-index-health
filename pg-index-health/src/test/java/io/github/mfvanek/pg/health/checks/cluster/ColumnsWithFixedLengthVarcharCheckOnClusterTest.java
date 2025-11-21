@@ -17,10 +17,13 @@ import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
@@ -44,13 +47,13 @@ class ColumnsWithFixedLengthVarcharCheckOnClusterTest extends DatabaseAwareTestB
                 .executing(ctx)
                 .hasSize(6)
                 .usingRecursiveFieldByFieldElementComparator()
-                .containsExactlyInAnyOrder(
+                .containsExactly(
                     ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "accounts", "account_number")),
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "email")),
                     ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "first_name")),
                     ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "last_name")),
                     ColumnWithType.ofVarchar(Column.ofNullable(ctx, "clients", "middle_name")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "phone")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "email"))
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "phone"))
                 ));
     }
 
@@ -62,12 +65,12 @@ class ColumnsWithFixedLengthVarcharCheckOnClusterTest extends DatabaseAwareTestB
                 .executing(ctx)
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparator()
-                .containsExactlyInAnyOrder(
+                .containsExactly(
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "email")),
                     ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "first_name")),
                     ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "last_name")),
                     ColumnWithType.ofVarchar(Column.ofNullable(ctx, "clients", "middle_name")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "phone")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "email"))
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "phone"))
                 ));
     }
 
@@ -76,12 +79,12 @@ class ColumnsWithFixedLengthVarcharCheckOnClusterTest extends DatabaseAwareTestB
     void shouldWorkWithPartitionedTables(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx ->
             assertThat(check)
-                .executing(ctx)
-                .hasSize(8)
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
-                .contains(
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "tp", "ref_type")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "tp", "entity_id"))
+                .containsExactly(
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "tp", "entity_id")),
+                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "tp", "ref_type"))
                 ));
     }
 }

@@ -39,18 +39,27 @@ class BtreeIndexesOnArrayColumnsCheckOnHostTest extends DatabaseAwareTestBase {
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void onDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withBtreeIndexesOnArrayColumn(), ctx -> {
-            final String accountsTableName = ctx.enrichWithSchema("accounts");
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
-                .containsExactlyInAnyOrder(
-                    IndexWithColumns.ofSingle(ctx, accountsTableName, "accounts_roles_btree_idx", 0L,
-                        Column.ofNotNull(ctx, accountsTableName, "roles")),
-                    IndexWithColumns.ofSingle(ctx, accountsTableName, "accounts_account_number_roles_btree_idx", 0L,
-                        Column.ofNotNull(ctx, accountsTableName, "roles"))
-                );
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
+                .containsExactly(
+                    IndexWithColumns.ofSingle(ctx, "accounts", "accounts_account_number_roles_btree_idx", 0L,
+                        Column.ofNullable(ctx, "accounts", "roles")),
+                    IndexWithColumns.ofSingle(ctx, "accounts", "accounts_roles_btree_idx", 0L,
+                        Column.ofNullable(ctx, "accounts", "roles")))
+                .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
@@ -65,8 +74,9 @@ class BtreeIndexesOnArrayColumnsCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    IndexWithColumns.ofSingle(ctx, "t1", "t1_roles_btree_idx", 0L, Column.ofNotNull(ctx, "t1", "roles"))
+                    IndexWithColumns.ofSingle(ctx, "t1", "t1_roles_btree_idx", 0L, Column.ofNullable(ctx, "t1", "roles"))
                 ));
     }
 }

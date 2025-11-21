@@ -45,6 +45,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
             assertThat(check)
                 .executing(ctx)
                 .hasSize(13)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Column.ofNotNull(ctx, "accounts", "account_balance"),
                     Column.ofNotNull(ctx, "accounts", "account_number"),
@@ -61,6 +62,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
                     Column.ofNullable(ctx, "clients", "middle_name"))
                 .filteredOn(Column::isNullable)
                 .hasSize(3)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Column.ofNullable(ctx, "\"bad-table-two\"", "description"),
                     Column.ofNullable(ctx, "clients", "info"),
@@ -83,6 +85,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
                 .hasSize(10)
                 .filteredOn(c -> "id".equalsIgnoreCase(c.getColumnName()))
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Column.ofNotNull(ctx, "accounts", "id"),
                     Column.ofNotNull(ctx, "clients", "id")));
@@ -97,8 +100,10 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
                 .hasSize(9)
                 .filteredOn(Column::isNullable)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name")));
+                    Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name")
+                ));
     }
 
     @ParameterizedTest
@@ -109,11 +114,13 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
                 .hasSize(5)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Column.ofNotNull(ctx, expectedTableName, "creation_date"),
                     Column.ofNullable(ctx, expectedTableName, "description"),
                     Column.ofNotNull(ctx, expectedTableName, "entity_id"),
                     Column.ofNotNull(ctx, expectedTableName, "ref_type"),
-                    Column.ofNotNull(ctx, expectedTableName, "ref_value")));
+                    Column.ofNotNull(ctx, expectedTableName, "ref_value")
+                ));
     }
 }
