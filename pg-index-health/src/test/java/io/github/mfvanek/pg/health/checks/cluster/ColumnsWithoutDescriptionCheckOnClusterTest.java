@@ -44,7 +44,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBadlyNamedObjects(), ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(13)
+                .hasSize(18)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Column.ofNotNull(ctx, "accounts", "account_balance"),
@@ -55,23 +55,20 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
                     Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\""),
                     Column.ofNotNull(ctx, "\"bad-table-two\"", "\"bad-ref-id\""),
                     Column.ofNullable(ctx, "\"bad-table-two\"", "description"),
+                    Column.ofNullable(ctx, "clients", "contact_person"),
                     Column.ofNotNull(ctx, "clients", "first_name"),
+                    Column.ofNotNull(ctx, "clients", "gender"),
+                    Column.ofNullable(ctx, "clients", "home_address"),
                     Column.ofNotNull(ctx, "clients", "id"),
                     Column.ofNullable(ctx, "clients", "info"),
                     Column.ofNotNull(ctx, "clients", "last_name"),
-                    Column.ofNullable(ctx, "clients", "middle_name"))
-                .filteredOn(Column::isNullable)
-                .hasSize(3)
-                .usingRecursiveFieldByFieldElementComparator()
-                .containsExactly(
-                    Column.ofNullable(ctx, "\"bad-table-two\"", "description"),
-                    Column.ofNullable(ctx, "clients", "info"),
-                    Column.ofNullable(ctx, "clients", "middle_name")
-                );
+                    Column.ofNullable(ctx, "clients", "middle_name"),
+                    Column.ofNullable(ctx, "clients", "nickname"),
+                    Column.ofNullable(ctx, "clients", "safe_word"));
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "\"bad-table\"", "\"bad-table-two\"")))
-                .hasSize(5)
+                .hasSize(10)
                 .allMatch(c -> c.getTableName().equals(ctx.enrichWithSchema("clients")));
         });
     }
@@ -82,7 +79,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnColumns(), ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(10)
+                .hasSize(15)
                 .filteredOn(c -> "id".equalsIgnoreCase(c.getColumnName()))
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
@@ -97,13 +94,11 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDroppedInfoColumn(), ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(9)
-                .filteredOn(Column::isNullable)
-                .hasSize(1)
+                .hasSize(14)
                 .usingRecursiveFieldByFieldElementComparator()
-                .containsExactly(
-                    Column.ofNullable(ctx.enrichWithSchema("clients"), "middle_name")
-                ));
+                .doesNotContain(
+                    Column.ofNullable(ctx, "clients", "info"))
+                .noneMatch(c -> "info".equalsIgnoreCase(c.getColumnName())));
     }
 
     @ParameterizedTest
