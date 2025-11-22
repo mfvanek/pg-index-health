@@ -46,11 +46,12 @@ class PrimaryKeysWithVarcharCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(3)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "t_link", "t_link_pkey", List.of(Column.ofNotNull(ctx, "t_link", "id_long"), Column.ofNotNull(ctx, "t_link", "\"id-short\""))),
                     IndexWithColumns.ofSingle(ctx, "t_varchar_long", "t_varchar_long_pkey", 0L, Column.ofNotNull(ctx, "t_varchar_long", "id_long")),
-                    IndexWithColumns.ofSingle(ctx, "\"t-varchar-short\"", "\"t-varchar-short_pkey\"", 0L, Column.ofNotNull(ctx, "\"t-varchar-short\"", "\"id-short\""))
-                );
+                    IndexWithColumns.ofSingle(ctx, "\"t-varchar-short\"", "\"t-varchar-short_pkey\"", 0L, Column.ofNotNull(ctx, "\"t-varchar-short\"", "\"id-short\"")))
+                .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("t_link", "t_varchar_long", "\"t-varchar-short\"")))
@@ -65,12 +66,12 @@ class PrimaryKeysWithVarcharCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "tp", "tp_pkey", List.of(
                         Column.ofNotNull(ctx, "tp", "creation_date"),
                         Column.ofNotNull(ctx, "tp", "ref_type"),
                         Column.ofNotNull(ctx, "tp", "entity_id")))
-                )
-        );
+                ));
     }
 }

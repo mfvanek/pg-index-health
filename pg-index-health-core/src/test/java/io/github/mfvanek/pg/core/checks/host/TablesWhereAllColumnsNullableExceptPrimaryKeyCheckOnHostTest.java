@@ -43,10 +43,11 @@ class TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHostTest extends Datab
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
                 .containsExactly(
                     Table.of(ctx, "bad_design"),
-                    Table.of(ctx, "\"no-pk\"")
-                ));
+                    Table.of(ctx, "\"no-pk\""))
+                .allMatch(t -> t.getTableSizeInBytes() > 1L));
     }
 
     @ParameterizedTest
@@ -56,7 +57,9 @@ class TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHostTest extends Datab
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name")));
+                    Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name")
+                ));
     }
 }

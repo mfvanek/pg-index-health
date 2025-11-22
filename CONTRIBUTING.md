@@ -69,6 +69,15 @@ Implement a new class extending [AbstractCheckOnCluster](pg-index-health/src/mai
 ### Write proper tests
 
 * Your code must be 100% covered.
+* Use the `containsExactly()` method from **AssertJ** to validate the order in the check results.
+* Use the `usingRecursiveFieldByFieldElementComparator()` method from **AssertJ** to validate database objects in the check results.
+* Ignore fields with the size of tables and indexes in the check results
+  via `usingRecursiveFieldByFieldElementComparatorIgnoringFields("totalSize", "indexes.indexSizeInBytes")`.  
+  Make sure that the size is returned and non-zero:
+  ```java
+  .allMatch(i -> i.getIndexSizeInBytes() > 1L)
+  .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
+  ```
 * Mutation tests via [pitest](https://pitest.org/) should work.
 * Behavior of the new check should be tested for ordinary (non-partitioned) tables/indexes.
 * Behavior of the new check should be tested for partitioned tables (if applicable).

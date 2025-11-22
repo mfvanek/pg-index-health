@@ -14,7 +14,8 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
-import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
@@ -24,47 +25,51 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
-class ForeignKeysWithUnmatchedColumnTypeCheckOnClusterTest extends DatabaseAwareTestBase {
+class ColumnsWithCharTypeCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<@NonNull ForeignKey> check = new ForeignKeysWithUnmatchedColumnTypeCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull ColumnWithType> check = new ColumnsWithCharTypeCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(ForeignKey.class)
-            .hasDiagnostic(Diagnostic.FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE)
+            .hasType(ColumnWithType.class)
+            .hasDiagnostic(Diagnostic.COLUMNS_WITH_CHAR_TYPE)
             .isStatic();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(2)
+                .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_email_phone", "phone"),
-                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id")
-                );
-
-            assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_clients"))
-                .isEmpty();
-        });
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "clients", "contact_person")),
+                    ColumnWithType.ofCharacter(Column.ofNotNull(ctx, "clients", "gender")),
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "clients", "home_address")),
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "clients", "nickname")))
+                .doesNotContain(
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "clients", "safe_word"))
+                ));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialAndForeignKeysInPartitionedTable, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx ->
             assertThat(check)
-                .executing(ctx)
-                .hasSize(1)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
+                .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type")
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "tp", "contact_person")),
+                    ColumnWithType.ofCharacter(Column.ofNotNull(ctx, "tp", "gender")),
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "tp", "home_address")),
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "tp", "nickname")))
+                .doesNotContain(
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "tp", "safe_word"))
                 ));
     }
 }

@@ -43,10 +43,11 @@ class TablesWherePrimaryKeyColumnsNotFirstCheckOnHostTest extends DatabaseAwareT
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
                 .containsExactly(
                     Table.of(ctx, "t2_composite"),
-                    Table.of(ctx, "\"times-of-creation\"")
-                ));
+                    Table.of(ctx, "\"times-of-creation\""))
+                .allMatch(t -> t.getTableSizeInBytes() > 1L));
     }
 
     @ParameterizedTest
@@ -65,7 +66,9 @@ class TablesWherePrimaryKeyColumnsNotFirstCheckOnHostTest extends DatabaseAwareT
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name")));
+                    Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name")
+                ));
     }
 }

@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
-import io.github.mfvanek.pg.model.column.SerialType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipBySequenceNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -44,6 +43,16 @@ class PrimaryKeysWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void onDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withIdentityPrimaryKey(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .isEmpty()
+        );
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withSerialType().withBadlyNamedObjects(), ctx -> {
             assertThat(check)
@@ -51,12 +60,8 @@ class PrimaryKeysWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithSerialType.of(
-                        ctx, Column.ofNotNull(ctx, "bad_accounts", "id"), SerialType.BIG_SERIAL, "bad_accounts_id_seq"
-                    ),
-                    ColumnWithSerialType.of(
-                        ctx, Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\""), SerialType.SERIAL, "\"bad-table_bad-id_seq\""
-                    )
+                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "bad_accounts", "id"), "bad_accounts_id_seq"),
+                    ColumnWithSerialType.ofSerial(ctx, Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\""), "\"bad-table_bad-id_seq\"")
                 );
 
             assertThat(check)
@@ -71,16 +76,6 @@ class PrimaryKeysWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withIdentityPrimaryKey(), ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .isEmpty()
-        );
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withVeryLongNamesInPartitionedTable, ctx -> {
             final String tableName = "entity_long_1234567890_1234567890_1234567890_1234567890_1234567";
@@ -90,7 +85,7 @@ class PrimaryKeysWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, tableName, "entity_id"), SerialType.BIG_SERIAL, sequenceName)
+                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, tableName, "entity_id"), sequenceName)
                 );
         });
     }

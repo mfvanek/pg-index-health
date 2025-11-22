@@ -43,7 +43,10 @@ class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(Table.of(ctx, "bad_clients"));
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
+                .containsExactly(
+                    Table.of(ctx, "bad_clients"))
+                .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_clients"))
@@ -67,6 +70,7 @@ class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
                 .containsExactly(
                     Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name"),
                     Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default")
@@ -80,6 +84,7 @@ class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name")));
     }

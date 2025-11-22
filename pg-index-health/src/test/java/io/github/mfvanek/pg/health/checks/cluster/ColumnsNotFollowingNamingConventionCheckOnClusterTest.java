@@ -45,6 +45,7 @@ class ColumnsNotFollowingNamingConventionCheckOnClusterTest extends DatabaseAwar
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\""),
                     Column.ofNotNull(ctx, "\"bad-table-two\"", "\"bad-ref-id\"")
@@ -63,6 +64,7 @@ class ColumnsNotFollowingNamingConventionCheckOnClusterTest extends DatabaseAwar
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Column.ofNotNull(ctx, "\"one-partitioned\"", "\"bad-id\"")
                 )

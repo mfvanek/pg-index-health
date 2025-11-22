@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.spring;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithCharTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
@@ -324,6 +325,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost tablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost(final PgConnection pgConnection) {
         return new TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(ColumnsWithCharTypeCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public ColumnsWithCharTypeCheckOnHost columnsWithCharTypeCheckOnHost(final PgConnection pgConnection) {
+        return new ColumnsWithCharTypeCheckOnHost(pgConnection);
     }
 
     @Bean

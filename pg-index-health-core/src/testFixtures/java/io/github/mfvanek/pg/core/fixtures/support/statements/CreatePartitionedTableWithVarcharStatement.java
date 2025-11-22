@@ -23,6 +23,11 @@ public class CreatePartitionedTableWithVarcharStatement extends AbstractDbStatem
                     ref_type varchar(36) not null,
                     entity_id varchar(36) not null,
                     account_balance money not null default 0,
+                    gender char not null,
+                    home_address char(2000),
+                    contact_person character(500),
+                    nickname bpchar(200),
+                    safe_word bpchar,
                     primary key (creation_date, ref_type, entity_id)
                 ) partition by range (creation_date);""",
             """

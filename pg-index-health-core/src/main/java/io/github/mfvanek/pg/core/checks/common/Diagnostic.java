@@ -137,11 +137,11 @@ public enum Diagnostic implements CheckInfo {
      */
     COLUMNS_NOT_FOLLOWING_NAMING_CONVENTION,
     /**
-     * Check for primary keys with columns of a fixed length varchar type.
+     * Check for primary keys with columns of a fixed length {@code varchar} type.
      */
     PRIMARY_KEYS_WITH_VARCHAR,
     /**
-     * Check for columns with a fixed length varchar type.
+     * Check for columns with a fixed length {@code varchar} type.
      */
     COLUMNS_WITH_FIXED_LENGTH_VARCHAR,
     /**
@@ -171,7 +171,11 @@ public enum Diagnostic implements CheckInfo {
     /**
      * Check for tables that have all columns besides the primary key that are nullable.
      */
-    TABLES_WHERE_ALL_COLUMNS_NULLABLE_EXCEPT_PK;
+    TABLES_WHERE_ALL_COLUMNS_NULLABLE_EXCEPT_PK,
+    /**
+     * Check for columns of type {@code char}, {@code char(n)}, {@code character(n)} or {@code bpchar(n)}.
+     */
+    COLUMNS_WITH_CHAR_TYPE;
 
     private final CheckInfo inner;
 

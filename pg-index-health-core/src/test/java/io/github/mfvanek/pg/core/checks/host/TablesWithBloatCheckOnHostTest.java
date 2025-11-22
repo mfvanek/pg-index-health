@@ -52,10 +52,11 @@ class TablesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
-                .containsExactlyInAnyOrder(
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("table.tableSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
+                .containsExactly(
                     TableWithBloat.of(ctx, "accounts"),
                     TableWithBloat.of(ctx, "clients"))
-                .allMatch(t -> t.getTableSizeInBytes() > 0L) // real size doesn't matter
+                .allMatch(t -> t.getTableSizeInBytes() > 1L) // real size doesn't matter
                 .allMatch(t -> t.getBloatPercentage() == 0 && t.getBloatSizeInBytes() == 0L);
 
             assertThat(check)
@@ -79,11 +80,12 @@ class TablesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("table.tableSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
                 .containsExactly(
                     TableWithBloat.of(ctx, "order_item_default"),
                     TableWithBloat.of(ctx, "orders_default"))
-                .allMatch(t -> t.getTableSizeInBytes() > 0L) // real size doesn't matter
-                .allMatch(t -> t.getBloatPercentage() > 10.0 && t.getBloatSizeInBytes() > 0L);
+                .allMatch(t -> t.getTableSizeInBytes() > 1L) // real size doesn't matter
+                .allMatch(t -> t.getBloatPercentage() > 10.0 && t.getBloatSizeInBytes() > 1L);
         });
     }
 }

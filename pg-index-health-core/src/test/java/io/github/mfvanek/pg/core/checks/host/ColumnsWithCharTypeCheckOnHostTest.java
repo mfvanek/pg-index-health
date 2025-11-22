@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.predicates.SkipByColumnNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
@@ -26,15 +25,15 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
-class ColumnsWithJsonTypeCheckOnHostTest extends DatabaseAwareTestBase {
+class ColumnsWithCharTypeCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<@NonNull ColumnWithType> check = new ColumnsWithJsonTypeCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull ColumnWithType> check = new ColumnsWithCharTypeCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
             .hasType(ColumnWithType.class)
-            .hasDiagnostic(Diagnostic.COLUMNS_WITH_JSON_TYPE)
+            .hasDiagnostic(Diagnostic.COLUMNS_WITH_CHAR_TYPE)
             .hasHost(getHost())
             .isStatic();
     }
@@ -42,45 +41,36 @@ class ColumnsWithJsonTypeCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withJsonType(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
+                .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.of(Column.ofNullable(ctx, "clients", "info"), "json")
-                );
-
-            assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
-                .isEmpty();
-
-            assertThat(check)
-                .executing(ctx, SkipByColumnNamePredicate.ofName("info"))
-                .isEmpty();
-        });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldIgnoreDroppedColumns(final String schemaName) {
-        // withData - skipped here below
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withJsonType().withDroppedInfoColumn(), ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .isEmpty());
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "clients", "contact_person")),
+                    ColumnWithType.ofCharacter(Column.ofNotNull(ctx, "clients", "gender")),
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "clients", "home_address")),
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "clients", "nickname")))
+                .doesNotContain(
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "clients", "safe_word"))
+                ));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withJsonAndSerialColumnsInPartitionedTable, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx ->
             assertThat(check)
-                .executing(ctx)
-                .hasSize(1)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
+                .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.of(Column.ofNullable(ctx, "parent", "raw_data"), "json")
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "tp", "contact_person")),
+                    ColumnWithType.ofCharacter(Column.ofNotNull(ctx, "tp", "gender")),
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "tp", "home_address")),
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "tp", "nickname")))
+                .doesNotContain(
+                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "tp", "safe_word"))
                 ));
     }
 }
