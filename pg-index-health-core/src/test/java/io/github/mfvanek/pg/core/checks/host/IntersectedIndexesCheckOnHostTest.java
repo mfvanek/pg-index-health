@@ -47,6 +47,7 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("totalSize", "indexes.indexSizeInBytes")
                 .containsExactly(
                     DuplicatedIndexes.of(
                         Index.of(ctx, "accounts", "i_accounts_account_number_not_deleted"),
@@ -75,6 +76,7 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("totalSize", "indexes.indexSizeInBytes")
                 .containsExactly(
                     DuplicatedIndexes.of(
                         Index.of(ctx, "clients", "i_clients_last_first"),
@@ -107,6 +109,7 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedIndexes.of(
                         Index.of(ctx, "t1", "idx_t1_deleted_duplicate"),

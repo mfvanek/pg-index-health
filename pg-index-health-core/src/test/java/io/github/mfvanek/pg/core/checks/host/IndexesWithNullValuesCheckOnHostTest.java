@@ -40,13 +40,24 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void onDatabaseWithoutThem(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(IndexWithColumns.ofNullable(ctx, "clients", "i_clients_middle_name", "middle_name"))
-                .allMatch(i -> i.getFirstColumn() != null && i.getFirstColumn().isNullable());
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
+                .containsExactly(
+                    IndexWithColumns.ofNullable(ctx, "clients", "i_clients_middle_name", "middle_name"))
+                .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
@@ -65,6 +76,7 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
                     IndexWithColumns.ofNullable(ctx, "custom_entity_reference_with_very_very_very_long_name", "idx_custom_entity_reference_with_very_very_very_long_name_1", "ref_type"),
                     IndexWithColumns.ofNullable(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "idx_custom_entity_reference_with_very_very_very_long_name_1_d_3", "ref_type"))

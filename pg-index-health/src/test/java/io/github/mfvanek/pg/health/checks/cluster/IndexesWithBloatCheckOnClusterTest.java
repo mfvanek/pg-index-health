@@ -53,7 +53,6 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
         });
     }
 
-    @SuppressWarnings("checkstyle:LambdaBodyLength")
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
@@ -67,7 +66,8 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(4)
-                .containsExactlyInAnyOrder(
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
+                .containsExactly(
                     IndexWithBloat.of(ctx, accountsTableName, "accounts_account_number_key"),
                     IndexWithBloat.of(ctx, accountsTableName, "accounts_pkey"),
                     IndexWithBloat.of(ctx, clientsTableName, "clients_pkey"),
@@ -104,6 +104,7 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(4)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
                 .containsExactly(
                     IndexWithBloat.of(ctx, "order_item_default", "order_item_default_order_id_idx"),
                     IndexWithBloat.of(ctx, "order_item_default", "order_item_default_pkey"),
@@ -115,6 +116,7 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
             assertThat(check)
                 .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "order_item_default_warehouse_id_idx"))
                 .hasSize(3)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
                 .containsExactly(
                     IndexWithBloat.of(ctx, "order_item_default", "order_item_default_order_id_idx"),
                     IndexWithBloat.of(ctx, "order_item_default", "order_item_default_pkey"),

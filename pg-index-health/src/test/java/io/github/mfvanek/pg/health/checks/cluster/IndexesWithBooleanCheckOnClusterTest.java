@@ -45,9 +45,11 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
                     IndexWithColumns.ofSingle(ctx, "accounts", "i_accounts_deleted", 0L,
-                        Column.ofNotNull(ctx, "accounts", "deleted")));
+                        Column.ofNotNull(ctx, "accounts", "deleted")))
+                .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
@@ -66,6 +68,7 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted", 0L,
                         Column.ofNotNull(ctx, "t1", "deleted"))
