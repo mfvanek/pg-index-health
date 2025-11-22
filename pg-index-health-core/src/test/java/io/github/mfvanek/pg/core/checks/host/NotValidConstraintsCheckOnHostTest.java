@@ -48,6 +48,7 @@ class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
             final List<Constraint> notValidConstraints = check.check(ctx);
             Assertions.assertThat(notValidConstraints)
                 .hasSize(3)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Constraint.ofType(ctx, "accounts", "c_accounts_chk_client_id_not_validated_yet", ConstraintType.CHECK),
                     Constraint.ofType(ctx, "accounts", "c_accounts_fk_client_id_not_validated_yet", ConstraintType.FOREIGN_KEY),
@@ -77,6 +78,7 @@ class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Constraint.ofType(ctx, "t1", "t1_entity_id_not_validated_yet", ConstraintType.CHECK),
                     Constraint.ofType(ctx, "t1_default", "t1_default_entity_id_not_validated_yet", ConstraintType.CHECK)

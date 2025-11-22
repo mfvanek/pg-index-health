@@ -51,9 +51,10 @@ class PossibleObjectNameOverflowCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
-                .containsExactlyInAnyOrder(
-                    AnyObject.ofType(ctx, matViewName, PgObjectType.MATERIALIZED_VIEW),
-                    AnyObject.ofType(ctx, constraintName, PgObjectType.CONSTRAINT));
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactly(
+                    AnyObject.ofType(ctx, constraintName, PgObjectType.CONSTRAINT),
+                    AnyObject.ofType(ctx, matViewName, PgObjectType.MATERIALIZED_VIEW));
 
             assertThat(check)
                 .executing(ctx, SkipDbObjectsByNamePredicate.of(ctx, List.of(matViewName, constraintName)))
