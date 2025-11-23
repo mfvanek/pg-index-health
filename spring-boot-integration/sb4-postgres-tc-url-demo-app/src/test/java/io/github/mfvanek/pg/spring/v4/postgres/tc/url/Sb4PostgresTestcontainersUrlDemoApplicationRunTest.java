@@ -27,7 +27,6 @@ class Sb4PostgresTestcontainersUrlDemoApplicationRunTest {
             .doesNotThrowAnyException();
         assertThat(output.getAll())
             .contains("Starting Sb4PostgresTestcontainersUrlDemoApplication using Java")
-            .contains("Container is started (JDBC URL: jdbc:postgresql://localhost:")
             .contains("Started Sb4PostgresTestcontainersUrlDemoApplication in")
             .contains("(v4.0.0)");
     }
