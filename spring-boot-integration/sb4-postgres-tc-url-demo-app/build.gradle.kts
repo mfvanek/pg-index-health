@@ -10,9 +10,8 @@
 
 plugins {
     id("pg-index-health.java-application")
-    alias(libs.plugins.spring.boot.v3.gradle.plugin)
+    alias(libs.plugins.spring.boot.v4.gradle.plugin)
     alias(libs.plugins.spring.dependency.management)
-    alias(libs.plugins.lombok)
 }
 
 ext["commons-lang3.version"] = libs.versions.commons.lang3.get()
@@ -20,17 +19,12 @@ ext["assertj.version"] = libs.versions.assertj.get()
 ext["junit-jupiter.version"] = libs.versions.junit.get()
 
 dependencies {
-    implementation(project(":pg-index-health-testing"))
-    implementation(libs.spring.boot.v3.starter.jdbc)
     implementation(platform(libs.testcontainers.bom))
     implementation("org.testcontainers:postgresql")
+    implementation(libs.spring.boot.v4.starter.jdbc.main)
 
     runtimeOnly(libs.postgresql)
 
-    testImplementation(libs.spring.boot.v3.starter.test)
+    testImplementation(libs.spring.boot.v4.starter.jdbc.test)
     testImplementation(project(":spring-boot-integration:pg-index-health-test-starter"))
-}
-
-lombok {
-    version = "1.18.42"
 }

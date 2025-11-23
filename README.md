@@ -90,11 +90,11 @@ Add a standard test to your project [as shown in the link](doc/standard_test.md)
 
 ### Spring Boot compatibility
 
-| Spring Boot | Min JDK | pg-index-health-test-starter |
-|-------------|---------|------------------------------|
-| 2.7.x       | 11      | 0.8.x — 0.15.x               |
-| 3.3.x       | 17      | 0.20.x                       |
-| 3.4.x       | 17      | 0.30.x                       |
+| Spring Boot | Minimum JDK | pg-index-health-test-starter |
+|-------------|-------------|------------------------------|
+| 2.7.x       | 11          | 0.8.x — 0.15.x               |
+| 3.3.x       | 17          | 0.20.x                       |
+| 3.4.x       | 17          | 0.30.x                       |
 
 #### Spring Boot 3 compatibility
 
@@ -102,6 +102,11 @@ Add a standard test to your project [as shown in the link](doc/standard_test.md)
   added support for [Spring Boot 3.0](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#auto-configuration-files)
 * Starting from [0.10.2](https://github.com/mfvanek/pg-index-health-test-starter/releases/tag/v.0.10.2)
   added support for [Spring Boot 3.2](https://github.com/spring-projects/spring-framework/wiki/Upgrading-to-Spring-Framework-6.x#parameter-name-retention)
+
+#### Spring Boot 4 compatibility
+
+* Starting from [0.30.1](https://github.com/mfvanek/pg-index-health-test-starter/releases/tag/v.0.30.1)
+  added support for [Spring Boot 4.0](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide)
 
 ## Supported PostgreSQL versions
 

@@ -6,6 +6,6 @@ spring:
         username: custom_user
         password: customUserPassword
     main:
-        banner-mode: off
+        banner-mode: log
     liquibase:
         change-log: classpath:/changelog/changelog.yaml

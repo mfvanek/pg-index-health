@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.spring.postgres.tc.url;
+package io.github.mfvanek.pg.spring.v4.postgres.tc.url;
 
 import com.zaxxer.hikari.HikariDataSource;
 import io.github.mfvanek.pg.connection.PgConnection;
@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class PostgresTestcontainersUrlDemoApplicationTest {
+class Sb4PostgresTestcontainersUrlDemoApplicationTest {
 
     @Autowired
     private ApplicationContext applicationContext;

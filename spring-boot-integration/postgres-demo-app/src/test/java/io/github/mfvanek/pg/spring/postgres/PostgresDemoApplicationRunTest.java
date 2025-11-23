@@ -28,6 +28,7 @@ class PostgresDemoApplicationRunTest {
         assertThat(output.getAll())
             .contains("Starting PostgresDemoApplication using Java")
             .contains("Container is started (JDBC URL: jdbc:postgresql://localhost:")
-            .contains("Started PostgresDemoApplication in");
+            .contains("Started PostgresDemoApplication in")
+            .contains("(v3.4.12)");
     }
 }

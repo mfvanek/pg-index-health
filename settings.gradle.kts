@@ -25,3 +25,5 @@ findProject(":spring-boot-integration:kotlin-custom-ds-demo-app")?.name = "kotli
 include("spring-boot-integration:postgres-demo-app-with-custom-user")
 findProject(":spring-boot-integration:postgres-demo-app-with-custom-user")?.name = "postgres-demo-app-with-custom-user"
 include("pg-index-health-model-jackson-module")
+include("spring-boot-integration:sb4-postgres-tc-url-demo-app")
+findProject(":spring-boot-integration:sb4-postgres-tc-url-demo-app")?.name = "sb4-postgres-tc-url-demo-app"

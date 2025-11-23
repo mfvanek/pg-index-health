@@ -2,7 +2,7 @@ debug: false
 
 spring:
     main:
-        banner-mode: off
+        banner-mode: log
     liquibase:
         change-log: classpath:/changelog/changelog.yaml
         default-schema: custom_ds_schema
