@@ -28,4 +28,5 @@ dependencies {
     testImplementation(libs.spring.boot.v3.starter.test)
     testImplementation(libs.apache.commons.lang3)
     testImplementation(libs.postgresql)
+    testImplementation(libs.arch.unit)
 }

@@ -16,6 +16,7 @@ dependencies {
     testImplementation(libs.postgresql)
     testImplementation(libs.slf4j.simple)
     testImplementation(libs.slf4j.jul)
+    testImplementation(libs.arch.unit)
 
     testFixturesImplementation(libs.jspecify)
     testFixturesImplementation(libs.apache.commons.lang3)

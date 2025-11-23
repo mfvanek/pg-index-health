@@ -37,6 +37,7 @@ detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin",
 liquibase-core = "org.liquibase:liquibase-core:5.0.1"
 liquibase-sessionlock = "com.github.blagerweij:liquibase-sessionlock:1.6.9"
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
+arch-unit = "com.tngtech.archunit:archunit-junit5:1.4.1"
 
 [plugins]
 spring-boot-v3-gradle-plugin = { id = "org.springframework.boot", version.ref = "spring-boot-v3" }
