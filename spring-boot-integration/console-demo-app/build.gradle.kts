@@ -10,7 +10,7 @@
 
 plugins {
     id("pg-index-health.java-application")
-    alias(libs.plugins.spring.boot.gradlePlugin)
+    alias(libs.plugins.spring.boot.v3.gradle.plugin)
     alias(libs.plugins.spring.dependency.management)
 }
 
@@ -19,8 +19,8 @@ ext["assertj.version"] = libs.versions.assertj.get()
 ext["junit-jupiter.version"] = libs.versions.junit.get()
 
 dependencies {
-    implementation(libs.spring.boot.starter.root)
+    implementation(libs.spring.boot.v3.starter.root)
 
-    testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.spring.boot.v3.starter.test)
     testImplementation(project(":spring-boot-integration:pg-index-health-test-starter"))
 }

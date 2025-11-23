@@ -2,4 +2,4 @@ debug: false
 
 spring:
     main:
-        banner-mode: off
+        banner-mode: log

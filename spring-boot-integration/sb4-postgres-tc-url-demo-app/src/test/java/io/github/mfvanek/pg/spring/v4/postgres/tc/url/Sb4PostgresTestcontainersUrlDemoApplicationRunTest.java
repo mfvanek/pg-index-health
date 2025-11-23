@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.spring.postgres.with.custom.user;
+package io.github.mfvanek.pg.spring.v4.postgres.tc.url;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,17 +19,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 @ExtendWith(OutputCaptureExtension.class)
-class PostgresWithCustomUserDemoApplicationRunTest {
+class Sb4PostgresTestcontainersUrlDemoApplicationRunTest {
 
     @Test
     void applicationShouldRun(final CapturedOutput output) {
-        assertThatCode(() -> PostgresWithCustomUserDemoApplication.main(new String[]{}))
+        assertThatCode(() -> Sb4PostgresTestcontainersUrlDemoApplication.main(new String[]{}))
             .doesNotThrowAnyException();
         assertThat(output.getAll())
-            .contains("Reading from main_schema.databasechangelog")
-            .contains("Starting PostgresWithCustomUserDemoApplication using Java")
+            .contains("Starting Sb4PostgresTestcontainersUrlDemoApplication using Java")
             .contains("Container is started (JDBC URL: jdbc:postgresql://localhost:")
-            .contains("Started PostgresWithCustomUserDemoApplication in")
-            .contains("(v3.4.12)");
+            .contains("Started Sb4PostgresTestcontainersUrlDemoApplication in")
+            .contains("(v4.0.0)");
     }
 }

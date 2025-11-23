@@ -32,7 +32,7 @@ class PostgresWithCustomUserDemoApplicationTest {
     private Environment environment;
 
     @Test
-    void contextLoadsAndDoesNotContainPgIndexHealthBeans() {
+    void contextLoadsAndContainsPgIndexHealthBeans() {
         assertThat(applicationContext.getBean("dataSource"))
             .isInstanceOf(HikariDataSource.class);
 

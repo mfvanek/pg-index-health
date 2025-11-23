@@ -27,6 +27,7 @@ class ConsoleDemoApplicationRunTest {
             .doesNotThrowAnyException();
         assertThat(output.getAll())
             .contains("Starting ConsoleDemoApplication using Java")
-            .contains("Started ConsoleDemoApplication in");
+            .contains("Started ConsoleDemoApplication in")
+            .contains("(v3.4.12)");
     }
 }

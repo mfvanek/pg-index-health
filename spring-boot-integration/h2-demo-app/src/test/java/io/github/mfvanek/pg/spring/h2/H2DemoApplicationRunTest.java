@@ -27,6 +27,7 @@ class H2DemoApplicationRunTest {
             .doesNotThrowAnyException();
         assertThat(output.getAll())
             .contains("Starting H2DemoApplication using Java")
-            .contains("Started H2DemoApplication in");
+            .contains("Started H2DemoApplication in")
+            .contains("(v3.4.12)");
     }
 }

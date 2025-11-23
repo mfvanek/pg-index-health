@@ -18,7 +18,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -32,7 +31,11 @@ import javax.sql.DataSource;
  * @author Ivan Vakhrushev
  * @since 0.3.1
  */
-@AutoConfiguration(after = DataSourceAutoConfiguration.class)
+@AutoConfiguration(afterName = {
+    "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration", // for Spring Boot 3.4
+    "org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration", // for Spring Boot 4.0
+    "org.springframework.boot.jdbc.autoconfigure.DataSourceInitializationAutoConfiguration" // for Spring Boot 4.0
+})
 @EnableConfigurationProperties(DatabaseStructureHealthProperties.class)
 @ConditionalOnClass(value = DataSource.class, name = "org.postgresql.Driver")
 @Conditional(DatabaseStructureHealthCondition.class)
