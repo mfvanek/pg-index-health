@@ -38,7 +38,7 @@ You can add your own database structure checks [as shown in the link](doc/custom
 Using Gradle:
 
 ```kotlin
-implementation("io.github.mfvanek:pg-index-health:0.30.0")
+implementation("io.github.mfvanek:pg-index-health:0.30.1")
 ```
 
 Using Maven:
@@ -47,7 +47,7 @@ Using Maven:
 <dependency>
   <groupId>io.github.mfvanek</groupId>
   <artifactId>pg-index-health</artifactId>
-  <version>0.30.0</version>
+  <version>0.30.1</version>
 </dependency>
 ```
 
@@ -70,7 +70,7 @@ More examples you can find in the [pg-index-health-demo](https://github.com/mfva
 Using Gradle:
 
 ```kotlin
-testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.30.0")
+testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.30.1")
 ```
 
 Using Maven:
@@ -79,7 +79,7 @@ Using Maven:
 <dependency>
     <groupId>io.github.mfvanek</groupId>
     <artifactId>pg-index-health-test-starter</artifactId>
-    <version>0.30.0</version>
+    <version>0.30.1</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -105,7 +105,7 @@ Add a standard test to your project [as shown in the link](doc/standard_test.md)
 
 #### Spring Boot 4 compatibility
 
-* Starting from [0.30.1](https://github.com/mfvanek/pg-index-health-test-starter/releases/tag/v.0.30.1)
+* Starting from [0.30.1](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.30.1)
   added support for [Spring Boot 4.0](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide)
 
 ## Supported PostgreSQL versions
