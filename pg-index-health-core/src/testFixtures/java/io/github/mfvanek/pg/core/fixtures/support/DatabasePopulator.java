@@ -66,6 +66,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithChec
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithFixedLengthVarcharStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIdentityPrimaryKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithInheritanceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithNaturalKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithTimestampInTheMiddleStatement;
@@ -368,6 +369,10 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withBloatInPartitionedTable() {
         return register(145, new CreatePartitionedTableForBloatStatement());
+    }
+
+    public DatabasePopulator withInheritance() {
+        return register(146, new CreateTableWithInheritanceStatement());
     }
 
     public void populate() {

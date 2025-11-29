@@ -80,7 +80,8 @@ public final class StandardChecksOnHost implements Function<PgConnection, List<D
             new ColumnsWithTimestampOrTimetzTypeCheckOnHost(pgConnection),
             new TablesWherePrimaryKeyColumnsNotFirstCheckOnHost(pgConnection),
             new TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost(pgConnection),
-            new ColumnsWithCharTypeCheckOnHost(pgConnection)
+            new ColumnsWithCharTypeCheckOnHost(pgConnection),
+            new TablesWithInheritanceCheckOnHost(pgConnection)
         );
     }
 }

@@ -79,7 +79,8 @@ public final class StandardChecksOnCluster implements Function<HighAvailabilityP
             new ColumnsWithTimestampOrTimetzTypeCheckOnCluster(haPgConnection),
             new TablesWherePrimaryKeyColumnsNotFirstCheckOnCluster(haPgConnection),
             new TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnCluster(haPgConnection),
-            new ColumnsWithCharTypeCheckOnCluster(haPgConnection)
+            new ColumnsWithCharTypeCheckOnCluster(haPgConnection),
+            new TablesWithInheritanceCheckOnCluster(haPgConnection)
         );
     }
 }

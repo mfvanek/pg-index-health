@@ -175,7 +175,11 @@ public enum Diagnostic implements CheckInfo {
     /**
      * Check for columns of type {@code char}, {@code char(n)}, {@code character(n)} or {@code bpchar(n)}.
      */
-    COLUMNS_WITH_CHAR_TYPE;
+    COLUMNS_WITH_CHAR_TYPE,
+    /**
+     * Check for tables with inheritance.
+     */
+    TABLES_WITH_INHERITANCE;
 
     private final CheckInfo inner;
 
