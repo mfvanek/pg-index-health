@@ -44,6 +44,7 @@ import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWherePrimaryKeyColumnsNotFirstCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.TablesWithInheritanceCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithZeroOrOneColumnCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
@@ -332,6 +333,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public ColumnsWithCharTypeCheckOnHost columnsWithCharTypeCheckOnHost(final PgConnection pgConnection) {
         return new ColumnsWithCharTypeCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(TablesWithInheritanceCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public TablesWithInheritanceCheckOnHost tablesWithInheritanceCheckOnHost(final PgConnection pgConnection) {
+        return new TablesWithInheritanceCheckOnHost(pgConnection);
     }
 
     @Bean
