@@ -13,6 +13,7 @@
         <exclude name="AbstractClassWithoutAbstractMethod"/> <!-- useless -->
         <exclude name="CheckResultSet"/>
         <exclude name="ImplicitFunctionalInterface"/>
+        <exclude name="EnumComparison"/>
     </rule>
 
     <rule ref="category/java/codestyle.xml">
@@ -55,7 +56,6 @@
     <rule ref="category/java/design.xml">
         <exclude name="LawOfDemeter"/>
         <exclude name="LoosePackageCoupling"/>
-        <exclude name="AvoidCatchingGenericException"/>
         <exclude name="UseUtilityClass"/>
         <exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal"/>
         <exclude name="DataClass"/>
@@ -95,5 +95,6 @@
         <exclude name="NullAssignment"/>
         <exclude name="TestClassWithoutTestCases"/>
         <exclude name="ConstructorCallsOverridableMethod"/>
+        <exclude name="AvoidCatchingGenericException"/>
     </rule>
 </ruleset>
