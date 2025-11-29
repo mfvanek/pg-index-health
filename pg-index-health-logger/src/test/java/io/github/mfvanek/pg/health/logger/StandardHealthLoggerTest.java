@@ -130,7 +130,8 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "columns_with_timestamp_or_timetz_type:4",
                         "tables_where_primary_key_columns_not_first:3",
                         "tables_where_all_columns_nullable_except_pk:5",
-                        "columns_with_char_type:4"
+                        "columns_with_char_type:4",
+                        "tables_with_inheritance:0"
                     );
             }
         );
