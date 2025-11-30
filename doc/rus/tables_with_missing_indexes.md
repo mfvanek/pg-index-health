@@ -30,37 +30,96 @@
 ```sql
 create schema if not exists demo;
 
-create table if not exists demo."table_with_missing_index"
+-- Для обычных (не секционированных) таблиц
+
+create table if not exists demo.orders
 (
-    id bigint not null primary key,
-    first_name text,
-    last_name text
+    id bigint primary key generated always as identity,
+    user_id bigint not null,
+    shop_id bigint not null,
+    status int not null,
+    created_at timestamptz not null default current_timestamp
 );
 
-insert into demo."table_with_missing_index" (id, first_name, last_name) values (generate_series(1, 20),'first', 'last');
+-- Наполнение данными
 
-insert into demo."table_with_missing_index" (id, first_name, last_name) values (generate_series(21, 27),'next first', 'next last');
+insert into demo.orders (user_id, shop_id, status)
+select
+    (ids.id % 10) + 1 as user_id,
+    (ids.id % 4) + 1 as shop_id,
+    1 as status
+from generate_series(1, 10000) ids (id);
 
-create table if not exists demo."table_with_missing_index_partitioned"
+DO $$
+    DECLARE
+        min_shop_id bigint;
+        r record;
+    BEGIN
+        -- один раз считаем минимальный shop_id
+        SELECT MIN(shop_id) INTO min_shop_id FROM demo.orders;
+
+        -- цикл 500 раз
+        FOR i IN 1..500 LOOP
+                SELECT *
+                INTO r
+                FROM demo.orders
+                WHERE shop_id = min_shop_id;
+
+                SELECT *
+                INTO r
+                FROM demo.orders
+                WHERE shop_id = 12345;
+            END LOOP;
+    END $$;
+
+-- собираем статистику
+vacuum analyze demo.orders;
+
+-- Для секционированных таблиц
+
+create table if not exists demo.orders_partitioned
 (
-    id integer not null primary key,
-    first_name text,
-    last_name text
-) partition by range (id);
+    id         bigint not null generated always as identity,
+    user_id    bigint      not null,
+    shop_id    bigint      not null,
+    status     int         not null,
+    created_at timestamptz not null default current_timestamp,
+    primary key (id, created_at)
+) partition by range (created_at);
 
-create table if not exists demo."table_with_missing_index_partitioned_1_20"
-    partition of demo."duplicated_indexes_partitioned"
-    for values from (1) to (21);
-    
-create table if not exists demo."table_with_missing_index_partitioned_1_30"
-    partition of demo."duplicated_indexes_partitioned"
-    for values from (21) to (31);
-    
-insert into demo."table_with_missing_index_partitioned_1_20" (id, first_name, last_name) values (generate_series(1, 20),'first', 'last');
+create table if not exists demo.orders_default
+    partition of demo.orders_partitioned default;
 
-insert into demo."table_with_missing_index_1_30" (id, first_name, last_name) values (generate_series(21, 27),'next first', 'next last');
+-- Наполнение данными
 
-select * from demo."table_with_missing_index" where first_name = 'first name';
+insert into demo.orders_partitioned (user_id, shop_id, status)
+select (ids.id % 10) + 1 as user_id,
+       (ids.id % 4) + 1  as shop_id,
+       1                 as status
+from generate_series(1, 10000) ids (id);
 
-select * from demo."table_with_missing_index_partitioned" where first_name = 'first name';
+DO $$
+    DECLARE
+        min_shop_id bigint;
+        r record;
+    BEGIN
+        -- один раз считаем минимальный shop_id
+        SELECT MIN(shop_id) INTO min_shop_id FROM demo.orders_partitioned;
+
+        -- цикл 500 раз
+        FOR i IN 1..500 LOOP
+                SELECT *
+                INTO r
+                FROM demo.orders_partitioned
+                WHERE shop_id = min_shop_id;
+
+                SELECT *
+                INTO r
+                FROM demo.orders_partitioned
+                WHERE shop_id = 12345;
+            END LOOP;
+    END $$;
+
+-- собираем статистику
+vacuum analyze demo.orders_partitioned;
 ```
