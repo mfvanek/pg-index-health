@@ -57,4 +57,13 @@ class TablesWithInheritanceCheckOnHostTest extends DatabaseAwareTestBase {
                 .isEmpty();
         });
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldIgnorePartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withBloatInPartitionedTable, ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .isEmpty());
+    }
 }
