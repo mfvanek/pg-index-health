@@ -32,6 +32,13 @@ create table demo.child_table(
 ) inherits (demo.parent_table);
 
 create table demo."second-child_table"(
-  extra_info2 text
+    extra_info2 text
 ) inherits (demo.child_table);
+
+create table if not exists demo.one_partitioned(
+    ref_type bigserial not null primary key
+) partition by range (ref_type);
+
+create table if not exists demo.one_default
+    partition of demo.one_partitioned default;
 ```
