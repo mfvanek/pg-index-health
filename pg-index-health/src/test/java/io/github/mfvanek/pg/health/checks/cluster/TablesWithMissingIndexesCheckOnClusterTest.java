@@ -49,6 +49,7 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("table.tableSizeInBytes", "seqScans", "indexScans")
                 .containsExactly(
                     TableWithMissingIndex.of(ctx, "accounts"))
                 .allMatch(t -> t.getSeqScans() >= AMOUNT_OF_TRIES)

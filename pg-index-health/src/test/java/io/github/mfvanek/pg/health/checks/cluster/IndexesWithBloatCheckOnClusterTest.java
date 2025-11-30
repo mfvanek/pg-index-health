@@ -53,7 +53,6 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
         });
     }
 
-    @SuppressWarnings("checkstyle:LambdaBodyLength")
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
@@ -67,7 +66,8 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(4)
-                .containsExactlyInAnyOrder(
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
+                .containsExactly(
                     IndexWithBloat.of(ctx, accountsTableName, "accounts_account_number_key"),
                     IndexWithBloat.of(ctx, accountsTableName, "accounts_pkey"),
                     IndexWithBloat.of(ctx, clientsTableName, "clients_pkey"),
@@ -90,6 +90,40 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
             assertThat(check)
                 .executing(ctx, SkipSmallIndexesPredicate.of(1_000_000L))
                 .isEmpty();
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withBloatInPartitionedTable, ctx -> {
+            collectStatistics(schemaName, List.of("orders_partitioned", "order_item_partitioned"));
+            Assertions.assertThat(existsStatisticsForTable(schemaName, "orders_partitioned"))
+                .isTrue();
+
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(4)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
+                .containsExactly(
+                    IndexWithBloat.of(ctx, "order_item_default", "order_item_default_order_id_idx"),
+                    IndexWithBloat.of(ctx, "order_item_default", "order_item_default_pkey"),
+                    IndexWithBloat.of(ctx, "order_item_default", "order_item_default_warehouse_id_idx"),
+                    IndexWithBloat.of(ctx, "orders_default", "orders_default_pkey")
+                )
+                .allMatch(i -> i.getIndexSizeInBytes() > 1L);
+
+            assertThat(check)
+                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "order_item_default_warehouse_id_idx"))
+                .hasSize(3)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
+                .containsExactly(
+                    IndexWithBloat.of(ctx, "order_item_default", "order_item_default_order_id_idx"),
+                    IndexWithBloat.of(ctx, "order_item_default", "order_item_default_pkey"),
+                    IndexWithBloat.of(ctx, "orders_default", "orders_default_pkey")
+                )
+                .allMatch(i -> i.getIndexSizeInBytes() > 1L)
+                .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 20.0);
         });
     }
 }

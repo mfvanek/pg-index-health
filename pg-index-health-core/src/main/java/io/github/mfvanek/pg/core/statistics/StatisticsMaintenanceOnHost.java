@@ -24,7 +24,7 @@ import java.util.Optional;
 public interface StatisticsMaintenanceOnHost extends StatisticsAware, HostAware {
 
     /**
-     * Resets all statistics counters for the current database on current host to zero.
+     * Resets all statistics counters for the current database on the current host to zero.
      * <p>
      * Note: superuser privileges are required.
      *
@@ -35,7 +35,7 @@ public interface StatisticsMaintenanceOnHost extends StatisticsAware, HostAware 
     boolean resetStatistics();
 
     /**
-     * Retrieves the time at which database statistics were last reset on current host.
+     * Retrieves the time at which database statistics were last reset on the current host.
      *
      * @return {@code Optional} of null or time at which database statistics were last reset.
      */

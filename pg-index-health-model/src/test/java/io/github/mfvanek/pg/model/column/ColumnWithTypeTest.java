@@ -113,6 +113,9 @@ class ColumnWithTypeTest {
 
         assertThat(ColumnWithType.ofUuid(column))
             .hasToString("ColumnWithType{column=Column{tableName='t1', columnName='c1', notNull=true}, columnType='uuid'}");
+
+        assertThat(ColumnWithType.ofCharacter(column))
+            .hasToString("ColumnWithType{column=Column{tableName='t1', columnName='c1', notNull=true}, columnType='character'}");
     }
 
     @SuppressWarnings("ConstantConditions")

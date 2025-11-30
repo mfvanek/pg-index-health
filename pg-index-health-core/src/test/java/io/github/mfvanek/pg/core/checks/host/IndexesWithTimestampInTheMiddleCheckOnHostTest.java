@@ -47,6 +47,7 @@ class IndexesWithTimestampInTheMiddleCheckOnHostTest extends DatabaseAwareTestBa
             assertThat(check)
                 .executing(ctx)
                 .hasSize(3)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_expr_first", List.of(
                         Column.ofNotNull(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\""),
@@ -59,8 +60,8 @@ class IndexesWithTimestampInTheMiddleCheckOnHostTest extends DatabaseAwareTestBa
                     IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_mid", List.of(
                         Column.ofNotNull(ctx, "\"t-multi\"", "id"),
                         Column.ofNullable(ctx, "\"t-multi\"", "ts"),
-                        Column.ofNullable(ctx, "\"t-multi\"", "name")))
-                );
+                        Column.ofNullable(ctx, "\"t-multi\"", "name"))))
+                .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "\"t-multi\""))
@@ -75,13 +76,13 @@ class IndexesWithTimestampInTheMiddleCheckOnHostTest extends DatabaseAwareTestBa
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "tp", "i_tp_creation_date_entity_id_ref_type", List.of(
                         Column.ofNotNull(ctx, "tp", "creation_date"),
                         Column.ofNotNull(ctx, "tp", "entity_id"),
                         Column.ofNotNull(ctx, "tp", "ref_type")
                     ))
-                )
-        );
+                ));
     }
 }

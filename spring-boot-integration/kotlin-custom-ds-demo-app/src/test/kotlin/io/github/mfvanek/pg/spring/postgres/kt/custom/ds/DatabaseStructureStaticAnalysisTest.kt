@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.model.dbobject.DbObject
 import io.github.mfvanek.pg.model.predicates.SkipLiquibaseTablesPredicate
 import io.github.mfvanek.pg.model.table.Table
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.InstanceOfAssertFactories.list
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -46,7 +47,10 @@ internal class DatabaseStructureStaticAnalysisTest {
                     "TABLES_NOT_LINKED_TO_OTHERS" ->
                         listAssert
                             .hasSize(1)
+                            .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
                             .containsExactly(Table.of("warehouse"))
+                            .asInstanceOf(list(Table::class.java))
+                            .allMatch { t -> t.tableSizeInBytes > 0L }
 
                     else -> listAssert.isEmpty()
                 }

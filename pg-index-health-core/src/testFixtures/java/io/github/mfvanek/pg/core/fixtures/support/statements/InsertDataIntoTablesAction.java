@@ -38,7 +38,7 @@ public class InsertDataIntoTablesAction implements Runnable {
     public void run() {
         final int clientsCountToCreate = 1_000;
         final String insertClientSql = String.format(
-            Locale.ROOT, "insert into %s.clients (id, first_name, last_name, info, email, phone) values (?, ?, ?, ?, ?, ?)", schemaName);
+            Locale.ROOT, "insert into %s.clients (id, first_name, last_name, info, email, phone, gender) values (?, ?, ?, ?, ?, ?, ?)", schemaName);
         final String insertAccountSql = String.format(
             Locale.ROOT, "insert into %s.accounts (client_id, account_number) values (?, ?)", schemaName);
         try (Connection connection = dataSource.getConnection();
@@ -52,18 +52,17 @@ public class InsertDataIntoTablesAction implements Runnable {
                 final String domainName = RandomStringUtils.secureStrong().nextAlphabetic(8);
                 final String email = lastName + "_" + firstName + "@" + domainName + ".com";
                 final String phone = RandomStringUtils.secureStrong().nextAlphanumeric(10);
+                final String gender = clientId % 2 == 0 ? "M" : "F";
                 insertClientStatement.setLong(1, clientId);
                 insertClientStatement.setString(2, firstName);
                 insertClientStatement.setString(3, lastName);
                 insertClientStatement.setObject(4, prepareClientInfo());
                 insertClientStatement.setString(5, email);
                 insertClientStatement.setString(6, phone);
+                insertClientStatement.setString(7, gender);
                 insertClientStatement.executeUpdate();
 
-                final String accountNumber = generateAccountNumber(clientId);
-                insertAccountStatement.setLong(1, clientId);
-                insertAccountStatement.setString(2, accountNumber);
-                insertAccountStatement.executeUpdate();
+                insertAccount(insertAccountStatement, clientId);
             }
             // Insert at least one duplicated client row
             final long clientId = getNextClientIdFromSequence(connection);
@@ -74,6 +73,13 @@ public class InsertDataIntoTablesAction implements Runnable {
         } catch (SQLException e) {
             throw new PgSqlException(e);
         }
+    }
+
+    private void insertAccount(final PreparedStatement insertAccountStatement, final long clientId) throws SQLException {
+        final String accountNumber = generateAccountNumber(clientId);
+        insertAccountStatement.setLong(1, clientId);
+        insertAccountStatement.setString(2, accountNumber);
+        insertAccountStatement.executeUpdate();
     }
 
     private static PGobject prepareClientInfo() throws SQLException {

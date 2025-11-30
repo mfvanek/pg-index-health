@@ -27,7 +27,7 @@ class PostgresTestcontainersUrlDemoApplicationRunTest {
             .doesNotThrowAnyException();
         assertThat(output.getAll())
             .contains("Starting PostgresTestcontainersUrlDemoApplication using Java")
-            .contains("Container is started (JDBC URL: jdbc:postgresql://localhost:")
-            .contains("Started PostgresTestcontainersUrlDemoApplication in");
+            .contains("Started PostgresTestcontainersUrlDemoApplication in")
+            .contains("(v3.4.12)");
     }
 }

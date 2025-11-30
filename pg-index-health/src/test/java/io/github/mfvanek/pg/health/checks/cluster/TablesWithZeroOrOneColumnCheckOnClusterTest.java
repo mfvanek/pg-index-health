@@ -45,6 +45,7 @@ class TablesWithZeroOrOneColumnCheckOnClusterTest extends DatabaseAwareTestBase 
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("table.tableSizeInBytes")
                 .containsExactly(
                     TableWithColumns.ofNotNullColumn(ctx, "another_table", "id"),
                     TableWithColumns.withoutColumns(ctx, "empty")
@@ -63,6 +64,7 @@ class TablesWithZeroOrOneColumnCheckOnClusterTest extends DatabaseAwareTestBase 
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     TableWithColumns.ofNotNullColumn(ctx, "tp", "ref_type")
                 ));

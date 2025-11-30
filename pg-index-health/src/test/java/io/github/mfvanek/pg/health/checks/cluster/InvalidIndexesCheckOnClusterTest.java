@@ -43,7 +43,9 @@ class InvalidIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .containsExactly(Index.of(ctx, "clients", "i_clients_last_name_first_name"))
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactly(
+                    Index.of(ctx, "clients", "i_clients_last_name_first_name"))
                 .allMatch(i -> i.getIndexSizeInBytes() == 0L);
 
             assertThat(check)

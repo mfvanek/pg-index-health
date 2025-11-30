@@ -47,9 +47,11 @@ class TablesWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
                 .containsExactly(
                     Table.of(ctx, "accounts"),
-                    Table.of(ctx, "clients"));
+                    Table.of(ctx, "clients"))
+                .allMatch(t -> t.getTableSizeInBytes() >= 0L);
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
@@ -64,14 +66,18 @@ class TablesWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
                 .containsExactly(
                     Table.of(ctx, "accounts"),
-                    Table.of(ctx, "clients"));
+                    Table.of(ctx, "clients"))
+                .allMatch(t -> t.getTableSizeInBytes() >= 0L);
 
             assertThat(check)
                 .executing(ctx, SkipSmallTablesPredicate.of(1_234L))
                 .hasSize(1)
-                .containsExactly(Table.of(ctx, "clients"))
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
+                .containsExactly(
+                    Table.of(ctx, "clients"))
                 .allMatch(t -> t.getTableSizeInBytes() > 1_234L);
         });
     }
@@ -83,6 +89,7 @@ class TablesWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Table.of(ctx, "custom_entity_reference_with_very_very_very_long_name")));
     }

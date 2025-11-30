@@ -57,6 +57,7 @@ class IntersectedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedForeignKeys.of(
                         ForeignKey.of(ctx, "client_preferences", "c_client_preferences_email_phone_fk",
@@ -78,6 +79,7 @@ class IntersectedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedForeignKeys.of(
                         ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type"),

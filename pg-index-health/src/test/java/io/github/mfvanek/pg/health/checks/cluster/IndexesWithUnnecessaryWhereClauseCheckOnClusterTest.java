@@ -46,11 +46,12 @@ class IndexesWithUnnecessaryWhereClauseCheckOnClusterTest extends DatabaseAwareT
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
                     IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_id_ref", 0L, Column.ofNotNull(ctx, "t1", "id_ref")),
                     IndexWithColumns.ofColumns(ctx, "t2", "\"idx_t2_first-ref_second_ref\"", List.of(
-                        Column.ofNotNull(ctx, "t2", "second_ref"), Column.ofNotNull(ctx, "t2", "\"first-ref\"")))
-                );
+                        Column.ofNotNull(ctx, "t2", "second_ref"), Column.ofNotNull(ctx, "t2", "\"first-ref\""))))
+                .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("t1", "t2")))
@@ -65,10 +66,10 @@ class IndexesWithUnnecessaryWhereClauseCheckOnClusterTest extends DatabaseAwareT
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "one_partitioned", "\"idx_second_ref_first-ref\"", List.of(
                         Column.ofNotNull(ctx, "one_partitioned", "second_ref"), Column.ofNotNull(ctx, "one_partitioned", "\"first-ref\"")))
-                )
-        );
+                ));
     }
 }

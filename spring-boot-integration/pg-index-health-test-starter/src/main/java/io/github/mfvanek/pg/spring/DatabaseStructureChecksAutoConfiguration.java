@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.spring;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithCharTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
@@ -43,6 +44,7 @@ import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWherePrimaryKeyColumnsNotFirstCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.TablesWithInheritanceCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithZeroOrOneColumnCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
@@ -324,6 +326,20 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost tablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost(final PgConnection pgConnection) {
         return new TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(ColumnsWithCharTypeCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public ColumnsWithCharTypeCheckOnHost columnsWithCharTypeCheckOnHost(final PgConnection pgConnection) {
+        return new ColumnsWithCharTypeCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(TablesWithInheritanceCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public TablesWithInheritanceCheckOnHost tablesWithInheritanceCheckOnHost(final PgConnection pgConnection) {
+        return new TablesWithInheritanceCheckOnHost(pgConnection);
     }
 
     @Bean

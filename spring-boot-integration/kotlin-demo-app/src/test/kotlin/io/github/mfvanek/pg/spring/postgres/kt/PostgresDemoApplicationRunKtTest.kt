@@ -28,5 +28,6 @@ internal class PostgresDemoApplicationRunKtTest {
             .contains("Starting PostgresDemoApplicationKt using Java")
             .contains("Container is started (JDBC URL: jdbc:postgresql://localhost:")
             .contains("Started PostgresDemoApplicationKt in")
+            .contains("(v3.4.12)")
     }
 }

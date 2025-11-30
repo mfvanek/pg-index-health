@@ -45,6 +45,7 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     StoredFunction.of(functionName, "a integer, b integer"),
                     StoredFunction.of(functionName, "a integer, b integer, c integer"));
@@ -64,6 +65,7 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     StoredFunction.of(functionName,
                         isOutParametersInProcedureSupported() ? "IN a integer, IN b integer" : "a integer, b integer"),
@@ -83,6 +85,7 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     StoredFunction.of(ctx, "add", "a integer, b integer"),
                     StoredFunction.of(ctx, "add", "a integer, b integer, c integer")

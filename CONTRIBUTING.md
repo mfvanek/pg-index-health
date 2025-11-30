@@ -1,6 +1,6 @@
 ## Building and testing
 
-Java >= 17 is required.
+**Java 21** or above is required to build the project, but we still use Java 17 as a baseline.
 
 1. Clone the repository
 
@@ -14,7 +14,7 @@ Java >= 17 is required.
    This will build the project and run tests.  
    **You need to have [Docker](https://www.docker.com/) up and running**.
     
-By default, [PostgreSQL 18.0 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
+By default, [PostgreSQL 18.1 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
 Set `TEST_PG_VERSION` environment variable to use any of another available PostgreSQL version:
 ```
 TEST_PG_VERSION=17.6-alpine
@@ -69,8 +69,18 @@ Implement a new class extending [AbstractCheckOnCluster](pg-index-health/src/mai
 ### Write proper tests
 
 * Your code must be 100% covered.
+* Use the `containsExactly()` method from **AssertJ** to validate the order in the check results.
+* Use the `usingRecursiveFieldByFieldElementComparator()` method from **AssertJ** to validate database objects in the check results.
+* Ignore fields with the size of tables and indexes in the check results
+  via `usingRecursiveFieldByFieldElementComparatorIgnoringFields("totalSize", "indexes.indexSizeInBytes")`.  
+  Make sure that the size is returned and non-zero:
+  ```java
+  .allMatch(i -> i.getIndexSizeInBytes() > 1L)
+  .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
+  ```
 * Mutation tests via [pitest](https://pitest.org/) should work.
-* Behavior of the new check should be tested for partitioned tables.
+* Behavior of the new check should be tested for ordinary (non-partitioned) tables/indexes.
+* Behavior of the new check should be tested for partitioned tables (if applicable).
 * Behavior of the new check should be tested with [quoted identifiers](https://www.postgresql.org/docs/17/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS).
 
 ### Further steps

@@ -37,7 +37,7 @@ public class ColumnsWithFixedLengthVarcharCheckOnHost extends AbstractCheckOnHos
 
     /**
      * Returns columns with fixed length varchar type in the specified schema.
-     * These are candidates for conversion to the varchar or text type.
+     * These are candidates for conversion to the {@code text} type.
      *
      * @param pgContext check's context with the specified schema
      * @return list of columns with a fixed length varchar type

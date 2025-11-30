@@ -78,9 +78,9 @@ class ColumnsWithJsonTypeCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ColumnWithType.of(Column.ofNullable(ctx, "parent", "raw_data"), "json")
-                )
-        );
+                ));
     }
 }

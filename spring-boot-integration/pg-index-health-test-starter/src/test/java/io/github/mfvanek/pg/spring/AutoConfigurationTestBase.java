@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithCharTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
@@ -44,6 +45,7 @@ import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWherePrimaryKeyColumnsNotFirstCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.TablesWithInheritanceCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithZeroOrOneColumnCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
@@ -156,7 +158,9 @@ abstract class AutoConfigurationTestBase {
             IndexesWithTimestampInTheMiddleCheckOnHost.class,
             ColumnsWithTimestampOrTimetzTypeCheckOnHost.class,
             TablesWherePrimaryKeyColumnsNotFirstCheckOnHost.class,
-            TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost.class
+            TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost.class,
+            ColumnsWithCharTypeCheckOnHost.class,
+            TablesWithInheritanceCheckOnHost.class
         );
     }
 }

@@ -41,27 +41,6 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnClusterTest extends DatabaseAwa
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withNaturalKeys, ctx -> {
-            assertThat(check)
-                .executing(ctx)
-                .hasSize(3)
-                .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "t2_composite", "t2_composite_pkey",
-                        List.of(Column.ofNotNull(ctx, "t2_composite", "passport_series"), Column.ofNotNull(ctx, "t2_composite", "passport_number"))),
-                    IndexWithColumns.ofColumns(ctx, "t3_composite", "t3_composite_pkey",
-                        List.of(Column.ofNotNull(ctx, "t3_composite", "app_id"), Column.ofNotNull(ctx, "t3_composite", "app_number"))),
-                    IndexWithColumns.ofNotNull(ctx, "\"times-of-creation\"", "\"times-of-creation_pkey\"", "\"time-of-creation\"")
-                );
-
-            assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("t2_composite", "t3_composite", "\"times-of-creation\"")))
-                .isEmpty();
-        });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithoutThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx ->
             assertThat(check)
@@ -72,10 +51,40 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnClusterTest extends DatabaseAwa
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void onDatabaseWithThem(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withNaturalKeys, ctx -> {
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(3)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
+                .containsExactly(
+                    IndexWithColumns.ofColumns(ctx, "t2_composite", "t2_composite_pkey",
+                        List.of(Column.ofNotNull(ctx, "t2_composite", "passport_series"), Column.ofNotNull(ctx, "t2_composite", "passport_number"))),
+                    IndexWithColumns.ofColumns(ctx, "t3_composite", "t3_composite_pkey",
+                        List.of(Column.ofNotNull(ctx, "t3_composite", "app_id"), Column.ofNotNull(ctx, "t3_composite", "app_number"))),
+                    IndexWithColumns.ofNotNull(ctx, "\"times-of-creation\"", "\"times-of-creation_pkey\"", "\"time-of-creation\""))
+                .allMatch(i -> i.getIndexSizeInBytes() > 1L);
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("t2_composite", "t3_composite", "\"times-of-creation\"")))
+                .isEmpty();
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1));
+                .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactly(
+                    IndexWithColumns.ofColumns(ctx, "tp", "tp_pkey",
+                        List.of(
+                            Column.ofNotNull(ctx, "tp", "creation_date"),
+                            Column.ofNotNull(ctx, "tp", "ref_type"),
+                            Column.ofNotNull(ctx, "tp", "entity_id")))
+                ));
     }
 }

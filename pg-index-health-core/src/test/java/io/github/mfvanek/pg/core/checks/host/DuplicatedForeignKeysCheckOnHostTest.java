@@ -44,6 +44,7 @@ class DuplicatedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedForeignKeys.of(
                         ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id"),
@@ -63,6 +64,7 @@ class DuplicatedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedForeignKeys.of(
                         ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
