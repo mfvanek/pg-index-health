@@ -29,8 +29,7 @@ B-tree индекс на таких столбцах эффективен, ес�
 ```sql
 create schema if not exists demo;
 
-create table if not exists demo."table_with_b-tree_index_on_array"
-(
+create table if not exists demo."table_with_b-tree_index_on_array"(
     id bigint not null,
     login text,
     roles text[]
@@ -42,17 +41,16 @@ create index if not exists roles_btree_idx
 create index if not exists login_roles_btree_idx
     on demo."table_with_b-tree_index_on_array"(login, roles);
 
-create table if not exists demo."table_with_b-tree_index_on_array_partitioned"
-(
+create table if not exists demo."table_with_b-tree_index_on_array_partitioned"(
     id bigint not null,
     login text,
     roles text[]
 ) partition by hash (login);
 
-create index if not exists roles_btree_idx
+create index if not exists roles_btree_partitioned_idx
     on demo."table_with_b-tree_index_on_array_partitioned"(roles) where roles is not null;
-    
-create index if not exists login_roles_btree_idx
+
+create index if not exists login_roles_btree_partitioned_idx
     on demo."table_with_b-tree_index_on_array_partitioned"(login, roles);
 
 create table if not exists demo."table_with_b-tree_index_on_array_hash_p0"
