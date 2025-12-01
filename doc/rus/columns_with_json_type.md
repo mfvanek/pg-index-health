@@ -37,8 +37,7 @@
 ```sql
 create schema if not exists demo;
 
-create table if not exists demo."table_with_json_column"
-(
+create table if not exists demo.table_with_json_column(
     ref_type varchar(32),
     ref_value varchar(64),
     creation_date timestamp with time zone not null,
@@ -47,8 +46,7 @@ create table if not exists demo."table_with_json_column"
     raw_data json
 );
 
-create table if not exists demo."table_with_json_column_partitioned"
-(
+create table if not exists demo.table_with_json_column_partitioned(
     ref_type varchar(32),
     ref_value varchar(64),
     creation_date timestamp with time zone not null,
@@ -57,7 +55,7 @@ create table if not exists demo."table_with_json_column_partitioned"
     raw_data json
 ) partition by range (creation_date);
 
-create table if not exists demo."table_with_json_column_partitioned_Q3"
-    partition of demo."table_with_json_column_partitioned"
-    for values from ('2025-07-01') to ('2025-10-01');
+create table if not exists demo.table_with_json_column_partitioned_Q3
+    partition of demo.table_with_json_column_partitioned
+        for values from ('2025-07-01') to ('2025-10-01');
 ```
