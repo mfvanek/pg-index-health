@@ -23,24 +23,4 @@
 
 ## Скрипт для воспроизведения
 
-```sql
-create schema if not exists demo;
-
-create table if not exists demo."entity_long_1234567890_1234567890_1234567890_1234567890_1234567"(
-    ref_type varchar(32),
-    ref_value varchar(64),
-    entity_id bigserial primary key
-);
-
-create table if not exists demo."entity_long_1234567890_1234567890_1234567890_1234567890_1234568"(
-    ref_type varchar(32),
-    ref_value varchar(64),
-    entity_id bigserial primary key
-) partition by range (entity_id);
-
-create index if not exists idx_entity_long_1234567890_1234567890_1234567890_1234567890_123
-    on demo.entity_long_1234567890_1234567890_1234567890_1234567890_1234567 (ref_type, ref_value);
-
-create table if not exists demo.entity_default_long_1234567890_1234567890_1234567890_1234567890
-    partition of demo.entity_long_1234567890_1234567890_1234567890_1234567890_1234567 default;
-```
+TODO
