@@ -31,28 +31,4 @@
 
 ## Скрипт для воспроизведения
 
-```sql
-create schema if not exists demo;
-
-create table if not exists demo.client
-(
-    id bigint not null,
-    real_id bigint unique not null,
-    first_name text,
-    last_name text
-);
-
-create table if not exists demo."account_with_dublicated_fk_partitioned"
-(
-    id bigint not null primary key,
-    account_number varchar(50) not null unique,
-    client_id bigint not null references demo.client (id),
-    client_real_id bigint not null,
-    timestamp with time zone not null,
-    foregn key (client_id, client_real_id) references demo.client (id, real_id)
-) partition by range (created);
-
-create table if not exists demo."account_with_dublicated_fk_partitioned_Q3"
-    partition of demo."account_without_fk_partitioned"
-    for values from ('2025-07-01') to ('2025-10-01');
-```
+TODO

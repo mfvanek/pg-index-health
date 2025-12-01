@@ -30,38 +30,4 @@ PostgreSQL может никогда не использовать некото�
 
 ## Скрипт для воспроизведения
 
-```sql
-create schema if not exists demo;
-
-create table if not exists demo."duplicated_indexes"
-(
-    id integer not null primary key,
-    first_name text,
-    last_name text
-);
-
-create index if not exists i_duplicated_indexes_last_first
-                    on demo."duplicated_indexes" (last_name, first_name);
-create index if not exists i_duplicated_indexes_last_not_deleted
-                    on demo."duplicated_indexes" (last_name, first_name) where not deleted;
-                    
-create table if not exists demo."duplicated_indexes_partitioned"
-(
-    id integer not null primary key,
-    first_name text,
-    last_name text
-) partition by range (id);
-
-create index if not exists i_duplicated_indexes_last_first
-                    on demo."duplicated_indexes_partitioned" (last_name, first_name);
-create index if not exists i_duplicated_indexes_last_not_deleted
-                    on demo."duplicated_indexes_partitioned" (last_name, first_name) where not deleted;
-
-create table if not exists demo."duplicated_indexes_partitioned_1_20"
-    partition of demo."duplicated_indexes_partitioned"
-    for values from (1) to (21);
-    
-insert into demo."duplicated_indexes" (id, first_name, last_name) values (generate_series(1, 20),'first', 'last');
-
-insert into demo."duplicated_indexes_partitioned" (id, first_name, last_name) values (generate_series(1, 20),'first', 'last');
-```
+TODO

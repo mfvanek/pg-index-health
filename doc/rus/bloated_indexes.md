@@ -46,8 +46,7 @@ create schema if not exists demo;
 
 -- Для обычных (не секционированных) таблиц
 
-create table if not exists demo.orders
-(
+create table if not exists demo.orders(
     id bigint primary key generated always as identity,
     user_id bigint not null,
     shop_id bigint not null,
@@ -55,8 +54,7 @@ create table if not exists demo.orders
     created_at timestamptz not null default current_timestamp
 );
 
-create table if not exists demo.order_item
-(
+create table if not exists demo.order_item(
     id bigint primary key generated always as identity,
     order_id bigint not null references demo.orders (id),
     price decimal(22, 2) not null default 0,
@@ -122,8 +120,7 @@ vacuum analyze demo.orders, demo.order_item;
 
 -- Для секционированных таблиц
 
-create table if not exists demo.orders_partitioned
-(
+create table if not exists demo.orders_partitioned(
     id         bigint not null generated always as identity,
     user_id    bigint      not null,
     shop_id    bigint      not null,
@@ -135,8 +132,7 @@ create table if not exists demo.orders_partitioned
 create table if not exists demo.orders_default
     partition of demo.orders_partitioned default;
 
-create table if not exists demo.order_item_partitioned
-(
+create table if not exists demo.order_item_partitioned(
     id           bigint generated always as identity,
     order_id     bigint         not null,
     created_at   timestamptz    not null,

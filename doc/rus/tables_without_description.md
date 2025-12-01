@@ -23,25 +23,23 @@
 ```sql
 create schema if not exists demo;
 
-create table if not exists demo."table_without_description"
-(
+create table if not exists demo.table_without_description(
     id integer not null primary key,
     first_name text,
     last_name text
 );
 
-comment on table demo."table_without_description" is '   ';
+comment on table demo.table_without_description is '   ';
                     
-create table if not exists demo."table_without_description_partitioned"
-(
+create table if not exists demo.table_without_description_partitioned(
     id integer not null primary key,
     first_name text,
     last_name text
 ) partition by range (id);
 
-comment on table demo."table_without_description_partitioned" is '';
+comment on table demo.table_without_description_partitioned is '';
 
 create table if not exists demo."table_without_description_partitioned_1_10"
-    partition of demo."table_without_description"
-    for values from (1) to (10);
+    partition of demo.table_without_description_partitioned
+        for values from (1) to (10);
 ```

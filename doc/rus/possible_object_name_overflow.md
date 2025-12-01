@@ -26,15 +26,13 @@
 ```sql
 create schema if not exists demo;
 
-create table if not exists demo."entity_long_1234567890_1234567890_1234567890_1234567890_1234567"
-(
+create table if not exists demo."entity_long_1234567890_1234567890_1234567890_1234567890_1234567"(
     ref_type varchar(32),
     ref_value varchar(64),
     entity_id bigserial primary key
 );
 
-create table if not exists demo."entity_long_1234567890_1234567890_1234567890_1234567890_1234568"
-(
+create table if not exists demo."entity_long_1234567890_1234567890_1234567890_1234567890_1234568"(
     ref_type varchar(32),
     ref_value varchar(64),
     entity_id bigserial primary key

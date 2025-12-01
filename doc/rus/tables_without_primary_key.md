@@ -23,24 +23,4 @@ PostgreSQL позволяет создавать таблицы без перв�
 
 ## Скрипт для воспроизведения
 
-```sql
-create schema if not exists demo;
-
-create table if not exists demo."table_without_primary_key"
-(
-    id bigint not null,
-    first_name text,
-    last_name text
-);
-
-create table if not exists demo."table_without_primary_key_partitioned"
-(
-    id integer not null,
-    first_name text,
-    last_name text
-) partition by hash (name);
-
-create table if not exists demo."table_without_primary_key_partitioned_hash_p0"
-    partition of demo."table_without_primary_key_partitioned"
-    for values with (modulus 4, remainder 0);
-```
+TODO

@@ -26,32 +26,4 @@
 
 ## Скрипт для воспроизведения
 
-```sql
-create schema if not exists demo;
-
-create table if not exists demo."table_with_null_value_index"
-(
-    id bigint not null primary key,
-    first_name text not null,
-    last_name text not null,
-    created timestamp with time zone not null,
-    updated timestamp with time zone
-);
-
-create index concurrently if not exists i_is_debtor on demo."table_with_null_value_index" (updated);
-
-create table if not exists demo."table_with_null_value_index_partitioned"
-(
-    id bigint not null primary key,
-    first_name text not null,
-    last_name text not null,
-    created timestamp with time zone not null,
-    updated timestamp with time zone
-) partition by range (created);
-
-create index if not exists i_is_debtor_part on demo."table_with_null_value_index_partitioned" (updated);
-
-create table if not exists demo."table_with_boolean_indexed_partitioned_2024"
-    partition of demo."table_with_boolean_indexed_partitioned"
-    for values from ('2024-01-01') to ('2024-12-31');
-```
+TODO
