@@ -55,7 +55,7 @@ create table if not exists demo.table_with_json_column_partitioned(
     raw_data json
 ) partition by range (creation_date);
 
-create table if not exists demo.table_with_json_column_partitioned_Q3
+create table if not exists demo.table_with_json_column_partitioned_q3
     partition of demo.table_with_json_column_partitioned
         for values from ('2025-07-01') to ('2025-10-01');
 ```
