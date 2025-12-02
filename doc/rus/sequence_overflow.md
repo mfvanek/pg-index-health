@@ -18,3 +18,17 @@
 ## Поддержка секционированных таблиц
 
 Не применима для секционированных таблиц.
+
+## Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+
+create sequence demo.seq_1 as smallint increment by 1 maxvalue 100 start 92;
+
+create sequence demo.seq_3 as integer increment by 2 maxvalue 100 start 92;
+
+create sequence demo.seq_5 as bigint increment by 10 maxvalue 100 start 92;
+
+create sequence demo.seq_cycle as bigint increment by 10 maxvalue 100 start 92 cycle;
+```

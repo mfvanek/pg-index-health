@@ -27,23 +27,19 @@
 ```sql
 create schema if not exists demo;
 
-create table if not exists demo.empty
-(
+create table if not exists demo.empty(
 );
 
-create table if not exists demo.one
-(
-    ref_type int not null primary key
+create table if not exists demo.one(
+    ref_type integer not null primary key
 );
 
-create table if not exists demo.two
-(
-    ref_type    int not null primary key,
+create table if not exists demo.two(
+    ref_type integer not null primary key,
     description text
 );
 
-create table if not exists demo.one_partitioned
-(
+create table if not exists demo.one_partitioned(
     ref_type bigserial not null primary key
 ) partition by range (ref_type);
 

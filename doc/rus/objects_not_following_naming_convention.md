@@ -49,13 +49,11 @@ reindex index concurrently "idx-my-task-expired-at-status";
 ```sql
 create schema if not exists "bad-demo";
 
-create table if not exists "bad-demo"."bad-table"
-(
+create table if not exists "bad-demo"."bad-table"(
     "bad-id" serial not null primary key
 );
 
-create table if not exists "bad-demo"."bad-table-two"
-(
+create table if not exists "bad-demo"."bad-table-two"(
     "bad-ref-id" int not null primary key,
     description  text
 );
@@ -63,8 +61,7 @@ create table if not exists "bad-demo"."bad-table-two"
 alter table if exists "bad-demo"."bad-table-two"
     add constraint "bad-table-two-fk-bad-ref-id" foreign key ("bad-ref-id") references "bad-demo"."bad-table" ("bad-id");
 
-create table if not exists "bad-demo"."one-partitioned"
-(
+create table if not exists "bad-demo"."one-partitioned"(
     "bad-id" bigserial not null primary key
 ) partition by range ("bad-id");
 

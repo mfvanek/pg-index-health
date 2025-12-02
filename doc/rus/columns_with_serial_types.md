@@ -23,3 +23,26 @@
 
 Поддерживает секционированные таблицы.
 Проверка выполняется на самой секционированной таблице (родительской). Отдельные секции (потомки) игнорируются.
+
+## Скрипт для воспроизведения
+
+```sql
+create schema if not exists demo;
+
+create table if not exists demo.table_with_serial_column(
+    ref_type smallserial,
+    ref_value serial,
+    real_client_id bigserial    
+);
+
+create table if not exists demo.table_with_serial_column_partitioned(
+    ref_type smallserial,
+    ref_value serial,
+    creation_date timestamp with time zone not null,
+    real_client_id bigserial    
+) partition by range (creation_date);
+
+create table if not exists demo.table_with_serial_column_partitioned_q3
+    partition of demo.table_with_serial_column_partitioned
+        for values from ('2025-07-01') to ('2025-10-01');
+```

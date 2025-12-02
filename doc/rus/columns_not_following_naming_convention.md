@@ -28,22 +28,26 @@
 ```sql
 create schema if not exists "bad-demo";
 
-create table if not exists "bad-demo"."bad-table"
-(
+create table if not exists "bad-demo"."bad-table"(
     "bad-id" serial not null primary key
 );
 
-create table if not exists "bad-demo"."bad-table-two"
-(
+create table if not exists "bad-demo"."bad-table-two"(
     "bad-ref-id" int not null primary key,
     description  text
 );
 
-create table if not exists "bad-demo"."one-partitioned"
-(
+create table if not exists "bad-demo"."one-partitioned"(
     "bad-id" bigserial not null primary key
 ) partition by range ("bad-id");
 
 create table if not exists "bad-demo"."one-default"
     partition of "bad-demo"."one-partitioned" default;
 ```
+
+## Как исправить
+
+Аккуратно переименуйте столбцы и приведите их имена в соответствие с соглашением об именовании.  
+Если ваша БД работает online и простой недопустим,
+то вместо переименования столбца используйте [подход с созданием нового столбца](https://habr.com/ru/companies/karuna/articles/568240/)
+и постепенным переходом на его использование.
