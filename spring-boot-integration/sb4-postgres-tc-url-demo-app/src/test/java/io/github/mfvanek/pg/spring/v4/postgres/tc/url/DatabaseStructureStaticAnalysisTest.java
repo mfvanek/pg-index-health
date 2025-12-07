@@ -48,7 +48,7 @@ class DatabaseStructureStaticAnalysisTest {
 
                 assertThat(c.getHost().getPgUrl())
                     .startsWith("jdbc:postgresql://localhost:")
-                    .endsWith("/test?loggerLevel=OFF");
+                    .endsWith("/demo_for_pg_index_health_starter?loggerLevel=OFF");
             });
 
         assertThat(output.getAll())
