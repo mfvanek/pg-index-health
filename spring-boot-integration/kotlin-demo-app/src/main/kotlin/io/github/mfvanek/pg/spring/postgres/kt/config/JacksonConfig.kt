@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration
 class JacksonConfig {
 
     @Bean
-    fun customizer() = Jackson2ObjectMapperBuilderCustomizer { builder ->
+    fun customizer(): Jackson2ObjectMapperBuilderCustomizer = Jackson2ObjectMapperBuilderCustomizer { builder ->
         builder.modulesToInstall(PgIndexHealthModelModule())
     }
 }

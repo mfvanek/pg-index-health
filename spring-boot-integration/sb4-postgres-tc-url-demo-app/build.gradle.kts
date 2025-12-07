@@ -20,7 +20,7 @@ ext["junit-jupiter.version"] = libs.versions.junit.get()
 
 dependencies {
     implementation(platform(libs.testcontainers.bom))
-    implementation("org.testcontainers:postgresql")
+    implementation("org.testcontainers:testcontainers-postgresql")
     implementation(libs.spring.boot.v4.starter.jdbc.main)
     implementation(libs.spring.boot.v4.starter.jackson2)
     implementation(project(":pg-index-health-model-jackson-module"))

@@ -13,17 +13,17 @@ package io.github.mfvanek.pg.spring.postgres.kt.config
 import org.springframework.core.env.ConfigurableEnvironment
 import org.springframework.core.env.Environment
 import org.springframework.core.env.MapPropertySource
-import org.testcontainers.containers.JdbcDatabaseContainer
+import org.testcontainers.postgresql.PostgreSQLContainer
 
 internal const val DATASOURCE_URL_PROP_NAME: String = "spring.datasource.url"
 
-internal fun addDatasourceUrlIfNeed(jdbcDatabaseContainer: JdbcDatabaseContainer<*>, environment: Environment): Boolean {
+internal fun addDatasourceUrlIfNeed(postgreSQLContainer: PostgreSQLContainer, environment: Environment): Boolean {
     if (environment.getProperty(DATASOURCE_URL_PROP_NAME) == null && environment is ConfigurableEnvironment) {
         val mps = environment.propertySources
         mps.addFirst(
             MapPropertySource(
                 "connectionString",
-                mapOf(DATASOURCE_URL_PROP_NAME to jdbcDatabaseContainer.jdbcUrl)
+                mapOf(DATASOURCE_URL_PROP_NAME to postgreSQLContainer.jdbcUrl)
             )
         )
         return true

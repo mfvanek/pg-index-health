@@ -14,7 +14,7 @@ import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -31,7 +31,7 @@ class PostgreSqlDataSourceHelperTest {
 
     @Test
     void buildDataSourceShouldUseFieldsFromTestcontainer() {
-        try (JdbcDatabaseContainer<?> container = Mockito.mock(JdbcDatabaseContainer.class)) {
+        try (PostgreSQLContainer container = Mockito.mock(PostgreSQLContainer.class)) {
             when(container.getJdbcUrl()).thenReturn("test url");
             when(container.getUsername()).thenReturn("some user name");
             when(container.getPassword()).thenReturn("test password");

@@ -16,7 +16,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
-import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import java.util.Map;
 
@@ -25,15 +25,15 @@ class ConfigurableEnvironmentMutator {
 
     static final String DATASOURCE_URL_PROP_NAME = "spring.datasource.url";
 
-    static boolean addDatasourceUrlIfNeed(@NonNull final JdbcDatabaseContainer<?> jdbcDatabaseContainer,
+    static boolean addDatasourceUrlIfNeed(@NonNull final PostgreSQLContainer postgreSQLContainer,
                                           @NonNull final Environment environment) {
         if (environment.getProperty(DATASOURCE_URL_PROP_NAME) == null &&
             environment instanceof final ConfigurableEnvironment configurableEnvironment) {
             final MutablePropertySources mps = configurableEnvironment.getPropertySources();
             mps.addFirst(new MapPropertySource("connectionString",
                 Map.ofEntries(
-                    Map.entry(DATASOURCE_URL_PROP_NAME, jdbcDatabaseContainer.getJdbcUrl()),
-                    Map.entry("spring.liquibase.url", jdbcDatabaseContainer.getJdbcUrl())
+                    Map.entry(DATASOURCE_URL_PROP_NAME, postgreSQLContainer.getJdbcUrl()),
+                    Map.entry("spring.liquibase.url", postgreSQLContainer.getJdbcUrl())
                 ))
             );
             return true;

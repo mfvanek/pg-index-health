@@ -15,18 +15,18 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.core.env.Environment
 import org.springframework.mock.env.MockEnvironment
-import org.testcontainers.containers.JdbcDatabaseContainer
+import org.testcontainers.postgresql.PostgreSQLContainer
 
 class ConfigurableEnvironmentMutatorKtTest {
 
-    private val jdbcDatabaseContainer: JdbcDatabaseContainer<*> = Mockito.mock(JdbcDatabaseContainer::class.java)
+    private val postgreSQLContainer: PostgreSQLContainer = Mockito.mock(PostgreSQLContainer::class.java)
 
     @Test
     fun shouldNotAddPropIfExist() {
         val environment = MockEnvironment()
         environment.setProperty(DATASOURCE_URL_PROP_NAME, "url")
 
-        assertThat(addDatasourceUrlIfNeed(jdbcDatabaseContainer, environment))
+        assertThat(addDatasourceUrlIfNeed(postgreSQLContainer, environment))
             .isFalse()
         assertThat(environment.getProperty(DATASOURCE_URL_PROP_NAME)).isEqualTo("url")
     }
@@ -36,16 +36,16 @@ class ConfigurableEnvironmentMutatorKtTest {
         val environment = Mockito.mock(Environment::class.java)
         Mockito.`when`(environment.getProperty(Mockito.anyString())).thenReturn(null)
 
-        assertThat(addDatasourceUrlIfNeed(jdbcDatabaseContainer, environment))
+        assertThat(addDatasourceUrlIfNeed(postgreSQLContainer, environment))
             .isFalse()
     }
 
     @Test
     fun shouldAddProperty() {
         val environment = MockEnvironment()
-        Mockito.`when`(jdbcDatabaseContainer.jdbcUrl).thenReturn("added_url")
+        Mockito.`when`(postgreSQLContainer.jdbcUrl).thenReturn("added_url")
 
-        assertThat(addDatasourceUrlIfNeed(jdbcDatabaseContainer, environment))
+        assertThat(addDatasourceUrlIfNeed(postgreSQLContainer, environment))
             .isTrue()
         assertThat(environment.getProperty(DATASOURCE_URL_PROP_NAME)).isEqualTo("added_url")
     }

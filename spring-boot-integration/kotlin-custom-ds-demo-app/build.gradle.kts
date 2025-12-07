@@ -20,7 +20,7 @@ ext["junit-jupiter.version"] = libs.versions.junit.get()
 
 dependencies {
     implementation(platform(libs.testcontainers.bom))
-    implementation("org.testcontainers:postgresql")
+    implementation("org.testcontainers:testcontainers-postgresql")
     implementation(libs.spring.boot.v3.starter.jdbc)
     implementation(libs.liquibase.core)
     implementation(libs.liquibase.sessionlock)
