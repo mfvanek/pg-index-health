@@ -14,8 +14,8 @@ import io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport;
 import io.github.mfvanek.pg.model.settings.ImportantParam;
 import io.github.mfvanek.pg.model.units.MemoryUnit;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.SQLException;
@@ -40,14 +40,13 @@ import javax.sql.DataSource;
 public final class PostgreSqlContainerWrapper implements AutoCloseable, PostgresVersionAware {
 
     private final PostgresVersionHolder pgVersion;
-    private final PostgreSQLContainer<?> container;
+    private final PostgreSQLContainer container;
     private final BasicDataSource dataSource;
 
     PostgreSqlContainerWrapper(final PostgresVersionHolder pgVersion,
                                final List<Map.Entry<String, String>> additionalParameters) {
         this.pgVersion = Objects.requireNonNull(pgVersion, "pgVersion cannot be null");
-        //noinspection resource
-        this.container = new PostgreSQLContainer<>(DockerImageName.parse("postgres") //NOSONAR
+        this.container = new PostgreSQLContainer(DockerImageName.parse("postgres") //NOSONAR
             .withTag(pgVersion.getVersion()))
             .withSharedMemorySize(MemoryUnit.MB.convertToBytes(512))
             .withTmpFs(Map.of(pgVersion.getMountVolume(), "rw"))

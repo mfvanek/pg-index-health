@@ -11,7 +11,7 @@ dependencies {
     implementation(libs.apache.commons.dbcp2)
     implementation(platform(libs.testcontainers.bom))
     implementation("org.testcontainers:testcontainers")
-    implementation("org.testcontainers:postgresql")
+    implementation("org.testcontainers:testcontainers-postgresql")
     implementation(libs.awaitility)
 
     testImplementation(testFixtures(project(":pg-index-health-model")))

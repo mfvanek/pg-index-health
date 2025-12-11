@@ -24,7 +24,7 @@ dependencies {
     implementation(libs.spring.boot.v3.starter.json)
     implementation(project(":pg-index-health-model-jackson-module"))
     implementation(platform(libs.testcontainers.bom))
-    implementation("org.testcontainers:postgresql")
+    implementation("org.testcontainers:testcontainers-postgresql")
 
     runtimeOnly(libs.postgresql)
 

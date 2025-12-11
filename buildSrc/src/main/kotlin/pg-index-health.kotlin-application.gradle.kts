@@ -50,7 +50,7 @@ tasks {
     }
 
    named("detekt") {
-        dependsOn(detektTest)
+        dependsOn(detektMain, detektTest)
     }
 }
 

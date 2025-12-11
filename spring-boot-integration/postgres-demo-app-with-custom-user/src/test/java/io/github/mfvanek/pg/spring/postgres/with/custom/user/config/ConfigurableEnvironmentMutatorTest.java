@@ -14,21 +14,21 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 import org.springframework.mock.env.MockEnvironment;
-import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import static io.github.mfvanek.pg.spring.postgres.with.custom.user.config.ConfigurableEnvironmentMutator.DATASOURCE_URL_PROP_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ConfigurableEnvironmentMutatorTest {
 
-    private final JdbcDatabaseContainer<?> jdbcDatabaseContainer = Mockito.mock(JdbcDatabaseContainer.class);
+    private final PostgreSQLContainer postgreSQLContainer = Mockito.mock(PostgreSQLContainer.class);
 
     @Test
     void shouldNotAddPropIfExist() {
         final MockEnvironment environment = new MockEnvironment();
         environment.setProperty(DATASOURCE_URL_PROP_NAME, "url");
 
-        assertThat(ConfigurableEnvironmentMutator.addDatasourceUrlIfNeed(jdbcDatabaseContainer, environment))
+        assertThat(ConfigurableEnvironmentMutator.addDatasourceUrlIfNeed(postgreSQLContainer, environment))
             .isFalse();
         assertThat(environment.getProperty(DATASOURCE_URL_PROP_NAME)).isEqualTo("url");
         assertThat(environment.getProperty("spring.liquibase.url")).isNull();
@@ -39,16 +39,16 @@ class ConfigurableEnvironmentMutatorTest {
         final Environment environment = Mockito.mock(Environment.class);
         Mockito.when(environment.getProperty(Mockito.anyString())).thenReturn(null);
 
-        assertThat(ConfigurableEnvironmentMutator.addDatasourceUrlIfNeed(jdbcDatabaseContainer, environment))
+        assertThat(ConfigurableEnvironmentMutator.addDatasourceUrlIfNeed(postgreSQLContainer, environment))
             .isFalse();
     }
 
     @Test
     void shouldAddProperty() {
         final MockEnvironment environment = new MockEnvironment();
-        Mockito.when(jdbcDatabaseContainer.getJdbcUrl()).thenReturn("added_url");
+        Mockito.when(postgreSQLContainer.getJdbcUrl()).thenReturn("added_url");
 
-        assertThat(ConfigurableEnvironmentMutator.addDatasourceUrlIfNeed(jdbcDatabaseContainer, environment))
+        assertThat(ConfigurableEnvironmentMutator.addDatasourceUrlIfNeed(postgreSQLContainer, environment))
             .isTrue();
         assertThat(environment.getProperty(DATASOURCE_URL_PROP_NAME)).isEqualTo("added_url");
         assertThat(environment.getProperty("spring.liquibase.url")).isEqualTo("added_url");

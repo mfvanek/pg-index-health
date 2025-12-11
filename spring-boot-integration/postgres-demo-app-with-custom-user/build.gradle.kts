@@ -23,7 +23,7 @@ dependencies {
     implementation(project(":pg-index-health-testing"))
     implementation(libs.spring.boot.v3.starter.jdbc)
     implementation(platform(libs.testcontainers.bom))
-    implementation("org.testcontainers:postgresql")
+    implementation("org.testcontainers:testcontainers-postgresql")
     implementation(libs.liquibase.core)
     implementation(libs.liquibase.sessionlock)
 
