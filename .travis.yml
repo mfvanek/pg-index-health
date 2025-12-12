@@ -1,0 +1,38 @@
+language: java
+
+services:
+  - docker
+
+env:
+  - TEST_PG_VERSION=14.20
+  - TEST_PG_VERSION=15.15
+  - TEST_PG_VERSION=16.11
+  - TEST_PG_VERSION=17.7
+  - TEST_PG_VERSION=18.1
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/modules-2/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.sonar/cache/
+
+before_install:
+  - pip install --user codecov
+  - if [ ! -p $PGHUP ]; then pg_create_hup; fi
+
+install:
+  - ./gradlew setupPg
+
+script:
+  - if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then ./gradlew check; else ./gradlew build sonarqube --info; fi
+
+after_success:
+  - codecov
+
+addons:
+  sonarcloud:
+    organization: "dpg-oss"
