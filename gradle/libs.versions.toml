@@ -16,7 +16,7 @@ postgresql = "org.postgresql:postgresql:42.7.8"
 jackson-bom = "com.fasterxml.jackson:jackson-bom:2.18.5" # to be compatible with Spring Boot 3.4.X
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" }
-apache-commons-dbcp2 = "org.apache.commons:commons-dbcp2:2.13.0"
+apache-commons-dbcp2 = "org.apache.commons:commons-dbcp2:2.14.0"
 awaitility = "org.awaitility:awaitility:4.3.0"
 apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commons-lang3" }
 equalsverifier = "nl.jqno.equalsverifier:equalsverifier:4.2.5"
