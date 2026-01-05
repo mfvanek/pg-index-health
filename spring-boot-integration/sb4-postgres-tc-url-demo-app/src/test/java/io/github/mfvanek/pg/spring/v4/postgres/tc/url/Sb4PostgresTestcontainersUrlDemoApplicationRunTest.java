@@ -28,6 +28,6 @@ class Sb4PostgresTestcontainersUrlDemoApplicationRunTest {
         assertThat(output.getAll())
             .contains("Starting Sb4PostgresTestcontainersUrlDemoApplication using Java")
             .contains("Started Sb4PostgresTestcontainersUrlDemoApplication in")
-            .contains("(v4.0.0)");
+            .contains("(v4.0.1)");
     }
 }
