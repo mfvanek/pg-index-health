@@ -28,6 +28,6 @@ internal class PostgresCustomDataSourceDemoApplicationKtRunTest {
             .contains("Reading from custom_ds_schema.databasechangelog")
             .contains("Starting PostgresCustomDataSourceDemoApplicationKt using Java")
             .contains("Started PostgresCustomDataSourceDemoApplicationKt in")
-            .contains("(v3.4.12)")
+            .contains("(v3.4.13)")
     }
 }

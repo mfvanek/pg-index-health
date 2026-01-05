@@ -30,6 +30,6 @@ class PostgresWithCustomUserDemoApplicationRunTest {
             .contains("Starting PostgresWithCustomUserDemoApplication using Java")
             .contains("Container is started (JDBC URL: jdbc:postgresql://localhost:")
             .contains("Started PostgresWithCustomUserDemoApplication in")
-            .contains("(v3.4.12)");
+            .contains("(v3.4.13)");
     }
 }
