@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
+ * Copyright (c) 2019-2026. Ivan Vakhrushev and others.
  * https://github.com/mfvanek/pg-index-health
  *
  * This file is a part of "pg-index-health" - an embeddable schema linter for PostgreSQL
@@ -28,10 +28,10 @@ plugins {
 
 dependencies {
     errorprone("com.google.errorprone:error_prone_core:2.45.0")
-    errorprone("com.uber.nullaway:nullaway:0.12.12")
+    errorprone("com.uber.nullaway:nullaway:0.12.15")
 
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.7.1")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.7.2")
 }
 
 tasks.withType<JavaCompile>().configureEach {

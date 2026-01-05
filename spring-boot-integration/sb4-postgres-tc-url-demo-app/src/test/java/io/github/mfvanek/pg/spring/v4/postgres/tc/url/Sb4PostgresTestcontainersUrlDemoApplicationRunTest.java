@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
+ * Copyright (c) 2019-2026. Ivan Vakhrushev and others.
  * https://github.com/mfvanek/pg-index-health
  *
  * This file is a part of "pg-index-health" - an embeddable schema linter for PostgreSQL
@@ -28,6 +28,6 @@ class Sb4PostgresTestcontainersUrlDemoApplicationRunTest {
         assertThat(output.getAll())
             .contains("Starting Sb4PostgresTestcontainersUrlDemoApplication using Java")
             .contains("Started Sb4PostgresTestcontainersUrlDemoApplication in")
-            .contains("(v4.0.0)");
+            .contains("(v4.0.1)");
     }
 }

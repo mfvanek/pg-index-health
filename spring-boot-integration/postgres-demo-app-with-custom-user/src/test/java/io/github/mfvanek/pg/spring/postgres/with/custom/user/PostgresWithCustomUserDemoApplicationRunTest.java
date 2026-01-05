@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
+ * Copyright (c) 2019-2026. Ivan Vakhrushev and others.
  * https://github.com/mfvanek/pg-index-health
  *
  * This file is a part of "pg-index-health" - an embeddable schema linter for PostgreSQL
@@ -30,6 +30,6 @@ class PostgresWithCustomUserDemoApplicationRunTest {
             .contains("Starting PostgresWithCustomUserDemoApplication using Java")
             .contains("Container is started (JDBC URL: jdbc:postgresql://localhost:")
             .contains("Started PostgresWithCustomUserDemoApplication in")
-            .contains("(v3.4.12)");
+            .contains("(v3.4.13)");
     }
 }
