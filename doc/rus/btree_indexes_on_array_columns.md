@@ -57,3 +57,7 @@ create table if not exists demo."table_with_b-tree_index_on_array_hash_p0"
     partition of demo."table_with_b-tree_index_on_array_partitioned"
     for values with (modulus 4, remainder 0);
 ```
+
+## Как исправить
+
+Рассмотрите использование GIN-индекса.

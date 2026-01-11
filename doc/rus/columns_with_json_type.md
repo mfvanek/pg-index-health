@@ -59,3 +59,7 @@ create table if not exists demo.table_with_json_column_partitioned_q3
     partition of demo.table_with_json_column_partitioned
         for values from ('2025-07-01') to ('2025-10-01');
 ```
+
+## Как исправить
+
+Измените тип столбца на `jsonb`. Не забудьте внести необходимые правки в приложение, работающее с БД.

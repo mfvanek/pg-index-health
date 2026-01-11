@@ -53,3 +53,7 @@ create table if not exists demo."bad_varchar_limit_partitioned_hash_p0"
     partition of demo."bad_varchar_limit_partitioned"
     for values with (modulus 4, remainder 0);
 ```
+
+## Как исправить
+
+Измените тип столбца на `text`. Не забудьте внести необходимые правки в приложение, работающее с БД.

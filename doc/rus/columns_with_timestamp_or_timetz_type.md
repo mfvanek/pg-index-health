@@ -51,3 +51,7 @@ create table if not exists demo."bad-time_partitioned"
 create table if not exists demo."bad_time_partitioned_hash_p0"
     partition of demo."bad-time_partitioned" for values with (modulus 4, remainder 0);
 ```
+
+## Как исправить
+
+Измените тип столбца на `timestamptz`. Не забудьте внести необходимые правки в приложение, работающее с БД.
