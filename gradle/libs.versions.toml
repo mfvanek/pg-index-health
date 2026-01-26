@@ -19,7 +19,7 @@ slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" 
 apache-commons-dbcp2 = "org.apache.commons:commons-dbcp2:2.14.0"
 awaitility = "org.awaitility:awaitility:4.3.0"
 apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commons-lang3" }
-equalsverifier = "nl.jqno.equalsverifier:equalsverifier:4.3"
+equalsverifier = "nl.jqno.equalsverifier:equalsverifier:4.3.1"
 spring-boot-v3-starter-root = { group = "org.springframework.boot", name = "spring-boot-starter", version.ref = "spring-boot-v3" }
 spring-boot-v3-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "spring-boot-v3" }
 spring-boot-v3-autoconfigure-processor = { group = "org.springframework.boot", name = "spring-boot-autoconfigure-processor", version.ref = "spring-boot-v3" }
