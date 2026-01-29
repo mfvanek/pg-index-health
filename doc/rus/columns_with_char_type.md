@@ -60,3 +60,7 @@ create table if not exists demo.orders_partitioned
 create table if not exists demo.orders_default
     partition of demo.orders_partitioned default;
 ```
+
+## Как исправить
+
+Измените тип столбца на `text`. Не забудьте внести необходимые правки в приложение, работающее с БД.
