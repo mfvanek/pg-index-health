@@ -2,7 +2,7 @@
 
 ## Особенности типа serial в PosgreSQL
 
-Типы данных smallserial, serial и bigserial - это синтаксический сахар.
+Типы данных `smallserial`, `serial` и `bigserial` — это синтаксический сахар.
 Они реализованы через [последовательности целых чисел](https://postgrespro.ru/docs/postgresql/17/datatype-numeric).
 
 ## Почему serial не стоит использовать
@@ -46,3 +46,10 @@ create table if not exists demo.table_with_serial_column_partitioned_q3
     partition of demo.table_with_serial_column_partitioned
         for values from ('2025-07-01') to ('2025-10-01');
 ```
+
+## Как исправить
+
+Удалите значение по умолчанию на столбце и связанную с этим столбцом последовательность.
+
+Используйте класс [ColumnWithSerialTypeMigrationGenerator](../../pg-index-health-generator/src/main/java/io/github/mfvanek/pg/generator/ColumnWithSerialTypeMigrationGenerator.java)
+для автоматической генерации корректирующей миграции БД.

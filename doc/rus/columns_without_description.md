@@ -47,3 +47,7 @@ create table if not exists demo.column_without_description_partitioned_1_10
 
 comment on column demo."column_without_description_partitioned_1_10".ref_value is '';
 ```
+
+## Как исправить
+
+Добавьте человекочитаемые описания ко всем столбцам.
