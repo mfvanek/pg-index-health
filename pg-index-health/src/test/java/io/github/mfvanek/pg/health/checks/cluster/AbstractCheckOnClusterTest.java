@@ -34,10 +34,11 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void shouldThrowExceptionIfMapperNotPassedForCrossClusterCheck() {
-        final HighAvailabilityPgConnection haPgConnection = getHaPgConnection();
-        assertThatThrownBy(() -> new WrongCheck(haPgConnection))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("acrossClusterResultsMapper cannot be null");
+        try (HighAvailabilityPgConnection haPgConnection = getHaPgConnection()) {
+            assertThatThrownBy(() -> new WrongCheck(haPgConnection))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("acrossClusterResultsMapper cannot be null");
+        }
     }
 
     @ParameterizedTest

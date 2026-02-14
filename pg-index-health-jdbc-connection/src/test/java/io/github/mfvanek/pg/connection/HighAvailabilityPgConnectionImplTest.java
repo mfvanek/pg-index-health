@@ -28,26 +28,28 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
 
     @Test
     void ofPrimary() {
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(getPgConnection());
-        assertThat(haPgConnection).isNotNull();
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
-            .isNotNull()
-            .hasSize(1)
-            .containsExactly(getPgConnection())
-            .isUnmodifiable();
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster().iterator().next())
-            .isEqualTo(haPgConnection.getConnectionToPrimary());
+        try (HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(getPgConnection())) {
+            assertThat(haPgConnection).isNotNull();
+            assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
+                .isNotNull()
+                .hasSize(1)
+                .containsExactly(getPgConnection())
+                .isUnmodifiable();
+            assertThat(haPgConnection.getConnectionsToAllHostsInCluster().iterator().next())
+                .isEqualTo(haPgConnection.getConnectionToPrimary());
+        }
     }
 
     @Test
     void shouldBeUnmodifiable() {
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(getPgConnection());
-        assertThat(haPgConnection).isNotNull();
-        assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
-            .isNotNull()
-            .hasSize(1)
-            .containsExactly(getPgConnection())
-            .isUnmodifiable();
+        try (HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(getPgConnection())) {
+            assertThat(haPgConnection).isNotNull();
+            assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
+                .isNotNull()
+                .hasSize(1)
+                .containsExactly(getPgConnection())
+                .isUnmodifiable();
+        }
     }
 
     @Test
@@ -55,18 +57,20 @@ class HighAvailabilityPgConnectionImplTest extends DatabaseAwareTestBase {
         try (LogsCaptor ignored = new LogsCaptor(HighAvailabilityPgConnectionImpl.class, Level.FINEST)) {
             final PgConnection primary = getPgConnection();
             final PgConnection replica = getConnectionToReplica();
-            final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary, List.of(primary, replica), 5L);
-            assertThat(haPgConnection).isNotNull();
-            Awaitility
-                .await()
-                .atMost(Duration.ofMillis(100L))
-                .pollDelay(Duration.ofMillis(20L))
-                .until(() -> Boolean.TRUE);
-            assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
-                .isNotNull()
-                .hasSize(2)
-                .containsExactlyInAnyOrder(primary, replica)
-                .isUnmodifiable();
+            try (HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(primary, List.of(primary, replica), 5L)) {
+                assertThat(haPgConnection)
+                    .isNotNull();
+                Awaitility
+                    .await()
+                    .atMost(Duration.ofMillis(100L))
+                    .pollDelay(Duration.ofMillis(20L))
+                    .until(() -> Boolean.TRUE);
+                assertThat(haPgConnection.getConnectionsToAllHostsInCluster())
+                    .isNotNull()
+                    .hasSize(2)
+                    .containsExactlyInAnyOrder(primary, replica)
+                    .isUnmodifiable();
+            }
         }
     }
 

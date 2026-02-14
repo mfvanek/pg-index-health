@@ -29,7 +29,7 @@ class PostgresBitnamiRepmgrContainer extends JdbcDatabaseContainer<PostgresBitna
     /**
      * The default port number used by PostgreSQL database instances.
      */
-    public static final Integer POSTGRESQL_PORT = 5432;
+    static final Integer POSTGRESQL_PORT = 5432;
     private final Map<String, String> envVars;
 
     /**

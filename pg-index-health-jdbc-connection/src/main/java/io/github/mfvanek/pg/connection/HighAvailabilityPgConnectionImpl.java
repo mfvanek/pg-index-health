@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Implementation of a connection to a high availability cluster (with set of primary host and replicas).
+ * Implementation of a connection to a high-availability cluster (with a set of primary host and replicas).
  *
  * @author Ivan Vakhrushev
  * @author Alexey Antipin
@@ -32,9 +32,9 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
     private static final Logger LOGGER = Logger.getLogger(HighAvailabilityPgConnectionImpl.class.getName());
     private static final long DEFAULT_PRIMARY_REFRESH_INTERVAL_MILLISECONDS = 30_000L;
 
-    private final AtomicReference<PgConnection> cachedConnectionToPrimary = new AtomicReference<>();
+    private final AtomicReference<PgConnection> cachedConnectionToPrimary;
+    private final ScheduledExecutorService executorService;
     private final Set<PgConnection> connectionsToAllHostsInCluster;
-    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private final PrimaryHostDeterminer primaryHostDeterminer;
 
     private HighAvailabilityPgConnectionImpl(final PgConnection connectionToPrimary,
@@ -44,7 +44,8 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
         Objects.requireNonNull(connectionToPrimary, "connectionToPrimary");
         final Set<PgConnection> defensiveCopy = Set.copyOf(Objects.requireNonNull(connectionsToAllHostsInCluster, "connectionsToAllHostsInCluster"));
         shouldContainsConnectionToPrimary(connectionToPrimary, defensiveCopy);
-        this.cachedConnectionToPrimary.set(connectionToPrimary);
+        this.executorService = Executors.newSingleThreadScheduledExecutor();
+        this.cachedConnectionToPrimary = new AtomicReference<>(connectionToPrimary);
         this.connectionsToAllHostsInCluster = defensiveCopy;
     }
 
@@ -63,6 +64,14 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
     @Override
     public Set<PgConnection> getConnectionsToAllHostsInCluster() {
         return connectionsToAllHostsInCluster;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        executorService.shutdownNow();
     }
 
     /**
@@ -92,7 +101,7 @@ public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConne
      *
      * @param connectionToPrimary                connection to the primary host in the cluster.
      * @param connectionsToAllHostsInCluster     connections to all replicas in the cluster.
-     * @param primaryRefreshIntervalMilliseconds time interval in milliseconds to refresh connection to the primary host.
+     * @param primaryRefreshIntervalMilliseconds time interval in milliseconds to refresh the connection to the primary host.
      * @return {@code HighAvailabilityPgConnection}
      */
     public static HighAvailabilityPgConnection of(final PgConnection connectionToPrimary,

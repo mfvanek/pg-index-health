@@ -27,7 +27,7 @@ final class DropDefaultValueGenerator extends AbstractOptionsAwareSqlGenerator<C
     }
 
     @Override
-    public String generate(final ColumnNameAware column) {
+    String generate(final ColumnNameAware column) {
         Objects.requireNonNull(column, "column cannot be null");
         return keyword("alter table ") +
             keyword("if exists ") +

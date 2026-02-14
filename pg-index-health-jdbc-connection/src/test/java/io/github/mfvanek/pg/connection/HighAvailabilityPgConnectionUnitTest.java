@@ -43,38 +43,38 @@ class HighAvailabilityPgConnectionUnitTest {
         initMocks(secondConnectionMocks, Boolean.FALSE);
 
         final List<PgConnection> pgConnections = prepareConnections();
-        final HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnections.get(0), pgConnections, 400L);
+        try (HighAvailabilityPgConnection haPgConnection = HighAvailabilityPgConnectionImpl.of(pgConnections.get(0), pgConnections, 400L)) {
+            assertThat(haPgConnection.getConnectionToPrimary())
+                .as("First connection is primary")
+                .isEqualTo(pgConnections.get(0))
+                .as("Second connection is not primary")
+                .isNotEqualTo(pgConnections.get(1));
+            Awaitility
+                .await()
+                .atMost(Duration.ofMillis(1000L))
+                .pollDelay(Duration.ofMillis(500L))
+                .until(() -> Boolean.TRUE);
 
-        assertThat(haPgConnection.getConnectionToPrimary())
-            .as("First connection is primary")
-            .isEqualTo(pgConnections.get(0))
-            .as("Second connection is not primary")
-            .isNotEqualTo(pgConnections.get(1));
-        Awaitility
-            .await()
-            .atMost(Duration.ofMillis(1000L))
-            .pollDelay(Duration.ofMillis(500L))
-            .until(() -> Boolean.TRUE);
+            Mockito.when(firstConnectionMocks.resultSet.getBoolean(1)).thenReturn(Boolean.FALSE);
+            Awaitility
+                .await()
+                .atMost(Duration.ofMillis(1000L))
+                .pollDelay(Duration.ofMillis(500L))
+                .until(() -> Boolean.TRUE);
+            assertThat(haPgConnection.getConnectionToPrimary())
+                .as("Without new primary first connection considered as primary")
+                .isEqualTo(pgConnections.get(0));
 
-        Mockito.when(firstConnectionMocks.resultSet.getBoolean(1)).thenReturn(Boolean.FALSE);
-        Awaitility
-            .await()
-            .atMost(Duration.ofMillis(1000L))
-            .pollDelay(Duration.ofMillis(500L))
-            .until(() -> Boolean.TRUE);
-        assertThat(haPgConnection.getConnectionToPrimary())
-            .as("Without new primary first connection considered as primary")
-            .isEqualTo(pgConnections.get(0));
-
-        Mockito.when(secondConnectionMocks.resultSet.getBoolean(1)).thenReturn(Boolean.TRUE);
-        Awaitility
-            .await()
-            .atMost(Duration.ofMillis(1000L))
-            .pollDelay(Duration.ofMillis(500L))
-            .until(() -> Boolean.TRUE);
-        assertThat(haPgConnection.getConnectionToPrimary())
-            .as("Second connection become new primary")
-            .isEqualTo(pgConnections.get(1));
+            Mockito.when(secondConnectionMocks.resultSet.getBoolean(1)).thenReturn(Boolean.TRUE);
+            Awaitility
+                .await()
+                .atMost(Duration.ofMillis(1000L))
+                .pollDelay(Duration.ofMillis(500L))
+                .until(() -> Boolean.TRUE);
+            assertThat(haPgConnection.getConnectionToPrimary())
+                .as("Second connection become new primary")
+                .isEqualTo(pgConnections.get(1));
+        }
     }
 
     @Test
@@ -83,15 +83,15 @@ class HighAvailabilityPgConnectionUnitTest {
         initMocks(secondConnectionMocks, Boolean.FALSE);
 
         final List<PgConnection> pgConnections = prepareConnections();
-        HighAvailabilityPgConnectionImpl.of(pgConnections.get(0), pgConnections, 50L);
+        try (HighAvailabilityPgConnection ignored = HighAvailabilityPgConnectionImpl.of(pgConnections.get(0), pgConnections, 50L)) {
+            Awaitility
+                .await()
+                .pollDelay(Duration.ofMillis(650)) // start delay compensation + OS dependent behavior
+                .until(() -> Boolean.TRUE);
 
-        Awaitility
-            .await()
-            .pollDelay(Duration.ofMillis(650)) // start delay compensation + OS dependent behavior
-            .until(() -> Boolean.TRUE);
-
-        // Due to interleaving method may be called more than 10 times but not less than 10
-        Mockito.verify(firstConnectionMocks.dataSource, Mockito.atLeast(10)).getConnection();
+            // Due to interleaving method may be called more than 10 times but not less than 10
+            Mockito.verify(firstConnectionMocks.dataSource, Mockito.atLeast(10)).getConnection();
+        }
     }
 
     @Test
@@ -103,16 +103,16 @@ class HighAvailabilityPgConnectionUnitTest {
             Mockito.when(secondConnectionMocks.resultSet.getBoolean(1)).thenThrow(RuntimeException.class);
 
             final List<PgConnection> pgConnections = prepareConnections();
-            HighAvailabilityPgConnectionImpl.of(pgConnections.get(0), pgConnections, 10L);
+            try (HighAvailabilityPgConnection ignored = HighAvailabilityPgConnectionImpl.of(pgConnections.get(0), pgConnections, 10L)) {
+                Awaitility
+                    .await()
+                    .pollDelay(Duration.ofMillis(200)) // start delay compensation + OS dependent behavior
+                    .until(() -> Boolean.TRUE);
 
-            Awaitility
-                .await()
-                .pollDelay(Duration.ofMillis(200)) // start delay compensation + OS dependent behavior
-                .until(() -> Boolean.TRUE);
-
-            assertThat(logsCaptor.getLogs())
-                .hasSizeGreaterThanOrEqualTo(10)
-                .allMatch(l -> l.getMessage().contains("Exception during primary detection for host"));
+                assertThat(logsCaptor.getLogs())
+                    .hasSizeGreaterThanOrEqualTo(10)
+                    .allMatch(l -> l.getMessage().contains("Exception during primary detection for host"));
+            }
         }
     }
 

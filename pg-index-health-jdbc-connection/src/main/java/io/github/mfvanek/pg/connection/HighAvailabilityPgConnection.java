@@ -13,12 +13,12 @@ package io.github.mfvanek.pg.connection;
 import java.util.Set;
 
 /**
- * An abstraction of a connection to a high availability cluster (with set of primary host and replicas).
+ * An abstraction of a connection to a high-availability cluster (with a set of primary host and replicas).
  *
  * @author Ivan Vakhrushev
  * @see PgConnection
  */
-public interface HighAvailabilityPgConnection {
+public interface HighAvailabilityPgConnection extends AutoCloseable {
 
     /**
      * Retrieves connection to a primary host in the cluster.
@@ -33,4 +33,10 @@ public interface HighAvailabilityPgConnection {
      * @return {@code Set} of connections to all hosts in target cluster
      */
     Set<PgConnection> getConnectionsToAllHostsInCluster();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    void close();
 }

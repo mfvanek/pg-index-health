@@ -21,8 +21,8 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 class ArchitectureTest {
 
     @ArchTest
-    static final ArchRule ALL_PUBLIC_CLASSES_SHOULD_BE_FINAL =
-        classes().that().areNotInterfaces().and().arePublic()
+    static final ArchRule ALL_PUBLIC_AND_NOT_ABSTRACT_CLASSES_SHOULD_BE_FINAL =
+        classes().that().areNotInterfaces().and().doNotHaveModifier(JavaModifier.ABSTRACT).and().arePublic()
             .should().haveOnlyFinalFields()
             .andShould().haveOnlyPrivateConstructors()
             .andShould().haveModifier(JavaModifier.FINAL);

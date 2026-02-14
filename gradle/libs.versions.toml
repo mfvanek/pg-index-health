@@ -4,7 +4,7 @@ spring-boot-v4 = "4.0.1"
 slf4j = "2.0.17" # to be compatible with Spring Boot 3.4.X
 detekt = "1.23.8"
 commons-lang3 = "3.20.0"
-assertj = "3.27.6"
+assertj = "3.27.7"
 testcontainers = "2.0.3" # we do not align the testcontainers version with Spring Boot BOM
 mockito = "5.21.0"
 forbiddenapis = "3.10"
@@ -12,7 +12,7 @@ junit = "6.0.2"
 
 [libraries]
 jspecify = "org.jspecify:jspecify:1.0.0"
-postgresql = "org.postgresql:postgresql:42.7.9"
+postgresql = "org.postgresql:postgresql:42.7.10"
 jackson-bom = "com.fasterxml.jackson:jackson-bom:2.18.5" # to be compatible with Spring Boot 3.4.X
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" }

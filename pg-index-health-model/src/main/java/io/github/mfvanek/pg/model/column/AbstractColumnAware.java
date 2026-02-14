@@ -22,7 +22,7 @@ import java.util.Objects;
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-abstract class AbstractColumnAware implements DbObject, ColumnTypeAware {
+public abstract class AbstractColumnAware implements DbObject, ColumnTypeAware {
 
     /**
      * The column associated with this instance.

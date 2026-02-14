@@ -27,11 +27,11 @@ plugins {
 }
 
 dependencies {
-    errorprone("com.google.errorprone:error_prone_core:2.45.0")
-    errorprone("com.uber.nullaway:nullaway:0.12.15")
+    errorprone("com.google.errorprone:error_prone_core:2.47.0")
+    errorprone("com.uber.nullaway:nullaway:0.13.1")
 
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.7.2")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.7.4")
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -100,7 +100,7 @@ tasks {
 }
 
 checkstyle {
-    toolVersion = "12.1.2"
+    toolVersion = "13.2.0"
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     maxWarnings = 0
@@ -108,7 +108,7 @@ checkstyle {
 }
 
 pmd {
-    toolVersion = "7.19.0"
+    toolVersion = "7.21.0"
     isConsoleOutput = true
     ruleSetFiles = files("${rootDir}/config/pmd/pmd.xml")
     ruleSets = listOf()
