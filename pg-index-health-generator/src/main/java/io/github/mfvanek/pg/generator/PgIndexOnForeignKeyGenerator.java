@@ -26,14 +26,14 @@ import java.util.stream.Collectors;
 final class PgIndexOnForeignKeyGenerator extends AbstractOptionsAwareSqlGenerator<ForeignKey> {
 
     // See https://www.postgresql.org/docs/current/limits.html
-    public static final int MAX_IDENTIFIER_LENGTH = 63;
+    static final int MAX_IDENTIFIER_LENGTH = 63;
 
     PgIndexOnForeignKeyGenerator(final GeneratingOptions options) {
         super(options);
     }
 
     @Override
-    public String generate(final ForeignKey foreignKey) {
+    String generate(final ForeignKey foreignKey) {
         Objects.requireNonNull(foreignKey, "foreignKey cannot be null");
         final PgIdentifierNameGenerator nameGenerator = PgIdentifierNameGenerator.of(foreignKey, options);
         final StringBuilder queryBuilder = new StringBuilder();

@@ -22,7 +22,7 @@ import java.util.Objects;
  * @author Ivan Vakhrushev
  * @since 0.15.0
  */
-abstract class AbstractIndexAware implements DbObject, TableNameAware, IndexSizeAware {
+public abstract class AbstractIndexAware implements DbObject, TableNameAware, IndexSizeAware {
 
     /**
      * The {@link Index} instance associated with this object.

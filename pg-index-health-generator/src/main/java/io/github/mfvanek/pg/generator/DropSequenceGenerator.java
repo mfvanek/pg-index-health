@@ -21,7 +21,7 @@ final class DropSequenceGenerator extends AbstractOptionsAwareSqlGenerator<Colum
     }
 
     @Override
-    public String generate(final ColumnWithSerialType column) {
+    String generate(final ColumnWithSerialType column) {
         Objects.requireNonNull(column, "column cannot be null");
         return keyword("drop sequence ") +
             keyword("if exists ") +

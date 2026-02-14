@@ -48,7 +48,7 @@ class PgIdentifierNameGenerator {
             foreignKey.getColumns().stream().anyMatch(ColumnNameAware::isNullable);
     }
 
-    public String generateFullIndexName() {
+    String generateFullIndexName() {
         final StringBuilder fullNameBuilder = new StringBuilder();
         addMainPart(fullNameBuilder);
         addWithoutNullsIfNeed(fullNameBuilder);
@@ -56,7 +56,7 @@ class PgIdentifierNameGenerator {
             .toString();
     }
 
-    public String generateTruncatedIndexName() {
+    String generateTruncatedIndexName() {
         int remainingLength = options.isNeedToAddIdx() ? MAX_IDENTIFIER_LENGTH - IDX.length() - DELIMITER_LENGTH : MAX_IDENTIFIER_LENGTH;
         final StringBuilder truncatedNameBuilder = new StringBuilder();
         final int mainPathLength = getMainPartLength();
@@ -113,7 +113,7 @@ class PgIdentifierNameGenerator {
         return nameBuilder;
     }
 
-    public static PgIdentifierNameGenerator of(final ForeignKey foreignKey, final GeneratingOptions options) {
+    static PgIdentifierNameGenerator of(final ForeignKey foreignKey, final GeneratingOptions options) {
         return new PgIdentifierNameGenerator(foreignKey, options);
     }
 }

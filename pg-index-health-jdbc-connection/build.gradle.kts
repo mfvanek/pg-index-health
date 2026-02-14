@@ -4,7 +4,7 @@ plugins {
     id("pg-index-health.mandatory-javadoc")
 }
 
-description = "pg-index-health-jdbc-connection is an abstraction of a connection to a high availability PostgreSQL cluster."
+description = "pg-index-health-jdbc-connection is an abstraction of a connection to a high-availability PostgreSQL cluster."
 
 dependencies {
     api(project(":pg-index-health-model"))

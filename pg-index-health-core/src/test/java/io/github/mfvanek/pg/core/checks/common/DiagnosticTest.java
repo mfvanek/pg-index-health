@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,10 +53,16 @@ class DiagnosticTest {
 
     @Test
     void allAcrossClusterChecksShouldBeRuntime() {
-        Arrays.stream(Diagnostic.values())
+        final List<Diagnostic> diagnostics = Arrays.stream(Diagnostic.values())
             .filter(Diagnostic::isAcrossCluster)
-            .forEach(d -> assertThat(d.isRuntime())
-                .isTrue());
+            .toList();
+
+        assertThat(diagnostics)
+            .hasSizeGreaterThanOrEqualTo(2);
+        diagnostics.forEach(d ->
+            assertThat(d.isRuntime())
+                .isTrue()
+        );
     }
 
     @Test

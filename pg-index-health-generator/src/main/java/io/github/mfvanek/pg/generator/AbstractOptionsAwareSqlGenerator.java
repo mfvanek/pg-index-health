@@ -32,5 +32,5 @@ abstract class AbstractOptionsAwareSqlGenerator<T extends TableNameAware> {
         return keyword;
     }
 
-    public abstract String generate(T dbObject);
+    abstract String generate(T dbObject);
 }

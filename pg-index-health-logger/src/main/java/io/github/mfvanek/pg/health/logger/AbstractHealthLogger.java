@@ -71,21 +71,22 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         Objects.requireNonNull(pgContext);
         // The main idea here is to create haPgConnection for a short period of time.
         // This helps to avoid dealing with failover/switch-over situations that occur in real clusters.
-        final HighAvailabilityPgConnection haPgConnection = connectionFactory.of(credentials);
-        final List<DatabaseCheckOnCluster<? extends DbObject>> databaseChecksOnCluster = databaseChecksFactory.apply(haPgConnection);
-        final Predicate<DbObject> jointFilters = prepareFilters(exclusions, pgContext);
-        final List<String> logResult = new ArrayList<>();
-        for (final DatabaseCheckOnCluster<? extends DbObject> check : databaseChecksOnCluster) {
-            final LoggingKey key = SimpleLoggingKeyAdapter.of(check);
-            final List<? extends DbObject> checkResult = check.check(pgContext, jointFilters);
-            if (checkResult.isEmpty()) {
-                logResult.add(writeZeroToLog(key));
-            } else {
-                LOGGER.warning(() -> String.format(Locale.ROOT, "There are %s in the database %s", key.getDescription(), checkResult));
-                logResult.add(writeToLog(key, checkResult.size()));
+        try (HighAvailabilityPgConnection haPgConnection = connectionFactory.of(credentials)) {
+            final List<DatabaseCheckOnCluster<? extends DbObject>> databaseChecksOnCluster = databaseChecksFactory.apply(haPgConnection);
+            final Predicate<DbObject> jointFilters = prepareFilters(exclusions, pgContext);
+            final List<String> logResult = new ArrayList<>();
+            for (final DatabaseCheckOnCluster<? extends DbObject> check : databaseChecksOnCluster) {
+                final LoggingKey key = SimpleLoggingKeyAdapter.of(check);
+                final List<? extends DbObject> checkResult = check.check(pgContext, jointFilters);
+                if (checkResult.isEmpty()) {
+                    logResult.add(writeZeroToLog(key));
+                } else {
+                    LOGGER.warning(() -> String.format(Locale.ROOT, "There are %s in the database %s", key.getDescription(), checkResult));
+                    logResult.add(writeToLog(key, checkResult.size()));
+                }
             }
+            return logResult;
         }
-        return logResult;
     }
 
     private Predicate<DbObject> prepareFilters(final Exclusions exclusions, final PgContext pgContext) {

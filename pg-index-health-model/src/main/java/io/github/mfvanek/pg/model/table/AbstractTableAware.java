@@ -21,7 +21,7 @@ import java.util.Objects;
  * @author Ivan Vakhrushev
  * @since 0.7.0
  */
-abstract class AbstractTableAware implements DbObject, TableSizeAware {
+public abstract class AbstractTableAware implements DbObject, TableSizeAware {
 
     /**
      * The {@link Table} instance associated with this object.
