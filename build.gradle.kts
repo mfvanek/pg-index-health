@@ -11,7 +11,7 @@ description = "pg-index-health build"
 
 allprojects {
     group = "io.github.mfvanek"
-    version = "0.31.0"
+    version = "0.31.1"
 
     repositories {
         mavenCentral()
@@ -29,7 +29,7 @@ dependencies {
     }
 }
 
-tasks{
+tasks {
     wrapper {
         gradleVersion = "9.3.1"
     }
