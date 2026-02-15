@@ -33,6 +33,12 @@ public abstract class AbstractColumnAware implements DbObject, ColumnTypeAware {
      */
     protected final String columnType;
 
+    /**
+     * Constructs a new instance with the specified column and column type.
+     *
+     * @param column     the column associated with this instance
+     * @param columnType the type of the column
+     */
     protected AbstractColumnAware(final Column column,
                                   final String columnType) {
         this.column = Objects.requireNonNull(column, COLUMN_FIELD + " cannot be null");

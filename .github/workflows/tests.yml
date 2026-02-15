@@ -59,3 +59,5 @@ jobs:
                     token: ${{ secrets.CODECOV_TOKEN }}
                     fail_ci_if_error: true
                     verbose: false
+            -   name: Generate Javadoc
+                run: ./gradlew javadoc

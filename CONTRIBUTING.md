@@ -83,9 +83,17 @@ Implement a new class extending [AbstractCheckOnCluster](pg-index-health/src/mai
 * Behavior of the new check should be tested for partitioned tables (if applicable).
 * Behavior of the new check should be tested with [quoted identifiers](https://www.postgresql.org/docs/17/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS).
 
+### Add documentation
+
+1. Add Javadoc for all public classes and methods.
+   Make sure that the Javadoc generation is working successfully:
+   ```shell
+   ./gradlew javadoc
+   ```
+2. Update [available_checks.md](doc/available_checks.md) and add information about the new check
+
 ### Further steps
 
-1. Update [available_checks.md](doc/available_checks.md) and add information about the new check
-2. Update [Spring Boot starter](spring-boot-integration%2Fpg-index-health-test-starter).
-3. Add sample code to the demo apps ([first](https://github.com/mfvanek/pg-index-health-demo/tree/master/pg-index-health-demo-without-spring), [second](https://github.com/mfvanek/pg-index-health-demo/tree/master/pg-index-health-spring-boot-demo)).
+1. Update [Spring Boot starter](spring-boot-integration%2Fpg-index-health-test-starter).
+2. Add sample code to the demo apps ([first](https://github.com/mfvanek/pg-index-health-demo/tree/master/pg-index-health-demo-without-spring), [second](https://github.com/mfvanek/pg-index-health-demo/tree/master/pg-index-health-spring-boot-demo)).
    Use a locally built pg-index-health version and send a draft PR.
