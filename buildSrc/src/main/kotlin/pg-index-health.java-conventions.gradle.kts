@@ -73,18 +73,20 @@ tasks {
         val projectVersion = project.version
         val doclet = options as StandardJavadocDocletOptions
         doclet.addBooleanOption("html5", true)
-        configurations.findByName("api")?.let { cfg ->
-            cfg.dependencies
-                .filterIsInstance<ProjectDependency>()
-                .map {
-                    val link = "https://javadoc.io/doc/$groupId/${it.name}/$projectVersion/"
-                    val dependencyProject = rootProject.project(it.path)
-                    val javadocTask = dependencyProject.tasks.named<Javadoc>("javadoc")
-                    val javadocOutputDir = javadocTask.get().destinationDir
-                    doclet.linksOffline(link, javadocOutputDir?.absolutePath)
-                    dependsOn(javadocTask)
-                }
-        }
+
+        configurations.findByName("api")?.dependencies
+            ?.filterIsInstance<ProjectDependency>()
+            ?.forEach { projectDependency ->
+                val dependencyProject = rootProject.project(projectDependency.path)
+                logger.quiet("Adding javadoc for project $dependencyProject")
+                val link = "https://javadoc.io/doc/$groupId/${projectDependency.name}/$projectVersion/"
+                val javadocTask = dependencyProject.tasks.named<Javadoc>("javadoc")
+                val javadocOutputDir = javadocTask.get().destinationDir
+                val javadocAbsolutePath = javadocOutputDir?.absolutePath!!
+                logger.quiet("Adding offline link $link to $javadocAbsolutePath")
+                doclet.linksOffline(link, javadocAbsolutePath)
+                dependsOn(javadocTask)
+            }
     }
 
     withType<SpotBugsTask>().configureEach {
