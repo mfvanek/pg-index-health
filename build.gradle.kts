@@ -19,12 +19,15 @@ allprojects {
     }
 }
 
+private val excludedSubprojects = setOf("pg-index-health-bom", "spring-boot-integration")
+
+private fun Project.shouldSkip() : Boolean =
+    excludedSubprojects.contains(this.name) || this.name.endsWith("-demo-app")
+
 dependencies {
-    val excludedSubprojects = setOf("pg-index-health-bom", "spring-boot-integration")
-    subprojects.forEach {
-        val shouldSkip = excludedSubprojects.contains(it.name) || it.name.endsWith("-demo-app")
-        if (!shouldSkip) {
-            jacocoAggregation(it)
+    subprojects.forEach { subproject ->
+        if (!subproject.shouldSkip()) {
+            jacocoAggregation(subproject)
         }
     }
 }
