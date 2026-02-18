@@ -19,12 +19,15 @@ allprojects {
     }
 }
 
+private val excludedSubprojects = setOf("pg-index-health-bom", "spring-boot-integration")
+
+private fun Project.shouldSkip(): Boolean =
+    excludedSubprojects.contains(this.name) || this.name.endsWith("-demo-app")
+
 dependencies {
-    val excludedSubprojects = setOf("pg-index-health-bom", "spring-boot-integration")
-    subprojects.forEach {
-        val shouldSkip = excludedSubprojects.contains(it.name) || it.name.endsWith("-demo-app")
-        if (!shouldSkip) {
-            jacocoAggregation(it)
+    subprojects.forEach { subproject ->
+        if (!subproject.shouldSkip()) {
+            jacocoAggregation(subproject)
         }
     }
 }
@@ -67,4 +70,31 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     rejectVersionIf {
         isNonStable(candidate.version)
     }
+}
+
+gradle.projectsEvaluated {
+    val groupId = rootProject.group
+    val projectVersion = rootProject.version
+
+    subprojects
+        .filter { subproject -> subproject.plugins.hasPlugin(JavaLibraryPlugin::class.java) }
+        .forEach { subproject ->
+            logger.info("Configuring javadoc links for project $subproject")
+            subproject.tasks.named<Javadoc>("javadoc").configure {
+                subproject.configurations.findByName("api")?.dependencies
+                    ?.filterIsInstance<ProjectDependency>()
+                    ?.forEach { projectDependency ->
+                        val dependencyProject = rootProject.project(projectDependency.path)
+                        evaluationDependsOn(dependencyProject.path)
+                        val link = "https://javadoc.io/doc/$groupId/${projectDependency.name}/$projectVersion/"
+                        val javadocTask = dependencyProject.tasks.named<Javadoc>("javadoc")
+                        val javadocOutputDir = javadocTask.get().destinationDir
+                        val javadocAbsolutePath = javadocOutputDir?.absolutePath!!
+                        logger.quiet("Adding offline link $link to $javadocAbsolutePath")
+                        val doclet = options as StandardJavadocDocletOptions
+                        doclet.linksOffline(link, javadocAbsolutePath)
+                        dependsOn(javadocTask)
+                    }
+            }
+        }
 }

@@ -20,6 +20,13 @@ plugins {
     id("pg-index-health.publish")
 }
 
+tasks {
+    javadoc {
+        val doclet = options as StandardJavadocDocletOptions
+        doclet.addBooleanOption("html5", true)
+    }
+}
+
 mavenPublishing {
     configure(
         JavaLibrary(
