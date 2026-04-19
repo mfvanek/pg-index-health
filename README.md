@@ -95,6 +95,7 @@ Add a standard test to your project [as shown in the link](doc/standard_test.md)
 | 2.7.x       | 11          | 0.8.x — 0.15.x               |
 | 3.3.x       | 17          | 0.20.x                       |
 | 3.4.x       | 17          | 0.30.x — 0.31.x              |
+| 3.5.x       | 17          | 0.40.x                       |
 
 #### Spring Boot 3 compatibility
 

@@ -27,8 +27,8 @@ plugins {
 }
 
 dependencies {
-    errorprone("com.google.errorprone:error_prone_core:2.47.0")
-    errorprone("com.uber.nullaway:nullaway:0.13.1")
+    errorprone("com.google.errorprone:error_prone_core:2.49.0")
+    errorprone("com.uber.nullaway:nullaway:0.13.3")
 
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0")
     spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.7.4")
@@ -81,7 +81,7 @@ tasks {
 }
 
 checkstyle {
-    toolVersion = "13.2.0"
+    toolVersion = "13.4.0"
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     maxWarnings = 0
@@ -89,7 +89,7 @@ checkstyle {
 }
 
 pmd {
-    toolVersion = "7.21.0"
+    toolVersion = "7.23.0"
     isConsoleOutput = true
     ruleSetFiles = files("${rootDir}/config/pmd/pmd.xml")
     ruleSets = listOf()
