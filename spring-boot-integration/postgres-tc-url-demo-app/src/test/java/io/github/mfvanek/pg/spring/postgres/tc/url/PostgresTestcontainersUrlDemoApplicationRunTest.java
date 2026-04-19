@@ -28,6 +28,6 @@ class PostgresTestcontainersUrlDemoApplicationRunTest {
         assertThat(output.getAll())
             .contains("Starting PostgresTestcontainersUrlDemoApplication using Java")
             .contains("Started PostgresTestcontainersUrlDemoApplication in")
-            .contains("(v3.4.13)");
+            .contains("(v3.5.13)");
     }
 }
