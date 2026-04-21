@@ -15,7 +15,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
-abstract class GenerateModuleVersionTask : DefaultTask() {
+abstract class GenerateJackson3ModuleVersionTask : DefaultTask() {
 
     @get:Input
     abstract val moduleGroup: Property<String>
@@ -32,7 +32,7 @@ abstract class GenerateModuleVersionTask : DefaultTask() {
     @TaskAction
     fun generate() {
         val versionJava = outputDir.get()
-            .file("io/github/mfvanek/pg/model/jackson/generated/ModuleVersion.java")
+            .file("io/github/mfvanek/pg/model/jackson3/generated/ModuleVersion.java")
             .asFile
         versionJava.parentFile.mkdirs()
         versionJava.writeText("""
@@ -46,13 +46,19 @@ abstract class GenerateModuleVersionTask : DefaultTask() {
              * Licensed under the Apache License 2.0
              */
 
-            package io.github.mfvanek.pg.model.jackson.generated;
+            package io.github.mfvanek.pg.model.jackson3.generated;
 
-            import com.fasterxml.jackson.core.Version;
+            import tools.jackson.core.Version;
+            import tools.jackson.core.Versioned;
 
             @io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport
-            public final class ModuleVersion {
+            public final class ModuleVersion implements Versioned {
                 public static final Version VERSION = new Version(${moduleVersion.get().replace(".", ", ")}, null, "${moduleGroup.get()}", "${moduleName.get()}");
+                
+                @Override
+                public Version version() {
+                    return VERSION;
+                }
             }
 
         """.trimIndent())

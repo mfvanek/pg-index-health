@@ -10,12 +10,11 @@
 
 package io.github.mfvanek.pg.model.jackson3.column;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.table.TableNameAware;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
 
 import java.io.IOException;
 
@@ -25,13 +24,13 @@ import java.io.IOException;
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-public class ColumnSerializer extends JsonSerializer<Column> {
+public class ColumnSerializer extends ValueSerializer<Column> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final Column value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final Column value, final JsonGenerator gen, final SerializationContext ctxt) throws IOException {
         gen.writeStartObject();
         gen.writeStringField(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
         gen.writeStringField(ColumnNameAware.COLUMN_NAME_FIELD, value.getColumnName());

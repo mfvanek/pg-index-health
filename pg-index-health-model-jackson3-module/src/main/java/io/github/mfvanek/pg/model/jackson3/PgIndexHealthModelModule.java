@@ -24,7 +24,7 @@ import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
-import io.github.mfvanek.pg.model.jackson.generated.ModuleVersion;
+import io.github.mfvanek.pg.model.jackson3.generated.ModuleVersion;
 import io.github.mfvanek.pg.model.jackson3.column.ColumnDeserializer;
 import io.github.mfvanek.pg.model.jackson3.column.ColumnSerializer;
 import io.github.mfvanek.pg.model.jackson3.column.ColumnWithSerialTypeDeserializer;

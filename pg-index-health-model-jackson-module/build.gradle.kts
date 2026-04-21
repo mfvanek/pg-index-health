@@ -13,7 +13,7 @@ dependencies {
     testImplementation(libs.classgraph)
 }
 
-val generateModuleVersion = tasks.register<GenerateModuleVersionTask>("generateModuleVersion") {
+val generateModuleVersion = tasks.register<GenerateJackson2ModuleVersionTask>("generateJackson2ModuleVersion") {
     moduleGroup.set(project.group.toString())
     moduleName.set(project.name)
     moduleVersion.set(project.version.toString())
