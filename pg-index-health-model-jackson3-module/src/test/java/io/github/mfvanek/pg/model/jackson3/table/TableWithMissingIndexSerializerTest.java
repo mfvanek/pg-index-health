@@ -8,25 +8,24 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.jackson.column;
+package io.github.mfvanek.pg.model.jackson3.table;
 
-import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
-import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
+import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
+import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ColumnWithTypeSerializerTest extends ObjectMapperTestBase {
+class TableWithMissingIndexSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() throws IOException {
-        final ColumnWithType original = ColumnWithType.ofUuid(Column.ofNotNull("t1", "c1"));
+        final TableWithMissingIndex original = TableWithMissingIndex.of("t", 113L, 255L, 344L);
         assertThat(objectMapper.writeValueAsString(original))
-            .isEqualTo("{\"column\":{\"tableName\":\"t1\",\"columnName\":\"c1\",\"notNull\":true},\"columnType\":\"uuid\"}");
-        final ColumnWithType restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), ColumnWithType.class);
+            .isEqualTo("{\"table\":{\"tableName\":\"t\",\"tableSizeInBytes\":113},\"seqScans\":255,\"indexScans\":344}");
+        final TableWithMissingIndex restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), TableWithMissingIndex.class);
         assertThat(restored)
             .usingRecursiveComparison()
             .isEqualTo(original);

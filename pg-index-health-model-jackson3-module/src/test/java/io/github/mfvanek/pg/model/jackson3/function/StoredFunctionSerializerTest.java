@@ -8,10 +8,10 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.jackson.function;
+package io.github.mfvanek.pg.model.jackson3.function;
 
 import io.github.mfvanek.pg.model.function.StoredFunction;
-import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
+import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

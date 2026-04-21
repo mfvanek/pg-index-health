@@ -8,11 +8,11 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.jackson.index;
+package io.github.mfvanek.pg.model.jackson3.index;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
-import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
+import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

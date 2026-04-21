@@ -8,26 +8,26 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.jackson.dbobject;
+package io.github.mfvanek.pg.model.jackson3.table;
 
-import io.github.mfvanek.pg.model.dbobject.AnyObject;
-import io.github.mfvanek.pg.model.dbobject.PgObjectType;
-import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
+import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
+import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AnyObjectSerializerTest extends ObjectMapperTestBase {
+class TableSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() throws IOException {
-        final AnyObject original = AnyObject.ofType("demo.orders", PgObjectType.TABLE);
+        final Table original = Table.of("demo.table1", 143L);
         assertThat(objectMapper.writeValueAsString(original))
-            .isEqualTo("{\"objectName\":\"demo.orders\",\"objectType\":\"table\"}");
-        final AnyObject restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), AnyObject.class);
+            .isEqualTo("{\"tableName\":\"demo.table1\",\"tableSizeInBytes\":143}");
+        final Table restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), Table.class);
         assertThat(restored)
+            .usingRecursiveComparison()
             .isEqualTo(original);
     }
 }

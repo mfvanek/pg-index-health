@@ -8,25 +8,24 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.jackson.constraint;
+package io.github.mfvanek.pg.model.jackson3.index;
 
-import io.github.mfvanek.pg.model.constraint.Constraint;
-import io.github.mfvanek.pg.model.constraint.ConstraintType;
-import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
+import io.github.mfvanek.pg.model.index.IndexWithBloat;
+import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ConstraintSerializerTest extends ObjectMapperTestBase {
+class IndexWithBloatSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() throws IOException {
-        final Constraint original = Constraint.ofType("demo.orders", "order_amount_check", ConstraintType.CHECK);
+        final IndexWithBloat original = IndexWithBloat.of("t1", "i1", 100L, 40L, 40.01);
         assertThat(objectMapper.writeValueAsString(original))
-            .isEqualTo("{\"tableName\":\"demo.orders\",\"constraintName\":\"order_amount_check\",\"constraintType\":\"CHECK\"}");
-        final Constraint restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), Constraint.class);
+            .isEqualTo("{\"index\":{\"tableName\":\"t1\",\"indexName\":\"i1\",\"indexSizeInBytes\":100},\"bloatSizeInBytes\":40,\"bloatPercentage\":40.01}");
+        final IndexWithBloat restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), IndexWithBloat.class);
         assertThat(restored)
             .usingRecursiveComparison()
             .isEqualTo(original);

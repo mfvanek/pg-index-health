@@ -8,10 +8,10 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.jackson.table;
+package io.github.mfvanek.pg.model.jackson3.table;
 
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
+import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
 import org.junit.jupiter.api.Test;

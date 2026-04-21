@@ -8,10 +8,10 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.jackson.sequence;
+package io.github.mfvanek.pg.model.jackson3.sequence;
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
+import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 import org.junit.jupiter.api.Test;
 

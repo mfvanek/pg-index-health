@@ -8,24 +8,24 @@
  * Licensed under the Apache License 2.0
  */
 
-package io.github.mfvanek.pg.model.jackson.table;
+package io.github.mfvanek.pg.model.jackson3.table;
 
-import io.github.mfvanek.pg.model.jackson.support.ObjectMapperTestBase;
-import io.github.mfvanek.pg.model.table.Table;
+import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
+import io.github.mfvanek.pg.model.table.TableWithBloat;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TableSerializerTest extends ObjectMapperTestBase {
+class TableWithBloatSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() throws IOException {
-        final Table original = Table.of("demo.table1", 143L);
+        final TableWithBloat original = TableWithBloat.of("demo.table1", 143L, 256L, 56.78);
         assertThat(objectMapper.writeValueAsString(original))
-            .isEqualTo("{\"tableName\":\"demo.table1\",\"tableSizeInBytes\":143}");
-        final Table restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), Table.class);
+            .isEqualTo("{\"table\":{\"tableName\":\"demo.table1\",\"tableSizeInBytes\":143},\"bloatSizeInBytes\":256,\"bloatPercentage\":56.78}");
+        final TableWithBloat restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), TableWithBloat.class);
         assertThat(restored)
             .usingRecursiveComparison()
             .isEqualTo(original);
