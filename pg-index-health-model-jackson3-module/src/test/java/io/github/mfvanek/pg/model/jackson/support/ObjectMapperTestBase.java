@@ -14,7 +14,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.StreamReadFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.mfvanek.pg.model.jackson.PgIndexHealthModelModule;
+import io.github.mfvanek.pg.model.jackson3.PgIndexHealthModelModule;
 
 public abstract class ObjectMapperTestBase {
 
