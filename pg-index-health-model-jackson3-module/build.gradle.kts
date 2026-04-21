@@ -3,12 +3,12 @@ plugins {
     id("pg-index-health.pitest")
 }
 
-description = "pg-index-health-model-jackson-module is an extension for serializing and deserializing database objects to and from JSON format with Jackson 2."
+description = "pg-index-health-model-jackson3-module is an extension for serializing and deserializing database objects to and from JSON format with Jackson 3."
 
 dependencies {
     api(project(":pg-index-health-model"))
-    implementation(platform(libs.jackson.bom))
-    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation(platform(libs.jackson3.bom))
+    implementation("tools.jackson.core:jackson-databind")
 
     testImplementation(libs.classgraph)
 }

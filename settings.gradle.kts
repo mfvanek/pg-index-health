@@ -27,3 +27,4 @@ findProject(":spring-boot-integration:postgres-demo-app-with-custom-user")?.name
 include("pg-index-health-model-jackson-module")
 include("spring-boot-integration:sb4-postgres-tc-url-demo-app")
 findProject(":spring-boot-integration:sb4-postgres-tc-url-demo-app")?.name = "sb4-postgres-tc-url-demo-app"
+include("pg-index-health-model-jackson3-module")
