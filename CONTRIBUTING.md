@@ -47,7 +47,7 @@ Domain model is located in a [pg-index-health-model](pg-index-health-model).
 
 Best practices:
 * All domain classes should be minimalistic and well-defined.
-* All domain classes should have a [Jackson serializer and deserializer](pg-index-health-model-jackson-module).
+* All domain classes should have a [Jackson serializer and deserializer](jackson-integration/pg-index-health-model-jackson3-module).
 * All domain classes should have a [builder](https://www.baeldung.com/java-builder-pattern).
 * They should include enough information to generate corrective SQL migrations via [pg-index-health-generator](pg-index-health-generator).
 * We use [JSpecify](https://github.com/jspecify/jspecify) to mark up the code with `Nullable`/`NonNull` annotations.
