@@ -18,7 +18,6 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
-
 /**
  * A custom JSON serializer for the {@link Index} class.
  *
@@ -35,7 +34,7 @@ public class IndexSerializer extends ValueSerializer<Index> {
         gen.writeStartObject();
         gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
         gen.writeStringProperty(IndexNameAware.INDEX_NAME_FIELD, value.getIndexName());
-        gen.writeNumberField(IndexSizeAware.INDEX_SIZE_IN_BYTES_FIELD, value.getIndexSizeInBytes());
+        gen.writeNumberProperty(IndexSizeAware.INDEX_SIZE_IN_BYTES_FIELD, value.getIndexSizeInBytes());
         gen.writeEndObject();
     }
 }

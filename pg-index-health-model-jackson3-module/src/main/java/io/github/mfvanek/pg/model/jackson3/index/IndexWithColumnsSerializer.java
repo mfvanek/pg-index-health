@@ -17,7 +17,6 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
-
 /**
  * A custom JSON serializer for the {@link IndexWithColumns} class.
  *

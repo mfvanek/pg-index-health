@@ -15,7 +15,6 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
-
 /**
  * A custom JSON serializer for the {@link PgContext} class.
  *
@@ -31,8 +30,8 @@ public class PgContextSerializer extends ValueSerializer<PgContext> {
     public void serialize(final PgContext value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         gen.writeStringProperty(PgContext.SCHEMA_NAME_FIELD, value.getSchemaName());
-        gen.writeNumberField(PgContext.BLOAT_PERCENTAGE_THRESHOLD_FIELD, value.getBloatPercentageThreshold());
-        gen.writeNumberField(PgContext.REMAINING_PERCENTAGE_THRESHOLD_FIELD, value.getRemainingPercentageThreshold());
+        gen.writeNumberProperty(PgContext.BLOAT_PERCENTAGE_THRESHOLD_FIELD, value.getBloatPercentageThreshold());
+        gen.writeNumberProperty(PgContext.REMAINING_PERCENTAGE_THRESHOLD_FIELD, value.getRemainingPercentageThreshold());
         gen.writeEndObject();
     }
 }

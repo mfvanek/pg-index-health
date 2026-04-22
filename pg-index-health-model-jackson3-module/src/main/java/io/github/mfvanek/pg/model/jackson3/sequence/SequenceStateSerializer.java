@@ -16,7 +16,6 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
-
 /**
  * A custom JSON serializer for the {@link SequenceState} class.
  *
@@ -33,7 +32,7 @@ public class SequenceStateSerializer extends ValueSerializer<SequenceState> {
         gen.writeStartObject();
         gen.writeStringProperty(SequenceNameAware.SEQUENCE_NAME_FIELD, value.getSequenceName());
         gen.writeStringProperty(SequenceState.DATA_TYPE_FIELD, value.getDataType());
-        gen.writeNumberField(SequenceState.REMAINING_PERCENTAGE_FIELD, value.getRemainingPercentage());
+        gen.writeNumberProperty(SequenceState.REMAINING_PERCENTAGE_FIELD, value.getRemainingPercentage());
         gen.writeEndObject();
     }
 }

@@ -16,7 +16,6 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
-
 /**
  * A custom JSON serializer for the {@link DuplicatedIndexes} class.
  *
@@ -32,7 +31,7 @@ public class DuplicatedIndexesSerializer extends ValueSerializer<DuplicatedIndex
     public void serialize(final DuplicatedIndexes value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
-        gen.writeNumberField(DuplicatedIndexes.TOTAL_SIZE_FIELD, value.getTotalSize());
+        gen.writeNumberProperty(DuplicatedIndexes.TOTAL_SIZE_FIELD, value.getTotalSize());
         ctxt.defaultSerializeProperty(DuplicatedIndexes.INDEXES_FIELD, value.getIndexes(), gen);
         gen.writeEndObject();
     }

@@ -17,7 +17,6 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
-
 /**
  * A custom JSON serializer for the {@link IndexWithBloat} class.
  *
@@ -33,8 +32,8 @@ public class IndexWithBloatSerializer extends ValueSerializer<IndexWithBloat> {
     public void serialize(final IndexWithBloat value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         ctxt.defaultSerializeProperty(IndexSizeAware.INDEX_FIELD, value.toIndex(), gen);
-        gen.writeNumberField(BloatAware.BLOAT_SIZE_IN_BYTES_FIELD, value.getBloatSizeInBytes());
-        gen.writeNumberField(BloatAware.BLOAT_PERCENTAGE_FIELD, value.getBloatPercentage());
+        gen.writeNumberProperty(BloatAware.BLOAT_SIZE_IN_BYTES_FIELD, value.getBloatSizeInBytes());
+        gen.writeNumberProperty(BloatAware.BLOAT_PERCENTAGE_FIELD, value.getBloatPercentage());
         gen.writeEndObject();
     }
 }

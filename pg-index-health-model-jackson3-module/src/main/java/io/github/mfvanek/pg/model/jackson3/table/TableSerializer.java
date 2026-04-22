@@ -17,7 +17,6 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
-
 /**
  * A custom JSON serializer for the {@link Table} class.
  *
@@ -33,7 +32,7 @@ public class TableSerializer extends ValueSerializer<Table> {
     public void serialize(final Table value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
-        gen.writeNumberField(TableSizeAware.TABLE_SIZE_IN_BYTES_FIELD, value.getTableSizeInBytes());
+        gen.writeNumberProperty(TableSizeAware.TABLE_SIZE_IN_BYTES_FIELD, value.getTableSizeInBytes());
         gen.writeEndObject();
     }
 }

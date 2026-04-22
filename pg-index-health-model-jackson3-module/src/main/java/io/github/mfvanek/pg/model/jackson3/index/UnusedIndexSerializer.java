@@ -16,7 +16,6 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
-
 /**
  * A custom JSON serializer for the {@link UnusedIndex} class.
  *
@@ -32,7 +31,7 @@ public class UnusedIndexSerializer extends ValueSerializer<UnusedIndex> {
     public void serialize(final UnusedIndex value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         ctxt.defaultSerializeProperty(IndexSizeAware.INDEX_FIELD, value.toIndex(), gen);
-        gen.writeNumberField(UnusedIndex.INDEX_SCANS_FIELD, value.getIndexScans());
+        gen.writeNumberProperty(UnusedIndex.INDEX_SCANS_FIELD, value.getIndexScans());
         gen.writeEndObject();
     }
 }

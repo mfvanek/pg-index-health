@@ -16,7 +16,6 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
-
 /**
  * A custom JSON serializer for the {@link TableWithMissingIndex} class.
  *
@@ -32,8 +31,8 @@ public class TableWithMissingIndexSerializer extends ValueSerializer<TableWithMi
     public void serialize(final TableWithMissingIndex value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         ctxt.defaultSerializeProperty(TableSizeAware.TABLE_FIELD, value.toTable(), gen);
-        gen.writeNumberField(TableWithMissingIndex.SEQ_SCANS_FIELD, value.getSeqScans());
-        gen.writeNumberField(TableWithMissingIndex.INDEX_SCANS_FIELD, value.getIndexScans());
+        gen.writeNumberProperty(TableWithMissingIndex.SEQ_SCANS_FIELD, value.getSeqScans());
+        gen.writeNumberProperty(TableWithMissingIndex.INDEX_SCANS_FIELD, value.getIndexScans());
         gen.writeEndObject();
     }
 }
