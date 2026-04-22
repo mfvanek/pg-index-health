@@ -10,12 +10,6 @@
 
 package io.github.mfvanek.pg.model.jackson3.common;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnTypeAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
@@ -25,7 +19,10 @@ import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.table.TableSizeAware;
-
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 import java.util.List;
 
@@ -50,29 +47,29 @@ public abstract class ModelDeserializer<T extends DbObject> extends AbstractDese
      * @param ctxt     the deserialization context, used for error reporting
      * @param rootNode the root JSON node containing the object data
      * @return the extracted table name as a {@link String}
-     * @throws JsonMappingException if the {@code tableName} field is missing, null, or not a string
+     * @throws MismatchedInputException if the {@code tableName} field is missing, null, or not a string
      */
     protected final String getTableName(final DeserializationContext ctxt,
-                                        final JsonNode rootNode) throws JsonMappingException {
+                                        final JsonNode rootNode) {
         return getStringField(ctxt, rootNode, TableNameAware.TABLE_NAME_FIELD);
     }
 
     /**
-     * Extracts a {@link Column} object from the given JSON root node using the provided codec.
-     * This method ensures the required field for constructing the {@link Column} is present
-     * and non-null within the root node. If the field is missing or null, an input mismatch
-     * is reported to the deserialization context.
+     * Extracts a {@link Column} object from the provided JSON root node.
+     * This method ensures the required field for constructing the {@link Column}
+     * is present and non-null within the root node. If the field is missing
+     * or explicitly null, an input mismatch is reported to the deserialization context.
      *
-     * @param codec    the object codec used to transform JSON tree nodes into Java objects
-     * @param rootNode the root JSON node containing the object data
-     * @param ctxt     the deserialization context used for error reporting
-     * @return the {@link Column} object deserialized from the specified JSON node
-     * @throws IOException if an I/O error occurs during deserialization
+     * @param rootNode the root JSON node containing the data for the {@link Column}
+     * @param ctxt     the deserialization context used for error handling and reporting
+     * @return the {@link Column} object created from the specified JSON node
      */
-    protected final Column getColumn(final ObjectCodec codec,
-                                     final JsonNode rootNode,
+    protected final Column getColumn(final JsonNode rootNode,
                                      final DeserializationContext ctxt) {
-        return codec.treeToValue(getNotNullNode(ctxt, rootNode, ColumnTypeAware.COLUMN_FIELD), Column.class);
+        final JsonNode notNullNode = getNotNullNode(ctxt, rootNode, ColumnTypeAware.COLUMN_FIELD);
+        try (JsonParser tokens = ctxt.treeAsTokens(notNullNode)) {
+            return tokens.readValueAs(Column.class);
+        }
     }
 
     /**

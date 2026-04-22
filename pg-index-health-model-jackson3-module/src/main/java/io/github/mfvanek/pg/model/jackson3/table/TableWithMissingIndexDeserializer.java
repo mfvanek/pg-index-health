@@ -10,14 +10,12 @@
 
 package io.github.mfvanek.pg.model.jackson3.table;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
-
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
 
 
 /**
@@ -33,8 +31,8 @@ public class TableWithMissingIndexDeserializer extends ModelDeserializer<TableWi
      */
     @Override
     public TableWithMissingIndex deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
+        
+        final JsonNode rootNode = ctxt.readTree(p);
         final Table table = getTable(codec, node, ctxt);
         final long seqScans = getLongField(ctxt, node, TableWithMissingIndex.SEQ_SCANS_FIELD);
         final long indexScans = getLongField(ctxt, node, TableWithMissingIndex.INDEX_SCANS_FIELD);

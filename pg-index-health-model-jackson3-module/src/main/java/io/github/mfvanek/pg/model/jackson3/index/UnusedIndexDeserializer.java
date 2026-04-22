@@ -10,14 +10,12 @@
 
 package io.github.mfvanek.pg.model.jackson3.index;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
-
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
 
 
 /**
@@ -33,8 +31,8 @@ public class UnusedIndexDeserializer extends ModelDeserializer<UnusedIndex> {
      */
     @Override
     public UnusedIndex deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
+        
+        final JsonNode rootNode = ctxt.readTree(p);
         final Index index = getIndex(codec, node, ctxt);
         final long indexScans = getLongField(ctxt, node, UnusedIndex.INDEX_SCANS_FIELD);
         return UnusedIndex.of(index, indexScans);

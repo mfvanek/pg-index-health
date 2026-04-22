@@ -10,15 +10,13 @@
 
 package io.github.mfvanek.pg.model.jackson3.constraint;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
-
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
 
 import java.util.List;
 
@@ -35,8 +33,8 @@ public class DuplicatedForeignKeysDeserializer extends ModelDeserializer<Duplica
      */
     @Override
     public DuplicatedForeignKeys deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
+        
+        final JsonNode rootNode = ctxt.readTree(p);
         final JavaType listType = ctxt.getTypeFactory().constructCollectionType(List.class, ForeignKey.class);
         final JsonNode foreignKeysNode = getNotNullNode(ctxt, node, DuplicatedForeignKeys.FOREIGN_KEYS_FIELD);
         try (JsonParser foreignKeysParser = foreignKeysNode.traverse(codec)) {

@@ -10,15 +10,13 @@
 
 package io.github.mfvanek.pg.model.jackson3.table;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.bloat.BloatAware;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
-
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
 
 
 /**
@@ -34,8 +32,8 @@ public class TableWithBloatDeserializer extends ModelDeserializer<TableWithBloat
      */
     @Override
     public TableWithBloat deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
+        
+        final JsonNode rootNode = ctxt.readTree(p);
         final Table table = getTable(codec, node, ctxt);
         final long bloatSizeInBytes = getLongField(ctxt, node, BloatAware.BLOAT_SIZE_IN_BYTES_FIELD);
         final double bloatPercentage = getDoubleField(ctxt, node, BloatAware.BLOAT_PERCENTAGE_FIELD);

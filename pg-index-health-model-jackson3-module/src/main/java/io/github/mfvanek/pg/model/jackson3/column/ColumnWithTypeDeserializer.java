@@ -10,16 +10,13 @@
 
 package io.github.mfvanek.pg.model.jackson3.column;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnTypeAware;
 import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
-
-
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
 
 /**
  * A deserializer for {@link ColumnWithType} objects, enabling JSON deserialization into immutable {@code ColumnWithType} instances.
@@ -34,10 +31,9 @@ public class ColumnWithTypeDeserializer extends ModelDeserializer<ColumnWithType
      */
     @Override
     public ColumnWithType deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
-        final Column column = getColumn(codec, node, ctxt);
-        final String columnType = getStringField(ctxt, node, ColumnTypeAware.COLUMN_TYPE_FIELD);
+        final JsonNode rootNode = ctxt.readTree(p);
+        final Column column = getColumn(rootNode, ctxt);
+        final String columnType = getStringField(ctxt, rootNode, ColumnTypeAware.COLUMN_TYPE_FIELD);
         return ColumnWithType.of(column, columnType);
     }
 }

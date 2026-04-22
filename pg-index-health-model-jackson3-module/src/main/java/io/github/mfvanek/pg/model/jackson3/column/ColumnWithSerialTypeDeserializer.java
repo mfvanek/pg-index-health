@@ -10,17 +10,14 @@
 
 package io.github.mfvanek.pg.model.jackson3.column;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.column.SerialType;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
-
-
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
 
 /**
  * A deserializer for {@link ColumnWithSerialType} objects, enabling JSON deserialization into immutable {@code ColumnWithSerialType} instances.
@@ -35,11 +32,10 @@ public class ColumnWithSerialTypeDeserializer extends ModelDeserializer<ColumnWi
      */
     @Override
     public ColumnWithSerialType deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
-        final Column column = getColumn(codec, node, ctxt);
-        final String serialType = getStringField(ctxt, node, ColumnWithSerialType.SERIAL_TYPE_FIELD);
-        final String sequenceName = getStringField(ctxt, node, SequenceNameAware.SEQUENCE_NAME_FIELD);
+        final JsonNode rootNode = ctxt.readTree(p);
+        final Column column = getColumn(rootNode, ctxt);
+        final String serialType = getStringField(ctxt, rootNode, ColumnWithSerialType.SERIAL_TYPE_FIELD);
+        final String sequenceName = getStringField(ctxt, rootNode, SequenceNameAware.SEQUENCE_NAME_FIELD);
         return ColumnWithSerialType.of(column, SerialType.valueOf(serialType), sequenceName);
     }
 }

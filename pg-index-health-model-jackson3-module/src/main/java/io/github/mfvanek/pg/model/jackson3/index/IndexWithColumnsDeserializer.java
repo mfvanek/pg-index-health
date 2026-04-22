@@ -10,15 +10,13 @@
 
 package io.github.mfvanek.pg.model.jackson3.index;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
-
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
 
 import java.util.List;
 
@@ -35,8 +33,8 @@ public class IndexWithColumnsDeserializer extends ModelDeserializer<IndexWithCol
      */
     @Override
     public IndexWithColumns deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
+        
+        final JsonNode rootNode = ctxt.readTree(p);
         final Index index = getIndex(codec, node, ctxt);
         final List<Column> columns = getColumns(codec, node, ctxt);
         return IndexWithColumns.of(index, columns);

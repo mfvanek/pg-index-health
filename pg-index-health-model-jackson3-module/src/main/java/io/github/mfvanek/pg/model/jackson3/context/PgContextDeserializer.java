@@ -10,12 +10,11 @@
 
 package io.github.mfvanek.pg.model.jackson3.context;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.jackson3.common.AbstractDeserializer;
-
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
 
 
 /**
