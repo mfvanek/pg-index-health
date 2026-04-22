@@ -36,9 +36,9 @@ public class DuplicatedForeignKeysDeserializer extends ModelDeserializer<Duplica
     @Override
     public DuplicatedForeignKeys deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
+        final JsonNode rootNode = codec.readTree(p);
         final JavaType listType = ctxt.getTypeFactory().constructCollectionType(List.class, ForeignKey.class);
-        final JsonNode foreignKeysNode = getNotNullNode(ctxt, node, DuplicatedForeignKeys.FOREIGN_KEYS_FIELD);
+        final JsonNode foreignKeysNode = getNotNullNode(ctxt, rootNode, DuplicatedForeignKeys.FOREIGN_KEYS_FIELD);
         try (JsonParser foreignKeysParser = foreignKeysNode.traverse(codec)) {
             final List<ForeignKey> foreignKeys = codec.readValue(foreignKeysParser, listType);
             return DuplicatedForeignKeys.of(foreignKeys);

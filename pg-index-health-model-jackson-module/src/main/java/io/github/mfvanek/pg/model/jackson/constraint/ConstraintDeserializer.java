@@ -33,10 +33,10 @@ public class ConstraintDeserializer extends ModelDeserializer<Constraint> {
      */
     @Override
     public Constraint deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String tableName = getTableName(ctxt, node);
-        final String constraintName = getStringField(ctxt, node, ConstraintNameAware.CONSTRAINT_NAME_FIELD);
-        final String constraintType = getStringField(ctxt, node, Constraint.CONSTRAINT_TYPE_FIELD);
+        final JsonNode rootNode = p.getCodec().readTree(p);
+        final String tableName = getTableName(ctxt, rootNode);
+        final String constraintName = getStringField(ctxt, rootNode, ConstraintNameAware.CONSTRAINT_NAME_FIELD);
+        final String constraintType = getStringField(ctxt, rootNode, Constraint.CONSTRAINT_TYPE_FIELD);
         return Constraint.ofType(tableName, constraintName, ConstraintType.valueOf(constraintType));
     }
 }

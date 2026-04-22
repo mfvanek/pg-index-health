@@ -36,9 +36,9 @@ public class TableWithColumnsDeserializer extends ModelDeserializer<TableWithCol
     @Override
     public TableWithColumns deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
-        final Table table = getTable(codec, node, ctxt);
-        final List<Column> columns = getColumns(codec, node, ctxt);
+        final JsonNode rootNode = codec.readTree(p);
+        final Table table = getTable(codec, rootNode, ctxt);
+        final List<Column> columns = getColumns(codec, rootNode, ctxt);
         return TableWithColumns.of(table, columns);
     }
 }

@@ -35,10 +35,10 @@ public class IndexWithBloatDeserializer extends ModelDeserializer<IndexWithBloat
     @Override
     public IndexWithBloat deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
-        final Index index = getIndex(codec, node, ctxt);
-        final long bloatSizeInBytes = getLongField(ctxt, node, BloatAware.BLOAT_SIZE_IN_BYTES_FIELD);
-        final double bloatPercentage = getDoubleField(ctxt, node, BloatAware.BLOAT_PERCENTAGE_FIELD);
+        final JsonNode rootNode = codec.readTree(p);
+        final Index index = getIndex(codec, rootNode, ctxt);
+        final long bloatSizeInBytes = getLongField(ctxt, rootNode, BloatAware.BLOAT_SIZE_IN_BYTES_FIELD);
+        final double bloatPercentage = getDoubleField(ctxt, rootNode, BloatAware.BLOAT_PERCENTAGE_FIELD);
         return IndexWithBloat.of(index, bloatSizeInBytes, bloatPercentage);
     }
 }

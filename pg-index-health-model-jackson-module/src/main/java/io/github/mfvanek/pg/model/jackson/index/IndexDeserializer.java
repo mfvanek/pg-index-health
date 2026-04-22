@@ -33,10 +33,10 @@ public class IndexDeserializer extends ModelDeserializer<Index> {
      */
     @Override
     public Index deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String tableName = getTableName(ctxt, node);
-        final String indexName = getStringField(ctxt, node, IndexNameAware.INDEX_NAME_FIELD);
-        final long indexSizeInBytes = getLongField(ctxt, node, IndexSizeAware.INDEX_SIZE_IN_BYTES_FIELD);
+        final JsonNode rootNode = p.getCodec().readTree(p);
+        final String tableName = getTableName(ctxt, rootNode);
+        final String indexName = getStringField(ctxt, rootNode, IndexNameAware.INDEX_NAME_FIELD);
+        final long indexSizeInBytes = getLongField(ctxt, rootNode, IndexSizeAware.INDEX_SIZE_IN_BYTES_FIELD);
         return Index.of(tableName, indexName, indexSizeInBytes);
     }
 }

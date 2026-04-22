@@ -31,9 +31,9 @@ public class AnyObjectDeserializer extends ModelDeserializer<AnyObject> {
      */
     @Override
     public AnyObject deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String objectName = getStringField(ctxt, node, AnyObject.OBJECT_NAME_FIELD);
-        final String objectType = getStringField(ctxt, node, AnyObject.OBJECT_TYPE_FIELD);
+        final JsonNode rootNode = p.getCodec().readTree(p);
+        final String objectName = getStringField(ctxt, rootNode, AnyObject.OBJECT_NAME_FIELD);
+        final String objectType = getStringField(ctxt, rootNode, AnyObject.OBJECT_TYPE_FIELD);
         return AnyObject.ofRaw(objectName, objectType);
     }
 }

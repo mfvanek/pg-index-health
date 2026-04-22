@@ -31,10 +31,10 @@ public class PgContextDeserializer extends AbstractDeserializer<PgContext> {
      */
     @Override
     public PgContext deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String schemaName = getStringField(ctxt, node, PgContext.SCHEMA_NAME_FIELD);
-        final double bloat = getDoubleField(ctxt, node, PgContext.BLOAT_PERCENTAGE_THRESHOLD_FIELD);
-        final double remaining = getDoubleField(ctxt, node, PgContext.REMAINING_PERCENTAGE_THRESHOLD_FIELD);
+        final JsonNode rootNode = p.getCodec().readTree(p);
+        final String schemaName = getStringField(ctxt, rootNode, PgContext.SCHEMA_NAME_FIELD);
+        final double bloat = getDoubleField(ctxt, rootNode, PgContext.BLOAT_PERCENTAGE_THRESHOLD_FIELD);
+        final double remaining = getDoubleField(ctxt, rootNode, PgContext.REMAINING_PERCENTAGE_THRESHOLD_FIELD);
         return PgContext.of(schemaName, bloat, remaining);
     }
 }

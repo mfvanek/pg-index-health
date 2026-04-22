@@ -32,9 +32,9 @@ public class TableDeserializer extends ModelDeserializer<Table> {
      */
     @Override
     public Table deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String tableName = getTableName(ctxt, node);
-        final long tableSizeInBytes = getLongField(ctxt, node, TableSizeAware.TABLE_SIZE_IN_BYTES_FIELD);
+        final JsonNode rootNode = p.getCodec().readTree(p);
+        final String tableName = getTableName(ctxt, rootNode);
+        final long tableSizeInBytes = getLongField(ctxt, rootNode, TableSizeAware.TABLE_SIZE_IN_BYTES_FIELD);
         return Table.of(tableName, tableSizeInBytes);
     }
 }

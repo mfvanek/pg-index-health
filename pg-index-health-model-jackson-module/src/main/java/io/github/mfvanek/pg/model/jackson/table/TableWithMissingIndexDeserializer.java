@@ -34,10 +34,10 @@ public class TableWithMissingIndexDeserializer extends ModelDeserializer<TableWi
     @Override
     public TableWithMissingIndex deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
-        final Table table = getTable(codec, node, ctxt);
-        final long seqScans = getLongField(ctxt, node, TableWithMissingIndex.SEQ_SCANS_FIELD);
-        final long indexScans = getLongField(ctxt, node, TableWithMissingIndex.INDEX_SCANS_FIELD);
+        final JsonNode rootNode = codec.readTree(p);
+        final Table table = getTable(codec, rootNode, ctxt);
+        final long seqScans = getLongField(ctxt, rootNode, TableWithMissingIndex.SEQ_SCANS_FIELD);
+        final long indexScans = getLongField(ctxt, rootNode, TableWithMissingIndex.INDEX_SCANS_FIELD);
         return TableWithMissingIndex.of(table, seqScans, indexScans);
     }
 }

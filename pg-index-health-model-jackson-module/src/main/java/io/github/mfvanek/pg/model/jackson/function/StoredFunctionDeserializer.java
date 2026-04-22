@@ -31,9 +31,9 @@ public class StoredFunctionDeserializer extends ModelDeserializer<StoredFunction
      */
     @Override
     public StoredFunction deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String functionName = getStringField(ctxt, node, StoredFunction.FUNCTION_NAME_FIELD);
-        final String functionSignature = getStringField(ctxt, node, StoredFunction.FUNCTION_SIGNATURE_FIELD);
+        final JsonNode rootNode = p.getCodec().readTree(p);
+        final String functionName = getStringField(ctxt, rootNode, StoredFunction.FUNCTION_NAME_FIELD);
+        final String functionSignature = getStringField(ctxt, rootNode, StoredFunction.FUNCTION_SIGNATURE_FIELD);
         return StoredFunction.of(functionName, functionSignature);
     }
 }

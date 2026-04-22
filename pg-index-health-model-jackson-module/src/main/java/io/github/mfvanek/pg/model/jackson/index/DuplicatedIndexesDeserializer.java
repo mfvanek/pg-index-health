@@ -36,9 +36,9 @@ public class DuplicatedIndexesDeserializer extends ModelDeserializer<DuplicatedI
     @Override
     public DuplicatedIndexes deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
+        final JsonNode rootNode = codec.readTree(p);
         final JavaType listType = ctxt.getTypeFactory().constructCollectionType(List.class, Index.class);
-        final JsonNode indexesNode = getNotNullNode(ctxt, node, DuplicatedIndexes.INDEXES_FIELD);
+        final JsonNode indexesNode = getNotNullNode(ctxt, rootNode, DuplicatedIndexes.INDEXES_FIELD);
         try (JsonParser duplicatedIndexesParser = indexesNode.traverse(codec)) {
             final List<Index> duplicatedIndexes = codec.readValue(duplicatedIndexesParser, listType);
             return DuplicatedIndexes.of(duplicatedIndexes);

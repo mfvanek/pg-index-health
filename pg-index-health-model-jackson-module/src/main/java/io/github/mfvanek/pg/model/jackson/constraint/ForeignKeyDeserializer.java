@@ -36,9 +36,9 @@ public class ForeignKeyDeserializer extends ModelDeserializer<ForeignKey> {
     @Override
     public ForeignKey deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
-        final Constraint constraint = getConstraint(codec, node, ctxt);
-        final List<Column> columns = getColumns(codec, node, ctxt);
+        final JsonNode rootNode = codec.readTree(p);
+        final Constraint constraint = getConstraint(codec, rootNode, ctxt);
+        final List<Column> columns = getColumns(codec, rootNode, ctxt);
         return ForeignKey.of(constraint, columns);
     }
 

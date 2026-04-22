@@ -34,9 +34,9 @@ public class UnusedIndexDeserializer extends ModelDeserializer<UnusedIndex> {
     @Override
     public UnusedIndex deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
-        final Index index = getIndex(codec, node, ctxt);
-        final long indexScans = getLongField(ctxt, node, UnusedIndex.INDEX_SCANS_FIELD);
+        final JsonNode rootNode = codec.readTree(p);
+        final Index index = getIndex(codec, rootNode, ctxt);
+        final long indexScans = getLongField(ctxt, rootNode, UnusedIndex.INDEX_SCANS_FIELD);
         return UnusedIndex.of(index, indexScans);
     }
 }

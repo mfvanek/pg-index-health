@@ -35,10 +35,10 @@ public class TableWithBloatDeserializer extends ModelDeserializer<TableWithBloat
     @Override
     public TableWithBloat deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final ObjectCodec codec = p.getCodec();
-        final JsonNode node = codec.readTree(p);
-        final Table table = getTable(codec, node, ctxt);
-        final long bloatSizeInBytes = getLongField(ctxt, node, BloatAware.BLOAT_SIZE_IN_BYTES_FIELD);
-        final double bloatPercentage = getDoubleField(ctxt, node, BloatAware.BLOAT_PERCENTAGE_FIELD);
+        final JsonNode rootNode = codec.readTree(p);
+        final Table table = getTable(codec, rootNode, ctxt);
+        final long bloatSizeInBytes = getLongField(ctxt, rootNode, BloatAware.BLOAT_SIZE_IN_BYTES_FIELD);
+        final double bloatPercentage = getDoubleField(ctxt, rootNode, BloatAware.BLOAT_PERCENTAGE_FIELD);
         return TableWithBloat.of(table, bloatSizeInBytes, bloatPercentage);
     }
 }
