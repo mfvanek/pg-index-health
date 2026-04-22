@@ -31,3 +31,6 @@ include("jackson-integration:pg-index-health-model-jackson2-module")
 findProject(":jackson-integration:pg-index-health-model-jackson2-module")?.name = "pg-index-health-model-jackson2-module"
 include("jackson-integration:pg-index-health-model-jackson3-module")
 findProject(":jackson-integration:pg-index-health-model-jackson3-module")?.name = "pg-index-health-model-jackson3-module"
+
+include("spring-boot-integration:sb4-jackson3-demo-app")
+findProject(":spring-boot-integration:sb4-jackson3-demo-app")?.name = "sb4-jackson3-demo-app"
