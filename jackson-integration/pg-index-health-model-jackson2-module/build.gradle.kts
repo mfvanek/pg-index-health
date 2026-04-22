@@ -7,7 +7,7 @@ description = "pg-index-health-model-jackson2-module is an extension for seriali
 
 dependencies {
     api(project(":pg-index-health-model"))
-    implementation(platform(libs.jackson.bom))
+    implementation(platform(libs.jackson2.bom))
     implementation("com.fasterxml.jackson.core:jackson-databind")
 
     testImplementation(libs.classgraph)
