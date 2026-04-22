@@ -23,15 +23,15 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link IndexWithBloat} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class IndexWithBloatSerializer extends JsonSerializer<IndexWithBloat> {
+public class IndexWithBloatSerializer extends ValueSerializer<IndexWithBloat> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final IndexWithBloat value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final IndexWithBloat value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
         serializers.defaultSerializeField(IndexSizeAware.INDEX_FIELD, value.toIndex(), gen);
         gen.writeNumberField(BloatAware.BLOAT_SIZE_IN_BYTES_FIELD, value.getBloatSizeInBytes());

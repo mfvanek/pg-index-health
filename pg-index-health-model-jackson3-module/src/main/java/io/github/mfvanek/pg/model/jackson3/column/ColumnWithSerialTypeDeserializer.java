@@ -26,7 +26,7 @@ import java.io.IOException;
  * A deserializer for {@link ColumnWithSerialType} objects, enabling JSON deserialization into immutable {@code ColumnWithSerialType} instances.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class ColumnWithSerialTypeDeserializer extends ModelDeserializer<ColumnWithSerialType> {
 
@@ -34,7 +34,7 @@ public class ColumnWithSerialTypeDeserializer extends ModelDeserializer<ColumnWi
      * {@inheritDoc}
      */
     @Override
-    public ColumnWithSerialType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public ColumnWithSerialType deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final Column column = getColumn(codec, node, ctxt);

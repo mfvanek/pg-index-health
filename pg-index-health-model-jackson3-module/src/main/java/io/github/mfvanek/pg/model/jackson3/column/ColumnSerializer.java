@@ -15,14 +15,13 @@ import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
-
-import java.io.IOException;
+import tools.jackson.databind.ValueSerializer;
 
 /**
  * A custom JSON serializer for the {@link Column} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class ColumnSerializer extends ValueSerializer<Column> {
 
@@ -30,11 +29,11 @@ public class ColumnSerializer extends ValueSerializer<Column> {
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final Column value, final JsonGenerator gen, final SerializationContext ctxt) throws IOException {
+    public void serialize(final Column value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
-        gen.writeStringField(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
-        gen.writeStringField(ColumnNameAware.COLUMN_NAME_FIELD, value.getColumnName());
-        gen.writeBooleanField(ColumnNameAware.NOT_NULL_FIELD, value.isNotNull());
+        gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
+        gen.writeStringProperty(ColumnNameAware.COLUMN_NAME_FIELD, value.getColumnName());
+        gen.writeBooleanProperty(ColumnNameAware.NOT_NULL_FIELD, value.isNotNull());
         gen.writeEndObject();
     }
 }

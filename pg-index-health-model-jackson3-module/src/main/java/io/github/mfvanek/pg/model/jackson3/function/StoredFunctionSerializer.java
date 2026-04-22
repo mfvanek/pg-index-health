@@ -21,18 +21,18 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link StoredFunction} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class StoredFunctionSerializer extends JsonSerializer<StoredFunction> {
+public class StoredFunctionSerializer extends ValueSerializer<StoredFunction> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final StoredFunction value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final StoredFunction value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
-        gen.writeStringField(StoredFunction.FUNCTION_NAME_FIELD, value.getFunctionName());
-        gen.writeStringField(StoredFunction.FUNCTION_SIGNATURE_FIELD, value.getFunctionSignature());
+        gen.writeStringProperty(StoredFunction.FUNCTION_NAME_FIELD, value.getFunctionName());
+        gen.writeStringProperty(StoredFunction.FUNCTION_SIGNATURE_FIELD, value.getFunctionSignature());
         gen.writeEndObject();
     }
 }

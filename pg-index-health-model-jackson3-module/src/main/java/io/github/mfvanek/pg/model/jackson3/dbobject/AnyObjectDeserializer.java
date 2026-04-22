@@ -22,7 +22,7 @@ import java.io.IOException;
  * A deserializer for {@link AnyObject} objects, enabling JSON deserialization into immutable {@code AnyObject} instances.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class AnyObjectDeserializer extends ModelDeserializer<AnyObject> {
 
@@ -30,7 +30,7 @@ public class AnyObjectDeserializer extends ModelDeserializer<AnyObject> {
      * {@inheritDoc}
      */
     @Override
-    public AnyObject deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public AnyObject deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final JsonNode node = p.getCodec().readTree(p);
         final String objectName = getStringField(ctxt, node, AnyObject.OBJECT_NAME_FIELD);
         final String objectType = getStringField(ctxt, node, AnyObject.OBJECT_TYPE_FIELD);

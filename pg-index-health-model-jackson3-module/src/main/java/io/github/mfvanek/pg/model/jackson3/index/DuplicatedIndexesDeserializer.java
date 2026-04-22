@@ -26,7 +26,7 @@ import java.util.List;
  * A deserializer for {@link DuplicatedIndexes} objects, enabling JSON deserialization into immutable {@code DuplicatedIndexes} instances.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class DuplicatedIndexesDeserializer extends ModelDeserializer<DuplicatedIndexes> {
 
@@ -34,7 +34,7 @@ public class DuplicatedIndexesDeserializer extends ModelDeserializer<DuplicatedI
      * {@inheritDoc}
      */
     @Override
-    public DuplicatedIndexes deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public DuplicatedIndexes deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final JavaType listType = ctxt.getTypeFactory().constructCollectionType(List.class, Index.class);

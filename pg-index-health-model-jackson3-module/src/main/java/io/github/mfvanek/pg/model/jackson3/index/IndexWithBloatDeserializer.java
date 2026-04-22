@@ -25,7 +25,7 @@ import java.io.IOException;
  * A deserializer for {@link IndexWithBloat} objects, enabling JSON deserialization into immutable {@code IndexWithBloat} instances.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class IndexWithBloatDeserializer extends ModelDeserializer<IndexWithBloat> {
 
@@ -33,7 +33,7 @@ public class IndexWithBloatDeserializer extends ModelDeserializer<IndexWithBloat
      * {@inheritDoc}
      */
     @Override
-    public IndexWithBloat deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public IndexWithBloat deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final Index index = getIndex(codec, node, ctxt);

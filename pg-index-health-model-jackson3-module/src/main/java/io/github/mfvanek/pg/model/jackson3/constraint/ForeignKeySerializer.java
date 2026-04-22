@@ -22,15 +22,15 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link ForeignKey} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class ForeignKeySerializer extends JsonSerializer<ForeignKey> {
+public class ForeignKeySerializer extends ValueSerializer<ForeignKey> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final ForeignKey value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final ForeignKey value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
         serializers.defaultSerializeField(ForeignKey.CONSTRAINT_FIELD, value.toConstraint(), gen);
         serializers.defaultSerializeField(ColumnsAware.COLUMNS_FIELD, value.getColumns(), gen);

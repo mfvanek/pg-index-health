@@ -22,18 +22,18 @@ import java.util.Locale;
  * A custom JSON serializer for the {@link AnyObject} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class AnyObjectSerializer extends JsonSerializer<AnyObject> {
+public class AnyObjectSerializer extends ValueSerializer<AnyObject> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final AnyObject value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final AnyObject value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
-        gen.writeStringField(AnyObject.OBJECT_NAME_FIELD, value.getName());
-        gen.writeStringField(AnyObject.OBJECT_TYPE_FIELD, value.getObjectType().name().toLowerCase(Locale.ROOT));
+        gen.writeStringProperty(AnyObject.OBJECT_NAME_FIELD, value.getName());
+        gen.writeStringProperty(AnyObject.OBJECT_TYPE_FIELD, value.getObjectType().name().toLowerCase(Locale.ROOT));
         gen.writeEndObject();
     }
 }

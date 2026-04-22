@@ -22,17 +22,17 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link DuplicatedForeignKeys} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class DuplicatedForeignKeysSerializer extends JsonSerializer<DuplicatedForeignKeys> {
+public class DuplicatedForeignKeysSerializer extends ValueSerializer<DuplicatedForeignKeys> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final DuplicatedForeignKeys value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final DuplicatedForeignKeys value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
-        gen.writeStringField(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
+        gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
         serializers.defaultSerializeField(DuplicatedForeignKeys.FOREIGN_KEYS_FIELD, value.getForeignKeys(), gen);
         gen.writeEndObject();
     }

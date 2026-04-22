@@ -23,7 +23,7 @@ import java.io.IOException;
  * A deserializer for {@link SequenceState} objects, enabling JSON deserialization into immutable {@code SequenceState} instances.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class SequenceStateDeserializer extends ModelDeserializer<SequenceState> {
 
@@ -31,7 +31,7 @@ public class SequenceStateDeserializer extends ModelDeserializer<SequenceState> 
      * {@inheritDoc}
      */
     @Override
-    public SequenceState deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public SequenceState deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final JsonNode node = p.getCodec().readTree(p);
         final String sequenceName = getStringField(ctxt, node, SequenceNameAware.SEQUENCE_NAME_FIELD);
         final String dataType = getStringField(ctxt, node, SequenceState.DATA_TYPE_FIELD);

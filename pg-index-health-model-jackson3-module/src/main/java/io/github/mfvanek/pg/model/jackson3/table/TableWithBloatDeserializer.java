@@ -25,7 +25,7 @@ import java.io.IOException;
  * A deserializer for {@link TableWithBloat} objects, enabling JSON deserialization into immutable {@code TableWithBloat} instances.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class TableWithBloatDeserializer extends ModelDeserializer<TableWithBloat> {
 
@@ -33,7 +33,7 @@ public class TableWithBloatDeserializer extends ModelDeserializer<TableWithBloat
      * {@inheritDoc}
      */
     @Override
-    public TableWithBloat deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public TableWithBloat deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final Table table = getTable(codec, node, ctxt);

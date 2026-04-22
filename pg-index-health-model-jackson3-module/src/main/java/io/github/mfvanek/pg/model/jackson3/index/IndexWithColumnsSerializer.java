@@ -23,15 +23,15 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link IndexWithColumns} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class IndexWithColumnsSerializer extends JsonSerializer<IndexWithColumns> {
+public class IndexWithColumnsSerializer extends ValueSerializer<IndexWithColumns> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final IndexWithColumns value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final IndexWithColumns value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
         serializers.defaultSerializeField(IndexSizeAware.INDEX_FIELD, value.toIndex(), gen);
         serializers.defaultSerializeField(ColumnsAware.COLUMNS_FIELD, value.getColumns(), gen);

@@ -22,17 +22,17 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link DuplicatedIndexes} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class DuplicatedIndexesSerializer extends JsonSerializer<DuplicatedIndexes> {
+public class DuplicatedIndexesSerializer extends ValueSerializer<DuplicatedIndexes> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final DuplicatedIndexes value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final DuplicatedIndexes value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
-        gen.writeStringField(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
+        gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
         gen.writeNumberField(DuplicatedIndexes.TOTAL_SIZE_FIELD, value.getTotalSize());
         serializers.defaultSerializeField(DuplicatedIndexes.INDEXES_FIELD, value.getIndexes(), gen);
         gen.writeEndObject();

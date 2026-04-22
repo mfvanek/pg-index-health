@@ -22,15 +22,15 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link UnusedIndex} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class UnusedIndexSerializer extends JsonSerializer<UnusedIndex> {
+public class UnusedIndexSerializer extends ValueSerializer<UnusedIndex> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final UnusedIndex value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final UnusedIndex value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
         serializers.defaultSerializeField(IndexSizeAware.INDEX_FIELD, value.toIndex(), gen);
         gen.writeNumberField(UnusedIndex.INDEX_SCANS_FIELD, value.getIndexScans());

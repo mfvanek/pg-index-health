@@ -23,7 +23,7 @@ import java.io.IOException;
  * A deserializer for {@link Column} objects, enabling JSON deserialization into immutable {@code Column} instances.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class ColumnDeserializer extends ModelDeserializer<Column> {
 
@@ -31,7 +31,7 @@ public class ColumnDeserializer extends ModelDeserializer<Column> {
      * {@inheritDoc}
      */
     @Override
-    public Column deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public Column deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final JsonNode node = p.getCodec().readTree(p);
         final String tableName = getTableName(ctxt, node);
         final String columnName = getStringField(ctxt, node, ColumnNameAware.COLUMN_NAME_FIELD);

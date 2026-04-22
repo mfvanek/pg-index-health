@@ -24,7 +24,7 @@ import java.util.Locale;
  *
  * @param <T> the type of object to be deserialized
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public abstract class AbstractDeserializer<T> extends JsonDeserializer<T> {
 

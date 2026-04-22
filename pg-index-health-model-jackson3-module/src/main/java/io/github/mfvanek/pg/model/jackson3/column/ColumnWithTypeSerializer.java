@@ -22,18 +22,18 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link ColumnWithType} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class ColumnWithTypeSerializer extends JsonSerializer<ColumnWithType> {
+public class ColumnWithTypeSerializer extends ValueSerializer<ColumnWithType> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final ColumnWithType value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final ColumnWithType value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
         serializers.defaultSerializeField(ColumnTypeAware.COLUMN_FIELD, value.toColumn(), gen);
-        gen.writeStringField(ColumnTypeAware.COLUMN_TYPE_FIELD, value.getColumnType());
+        gen.writeStringProperty(ColumnTypeAware.COLUMN_TYPE_FIELD, value.getColumnType());
         gen.writeEndObject();
     }
 }

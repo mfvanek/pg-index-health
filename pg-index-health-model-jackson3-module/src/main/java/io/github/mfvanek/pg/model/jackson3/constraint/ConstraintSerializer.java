@@ -23,19 +23,19 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link Constraint} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class ConstraintSerializer extends JsonSerializer<Constraint> {
+public class ConstraintSerializer extends ValueSerializer<Constraint> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final Constraint value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final Constraint value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
-        gen.writeStringField(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
-        gen.writeStringField(ConstraintNameAware.CONSTRAINT_NAME_FIELD, value.getConstraintName());
-        gen.writeStringField(Constraint.CONSTRAINT_TYPE_FIELD, value.getConstraintType().name());
+        gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
+        gen.writeStringProperty(ConstraintNameAware.CONSTRAINT_NAME_FIELD, value.getConstraintName());
+        gen.writeStringProperty(Constraint.CONSTRAINT_TYPE_FIELD, value.getConstraintType().name());
         gen.writeEndObject();
     }
 }

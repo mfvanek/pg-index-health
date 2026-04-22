@@ -39,7 +39,7 @@ import java.util.List;
  *
  * @param <T> the type of {@link DbObject} being deserialized
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public abstract class ModelDeserializer<T extends DbObject> extends AbstractDeserializer<T> {
 
@@ -71,7 +71,7 @@ public abstract class ModelDeserializer<T extends DbObject> extends AbstractDese
      */
     protected final Column getColumn(final ObjectCodec codec,
                                      final JsonNode rootNode,
-                                     final DeserializationContext ctxt) throws IOException {
+                                     final DeserializationContext ctxt) {
         return codec.treeToValue(getNotNullNode(ctxt, rootNode, ColumnTypeAware.COLUMN_FIELD), Column.class);
     }
 
@@ -89,7 +89,7 @@ public abstract class ModelDeserializer<T extends DbObject> extends AbstractDese
      */
     protected final Index getIndex(final ObjectCodec codec,
                                    final JsonNode rootNode,
-                                   final DeserializationContext ctxt) throws IOException {
+                                   final DeserializationContext ctxt) {
         return codec.treeToValue(getNotNullNode(ctxt, rootNode, IndexSizeAware.INDEX_FIELD), Index.class);
     }
 
@@ -107,7 +107,7 @@ public abstract class ModelDeserializer<T extends DbObject> extends AbstractDese
      */
     protected final Table getTable(final ObjectCodec codec,
                                    final JsonNode rootNode,
-                                   final DeserializationContext ctxt) throws IOException {
+                                   final DeserializationContext ctxt) {
         return codec.treeToValue(getNotNullNode(ctxt, rootNode, TableSizeAware.TABLE_FIELD), Table.class);
     }
 
@@ -125,7 +125,7 @@ public abstract class ModelDeserializer<T extends DbObject> extends AbstractDese
      */
     protected final List<Column> getColumns(final ObjectCodec codec,
                                             final JsonNode rootNode,
-                                            final DeserializationContext ctxt) throws IOException {
+                                            final DeserializationContext ctxt) {
         final JavaType listType = ctxt.getTypeFactory().constructCollectionType(List.class, Column.class);
         final JsonNode columnsNode = getNotNullNode(ctxt, rootNode, ColumnsAware.COLUMNS_FIELD);
         try (JsonParser columnsParser = columnsNode.traverse(codec)) {

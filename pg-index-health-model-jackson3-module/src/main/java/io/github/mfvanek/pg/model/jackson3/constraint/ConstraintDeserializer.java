@@ -24,7 +24,7 @@ import java.io.IOException;
  * A deserializer for {@link Constraint} objects, enabling JSON deserialization into immutable {@code Constraint} instances.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class ConstraintDeserializer extends ModelDeserializer<Constraint> {
 
@@ -32,7 +32,7 @@ public class ConstraintDeserializer extends ModelDeserializer<Constraint> {
      * {@inheritDoc}
      */
     @Override
-    public Constraint deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public Constraint deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final JsonNode node = p.getCodec().readTree(p);
         final String tableName = getTableName(ctxt, node);
         final String constraintName = getStringField(ctxt, node, ConstraintNameAware.CONSTRAINT_NAME_FIELD);

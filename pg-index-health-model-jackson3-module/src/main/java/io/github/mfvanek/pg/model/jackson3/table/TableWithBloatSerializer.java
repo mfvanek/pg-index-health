@@ -23,15 +23,15 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link TableWithBloat} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class TableWithBloatSerializer extends JsonSerializer<TableWithBloat> {
+public class TableWithBloatSerializer extends ValueSerializer<TableWithBloat> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final TableWithBloat value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final TableWithBloat value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
         serializers.defaultSerializeField(TableSizeAware.TABLE_FIELD, value.toTable(), gen);
         gen.writeNumberField(BloatAware.BLOAT_SIZE_IN_BYTES_FIELD, value.getBloatSizeInBytes());

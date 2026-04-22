@@ -26,7 +26,7 @@ import java.util.List;
  * A deserializer for {@link ForeignKey} objects, enabling JSON deserialization into immutable {@code ForeignKey} instances.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class ForeignKeyDeserializer extends ModelDeserializer<ForeignKey> {
 
@@ -34,7 +34,7 @@ public class ForeignKeyDeserializer extends ModelDeserializer<ForeignKey> {
      * {@inheritDoc}
      */
     @Override
-    public ForeignKey deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public ForeignKey deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final Constraint constraint = getConstraint(codec, node, ctxt);
@@ -44,7 +44,7 @@ public class ForeignKeyDeserializer extends ModelDeserializer<ForeignKey> {
 
     private Constraint getConstraint(final ObjectCodec codec,
                                      final JsonNode rootNode,
-                                     final DeserializationContext ctxt) throws IOException {
+                                     final DeserializationContext ctxt) {
         return codec.treeToValue(getNotNullNode(ctxt, rootNode, ForeignKey.CONSTRAINT_FIELD), Constraint.class);
     }
 }

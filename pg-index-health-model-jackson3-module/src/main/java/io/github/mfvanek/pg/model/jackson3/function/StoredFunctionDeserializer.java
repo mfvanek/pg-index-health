@@ -22,7 +22,7 @@ import java.io.IOException;
  * A deserializer for {@link StoredFunction} objects, enabling JSON deserialization into immutable {@code StoredFunction} instances.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class StoredFunctionDeserializer extends ModelDeserializer<StoredFunction> {
 
@@ -30,7 +30,7 @@ public class StoredFunctionDeserializer extends ModelDeserializer<StoredFunction
      * {@inheritDoc}
      */
     @Override
-    public StoredFunction deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public StoredFunction deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final JsonNode node = p.getCodec().readTree(p);
         final String functionName = getStringField(ctxt, node, StoredFunction.FUNCTION_NAME_FIELD);
         final String functionSignature = getStringField(ctxt, node, StoredFunction.FUNCTION_SIGNATURE_FIELD);

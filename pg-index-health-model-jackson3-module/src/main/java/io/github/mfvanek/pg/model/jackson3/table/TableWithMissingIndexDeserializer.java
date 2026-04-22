@@ -24,7 +24,7 @@ import java.io.IOException;
  * A deserializer for {@link TableWithMissingIndex} objects, enabling JSON deserialization into immutable {@code TableWithMissingIndex} instances.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class TableWithMissingIndexDeserializer extends ModelDeserializer<TableWithMissingIndex> {
 
@@ -32,7 +32,7 @@ public class TableWithMissingIndexDeserializer extends ModelDeserializer<TableWi
      * {@inheritDoc}
      */
     @Override
-    public TableWithMissingIndex deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public TableWithMissingIndex deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final Table table = getTable(codec, node, ctxt);

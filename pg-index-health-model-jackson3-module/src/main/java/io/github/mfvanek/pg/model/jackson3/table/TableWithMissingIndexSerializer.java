@@ -22,15 +22,15 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link TableWithMissingIndex} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class TableWithMissingIndexSerializer extends JsonSerializer<TableWithMissingIndex> {
+public class TableWithMissingIndexSerializer extends ValueSerializer<TableWithMissingIndex> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final TableWithMissingIndex value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final TableWithMissingIndex value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
         serializers.defaultSerializeField(TableSizeAware.TABLE_FIELD, value.toTable(), gen);
         gen.writeNumberField(TableWithMissingIndex.SEQ_SCANS_FIELD, value.getSeqScans());

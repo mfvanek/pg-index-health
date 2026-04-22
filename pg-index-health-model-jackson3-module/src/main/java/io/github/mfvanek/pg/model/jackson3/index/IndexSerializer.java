@@ -24,18 +24,18 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link Index} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class IndexSerializer extends JsonSerializer<Index> {
+public class IndexSerializer extends ValueSerializer<Index> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final Index value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final Index value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
-        gen.writeStringField(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
-        gen.writeStringField(IndexNameAware.INDEX_NAME_FIELD, value.getIndexName());
+        gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
+        gen.writeStringProperty(IndexNameAware.INDEX_NAME_FIELD, value.getIndexName());
         gen.writeNumberField(IndexSizeAware.INDEX_SIZE_IN_BYTES_FIELD, value.getIndexSizeInBytes());
         gen.writeEndObject();
     }

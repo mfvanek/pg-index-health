@@ -21,17 +21,17 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link PgContext} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class PgContextSerializer extends JsonSerializer<PgContext> {
+public class PgContextSerializer extends ValueSerializer<PgContext> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final PgContext value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final PgContext value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
-        gen.writeStringField(PgContext.SCHEMA_NAME_FIELD, value.getSchemaName());
+        gen.writeStringProperty(PgContext.SCHEMA_NAME_FIELD, value.getSchemaName());
         gen.writeNumberField(PgContext.BLOAT_PERCENTAGE_THRESHOLD_FIELD, value.getBloatPercentageThreshold());
         gen.writeNumberField(PgContext.REMAINING_PERCENTAGE_THRESHOLD_FIELD, value.getRemainingPercentageThreshold());
         gen.writeEndObject();

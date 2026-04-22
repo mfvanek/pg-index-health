@@ -23,20 +23,20 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link ColumnWithSerialType} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class ColumnWithSerialTypeSerializer extends JsonSerializer<ColumnWithSerialType> {
+public class ColumnWithSerialTypeSerializer extends ValueSerializer<ColumnWithSerialType> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final ColumnWithSerialType value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final ColumnWithSerialType value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
         serializers.defaultSerializeField(ColumnTypeAware.COLUMN_FIELD, value.toColumn(), gen);
-        gen.writeStringField(ColumnTypeAware.COLUMN_TYPE_FIELD, value.getColumnType());
-        gen.writeStringField(ColumnWithSerialType.SERIAL_TYPE_FIELD, value.getSerialType().name());
-        gen.writeStringField(SequenceNameAware.SEQUENCE_NAME_FIELD, value.getSequenceName());
+        gen.writeStringProperty(ColumnTypeAware.COLUMN_TYPE_FIELD, value.getColumnType());
+        gen.writeStringProperty(ColumnWithSerialType.SERIAL_TYPE_FIELD, value.getSerialType().name());
+        gen.writeStringProperty(SequenceNameAware.SEQUENCE_NAME_FIELD, value.getSequenceName());
         gen.writeEndObject();
     }
 }

@@ -26,7 +26,7 @@ import java.util.List;
  * A deserializer for {@link DuplicatedForeignKeys} objects, enabling JSON deserialization into immutable {@code DuplicatedForeignKeys} instances.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
 public class DuplicatedForeignKeysDeserializer extends ModelDeserializer<DuplicatedForeignKeys> {
 
@@ -34,7 +34,7 @@ public class DuplicatedForeignKeysDeserializer extends ModelDeserializer<Duplica
      * {@inheritDoc}
      */
     @Override
-    public DuplicatedForeignKeys deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public DuplicatedForeignKeys deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final ObjectCodec codec = p.getCodec();
         final JsonNode node = codec.readTree(p);
         final JavaType listType = ctxt.getTypeFactory().constructCollectionType(List.class, ForeignKey.class);

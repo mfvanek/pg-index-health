@@ -22,18 +22,18 @@ import java.io.IOException;
  * A custom JSON serializer for the {@link SequenceState} class.
  *
  * @author Ivan Vakhrushev
- * @since 0.20.3
+ * @since 0.41.0
  */
-public class SequenceStateSerializer extends JsonSerializer<SequenceState> {
+public class SequenceStateSerializer extends ValueSerializer<SequenceState> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final SequenceState value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+    public void serialize(final SequenceState value, final JsonGenerator gen, final SerializerProvider serializers) {
         gen.writeStartObject();
-        gen.writeStringField(SequenceNameAware.SEQUENCE_NAME_FIELD, value.getSequenceName());
-        gen.writeStringField(SequenceState.DATA_TYPE_FIELD, value.getDataType());
+        gen.writeStringProperty(SequenceNameAware.SEQUENCE_NAME_FIELD, value.getSequenceName());
+        gen.writeStringProperty(SequenceState.DATA_TYPE_FIELD, value.getDataType());
         gen.writeNumberField(SequenceState.REMAINING_PERCENTAGE_FIELD, value.getRemainingPercentage());
         gen.writeEndObject();
     }
