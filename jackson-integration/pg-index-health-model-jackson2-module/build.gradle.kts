@@ -3,7 +3,7 @@ plugins {
     id("pg-index-health.pitest")
 }
 
-description = "pg-index-health-model-jackson-module is an extension for serializing and deserializing database objects to and from JSON format with Jackson 2."
+description = "pg-index-health-model-jackson2-module is an extension for serializing and deserializing database objects to and from JSON format with Jackson 2."
 
 dependencies {
     api(project(":pg-index-health-model"))
