@@ -18,6 +18,7 @@ dependencies {
         api(project(":pg-index-health-logger"))
         api(project(":pg-index-health-core"))
         api(project(":pg-index-health-model-jackson-module"))
+        api(project(":pg-index-health-model-jackson3-module"))
     }
 }
 
