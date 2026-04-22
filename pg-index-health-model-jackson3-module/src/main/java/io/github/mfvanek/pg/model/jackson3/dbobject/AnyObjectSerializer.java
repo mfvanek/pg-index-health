@@ -10,12 +10,11 @@
 
 package io.github.mfvanek.pg.model.jackson3.dbobject;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -30,7 +29,7 @@ public class AnyObjectSerializer extends ValueSerializer<AnyObject> {
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final AnyObject value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final AnyObject value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         gen.writeStringProperty(AnyObject.OBJECT_NAME_FIELD, value.getName());
         gen.writeStringProperty(AnyObject.OBJECT_TYPE_FIELD, value.getObjectType().name().toLowerCase(Locale.ROOT));

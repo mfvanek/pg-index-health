@@ -17,7 +17,7 @@ import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 
-import java.io.IOException;
+
 
 /**
  * A deserializer for {@link Column} objects, enabling JSON deserialization into immutable {@code Column} instances.

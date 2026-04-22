@@ -17,7 +17,7 @@ import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableSizeAware;
 
-import java.io.IOException;
+
 
 /**
  * A deserializer for {@link Table} objects, enabling JSON deserialization into immutable {@code Table} instances.

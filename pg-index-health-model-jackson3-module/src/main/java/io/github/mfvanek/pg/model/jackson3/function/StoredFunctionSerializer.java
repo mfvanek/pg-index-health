@@ -10,12 +10,11 @@
 
 package io.github.mfvanek.pg.model.jackson3.function;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.function.StoredFunction;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
 /**
  * A custom JSON serializer for the {@link StoredFunction} class.
@@ -29,7 +28,7 @@ public class StoredFunctionSerializer extends ValueSerializer<StoredFunction> {
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final StoredFunction value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final StoredFunction value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         gen.writeStringProperty(StoredFunction.FUNCTION_NAME_FIELD, value.getFunctionName());
         gen.writeStringProperty(StoredFunction.FUNCTION_SIGNATURE_FIELD, value.getFunctionSignature());

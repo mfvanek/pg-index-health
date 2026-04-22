@@ -10,13 +10,12 @@
 
 package io.github.mfvanek.pg.model.jackson3.column;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.column.ColumnTypeAware;
 import io.github.mfvanek.pg.model.column.ColumnWithType;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
 /**
  * A custom JSON serializer for the {@link ColumnWithType} class.
@@ -30,9 +29,9 @@ public class ColumnWithTypeSerializer extends ValueSerializer<ColumnWithType> {
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final ColumnWithType value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final ColumnWithType value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
-        serializers.defaultSerializeField(ColumnTypeAware.COLUMN_FIELD, value.toColumn(), gen);
+        ctxt.defaultSerializeProperty(ColumnTypeAware.COLUMN_FIELD, value.toColumn(), gen);
         gen.writeStringProperty(ColumnTypeAware.COLUMN_TYPE_FIELD, value.getColumnType());
         gen.writeEndObject();
     }

@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 
-import java.io.IOException;
+
 
 /**
  * A deserializer for {@link AnyObject} objects, enabling JSON deserialization into immutable {@code AnyObject} instances.

@@ -10,13 +10,12 @@
 
 package io.github.mfvanek.pg.model.jackson3.constraint;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
 /**
  * A custom JSON serializer for the {@link ForeignKey} class.
@@ -30,10 +29,10 @@ public class ForeignKeySerializer extends ValueSerializer<ForeignKey> {
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final ForeignKey value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final ForeignKey value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
-        serializers.defaultSerializeField(ForeignKey.CONSTRAINT_FIELD, value.toConstraint(), gen);
-        serializers.defaultSerializeField(ColumnsAware.COLUMNS_FIELD, value.getColumns(), gen);
+        ctxt.defaultSerializeProperty(ForeignKey.CONSTRAINT_FIELD, value.toConstraint(), gen);
+        ctxt.defaultSerializeProperty(ColumnsAware.COLUMNS_FIELD, value.getColumns(), gen);
         gen.writeEndObject();
     }
 }

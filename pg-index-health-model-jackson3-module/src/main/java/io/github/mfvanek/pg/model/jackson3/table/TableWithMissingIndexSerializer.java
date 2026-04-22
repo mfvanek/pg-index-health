@@ -10,13 +10,12 @@
 
 package io.github.mfvanek.pg.model.jackson3.table;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.table.TableSizeAware;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
 /**
  * A custom JSON serializer for the {@link TableWithMissingIndex} class.
@@ -30,9 +29,9 @@ public class TableWithMissingIndexSerializer extends ValueSerializer<TableWithMi
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final TableWithMissingIndex value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final TableWithMissingIndex value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
-        serializers.defaultSerializeField(TableSizeAware.TABLE_FIELD, value.toTable(), gen);
+        ctxt.defaultSerializeProperty(TableSizeAware.TABLE_FIELD, value.toTable(), gen);
         gen.writeNumberField(TableWithMissingIndex.SEQ_SCANS_FIELD, value.getSeqScans());
         gen.writeNumberField(TableWithMissingIndex.INDEX_SCANS_FIELD, value.getIndexScans());
         gen.writeEndObject();

@@ -19,7 +19,7 @@ import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 
-import java.io.IOException;
+
 
 /**
  * A deserializer for {@link IndexWithBloat} objects, enabling JSON deserialization into immutable {@code IndexWithBloat} instances.

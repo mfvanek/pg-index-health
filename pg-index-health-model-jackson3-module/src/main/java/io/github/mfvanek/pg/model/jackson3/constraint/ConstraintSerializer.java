@@ -10,14 +10,13 @@
 
 package io.github.mfvanek.pg.model.jackson3.constraint;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.ConstraintNameAware;
 import io.github.mfvanek.pg.model.table.TableNameAware;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
 /**
  * A custom JSON serializer for the {@link Constraint} class.
@@ -31,7 +30,7 @@ public class ConstraintSerializer extends ValueSerializer<Constraint> {
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final Constraint value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final Constraint value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
         gen.writeStringProperty(ConstraintNameAware.CONSTRAINT_NAME_FIELD, value.getConstraintName());

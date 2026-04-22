@@ -18,7 +18,7 @@ import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 
-import java.io.IOException;
+
 
 /**
  * A deserializer for {@link UnusedIndex} objects, enabling JSON deserialization into immutable {@code UnusedIndex} instances.

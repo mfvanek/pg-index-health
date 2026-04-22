@@ -10,14 +10,13 @@
 
 package io.github.mfvanek.pg.model.jackson3.index;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
 /**
  * A custom JSON serializer for the {@link IndexWithColumns} class.
@@ -31,10 +30,10 @@ public class IndexWithColumnsSerializer extends ValueSerializer<IndexWithColumns
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final IndexWithColumns value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final IndexWithColumns value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
-        serializers.defaultSerializeField(IndexSizeAware.INDEX_FIELD, value.toIndex(), gen);
-        serializers.defaultSerializeField(ColumnsAware.COLUMNS_FIELD, value.getColumns(), gen);
+        ctxt.defaultSerializeProperty(IndexSizeAware.INDEX_FIELD, value.toIndex(), gen);
+        ctxt.defaultSerializeProperty(ColumnsAware.COLUMNS_FIELD, value.getColumns(), gen);
         gen.writeEndObject();
     }
 }

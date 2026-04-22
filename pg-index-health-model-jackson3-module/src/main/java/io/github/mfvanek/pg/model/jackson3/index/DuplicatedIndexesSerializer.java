@@ -10,13 +10,12 @@
 
 package io.github.mfvanek.pg.model.jackson3.index;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.table.TableNameAware;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
 /**
  * A custom JSON serializer for the {@link DuplicatedIndexes} class.
@@ -30,11 +29,11 @@ public class DuplicatedIndexesSerializer extends ValueSerializer<DuplicatedIndex
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final DuplicatedIndexes value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final DuplicatedIndexes value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
         gen.writeNumberField(DuplicatedIndexes.TOTAL_SIZE_FIELD, value.getTotalSize());
-        serializers.defaultSerializeField(DuplicatedIndexes.INDEXES_FIELD, value.getIndexes(), gen);
+        ctxt.defaultSerializeProperty(DuplicatedIndexes.INDEXES_FIELD, value.getIndexes(), gen);
         gen.writeEndObject();
     }
 }

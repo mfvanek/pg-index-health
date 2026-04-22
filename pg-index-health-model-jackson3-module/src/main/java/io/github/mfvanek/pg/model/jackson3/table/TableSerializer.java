@@ -10,14 +10,13 @@
 
 package io.github.mfvanek.pg.model.jackson3.table;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.table.TableSizeAware;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
 /**
  * A custom JSON serializer for the {@link Table} class.
@@ -31,7 +30,7 @@ public class TableSerializer extends ValueSerializer<Table> {
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final Table value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final Table value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
         gen.writeNumberField(TableSizeAware.TABLE_SIZE_IN_BYTES_FIELD, value.getTableSizeInBytes());

@@ -18,7 +18,7 @@ import io.github.mfvanek.pg.model.constraint.ConstraintNameAware;
 import io.github.mfvanek.pg.model.constraint.ConstraintType;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 
-import java.io.IOException;
+
 
 /**
  * A deserializer for {@link Constraint} objects, enabling JSON deserialization into immutable {@code Constraint} instances.

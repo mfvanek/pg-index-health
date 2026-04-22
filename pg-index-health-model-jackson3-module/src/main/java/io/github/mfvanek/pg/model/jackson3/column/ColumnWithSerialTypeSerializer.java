@@ -10,14 +10,12 @@
 
 package io.github.mfvanek.pg.model.jackson3.column;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.column.ColumnTypeAware;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
-
-import java.io.IOException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
 /**
  * A custom JSON serializer for the {@link ColumnWithSerialType} class.
@@ -31,9 +29,9 @@ public class ColumnWithSerialTypeSerializer extends ValueSerializer<ColumnWithSe
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final ColumnWithSerialType value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final ColumnWithSerialType value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
-        serializers.defaultSerializeField(ColumnTypeAware.COLUMN_FIELD, value.toColumn(), gen);
+        ctxt.defaultSerializeProperty(ColumnTypeAware.COLUMN_FIELD, value.toColumn(), gen);
         gen.writeStringProperty(ColumnTypeAware.COLUMN_TYPE_FIELD, value.getColumnType());
         gen.writeStringProperty(ColumnWithSerialType.SERIAL_TYPE_FIELD, value.getSerialType().name());
         gen.writeStringProperty(SequenceNameAware.SEQUENCE_NAME_FIELD, value.getSequenceName());

@@ -10,13 +10,12 @@
 
 package io.github.mfvanek.pg.model.jackson3.index;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
 /**
  * A custom JSON serializer for the {@link UnusedIndex} class.
@@ -30,9 +29,9 @@ public class UnusedIndexSerializer extends ValueSerializer<UnusedIndex> {
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final UnusedIndex value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final UnusedIndex value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
-        serializers.defaultSerializeField(IndexSizeAware.INDEX_FIELD, value.toIndex(), gen);
+        ctxt.defaultSerializeProperty(IndexSizeAware.INDEX_FIELD, value.toIndex(), gen);
         gen.writeNumberField(UnusedIndex.INDEX_SCANS_FIELD, value.getIndexScans());
         gen.writeEndObject();
     }

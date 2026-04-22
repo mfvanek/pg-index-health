@@ -19,7 +19,7 @@ import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
 
-import java.io.IOException;
+
 import java.util.List;
 
 /**

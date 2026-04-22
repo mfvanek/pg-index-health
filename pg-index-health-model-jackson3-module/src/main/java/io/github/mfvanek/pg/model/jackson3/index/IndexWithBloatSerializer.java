@@ -10,14 +10,13 @@
 
 package io.github.mfvanek.pg.model.jackson3.index;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.bloat.BloatAware;
 import io.github.mfvanek.pg.model.index.IndexSizeAware;
 import io.github.mfvanek.pg.model.index.IndexWithBloat;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
 /**
  * A custom JSON serializer for the {@link IndexWithBloat} class.
@@ -31,9 +30,9 @@ public class IndexWithBloatSerializer extends ValueSerializer<IndexWithBloat> {
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final IndexWithBloat value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final IndexWithBloat value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
-        serializers.defaultSerializeField(IndexSizeAware.INDEX_FIELD, value.toIndex(), gen);
+        ctxt.defaultSerializeProperty(IndexSizeAware.INDEX_FIELD, value.toIndex(), gen);
         gen.writeNumberField(BloatAware.BLOAT_SIZE_IN_BYTES_FIELD, value.getBloatSizeInBytes());
         gen.writeNumberField(BloatAware.BLOAT_PERCENTAGE_FIELD, value.getBloatPercentage());
         gen.writeEndObject();

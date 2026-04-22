@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.jackson3.common.AbstractDeserializer;
 
-import java.io.IOException;
+
 
 /**
  * A deserializer for {@link PgContext} objects, enabling JSON deserialization into immutable {@code PgContext} instances.

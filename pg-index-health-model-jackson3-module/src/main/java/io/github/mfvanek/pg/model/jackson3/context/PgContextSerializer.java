@@ -10,12 +10,11 @@
 
 package io.github.mfvanek.pg.model.jackson3.context;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.context.PgContext;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
 /**
  * A custom JSON serializer for the {@link PgContext} class.
@@ -29,7 +28,7 @@ public class PgContextSerializer extends ValueSerializer<PgContext> {
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final PgContext value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final PgContext value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         gen.writeStringProperty(PgContext.SCHEMA_NAME_FIELD, value.getSchemaName());
         gen.writeNumberField(PgContext.BLOAT_PERCENTAGE_THRESHOLD_FIELD, value.getBloatPercentageThreshold());

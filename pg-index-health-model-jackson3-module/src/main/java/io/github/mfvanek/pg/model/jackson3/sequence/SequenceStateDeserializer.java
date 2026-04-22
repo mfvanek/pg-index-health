@@ -17,7 +17,7 @@ import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 
-import java.io.IOException;
+
 
 /**
  * A deserializer for {@link SequenceState} objects, enabling JSON deserialization into immutable {@code SequenceState} instances.

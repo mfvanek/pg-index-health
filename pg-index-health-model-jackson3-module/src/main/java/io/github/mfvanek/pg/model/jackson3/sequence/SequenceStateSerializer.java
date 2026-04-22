@@ -10,13 +10,12 @@
 
 package io.github.mfvanek.pg.model.jackson3.sequence;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
 /**
  * A custom JSON serializer for the {@link SequenceState} class.
@@ -30,7 +29,7 @@ public class SequenceStateSerializer extends ValueSerializer<SequenceState> {
      * {@inheritDoc}
      */
     @Override
-    public void serialize(final SequenceState value, final JsonGenerator gen, final SerializerProvider serializers) {
+    public void serialize(final SequenceState value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         gen.writeStringProperty(SequenceNameAware.SEQUENCE_NAME_FIELD, value.getSequenceName());
         gen.writeStringProperty(SequenceState.DATA_TYPE_FIELD, value.getDataType());

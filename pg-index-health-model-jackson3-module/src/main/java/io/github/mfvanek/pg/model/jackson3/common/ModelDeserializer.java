@@ -26,7 +26,7 @@ import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.table.TableSizeAware;
 
-import java.io.IOException;
+
 import java.util.List;
 
 /**

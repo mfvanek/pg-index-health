@@ -20,7 +20,7 @@ import io.github.mfvanek.pg.model.column.SerialType;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 
-import java.io.IOException;
+
 
 /**
  * A deserializer for {@link ColumnWithSerialType} objects, enabling JSON deserialization into immutable {@code ColumnWithSerialType} instances.
