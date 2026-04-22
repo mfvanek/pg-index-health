@@ -10,12 +10,10 @@
 
 package io.github.mfvanek.pg.model.jackson3.sequence;
 
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -23,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class SequenceStateSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final SequenceState original = SequenceState.of("demo.seq1", "bigint", 83.21);
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"sequenceName\":\"demo.seq1\",\"dataType\":\"bigint\",\"remainingPercentage\":83.21}");
@@ -63,7 +61,7 @@ class SequenceStateSerializerTest extends ObjectMapperTestBase {
     }
 
     @Test
-    void acceptsNumbers() throws IOException {
+    void acceptsNumbers() {
         final String json = "{\"sequenceName\":\"seq1\",\"dataType\":\"bigint\",\"remainingPercentage\":88}";
         final SequenceState restored = objectMapper.readValue(json, SequenceState.class);
         assertThat(restored)

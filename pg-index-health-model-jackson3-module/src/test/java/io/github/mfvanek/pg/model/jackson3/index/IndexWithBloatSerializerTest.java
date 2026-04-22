@@ -14,14 +14,12 @@ import io.github.mfvanek.pg.model.index.IndexWithBloat;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class IndexWithBloatSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final IndexWithBloat original = IndexWithBloat.of("t1", "i1", 100L, 40L, 40.01);
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"index\":{\"tableName\":\"t1\",\"indexName\":\"i1\",\"indexSizeInBytes\":100},\"bloatSizeInBytes\":40,\"bloatPercentage\":40.01}");

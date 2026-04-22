@@ -14,14 +14,12 @@ import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TableSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final Table original = Table.of("demo.table1", 143L);
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"tableName\":\"demo.table1\",\"tableSizeInBytes\":143}");

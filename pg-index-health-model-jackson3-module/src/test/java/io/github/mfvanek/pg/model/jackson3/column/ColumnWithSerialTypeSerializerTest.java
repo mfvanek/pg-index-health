@@ -10,13 +10,11 @@
 
 package io.github.mfvanek.pg.model.jackson3.column;
 
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -24,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ColumnWithSerialTypeSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final ColumnWithSerialType original = ColumnWithSerialType.ofSmallSerial(Column.ofNotNull("t1", "c1"), "seq1");
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""

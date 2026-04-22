@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class IndexWithColumnsSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final List<Column> columns = List.of(
             Column.ofNullable("t3", "t"),
             Column.ofNullable("t3", "f"));

@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TableWithColumnsSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final TableWithColumns original = TableWithColumns.of(Table.of("t1", 123L), List.of(
             Column.ofNotNull("t1", "c1"),
             Column.ofNotNull("t1", "c2")));
@@ -40,7 +39,7 @@ class TableWithColumnsSerializerTest extends ObjectMapperTestBase {
     }
 
     @Test
-    void serializationShouldWorkForTableWithoutColumns() throws IOException {
+    void serializationShouldWorkForTableWithoutColumns() {
         final TableWithColumns original = TableWithColumns.withoutColumns(Table.of("t1", 123L));
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"table\":{\"tableName\":\"t1\",\"tableSizeInBytes\":123},\"columns\":[]}");

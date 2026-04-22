@@ -10,12 +10,10 @@
 
 package io.github.mfvanek.pg.model.jackson3.index;
 
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -23,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class UnusedIndexSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final UnusedIndex original = UnusedIndex.of("t1", "i1", 100L, 4567L);
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"index\":{\"tableName\":\"t1\",\"indexName\":\"i1\",\"indexSizeInBytes\":100},\"indexScans\":4567}");

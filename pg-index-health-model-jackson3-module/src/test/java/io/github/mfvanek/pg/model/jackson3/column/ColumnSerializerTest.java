@@ -10,12 +10,10 @@
 
 package io.github.mfvanek.pg.model.jackson3.column;
 
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -23,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ColumnSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationOfNotNullColumnShouldWork() throws IOException {
+    void serializationOfNotNullColumnShouldWork() {
         final Column original = Column.ofNotNull("table1", "column1");
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"tableName\":\"table1\",\"columnName\":\"column1\",\"notNull\":true}");
@@ -34,7 +32,7 @@ class ColumnSerializerTest extends ObjectMapperTestBase {
     }
 
     @Test
-    void serializationOfNullableColumnShouldWork() throws IOException {
+    void serializationOfNullableColumnShouldWork() {
         final Column original = Column.ofNullable("table2", "column2");
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"tableName\":\"table2\",\"columnName\":\"column2\",\"notNull\":false}");

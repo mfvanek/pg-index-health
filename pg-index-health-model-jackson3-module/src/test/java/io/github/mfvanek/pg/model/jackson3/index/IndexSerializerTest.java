@@ -10,12 +10,10 @@
 
 package io.github.mfvanek.pg.model.jackson3.index;
 
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -23,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class IndexSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final Index original = Index.of("demo.custom_table", "demo.custom_index", 123L);
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"tableName\":\"demo.custom_table\",\"indexName\":\"demo.custom_index\",\"indexSizeInBytes\":123}");

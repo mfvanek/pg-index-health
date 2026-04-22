@@ -10,13 +10,11 @@
 
 package io.github.mfvanek.pg.model.jackson3.constraint;
 
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -24,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class DuplicatedForeignKeysSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final DuplicatedForeignKeys original = DuplicatedForeignKeys.of(
             ForeignKey.ofNotNullColumn("t1", "c1", "col1"),
             ForeignKey.ofNotNullColumn("t1", "c2", "col1"));

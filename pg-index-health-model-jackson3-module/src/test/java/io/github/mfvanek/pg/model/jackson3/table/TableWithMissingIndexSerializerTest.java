@@ -14,14 +14,12 @@ import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TableWithMissingIndexSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final TableWithMissingIndex original = TableWithMissingIndex.of("t", 113L, 255L, 344L);
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"table\":{\"tableName\":\"t\",\"tableSizeInBytes\":113},\"seqScans\":255,\"indexScans\":344}");

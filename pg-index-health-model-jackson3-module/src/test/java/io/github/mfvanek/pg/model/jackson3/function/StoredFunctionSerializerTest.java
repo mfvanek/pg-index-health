@@ -14,14 +14,12 @@ import io.github.mfvanek.pg.model.function.StoredFunction;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class StoredFunctionSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final StoredFunction original = StoredFunction.of("demo.custom_func", "(int a, int b)");
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"functionName\":\"demo.custom_func\",\"functionSignature\":\"(int a, int b)\"}");

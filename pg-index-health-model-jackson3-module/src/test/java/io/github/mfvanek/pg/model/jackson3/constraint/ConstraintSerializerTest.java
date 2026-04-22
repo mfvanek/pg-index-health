@@ -15,14 +15,12 @@ import io.github.mfvanek.pg.model.constraint.ConstraintType;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ConstraintSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final Constraint original = Constraint.ofType("demo.orders", "order_amount_check", ConstraintType.CHECK);
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"tableName\":\"demo.orders\",\"constraintName\":\"order_amount_check\",\"constraintType\":\"CHECK\"}");

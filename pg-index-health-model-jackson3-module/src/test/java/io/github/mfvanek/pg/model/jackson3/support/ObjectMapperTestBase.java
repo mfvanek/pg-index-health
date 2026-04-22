@@ -10,22 +10,24 @@
 
 package io.github.mfvanek.pg.model.jackson3.support;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.StreamReadFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.mfvanek.pg.model.jackson3.PgIndexHealthModelModule;
+import tools.jackson.core.StreamReadFeature;
+import tools.jackson.core.StreamWriteFeature;
+import tools.jackson.core.json.JsonFactory;
+import tools.jackson.databind.json.JsonMapper;
 
 public abstract class ObjectMapperTestBase {
 
-    protected final ObjectMapper objectMapper = prepareObjectMapper();
+    protected final JsonMapper objectMapper = prepareObjectMapper();
 
-    private static ObjectMapper prepareObjectMapper() {
-        final JsonFactory factory = new JsonFactory();
-        factory.disable(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT);
-        factory.enable(StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION.mappedFeature());
-        final ObjectMapper mapper = new ObjectMapper(factory);
-        mapper.registerModule(new PgIndexHealthModelModule());
-        return mapper;
+    private static JsonMapper prepareObjectMapper() {
+        final JsonFactory factory = JsonFactory.builder()
+            .disable(StreamWriteFeature.AUTO_CLOSE_CONTENT)
+            .enable(StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION)
+            .build();
+
+        return JsonMapper.builder(factory)
+            .addModule(new PgIndexHealthModelModule())
+            .build();
     }
 }

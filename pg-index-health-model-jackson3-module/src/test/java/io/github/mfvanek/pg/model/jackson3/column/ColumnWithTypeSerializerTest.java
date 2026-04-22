@@ -15,14 +15,12 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ColumnWithTypeSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final ColumnWithType original = ColumnWithType.ofUuid(Column.ofNotNull("t1", "c1"));
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"column\":{\"tableName\":\"t1\",\"columnName\":\"c1\",\"notNull\":true},\"columnType\":\"uuid\"}");

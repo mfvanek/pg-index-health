@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 class DbObjectSerializationTest {
 
-    private static final String JSON_MODULE_PACKAGE = "io.github.mfvanek.pg.model.jackson";
+    private static final String JSON_MODULE_PACKAGE = "io.github.mfvanek.pg.model.jackson3";
 
     @Test
     void completenessTest() {

@@ -15,14 +15,12 @@ import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AnyObjectSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final AnyObject original = AnyObject.ofType("demo.orders", PgObjectType.TABLE);
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"objectName\":\"demo.orders\",\"objectType\":\"table\"}");

@@ -10,12 +10,10 @@
 
 package io.github.mfvanek.pg.model.jackson3.context;
 
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -23,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class PgContextSerializerTest extends ObjectMapperTestBase {
 
     @Test
-    void serializationShouldWork() throws IOException {
+    void serializationShouldWork() {
         final PgContext original = PgContext.of("demo", 0.15, 0.25);
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"schemaName\":\"demo\",\"bloatPercentageThreshold\":0.15,\"remainingPercentageThreshold\":0.25}");
