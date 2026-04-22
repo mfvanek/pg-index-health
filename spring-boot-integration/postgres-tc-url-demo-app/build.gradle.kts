@@ -23,7 +23,7 @@ dependencies {
     implementation("org.testcontainers:testcontainers-postgresql")
     implementation(libs.spring.boot.v3.starter.jdbc)
     implementation(libs.spring.boot.v3.starter.json)
-    implementation(project(":pg-index-health-model-jackson-module"))
+    implementation(project(":pg-index-health-model-jackson2-module"))
 
     runtimeOnly(libs.postgresql)
 
