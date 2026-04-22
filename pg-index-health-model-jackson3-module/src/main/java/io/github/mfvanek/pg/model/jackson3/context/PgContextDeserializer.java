@@ -16,7 +16,6 @@ import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.JsonNode;
 
-
 /**
  * A deserializer for {@link PgContext} objects, enabling JSON deserialization into immutable {@code PgContext} instances.
  *
@@ -30,10 +29,10 @@ public class PgContextDeserializer extends AbstractDeserializer<PgContext> {
      */
     @Override
     public PgContext deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String schemaName = getStringField(ctxt, node, PgContext.SCHEMA_NAME_FIELD);
-        final double bloat = getDoubleField(ctxt, node, PgContext.BLOAT_PERCENTAGE_THRESHOLD_FIELD);
-        final double remaining = getDoubleField(ctxt, node, PgContext.REMAINING_PERCENTAGE_THRESHOLD_FIELD);
+        final JsonNode rootNode = ctxt.readTree(p);
+        final String schemaName = getStringField(ctxt, rootNode, PgContext.SCHEMA_NAME_FIELD);
+        final double bloat = getDoubleField(ctxt, rootNode, PgContext.BLOAT_PERCENTAGE_THRESHOLD_FIELD);
+        final double remaining = getDoubleField(ctxt, rootNode, PgContext.REMAINING_PERCENTAGE_THRESHOLD_FIELD);
         return PgContext.of(schemaName, bloat, remaining);
     }
 }

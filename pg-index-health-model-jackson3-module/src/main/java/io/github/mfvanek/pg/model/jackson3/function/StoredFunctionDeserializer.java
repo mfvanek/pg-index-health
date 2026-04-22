@@ -16,7 +16,6 @@ import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.JsonNode;
 
-
 /**
  * A deserializer for {@link StoredFunction} objects, enabling JSON deserialization into immutable {@code StoredFunction} instances.
  *
@@ -30,9 +29,9 @@ public class StoredFunctionDeserializer extends ModelDeserializer<StoredFunction
      */
     @Override
     public StoredFunction deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String functionName = getStringField(ctxt, node, StoredFunction.FUNCTION_NAME_FIELD);
-        final String functionSignature = getStringField(ctxt, node, StoredFunction.FUNCTION_SIGNATURE_FIELD);
+        final JsonNode rootNode = ctxt.readTree(p);
+        final String functionName = getStringField(ctxt, rootNode, StoredFunction.FUNCTION_NAME_FIELD);
+        final String functionSignature = getStringField(ctxt, rootNode, StoredFunction.FUNCTION_SIGNATURE_FIELD);
         return StoredFunction.of(functionName, functionSignature);
     }
 }

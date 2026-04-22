@@ -18,7 +18,6 @@ import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.JsonNode;
 
-
 /**
  * A deserializer for {@link Constraint} objects, enabling JSON deserialization into immutable {@code Constraint} instances.
  *
@@ -32,10 +31,10 @@ public class ConstraintDeserializer extends ModelDeserializer<Constraint> {
      */
     @Override
     public Constraint deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String tableName = getTableName(ctxt, node);
-        final String constraintName = getStringField(ctxt, node, ConstraintNameAware.CONSTRAINT_NAME_FIELD);
-        final String constraintType = getStringField(ctxt, node, Constraint.CONSTRAINT_TYPE_FIELD);
+        final JsonNode rootNode = ctxt.readTree(p);
+        final String tableName = getTableName(ctxt, rootNode);
+        final String constraintName = getStringField(ctxt, rootNode, ConstraintNameAware.CONSTRAINT_NAME_FIELD);
+        final String constraintType = getStringField(ctxt, rootNode, Constraint.CONSTRAINT_TYPE_FIELD);
         return Constraint.ofType(tableName, constraintName, ConstraintType.valueOf(constraintType));
     }
 }

@@ -17,7 +17,6 @@ import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.JsonNode;
 
-
 /**
  * A deserializer for {@link SequenceState} objects, enabling JSON deserialization into immutable {@code SequenceState} instances.
  *
@@ -31,10 +30,10 @@ public class SequenceStateDeserializer extends ModelDeserializer<SequenceState> 
      */
     @Override
     public SequenceState deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String sequenceName = getStringField(ctxt, node, SequenceNameAware.SEQUENCE_NAME_FIELD);
-        final String dataType = getStringField(ctxt, node, SequenceState.DATA_TYPE_FIELD);
-        final double remainingPercentage = getDoubleField(ctxt, node, SequenceState.REMAINING_PERCENTAGE_FIELD);
+        final JsonNode rootNode = ctxt.readTree(p);
+        final String sequenceName = getStringField(ctxt, rootNode, SequenceNameAware.SEQUENCE_NAME_FIELD);
+        final String dataType = getStringField(ctxt, rootNode, SequenceState.DATA_TYPE_FIELD);
+        final double remainingPercentage = getDoubleField(ctxt, rootNode, SequenceState.REMAINING_PERCENTAGE_FIELD);
         return SequenceState.of(sequenceName, dataType, remainingPercentage);
     }
 }

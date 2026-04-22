@@ -33,10 +33,9 @@ public class TableWithColumnsDeserializer extends ModelDeserializer<TableWithCol
      */
     @Override
     public TableWithColumns deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        
         final JsonNode rootNode = ctxt.readTree(p);
-        final Table table = getTable(codec, node, ctxt);
-        final List<Column> columns = getColumns(codec, node, ctxt);
+        final Table table = getTable(rootNode, ctxt);
+        final List<Column> columns = getColumns(rootNode, ctxt);
         return TableWithColumns.of(table, columns);
     }
 }

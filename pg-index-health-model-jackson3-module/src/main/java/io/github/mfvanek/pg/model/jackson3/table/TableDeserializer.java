@@ -17,7 +17,6 @@ import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.JsonNode;
 
-
 /**
  * A deserializer for {@link Table} objects, enabling JSON deserialization into immutable {@code Table} instances.
  *
@@ -31,9 +30,9 @@ public class TableDeserializer extends ModelDeserializer<Table> {
      */
     @Override
     public Table deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String tableName = getTableName(ctxt, node);
-        final long tableSizeInBytes = getLongField(ctxt, node, TableSizeAware.TABLE_SIZE_IN_BYTES_FIELD);
+        final JsonNode rootNode = ctxt.readTree(p);
+        final String tableName = getTableName(ctxt, rootNode);
+        final long tableSizeInBytes = getLongField(ctxt, rootNode, TableSizeAware.TABLE_SIZE_IN_BYTES_FIELD);
         return Table.of(tableName, tableSizeInBytes);
     }
 }

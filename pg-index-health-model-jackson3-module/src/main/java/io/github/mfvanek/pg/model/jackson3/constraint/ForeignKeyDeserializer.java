@@ -33,16 +33,17 @@ public class ForeignKeyDeserializer extends ModelDeserializer<ForeignKey> {
      */
     @Override
     public ForeignKey deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        
         final JsonNode rootNode = ctxt.readTree(p);
-        final Constraint constraint = getConstraint(codec, node, ctxt);
-        final List<Column> columns = getColumns(codec, node, ctxt);
+        final Constraint constraint = getConstraint(rootNode, ctxt);
+        final List<Column> columns = getColumns(rootNode, ctxt);
         return ForeignKey.of(constraint, columns);
     }
 
-    private Constraint getConstraint(final ObjectCodec codec,
-                                     final JsonNode rootNode,
+    private Constraint getConstraint(final JsonNode rootNode,
                                      final DeserializationContext ctxt) {
-        return codec.treeToValue(getNotNullNode(ctxt, rootNode, ForeignKey.CONSTRAINT_FIELD), Constraint.class);
+        final JsonNode notNullNode = getNotNullNode(ctxt, rootNode, ForeignKey.CONSTRAINT_FIELD);
+        try (JsonParser tokens = ctxt.treeAsTokens(notNullNode)) {
+            return tokens.readValueAs(Constraint.class);
+        }
     }
 }

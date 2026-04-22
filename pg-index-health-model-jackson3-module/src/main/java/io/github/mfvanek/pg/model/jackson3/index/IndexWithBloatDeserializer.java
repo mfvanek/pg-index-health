@@ -18,7 +18,6 @@ import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.JsonNode;
 
-
 /**
  * A deserializer for {@link IndexWithBloat} objects, enabling JSON deserialization into immutable {@code IndexWithBloat} instances.
  *
@@ -32,11 +31,10 @@ public class IndexWithBloatDeserializer extends ModelDeserializer<IndexWithBloat
      */
     @Override
     public IndexWithBloat deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        
         final JsonNode rootNode = ctxt.readTree(p);
-        final Index index = getIndex(codec, node, ctxt);
-        final long bloatSizeInBytes = getLongField(ctxt, node, BloatAware.BLOAT_SIZE_IN_BYTES_FIELD);
-        final double bloatPercentage = getDoubleField(ctxt, node, BloatAware.BLOAT_PERCENTAGE_FIELD);
+        final Index index = getIndex(rootNode, ctxt);
+        final long bloatSizeInBytes = getLongField(ctxt, rootNode, BloatAware.BLOAT_SIZE_IN_BYTES_FIELD);
+        final double bloatPercentage = getDoubleField(ctxt, rootNode, BloatAware.BLOAT_PERCENTAGE_FIELD);
         return IndexWithBloat.of(index, bloatSizeInBytes, bloatPercentage);
     }
 }

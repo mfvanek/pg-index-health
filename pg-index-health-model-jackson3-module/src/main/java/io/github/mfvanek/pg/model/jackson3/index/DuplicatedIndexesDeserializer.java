@@ -10,12 +10,12 @@
 
 package io.github.mfvanek.pg.model.jackson3.index;
 
-import com.fasterxml.jackson.databind.JavaType;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JavaType;
 import tools.jackson.databind.JsonNode;
 
 import java.util.List;
@@ -33,12 +33,11 @@ public class DuplicatedIndexesDeserializer extends ModelDeserializer<DuplicatedI
      */
     @Override
     public DuplicatedIndexes deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        
         final JsonNode rootNode = ctxt.readTree(p);
         final JavaType listType = ctxt.getTypeFactory().constructCollectionType(List.class, Index.class);
-        final JsonNode indexesNode = getNotNullNode(ctxt, node, DuplicatedIndexes.INDEXES_FIELD);
-        try (JsonParser duplicatedIndexesParser = indexesNode.traverse(codec)) {
-            final List<Index> duplicatedIndexes = codec.readValue(duplicatedIndexesParser, listType);
+        final JsonNode indexesNode = getNotNullNode(ctxt, rootNode, DuplicatedIndexes.INDEXES_FIELD);
+        try (JsonParser duplicatedIndexesParser = indexesNode.traverse(ctxt)) {
+            final List<Index> duplicatedIndexes = ctxt.readValue(duplicatedIndexesParser, listType);
             return DuplicatedIndexes.of(duplicatedIndexes);
         }
     }

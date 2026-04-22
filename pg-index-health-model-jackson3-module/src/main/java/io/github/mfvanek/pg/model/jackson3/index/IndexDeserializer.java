@@ -18,7 +18,6 @@ import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.JsonNode;
 
-
 /**
  * A deserializer for {@link Index} objects, enabling JSON deserialization into immutable {@code Index} instances.
  *
@@ -32,10 +31,10 @@ public class IndexDeserializer extends ModelDeserializer<Index> {
      */
     @Override
     public Index deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String tableName = getTableName(ctxt, node);
-        final String indexName = getStringField(ctxt, node, IndexNameAware.INDEX_NAME_FIELD);
-        final long indexSizeInBytes = getLongField(ctxt, node, IndexSizeAware.INDEX_SIZE_IN_BYTES_FIELD);
+        final JsonNode rootNode = ctxt.readTree(p);
+        final String tableName = getTableName(ctxt, rootNode);
+        final String indexName = getStringField(ctxt, rootNode, IndexNameAware.INDEX_NAME_FIELD);
+        final long indexSizeInBytes = getLongField(ctxt, rootNode, IndexSizeAware.INDEX_SIZE_IN_BYTES_FIELD);
         return Index.of(tableName, indexName, indexSizeInBytes);
     }
 }

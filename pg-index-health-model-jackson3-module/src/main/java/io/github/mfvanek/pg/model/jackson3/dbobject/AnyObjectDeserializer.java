@@ -16,7 +16,6 @@ import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.JsonNode;
 
-
 /**
  * A deserializer for {@link AnyObject} objects, enabling JSON deserialization into immutable {@code AnyObject} instances.
  *
@@ -30,9 +29,9 @@ public class AnyObjectDeserializer extends ModelDeserializer<AnyObject> {
      */
     @Override
     public AnyObject deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        final JsonNode node = p.getCodec().readTree(p);
-        final String objectName = getStringField(ctxt, node, AnyObject.OBJECT_NAME_FIELD);
-        final String objectType = getStringField(ctxt, node, AnyObject.OBJECT_TYPE_FIELD);
+        final JsonNode rootNode = ctxt.readTree(p);
+        final String objectName = getStringField(ctxt, rootNode, AnyObject.OBJECT_NAME_FIELD);
+        final String objectType = getStringField(ctxt, rootNode, AnyObject.OBJECT_TYPE_FIELD);
         return AnyObject.ofRaw(objectName, objectType);
     }
 }

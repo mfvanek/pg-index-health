@@ -33,10 +33,9 @@ public class IndexWithColumnsDeserializer extends ModelDeserializer<IndexWithCol
      */
     @Override
     public IndexWithColumns deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        
         final JsonNode rootNode = ctxt.readTree(p);
-        final Index index = getIndex(codec, node, ctxt);
-        final List<Column> columns = getColumns(codec, node, ctxt);
+        final Index index = getIndex(rootNode, ctxt);
+        final List<Column> columns = getColumns(rootNode, ctxt);
         return IndexWithColumns.of(index, columns);
     }
 }

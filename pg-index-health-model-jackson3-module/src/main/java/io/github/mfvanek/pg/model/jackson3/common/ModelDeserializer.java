@@ -21,6 +21,7 @@ import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.table.TableSizeAware;
 import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JavaType;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.exc.MismatchedInputException;
 
@@ -73,60 +74,57 @@ public abstract class ModelDeserializer<T extends DbObject> extends AbstractDese
     }
 
     /**
-     * Extracts an {@link Index} object from the provided JSON root node using the given codec.
-     * This method ensures that the required field for constructing the {@link Index} is present
-     * and non-null within the root node. If the field is missing or explicitly null, an input
-     * mismatch is reported to the deserialization context.
+     * Extracts an {@link Index} object from the provided JSON root node.
+     * This method ensures the required field for constructing the {@link Index}
+     * is present and non-null within the root node. If the field is missing or
+     * explicitly null, an input mismatch is reported to the deserialization context.
      *
-     * @param codec    the {@link ObjectCodec} used to convert JSON tree nodes into Java objects
      * @param rootNode the root JSON node containing the data for the {@link Index}
      * @param ctxt     the deserialization context used for error handling and reporting
      * @return the {@link Index} object created from the specified JSON node
-     * @throws IOException if an I/O error occurs during deserialization
      */
-    protected final Index getIndex(final ObjectCodec codec,
-                                   final JsonNode rootNode,
+    protected final Index getIndex(final JsonNode rootNode,
                                    final DeserializationContext ctxt) {
-        return codec.treeToValue(getNotNullNode(ctxt, rootNode, IndexSizeAware.INDEX_FIELD), Index.class);
+        final JsonNode notNullNode = getNotNullNode(ctxt, rootNode, IndexSizeAware.INDEX_FIELD);
+        try (JsonParser tokens = ctxt.treeAsTokens(notNullNode)) {
+            return tokens.readValueAs(Index.class);
+        }
     }
 
     /**
-     * Deserializes a {@link Table} object from the provided JSON root node using the given codec.
-     * This method ensures the required field for constructing the {@link Table} is present
-     * and non-null within the root node. If the field is missing or explicitly null, an input
-     * mismatch is reported to the deserialization context.
+     * Extracts a {@link Table} object from the provided JSON root node.
+     * This method ensures that the required field for constructing the {@link Table}
+     * is present and non-null within the root node. If the field is missing
+     * or explicitly null, an input mismatch is reported to the deserialization context.
      *
-     * @param codec    the {@link ObjectCodec} used to convert JSON tree nodes into Java objects
      * @param rootNode the root JSON node containing the data for the {@link Table}
      * @param ctxt     the deserialization context used for error handling and reporting
      * @return the {@link Table} object created from the specified JSON node
-     * @throws IOException if an I/O error occurs during deserialization
      */
-    protected final Table getTable(final ObjectCodec codec,
-                                   final JsonNode rootNode,
+    protected final Table getTable(final JsonNode rootNode,
                                    final DeserializationContext ctxt) {
-        return codec.treeToValue(getNotNullNode(ctxt, rootNode, TableSizeAware.TABLE_FIELD), Table.class);
+        final JsonNode notNullNode = getNotNullNode(ctxt, rootNode, TableSizeAware.TABLE_FIELD);
+        try (JsonParser tokens = ctxt.treeAsTokens(notNullNode)) {
+            return tokens.readValueAs(Table.class);
+        }
     }
 
     /**
-     * Deserializes a list of {@link Column} objects from a specified JSON node using the provided codec.
-     * This method ensures the required field for the collection of columns is present
-     * and non-null within the root node. If the field is missing or null, an input mismatch
-     * is reported to the deserialization context.
+     * Extracts a list of {@link Column} objects from the provided JSON root node.
+     * This method ensures the required field for constructing the list of {@link Column} objects
+     * is present, non-null, and properly formatted within the root node. If the field is missing
+     * or explicitly null, an input mismatch is reported to the deserialization context.
      *
-     * @param codec    the {@link ObjectCodec} used to transform JSON data into Java objects
-     * @param rootNode the root JSON node containing the collection of columns
-     * @param ctxt     the deserialization context used for error reporting
-     * @return a {@link List} of {@link Column} objects deserialized from the specified JSON node
-     * @throws IOException if an I/O error occurs during deserialization
+     * @param rootNode the root JSON node containing the data for the {@link Column} list
+     * @param ctxt     the deserialization context used for error handling and reporting
+     * @return a list of {@link Column} objects created from the specified JSON node
      */
-    protected final List<Column> getColumns(final ObjectCodec codec,
-                                            final JsonNode rootNode,
+    protected final List<Column> getColumns(final JsonNode rootNode,
                                             final DeserializationContext ctxt) {
         final JavaType listType = ctxt.getTypeFactory().constructCollectionType(List.class, Column.class);
         final JsonNode columnsNode = getNotNullNode(ctxt, rootNode, ColumnsAware.COLUMNS_FIELD);
-        try (JsonParser columnsParser = columnsNode.traverse(codec)) {
-            return codec.readValue(columnsParser, listType);
+        try (JsonParser columnsParser = columnsNode.traverse(ctxt)) {
+            return ctxt.readValue(columnsParser, listType);
         }
     }
 }

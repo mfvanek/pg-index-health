@@ -17,7 +17,6 @@ import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.JsonNode;
 
-
 /**
  * A deserializer for {@link TableWithMissingIndex} objects, enabling JSON deserialization into immutable {@code TableWithMissingIndex} instances.
  *
@@ -31,11 +30,10 @@ public class TableWithMissingIndexDeserializer extends ModelDeserializer<TableWi
      */
     @Override
     public TableWithMissingIndex deserialize(final JsonParser p, final DeserializationContext ctxt) {
-        
         final JsonNode rootNode = ctxt.readTree(p);
-        final Table table = getTable(codec, node, ctxt);
-        final long seqScans = getLongField(ctxt, node, TableWithMissingIndex.SEQ_SCANS_FIELD);
-        final long indexScans = getLongField(ctxt, node, TableWithMissingIndex.INDEX_SCANS_FIELD);
+        final Table table = getTable(rootNode, ctxt);
+        final long seqScans = getLongField(ctxt, rootNode, TableWithMissingIndex.SEQ_SCANS_FIELD);
+        final long indexScans = getLongField(ctxt, rootNode, TableWithMissingIndex.INDEX_SCANS_FIELD);
         return TableWithMissingIndex.of(table, seqScans, indexScans);
     }
 }
