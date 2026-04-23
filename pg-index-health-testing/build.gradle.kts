@@ -11,6 +11,7 @@ dependencies {
     implementation(libs.apache.commons.dbcp2)
     implementation(platform(libs.testcontainers.bom))
     implementation("org.testcontainers:testcontainers")
+    implementation("org.testcontainers:testcontainers-jdbc")
     implementation("org.testcontainers:testcontainers-postgresql")
     implementation(libs.awaitility)
 
