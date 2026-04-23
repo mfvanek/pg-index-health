@@ -1,1 +1,1 @@
-io.github.mfvanek.pg.model.jackson.PgIndexHealthModelModule
+io.github.mfvanek.pg.model.jackson2.PgIndexHealthModelModule
