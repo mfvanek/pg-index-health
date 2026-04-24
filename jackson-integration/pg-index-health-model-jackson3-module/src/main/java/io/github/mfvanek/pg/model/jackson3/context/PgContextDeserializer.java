@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2019-2026. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health
+ *
+ * This file is a part of "pg-index-health" - an embeddable schema linter for PostgreSQL
+ * that detects common anti-patterns and promotes best practices.
+ *
+ * Licensed under the Apache License 2.0
+ */
+
+package io.github.mfvanek.pg.model.jackson3.context;
+
+import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.jackson3.common.AbstractDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
+
+/**
+ * A deserializer for {@link PgContext} objects, enabling JSON deserialization into immutable {@code PgContext} instances.
+ *
+ * @author Ivan Vakhrushev
+ * @since 0.41.0
+ */
+public class PgContextDeserializer extends AbstractDeserializer<PgContext> {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PgContext deserialize(final JsonParser p, final DeserializationContext ctxt) {
+        final JsonNode rootNode = ctxt.readTree(p);
+        final String schemaName = getStringField(ctxt, rootNode, PgContext.SCHEMA_NAME_FIELD);
+        final double bloat = getDoubleField(ctxt, rootNode, PgContext.BLOAT_PERCENTAGE_THRESHOLD_FIELD);
+        final double remaining = getDoubleField(ctxt, rootNode, PgContext.REMAINING_PERCENTAGE_THRESHOLD_FIELD);
+        return PgContext.of(schemaName, bloat, remaining);
+    }
+}

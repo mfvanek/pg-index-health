@@ -30,3 +30,11 @@ dependencies {
     testImplementation(libs.postgresql)
     testImplementation(libs.arch.unit)
 }
+
+tasks {
+    jar {
+        manifest {
+            attributes("Automatic-Module-Name" to "io.github.mfvanek.pg.spring")
+        }
+    }
+}

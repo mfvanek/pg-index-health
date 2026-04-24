@@ -5,6 +5,10 @@ include("pg-index-health")
 include("pg-index-health-jdbc-connection")
 include("pg-index-health-generator")
 include("pg-index-health-testing")
+include("pg-index-health-bom")
+include("pg-index-health-logger")
+include("pg-index-health-core")
+
 include("spring-boot-integration:pg-index-health-test-starter")
 findProject(":spring-boot-integration:pg-index-health-test-starter")?.name = "pg-index-health-test-starter"
 include("spring-boot-integration:h2-demo-app")
@@ -15,15 +19,18 @@ include("spring-boot-integration:postgres-demo-app")
 findProject(":spring-boot-integration:postgres-demo-app")?.name = "postgres-demo-app"
 include("spring-boot-integration:kotlin-demo-app")
 findProject(":spring-boot-integration:kotlin-demo-app")?.name = "kotlin-demo-app"
-include("pg-index-health-bom")
-include("pg-index-health-logger")
-include("pg-index-health-core")
 include("spring-boot-integration:postgres-tc-url-demo-app")
 findProject(":spring-boot-integration:postgres-tc-url-demo-app")?.name = "postgres-tc-url-demo-app"
 include("spring-boot-integration:kotlin-custom-ds-demo-app")
 findProject(":spring-boot-integration:kotlin-custom-ds-demo-app")?.name = "kotlin-custom-ds-demo-app"
 include("spring-boot-integration:postgres-demo-app-with-custom-user")
 findProject(":spring-boot-integration:postgres-demo-app-with-custom-user")?.name = "postgres-demo-app-with-custom-user"
-include("pg-index-health-model-jackson-module")
 include("spring-boot-integration:sb4-postgres-tc-url-demo-app")
 findProject(":spring-boot-integration:sb4-postgres-tc-url-demo-app")?.name = "sb4-postgres-tc-url-demo-app"
+include("spring-boot-integration:sb4-jackson3-demo-app")
+findProject(":spring-boot-integration:sb4-jackson3-demo-app")?.name = "sb4-jackson3-demo-app"
+
+include("jackson-integration:pg-index-health-model-jackson2-module")
+findProject(":jackson-integration:pg-index-health-model-jackson2-module")?.name = "pg-index-health-model-jackson2-module"
+include("jackson-integration:pg-index-health-model-jackson3-module")
+findProject(":jackson-integration:pg-index-health-model-jackson3-module")?.name = "pg-index-health-model-jackson3-module"

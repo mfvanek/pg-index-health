@@ -11,7 +11,7 @@ description = "pg-index-health build"
 
 allprojects {
     group = "io.github.mfvanek"
-    version = "0.40.1"
+    version = "0.41.0"
 
     repositories {
         mavenCentral()
@@ -19,7 +19,7 @@ allprojects {
     }
 }
 
-private val excludedSubprojects = setOf("pg-index-health-bom", "spring-boot-integration")
+private val excludedSubprojects = setOf("pg-index-health-bom", "spring-boot-integration", "jackson-integration")
 
 private fun Project.shouldSkip(): Boolean =
     excludedSubprojects.contains(this.name) || this.name.endsWith("-demo-app")
@@ -90,7 +90,7 @@ gradle.projectsEvaluated {
                         val javadocTask = dependencyProject.tasks.named<Javadoc>("javadoc")
                         val javadocOutputDir = javadocTask.get().destinationDir
                         val javadocAbsolutePath = javadocOutputDir?.absolutePath!!
-                        logger.quiet("Adding offline link $link to $javadocAbsolutePath")
+                        logger.info("Adding offline link $link to $javadocAbsolutePath")
                         val doclet = options as StandardJavadocDocletOptions
                         doclet.linksOffline(link, javadocAbsolutePath)
                         dependsOn(javadocTask)
