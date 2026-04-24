@@ -1,6 +1,6 @@
 plugins {
     id("pg-index-health.java-library")
-    id("pg-index-health.mandatory-javadoc")
+    //id("pg-index-health.mandatory-javadoc") temporarily disabled due to JPMS support
 }
 
 description = "pg-index-health-testing is an auxiliary library that allows you to run a PostgreSQL in tests."
@@ -24,5 +24,11 @@ dependencies {
 tasks {
     test {
         maxParallelForks = 1 // to increase tests stability
+    }
+
+    jar {
+        manifest {
+            attributes("Automatic-Module-Name" to "io.github.mfvanek.pg.testing")
+        }
     }
 }
