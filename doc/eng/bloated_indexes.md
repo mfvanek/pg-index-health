@@ -70,7 +70,7 @@ create index if not exists idx_order_item_order_id
 create index if not exists idx_order_item_warehouse_id_without_nulls
     on demo.order_item (warehouse_id) where warehouse_id is not null;
 
--- Наполнение данными
+-- Filling with data
 
 insert into demo.orders (user_id, shop_id, status)
 select
@@ -95,10 +95,10 @@ select
     md5((random() + 1)::text) as sku
 from demo.orders where id % 2 = 0;
 
--- собираем статистику
+-- collecting statistics
 vacuum analyze demo.orders, demo.order_item;
 
--- обновляем статус у нескольких заказов
+-- updating the status of several orders
 update demo.orders
 set status = 2 -- paid order
 where
@@ -116,10 +116,10 @@ where
         status = 2
       and created_at >= current_timestamp - interval '1 day');
 
--- собираем статистику
+-- collecting statistics
 vacuum analyze demo.orders, demo.order_item;
 
--- Для секционированных таблиц
+-- For partitioned tables
 
 create table if not exists demo.orders_partitioned(
     id         bigint not null generated always as identity,
@@ -155,7 +155,7 @@ create index if not exists idx_order_item_partitioned_warehouse_id_without_nulls
 create table if not exists demo.order_item_default
     partition of demo.order_item_partitioned default;
 
--- Наполнение данными
+-- Filling with data
 
 insert into demo.orders_partitioned (user_id, shop_id, status)
 select (ids.id % 10) + 1 as user_id,
@@ -178,10 +178,10 @@ select id as order_id, created_at,
 from demo.orders_partitioned
 where id % 2 = 0;
 
--- собираем статистику
+-- collecting statistics
 vacuum analyze demo.orders_partitioned, demo.order_item_partitioned;
 
--- обновляем статус у нескольких заказов
+-- updating the status of several orders
 update demo.orders_partitioned
 set status = 2 -- paid order
 where status = 1 -- new order
@@ -199,7 +199,7 @@ where warehouse_id is null
                    where status = 2
                      and created_at >= current_timestamp - interval '1 day');
 
--- собираем статистику
+-- collecting statistics
 vacuum analyze demo.orders_partitioned, demo.order_item_partitioned;
 ```
 
