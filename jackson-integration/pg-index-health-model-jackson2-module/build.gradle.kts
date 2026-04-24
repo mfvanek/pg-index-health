@@ -22,6 +22,14 @@ val generateModuleVersion = tasks.register<GenerateJackson2ModuleVersionTask>("g
 
 sourceSets["main"].java.srcDir(generateModuleVersion.map { it.outputs.files })
 
-tasks.named("compileJava") {
-    dependsOn(generateModuleVersion)
+tasks {
+    named("compileJava") {
+        dependsOn(generateModuleVersion)
+    }
+
+    jar {
+        manifest {
+            attributes("Automatic-Module-Name" to "io.github.mfvanek.pg.model.jackson2")
+        }
+    }
 }
