@@ -58,3 +58,7 @@ create index idx_part_parent_end on demo.t_part_parent (id, "ts-bad");
 
 create index idx_part_parent_mid on demo.t_part_parent ("ts-bad", id);
 ```
+
+## Как исправить
+
+В соответствии с правилом ESR пересоздайте индекс и переместите timestamp-поле в конец индекса.

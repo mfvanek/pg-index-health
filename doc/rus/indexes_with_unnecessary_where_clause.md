@@ -54,3 +54,7 @@ create index if not exists "idx_second_ref_first-ref" on demo.one_partitioned (s
 
 create table if not exists demo.one_default partition of demo.one_partitioned default;
 ```
+
+## Как исправить
+
+Удалите избыточные where-предикаты из индексов.
