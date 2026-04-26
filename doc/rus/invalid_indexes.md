@@ -62,3 +62,9 @@ values (1, 'Mary', 'Jones', '+12345678910'),
 create unique index concurrently if not exists i_first_last_name_p
     on demo.table_with_invalid_indexes_partitioned_hash_1_100 (first_name, last_name);
 ```
+
+## Как исправить
+
+Если вы создавали уникальный индекс,
+убедитесь в отсутствии дубликатов в данных в таблице, препятствующих созданию индекса.
+В остальных случаях попробуйте пересоздать индекс, использую команду [reindex concurrently](https://www.postgresql.org/docs/current/sql-reindex.html).

@@ -19,4 +19,22 @@
 
 ## Скрипт для воспроизведения
 
-TODO
+```sql
+create schema if not exists demo;
+
+create or replace function demo.add(a integer, b integer) returns integer
+as 'select $1 + $2;'
+    language sql
+    immutable
+    returns null on null input;
+
+create or replace function demo.add(a int, b int, c int) returns int
+as 'select $1 + $2 + $3;'
+    language sql
+    immutable
+    returns null on null input;
+```
+
+## Как исправить
+
+Добавьте человекочитаемые описания ко всем функциям.
