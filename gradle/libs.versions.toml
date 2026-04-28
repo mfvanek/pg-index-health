@@ -9,7 +9,7 @@ testcontainers = "2.0.5" # we do not align the testcontainers version with Sprin
 mockito = "5.23.0"
 forbiddenapis = "3.10"
 junit = "6.0.3"
-freefair = "9.2.0"
+freefair = "9.4.0"
 
 [libraries]
 jspecify = "org.jspecify:jspecify:1.0.0"
