@@ -42,7 +42,7 @@ After your PR with a new SQL query is merged, you need to update the git submodu
 
 ### Extend the domain model (if needed)
 
-pg-index-health is a [multimodule Gradle](https://docs.gradle.org/current/userguide/multi_project_builds.html) project.  
+`pg-index-health` is a [multimodule Gradle](https://docs.gradle.org/current/userguide/multi_project_builds.html) project.  
 Domain model is located in a [pg-index-health-model](pg-index-health-model).
 
 Best practices:
