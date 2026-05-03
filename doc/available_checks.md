@@ -51,6 +51,7 @@ All checks can be divided into two groups:
 | 37 | Tables that have all columns besides the primary key that are nullable                                                             | static             | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_where_all_columns_nullable_except_pk.sql) |
 | 38 | Columns with [char(n) type](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don't_use_char(n))                                    | static             | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_char_type.sql)                      |
 | 39 | Tables with [inheritance](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_table_inheritance)                          | static             | not applicable        | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_inheritance.sql)                     |
+| 40 | Multicolumn foreign keys where at least one of the referencing columns is nullable                                                 | static             | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/foreign_keys_with_null_values.sql)               |
 
 ### Raw SQL queries to use with other languages
 
