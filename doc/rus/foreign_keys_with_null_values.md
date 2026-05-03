@@ -1,4 +1,4 @@
-# Проверка внешних ключей,
+# Проверка наличия составных внешних ключей с nullable колонками без опции `MATCH FULL`
 
 Если внешний ключ состоит из нескольких колонок, и часть из них может принимать значение `NULL`,
 то в эту таблицу могут добавляться данные, которые отсутсвуют в целевой (referenced) таблице.
@@ -53,7 +53,7 @@ create table demo.referencing_bad_table
 
 -- Добавление данных
 -- Из-за того, что поле rbt_value может содержать null, обе записи будут добавлены в таблицу.
--- Если бы для constraint referencing_bad_table_fk установили match full, то вторая запись не была бы добавлена.
+-- Если бы для constraint referencing_bad_table_fk установили MATCH FULL, то вторая запись не была бы добавлена.
 -- https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-FK
 insert into demo.referencing_bad_table (rbt_id, rbt_value) values (20, '20');
 insert into demo.referencing_bad_table (rbt_id, rbt_value) values (30, null);
