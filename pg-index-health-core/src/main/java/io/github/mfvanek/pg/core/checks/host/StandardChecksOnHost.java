@@ -81,7 +81,8 @@ public final class StandardChecksOnHost implements Function<PgConnection, List<D
             new TablesWherePrimaryKeyColumnsNotFirstCheckOnHost(pgConnection),
             new TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost(pgConnection),
             new ColumnsWithCharTypeCheckOnHost(pgConnection),
-            new TablesWithInheritanceCheckOnHost(pgConnection)
+            new TablesWithInheritanceCheckOnHost(pgConnection),
+            new ForeignKeysWithNullValuesCheckOnHost(pgConnection)
         );
     }
 }

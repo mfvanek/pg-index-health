@@ -107,9 +107,12 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withSerialAndForeignKeysInPartitionedTable().withDuplicatedAndIntersectedIndexesInPartitionedTable(), ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(2)
+                .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
+                    DuplicatedIndexes.of(
+                        Index.of(ctx, "dict", "dict_pkey", 16_384L),
+                        Index.of(ctx, "dict", "idx_dict_ref_type_ref_value", 16_384L)),
                     DuplicatedIndexes.of(
                         Index.of(ctx, "t1", "idx_t1_deleted_duplicate"),
                         Index.of(ctx, "t1", "idx_t1_deleted_entity_id")),

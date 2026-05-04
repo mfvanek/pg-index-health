@@ -18,6 +18,8 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnColumns
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysStatement;
@@ -33,6 +35,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedObj
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateClientsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateCustomCollationStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDictTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedCustomCollationIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedHashIndexStatement;
@@ -292,7 +295,8 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     public DatabasePopulator withSerialAndForeignKeysInPartitionedTable() {
-        return register(116, new CreatePartitionedTableWithSerialAndForeignKeysStatement());
+        return withDictTable()
+            .register(116, new CreatePartitionedTableWithSerialAndForeignKeysStatement());
     }
 
     public DatabasePopulator withDuplicatedAndIntersectedIndexesInPartitionedTable() {
@@ -308,11 +312,13 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     public DatabasePopulator withDuplicatedForeignKeysInPartitionedTable() {
-        return register(120, new AddDuplicatedForeignKeysToPartitionedTableStatement());
+        return withDictTable()
+            .register(120, new AddDuplicatedForeignKeysToPartitionedTableStatement());
     }
 
     public DatabasePopulator withIntersectedForeignKeysInPartitionedTable() {
-        return register(121, new AddIntersectedForeignKeysToPartitionedTableStatement());
+        return withDictTable()
+            .register(121, new AddIntersectedForeignKeysToPartitionedTableStatement());
     }
 
     public DatabasePopulator withDroppedColumnInPartitionedTable() {
@@ -373,6 +379,20 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withInheritance() {
         return register(146, new CreateTableWithInheritanceStatement());
+    }
+
+    public DatabasePopulator withDictTable() {
+        return register(31, new CreateDictTableStatement());
+    }
+
+    public DatabasePopulator withCompositeForeignKey() {
+        return withDictTable()
+            .register(147, new AddCompositeForeignKeyWithNullValuesStatement());
+    }
+
+    public DatabasePopulator withCompositeForeignKeyInPartitionedTable() {
+        return withDictTable()
+            .register(148, new AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement());
     }
 
     public void populate() {

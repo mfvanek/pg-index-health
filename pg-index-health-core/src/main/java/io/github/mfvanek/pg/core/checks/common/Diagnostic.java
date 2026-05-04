@@ -22,14 +22,15 @@ import java.util.function.Function;
  * @see QueryExecutor
  * @see QueryExecutors
  */
+@SuppressWarnings("PMD.ExcessivePublicCount")
 public enum Diagnostic implements CheckInfo {
 
     /**
-     * Check for indexes bloat.
+     * Check for index bloat.
      */
     BLOATED_INDEXES(StandardCheckInfo::ofBloat),
     /**
-     * Check for tables bloat.
+     * Check for table bloat.
      */
     BLOATED_TABLES(StandardCheckInfo::ofBloat),
     /**
@@ -179,7 +180,11 @@ public enum Diagnostic implements CheckInfo {
     /**
      * Check for tables with inheritance.
      */
-    TABLES_WITH_INHERITANCE;
+    TABLES_WITH_INHERITANCE,
+    /**
+     * Check for composite (multi-column) foreign keys with nullable columns that are not defined with MATCH FULL.
+     */
+    FOREIGN_KEYS_WITH_NULL_VALUES;
 
     private final CheckInfo inner;
 

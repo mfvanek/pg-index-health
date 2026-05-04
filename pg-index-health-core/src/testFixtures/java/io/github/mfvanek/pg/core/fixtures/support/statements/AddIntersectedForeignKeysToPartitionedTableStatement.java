@@ -17,8 +17,6 @@ public class AddIntersectedForeignKeysToPartitionedTableStatement extends Abstra
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "alter table if exists {schemaName}.dict add column ref_value varchar(64);",
-            "create unique index if not exists idx_dict_ref_type_ref_value on {schemaName}.dict (ref_type, ref_value);",
             """
                 alter table if exists {schemaName}.t1
                     add constraint t1_ref_type_ref_value_fk
