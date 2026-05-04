@@ -18,11 +18,6 @@ public class CreatePartitionedTableWithSerialAndForeignKeysStatement extends Abs
     protected List<String> getSqlToExecute() {
         return List.of(
             """
-                create table if not exists {schemaName}.dict(
-                    ref_type int not null primary key,
-                    description text
-                );""",
-            """
                 create table if not exists {schemaName}.t1(
                     ref_value varchar(64) not null,
                     ref_type bigserial not null references {schemaName}.dict(ref_type),

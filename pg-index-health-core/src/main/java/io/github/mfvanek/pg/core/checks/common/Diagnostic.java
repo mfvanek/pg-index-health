@@ -22,14 +22,15 @@ import java.util.function.Function;
  * @see QueryExecutor
  * @see QueryExecutors
  */
+@SuppressWarnings("PMD.ExcessivePublicCount")
 public enum Diagnostic implements CheckInfo {
 
     /**
-     * Check for indexes bloat.
+     * Check for index bloat.
      */
     BLOATED_INDEXES(StandardCheckInfo::ofBloat),
     /**
-     * Check for tables bloat.
+     * Check for table bloat.
      */
     BLOATED_TABLES(StandardCheckInfo::ofBloat),
     /**
