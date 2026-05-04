@@ -8,12 +8,10 @@
  * Licensed under the Apache License 2.0
  */
 
-rootProject.name = "pg-index-health-conventions"
+package io.github.mfvanek.pg.core.checks.host;
 
-dependencyResolutionManagement {
-    versionCatalogs {
-        create("libs") {
-            from(files("../gradle/libs.versions.toml"))
-        }
-    }
+import static org.junit.jupiter.api.Assertions.*;
+
+class ForeignKeysWithNullValuesCheckOnHostTest {
+
 }

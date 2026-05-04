@@ -179,7 +179,11 @@ public enum Diagnostic implements CheckInfo {
     /**
      * Check for tables with inheritance.
      */
-    TABLES_WITH_INHERITANCE;
+    TABLES_WITH_INHERITANCE,
+    /**
+     * Check for composite (multi-column) foreign keys with nullable columns that are not defined with MATCH FULL.
+     */
+    FOREIGN_KEYS_WITH_NULL_VALUES;
 
     private final CheckInfo inner;
 
