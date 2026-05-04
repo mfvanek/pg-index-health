@@ -131,7 +131,8 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "tables_where_primary_key_columns_not_first:3",
                         "tables_where_all_columns_nullable_except_pk:5",
                         "columns_with_char_type:4",
-                        "tables_with_inheritance:0"
+                        "tables_with_inheritance:0",
+                        "foreign_keys_with_null_values:1"
                     );
             }
         );

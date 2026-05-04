@@ -80,7 +80,8 @@ public final class StandardChecksOnCluster implements Function<HighAvailabilityP
             new TablesWherePrimaryKeyColumnsNotFirstCheckOnCluster(haPgConnection),
             new TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnCluster(haPgConnection),
             new ColumnsWithCharTypeCheckOnCluster(haPgConnection),
-            new TablesWithInheritanceCheckOnCluster(haPgConnection)
+            new TablesWithInheritanceCheckOnCluster(haPgConnection),
+            new ForeignKeysWithNullValuesCheckOnCluster(haPgConnection)
         );
     }
 }
