@@ -68,13 +68,18 @@ class ForeignKeysWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialAndForeignKeysInPartitionedTable, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withCompositeForeignKeyInPartitionedTable, ctx -> {
+            final String tableName = "referencing_bad_table_partitioned";
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type")
-                ));
+                    ForeignKey.of(ctx, tableName, "\"referencing_bad_table_partitioned-fk\"", List.of(
+                        Column.ofNotNull(ctx, tableName, "rbt_id"),
+                        Column.ofNullable(ctx, tableName, "rbt_value")
+                    ))
+                );
+        });
     }
 }

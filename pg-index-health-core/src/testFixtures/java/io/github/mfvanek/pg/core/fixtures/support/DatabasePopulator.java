@@ -19,6 +19,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnFunctio
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysStatement;
@@ -387,6 +388,11 @@ public final class DatabasePopulator implements AutoCloseable {
     public DatabasePopulator withCompositeForeignKey() {
         return withDictTable()
             .register(148, new AddCompositeForeignKeyWithNullValuesStatement());
+    }
+
+    public DatabasePopulator withCompositeForeignKeyInPartitionedTable() {
+        return withDictTable()
+            .register(149, new AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement());
     }
 
     public void populate() {
