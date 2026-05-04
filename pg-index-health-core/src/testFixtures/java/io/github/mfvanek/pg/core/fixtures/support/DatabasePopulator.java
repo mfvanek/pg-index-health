@@ -382,17 +382,17 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     public DatabasePopulator withDictTable() {
-        return register(147, new CreateDictTableStatement());
+        return register(31, new CreateDictTableStatement());
     }
 
     public DatabasePopulator withCompositeForeignKey() {
         return withDictTable()
-            .register(148, new AddCompositeForeignKeyWithNullValuesStatement());
+            .register(147, new AddCompositeForeignKeyWithNullValuesStatement());
     }
 
     public DatabasePopulator withCompositeForeignKeyInPartitionedTable() {
         return withDictTable()
-            .register(149, new AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement());
+            .register(148, new AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement());
     }
 
     public void populate() {
