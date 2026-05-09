@@ -26,7 +26,7 @@ import java.util.Objects;
  * @see TableNameAware
  * @since 0.11.0
  */
-public final class Constraint implements DbObject, ConstraintNameAware {
+public final class Constraint implements DbObject, ConstraintNameAware, Comparable<Constraint> {
 
     /**
      * A constant representing the field name for the type of constraint.
@@ -116,6 +116,18 @@ public final class Constraint implements DbObject, ConstraintNameAware {
     @Override
     public int hashCode() {
         return Objects.hash(tableName, constraintName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(final Constraint other) {
+        Objects.requireNonNull(other, "other cannot be null");
+        if (!tableName.equals(other.tableName)) {
+            return tableName.compareTo(other.tableName);
+        }
+        return constraintName.compareTo(other.constraintName);
     }
 
     /**

@@ -125,6 +125,33 @@ class ConstraintTest {
             .verify();
     }
 
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void compareToTest() {
+        final Constraint first = Constraint.ofType("t1", "c1", ConstraintType.CHECK);
+        final Constraint theSame = Constraint.ofType("t1", "c1", ConstraintType.FOREIGN_KEY); // different type!
+        final Constraint second = Constraint.ofType("t1", "c2", ConstraintType.CHECK);
+        final Constraint third = Constraint.ofType("t2", "c1", ConstraintType.CHECK);
+
+        assertThatThrownBy(() -> first.compareTo(null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("other cannot be null");
+
+        assertThat(first)
+            .isEqualByComparingTo(first)
+            .isEqualByComparingTo(theSame)
+            .isLessThan(second)
+            .isLessThan(third);
+
+        assertThat(second)
+            .isGreaterThan(first)
+            .isLessThan(third);
+
+        assertThat(third)
+            .isGreaterThan(first)
+            .isGreaterThan(second);
+    }
+
     @Test
     void getValidateSqlShouldWork() {
         assertThat(Constraint.ofType("t", "not_valid_id", ConstraintType.CHECK).getValidateSql())
