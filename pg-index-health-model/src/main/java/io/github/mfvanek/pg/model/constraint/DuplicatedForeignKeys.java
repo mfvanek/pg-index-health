@@ -27,7 +27,7 @@ import java.util.Objects;
  * @see TableNameAware
  * @since 0.13.1
  */
-public final class DuplicatedForeignKeys implements DbObject, TableNameAware, ConstraintsAware {
+public final class DuplicatedForeignKeys implements DbObject, TableNameAware, ConstraintsAware, Comparable<DuplicatedForeignKeys> {
 
     /**
      * Represents the field name used to store information about foreign keys in the context of duplicated foreign key constraints.
@@ -110,6 +110,20 @@ public final class DuplicatedForeignKeys implements DbObject, TableNameAware, Co
     @Override
     public int hashCode() {
         return Objects.hash(foreignKeys);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(final DuplicatedForeignKeys other) {
+        Objects.requireNonNull(other, "other cannot be null");
+        final String thisTableName = getTableName();
+        final String otherTableName = other.getTableName();
+        if (!thisTableName.equals(otherTableName)) {
+            return thisTableName.compareTo(otherTableName);
+        }
+        return getName().compareTo(other.getName());
     }
 
     /**
