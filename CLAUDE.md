@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this project is
 
-**pg-index-health** is an embeddable Java library and schema linter for PostgreSQL. It detects common anti-patterns in database schemas (missing indexes, bloat, bad column types, naming issues, etc.) by querying `pg_catalog`. It ships as a multi-module Gradle project with Spring Boot integration, a CLI/demo layer, and support for both Jackson 2 and Jackson 3.
+**pg-index-health** is an embeddable Java library and schema linter for PostgreSQL.
+It detects common anti-patterns in database schemas (missing indexes, bloat, bad column types, naming issues, etc.) by querying `pg_catalog`.
+It ships as a multi-module Gradle project with Spring Boot integration, a CLI/demo layer, and support for both Jackson 2 and Jackson 3.
 
 ## Build and test commands
 
@@ -58,6 +60,22 @@ git submodule foreach --recursive git pull origin master
 | `spring-boot-integration/pg-index-health-test-starter` | Spring Boot auto-configuration starter. |
 
 SQL queries live in a **git submodule** (`pg-index-health-sql`) pointing to a separate repository. Clone with `--recursive`.
+
+## Architecture
+
+All database schema checks (also referred to as diagnostics) divided into two groups:
+- Runtime checks (require statistics).
+- Static checks (do not require statistics).
+
+Runtime checks are meaningful only when executed on a live database instance in production.
+These checks require accumulated statistics and aggregate this data from all hosts in the cluster.
+
+Static checks do not require accumulated statistics and can be executed on the primary host immediately after applying migrations.
+
+To obtain statistics for runtime checks we need to execute sql-queries on all hosts in the cluster.
+For these purposes we have HighAvailabilityPgConnection.
+
+All check has two classes with -CheckOnHost and -CheckOnCluster endings.
 
 ## Implementing a new check (required steps)
 
