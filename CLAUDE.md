@@ -39,6 +39,11 @@ $env:TEST_PG_VERSION="17.6-alpine"; .\gradlew.bat build
 # Verify Javadoc compiles
 .\gradlew.bat javadoc
 
+# Run individual quality checks without a full build
+.\gradlew.bat checkstyleMain
+.\gradlew.bat pmdMain
+.\gradlew.bat spotbugsMain
+
 # Update the SQL submodule after upstream SQL changes
 git submodule foreach --recursive git pull origin master
 ```
@@ -51,7 +56,7 @@ git submodule foreach --recursive git pull origin master
 | `pg-index-health-core` | Host-level checks — each extends `AbstractCheckOnHost`. JDBC + `pg_catalog` queries. |
 | `pg-index-health` | Cluster-level checks — each extends `AbstractCheckOnCluster`. Aggregates host checks. |
 | `pg-index-health-jdbc-connection` | JDBC abstraction for HA clusters (wraps Apache DBCP2). |
-| `pg-index-health-generator` | Generates corrective SQL migrations from check results. |
+| `pg-index-health-generator` | Generates corrective SQL migrations from check results. Extend when a new check type has a natural corrective SQL migration (e.g., `CREATE INDEX`, `ALTER TABLE`). |
 | `pg-index-health-testing` | Testcontainers-based test fixtures shared across modules. |
 | `pg-index-health-logger` | Logging utilities. |
 | `pg-index-health-bom` | Bill of Materials for downstream dependency management. |
@@ -75,16 +80,18 @@ Static checks do not require accumulated statistics and can be executed on the p
 To obtain statistics for runtime checks we need to execute sql-queries on all hosts in the cluster.
 For these purposes we have HighAvailabilityPgConnection.
 
-All check has two classes with -CheckOnHost and -CheckOnCluster endings.
+All checks have two classes with -CheckOnHost and -CheckOnCluster endings.
 
 ## Implementing a new check (required steps)
 
 1. **Add SQL** — write the query in the `pg-index-health-sql` submodule repo; merge it, then update the submodule here.
-2. **Extend the domain model** (if needed) in `pg-index-health-model`. All domain classes need: a builder, JSpecify null annotations, and Jackson serializer/deserializer in both jackson modules.
-3. **Host-level check** — create a class extending `AbstractCheckOnHost<T>` in `pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/host/`. Use `NamedParametersParser.parse()` for named SQL params, and one of the standard extractors in `pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/extractors/`.
-4. **Cluster-level check** — create a class extending `AbstractCheckOnCluster<T>` in `pg-index-health/src/main/java/io/github/mfvanek/pg/health/checks/cluster/`.
-5. **Register** — add a new entry to the `Diagnostic` enum and wire it into the Spring Boot starter.
-6. **Document** — add Javadoc, update `doc/available_checks.md`.
+2. **Extend the domain model** (if needed) in `pg-index-health-model`. All domain classes need: a builder, JSpecify null annotations, and Jackson serializer/deserializer in **both** `jackson2` and `jackson3` modules.
+3. **Test fixtures** — add an `Add*Statement.java` (and a partitioned variant if applicable) in `pg-index-health-testing/src/main/java/io/github/mfvanek/pg/testing/statements/`.
+4. **Host-level check** — create a class named `*CheckOnHost` extending `AbstractCheckOnHost<T>` in `pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/host/`. Use `NamedParametersParser.parse()` for named SQL params, and one of the standard extractors in `pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/extractors/`.
+5. **Cluster-level check** — create a class named `*CheckOnCluster` extending `AbstractCheckOnCluster<T>` in `pg-index-health/src/main/java/io/github/mfvanek/pg/health/checks/cluster/`.
+6. **Register** — add a new entry to the `Diagnostic` enum in `pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/common/Diagnostic.java`, then add a `@Bean` method (with `@ConditionalOnMissingBean`) in the Spring Boot starter auto-configuration class.
+7. **Per-check doc** — create `doc/eng/<check_name>.md` with a reproduction SQL script and recommended fix. Use an existing file (e.g., `doc/eng/foreign_keys_with_null_values.md`) as a template.
+8. **Document** — add Javadoc to new classes, update the table in `doc/available_checks.md` (columns: №, Description, Type, Supports partitioning, SQL query link).
 
 ## Code quality requirements
 
@@ -103,6 +110,14 @@ The build enforces:
 - Test both ordinary tables/indexes and **partitioned** tables where applicable.
 - Test with **quoted identifiers** (e.g., `"MyTable"`).
 - Test fixtures and Testcontainers setup live in `pg-index-health-testing`.
+- Name host-level test classes `*CheckOnHostTest` and cluster-level test classes `*CheckOnClusterTest`.
+
+## Common pitfalls
+
+- **Both Jackson modules** — adding a serializer/deserializer to `jackson2` but forgetting `jackson3` (or vice versa) compiles fine but breaks one Spring Boot generation.
+- **`@ConditionalOnMissingBean` required** — every `@Bean` in the Spring Boot auto-configuration must carry this annotation; omitting it silently overrides user-provided beans.
+- **Partitioned table tests** — if a check is relevant to partitioned tables, test it explicitly; JaCoCo enforces 100% branch coverage so a missing path fails the build.
+- **Diagnostic enum + starter** — forgetting either the `Diagnostic` entry or the Spring Boot `@Bean` leaves the check invisible to the auto-configured integration.
 
 ## Null safety
 
