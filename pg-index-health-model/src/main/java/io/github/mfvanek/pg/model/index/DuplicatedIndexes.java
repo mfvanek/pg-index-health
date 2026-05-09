@@ -28,7 +28,7 @@ import java.util.Objects;
  * @author Ivan Vakhrushev
  * @see TableNameAware
  */
-public final class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware {
+public final class DuplicatedIndexes implements DbObject, TableNameAware, IndexesAware, Comparable<DuplicatedIndexes> {
 
     /**
      * Represents the field name used to store information about indexes.
@@ -134,6 +134,20 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     @Override
     public int hashCode() {
         return Objects.hash(indexes);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(final DuplicatedIndexes other) {
+        Objects.requireNonNull(other, "other cannot be null");
+        final String thisTableName = getTableName();
+        final String otherTableName = other.getTableName();
+        if (!thisTableName.equals(otherTableName)) {
+            return thisTableName.compareTo(otherTableName);
+        }
+        return getName().compareTo(other.getName());
     }
 
     /**

@@ -201,6 +201,33 @@ class DuplicatedIndexesTest {
 
     @SuppressWarnings("ConstantConditions")
     @Test
+    void compareToTest() {
+        final DuplicatedIndexes first = DuplicatedIndexes.of(Index.of("t1", "i1"), Index.of("t1", "i2"));
+        final DuplicatedIndexes theSame = DuplicatedIndexes.of(Index.of("t1", "i1"), Index.of("t1", "i2"));
+        final DuplicatedIndexes secondName = DuplicatedIndexes.of(Index.of("t1", "i3"), Index.of("t1", "i4"));
+        final DuplicatedIndexes secondTable = DuplicatedIndexes.of(Index.of("t2", "i1"), Index.of("t2", "i2"));
+
+        assertThatThrownBy(() -> first.compareTo(null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("other cannot be null");
+
+        assertThat(first)
+            .isEqualByComparingTo(first)
+            .isEqualByComparingTo(theSame)
+            .isLessThan(secondName)
+            .isLessThan(secondTable);
+
+        assertThat(secondName)
+            .isGreaterThan(first)
+            .isLessThan(secondTable);
+
+        assertThat(secondTable)
+            .isGreaterThan(first)
+            .isGreaterThan(secondName);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
     void newFactoryConstructor() {
         assertThatThrownBy(() -> DuplicatedIndexes.of(null, null))
             .isInstanceOf(NullPointerException.class)
