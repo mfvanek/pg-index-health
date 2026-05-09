@@ -27,7 +27,8 @@ class ArchitectureTest {
         classes().that().areNotInterfaces().and().implement(ResultSetExtractor.class)
             .should().haveOnlyFinalFields()
             .andShould().haveOnlyPrivateConstructors()
-            .andShould().haveModifier(JavaModifier.FINAL);
+            .andShould().haveModifier(JavaModifier.FINAL)
+            .as("ResultSetExtractor implementations must be final, immutable, and use static factory methods instead of public constructors");
 
     @ArchTest
     static final ArchRule CHECK_ON_HOST_CLASSES_SHOULD_RESIDE_IN_CORRECT_PACKAGE =
