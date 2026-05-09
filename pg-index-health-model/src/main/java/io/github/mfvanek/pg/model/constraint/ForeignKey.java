@@ -29,7 +29,7 @@ import java.util.Objects;
  * @see TableNameAware
  * @see Constraint
  */
-public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsAware {
+public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsAware, Comparable<ForeignKey> {
 
     /**
      * Represents the name of the field that defines a database constraint.
@@ -147,6 +147,15 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
             constraint.innerToString() +
             ", " + COLUMNS_FIELD + '=' + columns +
             '}';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(final ForeignKey other) {
+        Objects.requireNonNull(other, "other cannot be null");
+        return constraint.compareTo(other.constraint);
     }
 
     private static Constraint asConstraint(final String tableName,

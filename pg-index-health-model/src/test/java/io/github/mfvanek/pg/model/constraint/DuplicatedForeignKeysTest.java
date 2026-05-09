@@ -111,6 +111,37 @@ class DuplicatedForeignKeysTest {
             .verify();
     }
 
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void compareToTest() {
+        final DuplicatedForeignKeys first = prepare();
+        final DuplicatedForeignKeys theSame = prepare();
+        final DuplicatedForeignKeys secondName = DuplicatedForeignKeys.of(
+            ForeignKey.ofNotNullColumn("t1", "c3", "col2"),
+            ForeignKey.ofNotNullColumn("t1", "c4", "col2"));
+        final DuplicatedForeignKeys secondTable = DuplicatedForeignKeys.of(
+            ForeignKey.ofNotNullColumn("t2", "c1", "col1"),
+            ForeignKey.ofNotNullColumn("t2", "c2", "col1"));
+
+        assertThatThrownBy(() -> first.compareTo(null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("other cannot be null");
+
+        assertThat(first)
+            .isEqualByComparingTo(first)
+            .isEqualByComparingTo(theSame)
+            .isLessThan(secondName)
+            .isLessThan(secondTable);
+
+        assertThat(secondName)
+            .isGreaterThan(first)
+            .isLessThan(secondTable);
+
+        assertThat(secondTable)
+            .isGreaterThan(first)
+            .isGreaterThan(secondName);
+    }
+
     @NonNull
     private DuplicatedForeignKeys prepare() {
         return DuplicatedForeignKeys.of(

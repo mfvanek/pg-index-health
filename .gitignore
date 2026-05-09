@@ -35,3 +35,4 @@ out/
 *.iml
 *.ipr
 *.iws
+/.claude/settings.local.json

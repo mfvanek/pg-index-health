@@ -25,7 +25,7 @@ import java.util.Objects;
  * @author Blohny
  * @since 0.12.0
  */
-public final class SequenceState implements DbObject, SequenceNameAware {
+public final class SequenceState implements DbObject, SequenceNameAware, Comparable<SequenceState> {
 
     /**
      * Represents the field name for storing the data type of the sequence.
@@ -120,6 +120,15 @@ public final class SequenceState implements DbObject, SequenceNameAware {
     @Override
     public int hashCode() {
         return Objects.hash(sequenceName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(final SequenceState other) {
+        Objects.requireNonNull(other, "other cannot be null");
+        return sequenceName.compareTo(other.sequenceName);
     }
 
     /**
