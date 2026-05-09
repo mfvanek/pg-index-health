@@ -106,4 +106,24 @@ class SequenceStateTest {
             .withIgnoredFields("remainingPercentage")
             .verify();
     }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void compareToTest() {
+        final SequenceState first = SequenceState.of("accounts_seq", "bigint", 100.0);
+        final SequenceState theSame = SequenceState.of("accounts_seq", "integer", 50.0); // different type and percentage!
+        final SequenceState second = SequenceState.of("clients_seq", "bigint", 100.0);
+
+        assertThatThrownBy(() -> first.compareTo(null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("other cannot be null");
+
+        assertThat(first)
+            .isEqualByComparingTo(first)
+            .isEqualByComparingTo(theSame)
+            .isLessThan(second);
+
+        assertThat(second)
+            .isGreaterThan(first);
+    }
 }
