@@ -210,4 +210,31 @@ class ForeignKeyTest {
             .withIgnoredFields(ColumnsAware.COLUMNS_FIELD)
             .verify();
     }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void compareToTest() {
+        final ForeignKey first = ForeignKey.ofNotNullColumn("t1", "c1", "col1");
+        final ForeignKey theSame = ForeignKey.ofNotNullColumn("t1", "c1", "col2"); // different column!
+        final ForeignKey secondName = ForeignKey.ofNotNullColumn("t1", "c2", "col1");
+        final ForeignKey secondTable = ForeignKey.ofNotNullColumn("t2", "c1", "col1");
+
+        assertThatThrownBy(() -> first.compareTo(null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("other cannot be null");
+
+        assertThat(first)
+            .isEqualByComparingTo(first)
+            .isEqualByComparingTo(theSame)
+            .isLessThan(secondName)
+            .isLessThan(secondTable);
+
+        assertThat(secondName)
+            .isGreaterThan(first)
+            .isLessThan(secondTable);
+
+        assertThat(secondTable)
+            .isGreaterThan(first)
+            .isGreaterThan(secondName);
+    }
 }
