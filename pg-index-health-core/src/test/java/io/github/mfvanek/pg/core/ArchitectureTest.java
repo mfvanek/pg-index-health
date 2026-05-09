@@ -15,6 +15,7 @@ import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
+import io.github.mfvanek.pg.core.checks.host.AbstractCheckOnHost;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 
@@ -27,4 +28,12 @@ class ArchitectureTest {
             .should().haveOnlyFinalFields()
             .andShould().haveOnlyPrivateConstructors()
             .andShould().haveModifier(JavaModifier.FINAL);
+
+    @ArchTest
+    static final ArchRule CHECK_ON_HOST_CLASSES_SHOULD_RESIDE_IN_CORRECT_PACKAGE =
+        classes().that().areNotInterfaces()
+            .and().doNotHaveModifier(JavaModifier.ABSTRACT)
+            .and().areAssignableTo(AbstractCheckOnHost.class)
+            .should().resideInAPackage("..checks.host")
+            .as("All concrete host-level check classes should reside in the checks.host package");
 }
