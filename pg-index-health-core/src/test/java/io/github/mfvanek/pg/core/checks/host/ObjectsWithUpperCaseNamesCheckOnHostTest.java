@@ -39,7 +39,7 @@ class ObjectsWithUpperCaseNamesCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withBadlyNamedObjects(), ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withBadlyNamedObjects, ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .isEmpty();

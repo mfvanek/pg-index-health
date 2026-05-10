@@ -18,6 +18,10 @@ public class CreateBadlyNamedObjectsStatement extends AbstractDbStatement {
     protected List<String> getSqlToExecute() {
         return List.of(
             """
+                create table if not exists {schemaName}."UpperCaseTable"(
+                    "UpperCaseId" int
+                );""",
+            """
                 create table if not exists {schemaName}."bad-table"(
                     "bad-id" serial not null primary key
                 );""",
