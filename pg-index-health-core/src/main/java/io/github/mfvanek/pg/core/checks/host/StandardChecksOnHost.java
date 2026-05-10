@@ -71,7 +71,6 @@ public final class StandardChecksOnHost implements Function<PgConnection, List<D
             new TablesWithZeroOrOneColumnCheckOnHost(pgConnection),
             new ObjectsNotFollowingNamingConventionCheckOnHost(pgConnection),
             new ColumnsNotFollowingNamingConventionCheckOnHost(pgConnection),
-            new ObjectsWithUpperCaseNamesCheckOnHost(pgConnection),
             new PrimaryKeysWithVarcharCheckOnHost(pgConnection),
             new ColumnsWithFixedLengthVarcharCheckOnHost(pgConnection),
             new IndexesWithUnnecessaryWhereClauseCheckOnHost(pgConnection),
