@@ -44,7 +44,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBadlyNamedObjects(), ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(18)
+                .hasSize(19)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Column.ofNotNull(ctx, "accounts", "account_balance"),
