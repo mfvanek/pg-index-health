@@ -3,17 +3,23 @@
 **Java 21** or above is required to build the project, but we still use Java 17 as a baseline.
 
 1. Clone the repository
-
-       git clone --recursive https://github.com/mfvanek/pg-index-health.git
-       cd pg-index-health
-
+   ```shell
+   git clone --recursive https://github.com/mfvanek/pg-index-health.git
+   cd pg-index-health
+   ```
 2. Build with Gradle
-    * On Linux and macOS: `./gradlew build`
-    * On Windows: `.\gradlew.bat build`
-    
-   This will build the project and run tests.  
+   ```shell
+   ./gradlew build
+   ```
+
+   This will build the project: run all tests (unit and [mutation](https://pitest.org/))
+   and check [code coverage](https://www.jacoco.org/jacoco/trunk/index.html).  
    **You need to have [Docker](https://www.docker.com/) up and running**.
-    
+3. For fast verification you can skip mutation testing and `pitest` task
+   ```shell
+   ./gradlew test
+   ```
+
 By default, [PostgreSQL 18.1 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
 Set `TEST_PG_VERSION` environment variable to use any of another available PostgreSQL version:
 ```

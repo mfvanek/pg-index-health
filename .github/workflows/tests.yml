@@ -48,10 +48,10 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
                     STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
-                run: ./gradlew build sonarqube --info
+                run: ./gradlew build sonarqube # run all tests and checks
             -   name: Build with Gradle
                 if: matrix.pg_version != '17.7'
-                run: ./gradlew build
+                run: ./gradlew check # do not run mutation tests
             -   name: Upload coverage to Codecov
                 if: matrix.pg_version == '17.7'
                 uses: codecov/codecov-action@v6

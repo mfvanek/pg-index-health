@@ -13,36 +13,29 @@ It ships as a multi-module Gradle project with Spring Boot integration, a CLI/de
 Docker must be running — tests use Testcontainers (PostgreSQL in Docker).
 
 ```bash
-# Full build (tests + all quality checks)
-.\gradlew.bat build                              # Windows
-./gradlew build                                  # Linux/macOS
+# Full build (unit tests + mutation tests + all quality checks)
+./gradlew build
 
-# Build without tests
-.\gradlew.bat build -x test
-
-# Run all tests
-.\gradlew.bat test
+# Run only unit tests (without mutation tests)
+./gradlew test
 
 # Run tests in one module
-.\gradlew.bat :pg-index-health-model:test
+./gradlew :pg-index-health-model:test
 
 # Run a specific test class or method
-.\gradlew.bat test --tests "*IndexesCheckOnHostTest"
-.\gradlew.bat test --tests "*IndexesCheckOnHostTest.someMethod"
-
-# Change PostgreSQL version (default: 18.1)
-$env:TEST_PG_VERSION="17.6-alpine"; .\gradlew.bat build
+./gradlew test --tests "*IndexesCheckOnHostTest"
+./gradlew test --tests "*IndexesCheckOnHostTest.someMethod"
 
 # Mutation tests
-.\gradlew.bat pitest
+./gradlew pitest
 
 # Verify Javadoc compiles
-.\gradlew.bat javadoc
+./gradlew javadoc
 
 # Run individual quality checks without a full build
-.\gradlew.bat checkstyleMain
-.\gradlew.bat pmdMain
-.\gradlew.bat spotbugsMain
+./gradlew checkstyleMain
+./gradlew pmdMain
+./gradlew spotbugsMain
 
 # Update the SQL submodule after upstream SQL changes
 git submodule foreach --recursive git pull origin master
