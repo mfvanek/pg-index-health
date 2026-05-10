@@ -92,6 +92,13 @@ Implement a new class extending [AbstractCheckOnCluster](pg-index-health/src/mai
    ```
 2. Update [available_checks.md](doc/available_checks.md) and add information about the new check
 
+### Register the new check
+
+Register the new check in the standard check lists so it is included in the default set:
+
+* [StandardChecksOnHost](pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/host/StandardChecksOnHost.java) — add a new instance to the `List.of(...)` in `apply(PgConnection)`.
+* [StandardChecksOnCluster](pg-index-health/src/main/java/io/github/mfvanek/pg/health/checks/cluster/StandardChecksOnCluster.java) — add a new instance to the `List.of(...)` in `apply(HighAvailabilityPgConnection)`.
+
 ### Further steps
 
 1. Update [Spring Boot starter](spring-boot-integration%2Fpg-index-health-test-starter).

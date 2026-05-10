@@ -70,6 +70,7 @@ public final class StandardChecksOnCluster implements Function<HighAvailabilityP
             new TablesWithZeroOrOneColumnCheckOnCluster(haPgConnection),
             new ObjectsNotFollowingNamingConventionCheckOnCluster(haPgConnection),
             new ColumnsNotFollowingNamingConventionCheckOnCluster(haPgConnection),
+            new ObjectsWithUpperCaseNamesCheckOnCluster(haPgConnection),
             new PrimaryKeysWithVarcharCheckOnCluster(haPgConnection),
             new ColumnsWithFixedLengthVarcharCheckOnCluster(haPgConnection),
             new IndexesWithUnnecessaryWhereClauseCheckOnCluster(haPgConnection),
