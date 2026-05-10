@@ -36,6 +36,7 @@ import io.github.mfvanek.pg.core.checks.host.IntersectedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.InvalidIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.NotValidConstraintsCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ObjectsNotFollowingNamingConventionCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ObjectsWithUpperCaseNamesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PossibleObjectNameOverflowCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithSerialTypesCheckOnHost;
@@ -257,6 +258,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public ObjectsNotFollowingNamingConventionCheckOnHost objectsNotFollowingNamingConventionCheckOnHost(final PgConnection pgConnection) {
         return new ObjectsNotFollowingNamingConventionCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(ObjectsWithUpperCaseNamesCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public ObjectsWithUpperCaseNamesCheckOnHost objectsWithUpperCaseNamesCheckOnHost(final PgConnection pgConnection) {
+        return new ObjectsWithUpperCaseNamesCheckOnHost(pgConnection);
     }
 
     @Bean

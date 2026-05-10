@@ -138,6 +138,10 @@ public enum Diagnostic implements CheckInfo {
      */
     COLUMNS_NOT_FOLLOWING_NAMING_CONVENTION,
     /**
+     * Check for objects whose names contain uppercase letters.
+     */
+    OBJECTS_WITH_UPPER_CASE_NAMES,
+    /**
      * Check for primary keys with columns of a fixed length {@code varchar} type.
      */
     PRIMARY_KEYS_WITH_VARCHAR,
