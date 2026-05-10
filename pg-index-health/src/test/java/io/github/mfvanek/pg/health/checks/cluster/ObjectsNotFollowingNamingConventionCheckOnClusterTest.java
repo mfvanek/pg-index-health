@@ -54,6 +54,7 @@ class ObjectsNotFollowingNamingConventionCheckOnClusterTest extends DatabaseAwar
                 AnyObject.ofType(ctx, "\"bad-table_pkey\"", PgObjectType.INDEX),
                 AnyObject.ofType(ctx, "\"accounts-materialized-view-with-length-63-1234567890-1234567890\"", PgObjectType.MATERIALIZED_VIEW),
                 AnyObject.ofType(ctx, "\"bad-table_bad-id_seq\"", PgObjectType.SEQUENCE),
+                AnyObject.ofType(ctx, "\"UpperCaseTable\"", PgObjectType.TABLE),
                 AnyObject.ofType(ctx, "\"bad-table\"", PgObjectType.TABLE),
                 AnyObject.ofType(ctx, "\"bad-table-two\"", PgObjectType.TABLE)
             };
@@ -67,12 +68,12 @@ class ObjectsNotFollowingNamingConventionCheckOnClusterTest extends DatabaseAwar
 
             assertThat(check)
                 .executing(ctx)
-                .hasSize(isNotNullConstraintsSupported() ? 12 : 10)
+                .hasSize(isNotNullConstraintsSupported() ? 13 : 11)
                 .containsExactlyInAnyOrder(expected);
 
             assertThat(check)
                 .executing(ctx, SkipDbObjectsByNamePredicate.of(ctx, List.of("\"bad-table\"", "\"bad-add\"")))
-                .hasSize(isNotNullConstraintsSupported() ? 10 : 8);
+                .hasSize(isNotNullConstraintsSupported() ? 11 : 9);
         });
     }
 

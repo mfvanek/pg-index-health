@@ -45,15 +45,16 @@ class ColumnsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
         executeTestOnDatabase(schemaName, DatabasePopulator::withBadlyNamedObjects, ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(2)
+                .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\""),
-                    Column.ofNotNull(ctx, "\"bad-table-two\"", "\"bad-ref-id\"")
+                    Column.ofNotNull(ctx, "\"bad-table-two\"", "\"bad-ref-id\""),
+                    Column.ofNullable(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\"")
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("\"bad-table\"", "\"bad-table-two\"")))
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("\"bad-table\"", "\"bad-table-two\"", "\"UpperCaseTable\"")))
                 .isEmpty();
         });
     }
