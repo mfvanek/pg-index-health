@@ -19,6 +19,7 @@ import io.github.mfvanek.pg.model.table.Table;
  * Check for tables without description on a specific host.
  *
  * @author Ivan Vakhrushev
+ * @see <a href="https://www.postgresql.org/docs/current/sql-comment.html">SQL Commands - COMMENT</a>
  * @since 0.6.0
  */
 public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Table> {

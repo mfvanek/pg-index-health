@@ -17,8 +17,10 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
 
 /**
  * Check for columns with {@code money} type on a specific host.
+ * These are candidates for conversion to the {@code numeric} type.
  *
  * @author Ivan Vakhrushev
+ * @see <a href="https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_money">Do not use money</a>
  * @since 0.20.1
  */
 public class ColumnsWithMoneyTypeCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {

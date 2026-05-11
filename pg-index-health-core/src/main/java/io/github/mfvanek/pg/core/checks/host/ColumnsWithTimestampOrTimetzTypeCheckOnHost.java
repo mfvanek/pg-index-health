@@ -17,8 +17,11 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
 
 /**
  * Check for columns with {@code timestamp} or {@code timetz} type on a specific host.
+ * These are candidates for conversion to the {@code timestamptz} type.
  *
  * @author Ivan Vakhrushev
+ * @see <a href="https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_timestamp_.28without_time_zone.29">Don't use timestamp (without time zone)</a>
+ * @see <a href="https://wiki.postgresql.org/wiki/Don't_Do_This#Don't_use_timetz">Don't use timetz</a>
  * @since 0.20.3
  */
 public class ColumnsWithTimestampOrTimetzTypeCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {

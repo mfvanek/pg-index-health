@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
 
 /**
  * Check for columns with a fixed length varchar type on a specific host.
+ * These are candidates for conversion to the {@code text} type.
  *
  * @author Diana Gilfanova
  * @since 0.14.6

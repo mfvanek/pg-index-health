@@ -24,6 +24,7 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
  *
  * @author Ivan Vakhrushev
  * @see <a href="https://www.postgresql.org/docs/current/datatype-character.html">Character Types </a>
+ * @see <a href="https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don't_use_char(n)">Do not use char(n)</a>
  * @since 0.30.1
  */
 public class ColumnsWithCharTypeCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {

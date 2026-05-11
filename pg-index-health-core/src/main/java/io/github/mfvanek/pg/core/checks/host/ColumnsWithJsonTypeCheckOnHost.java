@@ -17,8 +17,10 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
 
 /**
  * Check for columns with {@code JSON} type on a specific host.
+ * These are candidates for conversion to the {@code jsonb} type.
  *
  * @author Ivan Vakhrushev
+ * @see <a href="https://www.postgresql.org/docs/current/datatype-json.html">JSON Types</a>
  * @since 0.6.1
  */
 public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {

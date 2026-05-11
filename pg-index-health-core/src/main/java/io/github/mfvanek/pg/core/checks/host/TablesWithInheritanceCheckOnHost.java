@@ -19,6 +19,7 @@ import io.github.mfvanek.pg.model.table.Table;
  * Check for tables with inheritance on a specific host.
  *
  * @author Ivan Vakhrushev
+ * @see <a href="https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_table_inheritance">Don't use table inheritance</a>
  * @since 0.30.1
  */
 public class TablesWithInheritanceCheckOnHost extends AbstractCheckOnHost<Table> {
