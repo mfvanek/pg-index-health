@@ -22,6 +22,8 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
  * For example, a column with the {@code integer} type should refer to a column with the {@code integer} type.
  * This eliminates unnecessary conversions at the DBMS level and in the application code,
  * and reduces the number of errors that may appear due to type inconsistencies in the future.
+ * <p>
+ * For multi-column constraints returns only columns with differences.
  *
  * @author Ivan Vakhrushev
  * @see <a href="https://www.postgresql.org/docs/current/catalog-pg-constraint.html">pg_constraint</a>

@@ -17,6 +17,9 @@ import io.github.mfvanek.pg.model.index.IndexWithBloat;
 
 /**
  * Check for indexes bloat on a specific host.
+ * <p>
+ * Note: The database user on whose behalf this check will be executed
+ * has to have read permissions for the corresponding tables.
  *
  * @author Ivan Vakhrushev
  * @since 0.6.0

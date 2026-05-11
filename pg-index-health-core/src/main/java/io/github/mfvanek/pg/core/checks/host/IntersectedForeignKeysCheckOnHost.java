@@ -17,6 +17,8 @@ import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 
 /**
  * Check for intersected (partially identical) foreign keys on a specific host.
+ * <p>
+ * Returns results except completely identical foreign keys (see {@link DuplicatedForeignKeysCheckOnHost}).
  *
  * @author Ivan Vakhrushev
  * @see DuplicatedForeignKeysCheckOnHost

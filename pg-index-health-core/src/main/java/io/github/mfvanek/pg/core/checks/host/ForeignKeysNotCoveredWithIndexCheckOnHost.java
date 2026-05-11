@@ -17,6 +17,8 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
 
 /**
  * Check for foreign keys without associated indexes on a specific host.
+ * <p>
+ * For multi-column constraints returns all columns.
  *
  * @author Ivan Vakhrushev
  * @since 0.6.0
