@@ -18,6 +18,7 @@ import io.github.mfvanek.pg.model.predicates.SkipFlywayTablesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipLiquibaseTablesPredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
+import io.github.mfvanek.pg.spring.postgres.checks.custom.CustomChecksConfig;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(classes = CustomChecksConfig.class)
 @ActiveProfiles("test")
 class DatabaseStructureStaticAnalysisTest {
 
@@ -39,7 +40,7 @@ class DatabaseStructureStaticAnalysisTest {
     @Test
     void checksShouldWork() {
         assertThat(checks)
-            .hasSameSizeAs(Diagnostic.values());
+            .hasSize(Diagnostic.values().length + 2); // we have two additional checks
 
         // Predicates allow you to customize the list of permanent exceptions for your project.
         // Just filter out the database objects that you definitely don't want to see in the check results.
