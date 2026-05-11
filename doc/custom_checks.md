@@ -44,7 +44,8 @@ public class AllDateTimeColumnsShouldEndWithAtCheckOnHost extends AbstractCheckO
 - Come up with a unique name for the new check.
 - Write the appropriate JDBC-compatible SQL query.
   In the example above, we use the `NamedParametersParser.parse()` method to replace the named parameter `:schema_name_param` with a `?` placeholder.
-- Pass a `ResultSetExtractor` as the fourth constructor argument to convert query results to domain objects. You can use one of the [standard extractors](../pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/extractors).
+- Pass a `ResultSetExtractor` as the fourth constructor argument to convert query results to domain objects.
+  You can use one of the [standard extractors](../pg-index-health-core/src/main/java/io/github/mfvanek/pg/core/checks/extractors).
 
 More examples you can find in the [pg-index-health-demo](https://github.com/mfvanek/pg-index-health-demo) project.
 
