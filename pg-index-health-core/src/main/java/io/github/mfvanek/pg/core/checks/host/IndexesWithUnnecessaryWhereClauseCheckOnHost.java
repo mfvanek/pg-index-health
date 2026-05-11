@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.IndexWithColumnsExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
-
-import java.util.List;
 
 /**
  * Check for indexes with unnecessary where-clause on a not null column on a specific host.
@@ -33,16 +30,5 @@ public class IndexesWithUnnecessaryWhereClauseCheckOnHost extends AbstractCheckO
      */
     public IndexesWithUnnecessaryWhereClauseCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_UNNECESSARY_WHERE_CLAUSE, IndexWithColumnsExtractor.of());
-    }
-
-    /**
-     * Returns indexes with unnecessary where-clause on not null column in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of indexes with unnecessary where-clause on the not null column
-     */
-    @Override
-    protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

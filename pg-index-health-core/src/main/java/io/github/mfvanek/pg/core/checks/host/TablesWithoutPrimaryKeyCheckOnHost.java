@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
-
-import java.util.List;
 
 /**
  * Check for tables without a primary key on a specific host.
@@ -33,16 +30,5 @@ public class TablesWithoutPrimaryKeyCheckOnHost extends AbstractCheckOnHost<Tabl
      */
     public TablesWithoutPrimaryKeyCheckOnHost(final PgConnection pgConnection) {
         super(Table.class, pgConnection, Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, TableExtractor.of());
-    }
-
-    /**
-     * Returns tables without a primary key in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of tables without a primary key
-     */
-    @Override
-    protected List<Table> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

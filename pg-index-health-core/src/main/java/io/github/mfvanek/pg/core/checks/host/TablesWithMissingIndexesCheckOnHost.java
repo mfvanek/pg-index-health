@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.TableWithMissingIndexExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.TableWithMissingIndex;
-
-import java.util.List;
 
 /**
  * Check for tables with potentially missing indexes on a specific host.
@@ -33,16 +30,5 @@ public class TablesWithMissingIndexesCheckOnHost extends AbstractCheckOnHost<Tab
      */
     public TablesWithMissingIndexesCheckOnHost(final PgConnection pgConnection) {
         super(TableWithMissingIndex.class, pgConnection, Diagnostic.TABLES_WITH_MISSING_INDEXES, TableWithMissingIndexExtractor.of());
-    }
-
-    /**
-     * Returns tables with potentially missing indexes in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of tables with potentially missing indexes
-     */
-    @Override
-    protected List<TableWithMissingIndex> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

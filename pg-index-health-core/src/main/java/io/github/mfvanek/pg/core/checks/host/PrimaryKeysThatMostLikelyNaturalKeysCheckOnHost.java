@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.IndexWithColumnsExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
-
-import java.util.List;
 
 /**
  * Check for primary keys that are the most likely natural keys on a specific host.
@@ -36,16 +33,5 @@ public class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost extends AbstractChe
      */
     public PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost(final PgConnection pgConnection) {
         super(IndexWithColumns.class, pgConnection, Diagnostic.PRIMARY_KEYS_THAT_MOST_LIKELY_NATURAL_KEYS, IndexWithColumnsExtractor.of());
-    }
-
-    /**
-     * Returns primary keys that are most likely natural keys in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of primary keys that are most likely natural keys
-     */
-    @Override
-    protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

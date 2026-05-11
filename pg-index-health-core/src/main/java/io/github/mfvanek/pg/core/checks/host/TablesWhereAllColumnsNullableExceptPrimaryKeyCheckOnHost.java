@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
-
-import java.util.List;
 
 /**
  * Check for tables that have all columns besides the primary key that are nullable on a specific host.
@@ -35,16 +32,5 @@ public class TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost extends Ab
      */
     public TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost(final PgConnection pgConnection) {
         super(Table.class, pgConnection, Diagnostic.TABLES_WHERE_ALL_COLUMNS_NULLABLE_EXCEPT_PK, TableExtractor.of());
-    }
-
-    /**
-     * Returns tables that have all columns besides the primary key that are nullable in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema; must not be null
-     * @return list of tables that have all columns besides the primary key that are nullable
-     */
-    @Override
-    protected List<Table> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

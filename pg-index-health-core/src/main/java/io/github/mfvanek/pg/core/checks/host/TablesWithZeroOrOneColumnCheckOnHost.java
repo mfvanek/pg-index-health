@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.TableWithColumnsExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
-
-import java.util.List;
 
 /**
  * Check for tables with zero or one columns on a specific host.
@@ -34,16 +31,5 @@ public class TablesWithZeroOrOneColumnCheckOnHost extends AbstractCheckOnHost<Ta
      */
     public TablesWithZeroOrOneColumnCheckOnHost(final PgConnection pgConnection) {
         super(TableWithColumns.class, pgConnection, Diagnostic.TABLES_WITH_ZERO_OR_ONE_COLUMN, TableWithColumnsExtractor.of());
-    }
-
-    /**
-     * Returns tables with zero or one column in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of tables with zero or one column
-     */
-    @Override
-    protected List<TableWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

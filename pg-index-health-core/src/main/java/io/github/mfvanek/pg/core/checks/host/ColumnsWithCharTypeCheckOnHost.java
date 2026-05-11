@@ -14,9 +14,6 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
 import io.github.mfvanek.pg.model.column.ColumnWithType;
-import io.github.mfvanek.pg.model.context.PgContext;
-
-import java.util.List;
 
 /**
  * Check for columns of type {@code char}, {@code char(n)}, {@code character(n)} or {@code bpchar(n)} on a specific host.
@@ -38,18 +35,5 @@ public class ColumnsWithCharTypeCheckOnHost extends AbstractCheckOnHost<ColumnWi
      */
     public ColumnsWithCharTypeCheckOnHost(final PgConnection pgConnection) {
         super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_CHAR_TYPE, ColumnWithTypeExtractor.of());
-    }
-
-    /**
-     * Returns columns with a {@code character} type in the specified schema.
-     * These are candidates for conversion to the {@code text} type.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of columns with a {@code character} type
-     * @see <a href="https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don't_use_char(n)">Do not use char(n)</a>
-     */
-    @Override
-    protected List<ColumnWithType> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

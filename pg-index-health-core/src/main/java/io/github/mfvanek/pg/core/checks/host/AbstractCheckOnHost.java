@@ -126,12 +126,14 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
 
     /**
      * Executes the check in the specified schema.
-     * All child classes must implement this method.
+     * Subclasses may override this method to provide custom check logic.
      *
      * @param pgContext check's context with the specified schema; must not be null
      * @return list of deviations from the specified rule
      */
-    protected abstract List<T> doCheck(PgContext pgContext);
+    protected List<T> doCheck(final PgContext pgContext) {
+        return executeQuery(pgContext, rowMapper);
+    }
 
     /**
      * Executes a query associated with a diagnostic and extracts the result.

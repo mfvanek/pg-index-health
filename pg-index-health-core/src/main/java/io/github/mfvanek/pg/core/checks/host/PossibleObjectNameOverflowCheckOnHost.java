@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.AnyObjectExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
-
-import java.util.List;
 
 /**
  * Check for objects whose names have a length of {@code max_identifier_length} (usually it is 63) on a specific host.
@@ -42,16 +39,5 @@ public class PossibleObjectNameOverflowCheckOnHost extends AbstractCheckOnHost<A
      */
     public PossibleObjectNameOverflowCheckOnHost(final PgConnection pgConnection) {
         super(AnyObject.class, pgConnection, Diagnostic.POSSIBLE_OBJECT_NAME_OVERFLOW, AnyObjectExtractor.of());
-    }
-
-    /**
-     * Returns objects whose names have a length of {@code max_identifier_length} in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema; must not be null
-     * @return list of objects whose names have a length of {@code max_identifier_length}
-     */
-    @Override
-    protected List<AnyObject> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

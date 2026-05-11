@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
-
-import java.util.List;
 
 /**
  * Check for tables with inheritance on a specific host.
@@ -33,17 +30,5 @@ public class TablesWithInheritanceCheckOnHost extends AbstractCheckOnHost<Table>
      */
     public TablesWithInheritanceCheckOnHost(final PgConnection pgConnection) {
         super(Table.class, pgConnection, Diagnostic.TABLES_WITH_INHERITANCE, TableExtractor.of());
-    }
-
-    /**
-     * Returns tables that use inheritance in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of tables with inheritance
-     * @see <a href="https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_table_inheritance">Don't use table inheritance</a>
-     */
-    @Override
-    protected List<Table> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.StoredFunctionExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.function.StoredFunction;
-
-import java.util.List;
 
 /**
  * Check for procedures/functions without description on a specific host.
@@ -33,16 +30,5 @@ public class FunctionsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<
      */
     public FunctionsWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
         super(StoredFunction.class, pgConnection, Diagnostic.FUNCTIONS_WITHOUT_DESCRIPTION, StoredFunctionExtractor.of());
-    }
-
-    /**
-     * Returns procedures/functions without description (comment) in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of procedures/functions without description
-     */
-    @Override
-    protected List<StoredFunction> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

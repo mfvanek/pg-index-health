@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.UnusedIndexExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
-
-import java.util.List;
 
 /**
  * Check for unused indexes on a specific host.
@@ -33,16 +30,5 @@ public class UnusedIndexesCheckOnHost extends AbstractCheckOnHost<UnusedIndex> {
      */
     public UnusedIndexesCheckOnHost(final PgConnection pgConnection) {
         super(UnusedIndex.class, pgConnection, Diagnostic.UNUSED_INDEXES, UnusedIndexExtractor.of());
-    }
-
-    /**
-     * Returns unused indexes in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of unused indexes
-     */
-    @Override
-    protected List<UnusedIndex> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

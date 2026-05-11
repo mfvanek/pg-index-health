@@ -14,9 +14,6 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
 import io.github.mfvanek.pg.model.column.ColumnWithType;
-import io.github.mfvanek.pg.model.context.PgContext;
-
-import java.util.List;
 
 /**
  * Check for columns with {@code timestamp} or {@code timetz} type on a specific host.
@@ -33,19 +30,5 @@ public class ColumnsWithTimestampOrTimetzTypeCheckOnHost extends AbstractCheckOn
      */
     public ColumnsWithTimestampOrTimetzTypeCheckOnHost(final PgConnection pgConnection) {
         super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_TIMESTAMP_OR_TIMETZ_TYPE, ColumnWithTypeExtractor.of());
-    }
-
-    /**
-     * Returns columns with {@code timestamp} or {@code timetz} type in the specified schema.
-     * These are candidates for conversion to the {@code timestamptz} type.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of columns with timestamp or timetz type
-     * @see <a href="https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_timestamp_.28without_time_zone.29">Don't use timestamp (without time zone)</a>
-     * @see <a href="https://wiki.postgresql.org/wiki/Don't_Do_This#Don't_use_timetz">Don't use timetz</a>
-     */
-    @Override
-    protected List<ColumnWithType> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

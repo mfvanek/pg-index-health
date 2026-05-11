@@ -14,9 +14,6 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
 import io.github.mfvanek.pg.model.column.ColumnWithType;
-import io.github.mfvanek.pg.model.context.PgContext;
-
-import java.util.List;
 
 /**
  * Check for columns with {@code JSON} type on a specific host.
@@ -33,18 +30,5 @@ public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<ColumnWi
      */
     public ColumnsWithJsonTypeCheckOnHost(final PgConnection pgConnection) {
         super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_JSON_TYPE, ColumnWithTypeExtractor.of());
-    }
-
-    /**
-     * Returns columns with JSON type in the specified schema.
-     * These are candidates for conversion to the {@code jsonb} type.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of columns with JSON type
-     * @see <a href="https://www.postgresql.org/docs/current/datatype-json.html">JSON Types</a>
-     */
-    @Override
-    protected List<ColumnWithType> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }

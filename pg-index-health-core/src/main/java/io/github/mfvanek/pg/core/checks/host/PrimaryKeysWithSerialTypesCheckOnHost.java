@@ -14,9 +14,6 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.ColumnWithSerialTypeExtractor;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
-import io.github.mfvanek.pg.model.context.PgContext;
-
-import java.util.List;
 
 /**
  * Check for primary keys columns with serial types (smallserial/serial/bigserial) on a specific host.
@@ -35,16 +32,5 @@ public class PrimaryKeysWithSerialTypesCheckOnHost extends AbstractCheckOnHost<C
      */
     public PrimaryKeysWithSerialTypesCheckOnHost(final PgConnection pgConnection) {
         super(ColumnWithSerialType.class, pgConnection, Diagnostic.PRIMARY_KEYS_WITH_SERIAL_TYPES, ColumnWithSerialTypeExtractor.of());
-    }
-
-    /**
-     * Returns primary keys with columns of serial types in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema; must not be null
-     * @return list of primary keys with columns of serial types
-     */
-    @Override
-    protected List<ColumnWithSerialType> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
     }
 }
