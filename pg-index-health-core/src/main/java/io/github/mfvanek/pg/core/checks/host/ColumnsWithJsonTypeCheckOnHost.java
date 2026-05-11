@@ -32,7 +32,7 @@ public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<ColumnWi
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ColumnsWithJsonTypeCheckOnHost(final PgConnection pgConnection) {
-        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_JSON_TYPE);
+        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_JSON_TYPE, ColumnWithTypeExtractor.of());
     }
 
     /**
@@ -45,6 +45,6 @@ public class ColumnsWithJsonTypeCheckOnHost extends AbstractCheckOnHost<ColumnWi
      */
     @Override
     protected List<ColumnWithType> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ColumnWithTypeExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

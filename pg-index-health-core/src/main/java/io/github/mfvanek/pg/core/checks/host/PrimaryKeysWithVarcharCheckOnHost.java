@@ -42,7 +42,7 @@ public class PrimaryKeysWithVarcharCheckOnHost extends AbstractCheckOnHost<Index
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public PrimaryKeysWithVarcharCheckOnHost(final PgConnection pgConnection) {
-        super(IndexWithColumns.class, pgConnection, Diagnostic.PRIMARY_KEYS_WITH_VARCHAR);
+        super(IndexWithColumns.class, pgConnection, Diagnostic.PRIMARY_KEYS_WITH_VARCHAR, IndexWithColumnsExtractor.of());
     }
 
     /**
@@ -53,6 +53,6 @@ public class PrimaryKeysWithVarcharCheckOnHost extends AbstractCheckOnHost<Index
      */
     @Override
     protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, IndexWithColumnsExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

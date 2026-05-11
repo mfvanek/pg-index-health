@@ -32,7 +32,7 @@ public class TablesWithInheritanceCheckOnHost extends AbstractCheckOnHost<Table>
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public TablesWithInheritanceCheckOnHost(final PgConnection pgConnection) {
-        super(Table.class, pgConnection, Diagnostic.TABLES_WITH_INHERITANCE);
+        super(Table.class, pgConnection, Diagnostic.TABLES_WITH_INHERITANCE, TableExtractor.of());
     }
 
     /**
@@ -44,6 +44,6 @@ public class TablesWithInheritanceCheckOnHost extends AbstractCheckOnHost<Table>
      */
     @Override
     protected List<Table> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, TableExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

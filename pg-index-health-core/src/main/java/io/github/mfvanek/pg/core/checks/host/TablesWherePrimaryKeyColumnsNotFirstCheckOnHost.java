@@ -34,7 +34,7 @@ public class TablesWherePrimaryKeyColumnsNotFirstCheckOnHost extends AbstractChe
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public TablesWherePrimaryKeyColumnsNotFirstCheckOnHost(final PgConnection pgConnection) {
-        super(Table.class, pgConnection, Diagnostic.TABLES_WHERE_PRIMARY_KEY_COLUMNS_NOT_FIRST);
+        super(Table.class, pgConnection, Diagnostic.TABLES_WHERE_PRIMARY_KEY_COLUMNS_NOT_FIRST, TableExtractor.of());
     }
 
     /**
@@ -45,6 +45,6 @@ public class TablesWherePrimaryKeyColumnsNotFirstCheckOnHost extends AbstractChe
      */
     @Override
     protected List<Table> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, TableExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

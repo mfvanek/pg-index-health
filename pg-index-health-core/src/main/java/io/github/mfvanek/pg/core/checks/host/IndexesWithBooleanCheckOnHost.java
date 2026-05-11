@@ -32,7 +32,7 @@ public class IndexesWithBooleanCheckOnHost extends AbstractCheckOnHost<IndexWith
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public IndexesWithBooleanCheckOnHost(final PgConnection pgConnection) {
-        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_BOOLEAN);
+        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_BOOLEAN, IndexWithSingleColumnExtractor.of());
     }
 
     /**
@@ -43,6 +43,6 @@ public class IndexesWithBooleanCheckOnHost extends AbstractCheckOnHost<IndexWith
      */
     @Override
     protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, IndexWithSingleColumnExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

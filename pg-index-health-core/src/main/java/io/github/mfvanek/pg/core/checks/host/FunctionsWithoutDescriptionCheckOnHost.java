@@ -32,7 +32,7 @@ public class FunctionsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public FunctionsWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
-        super(StoredFunction.class, pgConnection, Diagnostic.FUNCTIONS_WITHOUT_DESCRIPTION);
+        super(StoredFunction.class, pgConnection, Diagnostic.FUNCTIONS_WITHOUT_DESCRIPTION, StoredFunctionExtractor.of());
     }
 
     /**
@@ -43,6 +43,6 @@ public class FunctionsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<
      */
     @Override
     protected List<StoredFunction> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, StoredFunctionExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

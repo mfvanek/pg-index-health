@@ -32,7 +32,7 @@ public class InvalidIndexesCheckOnHost extends AbstractCheckOnHost<Index> {
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public InvalidIndexesCheckOnHost(final PgConnection pgConnection) {
-        super(Index.class, pgConnection, Diagnostic.INVALID_INDEXES);
+        super(Index.class, pgConnection, Diagnostic.INVALID_INDEXES, IndexExtractor.of());
     }
 
     /**
@@ -44,6 +44,6 @@ public class InvalidIndexesCheckOnHost extends AbstractCheckOnHost<Index> {
      */
     @Override
     protected List<Index> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, IndexExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

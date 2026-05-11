@@ -34,7 +34,7 @@ public class TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost extends Ab
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost(final PgConnection pgConnection) {
-        super(Table.class, pgConnection, Diagnostic.TABLES_WHERE_ALL_COLUMNS_NULLABLE_EXCEPT_PK);
+        super(Table.class, pgConnection, Diagnostic.TABLES_WHERE_ALL_COLUMNS_NULLABLE_EXCEPT_PK, TableExtractor.of());
     }
 
     /**
@@ -45,6 +45,6 @@ public class TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost extends Ab
      */
     @Override
     protected List<Table> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, TableExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

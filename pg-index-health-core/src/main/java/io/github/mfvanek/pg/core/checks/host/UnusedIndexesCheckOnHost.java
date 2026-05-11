@@ -32,7 +32,7 @@ public class UnusedIndexesCheckOnHost extends AbstractCheckOnHost<UnusedIndex> {
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public UnusedIndexesCheckOnHost(final PgConnection pgConnection) {
-        super(UnusedIndex.class, pgConnection, Diagnostic.UNUSED_INDEXES);
+        super(UnusedIndex.class, pgConnection, Diagnostic.UNUSED_INDEXES, UnusedIndexExtractor.of());
     }
 
     /**
@@ -43,6 +43,6 @@ public class UnusedIndexesCheckOnHost extends AbstractCheckOnHost<UnusedIndex> {
      */
     @Override
     protected List<UnusedIndex> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, UnusedIndexExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

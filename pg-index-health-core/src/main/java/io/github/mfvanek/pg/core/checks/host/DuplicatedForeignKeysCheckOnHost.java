@@ -32,7 +32,7 @@ public class DuplicatedForeignKeysCheckOnHost extends AbstractCheckOnHost<Duplic
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public DuplicatedForeignKeysCheckOnHost(final PgConnection pgConnection) {
-        super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.DUPLICATED_FOREIGN_KEYS);
+        super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.DUPLICATED_FOREIGN_KEYS, DuplicatedForeignKeysExtractor.of("duplicate"));
     }
 
     /**
@@ -43,6 +43,6 @@ public class DuplicatedForeignKeysCheckOnHost extends AbstractCheckOnHost<Duplic
      */
     @Override
     protected List<DuplicatedForeignKeys> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, DuplicatedForeignKeysExtractor.of("duplicate"));
+        return executeQuery(pgContext, rowMapper);
     }
 }

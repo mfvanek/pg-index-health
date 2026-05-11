@@ -34,7 +34,7 @@ public class PrimaryKeysWithSerialTypesCheckOnHost extends AbstractCheckOnHost<C
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public PrimaryKeysWithSerialTypesCheckOnHost(final PgConnection pgConnection) {
-        super(ColumnWithSerialType.class, pgConnection, Diagnostic.PRIMARY_KEYS_WITH_SERIAL_TYPES);
+        super(ColumnWithSerialType.class, pgConnection, Diagnostic.PRIMARY_KEYS_WITH_SERIAL_TYPES, ColumnWithSerialTypeExtractor.of());
     }
 
     /**
@@ -45,6 +45,6 @@ public class PrimaryKeysWithSerialTypesCheckOnHost extends AbstractCheckOnHost<C
      */
     @Override
     protected List<ColumnWithSerialType> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ColumnWithSerialTypeExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

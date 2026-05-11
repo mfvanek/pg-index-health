@@ -38,7 +38,7 @@ public class ForeignKeysWithUnmatchedColumnTypeCheckOnHost extends AbstractCheck
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ForeignKeysWithUnmatchedColumnTypeCheckOnHost(final PgConnection pgConnection) {
-        super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE);
+        super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITH_UNMATCHED_COLUMN_TYPE, ForeignKeyExtractor.ofDefault());
     }
 
     /**
@@ -51,6 +51,6 @@ public class ForeignKeysWithUnmatchedColumnTypeCheckOnHost extends AbstractCheck
      */
     @Override
     protected List<ForeignKey> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ForeignKeyExtractor.ofDefault());
+        return executeQuery(pgContext, rowMapper);
     }
 }

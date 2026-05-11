@@ -32,7 +32,7 @@ public class TablesWithoutPrimaryKeyCheckOnHost extends AbstractCheckOnHost<Tabl
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public TablesWithoutPrimaryKeyCheckOnHost(final PgConnection pgConnection) {
-        super(Table.class, pgConnection, Diagnostic.TABLES_WITHOUT_PRIMARY_KEY);
+        super(Table.class, pgConnection, Diagnostic.TABLES_WITHOUT_PRIMARY_KEY, TableExtractor.of());
     }
 
     /**
@@ -43,6 +43,6 @@ public class TablesWithoutPrimaryKeyCheckOnHost extends AbstractCheckOnHost<Tabl
      */
     @Override
     protected List<Table> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, TableExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

@@ -32,7 +32,7 @@ public class ColumnsWithTimestampOrTimetzTypeCheckOnHost extends AbstractCheckOn
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ColumnsWithTimestampOrTimetzTypeCheckOnHost(final PgConnection pgConnection) {
-        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_TIMESTAMP_OR_TIMETZ_TYPE);
+        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_TIMESTAMP_OR_TIMETZ_TYPE, ColumnWithTypeExtractor.of());
     }
 
     /**
@@ -46,6 +46,6 @@ public class ColumnsWithTimestampOrTimetzTypeCheckOnHost extends AbstractCheckOn
      */
     @Override
     protected List<ColumnWithType> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ColumnWithTypeExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

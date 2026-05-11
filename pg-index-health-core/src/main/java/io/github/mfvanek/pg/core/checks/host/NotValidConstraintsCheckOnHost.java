@@ -32,7 +32,7 @@ public class NotValidConstraintsCheckOnHost extends AbstractCheckOnHost<Constrai
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public NotValidConstraintsCheckOnHost(final PgConnection pgConnection) {
-        super(Constraint.class, pgConnection, Diagnostic.NOT_VALID_CONSTRAINTS);
+        super(Constraint.class, pgConnection, Diagnostic.NOT_VALID_CONSTRAINTS, ConstraintExtractor.of());
     }
 
     /**
@@ -44,6 +44,6 @@ public class NotValidConstraintsCheckOnHost extends AbstractCheckOnHost<Constrai
      */
     @Override
     protected List<Constraint> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ConstraintExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

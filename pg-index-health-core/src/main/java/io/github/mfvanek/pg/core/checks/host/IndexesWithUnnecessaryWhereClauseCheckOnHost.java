@@ -32,7 +32,7 @@ public class IndexesWithUnnecessaryWhereClauseCheckOnHost extends AbstractCheckO
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public IndexesWithUnnecessaryWhereClauseCheckOnHost(final PgConnection pgConnection) {
-        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_UNNECESSARY_WHERE_CLAUSE);
+        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_UNNECESSARY_WHERE_CLAUSE, IndexWithColumnsExtractor.of());
     }
 
     /**
@@ -43,6 +43,6 @@ public class IndexesWithUnnecessaryWhereClauseCheckOnHost extends AbstractCheckO
      */
     @Override
     protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, IndexWithColumnsExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

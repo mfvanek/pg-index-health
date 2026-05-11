@@ -32,7 +32,7 @@ public class ColumnsWithMoneyTypeCheckOnHost extends AbstractCheckOnHost<ColumnW
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ColumnsWithMoneyTypeCheckOnHost(final PgConnection pgConnection) {
-        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_MONEY_TYPE);
+        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_MONEY_TYPE, ColumnWithTypeExtractor.of());
     }
 
     /**
@@ -45,6 +45,6 @@ public class ColumnsWithMoneyTypeCheckOnHost extends AbstractCheckOnHost<ColumnW
      */
     @Override
     protected List<ColumnWithType> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ColumnWithTypeExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

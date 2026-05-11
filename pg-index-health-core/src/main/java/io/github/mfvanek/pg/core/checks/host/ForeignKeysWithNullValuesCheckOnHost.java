@@ -33,7 +33,7 @@ public class ForeignKeysWithNullValuesCheckOnHost extends AbstractCheckOnHost<Fo
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ForeignKeysWithNullValuesCheckOnHost(final PgConnection pgConnection) {
-        super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITH_NULL_VALUES);
+        super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITH_NULL_VALUES, ForeignKeyExtractor.ofDefault());
     }
 
     /**
@@ -45,6 +45,6 @@ public class ForeignKeysWithNullValuesCheckOnHost extends AbstractCheckOnHost<Fo
      */
     @Override
     protected List<ForeignKey> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ForeignKeyExtractor.ofDefault());
+        return executeQuery(pgContext, rowMapper);
     }
 }

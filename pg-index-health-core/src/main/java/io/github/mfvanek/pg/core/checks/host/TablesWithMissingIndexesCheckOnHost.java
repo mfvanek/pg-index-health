@@ -32,7 +32,7 @@ public class TablesWithMissingIndexesCheckOnHost extends AbstractCheckOnHost<Tab
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public TablesWithMissingIndexesCheckOnHost(final PgConnection pgConnection) {
-        super(TableWithMissingIndex.class, pgConnection, Diagnostic.TABLES_WITH_MISSING_INDEXES);
+        super(TableWithMissingIndex.class, pgConnection, Diagnostic.TABLES_WITH_MISSING_INDEXES, TableWithMissingIndexExtractor.of());
     }
 
     /**
@@ -43,6 +43,6 @@ public class TablesWithMissingIndexesCheckOnHost extends AbstractCheckOnHost<Tab
      */
     @Override
     protected List<TableWithMissingIndex> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, TableWithMissingIndexExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

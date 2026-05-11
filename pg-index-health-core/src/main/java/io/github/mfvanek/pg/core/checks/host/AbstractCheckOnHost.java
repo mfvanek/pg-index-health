@@ -20,7 +20,6 @@ import io.github.mfvanek.pg.core.checks.common.StandardCheckInfo;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -51,6 +50,10 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
      * check to be performed on a PostgreSQL host.
      */
     protected final CheckInfo checkInfo;
+    /**
+     * Extracts a single domain object from a {@link java.sql.ResultSet} row.
+     */
+    protected final ResultSetExtractor<T> rowMapper;
 
     /**
      * Constructs an instance of AbstractCheckOnHost with the specified parameters.
@@ -58,14 +61,17 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
      * @param type         the type of the entity being checked; must not be null
      * @param pgConnection the PostgreSQL connection associated with this check; must not be null
      * @param checkInfo    the diagnostic defining the check configuration; must not be null
+     * @param rowMapper    the extractor used to map result set rows to domain objects; must not be null
      * @see StandardCheckInfo
      */
     protected AbstractCheckOnHost(final Class<T> type,
                                   final PgConnection pgConnection,
-                                  final CheckInfo checkInfo) {
+                                  final CheckInfo checkInfo,
+                                  final ResultSetExtractor<T> rowMapper) {
         this.type = Objects.requireNonNull(type, "type cannot be null");
         this.pgConnection = Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
         this.checkInfo = Objects.requireNonNull(checkInfo, "checkInfo cannot be null");
+        this.rowMapper = Objects.requireNonNull(rowMapper, "rowMapper cannot be null");
     }
 
     /**
@@ -131,7 +137,7 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
      * Executes a query associated with a diagnostic and extracts the result.
      *
      * @param pgContext check's context with the specified schema; must not be null
-     * @param rse       the extractor used to extract results from the {@link ResultSet}; must not be null
+     * @param rse       the extractor used to extract results from the {@link java.sql.ResultSet}; must not be null
      * @return list of deviations from the specified rule
      */
     protected final List<T> executeQuery(final PgContext pgContext,

@@ -32,7 +32,7 @@ public class ForeignKeysNotCoveredWithIndexCheckOnHost extends AbstractCheckOnHo
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ForeignKeysNotCoveredWithIndexCheckOnHost(final PgConnection pgConnection) {
-        super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX);
+        super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX, ForeignKeyExtractor.ofDefault());
     }
 
     /**
@@ -45,6 +45,6 @@ public class ForeignKeysNotCoveredWithIndexCheckOnHost extends AbstractCheckOnHo
      */
     @Override
     protected List<ForeignKey> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ForeignKeyExtractor.ofDefault());
+        return executeQuery(pgContext, rowMapper);
     }
 }

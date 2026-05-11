@@ -35,7 +35,7 @@ public class TablesNotLinkedToOthersCheckOnHost extends AbstractCheckOnHost<Tabl
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public TablesNotLinkedToOthersCheckOnHost(final PgConnection pgConnection) {
-        super(Table.class, pgConnection, Diagnostic.TABLES_NOT_LINKED_TO_OTHERS);
+        super(Table.class, pgConnection, Diagnostic.TABLES_NOT_LINKED_TO_OTHERS, TableExtractor.of());
     }
 
     /**
@@ -46,6 +46,6 @@ public class TablesNotLinkedToOthersCheckOnHost extends AbstractCheckOnHost<Tabl
      */
     @Override
     protected List<Table> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, TableExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

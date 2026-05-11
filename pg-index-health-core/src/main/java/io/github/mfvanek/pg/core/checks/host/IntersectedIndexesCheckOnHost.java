@@ -32,7 +32,7 @@ public class IntersectedIndexesCheckOnHost extends AbstractCheckOnHost<Duplicate
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public IntersectedIndexesCheckOnHost(final PgConnection pgConnection) {
-        super(DuplicatedIndexes.class, pgConnection, Diagnostic.INTERSECTED_INDEXES);
+        super(DuplicatedIndexes.class, pgConnection, Diagnostic.INTERSECTED_INDEXES, DuplicatedIndexesExtractor.of("intersected"));
     }
 
     /**
@@ -43,6 +43,6 @@ public class IntersectedIndexesCheckOnHost extends AbstractCheckOnHost<Duplicate
      */
     @Override
     protected List<DuplicatedIndexes> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, DuplicatedIndexesExtractor.of("intersected"));
+        return executeQuery(pgContext, rowMapper);
     }
 }

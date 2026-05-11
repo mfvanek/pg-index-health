@@ -32,7 +32,7 @@ public class IndexesWithBloatCheckOnHost extends AbstractCheckOnHost<IndexWithBl
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public IndexesWithBloatCheckOnHost(final PgConnection pgConnection) {
-        super(IndexWithBloat.class, pgConnection, Diagnostic.BLOATED_INDEXES);
+        super(IndexWithBloat.class, pgConnection, Diagnostic.BLOATED_INDEXES, IndexWithBloatExtractor.of());
     }
 
     /**
@@ -47,6 +47,6 @@ public class IndexesWithBloatCheckOnHost extends AbstractCheckOnHost<IndexWithBl
      */
     @Override
     protected List<IndexWithBloat> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, IndexWithBloatExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

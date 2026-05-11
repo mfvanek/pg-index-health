@@ -34,7 +34,7 @@ public class BtreeIndexesOnArrayColumnsCheckOnHost extends AbstractCheckOnHost<I
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public BtreeIndexesOnArrayColumnsCheckOnHost(final PgConnection pgConnection) {
-        super(IndexWithColumns.class, pgConnection, Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS);
+        super(IndexWithColumns.class, pgConnection, Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS, IndexWithSingleColumnExtractor.of());
     }
 
     /**
@@ -45,6 +45,6 @@ public class BtreeIndexesOnArrayColumnsCheckOnHost extends AbstractCheckOnHost<I
      */
     @Override
     protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, IndexWithSingleColumnExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

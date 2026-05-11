@@ -41,7 +41,7 @@ public class PossibleObjectNameOverflowCheckOnHost extends AbstractCheckOnHost<A
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public PossibleObjectNameOverflowCheckOnHost(final PgConnection pgConnection) {
-        super(AnyObject.class, pgConnection, Diagnostic.POSSIBLE_OBJECT_NAME_OVERFLOW);
+        super(AnyObject.class, pgConnection, Diagnostic.POSSIBLE_OBJECT_NAME_OVERFLOW, AnyObjectExtractor.of());
     }
 
     /**
@@ -52,6 +52,6 @@ public class PossibleObjectNameOverflowCheckOnHost extends AbstractCheckOnHost<A
      */
     @Override
     protected List<AnyObject> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, AnyObjectExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

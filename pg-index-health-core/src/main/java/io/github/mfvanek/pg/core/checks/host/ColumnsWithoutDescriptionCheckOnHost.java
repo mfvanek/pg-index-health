@@ -32,7 +32,7 @@ public class ColumnsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Co
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ColumnsWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
-        super(Column.class, pgConnection, Diagnostic.COLUMNS_WITHOUT_DESCRIPTION);
+        super(Column.class, pgConnection, Diagnostic.COLUMNS_WITHOUT_DESCRIPTION, ColumnExtractor.of());
     }
 
     /**
@@ -44,6 +44,6 @@ public class ColumnsWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Co
      */
     @Override
     protected List<Column> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ColumnExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

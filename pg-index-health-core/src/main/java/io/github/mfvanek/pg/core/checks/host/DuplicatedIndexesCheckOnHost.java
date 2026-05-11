@@ -32,7 +32,7 @@ public class DuplicatedIndexesCheckOnHost extends AbstractCheckOnHost<Duplicated
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public DuplicatedIndexesCheckOnHost(final PgConnection pgConnection) {
-        super(DuplicatedIndexes.class, pgConnection, Diagnostic.DUPLICATED_INDEXES);
+        super(DuplicatedIndexes.class, pgConnection, Diagnostic.DUPLICATED_INDEXES, DuplicatedIndexesExtractor.of("duplicated"));
     }
 
     /**
@@ -43,6 +43,6 @@ public class DuplicatedIndexesCheckOnHost extends AbstractCheckOnHost<Duplicated
      */
     @Override
     protected List<DuplicatedIndexes> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, DuplicatedIndexesExtractor.of("duplicated"));
+        return executeQuery(pgContext, rowMapper);
     }
 }

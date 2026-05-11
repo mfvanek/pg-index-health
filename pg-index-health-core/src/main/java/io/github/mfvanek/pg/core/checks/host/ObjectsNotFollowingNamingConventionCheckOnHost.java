@@ -35,7 +35,7 @@ public class ObjectsNotFollowingNamingConventionCheckOnHost extends AbstractChec
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ObjectsNotFollowingNamingConventionCheckOnHost(final PgConnection pgConnection) {
-        super(AnyObject.class, pgConnection, Diagnostic.OBJECTS_NOT_FOLLOWING_NAMING_CONVENTION);
+        super(AnyObject.class, pgConnection, Diagnostic.OBJECTS_NOT_FOLLOWING_NAMING_CONVENTION, AnyObjectExtractor.of());
     }
 
     /**
@@ -46,6 +46,6 @@ public class ObjectsNotFollowingNamingConventionCheckOnHost extends AbstractChec
      */
     @Override
     protected List<AnyObject> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, AnyObjectExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

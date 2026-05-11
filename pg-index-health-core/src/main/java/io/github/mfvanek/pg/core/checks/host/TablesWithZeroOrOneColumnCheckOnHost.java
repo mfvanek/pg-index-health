@@ -33,7 +33,7 @@ public class TablesWithZeroOrOneColumnCheckOnHost extends AbstractCheckOnHost<Ta
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public TablesWithZeroOrOneColumnCheckOnHost(final PgConnection pgConnection) {
-        super(TableWithColumns.class, pgConnection, Diagnostic.TABLES_WITH_ZERO_OR_ONE_COLUMN);
+        super(TableWithColumns.class, pgConnection, Diagnostic.TABLES_WITH_ZERO_OR_ONE_COLUMN, TableWithColumnsExtractor.of());
     }
 
     /**
@@ -44,6 +44,6 @@ public class TablesWithZeroOrOneColumnCheckOnHost extends AbstractCheckOnHost<Ta
      */
     @Override
     protected List<TableWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, TableWithColumnsExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

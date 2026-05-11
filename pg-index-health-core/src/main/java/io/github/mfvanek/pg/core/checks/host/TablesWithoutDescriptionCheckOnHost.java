@@ -32,7 +32,7 @@ public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Tab
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public TablesWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
-        super(Table.class, pgConnection, Diagnostic.TABLES_WITHOUT_DESCRIPTION);
+        super(Table.class, pgConnection, Diagnostic.TABLES_WITHOUT_DESCRIPTION, TableExtractor.of());
     }
 
     /**
@@ -44,6 +44,6 @@ public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Tab
      */
     @Override
     protected List<Table> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, TableExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

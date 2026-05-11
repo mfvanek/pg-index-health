@@ -32,7 +32,7 @@ public class IndexesWithTimestampInTheMiddleCheckOnHost extends AbstractCheckOnH
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public IndexesWithTimestampInTheMiddleCheckOnHost(final PgConnection pgConnection) {
-        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_TIMESTAMP_IN_THE_MIDDLE);
+        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_TIMESTAMP_IN_THE_MIDDLE, IndexWithColumnsExtractor.of());
     }
 
     /**
@@ -43,6 +43,6 @@ public class IndexesWithTimestampInTheMiddleCheckOnHost extends AbstractCheckOnH
      */
     @Override
     protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, IndexWithColumnsExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

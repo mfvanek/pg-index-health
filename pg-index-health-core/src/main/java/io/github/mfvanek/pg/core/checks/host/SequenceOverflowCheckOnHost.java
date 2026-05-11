@@ -32,7 +32,7 @@ public class SequenceOverflowCheckOnHost extends AbstractCheckOnHost<SequenceSta
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public SequenceOverflowCheckOnHost(final PgConnection pgConnection) {
-        super(SequenceState.class, pgConnection, Diagnostic.SEQUENCE_OVERFLOW);
+        super(SequenceState.class, pgConnection, Diagnostic.SEQUENCE_OVERFLOW, SequenceStateExtractor.of());
     }
 
     /**
@@ -44,6 +44,6 @@ public class SequenceOverflowCheckOnHost extends AbstractCheckOnHost<SequenceSta
      */
     @Override
     protected List<SequenceState> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, SequenceStateExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

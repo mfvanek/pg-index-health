@@ -33,7 +33,7 @@ public class IntersectedForeignKeysCheckOnHost extends AbstractCheckOnHost<Dupli
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public IntersectedForeignKeysCheckOnHost(final PgConnection pgConnection) {
-        super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.INTERSECTED_FOREIGN_KEYS);
+        super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.INTERSECTED_FOREIGN_KEYS, DuplicatedForeignKeysExtractor.of("intersected"));
     }
 
     /**
@@ -45,6 +45,6 @@ public class IntersectedForeignKeysCheckOnHost extends AbstractCheckOnHost<Dupli
      */
     @Override
     protected List<DuplicatedForeignKeys> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, DuplicatedForeignKeysExtractor.of("intersected"));
+        return executeQuery(pgContext, rowMapper);
     }
 }

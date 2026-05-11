@@ -35,7 +35,7 @@ public class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost extends AbstractChe
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost(final PgConnection pgConnection) {
-        super(IndexWithColumns.class, pgConnection, Diagnostic.PRIMARY_KEYS_THAT_MOST_LIKELY_NATURAL_KEYS);
+        super(IndexWithColumns.class, pgConnection, Diagnostic.PRIMARY_KEYS_THAT_MOST_LIKELY_NATURAL_KEYS, IndexWithColumnsExtractor.of());
     }
 
     /**
@@ -46,6 +46,6 @@ public class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost extends AbstractChe
      */
     @Override
     protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, IndexWithColumnsExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

@@ -32,7 +32,7 @@ public class ColumnsWithFixedLengthVarcharCheckOnHost extends AbstractCheckOnHos
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ColumnsWithFixedLengthVarcharCheckOnHost(final PgConnection pgConnection) {
-        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_FIXED_LENGTH_VARCHAR);
+        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_FIXED_LENGTH_VARCHAR, ColumnWithTypeExtractor.of());
     }
 
     /**
@@ -44,6 +44,6 @@ public class ColumnsWithFixedLengthVarcharCheckOnHost extends AbstractCheckOnHos
      */
     @Override
     protected List<ColumnWithType> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ColumnWithTypeExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }

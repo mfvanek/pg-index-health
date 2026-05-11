@@ -32,7 +32,7 @@ public class TablesWithBloatCheckOnHost extends AbstractCheckOnHost<TableWithBlo
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public TablesWithBloatCheckOnHost(final PgConnection pgConnection) {
-        super(TableWithBloat.class, pgConnection, Diagnostic.BLOATED_TABLES);
+        super(TableWithBloat.class, pgConnection, Diagnostic.BLOATED_TABLES, TableWithBloatExtractor.of());
     }
 
     /**
@@ -47,6 +47,6 @@ public class TablesWithBloatCheckOnHost extends AbstractCheckOnHost<TableWithBlo
      */
     @Override
     protected List<TableWithBloat> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, TableWithBloatExtractor.of());
+        return executeQuery(pgContext, rowMapper);
     }
 }
