@@ -13,15 +13,13 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
-
-import java.util.List;
 
 /**
  * Check for tables without description on a specific host.
  *
  * @author Ivan Vakhrushev
+ * @see <a href="https://www.postgresql.org/docs/current/sql-comment.html">SQL Commands - COMMENT</a>
  * @since 0.6.0
  */
 public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Table> {
@@ -32,18 +30,6 @@ public class TablesWithoutDescriptionCheckOnHost extends AbstractCheckOnHost<Tab
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public TablesWithoutDescriptionCheckOnHost(final PgConnection pgConnection) {
-        super(Table.class, pgConnection, Diagnostic.TABLES_WITHOUT_DESCRIPTION);
-    }
-
-    /**
-     * Returns tables without description (comment) in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of tables without description
-     * @see <a href="https://www.postgresql.org/docs/current/sql-comment.html">SQL Commands - COMMENT</a>
-     */
-    @Override
-    protected List<Table> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, TableExtractor.of());
+        super(Table.class, pgConnection, Diagnostic.TABLES_WITHOUT_DESCRIPTION, TableExtractor.of());
     }
 }

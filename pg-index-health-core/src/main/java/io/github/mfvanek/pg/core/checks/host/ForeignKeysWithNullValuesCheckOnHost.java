@@ -14,9 +14,6 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.ForeignKeyExtractor;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
-import io.github.mfvanek.pg.model.context.PgContext;
-
-import java.util.List;
 
 /**
  * Check for composite (multi-column) foreign keys with nullable columns
@@ -33,18 +30,6 @@ public class ForeignKeysWithNullValuesCheckOnHost extends AbstractCheckOnHost<Fo
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ForeignKeysWithNullValuesCheckOnHost(final PgConnection pgConnection) {
-        super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITH_NULL_VALUES);
-    }
-
-    /**
-     * Returns composite (multi-column) foreign keys with nullable columns
-     * that are not defined with MATCH FULL in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of composite (multi-column) foreign keys with nullable columns
-     */
-    @Override
-    protected List<ForeignKey> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ForeignKeyExtractor.ofDefault());
+        super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITH_NULL_VALUES, ForeignKeyExtractor.ofDefault());
     }
 }

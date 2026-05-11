@@ -14,12 +14,11 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.ForeignKeyExtractor;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
-import io.github.mfvanek.pg.model.context.PgContext;
-
-import java.util.List;
 
 /**
  * Check for foreign keys without associated indexes on a specific host.
+ * <p>
+ * For multi-column constraints returns all columns.
  *
  * @author Ivan Vakhrushev
  * @since 0.6.0
@@ -32,19 +31,6 @@ public class ForeignKeysNotCoveredWithIndexCheckOnHost extends AbstractCheckOnHo
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ForeignKeysNotCoveredWithIndexCheckOnHost(final PgConnection pgConnection) {
-        super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX);
-    }
-
-    /**
-     * Returns foreign keys without associated indexes in the specified schema.
-     * <p>
-     * For multi-column constraints returns all columns.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of foreign keys without associated indexes
-     */
-    @Override
-    protected List<ForeignKey> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ForeignKeyExtractor.ofDefault());
+        super(ForeignKey.class, pgConnection, Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX, ForeignKeyExtractor.ofDefault());
     }
 }

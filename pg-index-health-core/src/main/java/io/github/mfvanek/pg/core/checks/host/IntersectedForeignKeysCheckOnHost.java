@@ -14,12 +14,11 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.DuplicatedForeignKeysExtractor;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
-import io.github.mfvanek.pg.model.context.PgContext;
-
-import java.util.List;
 
 /**
  * Check for intersected (partially identical) foreign keys on a specific host.
+ * <p>
+ * Returns results except completely identical foreign keys (see {@link DuplicatedForeignKeysCheckOnHost}).
  *
  * @author Ivan Vakhrushev
  * @see DuplicatedForeignKeysCheckOnHost
@@ -33,18 +32,6 @@ public class IntersectedForeignKeysCheckOnHost extends AbstractCheckOnHost<Dupli
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public IntersectedForeignKeysCheckOnHost(final PgConnection pgConnection) {
-        super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.INTERSECTED_FOREIGN_KEYS);
-    }
-
-    /**
-     * Returns intersected (partially identical) foreign keys in the specified schema (except completely identical).
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of intersected foreign keys
-     * @see DuplicatedForeignKeysCheckOnHost
-     */
-    @Override
-    protected List<DuplicatedForeignKeys> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, DuplicatedForeignKeysExtractor.of("intersected"));
+        super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.INTERSECTED_FOREIGN_KEYS, DuplicatedForeignKeysExtractor.of("intersected"));
     }
 }

@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.IndexExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
-
-import java.util.List;
 
 /**
  * Check for invalid (broken) indexes on a specific host.
@@ -32,18 +29,6 @@ public class InvalidIndexesCheckOnHost extends AbstractCheckOnHost<Index> {
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public InvalidIndexesCheckOnHost(final PgConnection pgConnection) {
-        super(Index.class, pgConnection, Diagnostic.INVALID_INDEXES);
-    }
-
-    /**
-     * Returns invalid (broken) indexes in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of invalid indexes
-     * @see Index
-     */
-    @Override
-    protected List<Index> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, IndexExtractor.of());
+        super(Index.class, pgConnection, Diagnostic.INVALID_INDEXES, IndexExtractor.of());
     }
 }

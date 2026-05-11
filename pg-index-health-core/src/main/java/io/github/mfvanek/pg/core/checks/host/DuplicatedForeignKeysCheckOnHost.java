@@ -14,9 +14,6 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.DuplicatedForeignKeysExtractor;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
-import io.github.mfvanek.pg.model.context.PgContext;
-
-import java.util.List;
 
 /**
  * Check for duplicated (completely identical) foreign keys on a specific host.
@@ -32,17 +29,6 @@ public class DuplicatedForeignKeysCheckOnHost extends AbstractCheckOnHost<Duplic
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public DuplicatedForeignKeysCheckOnHost(final PgConnection pgConnection) {
-        super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.DUPLICATED_FOREIGN_KEYS);
-    }
-
-    /**
-     * Returns duplicated (completely identical) foreign keys in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of duplicated foreign keys
-     */
-    @Override
-    protected List<DuplicatedForeignKeys> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, DuplicatedForeignKeysExtractor.of("duplicate"));
+        super(DuplicatedForeignKeys.class, pgConnection, Diagnostic.DUPLICATED_FOREIGN_KEYS, DuplicatedForeignKeysExtractor.of("duplicate"));
     }
 }

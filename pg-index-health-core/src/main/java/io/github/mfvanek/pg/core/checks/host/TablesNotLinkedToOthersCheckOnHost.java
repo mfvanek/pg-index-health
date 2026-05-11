@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
-
-import java.util.List;
 
 /**
  * Check for tables that are not linked to other tables on a specific host.
@@ -35,17 +32,6 @@ public class TablesNotLinkedToOthersCheckOnHost extends AbstractCheckOnHost<Tabl
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public TablesNotLinkedToOthersCheckOnHost(final PgConnection pgConnection) {
-        super(Table.class, pgConnection, Diagnostic.TABLES_NOT_LINKED_TO_OTHERS);
-    }
-
-    /**
-     * Returns tables that are no longer in use or were created by mistake.
-     *
-     * @param pgContext check's context with the specified schema; must not be null
-     * @return list of tables that are no longer in use or were created by mistake
-     */
-    @Override
-    protected List<Table> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, TableExtractor.of());
+        super(Table.class, pgConnection, Diagnostic.TABLES_NOT_LINKED_TO_OTHERS, TableExtractor.of());
     }
 }

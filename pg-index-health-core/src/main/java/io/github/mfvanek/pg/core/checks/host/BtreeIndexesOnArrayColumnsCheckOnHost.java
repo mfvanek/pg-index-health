@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.IndexWithSingleColumnExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
-
-import java.util.List;
 
 /**
  * Check for B-tree indexes on array columns on a specific host.
@@ -34,17 +31,6 @@ public class BtreeIndexesOnArrayColumnsCheckOnHost extends AbstractCheckOnHost<I
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public BtreeIndexesOnArrayColumnsCheckOnHost(final PgConnection pgConnection) {
-        super(IndexWithColumns.class, pgConnection, Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS);
-    }
-
-    /**
-     * Returns B-tree indexes on array columns in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of B-tree indexes on array columns
-     */
-    @Override
-    protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, IndexWithSingleColumnExtractor.of());
+        super(IndexWithColumns.class, pgConnection, Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS, IndexWithSingleColumnExtractor.of());
     }
 }

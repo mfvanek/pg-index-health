@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.SequenceStateExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
-
-import java.util.List;
 
 /**
  * Check for sequence overflow on a specific host.
@@ -32,18 +29,6 @@ public class SequenceOverflowCheckOnHost extends AbstractCheckOnHost<SequenceSta
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public SequenceOverflowCheckOnHost(final PgConnection pgConnection) {
-        super(SequenceState.class, pgConnection, Diagnostic.SEQUENCE_OVERFLOW);
-    }
-
-    /**
-     * Returns sequences that are close to overflow in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema; must not be null
-     * @return list of sequences close to overflow
-     * @see SequenceState
-     */
-    @Override
-    protected List<SequenceState> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, SequenceStateExtractor.of());
+        super(SequenceState.class, pgConnection, Diagnostic.SEQUENCE_OVERFLOW, SequenceStateExtractor.of());
     }
 }

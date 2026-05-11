@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.IndexWithColumnsExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
-
-import java.util.List;
 
 /**
  * Check for indexes in which columns with the timestamp\timestamptz type are not the last on a specific host.
@@ -32,17 +29,6 @@ public class IndexesWithTimestampInTheMiddleCheckOnHost extends AbstractCheckOnH
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public IndexesWithTimestampInTheMiddleCheckOnHost(final PgConnection pgConnection) {
-        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_TIMESTAMP_IN_THE_MIDDLE);
-    }
-
-    /**
-     * Returns indexes with timestamp\timestamptz in the middle in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of indexes with timestamp\timestamptz in the middle
-     */
-    @Override
-    protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, IndexWithColumnsExtractor.of());
+        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_TIMESTAMP_IN_THE_MIDDLE, IndexWithColumnsExtractor.of());
     }
 }

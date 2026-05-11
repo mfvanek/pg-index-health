@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.IndexWithNullableColumnExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
-
-import java.util.List;
 
 /**
  * Check for indexes with null values on a specific host.
@@ -32,17 +29,6 @@ public class IndexesWithNullValuesCheckOnHost extends AbstractCheckOnHost<IndexW
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public IndexesWithNullValuesCheckOnHost(final PgConnection pgConnection) {
-        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_NULL_VALUES);
-    }
-
-    /**
-     * Returns indexes that contain null values in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of indexes with null values
-     */
-    @Override
-    protected List<IndexWithColumns> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, IndexWithNullableColumnExtractor.of());
+        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_NULL_VALUES, IndexWithNullableColumnExtractor.of());
     }
 }

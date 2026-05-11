@@ -14,14 +14,13 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
 import io.github.mfvanek.pg.model.column.ColumnWithType;
-import io.github.mfvanek.pg.model.context.PgContext;
-
-import java.util.List;
 
 /**
  * Check for columns with {@code money} type on a specific host.
+ * These are candidates for conversion to the {@code numeric} type.
  *
  * @author Ivan Vakhrushev
+ * @see <a href="https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_money">Do not use money</a>
  * @since 0.20.1
  */
 public class ColumnsWithMoneyTypeCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {
@@ -32,19 +31,6 @@ public class ColumnsWithMoneyTypeCheckOnHost extends AbstractCheckOnHost<ColumnW
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ColumnsWithMoneyTypeCheckOnHost(final PgConnection pgConnection) {
-        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_MONEY_TYPE);
-    }
-
-    /**
-     * Returns columns with a money type in the specified schema.
-     * These are candidates for conversion to the {@code numeric} type.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of columns with a money type
-     * @see <a href="https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_money">Do not use money</a>
-     */
-    @Override
-    protected List<ColumnWithType> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ColumnWithTypeExtractor.of());
+        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_MONEY_TYPE, ColumnWithTypeExtractor.of());
     }
 }

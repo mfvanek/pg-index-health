@@ -14,9 +14,6 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.ConstraintExtractor;
 import io.github.mfvanek.pg.model.constraint.Constraint;
-import io.github.mfvanek.pg.model.context.PgContext;
-
-import java.util.List;
 
 /**
  * Check for not valid constraints on a specific host.
@@ -32,18 +29,6 @@ public class NotValidConstraintsCheckOnHost extends AbstractCheckOnHost<Constrai
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public NotValidConstraintsCheckOnHost(final PgConnection pgConnection) {
-        super(Constraint.class, pgConnection, Diagnostic.NOT_VALID_CONSTRAINTS);
-    }
-
-    /**
-     * Returns not valid constraints in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema
-     * @return list of not valid constraints
-     * @see Constraint
-     */
-    @Override
-    protected List<Constraint> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, ConstraintExtractor.of());
+        super(Constraint.class, pgConnection, Diagnostic.NOT_VALID_CONSTRAINTS, ConstraintExtractor.of());
     }
 }

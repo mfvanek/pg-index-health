@@ -13,10 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.AnyObjectExtractor;
-import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
-
-import java.util.List;
 
 /**
  * Check for objects whose names do not follow the naming convention (that have to be enclosed in double-quotes) on a specific host.
@@ -35,17 +32,6 @@ public class ObjectsNotFollowingNamingConventionCheckOnHost extends AbstractChec
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ObjectsNotFollowingNamingConventionCheckOnHost(final PgConnection pgConnection) {
-        super(AnyObject.class, pgConnection, Diagnostic.OBJECTS_NOT_FOLLOWING_NAMING_CONVENTION);
-    }
-
-    /**
-     * Returns objects whose names do not follow the naming convention in the specified schema.
-     *
-     * @param pgContext check's context with the specified schema; must not be null
-     * @return list of objects whose names do not follow the naming convention
-     */
-    @Override
-    protected List<AnyObject> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, AnyObjectExtractor.of());
+        super(AnyObject.class, pgConnection, Diagnostic.OBJECTS_NOT_FOLLOWING_NAMING_CONVENTION, AnyObjectExtractor.of());
     }
 }
