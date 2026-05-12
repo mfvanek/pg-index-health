@@ -38,7 +38,7 @@ You can add your own database structure checks [as shown in the link](doc/custom
 Using Gradle:
 
 ```kotlin
-implementation("io.github.mfvanek:pg-index-health:0.40.0")
+implementation("io.github.mfvanek:pg-index-health:0.41.0")
 ```
 
 Using Maven:
@@ -47,7 +47,7 @@ Using Maven:
 <dependency>
   <groupId>io.github.mfvanek</groupId>
   <artifactId>pg-index-health</artifactId>
-  <version>0.40.0</version>
+  <version>0.41.0</version>
 </dependency>
 ```
 
@@ -70,7 +70,7 @@ More examples you can find in the [pg-index-health-demo](https://github.com/mfva
 Using Gradle:
 
 ```kotlin
-testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.40.0")
+testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.41.0")
 ```
 
 Using Maven:
@@ -79,7 +79,7 @@ Using Maven:
 <dependency>
     <groupId>io.github.mfvanek</groupId>
     <artifactId>pg-index-health-test-starter</artifactId>
-    <version>0.40.0</version>
+    <version>0.41.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -95,7 +95,7 @@ Add a standard test to your project [as shown in the link](doc/standard_test.md)
 | 2.7.x       | 11          | 0.8.x — 0.15.x               |
 | 3.3.x       | 17          | 0.20.x                       |
 | 3.4.x       | 17          | 0.30.x — 0.31.x              |
-| 3.5.x       | 17          | 0.40.x                       |
+| 3.5.x       | 17          | 0.40.x — 0.41.x              |
 
 #### Spring Boot 3 compatibility
 
