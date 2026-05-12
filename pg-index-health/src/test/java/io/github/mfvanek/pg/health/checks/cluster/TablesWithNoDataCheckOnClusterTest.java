@@ -38,19 +38,23 @@ class TablesWithNoDataCheckOnClusterTest extends StatisticsAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withEmptyTable().withData(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withEmptyTable().withBadlyNamedObjects().withData(), ctx -> {
             collectStatistics(schemaName);
 
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
-                .containsExactly(Table.of(ctx, "empty"))
-                .allMatch(t -> t.getTableSizeInBytes() >= 0L);
+                .hasSize(4)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields()
+                .containsExactly(
+                    Table.of(ctx, "\"bad-table\""),
+                    Table.of(ctx, "\"bad-table-two\"", 8_192L),
+                    Table.of(ctx, "empty"),
+                    Table.of(ctx, "\"UpperCaseTable\"")
+                );
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "empty"))
-                .isEmpty();
+                .hasSize(3);
         });
     }
 
@@ -65,6 +69,21 @@ class TablesWithNoDataCheckOnClusterTest extends StatisticsAwareTestBase {
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
                 .containsExactly(Table.of(ctx, "partitioned_table_with_no_data"))
+                .allMatch(t -> t.getTableSizeInBytes() >= 0L);
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithLayeredPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withData().withLayeredPartitionedTables(), ctx -> {
+            collectStatistics(schemaName);
+
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
+                .containsExactly(Table.of(ctx, "two_level_partitioned_empty"))
                 .allMatch(t -> t.getTableSizeInBytes() >= 0L);
         });
     }

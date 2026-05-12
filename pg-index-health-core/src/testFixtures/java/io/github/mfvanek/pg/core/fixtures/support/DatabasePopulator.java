@@ -48,6 +48,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithNull
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArrayColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDifferentOpclassStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateLayeredPartitionedTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedIndexWithUnnecessaryWhereClauseStatement;
@@ -398,6 +399,10 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withEmptyPartitionedTable() {
         return register(149, new CreatePartitionedTableWithNoDataStatement());
+    }
+
+    public DatabasePopulator withLayeredPartitionedTables() {
+        return register(150, new CreateLayeredPartitionedTablesStatement());
     }
 
     public void populate() {
