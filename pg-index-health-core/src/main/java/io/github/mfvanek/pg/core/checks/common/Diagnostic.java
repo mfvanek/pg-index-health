@@ -184,7 +184,11 @@ public enum Diagnostic implements CheckInfo {
     /**
      * Check for composite (multi-column) foreign keys with nullable columns that are not defined with MATCH FULL.
      */
-    FOREIGN_KEYS_WITH_NULL_VALUES;
+    FOREIGN_KEYS_WITH_NULL_VALUES,
+    /**
+     * Check for tables with no data.
+     */
+    TABLES_WITH_NO_DATA(StandardCheckInfo::ofRuntime);
 
     private final CheckInfo inner;
 
