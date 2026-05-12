@@ -54,6 +54,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedIn
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithDroppedColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithJsonAndSerialColumnsStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNoDataStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNullableFieldsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithSerialAndForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVarcharStatement;
@@ -393,6 +394,10 @@ public final class DatabasePopulator implements AutoCloseable {
     public DatabasePopulator withCompositeForeignKeyInPartitionedTable() {
         return withDictTable()
             .register(148, new AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement());
+    }
+
+    public DatabasePopulator withEmptyPartitionedTable() {
+        return register(149, new CreatePartitionedTableWithNoDataStatement());
     }
 
     public void populate() {
