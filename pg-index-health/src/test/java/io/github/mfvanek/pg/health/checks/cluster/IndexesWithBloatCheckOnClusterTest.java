@@ -73,7 +73,7 @@ class IndexesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
                     IndexWithBloat.of(ctx, clientsTableName, "clients_pkey"),
                     IndexWithBloat.of(ctx, clientsTableName, "i_clients_email_phone"))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L)
-                .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 14);
+                .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 8);
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))

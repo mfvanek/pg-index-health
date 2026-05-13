@@ -148,6 +148,17 @@ public class StandardCheckInfo implements CheckInfo {
     }
 
     /**
+     * Creates a {@code CheckInfo} instance for a runtime check using the provided check name.
+     * The SQL query is automatically fetched based on the check name.
+     *
+     * @param checkName the name of the check; must not be blank
+     * @return a new {@code CheckInfo} instance configured for runtime execution with the specified check name
+     */
+    static CheckInfo ofRuntime(final String checkName) {
+        return new StandardCheckInfo(checkName, SqlQueryReader.getQueryForCheck(checkName), QueryExecutors::executeQueryWithSchema, true);
+    }
+
+    /**
      * Creates a {@code CheckInfo} instance for a static check using the provided check name.
      * The SQL query is automatically fetched based on the check name.
      *
