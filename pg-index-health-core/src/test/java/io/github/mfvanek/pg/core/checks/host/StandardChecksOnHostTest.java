@@ -61,7 +61,8 @@ class StandardChecksOnHostTest extends DatabaseAwareTestBase {
                 Diagnostic.BLOATED_TABLES,
                 Diagnostic.FOREIGN_KEYS_WITHOUT_INDEX,
                 Diagnostic.COLUMNS_WITH_FIXED_LENGTH_VARCHAR,
-                Diagnostic.COLUMNS_WITH_CHAR_TYPE
+                Diagnostic.COLUMNS_WITH_CHAR_TYPE,
+                Diagnostic.TABLES_WITH_NO_DATA
             )
             .map(Diagnostic::getName)
             .collect(Collectors.toUnmodifiableSet());
