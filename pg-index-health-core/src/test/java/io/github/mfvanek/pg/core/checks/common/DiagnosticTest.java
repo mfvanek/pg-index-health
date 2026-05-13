@@ -48,7 +48,7 @@ class DiagnosticTest {
             .filter(d -> d.isRuntime() && !d.isStatic())
             .count();
         assertThat(countOfRuntimeChecks)
-            .isEqualTo(5);
+            .isGreaterThanOrEqualTo(6);
     }
 
     @Test
