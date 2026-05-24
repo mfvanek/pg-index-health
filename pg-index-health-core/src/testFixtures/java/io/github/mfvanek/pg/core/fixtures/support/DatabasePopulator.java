@@ -29,6 +29,8 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAcco
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddMoneyColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddNotValidConstraintToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddPrimaryKeyForDefaultPartitionStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJsonTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateAccountsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedObjectsStatement;
@@ -91,7 +93,7 @@ import java.util.Objects;
 import java.util.TreeMap;
 import javax.sql.DataSource;
 
-@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessivePublicCount"})
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessivePublicCount", "PMD.CyclomaticComplexity"})
 public final class DatabasePopulator implements AutoCloseable {
 
     private final DataSource dataSource;
@@ -403,6 +405,14 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withLayeredPartitionedTables() {
         return register(150, new CreateLayeredPartitionedTablesStatement());
+    }
+
+    public DatabasePopulator withSelfReferencedForeignKeys() {
+        return register(151, new AddSelfReferencedForeignKeysStatement());
+    }
+
+    public DatabasePopulator withSelfReferencedForeignKeysInPartitionedTable() {
+        return register(152, new AddSelfReferencedForeignKeysToPartitionedTableStatement());
     }
 
     public void populate() {

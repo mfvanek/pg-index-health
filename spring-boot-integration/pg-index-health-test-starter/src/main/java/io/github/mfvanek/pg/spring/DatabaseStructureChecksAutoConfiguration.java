@@ -40,6 +40,7 @@ import io.github.mfvanek.pg.core.checks.host.PossibleObjectNameOverflowCheckOnHo
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithVarcharCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.SelfReferencedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost;
@@ -356,6 +357,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public TablesWithNoDataCheckOnHost tablesWithNoDataCheckOnHost(final PgConnection pgConnection) {
         return new TablesWithNoDataCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(SelfReferencedForeignKeysCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public SelfReferencedForeignKeysCheckOnHost selfReferencedForeignKeysCheckOnHost(final PgConnection pgConnection) {
+        return new SelfReferencedForeignKeysCheckOnHost(pgConnection);
     }
 
     @Bean
