@@ -102,6 +102,42 @@ create table if not exists demo.good_tenant_categories
             references demo.good_tenant_categories (tenant_id, category_id)
             on delete cascade
 );
+
+-- Пример с секционированной таблицей:
+-- Используем хеш-секционирование по id, что позволяет использовать id как единственный первичный ключ.
+-- Благодаря этому самоссылающийся FK может ссылаться только на id, не включая ключ секционирования.
+create table if not exists demo.bad_categories_partitioned
+(
+    id        bigint not null,
+    parent_id bigint,
+    name      text not null,
+    primary key (id),
+    constraint bad_categories_partitioned_parent_fk
+        foreign key (parent_id) references demo.bad_categories_partitioned (id)
+        -- ON DELETE NO ACTION — неявное умолчание; удаление родителя с дочерними строками завершается ошибкой
+) partition by hash (id);
+
+create table if not exists demo.bad_categories_partitioned_0
+    partition of demo.bad_categories_partitioned for values with (modulus 2, remainder 0);
+create table if not exists demo.bad_categories_partitioned_1
+    partition of demo.bad_categories_partitioned for values with (modulus 2, remainder 1);
+
+-- Исправленный вариант с ON DELETE CASCADE
+create table if not exists demo.good_categories_partitioned
+(
+    id        bigint not null,
+    parent_id bigint,
+    name      text not null,
+    primary key (id),
+    constraint good_categories_partitioned_parent_fk
+        foreign key (parent_id) references demo.good_categories_partitioned (id)
+            on delete cascade
+) partition by hash (id);
+
+create table if not exists demo.good_categories_partitioned_0
+    partition of demo.good_categories_partitioned for values with (modulus 2, remainder 0);
+create table if not exists demo.good_categories_partitioned_1
+    partition of demo.good_categories_partitioned for values with (modulus 2, remainder 1);
 ```
 
 ## Как исправить

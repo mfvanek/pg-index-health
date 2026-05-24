@@ -102,6 +102,42 @@ create table if not exists demo.good_tenant_categories
             references demo.good_tenant_categories (tenant_id, category_id)
             on delete cascade
 );
+
+-- Partitioned table example:
+-- Using hash partitioning on id so that id alone can serve as the primary key,
+-- allowing the self-referencing FK to reference id without including the partition key.
+create table if not exists demo.bad_categories_partitioned
+(
+    id        bigint not null,
+    parent_id bigint,
+    name      text not null,
+    primary key (id),
+    constraint bad_categories_partitioned_parent_fk
+        foreign key (parent_id) references demo.bad_categories_partitioned (id)
+        -- ON DELETE NO ACTION is the implicit default; deleting a parent with children fails
+) partition by hash (id);
+
+create table if not exists demo.bad_categories_partitioned_0
+    partition of demo.bad_categories_partitioned for values with (modulus 2, remainder 0);
+create table if not exists demo.bad_categories_partitioned_1
+    partition of demo.bad_categories_partitioned for values with (modulus 2, remainder 1);
+
+-- A corrected version using ON DELETE CASCADE
+create table if not exists demo.good_categories_partitioned
+(
+    id        bigint not null,
+    parent_id bigint,
+    name      text not null,
+    primary key (id),
+    constraint good_categories_partitioned_parent_fk
+        foreign key (parent_id) references demo.good_categories_partitioned (id)
+            on delete cascade
+) partition by hash (id);
+
+create table if not exists demo.good_categories_partitioned_0
+    partition of demo.good_categories_partitioned for values with (modulus 2, remainder 0);
+create table if not exists demo.good_categories_partitioned_1
+    partition of demo.good_categories_partitioned for values with (modulus 2, remainder 1);
 ```
 
 ## How to fix
