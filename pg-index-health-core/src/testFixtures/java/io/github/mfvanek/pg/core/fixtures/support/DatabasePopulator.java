@@ -19,8 +19,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnFunctio
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysToPartitionedTableStatement;
@@ -31,6 +29,8 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAcco
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddMoneyColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddNotValidConstraintToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddPrimaryKeyForDefaultPartitionStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJsonTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateAccountsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedObjectsStatement;

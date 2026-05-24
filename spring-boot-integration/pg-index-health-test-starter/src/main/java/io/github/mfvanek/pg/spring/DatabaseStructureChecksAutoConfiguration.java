@@ -24,7 +24,6 @@ import io.github.mfvanek.pg.core.checks.host.DuplicatedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ForeignKeysNotCoveredWithIndexCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ForeignKeysWithNullValuesCheckOnHost;
-import io.github.mfvanek.pg.core.checks.host.SelfReferencedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ForeignKeysWithUnmatchedColumnTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.FunctionsWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithBloatCheckOnHost;
@@ -41,6 +40,7 @@ import io.github.mfvanek.pg.core.checks.host.PossibleObjectNameOverflowCheckOnHo
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysThatMostLikelyNaturalKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithVarcharCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.SelfReferencedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost;
