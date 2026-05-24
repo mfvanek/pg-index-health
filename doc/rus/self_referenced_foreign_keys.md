@@ -96,6 +96,61 @@ insert into demo.good_categories_set_null (parent_id, name) values (1, 'Child B'
 delete from demo.good_categories_set_null where id = 1;
 
 table demo.good_categories_set_null; -- возвращает 2 строки, обе с parent_id = null
+
+-- Пример составного самоссылающегося внешнего ключа:
+-- Мультитенантное дерево категорий, где (tenant_id, category_id) — составной первичный ключ.
+-- Родительская категория должна принадлежать тому же тенанту, поэтому FK охватывает оба столбца.
+create table demo.bad_tenant_categories
+(
+    tenant_id          integer not null,
+    category_id        integer not null,
+    parent_tenant_id   integer,
+    parent_category_id integer,
+    name               text not null,
+    primary key (tenant_id, category_id),
+    constraint bad_tenant_categories_parent_fk
+        foreign key (parent_tenant_id, parent_category_id)
+            references demo.bad_tenant_categories (tenant_id, category_id)
+    -- ON DELETE NO ACTION — неявное умолчание; удаление родителя с дочерними строками завершается ошибкой
+);
+
+insert into demo.bad_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
+    values (1, 1, null, null, 'Root');
+insert into demo.bad_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
+    values (1, 2, 1, 1, 'Child A');
+insert into demo.bad_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
+    values (1, 3, 1, 1, 'Child B');
+
+-- Попытка удалить корневую строку завершится ошибкой, т. к. дочерние строки ещё ссылаются на неё:
+-- delete from demo.bad_tenant_categories where tenant_id = 1 and category_id = 1;
+-- ERROR: update or delete on table "bad_tenant_categories" violates foreign key constraint
+
+-- Исправленный вариант с ON DELETE CASCADE
+create table demo.good_tenant_categories
+(
+    tenant_id          integer not null,
+    category_id        integer not null,
+    parent_tenant_id   integer,
+    parent_category_id integer,
+    name               text not null,
+    primary key (tenant_id, category_id),
+    constraint good_tenant_categories_parent_fk
+        foreign key (parent_tenant_id, parent_category_id)
+            references demo.good_tenant_categories (tenant_id, category_id)
+            on delete cascade
+);
+
+insert into demo.good_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
+    values (1, 1, null, null, 'Root');
+insert into demo.good_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
+    values (1, 2, 1, 1, 'Child A');
+insert into demo.good_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
+    values (1, 3, 1, 1, 'Child B');
+
+-- Удаление корневой строки автоматически удаляет всех её потомков:
+delete from demo.good_tenant_categories where tenant_id = 1 and category_id = 1;
+
+table demo.good_tenant_categories; -- возвращает 0 строк
 ```
 
 ## Как исправить
