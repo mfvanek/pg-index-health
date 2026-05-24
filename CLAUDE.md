@@ -128,3 +128,7 @@ All production classes must be `@NullMarked` (package-level or class-level) and 
 | `config/forbidden-apis/forbidden-apis.txt` | Forbidden API calls |
 | `doc/available_checks.md` | Catalog of all checks with descriptions |
 | `doc/custom_checks.md` | Guide for writing custom user-defined checks |
+
+## Git workflow
+
+**Never create a git commit unless the user explicitly asks.** Make all file edits freely, but wait for an explicit instruction (e.g. "commit", "commit the changes") before running any `git commit` command.

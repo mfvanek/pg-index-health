@@ -39,7 +39,7 @@ create schema if not exists demo;
 
 -- A category tree: each category may have a parent category in the same table.
 -- The FK uses the default ON DELETE NO ACTION, which makes subtree deletion fragile.
-create table demo.bad_categories
+create table if not exists demo.bad_categories
 (
     id        bigint generated always as identity primary key,
     parent_id bigint,
@@ -49,16 +49,8 @@ create table demo.bad_categories
         -- ON DELETE NO ACTION is the implicit default; deleting a parent with children fails
 );
 
-insert into demo.bad_categories (parent_id, name) values (null, 'Root');
-insert into demo.bad_categories (parent_id, name) values (1, 'Child A');
-insert into demo.bad_categories (parent_id, name) values (1, 'Child B');
-
--- Attempting to delete the root row fails because child rows still reference it:
--- delete from demo.bad_categories where id = 1; -- ERROR: update or delete on table "bad_categories"
---                                                -- violates foreign key constraint
-
 -- A corrected version using ON DELETE CASCADE
-create table demo.good_categories_cascade
+create table if not exists demo.good_categories_cascade
 (
     id        bigint generated always as identity primary key,
     parent_id bigint,
@@ -68,17 +60,8 @@ create table demo.good_categories_cascade
         on delete cascade
 );
 
-insert into demo.good_categories_cascade (parent_id, name) values (null, 'Root');
-insert into demo.good_categories_cascade (parent_id, name) values (1, 'Child A');
-insert into demo.good_categories_cascade (parent_id, name) values (1, 'Child B');
-
--- Deleting the root row now automatically removes its children:
-delete from demo.good_categories_cascade where id = 1;
-
-table demo.good_categories_cascade; -- returns 0 rows
-
 -- A corrected version using ON DELETE SET NULL
-create table demo.good_categories_set_null
+create table if not exists demo.good_categories_set_null
 (
     id        bigint generated always as identity primary key,
     parent_id bigint, -- nullable: required for ON DELETE SET NULL
@@ -88,19 +71,10 @@ create table demo.good_categories_set_null
         on delete set null
 );
 
-insert into demo.good_categories_set_null (parent_id, name) values (null, 'Root');
-insert into demo.good_categories_set_null (parent_id, name) values (1, 'Child A');
-insert into demo.good_categories_set_null (parent_id, name) values (1, 'Child B');
-
--- Deleting the root row detaches its children (they become new roots):
-delete from demo.good_categories_set_null where id = 1;
-
-table demo.good_categories_set_null; -- returns 2 rows, both with parent_id = null
-
 -- Composite self-referenced FK example:
 -- A multi-tenant category tree where (tenant_id, category_id) is the composite primary key.
 -- A category's parent must belong to the same tenant, so the FK spans both columns.
-create table demo.bad_tenant_categories
+create table if not exists demo.bad_tenant_categories
 (
     tenant_id          integer not null,
     category_id        integer not null,
@@ -114,19 +88,8 @@ create table demo.bad_tenant_categories
     -- ON DELETE NO ACTION is the implicit default; deleting a parent with children fails
 );
 
-insert into demo.bad_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
-    values (1, 1, null, null, 'Root');
-insert into demo.bad_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
-    values (1, 2, 1, 1, 'Child A');
-insert into demo.bad_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
-    values (1, 3, 1, 1, 'Child B');
-
--- Attempting to delete the root row fails because child rows still reference it:
--- delete from demo.bad_tenant_categories where tenant_id = 1 and category_id = 1;
--- ERROR: update or delete on table "bad_tenant_categories" violates foreign key constraint
-
 -- A corrected version using ON DELETE CASCADE
-create table demo.good_tenant_categories
+create table if not exists demo.good_tenant_categories
 (
     tenant_id          integer not null,
     category_id        integer not null,
@@ -139,18 +102,6 @@ create table demo.good_tenant_categories
             references demo.good_tenant_categories (tenant_id, category_id)
             on delete cascade
 );
-
-insert into demo.good_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
-    values (1, 1, null, null, 'Root');
-insert into demo.good_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
-    values (1, 2, 1, 1, 'Child A');
-insert into demo.good_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
-    values (1, 3, 1, 1, 'Child B');
-
--- Deleting the root row automatically removes its children:
-delete from demo.good_tenant_categories where tenant_id = 1 and category_id = 1;
-
-table demo.good_tenant_categories; -- returns 0 rows
 ```
 
 ## How to fix

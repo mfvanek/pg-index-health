@@ -39,7 +39,7 @@ create schema if not exists demo;
 
 -- Дерево категорий: каждая категория может иметь родительскую категорию в той же таблице.
 -- FK использует ON DELETE NO ACTION по умолчанию, что делает удаление поддерева ненадёжным.
-create table demo.bad_categories
+create table if not exists demo.bad_categories
 (
     id        bigint generated always as identity primary key,
     parent_id bigint,
@@ -49,16 +49,8 @@ create table demo.bad_categories
         -- ON DELETE NO ACTION — неявное умолчание; удаление родителя с дочерними строками завершается ошибкой
 );
 
-insert into demo.bad_categories (parent_id, name) values (null, 'Root');
-insert into demo.bad_categories (parent_id, name) values (1, 'Child A');
-insert into demo.bad_categories (parent_id, name) values (1, 'Child B');
-
--- Попытка удалить корневую строку завершится ошибкой, т. к. дочерние строки ещё ссылаются на неё:
--- delete from demo.bad_categories where id = 1; -- ERROR: update or delete on table "bad_categories"
---                                                -- violates foreign key constraint
-
 -- Исправленный вариант с ON DELETE CASCADE
-create table demo.good_categories_cascade
+create table if not exists demo.good_categories_cascade
 (
     id        bigint generated always as identity primary key,
     parent_id bigint,
@@ -68,17 +60,8 @@ create table demo.good_categories_cascade
         on delete cascade
 );
 
-insert into demo.good_categories_cascade (parent_id, name) values (null, 'Root');
-insert into demo.good_categories_cascade (parent_id, name) values (1, 'Child A');
-insert into demo.good_categories_cascade (parent_id, name) values (1, 'Child B');
-
--- Удаление корневой строки автоматически удаляет всех её потомков:
-delete from demo.good_categories_cascade where id = 1;
-
-table demo.good_categories_cascade; -- возвращает 0 строк
-
 -- Исправленный вариант с ON DELETE SET NULL
-create table demo.good_categories_set_null
+create table if not exists demo.good_categories_set_null
 (
     id        bigint generated always as identity primary key,
     parent_id bigint, -- nullable: обязательно для ON DELETE SET NULL
@@ -88,19 +71,10 @@ create table demo.good_categories_set_null
         on delete set null
 );
 
-insert into demo.good_categories_set_null (parent_id, name) values (null, 'Root');
-insert into demo.good_categories_set_null (parent_id, name) values (1, 'Child A');
-insert into demo.good_categories_set_null (parent_id, name) values (1, 'Child B');
-
--- Удаление корневой строки отвязывает её дочерние элементы (они становятся новыми корнями):
-delete from demo.good_categories_set_null where id = 1;
-
-table demo.good_categories_set_null; -- возвращает 2 строки, обе с parent_id = null
-
 -- Пример составного самоссылающегося внешнего ключа:
 -- Мультитенантное дерево категорий, где (tenant_id, category_id) — составной первичный ключ.
 -- Родительская категория должна принадлежать тому же тенанту, поэтому FK охватывает оба столбца.
-create table demo.bad_tenant_categories
+create table if not exists demo.bad_tenant_categories
 (
     tenant_id          integer not null,
     category_id        integer not null,
@@ -114,19 +88,8 @@ create table demo.bad_tenant_categories
     -- ON DELETE NO ACTION — неявное умолчание; удаление родителя с дочерними строками завершается ошибкой
 );
 
-insert into demo.bad_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
-    values (1, 1, null, null, 'Root');
-insert into demo.bad_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
-    values (1, 2, 1, 1, 'Child A');
-insert into demo.bad_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
-    values (1, 3, 1, 1, 'Child B');
-
--- Попытка удалить корневую строку завершится ошибкой, т. к. дочерние строки ещё ссылаются на неё:
--- delete from demo.bad_tenant_categories where tenant_id = 1 and category_id = 1;
--- ERROR: update or delete on table "bad_tenant_categories" violates foreign key constraint
-
 -- Исправленный вариант с ON DELETE CASCADE
-create table demo.good_tenant_categories
+create table if not exists demo.good_tenant_categories
 (
     tenant_id          integer not null,
     category_id        integer not null,
@@ -139,18 +102,6 @@ create table demo.good_tenant_categories
             references demo.good_tenant_categories (tenant_id, category_id)
             on delete cascade
 );
-
-insert into demo.good_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
-    values (1, 1, null, null, 'Root');
-insert into demo.good_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
-    values (1, 2, 1, 1, 'Child A');
-insert into demo.good_tenant_categories (tenant_id, category_id, parent_tenant_id, parent_category_id, name)
-    values (1, 3, 1, 1, 'Child B');
-
--- Удаление корневой строки автоматически удаляет всех её потомков:
-delete from demo.good_tenant_categories where tenant_id = 1 and category_id = 1;
-
-table demo.good_tenant_categories; -- возвращает 0 строк
 ```
 
 ## Как исправить
