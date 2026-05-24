@@ -24,6 +24,7 @@ import io.github.mfvanek.pg.core.checks.host.DuplicatedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ForeignKeysNotCoveredWithIndexCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ForeignKeysWithNullValuesCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.SelfReferencedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ForeignKeysWithUnmatchedColumnTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.FunctionsWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.IndexesWithBloatCheckOnHost;
@@ -356,6 +357,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public TablesWithNoDataCheckOnHost tablesWithNoDataCheckOnHost(final PgConnection pgConnection) {
         return new TablesWithNoDataCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(SelfReferencedForeignKeysCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public SelfReferencedForeignKeysCheckOnHost selfReferencedForeignKeysCheckOnHost(final PgConnection pgConnection) {
+        return new SelfReferencedForeignKeysCheckOnHost(pgConnection);
     }
 
     @Bean

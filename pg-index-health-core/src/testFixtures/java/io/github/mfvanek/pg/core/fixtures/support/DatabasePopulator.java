@@ -19,6 +19,8 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnFunctio
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysToPartitionedTableStatement;
@@ -403,6 +405,14 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withLayeredPartitionedTables() {
         return register(150, new CreateLayeredPartitionedTablesStatement());
+    }
+
+    public DatabasePopulator withSelfReferencedForeignKeys() {
+        return register(151, new AddSelfReferencedForeignKeysStatement());
+    }
+
+    public DatabasePopulator withSelfReferencedForeignKeysInPartitionedTable() {
+        return register(152, new AddSelfReferencedForeignKeysToPartitionedTableStatement());
     }
 
     public void populate() {
