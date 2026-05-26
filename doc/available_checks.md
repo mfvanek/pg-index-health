@@ -54,6 +54,7 @@ All checks can be divided into two groups:
 | 40 | Multicolumn foreign keys where at least one of the referencing columns is nullable                                                 | static             | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/foreign_keys_with_null_values.sql)               |
 | 41 | Tables with no data                                                                                                                | **runtime**        | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_no_data.sql)                         |
 | 42 | Self-referenced foreign keys without `ON DELETE CASCADE` or `ON DELETE SET NULL`                                                   | static             | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/self_referenced_foreign_keys.sql)                |
+| 43 | Columns that use [large object types (BLOB/CLOB)](https://www.postgresql.org/docs/current/largeobjects.html)                       | static             | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_blob_type.sql)                      |
 
 ### Raw SQL queries to use with other languages
 
