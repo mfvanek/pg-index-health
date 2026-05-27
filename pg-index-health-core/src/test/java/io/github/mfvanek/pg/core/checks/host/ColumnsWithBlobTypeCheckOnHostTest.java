@@ -47,8 +47,8 @@ class ColumnsWithBlobTypeCheckOnHostTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ColumnWithType.of(Column.ofNotNull(ctx, "\"document-bad\"", "\"content-bad\""), "oid"),
-                    ColumnWithType.of(Column.ofNullable(ctx, "image", "raster"), "lo"),
-                    ColumnWithType.of(Column.ofNotNull(ctx, "media_file", "full_image"), "lo"),
+                    ColumnWithType.of(Column.ofNullable(ctx, "image", "raster"), ctx.enrichWithSchema("lo")),
+                    ColumnWithType.of(Column.ofNotNull(ctx, "media_file", "full_image"), ctx.enrichWithSchema("lo")),
                     ColumnWithType.of(Column.ofNullable(ctx, "media_file", "thumbnail"), "oid")
                 ));
     }
