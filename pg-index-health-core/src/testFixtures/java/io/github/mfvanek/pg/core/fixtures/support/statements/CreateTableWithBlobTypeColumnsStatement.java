@@ -17,9 +17,7 @@ public class CreateTableWithBlobTypeColumnsStatement extends AbstractDbStatement
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            // Install lo in public so ::regtype::text returns plain 'lo'; recreate public in case a prior test dropped it.
-            "create schema if not exists public;",
-            "create extension if not exists lo schema public;",
+            "create extension if not exists lo;",
             """
                 create table if not exists {schemaName}."document-bad" (
                     id bigserial primary key,
