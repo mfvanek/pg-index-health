@@ -17,7 +17,9 @@ public class CreateTableWithBlobTypeColumnsStatement extends AbstractDbStatement
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create extension if not exists lo schema {schemaName};",
+            // Install lo in public so ::regtype::text returns plain 'lo'; recreate public in case a prior test dropped it.
+            "create schema if not exists public;",
+            "create extension if not exists lo schema public;",
             """
                 create table if not exists {schemaName}."document-bad" (
                     id bigserial primary key,
@@ -28,14 +30,14 @@ public class CreateTableWithBlobTypeColumnsStatement extends AbstractDbStatement
                 create table if not exists {schemaName}.image (
                     id bigserial primary key,
                     title text not null,
-                    raster {schemaName}.lo
+                    raster lo
                 );""",
             """
                 create table if not exists {schemaName}.media_file (
                     id bigserial primary key,
                     name text not null,
                     thumbnail oid,
-                    full_image {schemaName}.lo not null
+                    full_image lo not null
                 );"""
         );
     }
