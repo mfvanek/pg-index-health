@@ -17,7 +17,7 @@ public class CreateTableWithBlobTypeColumnsStatement extends AbstractDbStatement
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
-            "create extension if not exists lo;",
+            "create extension if not exists lo schema {schemaName};",
             """
                 create table if not exists {schemaName}."document-bad" (
                     id bigserial primary key,
@@ -28,14 +28,14 @@ public class CreateTableWithBlobTypeColumnsStatement extends AbstractDbStatement
                 create table if not exists {schemaName}.image (
                     id bigserial primary key,
                     title text not null,
-                    raster lo
+                    raster {schemaName}.lo
                 );""",
             """
                 create table if not exists {schemaName}.media_file (
                     id bigserial primary key,
                     name text not null,
                     thumbnail oid,
-                    full_image lo not null
+                    full_image {schemaName}.lo not null
                 );"""
         );
     }
