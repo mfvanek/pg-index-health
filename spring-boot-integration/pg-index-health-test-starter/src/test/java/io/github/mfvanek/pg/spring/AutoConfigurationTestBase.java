@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.spring;
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithBlobTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithCharTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
@@ -166,7 +167,8 @@ abstract class AutoConfigurationTestBase {
             TablesWithInheritanceCheckOnHost.class,
             ForeignKeysWithNullValuesCheckOnHost.class,
             TablesWithNoDataCheckOnHost.class,
-            SelfReferencedForeignKeysCheckOnHost.class
+            SelfReferencedForeignKeysCheckOnHost.class,
+            ColumnsWithBlobTypeCheckOnHost.class
         );
     }
 }

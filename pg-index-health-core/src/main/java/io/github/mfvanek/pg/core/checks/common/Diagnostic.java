@@ -192,7 +192,11 @@ public enum Diagnostic implements CheckInfo {
     /**
      * Check for self-referenced foreign keys without {@code ON DELETE CASCADE} or {@code ON DELETE SET NULL}.
      */
-    SELF_REFERENCED_FOREIGN_KEYS;
+    SELF_REFERENCED_FOREIGN_KEYS,
+    /**
+     * Check for columns with {@code oid} or {@code lo} blob type.
+     */
+    COLUMNS_WITH_BLOB_TYPE;
 
     private final CheckInfo inner;
 

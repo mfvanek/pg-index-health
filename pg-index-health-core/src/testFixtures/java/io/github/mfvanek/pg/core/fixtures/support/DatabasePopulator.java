@@ -67,7 +67,9 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTa
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithBlobTypeColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSuitableIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithBlobTypeColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWhereAllColumnsNullableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
@@ -413,6 +415,14 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withSelfReferencedForeignKeysInPartitionedTable() {
         return register(152, new AddSelfReferencedForeignKeysToPartitionedTableStatement());
+    }
+
+    public DatabasePopulator withBlobTypeColumns() {
+        return register(153, new CreateTableWithBlobTypeColumnsStatement());
+    }
+
+    public DatabasePopulator withBlobTypeColumnInPartitionedTable() {
+        return register(154, new CreatePartitionedTableWithBlobTypeColumnStatement());
     }
 
     public void populate() {

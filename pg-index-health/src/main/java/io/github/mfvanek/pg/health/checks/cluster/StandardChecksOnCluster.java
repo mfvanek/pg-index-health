@@ -83,7 +83,8 @@ public final class StandardChecksOnCluster implements Function<HighAvailabilityP
             new TablesWithInheritanceCheckOnCluster(haPgConnection),
             new ForeignKeysWithNullValuesCheckOnCluster(haPgConnection),
             new TablesWithNoDataCheckOnCluster(haPgConnection),
-            new SelfReferencedForeignKeysCheckOnCluster(haPgConnection)
+            new SelfReferencedForeignKeysCheckOnCluster(haPgConnection),
+            new ColumnsWithBlobTypeCheckOnCluster(haPgConnection)
         );
     }
 }

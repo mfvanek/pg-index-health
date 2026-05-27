@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.spring;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithBlobTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithCharTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
@@ -364,6 +365,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public SelfReferencedForeignKeysCheckOnHost selfReferencedForeignKeysCheckOnHost(final PgConnection pgConnection) {
         return new SelfReferencedForeignKeysCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(ColumnsWithBlobTypeCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public ColumnsWithBlobTypeCheckOnHost columnsWithBlobTypeCheckOnHost(final PgConnection pgConnection) {
+        return new ColumnsWithBlobTypeCheckOnHost(pgConnection);
     }
 
     @Bean
