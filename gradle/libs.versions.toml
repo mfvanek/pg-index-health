@@ -8,7 +8,7 @@ assertj = "3.27.7"
 testcontainers = "2.0.5" # we do not align the testcontainers version with Spring Boot BOM
 mockito = "5.23.0"
 forbiddenapis = "3.10"
-junit = "6.0.3"
+junit = "6.1.0"
 freefair = "9.5.0"
 
 [libraries]
