@@ -55,6 +55,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedV
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithBlobTypeColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithDroppedColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithJsonAndSerialColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNoDataStatement;
@@ -69,6 +70,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStateme
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWhereAllColumnsNullableStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithBlobTypeColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithFixedLengthVarcharStatement;
@@ -413,6 +415,14 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withSelfReferencedForeignKeysInPartitionedTable() {
         return register(152, new AddSelfReferencedForeignKeysToPartitionedTableStatement());
+    }
+
+    public DatabasePopulator withBlobTypeColumns() {
+        return register(153, new CreateTableWithBlobTypeColumnsStatement());
+    }
+
+    public DatabasePopulator withBlobTypeColumnInPartitionedTable() {
+        return register(154, new CreatePartitionedTableWithBlobTypeColumnStatement());
     }
 
     public void populate() {

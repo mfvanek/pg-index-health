@@ -104,6 +104,7 @@ The build enforces:
 - Test with **quoted identifiers** (e.g., `"MyTable"`).
 - Test fixtures and Testcontainers setup live in `pg-index-health-testing`.
 - Name host-level test classes `*CheckOnHostTest` and cluster-level test classes `*CheckOnClusterTest`.
+- PostgreSQL extensions can be installed into a specific schema: `create extension if not exists lo schema {schemaName};`. When installed that way, all usages of the extension's types must be schema-qualified (e.g., `{schemaName}.lo`). In tests, use `ctx.enrichWithSchema("lo")` to produce the qualified name from a `PgContext`.
 
 ## Common pitfalls
 

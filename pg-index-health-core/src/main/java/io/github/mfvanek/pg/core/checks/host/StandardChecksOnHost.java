@@ -84,7 +84,8 @@ public final class StandardChecksOnHost implements Function<PgConnection, List<D
             new TablesWithInheritanceCheckOnHost(pgConnection),
             new ForeignKeysWithNullValuesCheckOnHost(pgConnection),
             new TablesWithNoDataCheckOnHost(pgConnection),
-            new SelfReferencedForeignKeysCheckOnHost(pgConnection)
+            new SelfReferencedForeignKeysCheckOnHost(pgConnection),
+            new ColumnsWithBlobTypeCheckOnHost(pgConnection)
         );
     }
 }
