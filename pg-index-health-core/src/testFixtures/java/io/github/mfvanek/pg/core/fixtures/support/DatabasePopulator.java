@@ -70,7 +70,9 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStateme
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWhereAllColumnsNullableStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithIncrementingColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithBlobTypeColumnsStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIncrementingColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithFixedLengthVarcharStatement;
@@ -423,6 +425,14 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withBlobTypeColumnInPartitionedTable() {
         return register(154, new CreatePartitionedTableWithBlobTypeColumnStatement());
+    }
+
+    public DatabasePopulator withIncrementingColumns() {
+        return register(155, new CreateTableWithIncrementingColumnsStatement());
+    }
+
+    public DatabasePopulator withIncrementingColumnsInPartitionedTable() {
+        return register(156, new CreatePartitionedTableWithIncrementingColumnsStatement());
     }
 
     public void populate() {

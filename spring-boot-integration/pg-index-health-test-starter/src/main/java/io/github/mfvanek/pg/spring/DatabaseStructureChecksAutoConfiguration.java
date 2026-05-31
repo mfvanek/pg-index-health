@@ -43,6 +43,7 @@ import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithSerialTypesCheckOnHo
 import io.github.mfvanek.pg.core.checks.host.PrimaryKeysWithVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.SelfReferencedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.SequenceOverflowCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.TablesWithIncrementingColumnsCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWherePrimaryKeyColumnsNotFirstCheckOnHost;
@@ -372,6 +373,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public ColumnsWithBlobTypeCheckOnHost columnsWithBlobTypeCheckOnHost(final PgConnection pgConnection) {
         return new ColumnsWithBlobTypeCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(TablesWithIncrementingColumnsCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public TablesWithIncrementingColumnsCheckOnHost tablesWithIncrementingColumnsCheckOnHost(final PgConnection pgConnection) {
+        return new TablesWithIncrementingColumnsCheckOnHost(pgConnection);
     }
 
     @Bean
