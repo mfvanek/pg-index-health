@@ -48,6 +48,7 @@ import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWherePrimaryKeyColumnsNotFirstCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.TablesWithIncrementingColumnsCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithInheritanceCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithNoDataCheckOnHost;
@@ -168,7 +169,8 @@ abstract class AutoConfigurationTestBase {
             ForeignKeysWithNullValuesCheckOnHost.class,
             TablesWithNoDataCheckOnHost.class,
             SelfReferencedForeignKeysCheckOnHost.class,
-            ColumnsWithBlobTypeCheckOnHost.class
+            ColumnsWithBlobTypeCheckOnHost.class,
+            TablesWithIncrementingColumnsCheckOnHost.class
         );
     }
 }

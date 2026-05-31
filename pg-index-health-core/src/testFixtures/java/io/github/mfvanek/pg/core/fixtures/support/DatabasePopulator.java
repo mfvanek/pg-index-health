@@ -57,6 +57,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedIn
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithBlobTypeColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithDroppedColumnStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithIncrementingColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithJsonAndSerialColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNoDataStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNullableFieldsStatement;
@@ -75,6 +76,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithChec
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithFixedLengthVarcharStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIdentityPrimaryKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIncrementingColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithInheritanceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithNaturalKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement;
@@ -423,6 +425,14 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withBlobTypeColumnInPartitionedTable() {
         return register(154, new CreatePartitionedTableWithBlobTypeColumnStatement());
+    }
+
+    public DatabasePopulator withIncrementingColumns() {
+        return register(155, new CreateTableWithIncrementingColumnsStatement());
+    }
+
+    public DatabasePopulator withIncrementingColumnsInPartitionedTable() {
+        return register(156, new CreatePartitionedTableWithIncrementingColumnsStatement());
     }
 
     public void populate() {

@@ -47,6 +47,7 @@ import io.github.mfvanek.pg.core.checks.host.TablesNotLinkedToOthersCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWhereAllColumnsNullableExceptPrimaryKeyCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWherePrimaryKeyColumnsNotFirstCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithBloatCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.TablesWithIncrementingColumnsCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithInheritanceCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithMissingIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithNoDataCheckOnHost;
@@ -68,7 +69,7 @@ import org.springframework.context.annotation.Bean;
  * @author Ivan Vakhrushev
  * @since 0.13.2
  */
-@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessivePublicCount"})
 @AutoConfiguration(after = DatabaseStructureHealthAutoConfiguration.class)
 @ConditionalOnBean(PgConnection.class)
 public class DatabaseStructureChecksAutoConfiguration {
@@ -372,6 +373,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public ColumnsWithBlobTypeCheckOnHost columnsWithBlobTypeCheckOnHost(final PgConnection pgConnection) {
         return new ColumnsWithBlobTypeCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(TablesWithIncrementingColumnsCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public TablesWithIncrementingColumnsCheckOnHost tablesWithIncrementingColumnsCheckOnHost(final PgConnection pgConnection) {
+        return new TablesWithIncrementingColumnsCheckOnHost(pgConnection);
     }
 
     @Bean

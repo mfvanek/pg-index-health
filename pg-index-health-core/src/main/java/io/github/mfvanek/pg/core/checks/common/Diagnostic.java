@@ -196,7 +196,11 @@ public enum Diagnostic implements CheckInfo {
     /**
      * Check for columns with {@code oid} or {@code lo} blob type.
      */
-    COLUMNS_WITH_BLOB_TYPE;
+    COLUMNS_WITH_BLOB_TYPE,
+    /**
+     * Check for tables with incrementing column names (e.g., {@code phone1}, {@code phone2}) indicating de-normalization.
+     */
+    TABLES_WITH_INCREMENTING_COLUMNS;
 
     private final CheckInfo inner;
 
