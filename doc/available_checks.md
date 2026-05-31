@@ -55,6 +55,7 @@ All checks can be divided into two groups:
 | 41 | Tables with no data                                                                                                                | **runtime**        | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_no_data.sql)                         |
 | 42 | Self-referenced foreign keys without `ON DELETE CASCADE` or `ON DELETE SET NULL`                                                   | static             | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/self_referenced_foreign_keys.sql)                |
 | 43 | Columns that use [large object types (BLOB/CLOB)](https://www.postgresql.org/docs/current/largeobjects.html)                       | static             | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_blob_type.sql)                      |
+| 44 | Tables with incrementing column names                                                                                              | static             | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_incrementing_columns.sql)            |
 
 ### Raw SQL queries to use with other languages
 
