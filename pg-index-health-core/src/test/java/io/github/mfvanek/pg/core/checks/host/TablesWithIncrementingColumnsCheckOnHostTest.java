@@ -47,10 +47,10 @@ class TablesWithIncrementingColumnsCheckOnHostTest extends DatabaseAwareTestBase
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("table.tableSizeInBytes")
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     TableWithColumns.of(
-                        Table.of(ctx, "orders"),
+                        Table.of(ctx, "orders", 8_192L),
                         List.of(
                             Column.ofNullable(ctx, "orders", "phone1"),
                             Column.ofNullable(ctx, "orders", "phone2"),
@@ -59,8 +59,7 @@ class TablesWithIncrementingColumnsCheckOnHostTest extends DatabaseAwareTestBase
                             Column.ofNullable(ctx, "orders", "address3")
                         )
                     )
-                )
-                .allMatch(t -> t.getTableSizeInBytes() > 1L));
+                ));
     }
 
     @ParameterizedTest
@@ -70,7 +69,7 @@ class TablesWithIncrementingColumnsCheckOnHostTest extends DatabaseAwareTestBase
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("table.tableSizeInBytes")
+                .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     TableWithColumns.of(
                         Table.of(ctx, "events"),
@@ -79,7 +78,6 @@ class TablesWithIncrementingColumnsCheckOnHostTest extends DatabaseAwareTestBase
                             Column.ofNullable(ctx, "events", "tag2")
                         )
                     )
-                )
-                .allMatch(t -> t.getTableSizeInBytes() > 1L));
+                ));
     }
 }
