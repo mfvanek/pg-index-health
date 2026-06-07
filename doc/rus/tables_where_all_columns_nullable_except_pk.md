@@ -64,3 +64,18 @@ create table if not exists demo."bad-design_partitioned"
 create table if not exists demo."bad-design_partitioned_hash_p0"
     partition of demo."bad-design_partitioned" for values with (modulus 4, remainder 0);
 ```
+
+## Как исправить
+
+Проанализируйте модель данных и для столбцов, которые на самом деле обязательны, добавьте ограничение `not null`.
+
+```sql
+alter table demo.bad_design
+    alter column description set not null;
+```
+
+Если в таблице уже есть строки с `NULL` в таком столбце, перед добавлением ограничения нужно заполнить эти значения
+(например, осмысленным значением по умолчанию).
+
+Если же оказывается, что ни один столбец таблицы не является обязательным, это сигнал о слабом моделировании —
+пересмотрите дизайн таблицы целиком.
