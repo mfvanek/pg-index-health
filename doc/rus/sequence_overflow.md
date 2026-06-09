@@ -32,3 +32,30 @@ create sequence demo.seq_5 as bigint increment by 10 maxvalue 100 start 92;
 
 create sequence demo.seq_cycle as bigint increment by 10 maxvalue 100 start 92 cycle;
 ```
+
+## Как исправить
+
+Заранее (до фактического переполнения) переходите на более широкий целочисленный тип последовательности
+и связанного с ней столбца: `smallint` → `integer` → `bigint`.
+
+Если у последовательности задан искусственно низкий `maxvalue`, увеличьте его:
+
+```sql
+alter sequence demo.seq_3 maxvalue 2147483647;
+```
+
+Чаще же узким местом является тип столбца первичного ключа. Расширьте его до `bigint`:
+
+```sql
+alter table demo.some_table
+    alter column id type bigint;
+```
+
+Тип последовательности при этом тоже нужно расширить:
+
+```sql
+alter sequence demo.some_table_id_seq as bigint;
+```
+
+Меняйте тип столбца заблаговременно: на больших таблицах `alter column ... type` переписывает таблицу под блокировкой
+и может занять продолжительное время, а также затрагивает таблицы, ссылающиеся на этот первичный ключ внешними ключами.
