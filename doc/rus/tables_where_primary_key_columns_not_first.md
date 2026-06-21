@@ -56,3 +56,31 @@ create table if not exists demo."bad-pk_partitioned" (
 create table if not exists demo."bad_pk_partitioned_hash_p0"
     partition of demo."bad-pk_partitioned" for values with (modulus 4, remainder 0);
 ```
+
+## Как исправить
+
+Переупорядочьте столбцы так, чтобы столбцы первичного ключа шли первыми.
+
+PostgreSQL не позволяет менять порядок столбцов в существующей таблице, поэтому таблицу нужно пересоздать
+с правильным порядком столбцов и перенести данные:
+
+```sql
+create table if not exists demo.not_good_pk_new (
+    product_type text not null,
+    product_subtype text not null,
+    description text not null,
+    primary key (product_type, product_subtype)
+);
+
+insert into demo.not_good_pk_new (product_type, product_subtype, description)
+select product_type, product_subtype, description
+from demo.not_good_pk;
+
+drop table demo.not_good_pk;
+alter table demo.not_good_pk_new rename to not_good_pk;
+```
+
+Выполняйте такую миграцию аккуратно: при больших объёмах данных учитывайте блокировки и время выполнения,
+а также не забудьте пересоздать внешние ключи, индексы и другие зависимые объекты.
+
+Это лишь стилистическая проверка. Если порядок столбцов для вас не важен, просто игнорируйте её результаты.

@@ -43,3 +43,14 @@ create table if not exists demo."table_without_description_partitioned_1_10"
     partition of demo.table_without_description_partitioned
         for values from (1) to (10);
 ```
+
+## Как исправить
+
+Добавьте содержательное описание таблицы с помощью команды `comment on table`.
+
+```sql
+comment on table demo.table_without_description is 'Хранит данные о пользователях';
+```
+
+Обратите внимание, что пустой или состоящий только из пробелов комментарий считается отсутствующим —
+описание должно нести смысловую нагрузку.

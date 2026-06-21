@@ -54,7 +54,7 @@ jobs:
                 run: ./gradlew check # do not run mutation tests
             -   name: Upload coverage to Codecov
                 if: matrix.pg_version == '17.7'
-                uses: codecov/codecov-action@v6
+                uses: codecov/codecov-action@v7
                 with:
                     token: ${{ secrets.CODECOV_TOKEN }}
                     fail_ci_if_error: true

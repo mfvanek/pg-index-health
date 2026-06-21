@@ -45,3 +45,23 @@ create table if not exists demo.one_partitioned(
 
 create table if not exists demo.one_default partition of demo.one_partitioned default;
 ```
+
+## Как исправить
+
+Таблицы без столбцов почти всегда являются мусором — удалите их.
+
+```sql
+drop table demo.empty;
+```
+
+Таблицы с одним столбцом имеет смысл перепроектировать: добавьте недостающие столбцы
+
+```sql
+alter table demo.one
+    add column description text;
+```
+
+либо объедините такую таблицу с другой, к которой она логически относится.
+
+Если таблица с одним столбцом нужна намеренно (например, в качестве глобального индекса для секционированных таблиц),
+исключите её из проверки с помощью подходящего предиката (`SkipTablesByNamePredicate` и т.п.).

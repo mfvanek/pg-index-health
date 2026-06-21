@@ -23,4 +23,52 @@
 
 ## Скрипт для воспроизведения
 
-TODO
+```sql
+create schema if not exists demo;
+
+-- Связанные таблицы: clients и accounts соединены внешним ключом,
+-- поэтому проверка их не покажет.
+create table if not exists demo.clients (
+    id bigint not null primary key generated always as identity,
+    last_name varchar(255) not null,
+    first_name varchar(255) not null
+);
+
+create table if not exists demo.accounts (
+    id bigint not null primary key generated always as identity,
+    client_id bigint not null references demo.clients (id),
+    account_number varchar(50) not null unique
+);
+
+-- Таблица без единой связи с другими таблицами — попадёт в результаты проверки.
+create table if not exists demo.standalone (
+    id bigint not null primary key generated always as identity,
+    name varchar(255) not null
+);
+
+-- Секционированная таблица без связей.
+-- Проверка покажет только родительскую таблицу, секции игнорируются.
+create table if not exists demo.entity_reference(
+    ref_type varchar(32) not null,
+    ref_value varchar(64) not null,
+    creation_date timestamptz not null,
+    entity_id varchar(64) not null,
+    primary key (ref_type, ref_value, creation_date, entity_id)
+) partition by range (creation_date);
+
+create table if not exists demo.entity_reference_default
+    partition of demo.entity_reference default;
+```
+
+## Как исправить
+
+Убедитесь, что отсутствие связей не является ошибкой моделирования (забытый внешний ключ).
+Если таблица должна ссылаться на другую сущность, добавьте внешний ключ.
+
+```sql
+alter table demo.standalone
+    add column client_id bigint not null references demo.clients (id);
+```
+
+Если таблица без связей создана намеренно (например, справочник, лог или служебная таблица),
+просто исключите её из проверки с помощью подходящего предиката (`SkipTablesByNamePredicate` и т.п.).
