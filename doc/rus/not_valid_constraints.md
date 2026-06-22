@@ -30,4 +30,71 @@
 
 ## Скрипт для воспроизведения
 
-TODO
+```sql
+create schema if not exists demo;
+
+-- Для обычных (не секционированных) таблиц
+
+create table if not exists demo.clients(
+    id bigint primary key generated always as identity,
+    first_name varchar(255) not null,
+    last_name varchar(255) not null
+);
+
+create table if not exists demo.accounts(
+    id bigint primary key generated always as identity,
+    client_id bigint not null,
+    account_number varchar(50) not null,
+    account_balance numeric(22, 2) not null default 0
+);
+
+-- Внешний ключ, созданный с ключом NOT VALID: уже имеющиеся строки не проверяются
+alter table if exists demo.accounts
+    add constraint c_accounts_fk_client_id_not_validated_yet
+    foreign key (client_id) references demo.clients (id) not valid;
+
+-- Ограничение-проверка, созданное с ключом NOT VALID: уже имеющиеся строки не проверяются
+alter table if exists demo.accounts
+    add constraint c_accounts_chk_client_id_not_validated_yet
+    check (client_id > 0) not valid;
+
+-- Для секционированных таблиц
+
+create table if not exists demo.orders_partitioned(
+    id         bigint      not null generated always as identity,
+    user_id    bigint      not null,
+    status     int         not null,
+    created_at timestamptz not null default current_timestamp,
+    primary key (id, created_at)
+) partition by range (created_at);
+
+create table if not exists demo.orders_default
+    partition of demo.orders_partitioned default;
+
+-- Ограничение-проверка с ключом NOT VALID на самой секционированной (родительской) таблице
+alter table if exists demo.orders_partitioned
+    add constraint c_orders_chk_status_not_validated_yet
+    check (status >= 0) not valid;
+```
+
+## Как исправить
+
+Чтобы перевести ограничение в валидное состояние, выполните команду [`VALIDATE CONSTRAINT`](https://postgrespro.ru/docs/postgresql/17/sql-altertable).
+Она проверит все уже имеющиеся в таблице строки на соответствие ограничению, но, в отличие от создания ограничения,
+не блокирует чтение и запись — берётся только блокировка уровня `SHARE UPDATE EXCLUSIVE`.
+
+Для обычных таблиц:
+
+```sql
+alter table demo.accounts validate constraint c_accounts_fk_client_id_not_validated_yet;
+alter table demo.accounts validate constraint c_accounts_chk_client_id_not_validated_yet;
+```
+
+Для секционированных таблиц валидируйте ограничение на самой секционированной (родительской) таблице:
+
+```sql
+alter table demo.orders_partitioned validate constraint c_orders_chk_status_not_validated_yet;
+```
+
+Если команда `VALIDATE CONSTRAINT` завершается ошибкой, значит в таблице есть данные, не соответствующие ограничению.
+Найдите и исправьте такие строки (либо удалите само ограничение, если оно ошибочно), после чего повторите валидацию.
