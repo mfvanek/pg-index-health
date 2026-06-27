@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin:0.36.0")
+    implementation("com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin:0.37.0")
     implementation("com.github.spotbugs.snom:spotbugs-gradle-plugin:6.5.1")
     implementation("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:7.2.3.7755")
     implementation("net.ltgt.gradle:gradle-errorprone-plugin:5.1.0")
