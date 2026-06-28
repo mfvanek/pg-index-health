@@ -64,6 +64,17 @@ class ColumnsWithInconsistentTypesCheckOnClusterTest extends DatabaseAwareTestBa
                     ColumnWithType.ofTimestamptz(Column.ofNotNull(ctx, "t_uuid_id", "created_at")),
                     ColumnWithType.ofInteger(Column.ofNotNull(ctx, "\"t-int-id\"", "id")),
                     ColumnWithType.ofUuid(Column.ofNotNull(ctx, "t_uuid_id", "id")));
+
+            // Excluding "t_uuid_id" leaves "created_at" with a single type (timestamp): it is no longer
+            // inconsistent and is dropped, while "id" keeps two distinct types and survives.
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("t_uuid_id")))
+                .hasSize(3)
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactly(
+                    ColumnWithType.ofBigint(Column.ofNotNull(ctx, "accounts", "id")),
+                    ColumnWithType.ofBigint(Column.ofNotNull(ctx, "clients", "id")),
+                    ColumnWithType.ofInteger(Column.ofNotNull(ctx, "\"t-int-id\"", "id")));
         });
     }
 

@@ -15,6 +15,11 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
 import io.github.mfvanek.pg.model.column.ColumnWithType;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * Check for columns that share the same name but have different data types across tables on a specific host.
  * Inconsistent types for the same column name make joins and application code error-prone.
@@ -32,5 +37,23 @@ public class ColumnsWithInconsistentTypesCheckOnHost extends AbstractCheckOnHost
      */
     public ColumnsWithInconsistentTypesCheckOnHost(final PgConnection pgConnection) {
         super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_INCONSISTENT_TYPES, ColumnWithTypeExtractor.of());
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Inconsistency is a property of a group of equally named columns rather than of a single column.
+     * After the caller's exclusions are applied, a column name may be left with a single distinct type
+     * (for example, when service tables such as Liquibase's are filtered out); such residual columns are
+     * no longer inconsistent and are dropped from the result.
+     */
+    @Override
+    protected List<ColumnWithType> postProcessResults(final List<ColumnWithType> afterExclusions) {
+        final Map<String, Set<String>> typesByColumnName = afterExclusions.stream()
+            .collect(Collectors.groupingBy(ColumnWithType::getColumnName,
+                Collectors.mapping(ColumnWithType::getColumnType, Collectors.toSet())));
+        return afterExclusions.stream()
+            .filter(column -> typesByColumnName.getOrDefault(column.getColumnName(), Set.of()).size() > 1)
+            .toList();
     }
 }

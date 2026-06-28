@@ -95,9 +95,10 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
      */
     @Override
     public final List<T> check(final PgContext pgContext, final Predicate<? super T> exclusionsFilter) {
-        return doCheck(pgContext).stream()
+        final List<T> afterExclusions = doCheck(pgContext).stream()
             .filter(exclusionsFilter)
             .toList();
+        return postProcessResults(afterExclusions);
     }
 
     /**
@@ -133,6 +134,22 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
      */
     protected List<T> doCheck(final PgContext pgContext) {
         return executeQuery(pgContext, rowMapper);
+    }
+
+    /**
+     * Performs an additional post-processing pass over the results that remain after the exclusion predicate has been applied.
+     * <p>
+     * Most checks report each row independently, so the default implementation returns the list unchanged.
+     * Checks whose deviation is a property of a <i>group</i> of rows (for example {@code COLUMNS_WITH_INCONSISTENT_TYPES},
+     * where a column name is reported only because several tables declare it with conflicting types) must re-evaluate that
+     * group invariant here: once the caller excludes some rows, the survivors may no longer violate the rule.
+     *
+     * @param afterExclusions the results remaining after applying the exclusion predicate; must not be null
+     * @return the final list of deviations; never null
+     * @since 0.41.1
+     */
+    protected List<T> postProcessResults(final List<T> afterExclusions) {
+        return afterExclusions;
     }
 
     /**
