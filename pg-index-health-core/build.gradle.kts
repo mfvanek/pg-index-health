@@ -15,6 +15,13 @@ plugins {
 
 description = "pg-index-health-core is an embeddable schema linter for PostgreSQL that detects common anti-patterns and promotes best practices on a specific host."
 
+// The SQL queries come from the pg-index-health-sql git submodule, which also brings along
+// repository files (CLAUDE.md, CONTRIBUTING.md, LICENSE, README.md, .github/, etc.).
+// Only the SQL files are needed at runtime, so keep everything else out of the JAR.
+tasks.processResources {
+    include("sql/**")
+}
+
 dependencies {
     api(project(":pg-index-health-model"))
     api(project(":pg-index-health-jdbc-connection"))
