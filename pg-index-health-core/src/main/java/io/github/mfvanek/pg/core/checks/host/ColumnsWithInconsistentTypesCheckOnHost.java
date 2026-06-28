@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
 import io.github.mfvanek.pg.model.column.ColumnWithType;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,10 +50,23 @@ public class ColumnsWithInconsistentTypesCheckOnHost extends AbstractCheckOnHost
      */
     @Override
     protected List<ColumnWithType> postProcessResults(final List<ColumnWithType> afterExclusions) {
-        final Map<String, Set<String>> typesByColumnName = afterExclusions.stream()
+        return removeConsistentColumns(afterExclusions);
+    }
+
+    /**
+     * Keeps only the columns whose name is still associated with more than one distinct type.
+     * <p>
+     * Inconsistency is a property of a group of equally named columns rather than of a single column; once some
+     * columns are excluded, a name may be left with a single distinct type and is therefore no longer inconsistent.
+     *
+     * @param columns the columns remaining after exclusions; must not be null
+     * @return the columns that remain genuinely inconsistent, preserving the original order
+     */
+    static List<ColumnWithType> removeConsistentColumns(final Collection<ColumnWithType> columns) {
+        final Map<String, Set<String>> typesByColumnName = columns.stream()
             .collect(Collectors.groupingBy(ColumnWithType::getColumnName,
                 Collectors.mapping(ColumnWithType::getColumnType, Collectors.toSet())));
-        return afterExclusions.stream()
+        return columns.stream()
             .filter(column -> typesByColumnName.getOrDefault(column.getColumnName(), Set.of()).size() > 1)
             .toList();
     }
