@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConvention
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithBlobTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithCharTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithInconsistentTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithSerialTypesCheckOnHost;
@@ -380,6 +381,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public TablesWithIncrementingColumnsCheckOnHost tablesWithIncrementingColumnsCheckOnHost(final PgConnection pgConnection) {
         return new TablesWithIncrementingColumnsCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(ColumnsWithInconsistentTypesCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public ColumnsWithInconsistentTypesCheckOnHost columnsWithInconsistentTypesCheckOnHost(final PgConnection pgConnection) {
+        return new ColumnsWithInconsistentTypesCheckOnHost(pgConnection);
     }
 
     @Bean

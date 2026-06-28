@@ -85,7 +85,8 @@ public final class StandardChecksOnCluster implements Function<HighAvailabilityP
             new TablesWithNoDataCheckOnCluster(haPgConnection),
             new SelfReferencedForeignKeysCheckOnCluster(haPgConnection),
             new ColumnsWithBlobTypeCheckOnCluster(haPgConnection),
-            new TablesWithIncrementingColumnsCheckOnCluster(haPgConnection)
+            new TablesWithIncrementingColumnsCheckOnCluster(haPgConnection),
+            new ColumnsWithInconsistentTypesCheckOnCluster(haPgConnection)
         );
     }
 }

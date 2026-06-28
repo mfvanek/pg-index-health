@@ -57,6 +57,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedIn
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithBlobTypeColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithDroppedColumnStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithInconsistentTypesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithIncrementingColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithJsonAndSerialColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNoDataStatement;
@@ -83,6 +84,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithSeri
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithTimestampInTheMiddleStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithUniqueSerialColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithoutPrimaryKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithInconsistentTypesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.DbStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.DropColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.InsertDataIntoTablesAction;
@@ -433,6 +435,14 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withIncrementingColumnsInPartitionedTable() {
         return register(156, new CreatePartitionedTableWithIncrementingColumnsStatement());
+    }
+
+    public DatabasePopulator withInconsistentTypes() {
+        return register(157, new CreateTablesWithInconsistentTypesStatement());
+    }
+
+    public DatabasePopulator withInconsistentTypesInPartitionedTable() {
+        return register(158, new CreatePartitionedTableWithInconsistentTypesStatement());
     }
 
     public void populate() {
