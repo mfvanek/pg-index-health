@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConvention
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithBlobTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithCharTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithInconsistentTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithSerialTypesCheckOnHost;
@@ -170,7 +171,8 @@ abstract class AutoConfigurationTestBase {
             TablesWithNoDataCheckOnHost.class,
             SelfReferencedForeignKeysCheckOnHost.class,
             ColumnsWithBlobTypeCheckOnHost.class,
-            TablesWithIncrementingColumnsCheckOnHost.class
+            TablesWithIncrementingColumnsCheckOnHost.class,
+            ColumnsWithInconsistentTypesCheckOnHost.class
         );
     }
 }

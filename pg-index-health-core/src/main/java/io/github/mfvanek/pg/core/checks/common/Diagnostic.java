@@ -200,7 +200,11 @@ public enum Diagnostic implements CheckInfo {
     /**
      * Check for tables with incrementing column names (e.g., {@code phone1}, {@code phone2}) indicating de-normalization.
      */
-    TABLES_WITH_INCREMENTING_COLUMNS;
+    TABLES_WITH_INCREMENTING_COLUMNS,
+    /**
+     * Check for columns that share the same name but have different data types across tables.
+     */
+    COLUMNS_WITH_INCONSISTENT_TYPES;
 
     private final CheckInfo inner;
 
