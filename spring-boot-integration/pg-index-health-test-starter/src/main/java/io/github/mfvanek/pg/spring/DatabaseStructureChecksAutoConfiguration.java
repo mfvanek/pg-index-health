@@ -10,6 +10,12 @@
 
 package io.github.mfvanek.pg.spring;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
+
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
@@ -55,14 +61,11 @@ import io.github.mfvanek.pg.core.checks.host.TablesWithNoDataCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithZeroOrOneColumnCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.UnloggedSequencesCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.UnloggedTablesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHostImpl;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
 
 /**
  * Autoconfiguration for database checks.
@@ -388,6 +391,20 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public ColumnsWithInconsistentTypesCheckOnHost columnsWithInconsistentTypesCheckOnHost(final PgConnection pgConnection) {
         return new ColumnsWithInconsistentTypesCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(UnloggedTablesCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public UnloggedTablesCheckOnHost unloggedTablesCheckOnHost(final PgConnection pgConnection) {
+        return new UnloggedTablesCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(UnloggedSequencesCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public UnloggedSequencesCheckOnHost unloggedSequencesCheckOnHost(final PgConnection pgConnection) {
+        return new UnloggedSequencesCheckOnHost(pgConnection);
     }
 
     @Bean
