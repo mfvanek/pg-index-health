@@ -23,9 +23,9 @@ import io.github.mfvanek.pg.model.dbobject.AnyObject;
  * Their current value is lost after a crash, which may cause duplicate key errors
  * if used as default values for columns.
  *
- * @author Ivan Vakhrushev
+ * @author someshk1703
  * @see <a href="https://www.postgresql.org/docs/current/sql-createsequence.html">CREATE SEQUENCE</a>
- * @since 0.15.0
+ * @since 0.41.2
  */
 public class UnloggedSequencesCheckOnHost extends AbstractCheckOnHost<AnyObject> {
 
