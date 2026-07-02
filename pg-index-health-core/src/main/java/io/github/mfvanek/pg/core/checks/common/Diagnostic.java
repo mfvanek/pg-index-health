@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.core.checks.common;
 
-import io.github.mfvanek.pg.core.utils.QueryExecutors;
-
 import java.util.Objects;
 import java.util.function.Function;
+
+import io.github.mfvanek.pg.core.utils.QueryExecutors;
 
 /**
  * A list of standard diagnostics with corresponding SQL queries and query executors.
@@ -204,7 +204,15 @@ public enum Diagnostic implements CheckInfo {
     /**
      * Check for columns that share the same name but have different data types across tables.
      */
-    COLUMNS_WITH_INCONSISTENT_TYPES;
+    COLUMNS_WITH_INCONSISTENT_TYPES,
+    /**
+     * Check for unlogged tables (including unlogged partitioned tables).
+     */
+    UNLOGGED_TABLES,
+    /**
+     * Check for unlogged sequences.
+     */
+    UNLOGGED_SEQUENCES;
 
     private final CheckInfo inner;
 

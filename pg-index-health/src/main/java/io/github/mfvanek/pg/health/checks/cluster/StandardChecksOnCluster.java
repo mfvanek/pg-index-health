@@ -10,12 +10,12 @@
 
 package io.github.mfvanek.pg.health.checks.cluster;
 
+import java.util.List;
+import java.util.function.Function;
+
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
-
-import java.util.List;
-import java.util.function.Function;
 
 /**
  * A utility class that provides standard checks to be performed across a PostgreSQL cluster.
@@ -86,7 +86,9 @@ public final class StandardChecksOnCluster implements Function<HighAvailabilityP
             new SelfReferencedForeignKeysCheckOnCluster(haPgConnection),
             new ColumnsWithBlobTypeCheckOnCluster(haPgConnection),
             new TablesWithIncrementingColumnsCheckOnCluster(haPgConnection),
-            new ColumnsWithInconsistentTypesCheckOnCluster(haPgConnection)
+            new ColumnsWithInconsistentTypesCheckOnCluster(haPgConnection),
+            new UnloggedTablesCheckOnCluster(haPgConnection),
+            new UnloggedSequencesCheckOnCluster(haPgConnection)
         );
     }
 }

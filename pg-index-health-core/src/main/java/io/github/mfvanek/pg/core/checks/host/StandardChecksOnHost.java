@@ -10,12 +10,12 @@
 
 package io.github.mfvanek.pg.core.checks.host;
 
+import java.util.List;
+import java.util.function.Function;
+
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
-
-import java.util.List;
-import java.util.function.Function;
 
 /**
  * A utility class that provides standard checks to be performed on a specific PostgreSQL host.
@@ -87,7 +87,9 @@ public final class StandardChecksOnHost implements Function<PgConnection, List<D
             new SelfReferencedForeignKeysCheckOnHost(pgConnection),
             new ColumnsWithBlobTypeCheckOnHost(pgConnection),
             new TablesWithIncrementingColumnsCheckOnHost(pgConnection),
-            new ColumnsWithInconsistentTypesCheckOnHost(pgConnection)
+            new ColumnsWithInconsistentTypesCheckOnHost(pgConnection),
+            new UnloggedTablesCheckOnHost(pgConnection),
+            new UnloggedSequencesCheckOnHost(pgConnection)
         );
     }
 }
