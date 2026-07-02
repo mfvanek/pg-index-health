@@ -17,8 +17,8 @@ import io.github.mfvanek.pg.model.dbobject.AnyObject;
 /**
  * Check for unlogged sequences on all hosts in the cluster.
  *
- * @author Ivan Vakhrushev
- * @since 0.15.0
+ * @author someshk1703
+ * @since 0.41.2
  */
 public class UnloggedSequencesCheckOnCluster extends AbstractCheckOnCluster<AnyObject> {
 

@@ -21,9 +21,9 @@ import io.github.mfvanek.pg.model.table.Table;
  * Unlogged tables are not backed by WAL, so data in them is not replicated to standbys
  * and will be truncated automatically after a server crash.
  *
- * @author Ivan Vakhrushev
+ * @author someshk1703
  * @see <a href="https://www.postgresql.org/docs/current/sql-createtable.html#SQL-CREATETABLE-UNLOGGED">CREATE TABLE UNLOGGED</a>
- * @since 0.15.0
+ * @since 0.41.2
  */
 public class UnloggedTablesCheckOnHost extends AbstractCheckOnHost<Table> {
 
