@@ -10,21 +10,21 @@
 
 package io.github.mfvanek.pg.health.checks.cluster;
 
-import io.github.mfvanek.pg.core.checks.common.Diagnostic;
-import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
-import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
-import io.github.mfvanek.pg.model.context.PgContext;
-import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
-import io.github.mfvanek.pg.model.table.Table;
+import java.util.List;
+
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
+import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
+import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
+import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
+import io.github.mfvanek.pg.model.table.Table;
 
 class UnloggedTablesCheckOnClusterTest extends DatabaseAwareTestBase {
 
