@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.core.checks.common;
 
-import io.github.mfvanek.pg.core.utils.QueryExecutors;
-
 import java.util.Objects;
 import java.util.function.Function;
+
+import io.github.mfvanek.pg.core.utils.QueryExecutors;
 
 /**
  * A list of standard diagnostics with corresponding SQL queries and query executors.
