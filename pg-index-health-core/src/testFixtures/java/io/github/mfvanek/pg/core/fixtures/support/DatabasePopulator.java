@@ -10,16 +10,6 @@
 
 package io.github.mfvanek.pg.core.fixtures.support;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
-
-import javax.sql.DataSource;
-
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddArrayColumnAndIndexToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnFunctionsStatement;
@@ -102,6 +92,15 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.DbStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.DropColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.InsertDataIntoTablesAction;
 import io.github.mfvanek.pg.model.validation.Validators;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
+import javax.sql.DataSource;
 
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessivePublicCount", "PMD.CyclomaticComplexity"})
 public final class DatabasePopulator implements AutoCloseable {
