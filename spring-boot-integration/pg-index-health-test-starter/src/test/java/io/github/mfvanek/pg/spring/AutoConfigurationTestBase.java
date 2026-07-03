@@ -10,21 +10,6 @@
 
 package io.github.mfvanek.pg.spring;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
-import javax.sql.DataSource;
-
-import org.apache.commons.lang3.StringUtils;
-import static org.assertj.core.api.Assertions.assertThat;
-import org.jspecify.annotations.NonNull;
-import org.mockito.Mockito;
-import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.GenericApplicationContext;
-
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHost;
@@ -75,7 +60,21 @@ import io.github.mfvanek.pg.core.checks.host.UnloggedSequencesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.UnloggedTablesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
+import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+import javax.sql.DataSource;
+
 import static io.github.mfvanek.pg.spring.DatabaseStructureHealthProperties.STANDARD_DATASOURCE_BEAN_NAME;
+import static org.assertj.core.api.Assertions.assertThat;
 
 abstract class AutoConfigurationTestBase {
 
