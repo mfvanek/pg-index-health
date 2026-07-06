@@ -72,4 +72,8 @@ public abstract class DatabaseAwareTestBase {
     protected static boolean isNotNullConstraintsSupported() {
         return POSTGRES.isNotNullConstraintsSupported();
     }
+
+    protected static boolean isUnloggedSequencesSupported() {
+        return POSTGRES.isUnloggedSequencesSupported();
+    }
 }

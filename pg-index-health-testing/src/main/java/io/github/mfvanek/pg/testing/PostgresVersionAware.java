@@ -57,4 +57,14 @@ public interface PostgresVersionAware {
      * @since 0.30.0
      */
     boolean isNotNullConstraintsSupported();
+
+    /**
+     * Checks whether unlogged sequences are supported for the given PostgreSQL container.
+     * Unlogged sequences were introduced in PostgreSQL 15.
+     *
+     * @return true for version 15 and higher
+     * @since 0.41.2
+     * @see <a href="https://www.postgresql.org/docs/15/sql-createsequence.html">CREATE SEQUENCE</a>
+     */
+    boolean isUnloggedSequencesSupported();
 }

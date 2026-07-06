@@ -43,6 +43,9 @@ class UnloggedSequencesCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
+        if (!isUnloggedSequencesSupported()) {
+            return;
+        }
         executeTestOnDatabase(schemaName, DatabasePopulator::withUnloggedSequence, ctx -> {
             assertThat(check)
                 .executing(ctx)
