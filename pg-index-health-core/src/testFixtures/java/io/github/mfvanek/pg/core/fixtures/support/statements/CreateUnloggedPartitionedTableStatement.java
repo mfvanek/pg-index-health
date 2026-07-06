@@ -23,7 +23,7 @@ public class CreateUnloggedPartitionedTableStatement extends AbstractDbStatement
                     created date   not null
                 ) partition by range (created);""",
             """
-                create unlogged table {schemaName}.unlogged_partitioned_table_p1
+                create table {schemaName}.unlogged_partitioned_table_p1
                     partition of {schemaName}.unlogged_partitioned_table
                     for values from ('2025-01-01') to ('2026-01-01');"""
         );

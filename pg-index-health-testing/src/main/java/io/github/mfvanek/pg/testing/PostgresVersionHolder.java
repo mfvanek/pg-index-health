@@ -86,6 +86,14 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
         return getMajorVersion() >= 18;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isUnloggedSequencesSupported() {
+        return getMajorVersion() >= 15;
+    }
+
     @ExcludeFromJacocoGeneratedReport
     private static String preparePostgresVersion() {
         final String pgVersion = System.getenv("TEST_PG_VERSION");
