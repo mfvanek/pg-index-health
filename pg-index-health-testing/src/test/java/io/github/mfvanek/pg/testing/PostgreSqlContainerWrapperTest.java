@@ -68,6 +68,8 @@ class PostgreSqlContainerWrapperTest {
                         .isEqualTo("/var/lib/postgresql/18/docker");
                     assertThat(c.isNotNullConstraintsSupported())
                         .isTrue();
+                    assertThat(c.isUnloggedSequencesSupported())
+                        .isTrue();
                 });
         }
     }

@@ -10,6 +10,10 @@
 
 package io.github.mfvanek.pg.core.fixtures.support;
 
+import java.util.function.Consumer;
+
+import javax.sql.DataSource;
+
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionImpl;
 import io.github.mfvanek.pg.connection.PgConnection;
@@ -19,9 +23,6 @@ import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.testing.PostgreSqlContainerWrapper;
-
-import java.util.function.Consumer;
-import javax.sql.DataSource;
 
 public abstract class DatabaseAwareTestBase {
 
