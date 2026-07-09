@@ -23,7 +23,7 @@ pitest {
     junit5PluginVersion.set("1.2.3")
     pitestVersion.set("1.23.0")
     threads.set(4)
-    if (System.getenv("STRYKER_DASHBOARD_API_KEY") != null) {
+    if (!System.getenv("STRYKER_DASHBOARD_API_KEY").isNullOrBlank()) {
         outputFormats.set(setOf("stryker-dashboard"))
     } else {
         outputFormats.set(setOf("HTML"))

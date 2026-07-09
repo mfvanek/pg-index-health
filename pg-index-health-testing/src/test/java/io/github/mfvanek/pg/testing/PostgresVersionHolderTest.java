@@ -37,6 +37,7 @@ class PostgresVersionHolderTest {
                 assertThat(v.isProceduresSupported()).isFalse();
                 assertThat(v.isCumulativeStatisticsSystemSupported()).isFalse();
                 assertThat(v.isNotNullConstraintsSupported()).isFalse();
+                assertThat(v.isUnloggedSequencesSupported()).isFalse();
             });
     }
 
@@ -50,6 +51,7 @@ class PostgresVersionHolderTest {
                 assertThat(v.isProceduresSupported()).isTrue();
                 assertThat(v.isCumulativeStatisticsSystemSupported()).isTrue();
                 assertThat(v.isNotNullConstraintsSupported()).isFalse();
+                assertThat(v.isUnloggedSequencesSupported()).isTrue();
             });
     }
 
