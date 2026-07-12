@@ -11,10 +11,9 @@
 package io.github.mfvanek.pg.testing;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.junit.jupiter.api.Test;
 
 class PostgreSqlContainerWrapperTest {
 
