@@ -13,7 +13,7 @@ freefair = "9.5.0"
 
 [libraries]
 jspecify = "org.jspecify:jspecify:1.0.0"
-postgresql = "org.postgresql:postgresql:42.7.12"
+postgresql = "org.postgresql:postgresql:42.7.13"
 jackson2-bom = "com.fasterxml.jackson:jackson-bom:2.21.2" # to be compatible with Spring Boot 3.5.X
 jackson3-bom = "tools.jackson:jackson-bom:3.1.2" # to be compatible with Spring Boot 4.0.X
 classgraph = "io.github.classgraph:classgraph:4.8.184"
