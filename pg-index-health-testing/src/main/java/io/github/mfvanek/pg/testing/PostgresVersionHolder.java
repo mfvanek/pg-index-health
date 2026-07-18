@@ -10,10 +10,10 @@
 
 package io.github.mfvanek.pg.testing;
 
-import io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport;
-
 import java.util.Locale;
 import java.util.Objects;
+
+import io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport;
 
 /**
  * A helper class to obtain a PostgreSQL version to run with Testcontainers.
@@ -84,6 +84,14 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
     @Override
     public boolean isNotNullConstraintsSupported() {
         return getMajorVersion() >= 18;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isUnloggedSequencesSupported() {
+        return getMajorVersion() >= 15;
     }
 
     @ExcludeFromJacocoGeneratedReport

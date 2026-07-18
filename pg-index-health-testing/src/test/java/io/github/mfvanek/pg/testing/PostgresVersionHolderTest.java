@@ -10,11 +10,10 @@
 
 package io.github.mfvanek.pg.testing;
 
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 @Tag("fast")
 class PostgresVersionHolderTest {
@@ -37,6 +36,7 @@ class PostgresVersionHolderTest {
                 assertThat(v.isProceduresSupported()).isFalse();
                 assertThat(v.isCumulativeStatisticsSystemSupported()).isFalse();
                 assertThat(v.isNotNullConstraintsSupported()).isFalse();
+                assertThat(v.isUnloggedSequencesSupported()).isFalse();
             });
     }
 
@@ -50,6 +50,7 @@ class PostgresVersionHolderTest {
                 assertThat(v.isProceduresSupported()).isTrue();
                 assertThat(v.isCumulativeStatisticsSystemSupported()).isTrue();
                 assertThat(v.isNotNullConstraintsSupported()).isFalse();
+                assertThat(v.isUnloggedSequencesSupported()).isTrue();
             });
     }
 

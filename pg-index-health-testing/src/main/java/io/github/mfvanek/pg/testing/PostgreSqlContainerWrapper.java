@@ -10,21 +10,23 @@
 
 package io.github.mfvanek.pg.testing;
 
-import io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport;
-import io.github.mfvanek.pg.model.settings.ImportantParam;
-import io.github.mfvanek.pg.model.units.MemoryUnit;
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.postgresql.PostgreSQLContainer;
-import org.testcontainers.utility.DockerImageName;
-
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
+
 import javax.sql.DataSource;
+
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.postgresql.PostgreSQLContainer;
+import org.testcontainers.utility.DockerImageName;
+
+import io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport;
+import io.github.mfvanek.pg.model.settings.ImportantParam;
+import io.github.mfvanek.pg.model.units.MemoryUnit;
 
 /**
  * A wrapper around a PostgreSQL Testcontainers instance, providing easy access
@@ -169,6 +171,14 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
     @Override
     public boolean isNotNullConstraintsSupported() {
         return pgVersion.isNotNullConstraintsSupported();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isUnloggedSequencesSupported() {
+        return pgVersion.isUnloggedSequencesSupported();
     }
 
     /**

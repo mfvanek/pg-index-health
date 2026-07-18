@@ -56,6 +56,8 @@ import io.github.mfvanek.pg.core.checks.host.TablesWithNoDataCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithZeroOrOneColumnCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutDescriptionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.TablesWithoutPrimaryKeyCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.UnloggedSequencesCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.UnloggedTablesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import org.apache.commons.lang3.StringUtils;
@@ -172,7 +174,9 @@ abstract class AutoConfigurationTestBase {
             SelfReferencedForeignKeysCheckOnHost.class,
             ColumnsWithBlobTypeCheckOnHost.class,
             TablesWithIncrementingColumnsCheckOnHost.class,
-            ColumnsWithInconsistentTypesCheckOnHost.class
+            ColumnsWithInconsistentTypesCheckOnHost.class,
+            UnloggedTablesCheckOnHost.class,
+            UnloggedSequencesCheckOnHost.class
         );
     }
 }

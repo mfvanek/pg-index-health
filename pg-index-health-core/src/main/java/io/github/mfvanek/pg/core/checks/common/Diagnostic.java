@@ -204,7 +204,15 @@ public enum Diagnostic implements CheckInfo {
     /**
      * Check for columns that share the same name but have different data types across tables.
      */
-    COLUMNS_WITH_INCONSISTENT_TYPES;
+    COLUMNS_WITH_INCONSISTENT_TYPES,
+    /**
+     * Check for unlogged tables (including unlogged partitioned tables).
+     */
+    UNLOGGED_TABLES,
+    /**
+     * Check for unlogged sequences.
+     */
+    UNLOGGED_SEQUENCES;
 
     private final CheckInfo inner;
 
