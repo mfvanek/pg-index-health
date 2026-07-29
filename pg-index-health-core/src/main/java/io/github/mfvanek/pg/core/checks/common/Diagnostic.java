@@ -206,7 +206,7 @@ public enum Diagnostic implements CheckInfo {
      */
     COLUMNS_WITH_INCONSISTENT_TYPES,
     /**
-     * Check for unlogged tables (including unlogged partitioned tables).
+     * Check for unlogged tables.
      */
     UNLOGGED_TABLES,
     /**

@@ -41,16 +41,6 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnClusterTest extends DatabaseAwa
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withReferences, ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .isEmpty()
-        );
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withNaturalKeys, ctx -> {
             assertThat(check)

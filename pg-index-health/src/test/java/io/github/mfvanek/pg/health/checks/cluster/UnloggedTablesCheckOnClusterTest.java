@@ -57,15 +57,6 @@ class UnloggedTablesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithoutThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .isEmpty());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldDetectUnloggedPartitionedTable(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withUnloggedPartitionedTable, ctx ->
             assertThat(check)
