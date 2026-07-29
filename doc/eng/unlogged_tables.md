@@ -16,7 +16,8 @@ See also https://www.postgresql.org/docs/current/sql-createtable.html#SQL-CREATE
 
 ## Support for partitioned tables
 
-Applicable to both regular and partitioned unlogged tables.
+Supports partitioned tables.
+The check is performed on the partitioned table itself (the parent one). Individual sections (descendants) are ignored.
 
 ## Reproduction script
 
