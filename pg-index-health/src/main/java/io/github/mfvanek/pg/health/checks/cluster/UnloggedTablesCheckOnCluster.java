@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.core.checks.host.UnloggedTablesCheckOnHost;
 import io.github.mfvanek.pg.model.table.Table;
 
 /**
- * Check for unlogged tables (including unlogged partitioned tables) on all hosts in the cluster.
+ * Check for unlogged tables on all hosts in the cluster.
  *
  * @author someshk1703
  * @since 0.41.2

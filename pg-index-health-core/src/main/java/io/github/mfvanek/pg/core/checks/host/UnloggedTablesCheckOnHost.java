@@ -16,7 +16,7 @@ import io.github.mfvanek.pg.core.checks.extractors.TableExtractor;
 import io.github.mfvanek.pg.model.table.Table;
 
 /**
- * Check for unlogged tables (including unlogged partitioned tables) on a specific host.
+ * Check for unlogged tables on a specific host.
  * <p>
  * Unlogged tables are not backed by WAL, so data in them is not replicated to standbys
  * and will be truncated automatically after a server crash.
