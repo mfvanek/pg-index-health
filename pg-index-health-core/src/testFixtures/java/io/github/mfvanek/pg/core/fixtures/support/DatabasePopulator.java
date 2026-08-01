@@ -110,18 +110,26 @@ public final class DatabasePopulator implements AutoCloseable {
     private final Map<Integer, Runnable> actionsToExecuteOutsideTransaction = new TreeMap<>();
     private final Map<Integer, DbStatement> statementsToExecuteInSameTransaction = new TreeMap<>();
     private final boolean supportsProcedures;
+    private final boolean supportsUnloggedSequences;
 
-    private DatabasePopulator(final DataSource dataSource, final String schemaName, final boolean supportsProcedures) {
+    private DatabasePopulator(final DataSource dataSource,
+                              final String schemaName,
+                              final boolean supportsProcedures,
+                              final boolean supportsUnloggedSequences) {
         this.dataSource = Objects.requireNonNull(dataSource);
         this.schemaName = Validators.notBlank(schemaName, "schemaName");
         this.supportsProcedures = supportsProcedures;
+        this.supportsUnloggedSequences = supportsUnloggedSequences;
         register(1, new CreateSchemaStatement());
         register(2, new CreateClientsTableStatement());
         register(3, new CreateAccountsTableStatement());
     }
 
-    static DatabasePopulator builder(final DataSource dataSource, final String schemaName, final boolean supportsProcedures) {
-        return new DatabasePopulator(dataSource, schemaName, supportsProcedures);
+    static DatabasePopulator builder(final DataSource dataSource,
+                                     final String schemaName,
+                                     final boolean supportsProcedures,
+                                     final boolean supportsUnloggedSequences) {
+        return new DatabasePopulator(dataSource, schemaName, supportsProcedures, supportsUnloggedSequences);
     }
 
     public DatabasePopulator withCustomCollation() {
@@ -453,7 +461,10 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     public DatabasePopulator withUnloggedSequence() {
-        return register(160, new CreateUnloggedSequenceStatement());
+        if (supportsUnloggedSequences) {
+            return register(160, new CreateUnloggedSequenceStatement());
+        }
+        return this;
     }
 
     public DatabasePopulator withUnloggedPartitionedTable() {

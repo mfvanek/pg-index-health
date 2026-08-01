@@ -43,15 +43,18 @@ class UnloggedSequencesCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        if (!isUnloggedSequencesSupported()) {
-            return;
-        }
         executeTestOnDatabase(schemaName, DatabasePopulator::withUnloggedSequence, ctx -> {
-            assertThat(check)
-                .executing(ctx)
-                .hasSize(1)
-                .containsExactly(
-                    AnyObject.ofType(ctx, "unlogged_seq_1", PgObjectType.SEQUENCE));
+            if (isUnloggedSequencesSupported()) {
+                assertThat(check)
+                    .executing(ctx)
+                    .hasSize(1)
+                    .containsExactly(
+                        AnyObject.ofType(ctx, "unlogged_seq_1", PgObjectType.SEQUENCE));
+            } else {
+                assertThat(check)
+                    .executing(ctx)
+                    .isEmpty();
+            }
 
             assertThat(check)
                 .executing(ctx, SkipDbObjectsByNamePredicate.of(ctx, List.of("unlogged_seq_1")))
