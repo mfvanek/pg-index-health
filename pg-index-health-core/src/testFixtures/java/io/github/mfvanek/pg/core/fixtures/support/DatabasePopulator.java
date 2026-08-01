@@ -85,6 +85,8 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithTime
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithUniqueSerialColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithoutPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithInconsistentTypesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedSequenceStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.DbStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.DropColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.InsertDataIntoTablesAction;
@@ -107,18 +109,26 @@ public final class DatabasePopulator implements AutoCloseable {
     private final Map<Integer, Runnable> actionsToExecuteOutsideTransaction = new TreeMap<>();
     private final Map<Integer, DbStatement> statementsToExecuteInSameTransaction = new TreeMap<>();
     private final boolean supportsProcedures;
+    private final boolean supportsUnloggedSequences;
 
-    private DatabasePopulator(final DataSource dataSource, final String schemaName, final boolean supportsProcedures) {
+    private DatabasePopulator(final DataSource dataSource,
+                              final String schemaName,
+                              final boolean supportsProcedures,
+                              final boolean supportsUnloggedSequences) {
         this.dataSource = Objects.requireNonNull(dataSource);
         this.schemaName = Validators.notBlank(schemaName, "schemaName");
         this.supportsProcedures = supportsProcedures;
+        this.supportsUnloggedSequences = supportsUnloggedSequences;
         register(1, new CreateSchemaStatement());
         register(2, new CreateClientsTableStatement());
         register(3, new CreateAccountsTableStatement());
     }
 
-    static DatabasePopulator builder(final DataSource dataSource, final String schemaName, final boolean supportsProcedures) {
-        return new DatabasePopulator(dataSource, schemaName, supportsProcedures);
+    static DatabasePopulator builder(final DataSource dataSource,
+                                     final String schemaName,
+                                     final boolean supportsProcedures,
+                                     final boolean supportsUnloggedSequences) {
+        return new DatabasePopulator(dataSource, schemaName, supportsProcedures, supportsUnloggedSequences);
     }
 
     public DatabasePopulator withCustomCollation() {
@@ -443,6 +453,17 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withInconsistentTypesInPartitionedTable() {
         return register(158, new CreatePartitionedTableWithInconsistentTypesStatement());
+    }
+
+    public DatabasePopulator withUnloggedTable() {
+        return register(159, new CreateUnloggedTableStatement());
+    }
+
+    public DatabasePopulator withUnloggedSequence() {
+        if (supportsUnloggedSequences) {
+            return register(160, new CreateUnloggedSequenceStatement());
+        }
+        return this;
     }
 
     public void populate() {

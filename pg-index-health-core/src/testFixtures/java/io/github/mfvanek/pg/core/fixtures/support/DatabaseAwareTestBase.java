@@ -50,7 +50,7 @@ public abstract class DatabaseAwareTestBase {
     protected void executeTestOnDatabase(final String schemaName,
                                          final DatabaseConfigurer databaseConfigurer,
                                          final Consumer<PgContext> testExecutor) {
-        try (DatabasePopulator databasePopulator = DatabasePopulator.builder(getDataSource(), schemaName, isProceduresSupported())) {
+        try (DatabasePopulator databasePopulator = DatabasePopulator.builder(getDataSource(), schemaName, isProceduresSupported(), isUnloggedSequencesSupported())) {
             databaseConfigurer.configure(databasePopulator)
                 .populate();
             testExecutor.accept(PgContext.of(schemaName, 0));
@@ -71,5 +71,9 @@ public abstract class DatabaseAwareTestBase {
 
     protected static boolean isNotNullConstraintsSupported() {
         return POSTGRES.isNotNullConstraintsSupported();
+    }
+
+    protected static boolean isUnloggedSequencesSupported() {
+        return POSTGRES.isUnloggedSequencesSupported();
     }
 }
