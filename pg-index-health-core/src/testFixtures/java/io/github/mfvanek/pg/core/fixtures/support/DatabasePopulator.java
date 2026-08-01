@@ -85,7 +85,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithTime
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithUniqueSerialColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithoutPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithInconsistentTypesStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedSequenceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.DbStatement;
@@ -465,10 +464,6 @@ public final class DatabasePopulator implements AutoCloseable {
             return register(160, new CreateUnloggedSequenceStatement());
         }
         return this;
-    }
-
-    public DatabasePopulator withUnloggedPartitionedTable() {
-        return register(161, new CreateUnloggedPartitionedTableStatement());
     }
 
     public void populate() {

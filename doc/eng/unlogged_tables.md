@@ -16,8 +16,7 @@ See also https://www.postgresql.org/docs/current/sql-createtable.html#SQL-CREATE
 
 ## Support for partitioned tables
 
-Supports partitioned tables.
-The check is performed on the partitioned table itself (the parent one). Individual sections (descendants) are ignored.
+Not applicable to partitioned tables.
 
 ## Reproduction script
 
@@ -28,16 +27,6 @@ create unlogged table demo.unlogged_table(
     id   bigint generated always as identity primary key,
     info text
 );
-
--- Unlogged partitioned table example
-create unlogged table demo.unlogged_partitioned(
-    id      bigint not null,
-    created date   not null
-) partition by range (created);
-
-create unlogged table demo.unlogged_partitioned_2025
-    partition of demo.unlogged_partitioned
-    for values from ('2025-01-01') to ('2026-01-01');
 ```
 
 ## How to fix

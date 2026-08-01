@@ -17,8 +17,7 @@
 
 ## Поддержка секционированных таблиц
 
-Поддерживает секционированные таблицы.
-Проверка выполняется на самой секционированной таблице (родительской). Отдельные секции (потомки) игнорируются.
+Не применима к секционированным таблицам.
 
 ## Скрипт для воспроизведения
 
@@ -29,16 +28,6 @@ create unlogged table demo.unlogged_table(
     id   bigint generated always as identity primary key,
     info text
 );
-
--- Пример нелогируемой секционированной таблицы
-create unlogged table demo.unlogged_partitioned(
-    id      bigint not null,
-    created date   not null
-) partition by range (created);
-
-create unlogged table demo.unlogged_partitioned_2025
-    partition of demo.unlogged_partitioned
-    for values from ('2025-01-01') to ('2026-01-01');
 ```
 
 ## Как исправить

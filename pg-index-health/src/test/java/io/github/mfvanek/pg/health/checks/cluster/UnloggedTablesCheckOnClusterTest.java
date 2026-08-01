@@ -54,16 +54,4 @@ class UnloggedTablesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .isEmpty();
         });
     }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldDetectUnloggedPartitionedTable(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withUnloggedPartitionedTable, ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
-                .containsExactly(
-                    Table.of(ctx, "unlogged_partitioned_table")));
-    }
 }
