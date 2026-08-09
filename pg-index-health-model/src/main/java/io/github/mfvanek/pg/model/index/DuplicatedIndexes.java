@@ -42,7 +42,7 @@ public final class DuplicatedIndexes implements DbObject, TableNameAware, Indexe
     private static final Comparator<Index> INDEX_WITH_SIZE_COMPARATOR =
         Comparator.comparing(Index::getTableName)
             .thenComparing(Index::getIndexName)
-            .thenComparing(Index::getIndexSizeInBytes);
+            .thenComparingLong(Index::getIndexSizeInBytes);
 
     private final List<Index> indexes;
     private final long totalSize;

@@ -32,5 +32,5 @@ dependencies {
 }
 
 lombok {
-    version = "1.18.44"
+    version = "1.18.46"
 }

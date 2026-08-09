@@ -29,7 +29,7 @@ public class CreateTableWithoutPrimaryKeyStatement extends AbstractDbStatement {
     }
 
     @Override
-    public void postExecute(final Statement statement, final String schemaName) throws SQLException {
+    protected void postExecute(final Statement statement, final String schemaName) throws SQLException {
         throwExceptionIfTableDoesNotExist(statement, "bad_clients", schemaName);
     }
 }
