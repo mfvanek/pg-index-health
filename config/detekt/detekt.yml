@@ -1,3 +1,7 @@
+config:
+    validation: true
+    warningsAsErrors: true
+
 performance:
     SpreadOperator:
         active: false
@@ -6,9 +10,9 @@ libraries:
     LibraryEntitiesShouldNotBePublic:
         active: false
 
-formatting:
-    MaximumLineLength:
-        maxLineLength: 200
+ktlint:
+    TrailingCommaOnCallSite:
+        active: false
 
 style:
     MaxLineLength:
@@ -17,8 +21,9 @@ style:
         ignoreLateinitVar: true
     ForbiddenImport:
         active: true
-        imports: []
-        forbiddenPatterns: 'org\.junit\.jupiter\.api\.Assertions|org\.hamcrest'
+        forbiddenImports:
+            -   value: 'org.junit.jupiter.api.Assertions'
+            -   value: 'org.hamcrest'
     ForbiddenMethodCall:
         active: true
         methods:

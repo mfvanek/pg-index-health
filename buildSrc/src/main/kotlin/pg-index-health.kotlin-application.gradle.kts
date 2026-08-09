@@ -8,7 +8,7 @@
  * Licensed under the Apache License 2.0
  */
 
-import io.gitlab.arturbosch.detekt.Detekt
+import dev.detekt.gradle.Detekt
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -16,7 +16,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.plugin.spring")
     id("pg-index-health.java-compilation")
-    id("io.gitlab.arturbosch.detekt")
+    id("dev.detekt")
     id("pg-index-health.forbidden-apis")
 }
 
@@ -44,18 +44,18 @@ tasks {
 
     withType<Detekt>().configureEach {
         reports {
-            xml.required.set(true)
+            checkstyle.required.set(true)
             html.required.set(true)
         }
     }
 
-   named("detekt") {
+    named("detekt") {
         dependsOn(detektMain, detektTest)
     }
 }
 
 detekt {
-    toolVersion = versionCatalog.findVersion("detekt").get().requiredVersion
+    toolVersion.set(versionCatalog.findVersion("detekt").get().requiredVersion)
     config.setFrom(file("${rootDir}/config/detekt/detekt.yml"))
-    buildUponDefaultConfig = true
+    buildUponDefaultConfig.set(true)
 }
