@@ -7,16 +7,22 @@ Instead, you should use `varchar` (without a length limit) or `text`.
 
 ## Why you should not use it
 
+### No gain in performance or size
+
 `varchar(n)` is a variable-length text field that will throw an error
 if you try to insert a string longer than **n** characters into it.
 `varchar (without (n))` or `text` are similar, but without a length limit.
 If you insert the same string into all three field types, they will occupy the same amount of space,
 and you will not be able to measure any difference in performance.
-If you need to limit the value in a field, you probably need something more specific than a maximum length.
+
+### Requires an access exclusive lock
+
+Changing the size of a `varchar` field requires an `ACCESS EXCLUSIVE` lock, that will prevent all reads and writes to the table.
 
 ## When to use it
 
-If you need a text field that will throw an error if you insert a string that is too long, and you do not want to use an explicit check constraint, then varchar(n) is a perfectly suitable type.
+If you need a text field that will throw an error if you insert a string that is too long,
+and you do not want to use an explicit check constraint, then varchar(n) is a perfectly suitable type.
 
 ## SQL query
 
@@ -56,4 +62,5 @@ create table if not exists demo."bad_varchar_limit_partitioned_hash_p0"
 
 ## How to fix
 
-Change the column type to `text`. Do not forget to make the necessary changes in the application working with the database.
+- Change the column type to `text`. Do not forget to make the necessary changes in the application working with the database.
+- Use a `CHECK CONSTRAINT` to limit the max length. 
