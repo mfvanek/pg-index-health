@@ -40,7 +40,7 @@ internal class DatabaseStructureStaticAnalysisTest {
             .forEach { check ->
                 val ctx = PgContext.of("custom_ds_schema")
                 // Due to the use of spring.liquibase.default-schema, all names are resolved without a schema
-                val listAssert = assertThat(check.check(ctx, SkipLiquibaseTablesPredicate.ofDefault()))
+                val listAssert = assertThat(check.check(ctx, SkipLiquibaseTablesPredicate.of(ctx)))
                     .`as`(check.name)
 
                 when (check.name) {
@@ -48,7 +48,7 @@ internal class DatabaseStructureStaticAnalysisTest {
                         listAssert
                             .hasSize(1)
                             .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
-                            .containsExactly(Table.of("warehouse"))
+                            .containsExactly(Table.of(ctx, "warehouse"))
                             .asInstanceOf(list(Table::class.java))
                             .allMatch { t -> t.tableSizeInBytes > 0L }
 

@@ -28,6 +28,6 @@ class Sb4Jackson3DemoApplicationRunTest {
         assertThat(output.getAll())
             .contains("Starting Sb4Jackson3DemoApplication using Java")
             .contains("Started Sb4Jackson3DemoApplication in")
-            .contains("(v4.0.5)");
+            .contains("(v4.0.7)");
     }
 }
