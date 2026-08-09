@@ -29,7 +29,7 @@ public class CreateTableWithColumnOfBigSerialTypeStatement extends AbstractDbSta
     }
 
     @Override
-    public void postExecute(final Statement statement, final String schemaName) throws SQLException {
+    protected void postExecute(final Statement statement, final String schemaName) throws SQLException {
         throwExceptionIfTableDoesNotExist(statement, "bad_accounts", schemaName);
     }
 }

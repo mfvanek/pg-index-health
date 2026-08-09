@@ -24,7 +24,7 @@ public class CreateSchemaStatement extends AbstractDbStatement {
     }
 
     @Override
-    public void postExecute(final Statement statement, final String schemaName) throws SQLException {
+    protected void postExecute(final Statement statement, final String schemaName) throws SQLException {
         final String checkQuery = String.format(
             Locale.ROOT, "select exists(select 1 from information_schema.schemata where schema_name = '%s')", schemaName);
         try (ResultSet rs = statement.executeQuery(checkQuery)) {
