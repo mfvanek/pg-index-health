@@ -28,7 +28,5 @@ class DataSourceConfiguration {
     @Bean
     @Primary
     @LiquibaseDataSource
-    fun pgihCustomDataSource(properties: CustomDataSourceProperties): HikariDataSource {
-        return HikariDataSource(properties)
-    }
+    fun pgihCustomDataSource(properties: CustomDataSourceProperties): HikariDataSource = HikariDataSource(properties)
 }

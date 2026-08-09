@@ -2,7 +2,7 @@
 spring-boot-v3 = "3.5.16"
 spring-boot-v4 = "4.0.7"
 slf4j = "2.0.18" # to be compatible with Spring Boot 3.5.X
-detekt = "1.23.8"
+detekt = "2.0.0-alpha.6"
 commons-lang3 = "3.20.0"
 assertj = "3.27.7"
 testcontainers = "2.0.5" # we do not align the testcontainers version with Spring Boot BOM
@@ -33,11 +33,11 @@ spring-boot-v4-starter-jdbc-main = { group = "org.springframework.boot", name = 
 spring-boot-v4-starter-jdbc-test = { group = "org.springframework.boot", name = "spring-boot-starter-jdbc-test", version.ref = "spring-boot-v4" }
 spring-boot-v4-starter-jackson2 = { group = "org.springframework.boot", name = "spring-boot-jackson2", version.ref = "spring-boot-v4" }
 spring-boot-v4-starter-jackson3 = { group = "org.springframework.boot", name = "spring-boot-starter-jackson", version.ref = "spring-boot-v4" }
-detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
-detekt-libraries = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-libraries", version.ref = "detekt" }
+detekt-formatting = { group = "dev.detekt", name = "detekt-rules-ktlint-wrapper", version.ref = "detekt" }
+detekt-libraries = { group = "dev.detekt", name = "detekt-rules-libraries", version.ref = "detekt" }
 testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
 forbiddenapis = { group = "de.thetaphi", name = "forbiddenapis", version.ref = "forbiddenapis" }
-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+detekt = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 liquibase-core = "org.liquibase:liquibase-core:5.0.3"
 liquibase-sessionlock = "com.github.blagerweij:liquibase-sessionlock:1.6.9"
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
