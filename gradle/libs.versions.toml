@@ -38,7 +38,7 @@ detekt-libraries = { group = "dev.detekt", name = "detekt-rules-libraries", vers
 testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
 forbiddenapis = { group = "de.thetaphi", name = "forbiddenapis", version.ref = "forbiddenapis" }
 detekt = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
-liquibase-core = "org.liquibase:liquibase-core:5.0.3"
+liquibase-core = "org.liquibase:liquibase-core:5.0.4"
 liquibase-sessionlock = "com.github.blagerweij:liquibase-sessionlock:1.6.9"
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
 arch-unit = "com.tngtech.archunit:archunit-junit5:1.5.0"
