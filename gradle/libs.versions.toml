@@ -1,5 +1,5 @@
 [versions]
-spring-boot-v3 = "3.5.16"
+spring-boot-v3 = "4.1.1"
 spring-boot-v4 = "4.0.7"
 slf4j = "2.0.18" # to be compatible with Spring Boot 3.5.X
 detekt = "2.0.0-alpha.6"
