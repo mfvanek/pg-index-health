@@ -14,6 +14,9 @@ import java.util.List;
 
 public class CreateIndexWithNullValuesStatement extends AbstractDbStatement {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("create index if not exists i_clients_middle_name on {schemaName}.clients (middle_name)");

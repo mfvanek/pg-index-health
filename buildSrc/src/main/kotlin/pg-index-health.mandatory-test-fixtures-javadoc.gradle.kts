@@ -10,15 +10,12 @@
 
 plugins {
     id("java")
+    id("java-test-fixtures")
+    id("pg-index-health.mandatory-javadoc")
 }
 
 tasks {
-    withType<Javadoc> {
-        isFailOnError = true
-        (options as StandardJavadocDocletOptions).addBooleanOption("Werror", true)
-    }
-
     build {
-        dependsOn(javadoc)
+        dependsOn(testFixturesJavadoc)
     }
 }

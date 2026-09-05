@@ -14,6 +14,9 @@ import java.util.List;
 
 public class CreateTableWithInheritanceStatement extends AbstractDbStatement {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(

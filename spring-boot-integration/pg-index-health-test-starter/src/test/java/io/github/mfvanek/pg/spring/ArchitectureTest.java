@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods;
 
+@SuppressWarnings("PMD.InstantiableUtilityClass")
 @AnalyzeClasses(packages = "io.github.mfvanek.pg.spring")
 class ArchitectureTest {
 

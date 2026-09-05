@@ -44,7 +44,7 @@ dependencies {
 
 tasks {
     wrapper {
-        gradleVersion = "9.6.1"
+        gradleVersion = "9.7.1"
     }
 
     check {

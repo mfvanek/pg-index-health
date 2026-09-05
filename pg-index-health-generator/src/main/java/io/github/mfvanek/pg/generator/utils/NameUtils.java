@@ -12,12 +12,23 @@ package io.github.mfvanek.pg.generator.utils;
 
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
+/**
+ * Utility class for working with names.
+ *
+ * @author Ivan Vakhrushev
+ */
 public final class NameUtils {
 
     private NameUtils() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Returns a table name without a schema.
+     *
+     * @param tableNameAware table name provider
+     * @return table name without schema
+     */
     public static String getTableNameWithoutSchema(final TableNameAware tableNameAware) {
         final String tableName = tableNameAware.getTableName();
         final int index = tableName.indexOf('.');
