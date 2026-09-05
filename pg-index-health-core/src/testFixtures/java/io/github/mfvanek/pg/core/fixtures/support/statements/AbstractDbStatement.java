@@ -19,14 +19,11 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * AbstractDbStatement is an abstract base class that provides a framework for executing
- * database-related operations.
+ * AbstractDbStatement is an abstract base class that provides a framework for executing database-related operations.
  * <p>
- * It implements the {@link DbStatement} interface and contains
- * functionality to execute SQL statements with schema name parameterization.
+ * It implements the {@link DbStatement} interface and contains functionality to execute SQL statements with schema name parameterization.
  * <p>
- * Subclasses must
- * implement the {@code getSqlToExecute()} method to provide the specific SQL statements to run.
+ * Subclasses must implement the {@code getSqlToExecute()} method to provide the specific SQL statements to run.
  */
 public abstract class AbstractDbStatement implements DbStatement {
 
@@ -85,8 +82,7 @@ public abstract class AbstractDbStatement implements DbStatement {
      * Subclasses must implement this method to supply specific SQL statements tailored
      * to their intended database operation.
      *
-     * @return a list of SQL statements to execute, where each statement may include placeholders
-     * for runtime substitution. Must not return {@code null}.
+     * @return a list of SQL statements to execute, where each statement may include placeholders for runtime substitution. Must not return {@code null}.
      */
     protected abstract List<String> getSqlToExecute();
 
