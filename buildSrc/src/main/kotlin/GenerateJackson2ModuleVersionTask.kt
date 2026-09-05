@@ -50,6 +50,7 @@ abstract class GenerateJackson2ModuleVersionTask : DefaultTask() {
 
             import com.fasterxml.jackson.core.Version;
 
+            @SuppressWarnings("PMD.InstantiableUtilityClass")
             @io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport
             public final class ModuleVersion {
                 public static final Version VERSION = new Version(${moduleVersion.get().replace(".", ", ")}, null, "${moduleGroup.get()}", "${moduleName.get()}");

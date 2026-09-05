@@ -110,5 +110,6 @@ public abstract class AbstractDbStatement implements DbStatement {
      * @throws SQLException if a database access error occurs.
      */
     protected void postExecute(final Statement statement, final String schemaName) throws SQLException {
+        // This method is intended to be overridden by subclasses to perform any post-execution logic.
     }
 }
