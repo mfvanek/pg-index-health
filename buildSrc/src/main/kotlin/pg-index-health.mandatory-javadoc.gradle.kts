@@ -12,7 +12,13 @@ plugins {
     id("java")
 }
 
-tasks.withType<Javadoc> {
-    isFailOnError = true
-    (options as StandardJavadocDocletOptions).addBooleanOption("Werror", true)
+tasks {
+    withType<Javadoc> {
+        isFailOnError = true
+        (options as StandardJavadocDocletOptions).addBooleanOption("Werror", true)
+    }
+
+    build {
+        dependsOn(javadoc)
+    }
 }
