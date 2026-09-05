@@ -15,6 +15,9 @@ import io.github.mfvanek.pg.model.validation.Validators;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * A statement to drop a column from a table in a database.
+ */
 public class DropColumnStatement extends AbstractDbStatement {
 
     private final String tableName;
@@ -25,6 +28,9 @@ public class DropColumnStatement extends AbstractDbStatement {
         this.columnName = Validators.notBlank(columnName, "columnName");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(

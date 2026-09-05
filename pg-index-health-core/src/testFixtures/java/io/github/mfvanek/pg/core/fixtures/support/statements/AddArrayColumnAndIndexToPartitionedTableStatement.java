@@ -12,8 +12,15 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database operation that modifies a partitioned table by adding a new array column
+ * and creating an index on that column.
+ */
 public class AddArrayColumnAndIndexToPartitionedTableStatement extends AbstractDbStatement {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(

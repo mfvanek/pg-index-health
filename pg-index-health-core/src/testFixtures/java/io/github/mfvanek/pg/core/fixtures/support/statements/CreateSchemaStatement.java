@@ -18,11 +18,17 @@ import java.util.Locale;
 
 public class CreateSchemaStatement extends AbstractDbStatement {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("create schema if not exists {schemaName}");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void postExecute(final Statement statement, final String schemaName) throws SQLException {
         final String checkQuery = String.format(

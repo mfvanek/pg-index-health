@@ -14,6 +14,9 @@ import java.util.List;
 
 public class AddDuplicatedForeignKeysStatement extends AbstractDbStatement {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("""

@@ -23,11 +23,17 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
 
     private static final String ICU_COLLATION = "en-US-x-icu";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getSqlToExecute() {
         return List.of();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute(final Statement statement) throws SQLException {
         final String customCollation = "C.UTF-8";

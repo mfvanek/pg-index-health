@@ -24,16 +24,32 @@ import java.util.Locale;
 import java.util.Objects;
 import javax.sql.DataSource;
 
+/**
+ * The {@code InsertDataIntoTablesAction} class is responsible for inserting data into database tables.
+ */
 public class InsertDataIntoTablesAction implements Runnable {
 
     private final DataSource dataSource;
     private final String schemaName;
 
+    /**
+     * Constructs a new instance of {@code InsertDataIntoTablesAction}.
+     * <p>
+     * This constructor initializes an action for inserting data into database tables
+     * using the specified {@link DataSource} and schema name.
+     *
+     * @param dataSource the {@link DataSource} object used for getting database connections.
+     *                   Must not be null.
+     * @param schemaName the name of the schema where the tables reside. Must not be null.
+     */
     public InsertDataIntoTablesAction(final DataSource dataSource, final String schemaName) {
         this.dataSource = Objects.requireNonNull(dataSource);
         this.schemaName = Objects.requireNonNull(schemaName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         final int clientsCountToCreate = 1_000;

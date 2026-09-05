@@ -14,6 +14,9 @@ import java.util.List;
 
 public class CreatePartitionedTableWithBlobTypeColumnStatement extends AbstractDbStatement {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(

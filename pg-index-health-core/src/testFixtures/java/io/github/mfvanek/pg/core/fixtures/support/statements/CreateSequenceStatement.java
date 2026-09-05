@@ -14,6 +14,9 @@ import java.util.List;
 
 public class CreateSequenceStatement extends AbstractDbStatement {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(

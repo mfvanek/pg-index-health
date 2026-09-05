@@ -14,6 +14,9 @@ import java.util.List;
 
 public class CreatePartitionedTableWithInconsistentTypesStatement extends AbstractDbStatement {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getSqlToExecute() {
         // Two partitioned (parent) tables with inconsistent types for the same column names:

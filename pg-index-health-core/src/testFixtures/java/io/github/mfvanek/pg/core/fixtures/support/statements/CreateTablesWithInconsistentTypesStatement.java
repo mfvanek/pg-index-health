@@ -14,6 +14,9 @@ import java.util.List;
 
 public class CreateTablesWithInconsistentTypesStatement extends AbstractDbStatement {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getSqlToExecute() {
         // The base "clients" and "accounts" tables already declare "id" as bigint,

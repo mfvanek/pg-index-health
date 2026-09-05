@@ -14,6 +14,9 @@ import java.util.List;
 
 public class ConvertColumnToJsonTypeStatement extends AbstractDbStatement {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getSqlToExecute() {
         return List.of("alter table if exists {schemaName}.clients alter column info type json using info::json");
