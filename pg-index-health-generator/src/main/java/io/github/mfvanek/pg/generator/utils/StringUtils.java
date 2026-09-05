@@ -14,6 +14,11 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+/**
+ * Utility class for working with strings.
+ *
+ * @author Ivan Vakhrushev
+ */
 public final class StringUtils {
 
     private static final Logger LOGGER = Logger.getLogger(StringUtils.class.getName());
@@ -27,7 +32,7 @@ public final class StringUtils {
      * Similar to the {@code truncate} method from Apache commons-lang3.
      *
      * @param str      the String to truncate, cannot be null
-     * @param maxWidth maximum length of result String, must be positive
+     * @param maxWidth the maximum length of result String must be positive
      * @return truncated String
      */
     public static String truncate(final String str, final int maxWidth) {

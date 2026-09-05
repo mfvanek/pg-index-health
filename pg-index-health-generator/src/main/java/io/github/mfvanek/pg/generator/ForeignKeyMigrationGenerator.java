@@ -22,6 +22,11 @@ public final class ForeignKeyMigrationGenerator extends AbstractDbMigrationGener
 
     private final PgIndexOnForeignKeyGenerator generator;
 
+    /**
+     * {@code ForeignKeyMigrationGenerator} Constructor.
+     *
+     * @param options generating options
+     */
     public ForeignKeyMigrationGenerator(final GeneratingOptions options) {
         this.generator = new PgIndexOnForeignKeyGenerator(options);
     }

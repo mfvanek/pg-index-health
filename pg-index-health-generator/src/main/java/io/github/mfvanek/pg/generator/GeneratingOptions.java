@@ -15,7 +15,21 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * Immutable options to generate sql queries for database migration.
+ * Immutable options to generate SQL queries for database migration.
+ *
+ * <p>Instances are created using the {@link #builder()} method:
+ *
+ * <pre>{@code
+ * GeneratingOptions options = GeneratingOptions.builder()
+ *     .concurrently()
+ *     .excludeNulls()
+ *     .breakLines()
+ *     .withIndentation(4)
+ *     .uppercaseForKeywords()
+ *     .nameWithoutNulls()
+ *     .withIdxPosition(IdxPosition.SUFFIX)
+ *     .build();
+ * }</pre>
  *
  * @author Ivan Vakhrushev
  * @since 0.5.0
@@ -31,7 +45,7 @@ public final class GeneratingOptions {
      */
     private boolean excludeNulls;
     /**
-     * Neediness to break long generated sql queries into lines.
+     * Neediness to break long generated SQL queries into lines.
      */
     private boolean breakLines;
     /**
@@ -43,7 +57,7 @@ public final class GeneratingOptions {
      */
     private boolean uppercaseForKeywords;
     /**
-     * Neediness to add "without_nulls" part to the generated index name.
+     * Neediness to add the "without_nulls" part to the generated index name.
      */
     private boolean nameWithoutNulls;
     /**
@@ -67,34 +81,79 @@ public final class GeneratingOptions {
         this.idxPosition = idxPosition;
     }
 
+    /**
+     * Returns whether indexes should be built concurrently.
+     *
+     * @return {@code true} if concurrent index creation is enabled;
+     *         {@code false} if regular index creation should be used
+     */
     public boolean isConcurrently() {
         return concurrently;
     }
 
+    /**
+     * Returns whether {@code NULL} values should be excluded from indexes.
+     *
+     * @return {@code true} if {@code NULL} values should be excluded;
+     *         {@code false} if they should be included
+     */
     public boolean isExcludeNulls() {
         return excludeNulls;
     }
 
+    /**
+     * Returns whether generated SQL statements should be split across multiple lines.
+     *
+     * @return {@code true} if long SQL statements should be formatted across multiple lines;
+     *         {@code false} otherwise
+     */
     public boolean isBreakLines() {
         return breakLines;
     }
 
+    /**
+     * Returns the number of spaces used to indent continuation lines in generated SQL.
+     *
+     * @return indentation size in spaces
+     */
     public int getIndentation() {
         return indentation;
     }
 
+    /**
+     * Returns whether SQL operators and keywords should be generated using uppercase letters.
+     *
+     * @return {@code true} for uppercase SQL keywords; {@code false} for lowercase keywords
+     */
     public boolean isUppercaseForKeywords() {
         return uppercaseForKeywords;
     }
 
+    /**
+     * Returns whether the {@code without_nulls} part should be included in generated index names.
+     *
+     * @return {@code true} if the {@code without_nulls} suffix should be included;
+     *         {@code false} otherwise
+     */
     public boolean isNameWithoutNulls() {
         return nameWithoutNulls;
     }
 
+    /**
+     * Returns the position of the {@code idx} part in generated index names.
+     *
+     * @return configured {@link IdxPosition}
+     */
     public IdxPosition getIdxPosition() {
         return idxPosition;
     }
 
+    /**
+     * Determines whether the generated index name should contain an {@code idx} marker.
+     *
+     * @return {@code true} if {@link #getIdxPosition()} is not {@link IdxPosition#NONE};
+     *         {@code false} otherwise
+     */
     public boolean isNeedToAddIdx() {
         return idxPosition != IdxPosition.NONE;
     }
@@ -115,10 +174,21 @@ public final class GeneratingOptions {
             '}';
     }
 
+    /**
+     * Returns a builder for creating {@code GeneratingOptions}.
+     *
+     * @return a new builder initialized with the default options
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder for {@link GeneratingOptions}.
+     *
+     * <p>A builder can be used to customize SQL generation options before creating
+     * a {@code GeneratingOptions} instance.
+     */
     public static final class Builder {
 
         private @Nullable GeneratingOptions template = new GeneratingOptions(true, true, true, 4, false, true, IdxPosition.SUFFIX);
@@ -126,6 +196,15 @@ public final class GeneratingOptions {
         private Builder() {
         }
 
+        /**
+         * Builds the configured generation options.
+         *
+         * <p>The builder can only be used once. Calling this method more than once
+         * results in an {@link IllegalStateException}.
+         *
+         * @return configured generation options
+         * @throws IllegalStateException if this builder has already built an instance
+         */
         public GeneratingOptions build() {
             final GeneratingOptions generatingOptions = template();
             template = null;
@@ -159,51 +238,111 @@ public final class GeneratingOptions {
             return this;
         }
 
+        /**
+         * Configures generated indexes to exclude rows with {@code NULL} values.
+         *
+         * @return this builder
+         */
         public Builder excludeNulls() {
             template().excludeNulls = true;
             return this;
         }
 
+        /**
+         * Configures generated indexes to include rows with {@code NULL} values.
+         *
+         * @return this builder
+         */
         public Builder includeNulls() {
             template().excludeNulls = false;
             return this;
         }
 
+        /**
+         * Enables multi-line formatting for generated SQL statements.
+         *
+         * @return this builder
+         */
         public Builder breakLines() {
             template().breakLines = true;
             return this;
         }
 
+        /**
+         * Disables multi-line formatting for generated SQL statements.
+         *
+         * @return this builder
+         */
         public Builder doNotBreakLines() {
             template().breakLines = false;
             return this;
         }
 
+        /**
+         * Sets the indentation used for continuation lines in generated SQL.
+         *
+         * <p>The indentation must be between {@code 0} and {@code 8} spaces,
+         * inclusive.
+         *
+         * @param indentation indentation size in spaces
+         * @return this builder
+         * @throws IllegalArgumentException if {@code indentation} is outside
+         *         the range {@code [0, 8]}
+         */
         public Builder withIndentation(final int indentation) {
             template().indentation = validateIndentation(indentation);
             return this;
         }
 
+        /**
+         * Configures SQL operators and keywords to be generated using uppercase letters.
+         *
+         * @return this builder
+         */
         public Builder uppercaseForKeywords() {
             template().uppercaseForKeywords = true;
             return this;
         }
 
+        /**
+         * Configures SQL operators and keywords to be generated using lowercase letters.
+         *
+         * @return this builder
+         */
         public Builder lowercaseForKeywords() {
             template().uppercaseForKeywords = false;
             return this;
         }
 
+        /**
+         * Configures generated index names to include the {@code without_nulls} part
+         * when applicable.
+         *
+         * @return this builder
+         */
         public Builder nameWithoutNulls() {
             template().nameWithoutNulls = true;
             return this;
         }
 
+        /**
+         * Configures generated index names not to include the {@code without_nulls} part.
+         *
+         * @return this builder
+         */
         public Builder doNotNameWithoutNulls() {
             template().nameWithoutNulls = false;
             return this;
         }
 
+        /**
+         * Sets the position of the {@code idx} marker in generated index names.
+         *
+         * @param idxPosition position of the {@code idx} marker;
+         *                    must not be {@code null}
+         * @return this builder
+         * @throws NullPointerException if {@code idxPosition} is {@code null}
+         */
         public Builder withIdxPosition(final IdxPosition idxPosition) {
             template().idxPosition = Objects.requireNonNull(idxPosition, "idxPosition cannot be null");
             return this;
