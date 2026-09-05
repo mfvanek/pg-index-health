@@ -62,8 +62,7 @@ public final class LogsCaptor implements AutoCloseable {
      * Constructs a {@code LogsCaptor} instance to capture log messages
      * emitted by a logger associated with the specified class.
      *
-     * @param type the {@link Class} whose logger should be intercepted;
-     *             must not be null.
+     * @param type the {@link Class} whose logger should be intercepted; must not be null.
      */
     public LogsCaptor(final Class<?> type) {
         this(type, Level.INFO);
@@ -74,12 +73,8 @@ public final class LogsCaptor implements AutoCloseable {
      * emitted by a logger associated with the specified class, with the
      * specified log level.
      *
-     * @param type  the {@link Class} whose logger should be intercepted;
-     *              must not be null. This determines which logger's messages
-     *              will be captured.
-     * @param level the {@link Level} that specifies the minimum log level
-     *              to capture; must not be null. Log messages below this
-     *              level will not be recorded.
+     * @param type  the {@link Class} whose logger should be intercepted; must not be null.
+     * @param level the {@link Level} that specifies the minimum log level to capture; must not be null.
      */
     public LogsCaptor(final Class<?> type, final Level level) {
         this.logger = Logger.getLogger(type.getName());
@@ -104,8 +99,7 @@ public final class LogsCaptor implements AutoCloseable {
     /**
      * Retrieves the list of log records captured by the logger associated with this instance.
      *
-     * @return an immutable {@link List} of {@link LogRecord} objects representing
-     * the log messages that have been intercepted; never null.
+     * @return an immutable {@link List} of {@link LogRecord} objects representing the log messages that have been intercepted; never null.
      */
     public List<LogRecord> getLogs() {
         return handler.getLogRecords();
