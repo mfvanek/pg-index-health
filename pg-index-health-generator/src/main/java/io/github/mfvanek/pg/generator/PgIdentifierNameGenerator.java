@@ -27,7 +27,7 @@ import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGenerator.MAX_ID
  * @author Ivan Vakhrushev
  * @since 0.5.0
  */
-class PgIdentifierNameGenerator {
+final class PgIdentifierNameGenerator {
 
     private static final String IDX = "idx";
     private static final String WITHOUT_NULLS = "without_nulls";

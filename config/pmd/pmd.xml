@@ -6,25 +6,21 @@
     <description>PMD configuration</description>
 
     <rule ref="category/java/bestpractices.xml">
-        <exclude name="UnitTestContainsTooManyAsserts"/>
-        <exclude name="UnitTestAssertionsShouldIncludeMessage"/>
-        <exclude name="UnitTestShouldIncludeAssert"/>
-        <exclude name="GuardLogStatement"/>
+        <exclude name="UnitTestContainsTooManyAsserts"/> <!-- useless -->
+        <exclude name="GuardLogStatement"/> <!-- useless -->
         <exclude name="AbstractClassWithoutAbstractMethod"/> <!-- useless -->
-        <exclude name="CheckResultSet"/>
-        <exclude name="ImplicitFunctionalInterface"/>
-        <exclude name="EnumComparison"/>
+        <exclude name="ImplicitFunctionalInterface"/> <!-- useless -->
     </rule>
 
     <rule ref="category/java/codestyle.xml">
-        <exclude name="OnlyOneReturn"/>
-        <exclude name="AtLeastOneConstructor"/>
-        <exclude name="CommentDefaultAccessModifier"/>
-        <exclude name="LongVariable"/>
-        <exclude name="ShortVariable"/>
-        <exclude name="CallSuperInConstructor"/>
-        <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
-        <exclude name="UnnecessaryConstructor"/>
+        <exclude name="OnlyOneReturn"/> <!-- useless -->
+        <exclude name="AtLeastOneConstructor"/> <!-- useless -->
+        <exclude name="CommentDefaultAccessModifier"/> <!-- useless -->
+        <exclude name="LongVariable"/> <!-- useless -->
+        <exclude name="ShortVariable"/> <!-- useless -->
+        <exclude name="CallSuperInConstructor"/> <!-- useless -->
+        <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/> <!-- useless -->
+        <exclude name="UnnecessaryConstructor"/> <!-- useless -->
     </rule>
 
     <rule ref="category/java/codestyle.xml/ClassNamingConventions">
@@ -54,9 +50,7 @@
     </rule>
 
     <rule ref="category/java/design.xml">
-        <exclude name="LawOfDemeter"/>
-        <exclude name="LoosePackageCoupling"/>
-        <exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal"/>
+        <exclude name="LawOfDemeter"/> <!-- useless -->
         <exclude name="DataClass"/>
         <exclude name="TooManyMethods"/>
         <exclude name="ExceptionAsFlowControl"/>

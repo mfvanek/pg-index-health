@@ -105,7 +105,7 @@ public final class LogsCaptor implements AutoCloseable {
         return handler.getLogRecords();
     }
 
-    private static class CapturingHandler extends Handler {
+    private static final class CapturingHandler extends Handler {
 
         private final List<LogRecord> records = Collections.synchronizedList(new ArrayList<>());
 
