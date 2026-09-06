@@ -3,6 +3,52 @@
     "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
     "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
+<!--
+ConstructorsDeclarationGrouping	Checks that all constructors are grouped together.
+ExpressionOverBlockLambda	Checks that expression lambdas are used instead of single-line block lambdas where possible.
+GoogleMethodName	Checks that method names conform to the Google Java Style Guide for method naming.
+GoogleNonConstantFieldName	Checks that non-constant field names conform to the Google Java Style Guide for non-constant field naming.
+HexLiteralCase	Checks that hexadecimal literals are defined using uppercase letters (A-F) rather than lowercase (a-f).
+IllegalBlockTag	Detects a user-defined Javadoc block tag and reports a violation when the tag is present with text that does not match tagTextPattern.
+IllegalSymbol	Checks that specified symbols (by Unicode code points or ranges) are not used in code.
+InappropriateJavadocBlockTagsOnField	Checks that Javadoc block tags for field declarations do not contain tags that are semantically invalid for fields.
+InappropriateJavadocBlockTagsOnPackage	Checks that Javadoc block tags for package definitions do not contain tags that are semantically invalid for packages.
+InappropriateJavadocBlockTagsOnType	Checks that Javadoc block tags for type definitions (class, interface, enum, record, annotation) do not contain tags that are semantically invalid for types.
+JavadocEndCommentDelimiter	Checks that the Javadoc closing delimiter contains exactly one asterisk before the slash.
+JavadocLeadingAsteriskAlign	Checks the alignment of leading asterisks in a Javadoc comment.
+JavadocLinkFirstOccurrence	Checks that in Javadoc comments, each API name is linked with {@link} or {@linkplain} only on its first occurrence.
+JavadocLinkWellKnownApi	Checks that Javadoc comments avoid unnecessary {@link} and {@linkplain} tags for APIs that are considered well-known.
+JavadocNoErrorInThrowsTag	Checks that Error types are not documented in @throws or @exception Javadoc tags.
+JavadocParamOrder	Checks that @param tags in Javadoc comments are in the same order as the parameters in the declaration.
+JavadocRegexp	Checks that Javadoc comments do not match a configured regular expression.
+JavadocThrowsOrder	Checks that multiple @throws and @exception Javadoc tags are listed alphabetically by exception name.
+LineEnding	Checks whether file uses a specific line-ending sequence (LF, CRLF, or CR).
+MissingNullCaseInSwitch	Checks that a given switch statement or expression that use a reference type in its selector expression has a null case label.
+MissingOverrideOnRecordAccessor	Verifies that explicitly declared record accessor methods include the @Override annotation.
+ModuleDirectiveOrder	Checks the ordering, grouping and separation of directives in a module declaration.
+ModuleImportOrder	Checks the ordering and placement of module import declarations.
+MultiFileRegexpHeader	Checks the header of a source file against multiple header files that contain a pattern for each line of the source header.
+MultilineCommentLeadingAsteriskPresence	Checks if the multi-line comments have leading asterisks on each line.
+NumericalPrefixesInfixesSuffixesCharacterCase	Checks that all numerical literal prefixes, infixes, and suffixes are written using lowercase letters (for example prefixes : 0x, 0b, infixes : e, p, suffixes : f, d).
+OpenjdkAnnotationLocation	Verifies that annotations are properly placed by OpenJDK Style.
+PatternVariableAssignment	Checks for assignment of pattern variables.
+PreferCodeOrSnippetJavadocInlineTag	Checks that Javadoc inline tags {@code ...} and {@snippet ...} are preferred over HTML tags <code> and <pre>.
+PreferLiteralJavadocInlineTag	Checks that Javadoc inline tags are preferred over escaping entities.
+SealedShouldHavePermitsList	Checks that sealed classes and interfaces have a permits list.
+TextBlockGoogleStyleFormatting	Checks correct format of Java Text Blocks as specified in Google Java Style Guide.
+TypeBodyPadding	Checks the padding of the body of type definitions (classes, interfaces, enums, records).
+UnnecessaryFullyQualifiedType	Checks for fully qualified type references that are unnecessary because the type could simply be imported and referenced by its simple name.
+UnnecessaryNullCheckWithInstanceOf	Checks for redundant null checks with the instanceof operator.
+UnnecessaryTypeArgumentsWithRecordPattern	Checks for unnecessary explicit type arguments in record patterns.
+UnusedCatchParameterShouldBeUnnamed	Ensures that catch parameters that are not used are declared as an unnamed variable.
+UnusedLambdaParameterShouldBeUnnamed	Ensures that lambda parameters that are not used are declared as an unnamed variable.
+UnusedPrivateField	Check that a private field is declared, but never used.
+UnusedTryResourceShouldBeUnnamed	Ensures that try-with-resources resource variables that are not used are declared as an unnamed variable.
+UseEnhancedSwitch	Ensures that the enhanced switch (using -> for case labels) is used instead of the traditional switch (using : for case labels) where possible.
+WhenShouldBeUsed	Ensures that when is used instead of a single if statement inside a case block.
+WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening brace of an empty body.
+-->
+
 <module name="Checker">
     <property name="charset" value="UTF-8"/>
     <property name="severity" value="warning"/>
@@ -24,6 +70,11 @@
                   value="/*\n * Copyright (c) 2019-2026. Ivan Vakhrushev and others.\n * https://github.com/mfvanek/pg-index-health\n *\n * This file is a part of &quot;pg-index-health&quot; - an embeddable schema linter for PostgreSQL\n * that detects common anti-patterns and promotes best practices.\n *\n * Licensed under the Apache License 2.0\n */"/>
         <property name="fileExtensions" value="java"/>
     </module>
+    <!-- <module name="RegexpHeader"/> invalid -->
+    <!-- <module name="RegexpMultiline"/> invalid -->
+    <!-- <module name="RegexpOnFilename"/> invalid -->
+    <!-- <module name="RegexpSingleline"/> invalid -->
+    <!-- <module name="RegexpSinglelineJava"/> invalid -->
     <module name="NewlineAtEndOfFile"/>
     <module name="OrderedProperties"/>
     <module name="Translation"/>
@@ -40,6 +91,7 @@
         <module name="AbstractClassName">
             <property name="ignoreName" value="true"/>
         </module>
+        <module name="AnnotatedDeclarationVisibility"/>
         <module name="AnnotationLocation">
             <property name="id" value="AnnotationLocationMostCases"/>
             <property name="tokens"
@@ -54,9 +106,11 @@
         <!--<module name="AnnotationOnSameLine"/> invalid -->
         <module name="AnnotationUseStyle"/>
         <module name="AnonInnerLength"/>
+        <!-- <module name="ArrayBracketNoWhitespace"/> invalid -->
         <module name="ArrayTypeStyle"/>
         <!--<module name="AvoidInlineConditionals"/> invalid -->
         <module name="AvoidNestedBlocks"/>
+        <module name="AvoidModuleImport"/>
         <module name="BooleanExpressionComplexity"/>
         <module name="ClassDataAbstractionCoupling"/>
         <module name="ClassFanOutComplexity"/>
@@ -73,10 +127,10 @@
         <module name="EqualsHashCode"/>
         <module name="ExecutableStatementCount"/>
         <module name="ExplicitInitialization"/>
-        <!-- <module name="FinalClass"/> invalid -->
+        <module name="FinalClass"/>
         <module name="FinalLocalVariable"/>
         <module name="FinalParameters"/>
-        <!-- <module name="HiddenField"/> invalid -->
+        <!-- <module name="HiddenField"/> useless -->
         <!-- <module name="HideUtilityClassConstructor"/> useless -->
         <module name="IllegalCatch"/>
         <module name="IllegalIdentifierName"/>
