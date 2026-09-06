@@ -189,6 +189,7 @@ public final class GeneratingOptions {
      * <p>A builder can be used to customize SQL generation options before creating
      * a {@code GeneratingOptions} instance.
      */
+    @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
     public static final class Builder {
 
         private @Nullable GeneratingOptions template = new GeneratingOptions(true, true, true, 4, false, true, IdxPosition.SUFFIX);

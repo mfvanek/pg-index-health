@@ -80,13 +80,10 @@
     <rule ref="category/java/security.xml"/>
 
     <rule ref="category/java/errorprone.xml">
-        <exclude name="AvoidLiteralsInIfCondition"/>
-        <exclude name="AvoidFieldNameMatchingMethodName"/>
+        <exclude name="AvoidLiteralsInIfCondition"/> <!-- useless -->
         <exclude name="EqualsNull"/> <!-- useless -->
-        <exclude name="AvoidDuplicateLiterals"/>
-        <exclude name="AvoidAccessibilityAlteration"/>
+        <exclude name="AvoidDuplicateLiterals"/> <!-- useless -->
         <exclude name="NullAssignment"/> <!-- useless -->
-        <exclude name="TestClassWithoutTestCases"/>
         <exclude name="ConstructorCallsOverridableMethod"/> <!-- useless -->
         <exclude name="AvoidCatchingGenericException"/> <!-- useless -->
     </rule>
