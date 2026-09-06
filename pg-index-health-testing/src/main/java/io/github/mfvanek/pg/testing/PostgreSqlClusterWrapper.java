@@ -218,12 +218,12 @@ public final class PostgreSqlClusterWrapper implements AutoCloseable {
     }
 
     /**
-     * Provide convenient way to create cluster with single username/password.
+     * Provide a convenient way to create a cluster with a single username / password.
      * If no username/password is specified, "customuser" and "custompassword" will be used as default values for username and password, respectively.
      *
      * @author Alexey Antipin
      */
-    public static class PostgreSqlClusterBuilder {
+    public static final class PostgreSqlClusterBuilder {
 
         private String username = "customuser";
         private String password = "custompassword";

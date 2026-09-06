@@ -173,6 +173,7 @@ public final class Exclusions {
     /**
      * Builder class for constructing {@link Exclusions} objects.
      */
+    @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
     public static final class Builder {
 
         private static final String THRESHOLD_UNITS_COUNT = "thresholdUnitsCount";

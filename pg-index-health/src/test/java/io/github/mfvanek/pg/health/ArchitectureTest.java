@@ -18,7 +18,7 @@ import io.github.mfvanek.pg.health.checks.cluster.AbstractCheckOnCluster;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 
-@SuppressWarnings("PMD.InstantiableUtilityClass")
+@SuppressWarnings({"PMD.InstantiableUtilityClass", "PMD.TestClassWithoutTestCases"})
 @AnalyzeClasses(packages = "io.github.mfvanek.pg.health")
 class ArchitectureTest {
 

@@ -28,6 +28,7 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
 
     protected static final long AMOUNT_OF_TRIES = 101L;
 
+    @SuppressWarnings("PMD.CheckResultSet")
     protected long getSeqScansForAccounts(final PgContext pgContext) {
         final String sqlQuery = """
             select psat.relname::text as table_name, coalesce(psat.seq_scan, 0) as seq_scan
@@ -45,6 +46,7 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         }
     }
 
+    @SuppressWarnings("PMD.CheckResultSet")
     protected boolean existsStatisticsForTable(final String schemaName, final String tableName) {
         final String sqlQuery = """
             select exists (select 1 from pg_catalog.pg_stats ps

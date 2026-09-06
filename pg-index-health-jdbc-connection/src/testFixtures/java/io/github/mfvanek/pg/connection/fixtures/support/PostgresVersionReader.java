@@ -53,6 +53,7 @@ public final class PostgresVersionReader {
      * @return the server version as a {@link String}, typically in the format "X.Y.Z".
      * @throws PgSqlException if any {@link SQLException} occurs during the operation.
      */
+    @SuppressWarnings("PMD.CheckResultSet")
     public static String readVersion(final DataSource dataSource) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {

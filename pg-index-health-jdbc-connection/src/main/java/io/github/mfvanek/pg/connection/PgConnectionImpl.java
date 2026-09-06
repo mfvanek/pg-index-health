@@ -27,7 +27,7 @@ import javax.sql.DataSource;
  * @author Ivan Vakhrushev
  * @see PgConnection
  */
-public class PgConnectionImpl implements PgConnection {
+public final class PgConnectionImpl implements PgConnection {
 
     private final DataSource dataSource;
     private final PgHost host;
@@ -57,7 +57,7 @@ public class PgConnectionImpl implements PgConnection {
      * {@inheritDoc}
      */
     @Override
-    public final boolean equals(final Object other) {
+    public boolean equals(final Object other) {
         if (this == other) {
             return true;
         }
@@ -73,7 +73,7 @@ public class PgConnectionImpl implements PgConnection {
      * {@inheritDoc}
      */
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hash(host);
     }
 

@@ -121,6 +121,7 @@ class HighAvailabilityPgConnectionUnitTest {
         Mockito.when(connectionMocks.resultSet.getBoolean(1)).thenReturn(resultSetBooleanValue);
     }
 
+    @SuppressWarnings("PMD.CheckResultSet")
     private void initMocksCommon(final ConnectionMocks connectionMocks) throws SQLException {
         Mockito.when(connectionMocks.dataSource.getConnection()).thenReturn(connectionMocks.connection);
         Mockito.when(connectionMocks.connection.createStatement()).thenReturn(connectionMocks.statement);

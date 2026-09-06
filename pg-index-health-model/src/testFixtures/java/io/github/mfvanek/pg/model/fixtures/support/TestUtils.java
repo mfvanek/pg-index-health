@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
  * This class includes methods for invoking private constructors,
  * typically used to ensure test coverage for classes with private constructors.
  */
+@SuppressWarnings("PMD.TestClassWithoutTestCases")
 public final class TestUtils {
 
     private TestUtils() {
@@ -32,14 +33,14 @@ public final class TestUtils {
      * the instantiation process. Typically used for testing purposes, such as ensuring coverage
      * of private constructors in utility classes.
      *
-     * @param <T> the type of the class whose private constructor is being invoked
+     * @param <T>  the type of the class whose private constructor is being invoked
      * @param type the {@code Class} object of the target type with a private no-argument constructor
-     * @throws IllegalAccessException if the constructor cannot be accessed
-     * @throws InstantiationException if the class cannot be instantiated
+     * @throws IllegalAccessException    if the constructor cannot be accessed
+     * @throws InstantiationException    if the class cannot be instantiated
      * @throws InvocationTargetException if the constructor throws an exception
-     * @throws Throwable if any other exception occurs during the instantiation process
+     * @throws Throwable                 if any other exception occurs during the instantiation process
      */
-    @SuppressWarnings("checkstyle:IllegalThrows")
+    @SuppressWarnings({"checkstyle:IllegalThrows", "PMD.AvoidAccessibilityAlteration"})
     @SuppressForbidden
     public static <T> void invokePrivateConstructor(final Class<T> type)
         throws Throwable {

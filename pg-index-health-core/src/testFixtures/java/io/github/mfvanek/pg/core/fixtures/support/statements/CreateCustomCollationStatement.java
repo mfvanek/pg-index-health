@@ -43,6 +43,7 @@ public class CreateCustomCollationStatement extends AbstractDbStatement {
         createCustomCollation(statement, customCollation);
     }
 
+    @SuppressWarnings("PMD.CheckResultSet")
     private boolean isCollationExist(final Statement statement, final String collation) {
         try (ResultSet rs = statement.executeQuery(String.format(Locale.ROOT,
             "select exists(select 1 from pg_catalog.pg_collation as pgc where pgc.collname = '%s'::text)", collation))) {

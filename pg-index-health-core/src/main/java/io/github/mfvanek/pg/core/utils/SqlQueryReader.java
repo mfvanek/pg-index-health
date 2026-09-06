@@ -41,6 +41,7 @@ public final class SqlQueryReader {
      * @param sqlFileName the name of the SQL file to read, must not be null, empty, or blank and should have a ".sql" extension
      * @return the SQL query as a string with named parameters replaced by placeholders
      */
+    @SuppressWarnings("PMD.ExceptionAsFlowControl")
     public static String getQueryFromFile(final String sqlFileName) {
         final String fileName = validateSqlFileName(sqlFileName);
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

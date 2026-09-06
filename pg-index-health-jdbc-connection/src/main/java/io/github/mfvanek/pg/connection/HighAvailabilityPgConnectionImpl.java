@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  * @author Alexey Antipin
  * @see HighAvailabilityPgConnection
  */
-public class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConnection {
+public final class HighAvailabilityPgConnectionImpl implements HighAvailabilityPgConnection {
 
     private static final Logger LOGGER = Logger.getLogger(HighAvailabilityPgConnectionImpl.class.getName());
     private static final long DEFAULT_PRIMARY_REFRESH_INTERVAL_MILLISECONDS = 30_000L;

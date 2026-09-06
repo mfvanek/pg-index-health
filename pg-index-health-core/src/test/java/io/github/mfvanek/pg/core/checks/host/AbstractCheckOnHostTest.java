@@ -64,6 +64,7 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
         }
     }
 
+    @SuppressWarnings("PMD.CheckResultSet")
     private long getRowsCount(final String schemaName,
                               final String tableName) {
         try (Connection connection = getDataSource().getConnection();

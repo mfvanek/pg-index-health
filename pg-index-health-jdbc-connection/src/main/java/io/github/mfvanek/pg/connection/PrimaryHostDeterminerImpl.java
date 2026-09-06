@@ -42,6 +42,7 @@ public class PrimaryHostDeterminerImpl implements PrimaryHostDeterminer {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("PMD.CheckResultSet")
     @Override
     public boolean isPrimary(final PgConnection pgConnection) {
         Objects.requireNonNull(pgConnection, "pgConnection cannot be null");
