@@ -4,24 +4,7 @@
     "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <!--
-ConstructorsDeclarationGrouping	Checks that all constructors are grouped together.
-ExpressionOverBlockLambda	Checks that expression lambdas are used instead of single-line block lambdas where possible.
-GoogleMethodName	Checks that method names conform to the Google Java Style Guide for method naming.
-GoogleNonConstantFieldName	Checks that non-constant field names conform to the Google Java Style Guide for non-constant field naming.
-HexLiteralCase	Checks that hexadecimal literals are defined using uppercase letters (A-F) rather than lowercase (a-f).
-IllegalBlockTag	Detects a user-defined Javadoc block tag and reports a violation when the tag is present with text that does not match tagTextPattern.
-IllegalSymbol	Checks that specified symbols (by Unicode code points or ranges) are not used in code.
-InappropriateJavadocBlockTagsOnField	Checks that Javadoc block tags for field declarations do not contain tags that are semantically invalid for fields.
-InappropriateJavadocBlockTagsOnPackage	Checks that Javadoc block tags for package definitions do not contain tags that are semantically invalid for packages.
-InappropriateJavadocBlockTagsOnType	Checks that Javadoc block tags for type definitions (class, interface, enum, record, annotation) do not contain tags that are semantically invalid for types.
-JavadocEndCommentDelimiter	Checks that the Javadoc closing delimiter contains exactly one asterisk before the slash.
-JavadocLeadingAsteriskAlign	Checks the alignment of leading asterisks in a Javadoc comment.
-JavadocLinkFirstOccurrence	Checks that in Javadoc comments, each API name is linked with {@link} or {@linkplain} only on its first occurrence.
-JavadocLinkWellKnownApi	Checks that Javadoc comments avoid unnecessary {@link} and {@linkplain} tags for APIs that are considered well-known.
-JavadocNoErrorInThrowsTag	Checks that Error types are not documented in @throws or @exception Javadoc tags.
-JavadocParamOrder	Checks that @param tags in Javadoc comments are in the same order as the parameters in the declaration.
-JavadocRegexp	Checks that Javadoc comments do not match a configured regular expression.
-JavadocThrowsOrder	Checks that multiple @throws and @exception Javadoc tags are listed alphabetically by exception name.
+
 LineEnding	Checks whether file uses a specific line-ending sequence (LF, CRLF, or CR).
 MissingNullCaseInSwitch	Checks that a given switch statement or expression that use a reference type in its selector expression has a null case label.
 MissingOverrideOnRecordAccessor	Verifies that explicitly declared record accessor methods include the @Override annotation.
@@ -112,6 +95,7 @@ WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening
         <module name="AvoidNestedBlocks"/>
         <module name="AvoidModuleImport"/>
         <module name="BooleanExpressionComplexity"/>
+        <module name="ConstructorsDeclarationGrouping"/>
         <module name="ClassDataAbstractionCoupling"/>
         <module name="ClassFanOutComplexity"/>
         <!-- <module name="ClassMemberImpliedModifier"/> invalid -->
@@ -127,11 +111,17 @@ WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening
         <module name="EqualsHashCode"/>
         <module name="ExecutableStatementCount"/>
         <module name="ExplicitInitialization"/>
+        <module name="ExpressionOverBlockLambda"/>
         <module name="FinalClass"/>
         <module name="FinalLocalVariable"/>
         <module name="FinalParameters"/>
+        <!-- <module name="GoogleMethodName"/> useless -->
+        <module name="GoogleNonConstantFieldName"/>
+        <module name="HexLiteralCase"/>
         <!-- <module name="HiddenField"/> useless -->
         <!-- <module name="HideUtilityClassConstructor"/> useless -->
+        <module name="IllegalBlockTag"/>
+        <module name="IllegalSymbol"/>
         <module name="IllegalCatch"/>
         <module name="IllegalIdentifierName"/>
         <module name="IllegalInstantiation"/>
@@ -142,7 +132,18 @@ WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening
         <module name="InnerTypeLast"/>
         <module name="InterfaceIsType"/>
         <!-- <module name="InterfaceMemberImpliedModifier"/> invalid -->
+        <module name="InappropriateJavadocBlockTagsOnField"/>
+        <module name="InappropriateJavadocBlockTagsOnPackage"/>
+        <module name="InappropriateJavadocBlockTagsOnType"/>
         <module name="JavaNCSS"/>
+        <module name="JavadocEndCommentDelimiter"/>
+        <module name="JavadocLeadingAsteriskAlign"/>
+        <!-- <module name="JavadocLinkFirstOccurrence"/> useless -->
+        <module name="JavadocLinkWellKnownApi"/>
+        <module name="JavadocNoErrorInThrowsTag"/>
+        <!-- <module name="JavadocParamOrder"/> useless -->
+        <module name="JavadocRegexp"/>
+        <!-- <module name="JavadocThrowsOrder"/> useless -->
         <module name="LambdaBodyLength">
             <property name="max" value="35"/>
         </module>

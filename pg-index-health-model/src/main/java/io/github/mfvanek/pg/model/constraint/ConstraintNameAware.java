@@ -29,7 +29,7 @@ public interface ConstraintNameAware extends TableNameAware {
     /**
      * Retrieves the name of the database constraint associated with this entity.
      *
-     * @return the name of the constraint as a non-null {@link String}.
+     * @return the name of the constraint as a non-null {@code String}.
      */
     String getConstraintName();
 

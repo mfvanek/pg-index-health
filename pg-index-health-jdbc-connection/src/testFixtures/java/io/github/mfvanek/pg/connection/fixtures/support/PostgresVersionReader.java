@@ -50,7 +50,7 @@ public final class PostgresVersionReader {
      *
      * @param dataSource the {@link DataSource} instance used to establish a connection
      *                   to the PostgreSQL database; must not be null.
-     * @return the server version as a {@link String}, typically in the format "X.Y.Z".
+     * @return the server version as a {@code String}, typically in the format "X.Y.Z".
      * @throws PgSqlException if any {@link SQLException} occurs during the operation.
      */
     @SuppressWarnings("PMD.CheckResultSet")
