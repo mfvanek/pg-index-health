@@ -4,20 +4,6 @@
     "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <!--
-
-LineEnding	Checks whether file uses a specific line-ending sequence (LF, CRLF, or CR).
-MissingNullCaseInSwitch	Checks that a given switch statement or expression that use a reference type in its selector expression has a null case label.
-MissingOverrideOnRecordAccessor	Verifies that explicitly declared record accessor methods include the @Override annotation.
-ModuleDirectiveOrder	Checks the ordering, grouping and separation of directives in a module declaration.
-ModuleImportOrder	Checks the ordering and placement of module import declarations.
-MultiFileRegexpHeader	Checks the header of a source file against multiple header files that contain a pattern for each line of the source header.
-MultilineCommentLeadingAsteriskPresence	Checks if the multi-line comments have leading asterisks on each line.
-NumericalPrefixesInfixesSuffixesCharacterCase	Checks that all numerical literal prefixes, infixes, and suffixes are written using lowercase letters (for example prefixes : 0x, 0b, infixes : e, p, suffixes : f, d).
-OpenjdkAnnotationLocation	Verifies that annotations are properly placed by OpenJDK Style.
-PatternVariableAssignment	Checks for assignment of pattern variables.
-PreferCodeOrSnippetJavadocInlineTag	Checks that Javadoc inline tags {@code ...} and {@snippet ...} are preferred over HTML tags <code> and <pre>.
-PreferLiteralJavadocInlineTag	Checks that Javadoc inline tags are preferred over escaping entities.
-SealedShouldHavePermitsList	Checks that sealed classes and interfaces have a permits list.
 TextBlockGoogleStyleFormatting	Checks correct format of Java Text Blocks as specified in Google Java Style Guide.
 TypeBodyPadding	Checks the padding of the body of type definitions (classes, interfaces, enums, records).
 UnnecessaryFullyQualifiedType	Checks for fully qualified type references that are unnecessary because the type could simply be imported and referenced by its simple name.
@@ -48,11 +34,13 @@ WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening
         <property name="max" value="199"/>
         <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
     </module>
+    <!-- <module name="LineEnding"/> useless -->
     <module name="Header">
         <property name="header"
                   value="/*\n * Copyright (c) 2019-2026. Ivan Vakhrushev and others.\n * https://github.com/mfvanek/pg-index-health\n *\n * This file is a part of &quot;pg-index-health&quot; - an embeddable schema linter for PostgreSQL\n * that detects common anti-patterns and promotes best practices.\n *\n * Licensed under the Apache License 2.0\n */"/>
         <property name="fileExtensions" value="java"/>
     </module>
+    <!-- <module name="MultiFileRegexpHeader"/> useless -->
     <!-- <module name="RegexpHeader"/> invalid -->
     <!-- <module name="RegexpMultiline"/> invalid -->
     <!-- <module name="RegexpOnFilename"/> invalid -->
@@ -154,9 +142,14 @@ WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening
         <module name="MethodLength"/>
         <!-- <module name="MissingCtor"/> invalid -->
         <module name="MissingDeprecated"/>
+        <!-- <module name="MissingNullCaseInSwitch"/> invalid -->
         <module name="MissingOverride"/>
+        <module name="MissingOverrideOnRecordAccessor"/>
         <module name="ModifiedControlVariable"/>
+        <module name="ModuleDirectiveOrder"/>
+        <module name="ModuleImportOrder"/>
         <!-- <module name="MultipleStringLiterals"/> invalid -->
+        <module name="MultilineCommentLeadingAsteriskPresence"/>
         <module name="MutableException"/>
         <module name="NestedForDepth"/>
         <module name="NestedIfDepth"/>
@@ -164,6 +157,7 @@ WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening
         <module name="NoCodeInFile"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NPathComplexity"/>
+        <module name="NumericalPrefixesInfixesSuffixesCharacterCase"/>
         <module name="OuterTypeFilename"/>
         <module name="OuterTypeNumber"/>
         <module name="PackageAnnotation"/>
@@ -173,6 +167,8 @@ WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening
             <property name="max" value="13"/>
             <property name="ignoreOverriddenMethods" value="true"/>
         </module>
+        <module name="PreferCodeOrSnippetJavadocInlineTag"/>
+        <module name="PreferLiteralJavadocInlineTag"/>
         <module name="RecordComponentNumber"/>
         <module name="RequireThis"/>
         <module name="ReturnCount">
@@ -266,6 +262,7 @@ WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening
             <property name="tokens" value="METHOD_REF"/>
             <property name="option" value="nl"/>
         </module>
+        <module name="SealedShouldHavePermitsList"/>
         <module name="PackageName"/>
         <module name="TypeName"/>
         <module name="MemberName"/>
@@ -274,6 +271,7 @@ WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening
         <module name="CatchParameterName"/>
         <module name="LocalVariableName"/>
         <module name="PatternVariableName"/>
+        <module name="PatternVariableAssignment"/>
         <module name="ClassTypeParameterName"/>
         <module name="RecordComponentName"/>
         <module name="RecordTypeParameterName"/>

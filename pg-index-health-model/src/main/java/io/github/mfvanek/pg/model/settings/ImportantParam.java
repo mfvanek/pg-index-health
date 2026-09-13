@@ -21,11 +21,11 @@ import io.github.mfvanek.pg.model.validation.Validators;
  * </p>
  *
  * <p>Example usage:</p>
- * <pre>{@code
+ * <snippet>{@code
  * for (ImportantParam param : ImportantParam.values()) {
  *     System.out.println(param.getName() + " = " + param.getDefaultValue());
  * }
- * }</pre>
+ * }</snippet>
  *
  * @see ParamNameAware
  */
