@@ -22,6 +22,7 @@ import java.util.Objects;
  * @since 0.13.2
  */
 public enum PgObjectType {
+
     /**
      * A table (relation, entity) in a database.
      *

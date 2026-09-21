@@ -19,11 +19,18 @@
         <property name="max" value="199"/>
         <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
     </module>
+    <!-- <module name="LineEnding"/> useless -->
     <module name="Header">
         <property name="header"
                   value="/*\n * Copyright (c) 2019-2026. Ivan Vakhrushev and others.\n * https://github.com/mfvanek/pg-index-health\n *\n * This file is a part of &quot;pg-index-health&quot; - an embeddable schema linter for PostgreSQL\n * that detects common anti-patterns and promotes best practices.\n *\n * Licensed under the Apache License 2.0\n */"/>
         <property name="fileExtensions" value="java"/>
     </module>
+    <!-- <module name="MultiFileRegexpHeader"/> useless -->
+    <!-- <module name="RegexpHeader"/> invalid -->
+    <!-- <module name="RegexpMultiline"/> invalid -->
+    <!-- <module name="RegexpOnFilename"/> invalid -->
+    <!-- <module name="RegexpSingleline"/> invalid -->
+    <!-- <module name="RegexpSinglelineJava"/> invalid -->
     <module name="NewlineAtEndOfFile"/>
     <module name="OrderedProperties"/>
     <module name="Translation"/>
@@ -40,6 +47,7 @@
         <module name="AbstractClassName">
             <property name="ignoreName" value="true"/>
         </module>
+        <module name="AnnotatedDeclarationVisibility"/>
         <module name="AnnotationLocation">
             <property name="id" value="AnnotationLocationMostCases"/>
             <property name="tokens"
@@ -54,10 +62,13 @@
         <!--<module name="AnnotationOnSameLine"/> invalid -->
         <module name="AnnotationUseStyle"/>
         <module name="AnonInnerLength"/>
+        <!-- <module name="ArrayBracketNoWhitespace"/> invalid -->
         <module name="ArrayTypeStyle"/>
         <!--<module name="AvoidInlineConditionals"/> invalid -->
         <module name="AvoidNestedBlocks"/>
+        <module name="AvoidModuleImport"/>
         <module name="BooleanExpressionComplexity"/>
+        <module name="ConstructorsDeclarationGrouping"/>
         <module name="ClassDataAbstractionCoupling"/>
         <module name="ClassFanOutComplexity"/>
         <!-- <module name="ClassMemberImpliedModifier"/> invalid -->
@@ -73,11 +84,17 @@
         <module name="EqualsHashCode"/>
         <module name="ExecutableStatementCount"/>
         <module name="ExplicitInitialization"/>
-        <!-- <module name="FinalClass"/> invalid -->
+        <module name="ExpressionOverBlockLambda"/>
+        <module name="FinalClass"/>
         <module name="FinalLocalVariable"/>
         <module name="FinalParameters"/>
-        <!-- <module name="HiddenField"/> invalid -->
+        <!-- <module name="GoogleMethodName"/> useless -->
+        <module name="GoogleNonConstantFieldName"/>
+        <module name="HexLiteralCase"/>
+        <!-- <module name="HiddenField"/> useless -->
         <!-- <module name="HideUtilityClassConstructor"/> useless -->
+        <module name="IllegalBlockTag"/>
+        <module name="IllegalSymbol"/>
         <module name="IllegalCatch"/>
         <module name="IllegalIdentifierName"/>
         <module name="IllegalInstantiation"/>
@@ -88,7 +105,18 @@
         <module name="InnerTypeLast"/>
         <module name="InterfaceIsType"/>
         <!-- <module name="InterfaceMemberImpliedModifier"/> invalid -->
+        <module name="InappropriateJavadocBlockTagsOnField"/>
+        <module name="InappropriateJavadocBlockTagsOnPackage"/>
+        <module name="InappropriateJavadocBlockTagsOnType"/>
         <module name="JavaNCSS"/>
+        <module name="JavadocEndCommentDelimiter"/>
+        <module name="JavadocLeadingAsteriskAlign"/>
+        <!-- <module name="JavadocLinkFirstOccurrence"/> useless -->
+        <module name="JavadocLinkWellKnownApi"/>
+        <module name="JavadocNoErrorInThrowsTag"/>
+        <!-- <module name="JavadocParamOrder"/> useless -->
+        <module name="JavadocRegexp"/>
+        <!-- <module name="JavadocThrowsOrder"/> useless -->
         <module name="LambdaBodyLength">
             <property name="max" value="35"/>
         </module>
@@ -99,9 +127,14 @@
         <module name="MethodLength"/>
         <!-- <module name="MissingCtor"/> invalid -->
         <module name="MissingDeprecated"/>
+        <!-- <module name="MissingNullCaseInSwitch"/> invalid -->
         <module name="MissingOverride"/>
+        <module name="MissingOverrideOnRecordAccessor"/>
         <module name="ModifiedControlVariable"/>
+        <module name="ModuleDirectiveOrder"/>
+        <module name="ModuleImportOrder"/>
         <!-- <module name="MultipleStringLiterals"/> invalid -->
+        <module name="MultilineCommentLeadingAsteriskPresence"/>
         <module name="MutableException"/>
         <module name="NestedForDepth"/>
         <module name="NestedIfDepth"/>
@@ -109,6 +142,7 @@
         <module name="NoCodeInFile"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NPathComplexity"/>
+        <module name="NumericalPrefixesInfixesSuffixesCharacterCase"/>
         <module name="OuterTypeFilename"/>
         <module name="OuterTypeNumber"/>
         <module name="PackageAnnotation"/>
@@ -118,6 +152,8 @@
             <property name="max" value="13"/>
             <property name="ignoreOverriddenMethods" value="true"/>
         </module>
+        <!-- <module name="PreferCodeOrSnippetJavadocInlineTag"/> invalid -->
+        <module name="PreferLiteralJavadocInlineTag"/>
         <module name="RecordComponentNumber"/>
         <module name="RequireThis"/>
         <module name="ReturnCount">
@@ -131,18 +167,32 @@
         <module name="SuperClone"/>
         <module name="SuperFinalize"/>
         <module name="SuppressWarnings"/>
+        <!-- <module name="TextBlockGoogleStyleFormatting"/> invalid -->
         <module name="ThrowsCount"/>
         <module name="TodoComment"/>
         <!-- <module name="TrailingComment"/> invalid -->
         <module name="TypecastParenPad"/>
+        <module name="TypeBodyPadding">
+            <property name="atEndOfBody" value="false"/>
+        </module>
         <!-- <module name="UncommentedMain"/> useless -->
+        <module name="UnnecessaryFullyQualifiedType"/>
+        <module name="UnnecessaryNullCheckWithInstanceOf"/>
         <module name="UnnecessaryParentheses"/>
         <module name="UnnecessarySemicolonInEnumeration"/>
         <module name="UnnecessarySemicolonInTryWithResources"/>
         <module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/>
         <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
+        <module name="UnnecessaryTypeArgumentsWithRecordPattern"/>
+        <!-- <module name="UnusedCatchParameterShouldBeUnnamed"/> invalid -->
+        <!-- <module name="UnusedLambdaParameterShouldBeUnnamed"/> invalid -->
+        <!-- <module name="UnusedTryResourceShouldBeUnnamed"> invalid -->
         <module name="UnusedLocalVariable"/>
+        <module name="UnusedPrivateField"/>
+        <module name="UseEnhancedSwitch"/>
         <!-- <module name="VisibilityModifier"/> invalid -->
+        <module name="WhenShouldBeUsed"/>
+        <module name="WhitespaceBeforeEmptyBody"/>
         <module name="IllegalToken"/>
         <module name="IllegalTokenText"/>
         <module name="AvoidEscapedUnicodeCharacters"/>
@@ -211,6 +261,7 @@
             <property name="tokens" value="METHOD_REF"/>
             <property name="option" value="nl"/>
         </module>
+        <module name="SealedShouldHavePermitsList"/>
         <module name="PackageName"/>
         <module name="TypeName"/>
         <module name="MemberName"/>
@@ -219,6 +270,7 @@
         <module name="CatchParameterName"/>
         <module name="LocalVariableName"/>
         <module name="PatternVariableName"/>
+        <module name="PatternVariableAssignment"/>
         <module name="ClassTypeParameterName"/>
         <module name="RecordComponentName"/>
         <module name="RecordTypeParameterName"/>

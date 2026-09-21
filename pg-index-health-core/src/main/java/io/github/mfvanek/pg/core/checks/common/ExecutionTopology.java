@@ -17,6 +17,7 @@ package io.github.mfvanek.pg.core.checks.common;
  * @since 0.6.0
  */
 public enum ExecutionTopology {
+
     /**
      * Only on the primary host.
      */
