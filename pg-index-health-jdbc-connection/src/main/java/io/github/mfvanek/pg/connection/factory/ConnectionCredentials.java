@@ -45,9 +45,9 @@ public final class ConnectionCredentials {
     /**
      * Retrieves a set of connection strings for accessing all hosts in the database cluster.
      *
-     * @return connection urls
+     * @return connection URLs
      */
-    public Collection<String> getConnectionUrls() {
+    public Set<String> getConnectionUrls() {
         return connectionUrls;
     }
 

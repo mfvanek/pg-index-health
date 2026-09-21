@@ -114,7 +114,7 @@ public final class Exclusions {
      *
      * @return a collection of table names to exclude
      */
-    public Collection<String> getTableNameExclusions() {
+    public Set<String> getTableNameExclusions() {
         return Set.copyOf(tableNameExclusions);
     }
 
@@ -123,7 +123,7 @@ public final class Exclusions {
      *
      * @return a collection of index names to exclude
      */
-    public Collection<String> getIndexNameExclusions() {
+    public Set<String> getIndexNameExclusions() {
         return Set.copyOf(indexNameExclusions);
     }
 
@@ -132,7 +132,7 @@ public final class Exclusions {
      *
      * @return a collection of sequence names to exclude
      */
-    public Collection<String> getSequenceNameExclusions() {
+    public Set<String> getSequenceNameExclusions() {
         return Set.copyOf(sequenceNameExclusions);
     }
 

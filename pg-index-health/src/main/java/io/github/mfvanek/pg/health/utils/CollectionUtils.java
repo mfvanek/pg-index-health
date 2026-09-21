@@ -32,7 +32,7 @@ public final class CollectionUtils {
      * @param <T>    the generic type that is able to represent the types contained in both input collections.
      * @return the intersection of the two collections
      */
-    public static <T> Collection<T> intersection(final Collection<? extends T> first, final Collection<? extends T> second) {
+    public static <T> Set<T> intersection(final Collection<? extends T> first, final Collection<? extends T> second) {
         Objects.requireNonNull(first, "first cannot be null");
         final Set<T> prepared = Set.copyOf(Objects.requireNonNull(second, "second cannot be null"));
         final Set<T> result = new LinkedHashSet<>();
