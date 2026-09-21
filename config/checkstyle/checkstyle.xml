@@ -4,8 +4,6 @@
     "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <!--
-TextBlockGoogleStyleFormatting	Checks correct format of Java Text Blocks as specified in Google Java Style Guide.
-TypeBodyPadding	Checks the padding of the body of type definitions (classes, interfaces, enums, records).
 UnnecessaryFullyQualifiedType	Checks for fully qualified type references that are unnecessary because the type could simply be imported and referenced by its simple name.
 UnnecessaryNullCheckWithInstanceOf	Checks for redundant null checks with the instanceof operator.
 UnnecessaryTypeArgumentsWithRecordPattern	Checks for unnecessary explicit type arguments in record patterns.
@@ -182,10 +180,14 @@ WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening
         <module name="SuperClone"/>
         <module name="SuperFinalize"/>
         <module name="SuppressWarnings"/>
+        <!-- <module name="TextBlockGoogleStyleFormatting"/> invalid -->
         <module name="ThrowsCount"/>
         <module name="TodoComment"/>
         <!-- <module name="TrailingComment"/> invalid -->
         <module name="TypecastParenPad"/>
+        <module name="TypeBodyPadding">
+            <property name="atEndOfBody" value="false"/>
+        </module>
         <!-- <module name="UncommentedMain"/> useless -->
         <module name="UnnecessaryParentheses"/>
         <module name="UnnecessarySemicolonInEnumeration"/>

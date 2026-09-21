@@ -54,6 +54,7 @@ abstract class GenerateJackson3ModuleVersionTask : DefaultTask() {
             @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
             @io.github.mfvanek.pg.model.annotations.ExcludeFromJacocoGeneratedReport
             public final class ModuleVersion implements Versioned {
+
                 public static final Version VERSION = new Version(${moduleVersion.get().replace(".", ", ")}, null, "${moduleGroup.get()}", "${moduleName.get()}");
                 
                 @Override
