@@ -152,7 +152,7 @@
             <property name="max" value="13"/>
             <property name="ignoreOverriddenMethods" value="true"/>
         </module>
-        <module name="PreferCodeOrSnippetJavadocInlineTag"/>
+        <!-- <module name="PreferCodeOrSnippetJavadocInlineTag"/> invalid -->
         <module name="PreferLiteralJavadocInlineTag"/>
         <module name="RecordComponentNumber"/>
         <module name="RequireThis"/>

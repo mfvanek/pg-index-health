@@ -21,11 +21,11 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
  * Usually these columns should use a built-in uuid type.
  * <p>
  * UUID representation:
- * <snippet>{@code
+ * <pre>{@code
  * b9b1f6f5-7f90-4b68-a389-f0ad8bb5784b // with dashes - 36 characters
  * b9b1f6f57f904b68a389f0ad8bb5784b // without dashes - 32 characters
  * {b9b1f6f5-7f90-4b68-a389-f0ad8bb5784b} // with curly braces - 38 characters
- * }</snippet>
+ * }</pre>
  *
  * @author Ivan Vakhrushev
  * @see <a href="https://www.postgresql.org/docs/17/datatype-uuid.html">UUID Type</a>

@@ -19,7 +19,7 @@ import java.util.Objects;
  *
  * <p>Instances are created using the {@link #builder()} method:
  *
- * <snippet>{@code
+ * <pre>{@code
  * GeneratingOptions options = GeneratingOptions.builder()
  *     .concurrently()
  *     .excludeNulls()
@@ -29,7 +29,7 @@ import java.util.Objects;
  *     .nameWithoutNulls()
  *     .withIdxPosition(IdxPosition.SUFFIX)
  *     .build();
- * }</snippet>
+ * }</pre>
  *
  * @author Ivan Vakhrushev
  * @since 0.5.0
