@@ -3,19 +3,6 @@
     "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
     "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
-<!--
-UnnecessaryFullyQualifiedType	Checks for fully qualified type references that are unnecessary because the type could simply be imported and referenced by its simple name.
-UnnecessaryNullCheckWithInstanceOf	Checks for redundant null checks with the instanceof operator.
-UnnecessaryTypeArgumentsWithRecordPattern	Checks for unnecessary explicit type arguments in record patterns.
-UnusedCatchParameterShouldBeUnnamed	Ensures that catch parameters that are not used are declared as an unnamed variable.
-UnusedLambdaParameterShouldBeUnnamed	Ensures that lambda parameters that are not used are declared as an unnamed variable.
-UnusedPrivateField	Check that a private field is declared, but never used.
-UnusedTryResourceShouldBeUnnamed	Ensures that try-with-resources resource variables that are not used are declared as an unnamed variable.
-UseEnhancedSwitch	Ensures that the enhanced switch (using -> for case labels) is used instead of the traditional switch (using : for case labels) where possible.
-WhenShouldBeUsed	Ensures that when is used instead of a single if statement inside a case block.
-WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening brace of an empty body.
--->
-
 <module name="Checker">
     <property name="charset" value="UTF-8"/>
     <property name="severity" value="warning"/>
@@ -189,13 +176,23 @@ WhitespaceBeforeEmptyBody	Checks that a whitespace is present before the opening
             <property name="atEndOfBody" value="false"/>
         </module>
         <!-- <module name="UncommentedMain"/> useless -->
+        <module name="UnnecessaryFullyQualifiedType"/>
+        <module name="UnnecessaryNullCheckWithInstanceOf"/>
         <module name="UnnecessaryParentheses"/>
         <module name="UnnecessarySemicolonInEnumeration"/>
         <module name="UnnecessarySemicolonInTryWithResources"/>
         <module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/>
         <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
+        <module name="UnnecessaryTypeArgumentsWithRecordPattern"/>
+        <!-- <module name="UnusedCatchParameterShouldBeUnnamed"/> invalid -->
+        <!-- <module name="UnusedLambdaParameterShouldBeUnnamed"/> invalid -->
+        <!-- <module name="UnusedTryResourceShouldBeUnnamed"> invalid -->
         <module name="UnusedLocalVariable"/>
+        <module name="UnusedPrivateField"/>
+        <module name="UseEnhancedSwitch"/>
         <!-- <module name="VisibilityModifier"/> invalid -->
+        <module name="WhenShouldBeUsed"/>
+        <module name="WhitespaceBeforeEmptyBody"/>
         <module name="IllegalToken"/>
         <module name="IllegalTokenText"/>
         <module name="AvoidEscapedUnicodeCharacters"/>
