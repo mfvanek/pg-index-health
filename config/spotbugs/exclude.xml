@@ -1,96 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FindBugsFilter>
     <Match>
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE,RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE,AI_ANNOTATION_ISSUES_NEEDS_NULLABLE"/>
-    </Match>
-    <Match>
-        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2,CT_CONSTRUCTOR_THROW"/>
-    </Match>
-    <Match>
-        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE,SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
-    </Match>
-    <Match>
-        <Bug pattern="EC_NULL_ARG,EC_UNRELATED_TYPES,EC_UNRELATED_CLASS_AND_INTERFACE,NM_CONFUSING,NP_NONNULL_PARAM_VIOLATION,DP_DO_INSIDE_DO_PRIVILEGED,UVA_POSSIBLE_EXCESS_NULL"/>
-        <Class name="~.*Test"/>
-    </Match>
-    <Match>
-        <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
-        <Or>
-            <Class name="io.github.mfvanek.pg.testing.PostgreSqlClusterWrapper"/>
-            <Class name="io.github.mfvanek.pg.testing.PostgreSqlContainerWrapper"/>
-            <Class name="io.github.mfvanek.pg.spring.postgres.config.DatabaseConfig"/>
-        </Or>
-    </Match>
-    <Match>
-        <Bug pattern="OBL_UNSATISFIED_OBLIGATION,ODR_OPEN_DATABASE_RESOURCE"/>
-        <Class name="io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionUnitTest"/>
-    </Match>
-    <Match>
-        <Bug pattern="PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES"/>
-        <Or>
-            <Class name="io.github.mfvanek.pg.model.table.Table"/>
-            <Class name="io.github.mfvanek.pg.generator.utils.StringUtils"/>
-            <Class name="io.github.mfvanek.pg.generator.GeneratingOptions$Builder"/>
-            <Class name="io.github.mfvanek.pg.core.checks.common.Diagnostic"/>
-        </Or>
-    </Match>
-    <Match>
-        <Bug pattern="MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR"/>
-        <Class name="io.github.mfvanek.pg.spring.AutoConfigurationTestBase"/>
-    </Match>
-    <Match>
-        <Bug pattern="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED"/>
-        <Class name="io.github.mfvanek.pg.spring.DatabaseStructureHealthAutoConfigurationFilteringTest"/>
-    </Match>
-    <Match>
-        <Bug pattern="PDP_POORLY_DEFINED_PARAMETER"/>
-        <Class name="io.github.mfvanek.pg.spring.AutoConfigurationTestBase"/>
-    </Match>
-    <Match>
-        <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
-        <Class name="io.github.mfvanek.pg.spring.DatabaseStructureHealthAutoConfiguration"/>
-    </Match>
-    <Match>
         <Bug
-            pattern="PSC_PRESIZE_COLLECTIONS,WEM_WEAK_EXCEPTION_MESSAGING,IMC_IMMATURE_CLASS_NO_EQUALS,FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY,CLI_CONSTANT_LIST_INDEX,IMC_IMMATURE_CLASS_NO_TOSTRING,OPM_OVERLY_PERMISSIVE_METHOD,CE_CLASS_ENVY,EXS_EXCEPTION_SOFTENING_NO_CHECKED,EXS_EXCEPTION_SOFTENING_HAS_CHECKED,EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS,MDM_THREAD_YIELD,PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS,RFI_SET_ACCESSIBLE,SIL_SQL_IN_LOOP"/>
-    </Match>
-    <Match>
-        <Bug pattern="SQL_INJECTION_JDBC,IMPROPER_UNICODE,CRLF_INJECTION_LOGS"/>
-    </Match>
-    <Match>
-        <Bug pattern="HARD_CODE_PASSWORD"/>
-        <Class name="io.github.mfvanek.pg.testing.PostgreSqlClusterAliasHolder"/>
+            pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2,CT_CONSTRUCTOR_THROW,EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS,EXS_EXCEPTION_SOFTENING_NO_CHECKED,IMC_IMMATURE_CLASS_NO_TOSTRING,IMC_IMMATURE_CLASS_NO_EQUALS,OPM_OVERLY_PERMISSIVE_METHOD"/>
     </Match>
     <Match>
         <Bug pattern="NSE_NON_SYMMETRIC_EQUALS"/>
         <Class name="io.github.mfvanek.pg.connection.PgConnectionImpl"/>
     </Match>
     <Match>
-        <Bug pattern="UCPM_USE_CHARACTER_PARAMETERIZED_METHOD"/>
-        <Class name="io.github.mfvanek.pg.generator.PgIdentifierNameGenerator"/>
+        <Bug pattern="WEM_WEAK_EXCEPTION_MESSAGING,PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS,AI_ANNOTATION_ISSUES_NEEDS_NULLABLE,PSC_PRESIZE_COLLECTIONS"/>
     </Match>
     <Match>
-        <Bug pattern="STT_STRING_PARSING_A_FIELD"/>
-        <Class name="io.github.mfvanek.pg.testing.PostgresVersionHolder"/>
+        <Bug pattern="SIL_SQL_IN_LOOP,SQL_INJECTION_JDBC,CLI_CONSTANT_LIST_INDEX,IMPROPER_UNICODE,MDM_THREAD_YIELD"/>
     </Match>
     <Match>
-        <Bug pattern="LO_SUSPECT_LOG_CLASS"/>
-        <Class name="io.github.mfvanek.pg.health.logger.KeyValueFileHealthLogger"/>
+        <Bug pattern="CRLF_INJECTION_LOGS"/>
+        <Class name="io.github.mfvanek.pg.health.checks.cluster.UnusedIndexesCheckOnCluster"/>
     </Match>
     <Match>
-        <Bug pattern="FCBL_FIELD_COULD_BE_LOCAL,SEC_SIDE_EFFECT_CONSTRUCTOR"/>
-    </Match>
-    <Match>
-        <Bug pattern="ACEM_ABSTRACT_CLASS_EMPTY_METHODS"/>
-        <Class name="io.github.mfvanek.pg.core.fixtures.support.statements.AbstractDbStatement"/>
-    </Match>
-    <Match>
-        <Bug pattern="ITC_INHERITANCE_TYPE_CHECKING"/>
-        <Or>
-            <Class name="io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate"/>
-            <Class name="io.github.mfvanek.pg.model.predicates.SkipByConstraintNamePredicate"/>
-            <Class name="io.github.mfvanek.pg.model.predicates.SkipByColumnNamePredicate"/>
-        </Or>
+        <Bug pattern="HARD_CODE_PASSWORD"/>
+        <Class name="io.github.mfvanek.pg.testing.PostgreSqlClusterAliasHolder"/>
     </Match>
     <Match>
         <Bug pattern="OCP_OVERLY_CONCRETE_PARAMETER"/>
@@ -100,14 +30,42 @@
         </Or>
     </Match>
     <Match>
-        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_THROWABLE"/>
-        <Class name="io.github.mfvanek.pg.model.fixtures.support.TestUtils"/>
+        <Bug pattern="STT_STRING_PARSING_A_FIELD"/>
+        <Class name="io.github.mfvanek.pg.testing.PostgresVersionHolder"/>
     </Match>
     <Match>
-        <Bug pattern="IMC_IMMATURE_CLASS_COLLECTION_RETURN"/>
+        <Bug pattern="UCPM_USE_CHARACTER_PARAMETERIZED_METHOD"/>
+        <Class name="io.github.mfvanek.pg.generator.PgIdentifierNameGenerator"/>
     </Match>
     <Match>
         <Bug pattern="VA_FORMAT_STRING_USES_NEWLINE"/>
         <Class name="io.github.mfvanek.pg.core.fixtures.support.statements.AbstractDbStatement"/>
+    </Match>
+    <Match>
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE,SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING,EXS_EXCEPTION_SOFTENING_HAS_CHECKED"/>
+        <Or>
+            <Class name="~io\.github\.mfvanek\.pg\.core\.fixtures\.support\..*"/>
+            <Class name="~.*Test"/>
+        </Or>
+    </Match>
+    <Match>
+        <Bug pattern="ACEM_ABSTRACT_CLASS_EMPTY_METHODS"/>
+        <Class name="io.github.mfvanek.pg.core.fixtures.support.statements.AbstractDbStatement"/>
+    </Match>
+    <Match>
+        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_THROWABLE,RFI_SET_ACCESSIBLE"/>
+        <Class name="io.github.mfvanek.pg.model.fixtures.support.TestUtils"/>
+    </Match>
+    <Match>
+        <Bug pattern="CE_CLASS_ENVY,SEC_SIDE_EFFECT_CONSTRUCTOR,EC_UNRELATED_TYPES,EC_UNRELATED_CLASS_AND_INTERFACE,UVA_POSSIBLE_EXCESS_NULL"/>
+        <Class name="~.*Test"/>
+    </Match>
+    <Match>
+        <Bug pattern="OBL_UNSATISFIED_OBLIGATION,ODR_OPEN_DATABASE_RESOURCE"/>
+        <Class name="io.github.mfvanek.pg.connection.HighAvailabilityPgConnectionUnitTest"/>
+    </Match>
+    <Match>
+        <Bug pattern="PDP_POORLY_DEFINED_PARAMETER"/>
+        <Class name="io.github.mfvanek.pg.spring.AutoConfigurationTestBase"/>
     </Match>
 </FindBugsFilter>
