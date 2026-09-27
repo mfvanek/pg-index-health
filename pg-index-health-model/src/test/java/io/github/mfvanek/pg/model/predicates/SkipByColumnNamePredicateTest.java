@@ -19,12 +19,14 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 class SkipByColumnNamePredicateTest {
 
@@ -50,10 +52,10 @@ class SkipByColumnNamePredicateTest {
 
     @Test
     void shouldNotCastObjectsWhenExclusionsIsEmpty() {
-        final Constraint mockConstraint = Mockito.mock(Constraint.class);
+        final Constraint mockConstraint = mock(Constraint.class);
         assertThat(SkipByColumnNamePredicate.of(List.of()))
             .accepts(mockConstraint);
-        Mockito.verify(mockConstraint, Mockito.never()).getConstraintName();
+        verify(mockConstraint, never()).getConstraintName();
     }
 
     @Test

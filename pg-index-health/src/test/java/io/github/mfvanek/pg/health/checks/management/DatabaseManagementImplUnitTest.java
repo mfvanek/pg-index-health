@@ -17,7 +17,6 @@ import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.Set;
 import java.util.function.Function;
@@ -25,11 +24,16 @@ import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @Tag("fast")
 class DatabaseManagementImplUnitTest {
 
-    private final HighAvailabilityPgConnection haPgConnectionMock = Mockito.mock(HighAvailabilityPgConnection.class);
+    private final HighAvailabilityPgConnection haPgConnectionMock = mock(HighAvailabilityPgConnection.class);
 
     @SuppressWarnings("ConstantConditions")
     @Test
@@ -45,9 +49,9 @@ class DatabaseManagementImplUnitTest {
 
     @Test
     void resetStatisticsShouldAggregateResultsFromAllHosts() {
-        final StatisticsMaintenanceOnHost firstStatisticsMock = Mockito.mock(StatisticsMaintenanceOnHost.class);
-        final StatisticsMaintenanceOnHost secondStatisticsMock = Mockito.mock(StatisticsMaintenanceOnHost.class);
-        final DataSource dataSourceMock = Mockito.mock(DataSource.class);
+        final StatisticsMaintenanceOnHost firstStatisticsMock = mock(StatisticsMaintenanceOnHost.class);
+        final StatisticsMaintenanceOnHost secondStatisticsMock = mock(StatisticsMaintenanceOnHost.class);
+        final DataSource dataSourceMock = mock(DataSource.class);
         final PgConnection firstConnection = PgConnectionImpl.of(dataSourceMock, PgHostImpl.ofUrl("jdbc:postgresql://primary:6432"));
         final PgConnection secondConnection = PgConnectionImpl.of(dataSourceMock, PgHostImpl.ofUrl("jdbc:postgresql://secondary:6432"));
         final Function<PgConnection, StatisticsMaintenanceOnHost> statisticsOnHostFactory = pgConnection -> {
@@ -57,25 +61,25 @@ class DatabaseManagementImplUnitTest {
             return secondStatisticsMock;
         };
         final DatabaseManagement management = new DatabaseManagementImpl(haPgConnectionMock, statisticsOnHostFactory);
-        Mockito.when(haPgConnectionMock.getConnectionsToAllHostsInCluster())
+        when(haPgConnectionMock.getConnectionsToAllHostsInCluster())
             .thenReturn(Set.of(firstConnection, secondConnection));
 
         // False on all hosts
-        Mockito.when(firstStatisticsMock.resetStatistics()).thenReturn(Boolean.FALSE);
-        Mockito.when(secondStatisticsMock.resetStatistics()).thenReturn(Boolean.FALSE);
+        when(firstStatisticsMock.resetStatistics()).thenReturn(Boolean.FALSE);
+        when(secondStatisticsMock.resetStatistics()).thenReturn(Boolean.FALSE);
         assertThat(management.resetStatistics())
             .isFalse();
-        Mockito.verify(firstStatisticsMock, Mockito.times(1)).resetStatistics();
-        Mockito.verify(secondStatisticsMock, Mockito.times(1)).resetStatistics();
-        Mockito.verifyNoMoreInteractions(firstStatisticsMock, secondStatisticsMock);
+        verify(firstStatisticsMock, times(1)).resetStatistics();
+        verify(secondStatisticsMock, times(1)).resetStatistics();
+        verifyNoMoreInteractions(firstStatisticsMock, secondStatisticsMock);
 
         // True on all hosts
-        Mockito.when(firstStatisticsMock.resetStatistics()).thenReturn(Boolean.TRUE);
-        Mockito.when(secondStatisticsMock.resetStatistics()).thenReturn(Boolean.TRUE);
+        when(firstStatisticsMock.resetStatistics()).thenReturn(Boolean.TRUE);
+        when(secondStatisticsMock.resetStatistics()).thenReturn(Boolean.TRUE);
         assertThat(management.resetStatistics())
             .isTrue();
-        Mockito.verify(firstStatisticsMock, Mockito.times(2)).resetStatistics();
-        Mockito.verify(secondStatisticsMock, Mockito.times(2)).resetStatistics();
-        Mockito.verifyNoMoreInteractions(firstStatisticsMock, secondStatisticsMock);
+        verify(firstStatisticsMock, times(2)).resetStatistics();
+        verify(secondStatisticsMock, times(2)).resetStatistics();
+        verifyNoMoreInteractions(firstStatisticsMock, secondStatisticsMock);
     }
 }

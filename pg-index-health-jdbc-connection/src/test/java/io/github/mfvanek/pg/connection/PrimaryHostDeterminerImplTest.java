@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.connection.host.PgHost;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.connection.support.DatabaseAwareTestBase;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -28,6 +27,8 @@ import javax.sql.DataSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
 
@@ -44,12 +45,12 @@ class PrimaryHostDeterminerImplTest extends DatabaseAwareTestBase {
 
     @Test
     void isPrimaryWithExecutionError() throws SQLException {
-        final DataSource dataSource = Mockito.mock(DataSource.class);
-        try (Connection connection = Mockito.mock(Connection.class);
-             Statement statement = Mockito.mock(Statement.class)) {
-            Mockito.when(dataSource.getConnection()).thenReturn(connection);
-            Mockito.when(connection.createStatement()).thenReturn(statement);
-            Mockito.when(statement.executeQuery(anyString())).thenThrow(new SQLException("bad query"));
+        final DataSource dataSource = mock(DataSource.class);
+        try (Connection connection = mock(Connection.class);
+             Statement statement = mock(Statement.class)) {
+            when(dataSource.getConnection()).thenReturn(connection);
+            when(connection.createStatement()).thenReturn(statement);
+            when(statement.executeQuery(anyString())).thenThrow(new SQLException("bad query"));
             final PgConnection pgConnection = PgConnectionImpl.of(dataSource, localhost);
             assertThatThrownBy(() -> primaryHostDeterminer.isPrimary(pgConnection))
                 .isInstanceOf(PgSqlException.class)

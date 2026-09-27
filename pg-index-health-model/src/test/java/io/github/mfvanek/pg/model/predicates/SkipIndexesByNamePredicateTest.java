@@ -20,13 +20,15 @@ import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 class SkipIndexesByNamePredicateTest {
 
@@ -73,10 +75,10 @@ class SkipIndexesByNamePredicateTest {
 
     @Test
     void shouldNotCastObjectsWhenExclusionsIsEmpty() {
-        final Index mockIndex = Mockito.mock(Index.class);
+        final Index mockIndex = mock(Index.class);
         assertThat(SkipIndexesByNamePredicate.ofDefault(List.of()))
             .accepts(mockIndex);
-        Mockito.verify(mockIndex, Mockito.never()).getIndexName();
+        verify(mockIndex, never()).getIndexName();
     }
 
     @Test

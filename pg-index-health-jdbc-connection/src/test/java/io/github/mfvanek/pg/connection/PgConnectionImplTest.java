@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import io.github.mfvanek.pg.connection.support.DatabaseAwareTestBase;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,6 +24,8 @@ import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class PgConnectionImplTest extends DatabaseAwareTestBase {
 
@@ -92,8 +93,9 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
             .doesNotHaveSameHashCodeAs(first);
 
         // another implementation of PgConnection
-        final PgConnection connectionMock = Mockito.mock(PgConnection.class);
-        Mockito.when(connectionMock.getHost()).thenReturn(PgHostImpl.ofUrl("jdbc:postgresql://first:6432"));
+        final PgConnection connectionMock = mock(PgConnection.class);
+        when(connectionMock.getHost())
+            .thenReturn(PgHostImpl.ofUrl("jdbc:postgresql://first:6432"));
         assertThat(first).isEqualTo(connectionMock);
     }
 
@@ -113,7 +115,7 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
 
     @Test
     void twoConnectionsDifferentSameHostWithDifferentPortsConsideredNotEqual() {
-        final DataSource dataSourceMock = Mockito.mock(DataSource.class);
+        final DataSource dataSourceMock = mock(DataSource.class);
         final PgConnection firstPgConnection = PgConnectionImpl.of(dataSourceMock, PgHostImpl.ofUrl("jdbc:postgresql://localhost:5432"));
         final PgConnection secondPgConnection = PgConnectionImpl.of(dataSourceMock, PgHostImpl.ofUrl("jdbc:postgresql://localhost:5431"));
 
@@ -140,11 +142,11 @@ class PgConnectionImplTest extends DatabaseAwareTestBase {
 
     @Test
     void withExceptionWhileObtainingUrlFromMetadata() throws SQLException {
-        final DataSource dataSourceMock = Mockito.mock(DataSource.class);
-        try (Connection connectionMock = Mockito.mock(Connection.class)) {
-            Mockito.when(dataSourceMock.getConnection())
+        final DataSource dataSourceMock = mock(DataSource.class);
+        try (Connection connectionMock = mock(Connection.class)) {
+            when(dataSourceMock.getConnection())
                 .thenReturn(connectionMock);
-            Mockito.when(connectionMock.getMetaData())
+            when(connectionMock.getMetaData())
                 .thenThrow(new SQLException("Unable to obtain connection from metadata"));
 
             assertThatThrownBy(() -> PgConnectionImpl.ofUrl(dataSourceMock, null))

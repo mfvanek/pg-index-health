@@ -311,6 +311,11 @@
             <property name="illegalClasses"
                       value="^java\.io\.BufferedInputStream"/>
         </module>
+        <module name="IllegalImport">
+            <property name="id" value="IllegalImportMockito"/>
+            <property name="illegalClasses" value="^org\.mockito\.Mockito$"/>
+            <property name="regexp" value="true"/>
+        </module>
         <module name="MethodParamPad"/>
         <module name="NoWhitespaceBefore"/>
         <module name="NoWhitespaceBeforeCaseDefaultColon"/>

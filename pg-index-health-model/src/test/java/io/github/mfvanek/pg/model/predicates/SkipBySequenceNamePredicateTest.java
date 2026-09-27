@@ -18,13 +18,15 @@ import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 class SkipBySequenceNamePredicateTest {
 
@@ -71,10 +73,10 @@ class SkipBySequenceNamePredicateTest {
 
     @Test
     void shouldNotCastObjectsWhenExclusionsIsEmpty() {
-        final SequenceState mockSequence = Mockito.mock(SequenceState.class);
+        final SequenceState mockSequence = mock(SequenceState.class);
         assertThat(SkipBySequenceNamePredicate.ofDefault(List.of()))
             .accepts(mockSequence);
-        Mockito.verify(mockSequence, Mockito.never()).getSequenceName();
+        verify(mockSequence, never()).getSequenceName();
     }
 
     @Test

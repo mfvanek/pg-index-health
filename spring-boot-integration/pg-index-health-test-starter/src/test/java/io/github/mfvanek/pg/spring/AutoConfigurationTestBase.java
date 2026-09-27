@@ -62,7 +62,6 @@ import io.github.mfvanek.pg.core.checks.host.UnusedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.statistics.StatisticsMaintenanceOnHost;
 import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.NonNull;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
@@ -75,6 +74,7 @@ import javax.sql.DataSource;
 
 import static io.github.mfvanek.pg.spring.DatabaseStructureHealthProperties.STANDARD_DATASOURCE_BEAN_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 abstract class AutoConfigurationTestBase {
 
@@ -86,7 +86,7 @@ abstract class AutoConfigurationTestBase {
         .toList();
 
     protected static final Class<?>[] EXPECTED_TYPES = {PgConnection.class, DatabaseCheckOnHost.class, StatisticsMaintenanceOnHost.class};
-    protected static final DataSource DATA_SOURCE_MOCK = Mockito.mock(DataSource.class);
+    protected static final DataSource DATA_SOURCE_MOCK = mock(DataSource.class);
 
     private static final String CUSTOM_DATASOURCE_BEAN_NAME = "customDataSource";
 

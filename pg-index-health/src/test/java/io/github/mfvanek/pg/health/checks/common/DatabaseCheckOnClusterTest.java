@@ -15,13 +15,14 @@ import io.github.mfvanek.pg.model.table.Table;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 @Tag("fast")
 class DatabaseCheckOnClusterTest {
@@ -32,8 +33,8 @@ class DatabaseCheckOnClusterTest {
     @SuppressWarnings("unchecked")
     @Test
     void check() {
-        final DatabaseCheckOnCluster<Table> check = (DatabaseCheckOnCluster<@NonNull Table>) Mockito.spy(DatabaseCheckOnCluster.class);
-        Mockito.when(check.check(any(PgContext.class), any()))
+        final DatabaseCheckOnCluster<Table> check = (DatabaseCheckOnCluster<@NonNull Table>) spy(DatabaseCheckOnCluster.class);
+        when(check.check(any(PgContext.class), any()))
             .thenAnswer(invocation -> {
                 final PgContext ctx = invocation.getArgument(0);
                 return List.of(

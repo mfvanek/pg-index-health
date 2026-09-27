@@ -13,13 +13,14 @@ package io.github.mfvanek.pg.core.statistics;
 import io.github.mfvanek.pg.connection.PgConnection;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Tag("fast")
 class StatisticsMaintenanceOnHostImplUnitTest {
@@ -31,7 +32,7 @@ class StatisticsMaintenanceOnHostImplUnitTest {
             .isInstanceOf(NullPointerException.class)
             .hasMessage("pgConnection cannot be null");
 
-        final PgConnection connectionMock = Mockito.mock(PgConnection.class);
+        final PgConnection connectionMock = mock(PgConnection.class);
         assertThatThrownBy(() -> new StatisticsMaintenanceOnHostImpl(connectionMock, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("queryExecutor cannot be null");
@@ -39,10 +40,10 @@ class StatisticsMaintenanceOnHostImplUnitTest {
 
     @Test
     void resetStatisticsShouldReturnFalseOnEmptyResultSet() {
-        final PgConnection connectionMock = Mockito.mock(PgConnection.class);
-        final StatisticsQueryExecutor executorMock = Mockito.mock(StatisticsQueryExecutor.class);
+        final PgConnection connectionMock = mock(PgConnection.class);
+        final StatisticsQueryExecutor executorMock = mock(StatisticsQueryExecutor.class);
         final StatisticsMaintenanceOnHost maintenance = new StatisticsMaintenanceOnHostImpl(connectionMock, executorMock);
-        Mockito.when(executorMock.executeQuery(any(), any(), any()))
+        when(executorMock.executeQuery(any(), any(), any()))
             .thenReturn(List.of());
         assertThat(maintenance.resetStatistics())
             .isFalse();
@@ -50,10 +51,10 @@ class StatisticsMaintenanceOnHostImplUnitTest {
 
     @Test
     void resetStatisticsShouldReturnFalseWhenFirstRowIsFalse() {
-        final PgConnection connectionMock = Mockito.mock(PgConnection.class);
-        final StatisticsQueryExecutor executorMock = Mockito.mock(StatisticsQueryExecutor.class);
+        final PgConnection connectionMock = mock(PgConnection.class);
+        final StatisticsQueryExecutor executorMock = mock(StatisticsQueryExecutor.class);
         final StatisticsMaintenanceOnHost maintenance = new StatisticsMaintenanceOnHostImpl(connectionMock, executorMock);
-        Mockito.when(executorMock.executeQuery(any(), any(), any()))
+        when(executorMock.executeQuery(any(), any(), any()))
             .thenReturn(List.of(Boolean.FALSE, Boolean.TRUE));
         assertThat(maintenance.resetStatistics())
             .isFalse();
@@ -61,10 +62,10 @@ class StatisticsMaintenanceOnHostImplUnitTest {
 
     @Test
     void getLastStatsResetTimestampShouldReturnEmptyOptionalWhenNoResultFromDatabase() {
-        final PgConnection connectionMock = Mockito.mock(PgConnection.class);
-        final StatisticsQueryExecutor executorMock = Mockito.mock(StatisticsQueryExecutor.class);
+        final PgConnection connectionMock = mock(PgConnection.class);
+        final StatisticsQueryExecutor executorMock = mock(StatisticsQueryExecutor.class);
         final StatisticsMaintenanceOnHost maintenance = new StatisticsMaintenanceOnHostImpl(connectionMock, executorMock);
-        Mockito.when(executorMock.executeQuery(any(), any(), any()))
+        when(executorMock.executeQuery(any(), any(), any()))
             .thenReturn(List.of());
         assertThat(maintenance.getLastStatsResetTimestamp())
             .isEmpty();

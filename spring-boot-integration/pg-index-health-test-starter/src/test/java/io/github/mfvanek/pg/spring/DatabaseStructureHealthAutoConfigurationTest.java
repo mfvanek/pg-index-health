@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.connection.host.PgHostImpl;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -24,6 +23,8 @@ import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTestBase {
 
@@ -70,7 +71,7 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
 
     @Test
     void withDataSourceButWithoutConnectionString() throws SQLException {
-        try (Connection connectionMock = Mockito.mock(Connection.class)) {
+        try (Connection connectionMock = mock(Connection.class)) {
             setMocks(connectionMock);
 
             assertWithTestConfig()
@@ -85,7 +86,7 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
 
     @Test
     void withCustomDataSourceButWithoutConnectionString() throws SQLException {
-        try (Connection connectionMock = Mockito.mock(Connection.class)) {
+        try (Connection connectionMock = mock(Connection.class)) {
             setMocks(connectionMock);
 
             assertWithTestConfig()
@@ -102,7 +103,7 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
 
     @Test
     void withDataSourceAndEmptyConnectionString() throws SQLException {
-        try (Connection connectionMock = Mockito.mock(Connection.class)) {
+        try (Connection connectionMock = mock(Connection.class)) {
             setMocks(connectionMock);
 
             assertWithTestConfig()
@@ -118,7 +119,7 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
 
     @Test
     void withCustomDataSourceAndEmptyConnectionString() throws SQLException {
-        try (Connection connectionMock = Mockito.mock(Connection.class)) {
+        try (Connection connectionMock = mock(Connection.class)) {
             setMocks(connectionMock);
 
             assertWithTestConfig()
@@ -168,7 +169,7 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
 
     @Test
     void withDataSourceAndTestcontainersConnectionString() throws SQLException {
-        try (Connection connectionMock = Mockito.mock(Connection.class)) {
+        try (Connection connectionMock = mock(Connection.class)) {
             setMocks(connectionMock);
 
             assertWithTestConfig()
@@ -211,10 +212,10 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
 
     @Test
     void withDataSourceAndExceptionWhileObtainingUrlFromMetadata() throws SQLException {
-        try (Connection connectionMock = Mockito.mock(Connection.class)) {
-            Mockito.when(DATA_SOURCE_MOCK.getConnection())
+        try (Connection connectionMock = mock(Connection.class)) {
+            when(DATA_SOURCE_MOCK.getConnection())
                 .thenReturn(connectionMock);
-            Mockito.when(connectionMock.getMetaData())
+            when(connectionMock.getMetaData())
                 .thenThrow(SQLException.class);
 
             final ApplicationContextRunner contextRunner = assertWithTestConfig()
@@ -244,12 +245,12 @@ class DatabaseStructureHealthAutoConfigurationTest extends AutoConfigurationTest
     }
 
     private void setMocks(@NonNull final Connection connectionMock) throws SQLException {
-        Mockito.when(DATA_SOURCE_MOCK.getConnection())
+        when(DATA_SOURCE_MOCK.getConnection())
             .thenReturn(connectionMock);
-        final DatabaseMetaData metaDataMock = Mockito.mock(DatabaseMetaData.class);
-        Mockito.when(connectionMock.getMetaData())
+        final DatabaseMetaData metaDataMock = mock(DatabaseMetaData.class);
+        when(connectionMock.getMetaData())
             .thenReturn(metaDataMock);
-        Mockito.when(metaDataMock.getURL())
+        when(metaDataMock.getURL())
             .thenReturn("jdbc:postgresql://192.168.1.1:6432");
     }
 }

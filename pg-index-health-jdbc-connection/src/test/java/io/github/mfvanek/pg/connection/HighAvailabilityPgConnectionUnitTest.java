@@ -17,7 +17,6 @@ import org.awaitility.Awaitility;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -30,6 +29,10 @@ import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Tag("fast")
 class HighAvailabilityPgConnectionUnitTest {
@@ -55,7 +58,7 @@ class HighAvailabilityPgConnectionUnitTest {
                 .pollDelay(Duration.ofMillis(500L))
                 .until(() -> Boolean.TRUE);
 
-            Mockito.when(firstConnectionMocks.resultSet.getBoolean(1)).thenReturn(Boolean.FALSE);
+            when(firstConnectionMocks.resultSet.getBoolean(1)).thenReturn(Boolean.FALSE);
             Awaitility
                 .await()
                 .atMost(Duration.ofMillis(1000L))
@@ -65,7 +68,7 @@ class HighAvailabilityPgConnectionUnitTest {
                 .as("Without new primary first connection considered as primary")
                 .isEqualTo(pgConnections.get(0));
 
-            Mockito.when(secondConnectionMocks.resultSet.getBoolean(1)).thenReturn(Boolean.TRUE);
+            when(secondConnectionMocks.resultSet.getBoolean(1)).thenReturn(Boolean.TRUE);
             Awaitility
                 .await()
                 .atMost(Duration.ofMillis(1000L))
@@ -90,7 +93,7 @@ class HighAvailabilityPgConnectionUnitTest {
                 .until(() -> Boolean.TRUE);
 
             // Due to interleaving method may be called more than 10 times but not less than 10
-            Mockito.verify(firstConnectionMocks.dataSource, Mockito.atLeast(10)).getConnection();
+            verify(firstConnectionMocks.dataSource, atLeast(10)).getConnection();
         }
     }
 
@@ -98,9 +101,9 @@ class HighAvailabilityPgConnectionUnitTest {
     void updateConnectionToPrimaryShouldCatchAndLogExceptions() throws SQLException {
         try (LogsCaptor logsCaptor = new LogsCaptor(HighAvailabilityPgConnectionImpl.class, Level.WARNING)) {
             initMocksCommon(firstConnectionMocks);
-            Mockito.when(firstConnectionMocks.resultSet.getBoolean(1)).thenThrow(RuntimeException.class);
+            when(firstConnectionMocks.resultSet.getBoolean(1)).thenThrow(RuntimeException.class);
             initMocksCommon(secondConnectionMocks);
-            Mockito.when(secondConnectionMocks.resultSet.getBoolean(1)).thenThrow(RuntimeException.class);
+            when(secondConnectionMocks.resultSet.getBoolean(1)).thenThrow(RuntimeException.class);
 
             final List<PgConnection> pgConnections = prepareConnections();
             try (HighAvailabilityPgConnection ignored = HighAvailabilityPgConnectionImpl.of(pgConnections.get(0), pgConnections, 10L)) {
@@ -118,15 +121,15 @@ class HighAvailabilityPgConnectionUnitTest {
 
     private void initMocks(final ConnectionMocks connectionMocks, final Boolean resultSetBooleanValue) throws SQLException {
         initMocksCommon(connectionMocks);
-        Mockito.when(connectionMocks.resultSet.getBoolean(1)).thenReturn(resultSetBooleanValue);
+        when(connectionMocks.resultSet.getBoolean(1)).thenReturn(resultSetBooleanValue);
     }
 
     @SuppressWarnings("PMD.CheckResultSet")
     private void initMocksCommon(final ConnectionMocks connectionMocks) throws SQLException {
-        Mockito.when(connectionMocks.dataSource.getConnection()).thenReturn(connectionMocks.connection);
-        Mockito.when(connectionMocks.connection.createStatement()).thenReturn(connectionMocks.statement);
-        Mockito.when(connectionMocks.resultSet.next()).thenReturn(Boolean.TRUE);
-        Mockito.when(connectionMocks.statement.executeQuery(anyString())).thenReturn(connectionMocks.resultSet);
+        when(connectionMocks.dataSource.getConnection()).thenReturn(connectionMocks.connection);
+        when(connectionMocks.connection.createStatement()).thenReturn(connectionMocks.statement);
+        when(connectionMocks.resultSet.next()).thenReturn(Boolean.TRUE);
+        when(connectionMocks.statement.executeQuery(anyString())).thenReturn(connectionMocks.resultSet);
     }
 
     @NonNull
@@ -140,9 +143,9 @@ class HighAvailabilityPgConnectionUnitTest {
 
     private static final class ConnectionMocks {
 
-        private final Connection connection = Mockito.mock(Connection.class);
-        private final Statement statement = Mockito.mock(Statement.class);
-        private final ResultSet resultSet = Mockito.mock(ResultSet.class);
-        private final DataSource dataSource = Mockito.mock(DataSource.class);
+        private final Connection connection = mock(Connection.class);
+        private final Statement statement = mock(Statement.class);
+        private final ResultSet resultSet = mock(ResultSet.class);
+        private final DataSource dataSource = mock(DataSource.class);
     }
 }

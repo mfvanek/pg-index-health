@@ -11,17 +11,19 @@
 package io.github.mfvanek.pg.spring.postgres.with.custom.user.config;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 import org.springframework.mock.env.MockEnvironment;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import static io.github.mfvanek.pg.spring.postgres.with.custom.user.config.ConfigurableEnvironmentMutator.DATASOURCE_URL_PROP_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class ConfigurableEnvironmentMutatorTest {
 
-    private final PostgreSQLContainer postgreSQLContainer = Mockito.mock(PostgreSQLContainer.class);
+    private final PostgreSQLContainer postgreSQLContainer = mock(PostgreSQLContainer.class);
 
     @Test
     void shouldNotAddPropIfExist() {
@@ -36,8 +38,8 @@ class ConfigurableEnvironmentMutatorTest {
 
     @Test
     void shouldNotAddPropIfInvalidType() {
-        final Environment environment = Mockito.mock(Environment.class);
-        Mockito.when(environment.getProperty(Mockito.anyString())).thenReturn(null);
+        final Environment environment = mock(Environment.class);
+        when(environment.getProperty(anyString())).thenReturn(null);
 
         assertThat(ConfigurableEnvironmentMutator.addDatasourceUrlIfNeed(postgreSQLContainer, environment))
             .isFalse();
@@ -46,7 +48,7 @@ class ConfigurableEnvironmentMutatorTest {
     @Test
     void shouldAddProperty() {
         final MockEnvironment environment = new MockEnvironment();
-        Mockito.when(postgreSQLContainer.getJdbcUrl()).thenReturn("added_url");
+        when(postgreSQLContainer.getJdbcUrl()).thenReturn("added_url");
 
         assertThat(ConfigurableEnvironmentMutator.addDatasourceUrlIfNeed(postgreSQLContainer, environment))
             .isTrue();

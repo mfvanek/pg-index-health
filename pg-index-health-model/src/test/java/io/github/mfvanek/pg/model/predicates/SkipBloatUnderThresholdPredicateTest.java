@@ -15,10 +15,12 @@ import io.github.mfvanek.pg.model.sequence.SequenceState;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 class SkipBloatUnderThresholdPredicateTest {
 
@@ -39,11 +41,11 @@ class SkipBloatUnderThresholdPredicateTest {
 
     @Test
     void shouldNotCastObjectsWhenThresholdIsZero() {
-        final TableWithBloat mockBloat = Mockito.mock(TableWithBloat.class);
+        final TableWithBloat mockBloat = mock(TableWithBloat.class);
         assertThat(SkipBloatUnderThresholdPredicate.of(0L, 0.0))
             .accepts(mockBloat);
-        Mockito.verify(mockBloat, Mockito.never()).getBloatPercentage();
-        Mockito.verify(mockBloat, Mockito.never()).getBloatSizeInBytes();
+        verify(mockBloat, never()).getBloatPercentage();
+        verify(mockBloat, never()).getBloatSizeInBytes();
     }
 
     @Test

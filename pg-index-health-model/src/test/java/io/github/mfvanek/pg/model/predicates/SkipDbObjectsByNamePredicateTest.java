@@ -13,12 +13,14 @@ package io.github.mfvanek.pg.model.predicates;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 class SkipDbObjectsByNamePredicateTest {
 
@@ -78,12 +80,12 @@ class SkipDbObjectsByNamePredicateTest {
 
     @Test
     void forEmpty() {
-        final Table mockTable = Mockito.mock(Table.class);
+        final Table mockTable = mock(Table.class);
         assertThat(SkipDbObjectsByNamePredicate.of(List.of()))
             .accepts(FIRST)
             .accepts(SECOND)
             .accepts(THIRD)
             .accepts(mockTable);
-        Mockito.verify(mockTable, Mockito.never()).getName();
+        verify(mockTable, never()).getName();
     }
 }

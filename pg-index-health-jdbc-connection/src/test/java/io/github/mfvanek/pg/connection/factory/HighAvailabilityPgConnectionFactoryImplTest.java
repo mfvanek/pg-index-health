@@ -16,7 +16,6 @@ import io.github.mfvanek.pg.connection.PrimaryHostDeterminer;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,18 +24,21 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Tag("fast")
 class HighAvailabilityPgConnectionFactoryImplTest {
 
-    private final PrimaryHostDeterminer primaryHostDeterminer = Mockito.mock(PrimaryHostDeterminer.class);
+    private final PrimaryHostDeterminer primaryHostDeterminer = mock(PrimaryHostDeterminer.class);
     private final HighAvailabilityPgConnectionFactory connectionFactory =
         new HighAvailabilityPgConnectionFactoryImpl(new PgConnectionFactoryImpl(), primaryHostDeterminer);
 
     @Test
     void onlyWriteUrl() {
-        Mockito.doAnswer(invocation -> {
+        doAnswer(invocation -> {
             final PgConnection connection = invocation.getArgument(0, PgConnection.class);
             return "host-1".equals(connection.getHost().getName());
         }).when(primaryHostDeterminer).isPrimary(any(PgConnection.class));
@@ -53,7 +55,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
 
     @Test
     void writeAndReadUrl() {
-        Mockito.doAnswer(invocation -> {
+        doAnswer(invocation -> {
             final PgConnection connection = invocation.getArgument(0, PgConnection.class);
             return "host-2".equals(connection.getHost().getName());
         }).when(primaryHostDeterminer).isPrimary(any(PgConnection.class));
@@ -72,7 +74,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
 
     @Test
     void asyncReplica() {
-        Mockito.doAnswer(invocation -> {
+        doAnswer(invocation -> {
             final PgConnection connection = invocation.getArgument(0, PgConnection.class);
             return "host-2".equals(connection.getHost().getName());
         }).when(primaryHostDeterminer).isPrimary(any(PgConnection.class));
@@ -121,7 +123,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
 
     @Test
     void shouldFailWhenPrimaryHosNotFound() {
-        Mockito.when(primaryHostDeterminer.isPrimary(any(PgConnection.class))).thenReturn(Boolean.FALSE);
+        when(primaryHostDeterminer.isPrimary(any(PgConnection.class))).thenReturn(Boolean.FALSE);
         assertThatThrownBy(() -> connectionFactory.ofUrl("jdbc:postgresql://host-1:6432,host-2:6432/db_name", "postgres", "postgres"))
             .isInstanceOf(NoSuchElementException.class)
             .hasMessageStartingWith("Connection to primary host not found in ");
@@ -129,7 +131,7 @@ class HighAvailabilityPgConnectionFactoryImplTest {
 
     @Test
     void shouldNotFailWhenSplitBrainOrMultiMasterConfiguration() {
-        Mockito.when(primaryHostDeterminer.isPrimary(any(PgConnection.class))).thenReturn(Boolean.TRUE);
+        when(primaryHostDeterminer.isPrimary(any(PgConnection.class))).thenReturn(Boolean.TRUE);
         try (HighAvailabilityPgConnection haPgConnection = connectionFactory.ofUrl(
             "jdbc:postgresql://host-D:6432,host-A:6432/db_name", "postgres", "postgres")) {
             assertThat(haPgConnection)
