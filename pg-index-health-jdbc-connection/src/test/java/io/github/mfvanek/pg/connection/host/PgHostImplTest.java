@@ -13,10 +13,11 @@ package io.github.mfvanek.pg.connection.host;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Tag("fast")
 class PgHostImplTest {
@@ -111,10 +112,10 @@ class PgHostImplTest {
             .doesNotHaveSameHashCodeAs(first);
 
         // another implementation of PgHost
-        final PgHost pgHostMock = Mockito.mock(PgHost.class);
-        Mockito.when(pgHostMock.canBePrimary()).thenReturn(Boolean.TRUE);
-        Mockito.when(pgHostMock.getName()).thenReturn("primary");
-        Mockito.when(pgHostMock.getPgUrl()).thenReturn("jdbc:postgresql://primary:5432");
+        final PgHost pgHostMock = mock(PgHost.class);
+        when(pgHostMock.canBePrimary()).thenReturn(Boolean.TRUE);
+        when(pgHostMock.getName()).thenReturn("primary");
+        when(pgHostMock.getPgUrl()).thenReturn("jdbc:postgresql://primary:5432");
         assertThat(pgHostMock)
             .isNotEqualTo(second)
             .satisfies(h -> {

@@ -15,12 +15,14 @@ import io.github.mfvanek.pg.model.table.Table;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Tag("fast")
 class TableExtractorTest {
@@ -34,10 +36,10 @@ class TableExtractorTest {
 
     @Test
     void mapRowShouldWork() throws SQLException {
-        try (ResultSet rs = Mockito.mock(ResultSet.class)) {
+        try (ResultSet rs = mock(ResultSet.class)) {
             final ResultSetExtractor<@NonNull Table> extractor = TableExtractor.of();
-            Mockito.when(rs.getString(Mockito.anyString())).thenReturn("tst");
-            Mockito.when(rs.getLong(Mockito.anyString())).thenReturn(11L);
+            when(rs.getString(anyString())).thenReturn("tst");
+            when(rs.getLong(anyString())).thenReturn(11L);
             assertThat(extractor.mapRow(rs, Integer.MAX_VALUE))
                 .usingRecursiveComparison()
                 .isEqualTo(Table.of("tst", 11L));

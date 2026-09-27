@@ -14,10 +14,12 @@ import io.github.mfvanek.pg.model.sequence.SequenceState;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithBloat;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 class SkipSmallTablesPredicateTest {
 
@@ -30,10 +32,10 @@ class SkipSmallTablesPredicateTest {
 
     @Test
     void shouldNotCastObjectsWhenThresholdIsZero() {
-        final Table mockTable = Mockito.mock(Table.class);
+        final Table mockTable = mock(Table.class);
         assertThat(SkipSmallTablesPredicate.of(0L))
             .accepts(mockTable);
-        Mockito.verify(mockTable, Mockito.never()).getTableSizeInBytes();
+        verify(mockTable, never()).getTableSizeInBytes();
     }
 
     @Test

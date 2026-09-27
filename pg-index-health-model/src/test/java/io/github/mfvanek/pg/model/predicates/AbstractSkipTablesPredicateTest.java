@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,6 +21,9 @@ import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @SuppressWarnings("checkstyle:AbstractClassName")
 class AbstractSkipTablesPredicateTest {
@@ -50,10 +52,10 @@ class AbstractSkipTablesPredicateTest {
 
     @Test
     void shouldNotCastObjectsWhenExclusionsIsEmpty() {
-        final Table mockTable = Mockito.mock(Table.class);
+        final Table mockTable = mock(Table.class);
         assertThat(new SkipTablesPredicate(PgContext.ofDefault(), List.of()))
             .accepts(mockTable);
-        Mockito.verify(mockTable, Mockito.never()).getTableName();
+        verify(mockTable, never()).getTableName();
     }
 
     private static class SkipTablesPredicate extends AbstractSkipTablesPredicate {

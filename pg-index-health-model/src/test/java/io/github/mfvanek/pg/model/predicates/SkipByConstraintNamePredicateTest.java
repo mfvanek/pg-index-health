@@ -17,13 +17,15 @@ import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 class SkipByConstraintNamePredicateTest {
 
@@ -49,10 +51,10 @@ class SkipByConstraintNamePredicateTest {
 
     @Test
     void shouldNotCastObjectsWhenExclusionsIsEmpty() {
-        final Constraint mockConstraint = Mockito.mock(Constraint.class);
+        final Constraint mockConstraint = mock(Constraint.class);
         assertThat(SkipByConstraintNamePredicate.of(List.of()))
             .accepts(mockConstraint);
-        Mockito.verify(mockConstraint, Mockito.never()).getConstraintName();
+        verify(mockConstraint, never()).getConstraintName();
     }
 
     @Test

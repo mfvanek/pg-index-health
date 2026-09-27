@@ -14,10 +14,12 @@ import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 class SkipSmallIndexesPredicateTest {
 
@@ -30,10 +32,10 @@ class SkipSmallIndexesPredicateTest {
 
     @Test
     void shouldNotCastObjectsWhenThresholdIsZero() {
-        final Index mockIndex = Mockito.mock(Index.class);
+        final Index mockIndex = mock(Index.class);
         assertThat(SkipSmallIndexesPredicate.of(0L))
             .accepts(mockIndex);
-        Mockito.verify(mockIndex, Mockito.never()).getIndexSizeInBytes();
+        verify(mockIndex, never()).getIndexSizeInBytes();
     }
 
     @Test

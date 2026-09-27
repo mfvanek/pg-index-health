@@ -27,7 +27,6 @@ import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.Mockito;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -37,6 +36,8 @@ import java.util.logging.Level;
 import static io.github.mfvanek.pg.health.checks.cluster.UnusedIndexesCheckOnCluster.getLastStatsResetDateLogMessage;
 import static io.github.mfvanek.pg.health.checks.cluster.UnusedIndexesCheckOnCluster.getResultAsIntersection;
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
@@ -150,8 +151,9 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @Test
     void getLastStatsResetDateLogMessageWithoutResetTimestamp() {
-        final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
-        Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.empty());
+        final StatisticsMaintenanceOnHost statisticsMaintenance = mock(StatisticsMaintenanceOnHost.class);
+        when(statisticsMaintenance.getLastStatsResetTimestamp())
+            .thenReturn(Optional.empty());
         final String logMessage = getLastStatsResetDateLogMessage(statisticsMaintenance);
         Assertions.assertThat(logMessage)
             .isEqualTo("Statistics have never been reset on this host");
@@ -160,8 +162,9 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @Test
     void getLastStatsResetDateLogMessageWithResetTimestamp() {
         final OffsetDateTime resetDate = OffsetDateTime.now(ClockHolder.clock());
-        final StatisticsMaintenanceOnHost statisticsMaintenance = Mockito.mock(StatisticsMaintenanceOnHost.class);
-        Mockito.when(statisticsMaintenance.getLastStatsResetTimestamp()).thenReturn(Optional.of(resetDate.minusDays(123L)));
+        final StatisticsMaintenanceOnHost statisticsMaintenance = mock(StatisticsMaintenanceOnHost.class);
+        when(statisticsMaintenance.getLastStatsResetTimestamp())
+            .thenReturn(Optional.of(resetDate.minusDays(123L)));
         final String logMessage = getLastStatsResetDateLogMessage(statisticsMaintenance);
         Assertions.assertThat(logMessage)
             .startsWith("Last statistics reset on this host was 123 days ago (");

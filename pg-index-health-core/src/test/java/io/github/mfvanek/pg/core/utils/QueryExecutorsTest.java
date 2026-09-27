@@ -18,7 +18,6 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,6 +28,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class QueryExecutorsTest extends DatabaseAwareTestBase {
 
@@ -70,12 +72,12 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
 
     @Test
     void executeQueryWithSchemaWithExecutionError() throws SQLException {
-        final DataSource dataSource = Mockito.mock(DataSource.class);
-        try (Connection connection = Mockito.mock(Connection.class);
-             PreparedStatement statement = Mockito.mock(PreparedStatement.class)) {
-            Mockito.when(dataSource.getConnection()).thenReturn(connection);
-            Mockito.when(connection.prepareStatement(anyString())).thenReturn(statement);
-            Mockito.doAnswer(invocation -> {
+        final DataSource dataSource = mock(DataSource.class);
+        try (Connection connection = mock(Connection.class);
+             PreparedStatement statement = mock(PreparedStatement.class)) {
+            when(dataSource.getConnection()).thenReturn(connection);
+            when(connection.prepareStatement(anyString())).thenReturn(statement);
+            doAnswer(invocation -> {
                 throw new SQLException("bad parameter");
             }).when(statement).setString(anyInt(), anyString());
             final PgConnection pgConnection = PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:6432"));
@@ -90,12 +92,12 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
 
     @Test
     void executeQueryWithBloatThresholdWithExecutionError() throws SQLException {
-        final DataSource dataSource = Mockito.mock(DataSource.class);
-        try (Connection connection = Mockito.mock(Connection.class);
-             PreparedStatement statement = Mockito.mock(PreparedStatement.class)) {
-            Mockito.when(dataSource.getConnection()).thenReturn(connection);
-            Mockito.when(connection.prepareStatement(anyString())).thenReturn(statement);
-            Mockito.doAnswer(invocation -> {
+        final DataSource dataSource = mock(DataSource.class);
+        try (Connection connection = mock(Connection.class);
+             PreparedStatement statement = mock(PreparedStatement.class)) {
+            when(dataSource.getConnection()).thenReturn(connection);
+            when(connection.prepareStatement(anyString())).thenReturn(statement);
+            doAnswer(invocation -> {
                 throw new SQLException("bad parameter");
             }).when(statement).setString(anyInt(), anyString());
             final PgConnection pgConnection = PgConnectionImpl.of(dataSource, PgHostImpl.ofUrl("jdbc:postgresql://localhost:6432"));
@@ -110,15 +112,15 @@ class QueryExecutorsTest extends DatabaseAwareTestBase {
 
     @Test
     void executeQueryWithRemainingPercentageThreshold() throws SQLException {
-        final DataSource dataSource = Mockito.mock(DataSource.class);
-        try (Connection connection = Mockito.mock(Connection.class);
-             PreparedStatement statement = Mockito.mock(PreparedStatement.class)) {
-            Mockito.when(dataSource.getConnection()).thenReturn(connection);
-            Mockito.when(connection.prepareStatement(anyString())).thenReturn(statement);
-            Mockito.doAnswer(invocation -> {
+        final DataSource dataSource = mock(DataSource.class);
+        try (Connection connection = mock(Connection.class);
+             PreparedStatement statement = mock(PreparedStatement.class)) {
+            when(dataSource.getConnection()).thenReturn(connection);
+            when(connection.prepareStatement(anyString())).thenReturn(statement);
+            doAnswer(invocation -> {
                 throw new SQLException("bad parameter");
             }).when(statement).setString(anyInt(), anyString());
-            Mockito.doAnswer(invocation -> {
+            doAnswer(invocation -> {
                 throw new SQLException("bad parameter");
             }).when(statement).setDouble(anyInt(), anyDouble());
 
