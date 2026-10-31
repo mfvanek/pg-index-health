@@ -28,11 +28,13 @@ class DbObjectSerializationTest {
     @Test
     void completenessTest() {
         try (ScanResult scan = new ClassGraph()
-            .enableAllInfo()
+            .enableClasspath()
+            .enableClassInfo()
+            .ignoreClassVisibility()
             .acceptPackages("io.github.mfvanek.pg.model")
             .scan()) {
 
-            final List<ClassInfo> classes = scan.getClassesImplementing(DbObject.class.getName())
+            final List<ClassInfo> classes = scan.getAllClassesImplementing(DbObject.class.getName())
                 .filter(classInfo -> !classInfo.isAbstract() && !classInfo.isInterface());
 
             assertThat(classes)
