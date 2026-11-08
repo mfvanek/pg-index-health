@@ -94,8 +94,39 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void onDatabaseWithPartialIndexShouldNotConsiderItAsCovering(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withPartialIndexForForeignKey(), ctx -> {
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactly(
+                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id")
+                );
+
+            assertThat(check)
+                .executing(ctx, SkipByConstraintNamePredicate.ofName("c_accounts_fk_client_id"))
+                .isEmpty();
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withSerialAndForeignKeysInPartitionedTable, ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactly(
+                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type")
+                ));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldNotConsiderPartialIndexAsCoveringInPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withPartialIndexForForeignKeyInPartitionedTable, ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
