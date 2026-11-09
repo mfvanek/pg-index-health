@@ -95,7 +95,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                     .containsExactlyInAnyOrder(
                         "invalid_indexes:1",
                         "duplicated_indexes:2",
-                        "foreign_keys_without_index:8",
+                        "foreign_keys_without_index:9",
                         "tables_without_primary_key:7",
                         "indexes_with_null_values:1",
                         "bloated_indexes:19",
