@@ -53,6 +53,8 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDi
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateLayeredPartitionedTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexForForeignKeyInPartitionedTableStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithBlobTypeColumnStatement;
@@ -163,6 +165,10 @@ public final class DatabasePopulator implements AutoCloseable {
 
     public DatabasePopulator withSuitableIndex() {
         return register(44, new CreateSuitableIndexForForeignKeyStatement());
+    }
+
+    public DatabasePopulator withPartialIndexForForeignKey() {
+        return register(45, new CreatePartialIndexForForeignKeyStatement());
     }
 
     public DatabasePopulator withTableWithoutPrimaryKey() {
@@ -464,6 +470,11 @@ public final class DatabasePopulator implements AutoCloseable {
             return register(160, new CreateUnloggedSequenceStatement());
         }
         return this;
+    }
+
+    public DatabasePopulator withPartialIndexForForeignKeyInPartitionedTable() {
+        return withSerialAndForeignKeysInPartitionedTable()
+            .register(161, new CreatePartialIndexForForeignKeyInPartitionedTableStatement());
     }
 
     public void populate() {
