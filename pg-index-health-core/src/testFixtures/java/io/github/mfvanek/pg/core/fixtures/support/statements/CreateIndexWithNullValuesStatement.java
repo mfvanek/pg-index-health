@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates an index on columns containing null values.
+ */
 public class CreateIndexWithNullValuesStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateIndexWithNullValuesStatement}.
+     */
+    public CreateIndexWithNullValuesStatement() {
+    }
 
     /**
      * {@inheritDoc}

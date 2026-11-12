@@ -16,7 +16,16 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Represents a database statement that creates a custom database schema.
+ */
 public class CreateSchemaStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateSchemaStatement}.
+     */
+    public CreateSchemaStatement() {
+    }
 
     /**
      * {@inheritDoc}

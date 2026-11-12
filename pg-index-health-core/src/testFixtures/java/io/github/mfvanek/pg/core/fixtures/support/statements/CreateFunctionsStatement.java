@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates stored functions in the database.
+ */
 public class CreateFunctionsStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateFunctionsStatement}.
+     */
+    public CreateFunctionsStatement() {
+    }
 
     /**
      * {@inheritDoc}

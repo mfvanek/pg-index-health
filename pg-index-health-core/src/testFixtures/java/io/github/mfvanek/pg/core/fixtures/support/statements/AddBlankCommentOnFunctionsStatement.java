@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that adds blank comments on stored functions.
+ */
 public class AddBlankCommentOnFunctionsStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code AddBlankCommentOnFunctionsStatement}.
+     */
+    public AddBlankCommentOnFunctionsStatement() {
+    }
 
     /**
      * {@inheritDoc}

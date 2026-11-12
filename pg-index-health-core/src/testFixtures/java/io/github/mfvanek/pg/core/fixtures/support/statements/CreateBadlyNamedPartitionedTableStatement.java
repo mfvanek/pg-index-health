@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a partitioned table with non-standard naming.
+ */
 public class CreateBadlyNamedPartitionedTableStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateBadlyNamedPartitionedTableStatement}.
+     */
+    public CreateBadlyNamedPartitionedTableStatement() {
+    }
 
     /**
      * {@inheritDoc}

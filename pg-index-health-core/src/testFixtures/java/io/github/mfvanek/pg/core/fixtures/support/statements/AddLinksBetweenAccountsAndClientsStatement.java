@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that adds foreign key links between accounts and clients tables.
+ */
 public class AddLinksBetweenAccountsAndClientsStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code AddLinksBetweenAccountsAndClientsStatement}.
+     */
+    public AddLinksBetweenAccountsAndClientsStatement() {
+    }
 
     /**
      * {@inheritDoc}

@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates duplicated indexes on a table.
+ */
 public class CreateDuplicatedIndexStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateDuplicatedIndexStatement}.
+     */
+    public CreateDuplicatedIndexStatement() {
+    }
 
     /**
      * {@inheritDoc}

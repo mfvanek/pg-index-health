@@ -19,12 +19,21 @@ import java.sql.Statement;
 import java.util.Collection;
 import javax.sql.DataSource;
 
+/**
+ * Utility methods for executing database statements in tests.
+ */
 public final class ExecuteUtils {
 
     private ExecuteUtils() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Executes a database statement against the specified data source.
+     *
+     * @param dataSource the data source to connect to
+     * @param callback   the database statement to execute
+     */
     public static void executeOnDatabase(final DataSource dataSource,
                                          final DbStatement callback) {
         try (Connection connection = dataSource.getConnection();
@@ -35,6 +44,12 @@ public final class ExecuteUtils {
         }
     }
 
+    /**
+     * Executes a collection of database statements in a single transaction.
+     *
+     * @param dataSource   the data source to connect to
+     * @param dbStatements the database statements to execute
+     */
     public static void executeInTransaction(final DataSource dataSource,
                                             final Collection<? extends DbStatement> dbStatements) {
         try (Connection connection = dataSource.getConnection();

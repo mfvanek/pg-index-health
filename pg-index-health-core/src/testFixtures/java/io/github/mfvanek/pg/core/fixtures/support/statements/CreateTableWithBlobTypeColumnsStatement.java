@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a table with BLOB or bytea type columns.
+ */
 public class CreateTableWithBlobTypeColumnsStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateTableWithBlobTypeColumnsStatement}.
+     */
+    public CreateTableWithBlobTypeColumnsStatement() {
+    }
 
     /**
      * {@inheritDoc}

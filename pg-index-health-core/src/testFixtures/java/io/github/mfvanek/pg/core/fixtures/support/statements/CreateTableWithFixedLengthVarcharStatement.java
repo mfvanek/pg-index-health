@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a table with fixed-length varchar columns.
+ */
 public class CreateTableWithFixedLengthVarcharStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateTableWithFixedLengthVarcharStatement}.
+     */
+    public CreateTableWithFixedLengthVarcharStatement() {
+    }
 
     /**
      * {@inheritDoc}

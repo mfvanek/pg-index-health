@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a partitioned table without a primary key.
+ */
 public class CreatePartitionedTableWithoutPrimaryKeyStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreatePartitionedTableWithoutPrimaryKeyStatement}.
+     */
+    public CreatePartitionedTableWithoutPrimaryKeyStatement() {
+    }
 
     /**
      * {@inheritDoc}

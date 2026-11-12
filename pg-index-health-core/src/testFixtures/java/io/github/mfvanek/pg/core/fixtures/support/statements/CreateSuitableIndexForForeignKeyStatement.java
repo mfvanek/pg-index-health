@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates an index suitable for a foreign key constraint.
+ */
 public class CreateSuitableIndexForForeignKeyStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateSuitableIndexForForeignKeyStatement}.
+     */
+    public CreateSuitableIndexForForeignKeyStatement() {
+    }
 
     /**
      * {@inheritDoc}

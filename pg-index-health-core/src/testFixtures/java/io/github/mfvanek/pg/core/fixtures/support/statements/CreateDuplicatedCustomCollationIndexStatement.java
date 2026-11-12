@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates duplicated indexes with a custom collation.
+ */
 public class CreateDuplicatedCustomCollationIndexStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateDuplicatedCustomCollationIndexStatement}.
+     */
+    public CreateDuplicatedCustomCollationIndexStatement() {
+    }
 
     /**
      * {@inheritDoc}

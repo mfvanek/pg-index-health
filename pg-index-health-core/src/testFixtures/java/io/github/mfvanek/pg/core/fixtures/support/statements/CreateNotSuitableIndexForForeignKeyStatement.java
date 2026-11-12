@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates an index not suitable for a foreign key constraint.
+ */
 public class CreateNotSuitableIndexForForeignKeyStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateNotSuitableIndexForForeignKeyStatement}.
+     */
+    public CreateNotSuitableIndexForForeignKeyStatement() {
+    }
 
     /**
      * {@inheritDoc}

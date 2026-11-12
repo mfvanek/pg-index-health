@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates an accounts table.
+ */
 public class CreateAccountsTableStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateAccountsTableStatement}.
+     */
+    public CreateAccountsTableStatement() {
+    }
 
     /**
      * {@inheritDoc}

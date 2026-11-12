@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates duplicated and intersected indexes in a partitioned table.
+ */
 public class CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement}.
+     */
+    public CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement() {
+    }
 
     /**
      * {@inheritDoc}

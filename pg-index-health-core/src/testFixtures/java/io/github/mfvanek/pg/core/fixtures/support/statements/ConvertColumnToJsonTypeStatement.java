@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that converts a table column to JSON type.
+ */
 public class ConvertColumnToJsonTypeStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code ConvertColumnToJsonTypeStatement}.
+     */
+    public ConvertColumnToJsonTypeStatement() {
+    }
 
     /**
      * {@inheritDoc}
