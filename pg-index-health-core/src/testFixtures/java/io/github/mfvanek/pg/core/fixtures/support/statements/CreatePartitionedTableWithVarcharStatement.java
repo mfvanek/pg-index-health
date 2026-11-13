@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a partitioned table with varchar columns.
+ */
 public class CreatePartitionedTableWithVarcharStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreatePartitionedTableWithVarcharStatement}.
+     */
+    public CreatePartitionedTableWithVarcharStatement() {
+    }
 
     /**
      * {@inheritDoc}

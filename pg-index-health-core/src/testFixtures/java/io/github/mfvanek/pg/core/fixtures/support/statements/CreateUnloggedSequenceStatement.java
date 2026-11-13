@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates an unlogged sequence.
+ */
 public class CreateUnloggedSequenceStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateUnloggedSequenceStatement}.
+     */
+    public CreateUnloggedSequenceStatement() {
+    }
 
     /**
      * {@inheritDoc}

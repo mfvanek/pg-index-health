@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates an unlogged table.
+ */
 public class CreateUnloggedTableStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateUnloggedTableStatement}.
+     */
+    public CreateUnloggedTableStatement() {
+    }
 
     /**
      * {@inheritDoc}

@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that adds comments on stored functions.
+ */
 public class AddCommentOnFunctionsStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code AddCommentOnFunctionsStatement}.
+     */
+    public AddCommentOnFunctionsStatement() {
+    }
 
     /**
      * {@inheritDoc}

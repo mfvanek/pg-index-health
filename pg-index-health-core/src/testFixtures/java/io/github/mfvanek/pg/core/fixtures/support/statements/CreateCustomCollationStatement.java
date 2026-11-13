@@ -19,9 +19,18 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Represents a database statement that creates a custom collation.
+ */
 public class CreateCustomCollationStatement extends AbstractDbStatement {
 
     private static final String ICU_COLLATION = "en-US-x-icu";
+
+    /**
+     * Constructs a new instance of {@code CreateCustomCollationStatement}.
+     */
+    public CreateCustomCollationStatement() {
+    }
 
     /**
      * {@inheritDoc}

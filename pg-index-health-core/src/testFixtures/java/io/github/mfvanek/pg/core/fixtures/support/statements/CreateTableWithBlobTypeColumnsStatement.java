@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates tables with {@code oid} and {@code lo} columns for large objects.
+ */
 public class CreateTableWithBlobTypeColumnsStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateTableWithBlobTypeColumnsStatement}.
+     */
+    public CreateTableWithBlobTypeColumnsStatement() {
+    }
 
     /**
      * {@inheritDoc}

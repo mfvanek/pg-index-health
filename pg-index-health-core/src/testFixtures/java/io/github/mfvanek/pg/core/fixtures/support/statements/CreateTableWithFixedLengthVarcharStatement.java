@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates tables storing UUID strings in {@code varchar(32)} and {@code varchar(36)} columns.
+ */
 public class CreateTableWithFixedLengthVarcharStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateTableWithFixedLengthVarcharStatement}.
+     */
+    public CreateTableWithFixedLengthVarcharStatement() {
+    }
 
     /**
      * {@inheritDoc}

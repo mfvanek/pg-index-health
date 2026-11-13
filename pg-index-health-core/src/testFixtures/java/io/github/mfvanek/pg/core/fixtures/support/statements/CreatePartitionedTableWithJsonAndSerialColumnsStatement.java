@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a partitioned table with JSON and serial columns.
+ */
 public class CreatePartitionedTableWithJsonAndSerialColumnsStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreatePartitionedTableWithJsonAndSerialColumnsStatement}.
+     */
+    public CreatePartitionedTableWithJsonAndSerialColumnsStatement() {
+    }
 
     /**
      * {@inheritDoc}

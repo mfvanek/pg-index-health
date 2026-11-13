@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that adds self-referencing foreign keys to a table.
+ */
 public class AddSelfReferencedForeignKeysStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code AddSelfReferencedForeignKeysStatement}.
+     */
+    public AddSelfReferencedForeignKeysStatement() {
+    }
 
     /**
      * {@inheritDoc}

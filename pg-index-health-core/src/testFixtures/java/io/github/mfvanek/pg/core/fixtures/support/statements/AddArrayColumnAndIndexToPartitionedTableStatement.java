@@ -19,6 +19,12 @@ import java.util.List;
 public class AddArrayColumnAndIndexToPartitionedTableStatement extends AbstractDbStatement {
 
     /**
+     * Constructs a new instance of {@code AddArrayColumnAndIndexToPartitionedTableStatement}.
+     */
+    public AddArrayColumnAndIndexToPartitionedTableStatement() {
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

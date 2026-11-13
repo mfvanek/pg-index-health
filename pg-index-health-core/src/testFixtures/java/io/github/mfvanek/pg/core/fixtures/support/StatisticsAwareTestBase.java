@@ -24,10 +24,28 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+/**
+ * Base class for database tests that interact with and verify PostgreSQL statistics.
+ */
 public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
 
+    /**
+     * Default number of query executions to trigger statistics updates.
+     */
     protected static final long AMOUNT_OF_TRIES = 101L;
 
+    /**
+     * Constructs a new instance of {@code StatisticsAwareTestBase}.
+     */
+    protected StatisticsAwareTestBase() {
+    }
+
+    /**
+     * Retrieves the number of sequential scans recorded for the accounts table.
+     *
+     * @param pgContext the context of the PostgreSQL schema
+     * @return the number of sequential scans
+     */
     @SuppressWarnings("PMD.CheckResultSet")
     protected long getSeqScansForAccounts(final PgContext pgContext) {
         final String sqlQuery = """
@@ -46,6 +64,13 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         }
     }
 
+    /**
+     * Checks if pg_stats statistics exist for the specified table.
+     *
+     * @param schemaName the schema name
+     * @param tableName  the table name
+     * @return {@code true} if statistics exist for the table, {@code false} otherwise
+     */
     @SuppressWarnings("PMD.CheckResultSet")
     protected boolean existsStatisticsForTable(final String schemaName, final String tableName) {
         final String sqlQuery = """
@@ -64,6 +89,11 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         }
     }
 
+    /**
+     * Executes queries on the accounts table repeatedly to generate statistics and runs vacuum analyze.
+     *
+     * @param schemaName the schema name
+     */
     protected void tryToFindAccountByClientId(final String schemaName) {
         try (Connection connection = getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
@@ -96,16 +126,30 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         }
     }
 
+    /**
+     * Collects statistics and waits for the stats collector for the specified tables.
+     *
+     * @param schemaName the schema name
+     * @param tableNames the names of tables to verify statistics for
+     */
     protected void collectStatistics(final String schemaName, final Collection<String> tableNames) {
         collectStatistics();
         waitForStatisticsCollector(schemaName, tableNames);
     }
 
+    /**
+     * Collects statistics and waits for the stats collector for clients and accounts tables.
+     *
+     * @param schemaName the schema name
+     */
     protected void collectStatistics(final String schemaName) {
         collectStatistics();
         waitForStatisticsCollector(schemaName, List.of("clients", "accounts"));
     }
 
+    /**
+     * Executes {@code vacuum analyze} on the database to collect statistics.
+     */
     protected void collectStatistics() {
         ExecuteUtils.executeOnDatabase(getDataSource(), statement -> statement.execute("vacuum analyze"));
         waitForStatisticsCollector(null, List.of());

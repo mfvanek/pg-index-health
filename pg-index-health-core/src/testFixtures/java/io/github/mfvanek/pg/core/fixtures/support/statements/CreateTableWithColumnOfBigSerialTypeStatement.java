@@ -14,7 +14,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a table with a column of bigserial type.
+ */
 public class CreateTableWithColumnOfBigSerialTypeStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateTableWithColumnOfBigSerialTypeStatement}.
+     */
+    public CreateTableWithColumnOfBigSerialTypeStatement() {
+    }
 
     /**
      * {@inheritDoc}

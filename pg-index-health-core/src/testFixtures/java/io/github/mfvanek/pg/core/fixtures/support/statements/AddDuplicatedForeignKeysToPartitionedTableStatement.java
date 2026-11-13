@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that adds duplicated foreign keys to a partitioned table.
+ */
 public class AddDuplicatedForeignKeysToPartitionedTableStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code AddDuplicatedForeignKeysToPartitionedTableStatement}.
+     */
+    public AddDuplicatedForeignKeysToPartitionedTableStatement() {
+    }
 
     /**
      * {@inheritDoc}

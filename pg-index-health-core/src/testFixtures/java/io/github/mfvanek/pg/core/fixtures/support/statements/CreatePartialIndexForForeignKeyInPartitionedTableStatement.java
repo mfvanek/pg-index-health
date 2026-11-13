@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a partial index for a foreign key in a partitioned table.
+ */
 public class CreatePartialIndexForForeignKeyInPartitionedTableStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreatePartialIndexForForeignKeyInPartitionedTableStatement}.
+     */
+    public CreatePartialIndexForForeignKeyInPartitionedTableStatement() {
+    }
 
     /**
      * {@inheritDoc}

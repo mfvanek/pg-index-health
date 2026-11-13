@@ -23,6 +23,12 @@ public class DropColumnStatement extends AbstractDbStatement {
     private final String tableName;
     private final String columnName;
 
+    /**
+     * Constructs an instance of {@code DropColumnStatement}.
+     *
+     * @param tableName  the name of the table from which to drop the column
+     * @param columnName the name of the column to drop
+     */
     public DropColumnStatement(final String tableName, final String columnName) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.columnName = Validators.notBlank(columnName, "columnName");

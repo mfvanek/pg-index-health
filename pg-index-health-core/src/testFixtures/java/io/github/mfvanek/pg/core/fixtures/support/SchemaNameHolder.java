@@ -14,6 +14,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static io.github.mfvanek.pg.model.context.PgContext.DEFAULT_SCHEMA_NAME;
 
+/**
+ * A scoped context holder for managing the active database schema name during test execution.
+ */
 public final class SchemaNameHolder implements AutoCloseable {
 
     private static final AtomicReference<String> SCHEMA_NAME_HOLDER = new AtomicReference<>(DEFAULT_SCHEMA_NAME);
@@ -24,15 +27,29 @@ public final class SchemaNameHolder implements AutoCloseable {
         this.oldSchemaName = SCHEMA_NAME_HOLDER.getAndSet(newSchemaName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void close() {
         SCHEMA_NAME_HOLDER.set(oldSchemaName);
     }
 
+    /**
+     * Gets the currently active schema name.
+     *
+     * @return the current schema name
+     */
     public static String getSchemaName() {
         return SCHEMA_NAME_HOLDER.get();
     }
 
+    /**
+     * Creates a new scoped holder with the specified schema name.
+     *
+     * @param schemaName the schema name to set
+     * @return a {@link SchemaNameHolder} instance that restores the previous schema name upon closing
+     */
     public static SchemaNameHolder with(final String schemaName) {
         return new SchemaNameHolder(schemaName);
     }

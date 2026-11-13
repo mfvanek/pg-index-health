@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates layered partitioned tables.
+ */
 public class CreateLayeredPartitionedTablesStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateLayeredPartitionedTablesStatement}.
+     */
+    public CreateLayeredPartitionedTablesStatement() {
+    }
 
     /**
      * {@inheritDoc}

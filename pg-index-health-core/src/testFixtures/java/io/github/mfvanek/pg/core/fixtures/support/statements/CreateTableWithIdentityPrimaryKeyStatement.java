@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a table with an identity primary key.
+ */
 public class CreateTableWithIdentityPrimaryKeyStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateTableWithIdentityPrimaryKeyStatement}.
+     */
+    public CreateTableWithIdentityPrimaryKeyStatement() {
+    }
 
     /**
      * {@inheritDoc}

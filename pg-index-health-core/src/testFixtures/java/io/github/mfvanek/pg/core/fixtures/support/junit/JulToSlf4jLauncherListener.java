@@ -17,9 +17,19 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * A JUnit {@link LauncherSessionListener} that bridges java.util.logging (JUL) to SLF4J
+ * during test execution.
+ */
 public class JulToSlf4jLauncherListener implements LauncherSessionListener {
 
     private static final Logger ROOT_LOGGER = Logger.getLogger("io.github.mfvanek.pg");
+
+    /**
+     * Constructs a new instance of {@code JulToSlf4jLauncherListener}.
+     */
+    public JulToSlf4jLauncherListener() {
+    }
 
     /**
      * {@inheritDoc}
