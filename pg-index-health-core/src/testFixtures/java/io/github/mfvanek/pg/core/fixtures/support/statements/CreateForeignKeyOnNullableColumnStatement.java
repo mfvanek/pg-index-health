@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that creates a foreign key referencing a nullable column.
+ * Represents a database statement that adds foreign keys on nullable columns in {@code bad_clients}.
  */
 public class CreateForeignKeyOnNullableColumnStatement extends AbstractDbStatement {
 

@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that creates a table with auto-incrementing serial columns.
+ * Represents a database statement that creates a table with a {@code bigint} identity primary key.
  */
 public class CreateTableWithIncrementingColumnsStatement extends AbstractDbStatement {
 

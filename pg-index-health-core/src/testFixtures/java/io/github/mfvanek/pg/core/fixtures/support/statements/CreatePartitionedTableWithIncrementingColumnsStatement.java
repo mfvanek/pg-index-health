@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that creates a partitioned table with auto-incrementing serial columns.
+ * Represents a database statement that creates a date-partitioned table with a plain {@code bigint} ID.
  */
 public class CreatePartitionedTableWithIncrementingColumnsStatement extends AbstractDbStatement {
 

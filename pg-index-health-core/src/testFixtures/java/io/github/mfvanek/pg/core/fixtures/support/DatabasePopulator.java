@@ -274,7 +274,7 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a foreign key constraint on a nullable column.
+     * Configures foreign keys on nullable columns in {@code bad_clients}.
      *
      * @return this {@code DatabasePopulator} instance
      */
@@ -655,7 +655,7 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a table using fixed-length varchar columns instead of UUIDs.
+     * Configures tables storing UUID strings in {@code varchar(32)} and {@code varchar(36)} columns.
      *
      * @return this {@code DatabasePopulator} instance
      */
@@ -819,7 +819,7 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a table with incrementing numeric columns.
+     * Configures a table with a {@code bigint} identity primary key.
      *
      * @return this {@code DatabasePopulator} instance
      */
@@ -828,7 +828,7 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a partitioned table with incrementing numeric columns.
+     * Configures a date-partitioned table with a plain {@code bigint} ID.
      *
      * @return this {@code DatabasePopulator} instance
      */
