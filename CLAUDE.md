@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **pg-index-health** is an embeddable Java library and schema linter for PostgreSQL.
 It detects common anti-patterns in database schemas (missing indexes, bloat, bad column types, naming issues, etc.) by querying `pg_catalog`.
-It ships as a multi-module Gradle project with Spring Boot integration, a CLI/demo layer, and support for both Jackson 2 and Jackson 3.
+It ships as a multi-module Gradle project with Spring Boot integration, a CLI/demo layer, and support for both Jackson 2 and Jackson 3 on Spring Boot 4.
 
 ## Build and test commands
 
@@ -53,8 +53,8 @@ git submodule foreach --recursive git pull origin master
 | `pg-index-health-testing` | Testcontainers-based test fixtures shared across modules. |
 | `pg-index-health-logger` | Logging utilities. |
 | `pg-index-health-bom` | Bill of Materials for downstream dependency management. |
-| `jackson-integration/pg-index-health-model-jackson2-module` | Jackson 2 serializers/deserializers (Spring Boot 3). |
-| `jackson-integration/pg-index-health-model-jackson3-module` | Jackson 3 serializers/deserializers (Spring Boot 4). |
+| `jackson-integration/pg-index-health-model-jackson2-module` | Jackson 2 serializers/deserializers (Spring Boot 4 via `spring-boot-jackson2`, deprecated upstream). |
+| `jackson-integration/pg-index-health-model-jackson3-module` | Jackson 3 serializers/deserializers (Spring Boot 4 default). |
 | `spring-boot-integration/pg-index-health-test-starter` | Spring Boot auto-configuration starter. |
 
 SQL queries live in a **git submodule** (`pg-index-health-sql`) pointing to a separate repository. Clone with `--recursive`.
@@ -111,7 +111,7 @@ The build enforces:
 
 ## Common pitfalls
 
-- **Both Jackson modules** — adding a serializer/deserializer to `jackson2` but forgetting `jackson3` (or vice versa) compiles fine but breaks one Spring Boot generation.
+- **Both Jackson modules** — adding a serializer/deserializer to `jackson2` but forgetting `jackson3` (or vice versa) compiles fine but breaks users of the other Jackson version (both target Spring Boot 4).
 - **`@ConditionalOnMissingBean` required** — every `@Bean` in the Spring Boot auto-configuration must carry this annotation; omitting it silently overrides user-provided beans.
 - **Partitioned table tests** — if a check is relevant to partitioned tables, test it explicitly; JaCoCo enforces 100% branch coverage so a missing path fails the build.
 - **Diagnostic enum + starter** — forgetting either the `Diagnostic` entry or the Spring Boot `@Bean` leaves the check invisible to the auto-configured integration.

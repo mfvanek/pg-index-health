@@ -32,9 +32,8 @@ import javax.sql.DataSource;
  * @since 0.3.1
  */
 @AutoConfiguration(afterName = {
-    "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration", // for Spring Boot 3.4
-    "org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration", // for Spring Boot 4.0
-    "org.springframework.boot.jdbc.autoconfigure.DataSourceInitializationAutoConfiguration" // for Spring Boot 4.0
+    "org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration",
+    "org.springframework.boot.jdbc.autoconfigure.DataSourceInitializationAutoConfiguration"
 })
 @EnableConfigurationProperties(DatabaseStructureHealthProperties.class)
 @ConditionalOnClass(value = DataSource.class, name = "org.postgresql.Driver")

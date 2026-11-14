@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.spring.postgres.tc.url.config;
 
 import io.github.mfvanek.pg.model.jackson2.PgIndexHealthModelModule;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.jackson2.autoconfigure.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -10,7 +10,7 @@
 
 plugins {
     id("pg-index-health.kotlin-application")
-    alias(libs.plugins.spring.boot.v3.gradle.plugin)
+    alias(libs.plugins.spring.boot.v4.gradle.plugin)
     alias(libs.plugins.spring.dependency.management)
 }
 
@@ -20,14 +20,14 @@ ext["junit-jupiter.version"] = libs.versions.junit.get()
 
 dependencies {
     implementation(project(":pg-index-health-testing"))
-    implementation(libs.spring.boot.v3.starter.jdbc)
-    implementation(libs.spring.boot.v3.starter.json)
+    implementation(libs.spring.boot.v4.starter.jdbc.main)
+    implementation(libs.spring.boot.v4.starter.jackson2)
     implementation(project(":jackson-integration:pg-index-health-model-jackson2-module"))
     implementation(platform(libs.testcontainers.bom))
     implementation("org.testcontainers:testcontainers-postgresql")
 
     runtimeOnly(libs.postgresql)
 
-    testImplementation(libs.spring.boot.v3.starter.test)
+    testImplementation(libs.spring.boot.v4.starter.jdbc.test)
     testImplementation(project(":spring-boot-integration:pg-index-health-test-starter"))
 }

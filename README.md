@@ -96,6 +96,7 @@ Add a standard test to your project [as shown in the link](doc/standard_test.md)
 | 3.3.x       | 17          | 0.20.x                       |
 | 3.4.x       | 17          | 0.30.x — 0.31.x              |
 | 3.5.x       | 17          | 0.40.x — 0.41.x              |
+| 4.0.x       | 17          | 0.50.x                       |
 
 #### Spring Boot 3 compatibility
 
@@ -108,6 +109,7 @@ Add a standard test to your project [as shown in the link](doc/standard_test.md)
 
 * Starting from [0.30.2](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.30.2)
   added support for [Spring Boot 4.0](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide)
+* Starting from 0.50.0 the starter is built against Spring Boot 4.0 only; Spring Boot 3.x is no longer supported
 
 ## Supported PostgreSQL versions
 

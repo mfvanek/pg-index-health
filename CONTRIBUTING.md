@@ -20,7 +20,7 @@
    ./gradlew test
    ```
 
-By default, [PostgreSQL 18.1 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
+By default, [PostgreSQL 18.7 from Testcontainers](https://www.testcontainers.org/) is used to run tests.  
 Set `TEST_PG_VERSION` environment variable to use any of another available PostgreSQL version:
 ```
 TEST_PG_VERSION=17.6-alpine
