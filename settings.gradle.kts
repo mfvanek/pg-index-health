@@ -35,8 +35,6 @@ include("spring-boot-integration:kotlin-custom-ds-demo-app")
 findProject(":spring-boot-integration:kotlin-custom-ds-demo-app")?.name = "kotlin-custom-ds-demo-app"
 include("spring-boot-integration:postgres-demo-app-with-custom-user")
 findProject(":spring-boot-integration:postgres-demo-app-with-custom-user")?.name = "postgres-demo-app-with-custom-user"
-include("spring-boot-integration:sb4-postgres-tc-url-demo-app")
-findProject(":spring-boot-integration:sb4-postgres-tc-url-demo-app")?.name = "sb4-postgres-tc-url-demo-app"
 include("spring-boot-integration:sb4-jackson3-demo-app")
 findProject(":spring-boot-integration:sb4-jackson3-demo-app")?.name = "sb4-jackson3-demo-app"
 

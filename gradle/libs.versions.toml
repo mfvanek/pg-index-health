@@ -1,7 +1,6 @@
 [versions]
-spring-boot-v3 = "3.5.16"
-spring-boot-v4 = "4.0.7"
-slf4j = "2.0.18" # to be compatible with Spring Boot 3.5.X
+spring-boot-v4 = "4.0.9"
+slf4j = "2.0.20" # to be compatible with Spring Boot 4.0.X
 detekt = "2.0.0-alpha.6"
 commons-lang3 = "3.21.0"
 assertj = "3.27.7"
@@ -14,8 +13,8 @@ freefair = "9.8.2"
 [libraries]
 jspecify = "org.jspecify:jspecify:1.0.1"
 postgresql = "org.postgresql:postgresql:42.7.14"
-jackson2-bom = "com.fasterxml.jackson:jackson-bom:2.21.4" # to be compatible with Spring Boot 3.5.X
-jackson3-bom = "tools.jackson:jackson-bom:3.1.4" # to be compatible with Spring Boot 4.0.X
+jackson2-bom = "com.fasterxml.jackson:jackson-bom:2.21.7" # to be compatible with Spring Boot 4.0.X
+jackson3-bom = "tools.jackson:jackson-bom:3.1.7" # to be compatible with Spring Boot 4.0.X
 classgraph = "io.github.classgraph:classgraph:5.0.1"
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" }
@@ -23,12 +22,11 @@ apache-commons-dbcp2 = "org.apache.commons:commons-dbcp2:2.14.0"
 awaitility = "org.awaitility:awaitility:4.3.0"
 apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commons-lang3" }
 equalsverifier = "nl.jqno.equalsverifier:equalsverifier:4.5.2"
-spring-boot-v3-starter-root = { group = "org.springframework.boot", name = "spring-boot-starter", version.ref = "spring-boot-v3" }
-spring-boot-v3-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "spring-boot-v3" }
-spring-boot-v3-autoconfigure-processor = { group = "org.springframework.boot", name = "spring-boot-autoconfigure-processor", version.ref = "spring-boot-v3" }
-spring-boot-v3-configuration-processor = { group = "org.springframework.boot", name = "spring-boot-configuration-processor", version.ref = "spring-boot-v3" }
-spring-boot-v3-starter-jdbc = { group = "org.springframework.boot", name = "spring-boot-starter-jdbc", version.ref = "spring-boot-v3" }
-spring-boot-v3-starter-json = { group = "org.springframework.boot", name = "spring-boot-starter-json", version.ref = "spring-boot-v3" }
+spring-boot-v4-starter-root = { group = "org.springframework.boot", name = "spring-boot-starter", version.ref = "spring-boot-v4" }
+spring-boot-v4-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "spring-boot-v4" }
+spring-boot-v4-autoconfigure-processor = { group = "org.springframework.boot", name = "spring-boot-autoconfigure-processor", version.ref = "spring-boot-v4" }
+spring-boot-v4-configuration-processor = { group = "org.springframework.boot", name = "spring-boot-configuration-processor", version.ref = "spring-boot-v4" }
+spring-boot-v4-starter-liquibase = { group = "org.springframework.boot", name = "spring-boot-starter-liquibase", version.ref = "spring-boot-v4" }
 spring-boot-v4-starter-jdbc-main = { group = "org.springframework.boot", name = "spring-boot-starter-jdbc", version.ref = "spring-boot-v4" }
 spring-boot-v4-starter-jdbc-test = { group = "org.springframework.boot", name = "spring-boot-starter-jdbc-test", version.ref = "spring-boot-v4" }
 spring-boot-v4-starter-jackson2 = { group = "org.springframework.boot", name = "spring-boot-jackson2", version.ref = "spring-boot-v4" }
@@ -44,7 +42,6 @@ junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
 arch-unit = "com.tngtech.archunit:archunit-junit5:1.5.1"
 
 [plugins]
-spring-boot-v3-gradle-plugin = { id = "org.springframework.boot", version.ref = "spring-boot-v3" }
 spring-boot-v4-gradle-plugin = { id = "org.springframework.boot", version.ref = "spring-boot-v4" }
 spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.7" }
 lombok = { id = "io.freefair.lombok", version.ref = "freefair" }

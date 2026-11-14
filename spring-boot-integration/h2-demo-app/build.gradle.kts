@@ -10,7 +10,7 @@
 
 plugins {
     id("pg-index-health.java-application")
-    alias(libs.plugins.spring.boot.v3.gradle.plugin)
+    alias(libs.plugins.spring.boot.v4.gradle.plugin)
     alias(libs.plugins.spring.dependency.management)
 }
 
@@ -19,10 +19,10 @@ ext["assertj.version"] = libs.versions.assertj.get()
 ext["junit-jupiter.version"] = libs.versions.junit.get()
 
 dependencies {
-    implementation(libs.spring.boot.v3.starter.jdbc)
+    implementation(libs.spring.boot.v4.starter.jdbc.main)
 
     runtimeOnly("com.h2database:h2")
 
-    testImplementation(libs.spring.boot.v3.starter.test)
+    testImplementation(libs.spring.boot.v4.starter.jdbc.test)
     testImplementation(project(":spring-boot-integration:pg-index-health-test-starter"))
 }

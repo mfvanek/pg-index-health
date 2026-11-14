@@ -28,6 +28,6 @@ class ConsoleDemoApplicationRunTest {
         assertThat(output.getAll())
             .contains("Starting ConsoleDemoApplication using Java")
             .contains("Started ConsoleDemoApplication in")
-            .contains("(v3.5.16)");
+            .contains("(v4.0.9)");
     }
 }

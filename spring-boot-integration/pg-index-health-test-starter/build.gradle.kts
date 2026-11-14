@@ -20,12 +20,12 @@ dependencies {
     api(project(":pg-index-health-jdbc-connection"))
     api(project(":pg-index-health-core"))
 
-    implementation(libs.spring.boot.v3.starter.root)
+    implementation(libs.spring.boot.v4.starter.root)
 
-    annotationProcessor(libs.spring.boot.v3.autoconfigure.processor)
-    annotationProcessor(libs.spring.boot.v3.configuration.processor)
+    annotationProcessor(libs.spring.boot.v4.autoconfigure.processor)
+    annotationProcessor(libs.spring.boot.v4.configuration.processor)
 
-    testImplementation(libs.spring.boot.v3.starter.test)
+    testImplementation(libs.spring.boot.v4.starter.test)
     testImplementation(libs.apache.commons.lang3)
     testImplementation(libs.postgresql)
     testImplementation(libs.arch.unit)
