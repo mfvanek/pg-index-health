@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that adds blank comments on tables.
+ */
 public class AddBlankCommentOnTablesStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code AddBlankCommentOnTablesStatement}.
+     */
+    public AddBlankCommentOnTablesStatement() {
+    }
 
     /**
      * {@inheritDoc}

@@ -61,3 +61,5 @@ jobs:
                     verbose: false
             -   name: Generate Javadoc
                 run: ./gradlew javadoc
+            -   name: Generate test fixtures Javadoc
+                run: ./gradlew testFixturesJavadoc

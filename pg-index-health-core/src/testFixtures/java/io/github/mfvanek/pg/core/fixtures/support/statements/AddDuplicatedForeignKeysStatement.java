@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that adds duplicated foreign keys between tables.
+ */
 public class AddDuplicatedForeignKeysStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code AddDuplicatedForeignKeysStatement}.
+     */
+    public AddDuplicatedForeignKeysStatement() {
+    }
 
     /**
      * {@inheritDoc}

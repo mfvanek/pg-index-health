@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that adds a primary key for a default partition table.
+ */
 public class AddPrimaryKeyForDefaultPartitionStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code AddPrimaryKeyForDefaultPartitionStatement}.
+     */
+    public AddPrimaryKeyForDefaultPartitionStatement() {
+    }
 
     /**
      * {@inheritDoc}

@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that adds a column of money type to a table.
+ */
 public class AddMoneyColumnStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code AddMoneyColumnStatement}.
+     */
+    public AddMoneyColumnStatement() {
+    }
 
     /**
      * {@inheritDoc}

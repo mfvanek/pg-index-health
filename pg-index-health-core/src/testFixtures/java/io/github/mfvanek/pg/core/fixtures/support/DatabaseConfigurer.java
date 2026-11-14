@@ -10,8 +10,17 @@
 
 package io.github.mfvanek.pg.core.fixtures.support;
 
+/**
+ * Functional interface for configuring a {@link DatabasePopulator} before database initialization.
+ */
 @FunctionalInterface
 public interface DatabaseConfigurer {
 
+    /**
+     * Configures the given {@link DatabasePopulator}.
+     *
+     * @param databasePopulator the database populator to configure
+     * @return the configured database populator
+     */
     DatabasePopulator configure(DatabasePopulator databasePopulator);
 }

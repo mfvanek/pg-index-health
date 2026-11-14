@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a table with a check constraint on a serial primary key.
+ */
 public class CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement}.
+     */
+    public CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement() {
+    }
 
     /**
      * {@inheritDoc}

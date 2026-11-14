@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a partitioned table with serial primary key and foreign keys.
+ */
 public class CreatePartitionedTableWithSerialAndForeignKeysStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreatePartitionedTableWithSerialAndForeignKeysStatement}.
+     */
+    public CreatePartitionedTableWithSerialAndForeignKeysStatement() {
+    }
 
     /**
      * {@inheritDoc}

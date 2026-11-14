@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that adds intersected foreign keys between tables.
+ */
 public class AddIntersectedForeignKeysStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code AddIntersectedForeignKeysStatement}.
+     */
+    public AddIntersectedForeignKeysStatement() {
+    }
 
     /**
      * {@inheritDoc}

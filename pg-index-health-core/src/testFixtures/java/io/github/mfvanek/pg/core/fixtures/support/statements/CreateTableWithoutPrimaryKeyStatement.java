@@ -14,7 +14,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a table without a primary key.
+ */
 public class CreateTableWithoutPrimaryKeyStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateTableWithoutPrimaryKeyStatement}.
+     */
+    public CreateTableWithoutPrimaryKeyStatement() {
+    }
 
     /**
      * {@inheritDoc}

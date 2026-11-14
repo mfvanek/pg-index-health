@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that adds a NOT VALID constraint to a partitioned table.
+ */
 public class AddNotValidConstraintToPartitionedTableStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code AddNotValidConstraintToPartitionedTableStatement}.
+     */
+    public AddNotValidConstraintToPartitionedTableStatement() {
+    }
 
     /**
      * {@inheritDoc}

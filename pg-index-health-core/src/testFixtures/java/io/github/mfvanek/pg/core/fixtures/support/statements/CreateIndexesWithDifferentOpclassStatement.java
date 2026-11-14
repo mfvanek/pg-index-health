@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates indexes with different operator classes.
+ */
 public class CreateIndexesWithDifferentOpclassStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateIndexesWithDifferentOpclassStatement}.
+     */
+    public CreateIndexesWithDifferentOpclassStatement() {
+    }
 
     /**
      * {@inheritDoc}

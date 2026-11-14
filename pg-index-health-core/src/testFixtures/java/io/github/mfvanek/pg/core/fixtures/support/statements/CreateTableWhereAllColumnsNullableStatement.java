@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a table where all columns are nullable.
+ */
 public class CreateTableWhereAllColumnsNullableStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreateTableWhereAllColumnsNullableStatement}.
+     */
+    public CreateTableWhereAllColumnsNullableStatement() {
+    }
 
     /**
      * {@inheritDoc}

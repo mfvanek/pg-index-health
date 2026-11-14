@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that adds a composite foreign key with nullable columns.
+ */
 public class AddCompositeForeignKeyWithNullValuesStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code AddCompositeForeignKeyWithNullValuesStatement}.
+     */
+    public AddCompositeForeignKeyWithNullValuesStatement() {
+    }
 
     /**
      * {@inheritDoc}

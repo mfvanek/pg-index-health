@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a partitioned table for bloat testing.
+ */
 public class CreatePartitionedTableForBloatStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreatePartitionedTableForBloatStatement}.
+     */
+    public CreatePartitionedTableForBloatStatement() {
+    }
 
     /**
      * {@inheritDoc}

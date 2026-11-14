@@ -12,7 +12,16 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 
 import java.util.List;
 
+/**
+ * Represents a database statement that creates a partitioned index with an unnecessary WHERE clause.
+ */
 public class CreatePartitionedIndexWithUnnecessaryWhereClauseStatement extends AbstractDbStatement {
+
+    /**
+     * Constructs a new instance of {@code CreatePartitionedIndexWithUnnecessaryWhereClauseStatement}.
+     */
+    public CreatePartitionedIndexWithUnnecessaryWhereClauseStatement() {
+    }
 
     /**
      * {@inheritDoc}
