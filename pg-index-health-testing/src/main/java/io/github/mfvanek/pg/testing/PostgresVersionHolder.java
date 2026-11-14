@@ -100,13 +100,13 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
         if (pgVersion != null) {
             return pgVersion;
         }
-        return "18.1";
+        return "18.7";
     }
 
     /**
      * Creates {@code PostgresVersionHolder} for single node installation.
      * The version is taken from the environment variable {@code TEST_PG_VERSION} if it is set,
-     * otherwise the default version {@code 18.1} is used.
+     * otherwise the default version {@code 18.7} is used.
      *
      * @return {@code PostgresVersionHolder}
      */

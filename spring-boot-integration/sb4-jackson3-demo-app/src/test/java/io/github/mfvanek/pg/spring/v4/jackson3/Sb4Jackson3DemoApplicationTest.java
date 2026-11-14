@@ -41,6 +41,6 @@ class Sb4Jackson3DemoApplicationTest {
 
         assertThat(environment.getProperty("spring.datasource.url"))
             .isNotBlank()
-            .isEqualTo("jdbc:tc:postgresql:18.1:///demo_for_pg_index_health_starter");
+            .isEqualTo("jdbc:tc:postgresql:18.7:///demo_for_pg_index_health_starter");
     }
 }
