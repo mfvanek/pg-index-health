@@ -10,6 +10,9 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
+import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
+import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.constraint.ForeignKeyCycle;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
@@ -100,5 +103,38 @@ class SkipTablesByNamePredicateTest {
             .rejects(Index.of(ctx, "t1", "i1"))
             .rejects(Index.of(ctx, "T2", "i2"))
             .accepts(Table.of(ctx, "t11"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldCheckEveryTableOfForeignKeyCycle(final String schemaName) {
+        final PgContext ctx = PgContext.of(schemaName);
+        final ForeignKeyCycle cycle = ForeignKeyCycle.of(
+            ForeignKey.ofNotNullColumn(ctx, "t1", "c1", "col1"),
+            ForeignKey.ofNotNullColumn(ctx, "t2", "c2", "col2"),
+            ForeignKey.ofNotNullColumn(ctx, "T3", "c3", "col3"));
+        assertThat(SkipTablesByNamePredicate.ofName(ctx, "t1"))
+            .rejects(cycle);
+        assertThat(SkipTablesByNamePredicate.ofName(ctx, "t2"))
+            .rejects(cycle);
+        assertThat(SkipTablesByNamePredicate.ofName(ctx, "t3"))
+            .rejects(cycle);
+        assertThat(SkipTablesByNamePredicate.of(ctx, Set.of("t4", "T3")))
+            .rejects(cycle);
+        assertThat(SkipTablesByNamePredicate.ofName(ctx, "t4"))
+            .accepts(cycle);
+        assertThat(SkipTablesByNamePredicate.of(ctx, Set.of("c1", "c2", "c3", "col1")))
+            .accepts(cycle);
+    }
+
+    @Test
+    void shouldWorkWithDuplicatedForeignKeys() {
+        final DuplicatedForeignKeys duplicatedForeignKeys = DuplicatedForeignKeys.of(
+            ForeignKey.ofNotNullColumn("t1", "c1", "col1"),
+            ForeignKey.ofNotNullColumn("t1", "c2", "col1"));
+        assertThat(SkipTablesByNamePredicate.ofName("t1"))
+            .rejects(duplicatedForeignKeys);
+        assertThat(SkipTablesByNamePredicate.ofName("t2"))
+            .accepts(duplicatedForeignKeys);
     }
 }
