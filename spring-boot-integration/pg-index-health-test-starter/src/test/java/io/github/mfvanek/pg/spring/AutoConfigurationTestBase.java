@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHo
 import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithBlobTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithCharTypeCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithEnumTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithInconsistentTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
@@ -176,7 +177,8 @@ abstract class AutoConfigurationTestBase {
             TablesWithIncrementingColumnsCheckOnHost.class,
             ColumnsWithInconsistentTypesCheckOnHost.class,
             UnloggedTablesCheckOnHost.class,
-            UnloggedSequencesCheckOnHost.class
+            UnloggedSequencesCheckOnHost.class,
+            ColumnsWithEnumTypeCheckOnHost.class
         );
     }
 }

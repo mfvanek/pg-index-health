@@ -59,6 +59,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedIn
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithBlobTypeColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithDroppedColumnStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithEnumColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithInconsistentTypesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithIncrementingColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithJsonAndSerialColumnsStatement;
@@ -86,6 +87,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithSeri
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithTimestampInTheMiddleStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithUniqueSerialColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithoutPrimaryKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithEnumColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithInconsistentTypesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedSequenceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedTableStatement;
@@ -883,6 +885,24 @@ public final class DatabasePopulator implements AutoCloseable {
     public DatabasePopulator withPartialIndexForForeignKeyInPartitionedTable() {
         return withSerialAndForeignKeysInPartitionedTable()
             .register(161, new CreatePartialIndexForForeignKeyInPartitionedTableStatement());
+    }
+
+    /**
+     * Configures tables containing enum columns.
+     *
+     * @return this {@code DatabasePopulator} instance
+     */
+    public DatabasePopulator withEnumColumns() {
+        return register(162, new CreateTablesWithEnumColumnsStatement());
+    }
+
+    /**
+     * Configures a partitioned table containing an enum column.
+     *
+     * @return this {@code DatabasePopulator} instance
+     */
+    public DatabasePopulator withEnumColumnInPartitionedTable() {
+        return register(163, new CreatePartitionedTableWithEnumColumnStatement());
     }
 
     /**

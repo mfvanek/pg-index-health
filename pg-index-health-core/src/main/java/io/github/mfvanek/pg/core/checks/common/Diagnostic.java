@@ -212,7 +212,11 @@ public enum Diagnostic implements CheckInfo {
     /**
      * Check for unlogged sequences.
      */
-    UNLOGGED_SEQUENCES;
+    UNLOGGED_SEQUENCES,
+    /**
+     * Check for columns with an enum type.
+     */
+    COLUMNS_WITH_ENUM_TYPE;
 
     private final CheckInfo inner;
 

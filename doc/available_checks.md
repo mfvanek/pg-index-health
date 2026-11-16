@@ -59,6 +59,7 @@ All checks can be divided into two groups:
 | 45 | Columns with inconsistent types (the same name but different data types)                                                           | static             | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_inconsistent_types.sql)             |
 | 46 | [Unlogged tables](doc/eng/unlogged_tables.md)                                                                                      | static             | not applicable        | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/unlogged_tables.sql)                             |
 | 47 | [Unlogged sequences](doc/eng/unlogged_sequences.md)                                                                                | static             | not applicable        | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/unlogged_sequences.sql)                          |
+| 48 | [Columns with an enum type](doc/eng/columns_with_enum_type.md)                                                                     | static             | yes                   | [sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_enum_type.sql)                      |
 
 ### Raw SQL queries to use with other languages
 
