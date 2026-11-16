@@ -88,7 +88,8 @@ public final class StandardChecksOnCluster implements Function<HighAvailabilityP
             new TablesWithIncrementingColumnsCheckOnCluster(haPgConnection),
             new ColumnsWithInconsistentTypesCheckOnCluster(haPgConnection),
             new UnloggedTablesCheckOnCluster(haPgConnection),
-            new UnloggedSequencesCheckOnCluster(haPgConnection)
+            new UnloggedSequencesCheckOnCluster(haPgConnection),
+            new ColumnsWithEnumTypeCheckOnCluster(haPgConnection)
         );
     }
 }

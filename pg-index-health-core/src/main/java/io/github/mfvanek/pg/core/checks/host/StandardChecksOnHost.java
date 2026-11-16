@@ -89,7 +89,8 @@ public final class StandardChecksOnHost implements Function<PgConnection, List<D
             new TablesWithIncrementingColumnsCheckOnHost(pgConnection),
             new ColumnsWithInconsistentTypesCheckOnHost(pgConnection),
             new UnloggedTablesCheckOnHost(pgConnection),
-            new UnloggedSequencesCheckOnHost(pgConnection)
+            new UnloggedSequencesCheckOnHost(pgConnection),
+            new ColumnsWithEnumTypeCheckOnHost(pgConnection)
         );
     }
 }

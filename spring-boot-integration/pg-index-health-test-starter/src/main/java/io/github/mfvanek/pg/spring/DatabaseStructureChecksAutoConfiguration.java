@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.host.BtreeIndexesOnArrayColumnsCheckOnHo
 import io.github.mfvanek.pg.core.checks.host.ColumnsNotFollowingNamingConventionCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithBlobTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithCharTypeCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.ColumnsWithEnumTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithInconsistentTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithJsonTypeCheckOnHost;
@@ -404,6 +405,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public UnloggedSequencesCheckOnHost unloggedSequencesCheckOnHost(final PgConnection pgConnection) {
         return new UnloggedSequencesCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(ColumnsWithEnumTypeCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public ColumnsWithEnumTypeCheckOnHost columnsWithEnumTypeCheckOnHost(final PgConnection pgConnection) {
+        return new ColumnsWithEnumTypeCheckOnHost(pgConnection);
     }
 
     @Bean
