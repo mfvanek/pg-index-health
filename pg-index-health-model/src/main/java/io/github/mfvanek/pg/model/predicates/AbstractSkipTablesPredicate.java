@@ -10,6 +10,8 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
+import io.github.mfvanek.pg.model.constraint.ConstraintNameAware;
+import io.github.mfvanek.pg.model.constraint.ConstraintsAware;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.table.TableNameAware;
@@ -63,6 +65,8 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      * <p>
      * Returns {@code false} if the {@code DbObject} is a {@link TableNameAware} instance
      * with a table name that matches any of the fully qualified table names to skip.
+     * For a {@link ConstraintsAware} instance (for example, a cycle of foreign keys that spans several tables)
+     * the table of every constraint is checked, not only the first one.
      * Otherwise, returns {@code true}.
      * </p>
      *
@@ -71,10 +75,24 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      */
     @Override
     public boolean test(final DbObject dbObject) {
-        if (!fullyQualifiedTableNamesToSkip.isEmpty() && dbObject instanceof final TableNameAware t) {
-            return !fullyQualifiedTableNamesToSkip.contains(t.getTableName().toLowerCase(Locale.ROOT));
+        if (fullyQualifiedTableNamesToSkip.isEmpty()) {
+            return true;
+        }
+        if (dbObject instanceof final ConstraintsAware cs) {
+            for (final ConstraintNameAware c : cs.getConstraints()) {
+                if (shouldSkip(c)) {
+                    return false;
+                }
+            }
+        }
+        if (dbObject instanceof final TableNameAware t) {
+            return !shouldSkip(t);
         }
         return true;
+    }
+
+    private boolean shouldSkip(final TableNameAware tableNameAware) {
+        return fullyQualifiedTableNamesToSkip.contains(tableNameAware.getTableName().toLowerCase(Locale.ROOT));
     }
 
     /**

@@ -17,6 +17,7 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.constraint.ForeignKeyCycle;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.AnyObject;
 import io.github.mfvanek.pg.model.function.StoredFunction;
@@ -36,6 +37,8 @@ import io.github.mfvanek.pg.model.jackson2.constraint.ConstraintDeserializer;
 import io.github.mfvanek.pg.model.jackson2.constraint.ConstraintSerializer;
 import io.github.mfvanek.pg.model.jackson2.constraint.DuplicatedForeignKeysDeserializer;
 import io.github.mfvanek.pg.model.jackson2.constraint.DuplicatedForeignKeysSerializer;
+import io.github.mfvanek.pg.model.jackson2.constraint.ForeignKeyCycleDeserializer;
+import io.github.mfvanek.pg.model.jackson2.constraint.ForeignKeyCycleSerializer;
 import io.github.mfvanek.pg.model.jackson2.constraint.ForeignKeyDeserializer;
 import io.github.mfvanek.pg.model.jackson2.constraint.ForeignKeySerializer;
 import io.github.mfvanek.pg.model.jackson2.context.PgContextDeserializer;
@@ -111,6 +114,8 @@ public class PgIndexHealthModelModule extends SimpleModule {
 
         addSerializer(DuplicatedForeignKeys.class, new DuplicatedForeignKeysSerializer());
         addDeserializer(DuplicatedForeignKeys.class, new DuplicatedForeignKeysDeserializer());
+        addSerializer(ForeignKeyCycle.class, new ForeignKeyCycleSerializer());
+        addDeserializer(ForeignKeyCycle.class, new ForeignKeyCycleDeserializer());
 
         addSerializer(StoredFunction.class, new StoredFunctionSerializer());
         addDeserializer(StoredFunction.class, new StoredFunctionDeserializer());

@@ -26,6 +26,7 @@
         <Bug pattern="OCP_OVERLY_CONCRETE_PARAMETER"/>
         <Or>
             <Class name="io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys"/>
+            <Class name="io.github.mfvanek.pg.model.constraint.ForeignKeyCycle"/>
             <Class name="io.github.mfvanek.pg.model.index.DuplicatedIndexes"/>
         </Or>
     </Match>
