@@ -13,7 +13,8 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that creates database objects with non-standard or uppercase names.
+ * Represents a database statement that creates database objects with non-standard or uppercase names,
+ * including names that start with a digit.
  */
 public class CreateBadlyNamedObjectsStatement extends AbstractDbStatement {
 
@@ -48,6 +49,16 @@ public class CreateBadlyNamedObjectsStatement extends AbstractDbStatement {
                     foreign key ("bad-ref-id") references {schemaName}."bad-table" ("bad-id") not valid;""",
             """
                 create or replace function {schemaName}."bad-add"(a integer, b integer) returns integer
+                    as 'select $1 + $2;'
+                    language sql
+                    immutable
+                    returns null on null input;""",
+            """
+                create table if not exists {schemaName}."1st_table"(
+                    "2nd_id" int not null primary key
+                );""",
+            """
+                create or replace function {schemaName}."3rd_add"(a integer, b integer) returns integer
                     as 'select $1 + $2;'
                     language sql
                     immutable

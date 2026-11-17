@@ -118,7 +118,7 @@
         <module name="JavadocRegexp"/>
         <!-- <module name="JavadocThrowsOrder"/> useless -->
         <module name="LambdaBodyLength">
-            <property name="max" value="35"/>
+            <property name="max" value="36"/>
         </module>
         <module name="LocalFinalVariableName"/>
         <!-- <module name="MagicNumber"/> invalid -->

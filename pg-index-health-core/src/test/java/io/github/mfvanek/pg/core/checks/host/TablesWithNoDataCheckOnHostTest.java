@@ -44,9 +44,10 @@ class TablesWithNoDataCheckOnHostTest extends StatisticsAwareTestBase {
 
             assertThat(check)
                 .executing(ctx)
-                .hasSize(4)
+                .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields()
                 .containsExactly(
+                    Table.of(ctx, "\"1st_table\""),
                     Table.of(ctx, "\"bad-table\""),
                     Table.of(ctx, "\"bad-table-two\"", 8_192L),
                     Table.of(ctx, "empty"),
@@ -55,7 +56,7 @@ class TablesWithNoDataCheckOnHostTest extends StatisticsAwareTestBase {
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "empty"))
-                .hasSize(3);
+                .hasSize(4);
         });
     }
 

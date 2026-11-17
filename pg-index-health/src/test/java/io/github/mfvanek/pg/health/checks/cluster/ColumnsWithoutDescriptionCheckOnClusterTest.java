@@ -44,9 +44,10 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBadlyNamedObjects(), ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(19)
+                .hasSize(20)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
+                    Column.ofNotNull(ctx, "\"1st_table\"", "\"2nd_id\""),
                     Column.ofNotNull(ctx, "accounts", "account_balance"),
                     Column.ofNotNull(ctx, "accounts", "account_number"),
                     Column.ofNotNull(ctx, "accounts", "client_id"),
@@ -68,7 +69,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
                     Column.ofNullable(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\""));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "\"bad-table\"", "\"bad-table-two\"")))
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("\"1st_table\"", "accounts", "\"bad-table\"", "\"bad-table-two\"")))
                 .hasSize(11);
         });
     }
