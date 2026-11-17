@@ -216,7 +216,11 @@ public enum Diagnostic implements CheckInfo {
     /**
      * Check for columns with an enum type.
      */
-    COLUMNS_WITH_ENUM_TYPE;
+    COLUMNS_WITH_ENUM_TYPE,
+    /**
+     * Check for cyclic foreign keys (cyclical relationships between tables).
+     */
+    CYCLIC_FOREIGN_KEYS;
 
     private final CheckInfo inner;
 

@@ -70,6 +70,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTa
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVeryLongNamesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutCommentsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutPrimaryKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTablesWithCyclicForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceStatement;
@@ -87,6 +88,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithSeri
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithTimestampInTheMiddleStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithUniqueSerialColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithoutPrimaryKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithCyclicForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithEnumColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithInconsistentTypesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedSequenceStatement;
@@ -903,6 +905,24 @@ public final class DatabasePopulator implements AutoCloseable {
      */
     public DatabasePopulator withEnumColumnInPartitionedTable() {
         return register(163, new CreatePartitionedTableWithEnumColumnStatement());
+    }
+
+    /**
+     * Configures tables with cyclic foreign keys.
+     *
+     * @return this {@code DatabasePopulator} instance
+     */
+    public DatabasePopulator withCyclicForeignKeys() {
+        return register(164, new CreateTablesWithCyclicForeignKeysStatement());
+    }
+
+    /**
+     * Configures partitioned tables with cyclic foreign keys.
+     *
+     * @return this {@code DatabasePopulator} instance
+     */
+    public DatabasePopulator withCyclicForeignKeysInPartitionedTables() {
+        return register(165, new CreatePartitionedTablesWithCyclicForeignKeysStatement());
     }
 
     /**

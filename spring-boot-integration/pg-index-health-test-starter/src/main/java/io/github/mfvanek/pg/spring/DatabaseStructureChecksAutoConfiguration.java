@@ -23,6 +23,7 @@ import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithTimestampOrTimetzTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithoutDescriptionCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.CyclicForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ForeignKeysNotCoveredWithIndexCheckOnHost;
@@ -412,6 +413,13 @@ public class DatabaseStructureChecksAutoConfiguration {
     @ConditionalOnMissingBean
     public ColumnsWithEnumTypeCheckOnHost columnsWithEnumTypeCheckOnHost(final PgConnection pgConnection) {
         return new ColumnsWithEnumTypeCheckOnHost(pgConnection);
+    }
+
+    @Bean
+    @ConditionalOnClass(CyclicForeignKeysCheckOnHost.class)
+    @ConditionalOnMissingBean
+    public CyclicForeignKeysCheckOnHost cyclicForeignKeysCheckOnHost(final PgConnection pgConnection) {
+        return new CyclicForeignKeysCheckOnHost(pgConnection);
     }
 
     @Bean

@@ -140,7 +140,8 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "columns_with_inconsistent_types:17",
                         "unlogged_tables:0",
                         "unlogged_sequences:0",
-                        "columns_with_enum_type:0"
+                        "columns_with_enum_type:0",
+                        "cyclic_foreign_keys:0"
                     );
             }
         );

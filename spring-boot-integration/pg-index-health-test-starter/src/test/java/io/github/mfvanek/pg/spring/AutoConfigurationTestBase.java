@@ -24,6 +24,7 @@ import io.github.mfvanek.pg.core.checks.host.ColumnsWithMoneyTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithSerialTypesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithTimestampOrTimetzTypeCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithoutDescriptionCheckOnHost;
+import io.github.mfvanek.pg.core.checks.host.CyclicForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedForeignKeysCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.DuplicatedIndexesCheckOnHost;
 import io.github.mfvanek.pg.core.checks.host.ForeignKeysNotCoveredWithIndexCheckOnHost;
@@ -178,7 +179,8 @@ abstract class AutoConfigurationTestBase {
             ColumnsWithInconsistentTypesCheckOnHost.class,
             UnloggedTablesCheckOnHost.class,
             UnloggedSequencesCheckOnHost.class,
-            ColumnsWithEnumTypeCheckOnHost.class
+            ColumnsWithEnumTypeCheckOnHost.class,
+            CyclicForeignKeysCheckOnHost.class
         );
     }
 }
