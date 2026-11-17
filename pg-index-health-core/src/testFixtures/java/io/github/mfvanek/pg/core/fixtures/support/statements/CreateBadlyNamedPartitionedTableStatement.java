@@ -32,8 +32,12 @@ public class CreateBadlyNamedPartitionedTableStatement extends AbstractDbStateme
             """
                 create table if not exists {schemaName}."one-partitioned"(
                     "bad-id" bigserial not null primary key,
-                    description text
+                    description text,
+                    "1st_column" text
                 ) partition by range ("bad-id");""",
+            """
+                create table if not exists {schemaName}."2nd_partition"
+                    partition of {schemaName}."one-partitioned" for values from (1) to (1000);""",
             """
                 create table if not exists {schemaName}."one-default"
                     partition of {schemaName}."one-partitioned" default;""",

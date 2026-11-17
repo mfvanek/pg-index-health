@@ -44,16 +44,17 @@ class ColumnsNotFollowingNamingConventionCheckOnClusterTest extends DatabaseAwar
         executeTestOnDatabase(schemaName, DatabasePopulator::withBadlyNamedObjects, ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(3)
+                .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
+                    Column.ofNotNull(ctx, "\"1st_table\"", "\"2nd_id\""),
                     Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\""),
                     Column.ofNotNull(ctx, "\"bad-table-two\"", "\"bad-ref-id\""),
                     Column.ofNullable(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\"")
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("\"bad-table\"", "\"bad-table-two\"", "\"UpperCaseTable\"")))
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("\"1st_table\"", "\"bad-table\"", "\"bad-table-two\"", "\"UpperCaseTable\"")))
                 .isEmpty();
         });
     }
@@ -64,9 +65,10 @@ class ColumnsNotFollowingNamingConventionCheckOnClusterTest extends DatabaseAwar
         executeTestOnDatabase(schemaName, DatabasePopulator::withBadlyNamedPartitionedTable, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
+                .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
+                    Column.ofNullable(ctx, "\"one-partitioned\"", "\"1st_column\""),
                     Column.ofNotNull(ctx, "\"one-partitioned\"", "\"bad-id\"")
                 )
         );

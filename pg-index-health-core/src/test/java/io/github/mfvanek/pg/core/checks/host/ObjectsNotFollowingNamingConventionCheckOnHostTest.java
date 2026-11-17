@@ -47,19 +47,24 @@ class ObjectsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, dbp -> dbp.withMaterializedView().withBadlyNamedObjects(), ctx -> {
             final AnyObject[] baseExpected = {
+                AnyObject.ofType(ctx, "\"1st_table_pkey\"", PgObjectType.CONSTRAINT),
                 AnyObject.ofType(ctx, "\"bad-table-two-fk-bad-ref-id\"", PgObjectType.CONSTRAINT),
                 AnyObject.ofType(ctx, "\"bad-table-two_pkey\"", PgObjectType.CONSTRAINT),
                 AnyObject.ofType(ctx, "\"bad-table_pkey\"", PgObjectType.CONSTRAINT),
+                AnyObject.ofType(ctx, "\"3rd_add\"", PgObjectType.FUNCTION),
                 AnyObject.ofType(ctx, "\"bad-add\"", PgObjectType.FUNCTION),
+                AnyObject.ofType(ctx, "\"1st_table_pkey\"", PgObjectType.INDEX),
                 AnyObject.ofType(ctx, "\"bad-table-two_pkey\"", PgObjectType.INDEX),
                 AnyObject.ofType(ctx, "\"bad-table_pkey\"", PgObjectType.INDEX),
                 AnyObject.ofType(ctx, "\"accounts-materialized-view-with-length-63-1234567890-1234567890\"", PgObjectType.MATERIALIZED_VIEW),
                 AnyObject.ofType(ctx, "\"bad-table_bad-id_seq\"", PgObjectType.SEQUENCE),
+                AnyObject.ofType(ctx, "\"1st_table\"", PgObjectType.TABLE),
                 AnyObject.ofType(ctx, "\"UpperCaseTable\"", PgObjectType.TABLE),
                 AnyObject.ofType(ctx, "\"bad-table\"", PgObjectType.TABLE),
                 AnyObject.ofType(ctx, "\"bad-table-two\"", PgObjectType.TABLE)
             };
             final AnyObject[] notNullConstraints = {
+                AnyObject.ofType(ctx, "\"1st_table_2nd_id_not_null\"", PgObjectType.CONSTRAINT),
                 AnyObject.ofType(ctx, "\"bad-table-two_bad-ref-id_not_null\"", PgObjectType.CONSTRAINT),
                 AnyObject.ofType(ctx, "\"bad-table_bad-id_not_null\"", PgObjectType.CONSTRAINT)
             };
@@ -69,12 +74,12 @@ class ObjectsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
 
             assertThat(check)
                 .executing(ctx)
-                .hasSize(isNotNullConstraintsSupported() ? 13 : 11)
+                .hasSize(isNotNullConstraintsSupported() ? 18 : 15)
                 .containsExactlyInAnyOrder(expected);
 
             assertThat(check)
                 .executing(ctx, SkipDbObjectsByNamePredicate.of(ctx, List.of("\"bad-table\"", "\"bad-add\"")))
-                .hasSize(isNotNullConstraintsSupported() ? 11 : 9);
+                .hasSize(isNotNullConstraintsSupported() ? 16 : 13);
         });
     }
 
@@ -86,9 +91,11 @@ class ObjectsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
                 AnyObject.ofType(ctx, "\"one-default_description_not_null\"", PgObjectType.CONSTRAINT),
                 AnyObject.ofType(ctx, "\"one-partitioned_pkey\"", PgObjectType.CONSTRAINT),
                 AnyObject.ofType(ctx, "\"one-default_pkey\"", PgObjectType.INDEX),
+                AnyObject.ofType(ctx, "\"2nd_partition_pkey\"", PgObjectType.INDEX),
                 AnyObject.ofType(ctx, "\"one-partitioned_pkey\"", PgObjectType.PARTITIONED_INDEX),
                 AnyObject.ofType(ctx, "\"one-partitioned\"", PgObjectType.PARTITIONED_TABLE),
                 AnyObject.ofType(ctx, "\"one-partitioned_bad-id_seq\"", PgObjectType.SEQUENCE),
+                AnyObject.ofType(ctx, "\"2nd_partition\"", PgObjectType.TABLE),
                 AnyObject.ofType(ctx, "\"one-default\"", PgObjectType.TABLE)
             };
             final AnyObject[] notNullConstraints = {
@@ -100,7 +107,7 @@ class ObjectsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
 
             assertThat(check)
                 .executing(ctx)
-                .hasSize(isNotNullConstraintsSupported() ? 8 : 7)
+                .hasSize(isNotNullConstraintsSupported() ? 10 : 9)
                 .containsExactlyInAnyOrder(expected);
         });
     }
