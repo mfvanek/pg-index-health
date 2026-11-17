@@ -50,11 +50,16 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithNull
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArrayColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDifferentOpclassStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIsNullPartialIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateLayeredPartitionedTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullAndNotDeletedPartialIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullPartialIndexForForeignKeyInPartitionedTableStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullPartialIndexesForForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexForForeignKeyInPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexWithNotNullSubsetForCompositeForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithBlobTypeColumnStatement;
@@ -923,6 +928,55 @@ public final class DatabasePopulator implements AutoCloseable {
      */
     public DatabasePopulator withCyclicForeignKeysInPartitionedTables() {
         return register(165, new CreatePartitionedTablesWithCyclicForeignKeysStatement());
+    }
+
+    /**
+     * Configures foreign keys with partial indexes with predicates {@code fk_column is not null} for all of them.
+     *
+     * @return this {@code DatabasePopulator} instance
+     */
+    public DatabasePopulator withNotNullPartialIndexesForForeignKeys() {
+        return withReferences()
+            .withForeignKeyOnNullableColumn()
+            .register(166, new CreateNotNullPartialIndexesForForeignKeysStatement());
+    }
+
+    /**
+     * Configures partial indexes for composite foreign keys with predicates checking only a subset of their columns for not null.
+     *
+     * @return this {@code DatabasePopulator} instance
+     */
+    public DatabasePopulator withNotNullSubsetPartialIndexForCompositeForeignKey() {
+        return withCompositeForeignKey()
+            .register(168, new CreatePartialIndexWithNotNullSubsetForCompositeForeignKeyStatement());
+    }
+
+    /**
+     * Configures a partitioned table with a foreign key covered by a partial index with a predicate {@code fk_column is not null}.
+     *
+     * @return this {@code DatabasePopulator} instance
+     */
+    public DatabasePopulator withNotNullPartialIndexForForeignKeyInPartitionedTable() {
+        return withDictTable()
+            .register(169, new CreateNotNullPartialIndexForForeignKeyInPartitionedTableStatement());
+    }
+
+    /**
+     * Configures a partial index for a foreign key with a predicate {@code client_id is not null and not deleted}.
+     *
+     * @return this {@code DatabasePopulator} instance
+     */
+    public DatabasePopulator withNotNullAndNotDeletedPartialIndexForForeignKey() {
+        return register(170, new CreateNotNullAndNotDeletedPartialIndexForForeignKeyStatement());
+    }
+
+    /**
+     * Configures a partial index for a foreign key with a predicate {@code client_id is null}.
+     *
+     * @return this {@code DatabasePopulator} instance
+     */
+    public DatabasePopulator withIsNullPartialIndexForForeignKey() {
+        return register(171, new CreateIsNullPartialIndexForForeignKeyStatement());
     }
 
     /**

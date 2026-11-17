@@ -15,12 +15,18 @@ Try to prepare a short changelog and highlight the main changes in the upcoming 
 
 Make sure that the `master` branch is up to date and builds successfully on your local machine.
 
+At least update git submodules:
+
+```shell
+  git submodule foreach --recursive git pull origin master
+```
+
 ```shell
 ./gradlew clean
 ```
 
 ```shell
-./gradlew build
+./gradlew :pg-index-health-core:test
 ```
 
 ### Prepare the root `gradle.properties`

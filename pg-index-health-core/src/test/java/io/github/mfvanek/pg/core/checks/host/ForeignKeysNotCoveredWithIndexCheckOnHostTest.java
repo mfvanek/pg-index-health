@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
-import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -113,21 +112,43 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialAndForeignKeysInPartitionedTable, ctx ->
+    void onDatabaseWithNotNullPartialIndexShouldConsiderItAsCovering(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withNotNullPartialIndexesForForeignKeys().withNotNullSubsetPartialIndexForCompositeForeignKey(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void onDatabaseWithNotNullAndNotDeletedPartialIndexShouldNotConsiderItAsCovering(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withNotNullAndNotDeletedPartialIndexForForeignKey(), ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type")
+                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id")
                 ));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldNotConsiderPartialIndexAsCoveringInPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withPartialIndexForForeignKeyInPartitionedTable, ctx ->
+    void onDatabaseWithIsNullPartialIndexShouldNotConsiderItAsCovering(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withIsNullPartialIndexForForeignKey(), ctx ->
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactly(
+                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id")
+                ));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withPartialIndexForForeignKeyInPartitionedTable().withNotNullPartialIndexForForeignKeyInPartitionedTable(), ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
