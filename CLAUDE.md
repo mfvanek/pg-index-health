@@ -107,6 +107,12 @@ The build enforces:
 - Keep `*CheckOnHostTest` and `*CheckOnClusterTest` for the same check as close as possible: every test in the host class must exist in the cluster class
   with the same name, in the same order, and with the same fixtures and assertions. The cluster class may contain additional tests (e.g. cluster-only behavior),
   but never fewer. When adding or changing a test in one class, mirror it in the other.
+- Each test method must contain exactly one `executeTestOnDatabase` call and no loops. To cover several scenarios in one test,
+  build a single fixture that contains all of them (e.g. extra tables/indexes) and assert the combined result.
+- Write as little test code as possible: prefer extending an existing test and fixture over adding new ones,
+  and make a fixture cover all relevant objects so assertions don't carry unrelated leftover results.
+- `foreign_keys_without_index`: a partial index covers a foreign key only if its predicate consists solely of `fk_column IS NOT NULL`
+  conditions joined by `AND` (on any subset of the FK columns); any other predicate does not cover it. Invalid indexes never cover it.
 - PostgreSQL extensions can be installed into a specific schema: `create extension if not exists lo schema {schemaName};`. When installed that way, all usages of the extension's types must be schema-qualified (e.g., `{schemaName}.lo`). In tests, use `ctx.enrichWithSchema("lo")` to produce the qualified name from a `PgContext`.
 
 ## Common pitfalls
