@@ -38,7 +38,7 @@ You can add your own database structure checks [as shown in the link](doc/custom
 Using Gradle:
 
 ```kotlin
-implementation("io.github.mfvanek:pg-index-health:0.41.3")
+implementation("io.github.mfvanek:pg-index-health:0.50.0")
 ```
 
 Using Maven:
@@ -47,7 +47,7 @@ Using Maven:
 <dependency>
   <groupId>io.github.mfvanek</groupId>
   <artifactId>pg-index-health</artifactId>
-  <version>0.41.3</version>
+  <version>0.50.0</version>
 </dependency>
 ```
 
@@ -70,7 +70,7 @@ More examples you can find in the [pg-index-health-demo](https://github.com/mfva
 Using Gradle:
 
 ```kotlin
-testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.41.3")
+testImplementation("io.github.mfvanek:pg-index-health-test-starter:0.50.0")
 ```
 
 Using Maven:
@@ -79,7 +79,7 @@ Using Maven:
 <dependency>
     <groupId>io.github.mfvanek</groupId>
     <artifactId>pg-index-health-test-starter</artifactId>
-    <version>0.41.3</version>
+    <version>0.50.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -92,24 +92,14 @@ Add a standard test to your project [as shown in the link](doc/standard_test.md)
 
 | Spring Boot | Minimum JDK | pg-index-health-test-starter |
 |-------------|-------------|------------------------------|
-| 2.7.x       | 11          | 0.8.x — 0.15.x               |
-| 3.3.x       | 17          | 0.20.x                       |
-| 3.4.x       | 17          | 0.30.x — 0.31.x              |
 | 3.5.x       | 17          | 0.40.x — 0.41.x              |
 | 4.0.x       | 17          | 0.50.x                       |
-
-#### Spring Boot 3 compatibility
-
-* Starting from [0.9.0.1](https://github.com/mfvanek/pg-index-health-test-starter/releases/tag/v.0.9.0.1)
-  added support for [Spring Boot 3.0](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#auto-configuration-files)
-* Starting from [0.10.2](https://github.com/mfvanek/pg-index-health-test-starter/releases/tag/v.0.10.2)
-  added support for [Spring Boot 3.2](https://github.com/spring-projects/spring-framework/wiki/Upgrading-to-Spring-Framework-6.x#parameter-name-retention)
 
 #### Spring Boot 4 compatibility
 
 * Starting from [0.30.2](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.30.2)
   added support for [Spring Boot 4.0](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide)
-* Starting from 0.50.0 the starter is built against Spring Boot 4.0 only; Spring Boot 3.x is no longer supported
+* Starting from [0.50.0](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.50.0) the starter is built against Spring Boot 4.0 only; Spring Boot 3.x is no longer supported
 
 ## Supported PostgreSQL versions
 
@@ -121,15 +111,13 @@ Add a standard test to your project [as shown in the link](doc/standard_test.md)
 
 ### Support for previous versions of PostgreSQL
 
-Compatibility with previous PostgreSQL versions is no longer guaranteed, but it is very likely.  
+Compatibility with previous PostgreSQL versions is no longer guaranteed.  
 We focus only on the currently maintained versions of PostgreSQL.  
 For more information please see [PostgreSQL Versioning Policy](https://www.postgresql.org/support/versioning/).
 
 ## Supported Java versions
 
 Supports [Java 17](https://www.java.com/en/) and above.
-
-- For **Java 11** compatible version take a look at release [0.15.0](https://github.com/mfvanek/pg-index-health/releases/tag/v.0.15.0) and lower.
 
 ## Articles and publications
 
