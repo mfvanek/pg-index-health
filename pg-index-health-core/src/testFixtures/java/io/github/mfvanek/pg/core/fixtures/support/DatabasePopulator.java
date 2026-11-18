@@ -26,7 +26,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddInvalidForeignKe
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAccountsAndClientsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddMoneyColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJsonTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateAccountsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedObjectsStatement;
@@ -61,7 +60,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTa
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithSerialAndForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVarcharStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutCommentsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTablesWithCyclicForeignKeysStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTablesWithCyclicAndSelfReferencedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceStatement;
@@ -707,15 +706,6 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures self-referencing foreign keys in a partitioned table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withSelfReferencedForeignKeysInPartitionedTable() {
-        return register(152, new AddSelfReferencedForeignKeysToPartitionedTableStatement());
-    }
-
-    /**
      * Configures a table containing blob type columns.
      *
      * @return this {@code DatabasePopulator} instance
@@ -791,12 +781,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures partitioned tables with cyclic foreign keys.
+     * Configures partitioned tables with cyclic foreign keys and a partitioned table with a self-referencing foreign key.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withCyclicForeignKeysInPartitionedTables() {
-        return register(165, new CreatePartitionedTablesWithCyclicForeignKeysStatement());
+    public DatabasePopulator withCyclicAndSelfReferencedForeignKeysInPartitionedTables() {
+        return register(165, new CreatePartitionedTablesWithCyclicAndSelfReferencedForeignKeysStatement());
     }
 
     /**

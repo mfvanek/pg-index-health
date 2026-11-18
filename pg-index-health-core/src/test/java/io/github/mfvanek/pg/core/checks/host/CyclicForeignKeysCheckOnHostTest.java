@@ -110,7 +110,7 @@ class CyclicForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withCyclicForeignKeysInPartitionedTables, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withCyclicAndSelfReferencedForeignKeysInPartitionedTables, ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
