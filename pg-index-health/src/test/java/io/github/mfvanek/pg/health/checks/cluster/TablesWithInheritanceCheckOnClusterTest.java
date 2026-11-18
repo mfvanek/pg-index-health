@@ -59,10 +59,11 @@ class TablesWithInheritanceCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldIgnorePartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withBloatInPartitionedTable, ctx ->
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withEmptyPartitionedTables, ctx ->
             assertThat(check)
                 .executing(ctx)
+                .as("Partitioned tables and their partitions are not reported as tables with inheritance")
                 .isEmpty());
     }
 }
