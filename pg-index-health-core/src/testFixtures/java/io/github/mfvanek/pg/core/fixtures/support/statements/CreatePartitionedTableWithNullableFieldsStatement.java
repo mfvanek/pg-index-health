@@ -13,7 +13,8 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that creates a partitioned table with nullable fields.
+ * Represents a database statement that creates a partitioned table with nullable fields
+ * and a partitioned table without a primary key whose default partition has a primary key.
  */
 public class CreatePartitionedTableWithNullableFieldsStatement extends AbstractDbStatement {
 
@@ -47,7 +48,17 @@ public class CreatePartitionedTableWithNullableFieldsStatement extends AbstractD
                     partition of {schemaName}.custom_entity_reference_with_very_very_very_long_name default;""",
             """
                 create index if not exists idx_custom_entity_reference_with_very_very_very_long_name_1_d_3
-                    on {schemaName}.custom_entity_reference_with_very_very_very_long_name_1_default (ref_type, ref_value);"""
+                    on {schemaName}.custom_entity_reference_with_very_very_very_long_name_1_default (ref_type, ref_value);""",
+            // Partitioned table without a primary key whose default partition has its own primary key
+            """
+                create table if not exists {schemaName}.pk_only_in_partition(
+                    id bigint not null,
+                    creation_date timestamp with time zone not null
+                ) partition by range (creation_date);""",
+            """
+                create table if not exists {schemaName}.pk_only_in_partition_default
+                    partition of {schemaName}.pk_only_in_partition default;""",
+            "alter table if exists {schemaName}.pk_only_in_partition_default add primary key (id, creation_date);"
         );
     }
 }

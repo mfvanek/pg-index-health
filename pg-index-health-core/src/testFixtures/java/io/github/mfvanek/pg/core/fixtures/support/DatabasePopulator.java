@@ -25,7 +25,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForei
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddInvalidForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAccountsAndClientsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddMoneyColumnStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddPrimaryKeyForDefaultPartitionStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJsonTypeStatement;
@@ -495,17 +494,8 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a partitioned table with nullable fields and indexes and a primary key for its default partition.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withPrimaryKeyForDefaultPartition() {
-        return withNullableIndexesInPartitionedTable()
-            .register(112, new AddPrimaryKeyForDefaultPartitionStatement());
-    }
-
-    /**
-     * Configures a partitioned table with nullable fields and indexes.
+     * Configures a partitioned table with nullable fields and indexes
+     * and a partitioned table without a primary key whose default partition has a primary key.
      *
      * @return this {@code DatabasePopulator} instance
      */

@@ -105,11 +105,11 @@ The build enforces:
 - Test fixtures and Testcontainers setup live in `pg-index-health-testing`.
 - `DatabasePopulator` methods (and the statements they register) for ordinary tables and for partitioned tables MUST be separate:
   never mix ordinary and partitioned tables in one method or statement. Every method/statement that creates or changes partitioned tables
-  or their partitions must have `Partitioned` or `Partition` in its name (e.g. `withDuplicatedAndIntersectedForeignKeysInPartitionedTable`,
-  `withPrimaryKeyForDefaultPartition`); methods without it must touch only ordinary tables.
+  or their partitions must have `Partitioned` or `Partition` in its name (e.g. `withDuplicatedAndIntersectedForeignKeysInPartitionedTable`);
+  methods without it must touch only ordinary tables.
   Regular-table scenarios belong in regular-table tests (e.g. `onDatabaseWithThem`), partitioned ones in `shouldWorkWithPartitionedTables`.
 - When a `DatabasePopulator` method depends on objects created by another method, it MUST call that method inside
-  (e.g. `return withNullableIndexesInPartitionedTable().register(112, ...)`) instead of relying on callers to invoke both.
+  (e.g. `withSerialAndForeignKeysInPartitionedTable()` does `return withDictTable().register(116, ...)`) instead of relying on callers to invoke both.
   Statements are executed sorted by their `register` order number, so the dependent statement must also use a higher number than the one it depends on.
 - Name host-level test classes `*CheckOnHostTest` and cluster-level test classes `*CheckOnClusterTest`.
 - Keep `*CheckOnHostTest` and `*CheckOnClusterTest` for the same check as close as possible: every test in the host class must exist in the cluster class
