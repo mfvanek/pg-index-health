@@ -64,7 +64,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTa
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVarcharStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVeryLongNamesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutCommentsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTablesWithCyclicForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStatement;
@@ -498,21 +497,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a partitioned table without a primary key.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withPartitionedTableWithoutPrimaryKey() {
-        return register(111, new CreatePartitionedTableWithoutPrimaryKeyStatement());
-    }
-
-    /**
      * Configures a primary key for the default partition.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withPrimaryKeyForDefaultPartition() {
-        return register(112, new AddPrimaryKeyForDefaultPartitionStatement());
+        return register(111, new AddPrimaryKeyForDefaultPartitionStatement());
     }
 
     /**
@@ -521,7 +511,7 @@ public final class DatabasePopulator implements AutoCloseable {
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withNullableIndexesInPartitionedTable() {
-        return register(113, new CreatePartitionedTableWithNullableFieldsStatement());
+        return register(112, new CreatePartitionedTableWithNullableFieldsStatement());
     }
 
     /**

@@ -66,7 +66,7 @@ class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTablesAndPartitions(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withPartitionedTableWithoutPrimaryKey(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withNullableIndexesInPartitionedTable(), ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)
@@ -80,7 +80,7 @@ class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTablesWhenOnlyPartitionsHavePrimaryKeys(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withPartitionedTableWithoutPrimaryKey().withPrimaryKeyForDefaultPartition(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withNullableIndexesInPartitionedTable().withPrimaryKeyForDefaultPartition(), ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
