@@ -103,6 +103,10 @@ The build enforces:
 - Test both ordinary tables/indexes and **partitioned** tables where applicable.
 - Test with **quoted identifiers** (e.g., `"MyTable"`).
 - Test fixtures and Testcontainers setup live in `pg-index-health-testing`.
+- `DatabasePopulator` methods (and the statements they register) for ordinary tables and for partitioned tables MUST be separate:
+  never mix ordinary and partitioned tables in one method or statement. Every method/statement that creates or changes partitioned tables
+  must have `Partitioned` in its name (e.g. `withDuplicatedAndIntersectedForeignKeysInPartitionedTable`); methods without it must touch only ordinary tables.
+  Regular-table scenarios belong in regular-table tests (e.g. `onDatabaseWithThem`), partitioned ones in `shouldWorkWithPartitionedTables`.
 - Name host-level test classes `*CheckOnHostTest` and cluster-level test classes `*CheckOnClusterTest`.
 - Keep `*CheckOnHostTest` and `*CheckOnClusterTest` for the same check as close as possible: every test in the host class must exist in the cluster class
   with the same name, in the same order, and with the same fixtures and assertions. The cluster class may contain additional tests (e.g. cluster-only behavior),
