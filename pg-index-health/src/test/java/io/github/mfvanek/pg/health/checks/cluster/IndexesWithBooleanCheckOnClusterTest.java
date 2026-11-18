@@ -67,10 +67,14 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, DatabasePopulator::withSerialAndForeignKeysInPartitionedTable, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
+                .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted", 0L,
+                        Column.ofNotNull(ctx, "t1", "deleted")),
+                    IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted_duplicate", 0L,
+                        Column.ofNotNull(ctx, "t1", "deleted")),
+                    IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted_entity_id", 0L,
                         Column.ofNotNull(ctx, "t1", "deleted"))
                 ));
     }

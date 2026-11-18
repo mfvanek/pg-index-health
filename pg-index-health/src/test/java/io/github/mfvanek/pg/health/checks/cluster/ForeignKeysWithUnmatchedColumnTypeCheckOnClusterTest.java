@@ -61,10 +61,11 @@ class ForeignKeysWithUnmatchedColumnTypeCheckOnClusterTest extends DatabaseAware
         executeTestOnDatabase(schemaName, DatabasePopulator::withSerialAndForeignKeysInPartitionedTable, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
+                .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type")
+                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type"),
+                    ForeignKey.ofNullableColumn(ctx, "t3", "t3_ref_type_fkey", "ref_type")
                 ));
     }
 }

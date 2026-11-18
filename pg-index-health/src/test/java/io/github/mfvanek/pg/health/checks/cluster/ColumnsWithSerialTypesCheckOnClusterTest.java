@@ -127,12 +127,13 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withJsonAndSerialColumnsInPartitionedTable, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
+                .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
+                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "attachment", "id"), "attachment_id_seq"),
                     ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "parent", "real_client_id"), "parent_real_client_id_seq")
                 ));
     }
