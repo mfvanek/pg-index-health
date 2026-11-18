@@ -19,10 +19,9 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnProcedu
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedAndIntersectedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddInvalidForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAccountsAndClientsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddMoneyColumnStatement;
@@ -502,7 +501,7 @@ public final class DatabasePopulator implements AutoCloseable {
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withPrimaryKeyForDefaultPartition() {
-        return register(111, new AddPrimaryKeyForDefaultPartitionStatement());
+        return register(112, new AddPrimaryKeyForDefaultPartitionStatement());
     }
 
     /**
@@ -511,7 +510,7 @@ public final class DatabasePopulator implements AutoCloseable {
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withNullableIndexesInPartitionedTable() {
-        return register(112, new CreatePartitionedTableWithNullableFieldsStatement());
+        return register(111, new CreatePartitionedTableWithNullableFieldsStatement());
     }
 
     /**
@@ -534,23 +533,13 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures duplicated foreign keys on a partitioned table.
+     * Configures duplicated and intersected foreign keys on a partitioned table.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withDuplicatedForeignKeysInPartitionedTable() {
+    public DatabasePopulator withDuplicatedAndIntersectedForeignKeysInPartitionedTable() {
         return withDictTable()
-            .register(120, new AddDuplicatedForeignKeysToPartitionedTableStatement());
-    }
-
-    /**
-     * Configures intersected foreign keys on a partitioned table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withIntersectedForeignKeysInPartitionedTable() {
-        return withDictTable()
-            .register(121, new AddIntersectedForeignKeysToPartitionedTableStatement());
+            .register(120, new AddDuplicatedAndIntersectedForeignKeysToPartitionedTableStatement());
     }
 
     /**

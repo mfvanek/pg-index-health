@@ -13,14 +13,14 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that adds intersected foreign keys to a partitioned table.
+ * Represents a database statement that adds duplicated and intersected foreign keys to a partitioned table.
  */
-public class AddIntersectedForeignKeysToPartitionedTableStatement extends AbstractDbStatement {
+public class AddDuplicatedAndIntersectedForeignKeysToPartitionedTableStatement extends AbstractDbStatement {
 
     /**
-     * Constructs a new instance of {@code AddIntersectedForeignKeysToPartitionedTableStatement}.
+     * Constructs a new instance of {@code AddDuplicatedAndIntersectedForeignKeysToPartitionedTableStatement}.
      */
-    public AddIntersectedForeignKeysToPartitionedTableStatement() {
+    public AddDuplicatedAndIntersectedForeignKeysToPartitionedTableStatement() {
     }
 
     /**
@@ -29,6 +29,10 @@ public class AddIntersectedForeignKeysToPartitionedTableStatement extends Abstra
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
+            """
+                alter table if exists {schemaName}.t1
+                    add constraint t1_ref_type_fk_duplicate
+                    foreign key (ref_type) references {schemaName}.dict(ref_type);""",
             """
                 alter table if exists {schemaName}.t1
                     add constraint t1_ref_type_ref_value_fk
