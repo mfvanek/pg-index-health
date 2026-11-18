@@ -81,9 +81,11 @@ class ColumnsWithFixedLengthVarcharCheckTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx ->
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
-                .hasSize(5)
+                .hasSize(7)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
+                    ColumnWithType.ofVarchar(Column.ofNullable(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_1234567", "ref_type")),
+                    ColumnWithType.ofVarchar(Column.ofNullable(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_1234567", "ref_value")),
                     ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "parent", "entity_id")),
                     ColumnWithType.ofVarchar(Column.ofNullable(ctx, "parent", "ref_type")),
                     ColumnWithType.ofVarchar(Column.ofNullable(ctx, "parent", "ref_value")),

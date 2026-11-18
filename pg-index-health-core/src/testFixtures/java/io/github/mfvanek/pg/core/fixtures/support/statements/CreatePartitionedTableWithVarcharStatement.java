@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Represents a database statement that creates partitioned tables with varchar, char, money, timestamp,
- * blob, enum, JSON, serial and incrementing columns.
+ * blob, enum, JSON, serial and incrementing columns, and a partitioned table with very long names.
  */
 public class CreatePartitionedTableWithVarcharStatement extends AbstractDbStatement {
 
@@ -98,7 +98,19 @@ public class CreatePartitionedTableWithVarcharStatement extends AbstractDbStatem
             """
                 create table if not exists {schemaName}.events_2024
                     partition of {schemaName}.events
-                        for values from ('2024-01-01') to ('2025-01-01');"""
+                        for values from ('2024-01-01') to ('2025-01-01');""",
+            """
+                create table if not exists {schemaName}.entity_long_1234567890_1234567890_1234567890_1234567890_1234567(
+                    ref_type varchar(32),
+                    ref_value varchar(64),
+                    entity_id bigserial primary key
+                ) partition by range (entity_id);""",
+            """
+                create index if not exists idx_entity_long_1234567890_1234567890_1234567890_1234567890_123
+                    on {schemaName}.entity_long_1234567890_1234567890_1234567890_1234567890_1234567 (ref_type, ref_value);""",
+            """
+                create table if not exists {schemaName}.entity_default_long_1234567890_1234567890_1234567890_1234567890
+                    partition of {schemaName}.entity_long_1234567890_1234567890_1234567890_1234567890_1234567 default;"""
         );
     }
 }

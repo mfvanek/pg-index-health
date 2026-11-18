@@ -79,7 +79,7 @@ class TablesWithoutPrimaryKeyCheckOnClusterTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTablesWhenOnlyPartitionsHavePrimaryKeys(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withNullableIndexesInPartitionedTable().withPrimaryKeyForDefaultPartition(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withPrimaryKeyForDefaultPartition(), ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)

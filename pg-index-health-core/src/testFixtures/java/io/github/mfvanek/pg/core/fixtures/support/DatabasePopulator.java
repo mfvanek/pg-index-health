@@ -61,7 +61,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTa
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNullableFieldsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithSerialAndForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVarcharStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVeryLongNamesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutCommentsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTablesWithCyclicForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateProceduresStatement;
@@ -496,12 +495,13 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a primary key for the default partition.
+     * Configures a partitioned table with nullable fields and indexes and a primary key for its default partition.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withPrimaryKeyForDefaultPartition() {
-        return register(112, new AddPrimaryKeyForDefaultPartitionStatement());
+        return withNullableIndexesInPartitionedTable()
+            .register(112, new AddPrimaryKeyForDefaultPartitionStatement());
     }
 
     /**
@@ -511,15 +511,6 @@ public final class DatabasePopulator implements AutoCloseable {
      */
     public DatabasePopulator withNullableIndexesInPartitionedTable() {
         return register(111, new CreatePartitionedTableWithNullableFieldsStatement());
-    }
-
-    /**
-     * Configures a partitioned table with very long names.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withVeryLongNamesInPartitionedTable() {
-        return register(114, new CreatePartitionedTableWithVeryLongNamesStatement());
     }
 
     /**
@@ -561,7 +552,8 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures partitioned tables with varchar, char, money, timestamp, blob, enum, json, serial and incrementing columns.
+     * Configures partitioned tables with varchar, char, money, timestamp, blob, enum, json, serial and incrementing columns,
+     * and a partitioned table with very long names.
      *
      * @return this {@code DatabasePopulator} instance
      */

@@ -77,7 +77,7 @@ class PrimaryKeysWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withVeryLongNamesInPartitionedTable, ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx -> {
             final String tableName = "entity_long_1234567890_1234567890_1234567890_1234567890_1234567";
             final String sequenceName = "entity_long_1234567890_1234567890_1234567890_1234_entity_id_seq";
             assertThat(check)
