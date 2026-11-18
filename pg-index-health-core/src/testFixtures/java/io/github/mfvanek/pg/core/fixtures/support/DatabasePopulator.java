@@ -48,7 +48,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithUnne
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArrayColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDifferentOpclassStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIsNullPartialIndexForForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateLayeredPartitionedTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullAndNotDeletedPartialIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullPartialIndexesForForeignKeysStatement;
@@ -729,21 +728,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures an empty partitioned table without data.
+     * Configures empty partitioned tables (including two-level ones) and a two-level partitioned table with data.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withEmptyPartitionedTable() {
+    public DatabasePopulator withEmptyPartitionedTables() {
         return register(149, new CreatePartitionedTableWithNoDataStatement());
-    }
-
-    /**
-     * Configures layered partitioned tables.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withLayeredPartitionedTables() {
-        return register(150, new CreateLayeredPartitionedTablesStatement());
     }
 
     /**

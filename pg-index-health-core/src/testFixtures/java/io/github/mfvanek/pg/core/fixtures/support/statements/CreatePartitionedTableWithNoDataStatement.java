@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that creates a partitioned table with no data.
+ * Represents a database statement that creates partitioned tables (including two-level ones) with and without data.
  */
 public class CreatePartitionedTableWithNoDataStatement extends AbstractDbStatement {
 
@@ -39,7 +39,42 @@ public class CreatePartitionedTableWithNoDataStatement extends AbstractDbStateme
                     partition of {schemaName}.partitioned_table_with_no_data for values from (1) to (100);""",
             """
                 create table if not exists {schemaName}.partitioned_table_with_no_data_p2
-                    partition of {schemaName}.partitioned_table_with_no_data for values from (100) to (200);"""
+                    partition of {schemaName}.partitioned_table_with_no_data for values from (100) to (200);""",
+            // Two-level empty partitioned table: all leaf partitions have no data — should be detected
+            """
+                create table if not exists {schemaName}.two_level_partitioned_empty(
+                    id     bigint,
+                    region text,
+                    val    text
+                ) partition by range (id);""",
+            """
+                create table if not exists {schemaName}.two_level_partitioned_empty_p1
+                    partition of {schemaName}.two_level_partitioned_empty
+                    for values from (1) to (1000) partition by list (region);""",
+            """
+                create table if not exists {schemaName}.two_level_partitioned_empty_p1_us
+                    partition of {schemaName}.two_level_partitioned_empty_p1 for values in ('us');""",
+            """
+                create table if not exists {schemaName}.two_level_partitioned_empty_p1_eu
+                    partition of {schemaName}.two_level_partitioned_empty_p1 for values in ('eu');""",
+            // Two-level partitioned table with data in a leaf partition — should NOT be detected
+            """
+                create table if not exists {schemaName}.two_level_partitioned_with_data(
+                    id     bigint,
+                    region text,
+                    val    text
+                ) partition by range (id);""",
+            """
+                create table if not exists {schemaName}.two_level_partitioned_with_data_p1
+                    partition of {schemaName}.two_level_partitioned_with_data
+                    for values from (1) to (1000) partition by list (region);""",
+            """
+                create table if not exists {schemaName}.two_level_partitioned_with_data_p1_us
+                    partition of {schemaName}.two_level_partitioned_with_data_p1 for values in ('us');""",
+            """
+                create table if not exists {schemaName}.two_level_partitioned_with_data_p1_eu
+                    partition of {schemaName}.two_level_partitioned_with_data_p1 for values in ('eu');""",
+            "insert into {schemaName}.two_level_partitioned_with_data (id, region, val) values (50, 'us', 'hello');"
         );
     }
 }
