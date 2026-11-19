@@ -78,7 +78,15 @@ public class CreatePartitionedTableWithSerialAndForeignKeysStatement extends Abs
                 create table if not exists {schemaName}.referencing_bad_table_default
                     partition of {schemaName}.referencing_bad_table_partitioned default;""",
             "insert into {schemaName}.referencing_bad_table_partitioned (rbt_id, rbt_value) values (20, '20');",
-            "insert into {schemaName}.referencing_bad_table_partitioned (rbt_id, rbt_value) values (30, null);"
+            "insert into {schemaName}.referencing_bad_table_partitioned (rbt_id, rbt_value) values (30, null);",
+            """
+                alter table if exists {schemaName}.t1
+                    add constraint t1_ref_type_fk_duplicate
+                    foreign key (ref_type) references {schemaName}.dict(ref_type);""",
+            """
+                alter table if exists {schemaName}.t1
+                    add constraint t1_ref_type_ref_value_fk
+                    foreign key (ref_type, ref_value) references {schemaName}.dict(ref_type, ref_value);"""
         );
     }
 }

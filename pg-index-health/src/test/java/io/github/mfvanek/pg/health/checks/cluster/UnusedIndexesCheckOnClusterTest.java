@@ -73,9 +73,9 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(6)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes", "indexScans")
                 .containsExactly(
-                    UnusedIndex.of(ctx, "accounts", "i_accounts_id_account_number_not_deleted"),
                     UnusedIndex.of(ctx, "accounts", "i_accounts_account_number"),
                     UnusedIndex.of(ctx, "accounts", "i_accounts_account_number_not_deleted"),
+                    UnusedIndex.of(ctx, "accounts", "i_accounts_id_account_number_not_deleted"),
                     UnusedIndex.of(ctx, "accounts", "i_accounts_number_balance_not_deleted"),
                     UnusedIndex.of(ctx, "clients", "i_clients_last_first"),
                     UnusedIndex.of(ctx, "clients", "i_clients_last_name"))
@@ -103,8 +103,8 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes", "indexScans")
                 .containsExactly(
-                    UnusedIndex.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "custom_entity_reference_with_very_very_v_ref_type_ref_value_idx"),
                     UnusedIndex.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "custom_entity_reference_with_very_very__entity_id_ref_value_idx"),
+                    UnusedIndex.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "custom_entity_reference_with_very_very_v_ref_type_ref_value_idx"),
                     UnusedIndex.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "idx_custom_entity_reference_with_very_very_very_long_name_1_d_3"))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L)
                 .allMatch(i -> i.getIndexScans() == 0);

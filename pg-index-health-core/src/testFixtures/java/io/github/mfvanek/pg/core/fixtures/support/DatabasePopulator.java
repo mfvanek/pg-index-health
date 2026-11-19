@@ -18,7 +18,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnFunctio
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedAndIntersectedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddInvalidForeignKeyStatement;
@@ -501,23 +500,13 @@ public final class DatabasePopulator implements AutoCloseable {
 
     /**
      * Configures partitioned tables with serial and foreign key constraints,
-     * including a composite foreign key with null values.
+     * including a composite foreign key with null values and duplicated and intersected foreign keys.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withSerialAndForeignKeysInPartitionedTable() {
         return withDictTable()
             .register(116, new CreatePartitionedTableWithSerialAndForeignKeysStatement());
-    }
-
-    /**
-     * Configures duplicated and intersected foreign keys on a partitioned table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withDuplicatedAndIntersectedForeignKeysInPartitionedTable() {
-        return withDictTable()
-            .register(120, new AddDuplicatedAndIntersectedForeignKeysToPartitionedTableStatement());
     }
 
     /**
