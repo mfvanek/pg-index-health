@@ -62,14 +62,14 @@ class IndexesWithUnnecessaryWhereClauseCheckOnClusterTest extends DatabaseAwareT
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withUnnecessaryWhereClauseInPartitionedIndex, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "one_partitioned", "\"idx_second_ref_first-ref\"", List.of(
-                        Column.ofNotNull(ctx, "one_partitioned", "second_ref"), Column.ofNotNull(ctx, "one_partitioned", "\"first-ref\"")))
+                    IndexWithColumns.ofColumns(ctx, "deliveries", "\"idx_deliveries_status-id\"", List.of(
+                        Column.ofNotNull(ctx, "deliveries", "status"), Column.ofNotNull(ctx, "deliveries", "id")))
                 ));
     }
 }

@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.core.fixtures.support;
 
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddArrayColumnAndIndexToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnTablesStatement;
@@ -19,18 +18,12 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnFunctio
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddInvalidForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAccountsAndClientsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddMoneyColumnStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddNotValidConstraintToPartitionedTableStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddPrimaryKeyForDefaultPartitionStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJsonTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateAccountsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedObjectsStatement;
@@ -38,7 +31,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedPar
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateClientsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateCustomCollationStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDictTableStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedCustomCollationIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedHashIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedIndexStatement;
@@ -51,31 +43,20 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithUnne
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArrayColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDifferentOpclassStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIsNullPartialIndexForForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateLayeredPartitionedTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullAndNotDeletedPartialIndexForForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullPartialIndexForForeignKeyInPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullPartialIndexesForForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexForForeignKeyInPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexWithNotNullSubsetForCompositeForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithBlobTypeColumnStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithDroppedColumnStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithEnumColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithInconsistentTypesStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithIncrementingColumnsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithJsonAndSerialColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNoDataStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNullableFieldsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithSerialAndForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVarcharStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVeryLongNamesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutCommentsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutPrimaryKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTablesWithCyclicForeignKeysStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTablesWithCyclicAndSelfReferencedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceStatement;
@@ -508,114 +489,24 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a partitioned table without a primary key.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withPartitionedTableWithoutPrimaryKey() {
-        return register(111, new CreatePartitionedTableWithoutPrimaryKeyStatement());
-    }
-
-    /**
-     * Configures a primary key for the default partition.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withPrimaryKeyForDefaultPartition() {
-        return register(112, new AddPrimaryKeyForDefaultPartitionStatement());
-    }
-
-    /**
-     * Configures a partitioned table with nullable fields and indexes.
+     * Configures a partitioned table with nullable fields and indexes
+     * and a partitioned table without a primary key whose default partition has a primary key.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withNullableIndexesInPartitionedTable() {
-        return register(113, new CreatePartitionedTableWithNullableFieldsStatement());
+        return register(111, new CreatePartitionedTableWithNullableFieldsStatement());
     }
 
     /**
-     * Configures a partitioned table with very long names.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withVeryLongNamesInPartitionedTable() {
-        return register(114, new CreatePartitionedTableWithVeryLongNamesStatement());
-    }
-
-    /**
-     * Configures a partitioned table with JSON and serial columns.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withJsonAndSerialColumnsInPartitionedTable() {
-        return register(115, new CreatePartitionedTableWithJsonAndSerialColumnsStatement());
-    }
-
-    /**
-     * Configures a partitioned table with serial and foreign key constraints.
+     * Configures partitioned tables with serial and foreign key constraints,
+     * including a composite foreign key with null values and duplicated and intersected foreign keys.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withSerialAndForeignKeysInPartitionedTable() {
         return withDictTable()
             .register(116, new CreatePartitionedTableWithSerialAndForeignKeysStatement());
-    }
-
-    /**
-     * Configures duplicated and intersected indexes on a partitioned table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withDuplicatedAndIntersectedIndexesInPartitionedTable() {
-        return register(117, new CreateDuplicatedAndIntersectedIndexesInPartitionedTableStatement());
-    }
-
-    /**
-     * Configures invalid constraints on a partitioned table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withNotValidConstraintInPartitionedTable() {
-        return register(118, new AddNotValidConstraintToPartitionedTableStatement());
-    }
-
-    /**
-     * Configures an array column with a B-tree index on a partitioned table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withBtreeIndexOnArrayColumnInPartitionedTable() {
-        return register(119, new AddArrayColumnAndIndexToPartitionedTableStatement());
-    }
-
-    /**
-     * Configures duplicated foreign keys on a partitioned table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withDuplicatedForeignKeysInPartitionedTable() {
-        return withDictTable()
-            .register(120, new AddDuplicatedForeignKeysToPartitionedTableStatement());
-    }
-
-    /**
-     * Configures intersected foreign keys on a partitioned table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withIntersectedForeignKeysInPartitionedTable() {
-        return withDictTable()
-            .register(121, new AddIntersectedForeignKeysToPartitionedTableStatement());
-    }
-
-    /**
-     * Configures a partitioned table with a dropped column.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withDroppedColumnInPartitionedTable() {
-        return register(122, new CreatePartitionedTableWithDroppedColumnStatement());
     }
 
     /**
@@ -628,21 +519,14 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a partitioned table with varchar columns.
+     * Configures partitioned tables with varchar, char, money, timestamp, blob, enum, json, serial and incrementing columns,
+     * a partitioned table with very long names, a partitioned table with a dropped column
+     * and a partitioned index with an unnecessary WHERE clause.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withVarcharInPartitionedTable() {
         return register(124, new CreatePartitionedTableWithVarcharStatement());
-    }
-
-    /**
-     * Configures a partitioned index with an unnecessary WHERE clause.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withUnnecessaryWhereClauseInPartitionedIndex() {
-        return register(125, new CreatePartitionedIndexWithUnnecessaryWhereClauseStatement());
     }
 
     /**
@@ -764,31 +648,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a composite foreign key with null values in a partitioned table.
+     * Configures empty partitioned tables (including two-level ones) and a two-level partitioned table with data.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withCompositeForeignKeyInPartitionedTable() {
-        return withDictTable()
-            .register(148, new AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement());
-    }
-
-    /**
-     * Configures an empty partitioned table without data.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withEmptyPartitionedTable() {
+    public DatabasePopulator withEmptyPartitionedTables() {
         return register(149, new CreatePartitionedTableWithNoDataStatement());
-    }
-
-    /**
-     * Configures layered partitioned tables.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withLayeredPartitionedTables() {
-        return register(150, new CreateLayeredPartitionedTablesStatement());
     }
 
     /**
@@ -801,15 +666,6 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures self-referencing foreign keys in a partitioned table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withSelfReferencedForeignKeysInPartitionedTable() {
-        return register(152, new AddSelfReferencedForeignKeysToPartitionedTableStatement());
-    }
-
-    /**
      * Configures a table containing blob type columns.
      *
      * @return this {@code DatabasePopulator} instance
@@ -819,30 +675,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a partitioned table containing a blob type column.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withBlobTypeColumnInPartitionedTable() {
-        return register(154, new CreatePartitionedTableWithBlobTypeColumnStatement());
-    }
-
-    /**
      * Configures a table with a {@code bigint} identity primary key.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withIncrementingColumns() {
         return register(155, new CreateTableWithIncrementingColumnsStatement());
-    }
-
-    /**
-     * Configures a date-partitioned table with a plain {@code bigint} ID.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withIncrementingColumnsInPartitionedTable() {
-        return register(156, new CreatePartitionedTableWithIncrementingColumnsStatement());
     }
 
     /**
@@ -885,31 +723,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a partial index for a foreign key in a partitioned table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withPartialIndexForForeignKeyInPartitionedTable() {
-        return withSerialAndForeignKeysInPartitionedTable()
-            .register(161, new CreatePartialIndexForForeignKeyInPartitionedTableStatement());
-    }
-
-    /**
      * Configures tables containing enum columns.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withEnumColumns() {
         return register(162, new CreateTablesWithEnumColumnsStatement());
-    }
-
-    /**
-     * Configures a partitioned table containing an enum column.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withEnumColumnInPartitionedTable() {
-        return register(163, new CreatePartitionedTableWithEnumColumnStatement());
     }
 
     /**
@@ -922,12 +741,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures partitioned tables with cyclic foreign keys.
+     * Configures partitioned tables with cyclic foreign keys and a partitioned table with a self-referencing foreign key.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withCyclicForeignKeysInPartitionedTables() {
-        return register(165, new CreatePartitionedTablesWithCyclicForeignKeysStatement());
+    public DatabasePopulator withCyclicAndSelfReferencedForeignKeysInPartitionedTables() {
+        return register(165, new CreatePartitionedTablesWithCyclicAndSelfReferencedForeignKeysStatement());
     }
 
     /**
@@ -949,16 +768,6 @@ public final class DatabasePopulator implements AutoCloseable {
     public DatabasePopulator withNotNullSubsetPartialIndexForCompositeForeignKey() {
         return withCompositeForeignKey()
             .register(168, new CreatePartialIndexWithNotNullSubsetForCompositeForeignKeyStatement());
-    }
-
-    /**
-     * Configures a partitioned table with a foreign key covered by a partial index with a predicate {@code fk_column is not null}.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withNotNullPartialIndexForForeignKeyInPartitionedTable() {
-        return withDictTable()
-            .register(169, new CreateNotNullPartialIndexForForeignKeyInPartitionedTableStatement());
     }
 
     /**

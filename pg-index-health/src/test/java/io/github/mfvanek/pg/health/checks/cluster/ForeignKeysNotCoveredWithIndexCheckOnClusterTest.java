@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
@@ -147,13 +148,24 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withPartialIndexForForeignKeyInPartitionedTable().withNotNullPartialIndexForForeignKeyInPartitionedTable(), ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialAndForeignKeysInPartitionedTable, ctx -> {
+            final String tableName = "referencing_bad_table_partitioned";
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
+                .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type")
-                ));
+                    ForeignKey.of(ctx, tableName, "\"referencing_bad_table_partitioned-fk\"", List.of(
+                        Column.ofNotNull(ctx, tableName, "rbt_id"),
+                        Column.ofNullable(ctx, tableName, "rbt_value")
+                    )),
+                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
+                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type"),
+                    ForeignKey.of(ctx, "t1", "t1_ref_type_ref_value_fk", List.of(
+                        Column.ofNotNull(ctx, "t1", "ref_type"),
+                        Column.ofNotNull(ctx, "t1", "ref_value")
+                    ))
+                );
+        });
     }
 }

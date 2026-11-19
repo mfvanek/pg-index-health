@@ -13,7 +13,8 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that creates a partitioned table with varchar columns.
+ * Represents a database statement that creates partitioned tables with varchar, char, money, timestamp,
+ * blob, enum, JSON, serial and incrementing columns, and a partitioned table with very long names.
  */
 public class CreatePartitionedTableWithVarcharStatement extends AbstractDbStatement {
 
@@ -56,7 +57,73 @@ public class CreatePartitionedTableWithVarcharStatement extends AbstractDbStatem
                 ) partition by range (creation_date);""",
             """
                 create table if not exists {schemaName}."tp_good-default"
-                    partition of {schemaName}.tp_good default;"""
+                    partition of {schemaName}.tp_good default;""",
+            """
+                create table if not exists {schemaName}.attachment (
+                    id bigserial not null,
+                    created_at date not null,
+                    file_data oid
+                ) partition by range (created_at);""",
+            """
+                create table if not exists {schemaName}.attachment_2024
+                    partition of {schemaName}.attachment for values from ('2024-01-01') to ('2025-01-01');""",
+            "create type {schemaName}.delivery_status as enum ('new', 'delivered');",
+            """
+                create table if not exists {schemaName}.deliveries (
+                    id bigint not null,
+                    created_at timestamptz not null,
+                    status {schemaName}.delivery_status not null,
+                    primary key (id, created_at)
+                ) partition by range (created_at);""",
+            "create table if not exists {schemaName}.deliveries_default partition of {schemaName}.deliveries default;",
+            """
+                create table if not exists {schemaName}.parent(
+                    ref_type varchar(32),
+                    ref_value varchar(64),
+                    creation_date timestamp with time zone not null,
+                    entity_id varchar(64) not null,
+                    real_client_id bigserial,
+                    raw_data json
+                ) partition by range (creation_date);""",
+            """
+                create table if not exists {schemaName}.partition_default
+                    partition of {schemaName}.parent default;""",
+            """
+                create table if not exists {schemaName}.events (
+                    id         bigint not null,
+                    event_date date   not null,
+                    tag1       text,
+                    tag2       text
+                ) partition by range (event_date);""",
+            """
+                create table if not exists {schemaName}.events_2024
+                    partition of {schemaName}.events
+                        for values from ('2024-01-01') to ('2025-01-01');""",
+            """
+                create table if not exists {schemaName}.entity_long_1234567890_1234567890_1234567890_1234567890_1234567(
+                    ref_type varchar(32),
+                    ref_value varchar(64),
+                    entity_id bigserial primary key
+                ) partition by range (entity_id);""",
+            """
+                create index if not exists idx_entity_long_1234567890_1234567890_1234567890_1234567890_123
+                    on {schemaName}.entity_long_1234567890_1234567890_1234567890_1234567890_1234567 (ref_type, ref_value);""",
+            """
+                create table if not exists {schemaName}.entity_default_long_1234567890_1234567890_1234567890_1234567890
+                    partition of {schemaName}.entity_long_1234567890_1234567890_1234567890_1234567890_1234567 default;""",
+            """
+                create table if not exists {schemaName}.tp_dropped_column(
+                    ref_type bigint not null,
+                    entity_id varchar(64) not null
+                ) partition by range (ref_type);""",
+            "alter table if exists {schemaName}.tp_dropped_column drop column entity_id;",
+            """
+                create table if not exists {schemaName}.tp_dropped_column_default
+                    partition of {schemaName}.tp_dropped_column default;""",
+            """
+                create index if not exists "idx_deliveries_status-id"
+                    on {schemaName}.deliveries (status, id)
+                    where id is not null;"""
         );
     }
 }

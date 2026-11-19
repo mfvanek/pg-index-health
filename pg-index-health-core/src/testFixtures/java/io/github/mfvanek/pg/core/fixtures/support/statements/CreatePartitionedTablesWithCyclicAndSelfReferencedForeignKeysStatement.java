@@ -13,14 +13,15 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that creates partitioned tables with cyclic foreign keys.
+ * Represents a database statement that creates partitioned tables with cyclic foreign keys
+ * and a partitioned table with a self-referencing foreign key.
  */
-public class CreatePartitionedTablesWithCyclicForeignKeysStatement extends AbstractDbStatement {
+public class CreatePartitionedTablesWithCyclicAndSelfReferencedForeignKeysStatement extends AbstractDbStatement {
 
     /**
-     * Constructs a new instance of {@code CreatePartitionedTablesWithCyclicForeignKeysStatement}.
+     * Constructs a new instance of {@code CreatePartitionedTablesWithCyclicAndSelfReferencedForeignKeysStatement}.
      */
-    public CreatePartitionedTablesWithCyclicForeignKeysStatement() {
+    public CreatePartitionedTablesWithCyclicAndSelfReferencedForeignKeysStatement() {
     }
 
     /**
@@ -81,7 +82,23 @@ public class CreatePartitionedTablesWithCyclicForeignKeysStatement extends Abstr
                 );""",
             """
                 alter table if exists {schemaName}.cfk_part_t_1
-                    add constraint cfk_part_t_1_u_fk foreign key (u_id) references {schemaName}.cfk_part_u (id);"""
+                    add constraint cfk_part_t_1_u_fk foreign key (u_id) references {schemaName}.cfk_part_u (id);""",
+            // Partitioned table with a self-referencing foreign key
+            """
+                create table if not exists {schemaName}.bad_self_ref_partitioned (
+                    id bigint not null,
+                    parent_id bigint,
+                    name text not null,
+                    primary key (id),
+                    constraint bad_self_ref_partitioned_parent_id_fk
+                        foreign key (parent_id) references {schemaName}.bad_self_ref_partitioned (id)
+                ) partition by hash (id);""",
+            """
+                create table if not exists {schemaName}.bad_self_ref_partitioned_0
+                    partition of {schemaName}.bad_self_ref_partitioned for values with (modulus 2, remainder 0);""",
+            """
+                create table if not exists {schemaName}.bad_self_ref_partitioned_1
+                    partition of {schemaName}.bad_self_ref_partitioned for values with (modulus 2, remainder 1);"""
         );
     }
 }

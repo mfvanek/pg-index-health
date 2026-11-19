@@ -62,29 +62,16 @@ class TablesWithNoDataCheckOnClusterTest extends StatisticsAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withData().withEmptyPartitionedTable(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withData().withEmptyPartitionedTables(), ctx -> {
             collectStatistics(schemaName);
 
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
+                .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
-                .containsExactly(Table.of(ctx, "partitioned_table_with_no_data"))
-                .allMatch(t -> t.getTableSizeInBytes() >= 0L);
-        });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldWorkWithLayeredPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withData().withLayeredPartitionedTables(), ctx -> {
-            collectStatistics(schemaName);
-
-            assertThat(check)
-                .executing(ctx)
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("tableSizeInBytes")
-                .containsExactly(Table.of(ctx, "two_level_partitioned_empty"))
+                .containsExactly(
+                    Table.of(ctx, "partitioned_table_with_no_data"),
+                    Table.of(ctx, "two_level_partitioned_empty"))
                 .allMatch(t -> t.getTableSizeInBytes() >= 0L);
         });
     }

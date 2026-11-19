@@ -65,7 +65,7 @@ class PossibleObjectNameOverflowCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withVeryLongNamesInPartitionedTable, ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx -> {
             final AnyObject[] baseExpected = {
                 AnyObject.ofType(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_12_pkey", PgObjectType.CONSTRAINT),
                 AnyObject.ofType(ctx, "entity_default_long_1234567890_1234567890_1234567890_12345_pkey", PgObjectType.INDEX),
