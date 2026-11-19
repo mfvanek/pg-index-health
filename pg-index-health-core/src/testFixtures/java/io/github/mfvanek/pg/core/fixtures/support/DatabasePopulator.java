@@ -52,7 +52,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexF
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexWithNotNullSubsetForCompositeForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithDroppedColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithInconsistentTypesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNoDataStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNullableFieldsStatement;
@@ -523,15 +522,6 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a partitioned table with a dropped column.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withDroppedColumnInPartitionedTable() {
-        return register(122, new CreatePartitionedTableWithDroppedColumnStatement());
-    }
-
-    /**
      * Configures a badly named partitioned table.
      *
      * @return this {@code DatabasePopulator} instance
@@ -542,7 +532,7 @@ public final class DatabasePopulator implements AutoCloseable {
 
     /**
      * Configures partitioned tables with varchar, char, money, timestamp, blob, enum, json, serial and incrementing columns,
-     * and a partitioned table with very long names.
+     * a partitioned table with very long names and a partitioned table with a dropped column.
      *
      * @return this {@code DatabasePopulator} instance
      */
