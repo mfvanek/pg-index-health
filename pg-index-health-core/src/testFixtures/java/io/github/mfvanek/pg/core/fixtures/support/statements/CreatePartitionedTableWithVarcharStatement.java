@@ -119,7 +119,11 @@ public class CreatePartitionedTableWithVarcharStatement extends AbstractDbStatem
             "alter table if exists {schemaName}.tp_dropped_column drop column entity_id;",
             """
                 create table if not exists {schemaName}.tp_dropped_column_default
-                    partition of {schemaName}.tp_dropped_column default;"""
+                    partition of {schemaName}.tp_dropped_column default;""",
+            """
+                create index if not exists "idx_deliveries_status-id"
+                    on {schemaName}.deliveries (status, id)
+                    where id is not null;"""
         );
     }
 }

@@ -50,7 +50,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullPartia
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexWithNotNullSubsetForCompositeForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithInconsistentTypesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNoDataStatement;
@@ -532,21 +531,13 @@ public final class DatabasePopulator implements AutoCloseable {
 
     /**
      * Configures partitioned tables with varchar, char, money, timestamp, blob, enum, json, serial and incrementing columns,
-     * a partitioned table with very long names and a partitioned table with a dropped column.
+     * a partitioned table with very long names, a partitioned table with a dropped column
+     * and a partitioned index with an unnecessary WHERE clause.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withVarcharInPartitionedTable() {
         return register(124, new CreatePartitionedTableWithVarcharStatement());
-    }
-
-    /**
-     * Configures a partitioned index with an unnecessary WHERE clause.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withUnnecessaryWhereClauseInPartitionedIndex() {
-        return register(125, new CreatePartitionedIndexWithUnnecessaryWhereClauseStatement());
     }
 
     /**
