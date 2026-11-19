@@ -65,7 +65,20 @@ public class CreatePartitionedTableWithSerialAndForeignKeysStatement extends Abs
                     creation_date timestamp with time zone not null
                 ) partition by range (creation_date);""",
             "create index if not exists idx_t3_ref_type_not_null on {schemaName}.t3 (ref_type) where ref_type is not null;",
-            "create table if not exists {schemaName}.t3_default partition of {schemaName}.t3 default;"
+            "create table if not exists {schemaName}.t3_default partition of {schemaName}.t3 default;",
+            """
+                create table if not exists {schemaName}.referencing_bad_table_partitioned(
+                    rbt_id integer not null,
+                    rbt_value text, /* nullable */
+                    created_at timestamptz not null default current_timestamp,
+                    constraint "referencing_bad_table_partitioned-fk" foreign key (rbt_id, rbt_value)
+                        references {schemaName}.dict (ref_type, ref_value)
+                ) partition by range (created_at);""",
+            """
+                create table if not exists {schemaName}.referencing_bad_table_default
+                    partition of {schemaName}.referencing_bad_table_partitioned default;""",
+            "insert into {schemaName}.referencing_bad_table_partitioned (rbt_id, rbt_value) values (20, '20');",
+            "insert into {schemaName}.referencing_bad_table_partitioned (rbt_id, rbt_value) values (30, null);"
         );
     }
 }

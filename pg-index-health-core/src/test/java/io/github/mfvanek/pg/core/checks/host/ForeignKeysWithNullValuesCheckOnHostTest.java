@@ -68,7 +68,7 @@ class ForeignKeysWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withCompositeForeignKeyInPartitionedTable, ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialAndForeignKeysInPartitionedTable, ctx -> {
             final String tableName = "referencing_bad_table_partitioned";
             assertThat(check)
                 .executing(ctx)

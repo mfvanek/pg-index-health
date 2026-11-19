@@ -149,13 +149,19 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldWorkWithPartitionedTables(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialAndForeignKeysInPartitionedTable, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialAndForeignKeysInPartitionedTable, ctx -> {
+            final String tableName = "referencing_bad_table_partitioned";
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
+                .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
+                    ForeignKey.of(ctx, tableName, "\"referencing_bad_table_partitioned-fk\"", List.of(
+                        Column.ofNotNull(ctx, tableName, "rbt_id"),
+                        Column.ofNullable(ctx, tableName, "rbt_value")
+                    )),
                     ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type")
-                ));
+                );
+        });
     }
 }

@@ -18,7 +18,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnFunctio
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedAndIntersectedForeignKeysToPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysStatement;
@@ -503,7 +502,8 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a partitioned table with serial and foreign key constraints.
+     * Configures partitioned tables with serial and foreign key constraints,
+     * including a composite foreign key with null values.
      *
      * @return this {@code DatabasePopulator} instance
      */
@@ -675,16 +675,6 @@ public final class DatabasePopulator implements AutoCloseable {
     public DatabasePopulator withCompositeForeignKey() {
         return withDictTable()
             .register(147, new AddCompositeForeignKeyWithNullValuesStatement());
-    }
-
-    /**
-     * Configures a composite foreign key with null values in a partitioned table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withCompositeForeignKeyInPartitionedTable() {
-        return withDictTable()
-            .register(148, new AddCompositeForeignKeyWithNullValuesToPartitionedTableStatement());
     }
 
     /**
