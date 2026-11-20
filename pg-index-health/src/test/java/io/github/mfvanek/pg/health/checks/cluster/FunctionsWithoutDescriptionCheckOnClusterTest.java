@@ -19,7 +19,6 @@ import io.github.mfvanek.pg.model.function.StoredFunction;
 import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -56,7 +55,6 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
         });
     }
 
-    @DisabledIf("isProceduresNotSupported")
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThemForProcedures(final String schemaName) {
@@ -67,10 +65,8 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    StoredFunction.of(functionName,
-                        isOutParametersInProcedureSupported() ? "IN a integer, IN b integer" : "a integer, b integer"),
-                    StoredFunction.of(functionName,
-                        isOutParametersInProcedureSupported() ? "IN a integer, IN b integer, IN c integer" : "a integer, b integer, c integer"));
+                    StoredFunction.of(functionName, "IN a integer, IN b integer"),
+                    StoredFunction.of(functionName, "IN a integer, IN b integer, IN c integer"));
 
             assertThat(check)
                 .executing(ctx, SkipDbObjectsByNamePredicate.ofName(functionName))
@@ -102,7 +98,6 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
         );
     }
 
-    @DisabledIf("isProceduresNotSupported")
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldTakingIntoAccountNonBlankCommentsForProcedures(final String schemaName) {

@@ -143,22 +143,6 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
      * {@inheritDoc}
      */
     @Override
-    public boolean isProceduresSupported() {
-        return pgVersion.isProceduresSupported();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isOutParametersInProcedureSupported() {
-        return pgVersion.isOutParametersInProcedureSupported();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String getMountVolume() {
         return pgVersion.getMountVolume();
     }

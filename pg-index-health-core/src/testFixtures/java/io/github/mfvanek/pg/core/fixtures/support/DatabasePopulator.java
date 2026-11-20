@@ -94,16 +94,13 @@ public final class DatabasePopulator implements AutoCloseable {
     private final String schemaName;
     private final Map<Integer, Runnable> actionsToExecuteOutsideTransaction = new TreeMap<>();
     private final Map<Integer, DbStatement> statementsToExecuteInSameTransaction = new TreeMap<>();
-    private final boolean supportsProcedures;
     private final boolean supportsUnloggedSequences;
 
     private DatabasePopulator(final DataSource dataSource,
                               final String schemaName,
-                              final boolean supportsProcedures,
                               final boolean supportsUnloggedSequences) {
         this.dataSource = Objects.requireNonNull(dataSource);
         this.schemaName = Validators.notBlank(schemaName, "schemaName");
-        this.supportsProcedures = supportsProcedures;
         this.supportsUnloggedSequences = supportsUnloggedSequences;
         register(1, new CreateSchemaStatement());
         register(2, new CreateClientsTableStatement());
@@ -112,9 +109,8 @@ public final class DatabasePopulator implements AutoCloseable {
 
     static DatabasePopulator builder(final DataSource dataSource,
                                      final String schemaName,
-                                     final boolean supportsProcedures,
                                      final boolean supportsUnloggedSequences) {
-        return new DatabasePopulator(dataSource, schemaName, supportsProcedures, supportsUnloggedSequences);
+        return new DatabasePopulator(dataSource, schemaName, supportsUnloggedSequences);
     }
 
     /**
@@ -320,10 +316,7 @@ public final class DatabasePopulator implements AutoCloseable {
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withProcedures() {
-        if (supportsProcedures) {
-            return register(91, new CreateProceduresStatement());
-        }
-        return this;
+        return register(91, new CreateProceduresStatement());
     }
 
     /**
@@ -350,10 +343,7 @@ public final class DatabasePopulator implements AutoCloseable {
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withCommentOnProcedures() {
-        if (supportsProcedures) {
-            return register(94, new AddCommentOnProceduresStatement());
-        }
-        return this;
+        return register(94, new AddCommentOnProceduresStatement());
     }
 
     /**

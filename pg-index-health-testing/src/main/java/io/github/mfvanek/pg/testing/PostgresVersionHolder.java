@@ -54,22 +54,6 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
      * {@inheritDoc}
      */
     @Override
-    public boolean isProceduresSupported() {
-        return getMajorVersion() >= 11;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isOutParametersInProcedureSupported() {
-        return isProceduresSupported() && getMajorVersion() >= 14;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String getMountVolume() {
         final int majorVersion = getMajorVersion();
         if (majorVersion >= 18) {

@@ -27,22 +27,6 @@ public interface PostgresVersionAware {
     boolean isCumulativeStatisticsSystemSupported();
 
     /**
-     * Checks whether <a href="https://www.postgresql.org/docs/current/sql-createprocedure.html">CREATE PROCEDURE</a> command is supported for given PostgreSQL container.
-     *
-     * @return true for version 11 and higher
-     * @since 0.7.0
-     */
-    boolean isProceduresSupported();
-
-    /**
-     * Checks whether <a href="https://www.postgresql.org/docs/current/sql-createprocedure.html">CREATE PROCEDURE</a> command supports OUT parameters.
-     *
-     * @return true for version 14 and higher
-     * @since 0.7.0
-     */
-    boolean isOutParametersInProcedureSupported();
-
-    /**
      * Retrieves the mount volume for the PostgreSQL container.
      *
      * @return the mount volume path as a string
@@ -63,8 +47,8 @@ public interface PostgresVersionAware {
      * Unlogged sequences were introduced in PostgreSQL 15.
      *
      * @return true for version 15 and higher
-     * @since 0.41.2
      * @see <a href="https://www.postgresql.org/docs/15/sql-createsequence.html">CREATE SEQUENCE</a>
+     * @since 0.41.2
      */
     boolean isUnloggedSequencesSupported();
 }
