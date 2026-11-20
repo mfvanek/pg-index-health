@@ -20,7 +20,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForei
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddInvalidForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAccountsAndClientsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddMoneyColumnStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJsonTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateAccountsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedObjectsStatement;
@@ -60,7 +59,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithInhe
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithNaturalKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithTimestampInTheMiddleStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithoutPrimaryKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithCyclicForeignKeysStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithCyclicAndSelfReferencedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithEnumColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithInconsistentTypesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithSerialColumnsStatement;
@@ -539,15 +538,6 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures self-referencing foreign keys.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withSelfReferencedForeignKeys() {
-        return register(151, new AddSelfReferencedForeignKeysStatement());
-    }
-
-    /**
      * Configures a table containing blob type columns.
      *
      * @return this {@code DatabasePopulator} instance
@@ -614,12 +604,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures tables with cyclic foreign keys.
+     * Configures tables with cyclic foreign keys and tables with self-referencing foreign keys.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withCyclicForeignKeys() {
-        return register(164, new CreateTablesWithCyclicForeignKeysStatement());
+    public DatabasePopulator withCyclicAndSelfReferencedForeignKeys() {
+        return register(164, new CreateTablesWithCyclicAndSelfReferencedForeignKeysStatement());
     }
 
     /**

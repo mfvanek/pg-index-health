@@ -13,17 +13,17 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that creates tables with cyclic foreign keys.
+ * Represents a database statement that creates tables with cyclic foreign keys and tables with self-referenced foreign keys.
  * <p>
  * Table names are chosen so that their order does not depend on the collation of the database.
  * </p>
  */
-public class CreateTablesWithCyclicForeignKeysStatement extends AbstractDbStatement {
+public class CreateTablesWithCyclicAndSelfReferencedForeignKeysStatement extends AbstractDbStatement {
 
     /**
-     * Constructs a new instance of {@code CreateTablesWithCyclicForeignKeysStatement}.
+     * Constructs a new instance of {@code CreateTablesWithCyclicAndSelfReferencedForeignKeysStatement}.
      */
-    public CreateTablesWithCyclicForeignKeysStatement() {
+    public CreateTablesWithCyclicAndSelfReferencedForeignKeysStatement() {
     }
 
     /**
@@ -137,7 +137,34 @@ public class CreateTablesWithCyclicForeignKeysStatement extends AbstractDbStatem
                 );""",
             """
                 alter table if exists {schemaName}."Cfk-A-First"
-                    add constraint "Cfk-A-First-Fk" foreign key ("Second-Id") references {schemaName}."Cfk-A-Second" (id);"""
+                    add constraint "Cfk-A-First-Fk" foreign key ("Second-Id") references {schemaName}."Cfk-A-Second" (id);""",
+            // Self-referenced foreign keys: without ON DELETE rule, with ON DELETE RESTRICT and with ON DELETE CASCADE
+            """
+                create table if not exists {schemaName}.bad_self_ref_table (
+                    id bigint generated always as identity primary key,
+                    parent_id bigint,
+                    name text not null,
+                    constraint bad_self_ref_table_parent_id_fk
+                        foreign key (parent_id) references {schemaName}.bad_self_ref_table (id)
+                );""",
+            """
+                create table if not exists {schemaName}.bad_self_ref_restrict_table (
+                    id bigint generated always as identity primary key,
+                    parent_id bigint,
+                    name text not null,
+                    constraint bad_self_ref_restrict_table_parent_id_fk
+                        foreign key (parent_id) references {schemaName}.bad_self_ref_restrict_table (id)
+                        on delete restrict
+                );""",
+            """
+                create table if not exists {schemaName}.good_self_ref_table (
+                    id bigint generated always as identity primary key,
+                    parent_id bigint,
+                    name text not null,
+                    constraint good_self_ref_table_parent_id_fk
+                        foreign key (parent_id) references {schemaName}.good_self_ref_table (id)
+                        on delete cascade
+                );"""
         );
     }
 }
