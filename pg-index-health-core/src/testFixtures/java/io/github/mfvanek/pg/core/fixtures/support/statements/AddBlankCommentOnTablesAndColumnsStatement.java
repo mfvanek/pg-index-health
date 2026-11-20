@@ -13,14 +13,14 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that adds blank comments on tables.
+ * Represents a database statement that adds blank comments on tables and their columns.
  */
-public class AddBlankCommentOnTablesStatement extends AbstractDbStatement {
+public class AddBlankCommentOnTablesAndColumnsStatement extends AbstractDbStatement {
 
     /**
-     * Constructs a new instance of {@code AddBlankCommentOnTablesStatement}.
+     * Constructs a new instance of {@code AddBlankCommentOnTablesAndColumnsStatement}.
      */
-    public AddBlankCommentOnTablesStatement() {
+    public AddBlankCommentOnTablesAndColumnsStatement() {
     }
 
     /**
@@ -30,7 +30,9 @@ public class AddBlankCommentOnTablesStatement extends AbstractDbStatement {
     protected List<String> getSqlToExecute() {
         return List.of(
             "comment on table {schemaName}.clients is '   ';",
-            "comment on table {schemaName}.accounts is '';"
+            "comment on table {schemaName}.accounts is '';",
+            "comment on column {schemaName}.clients.id is '';",
+            "comment on column {schemaName}.accounts.id is '   ';"
         );
     }
 }

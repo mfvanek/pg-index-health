@@ -67,7 +67,7 @@ class StandardChecksOnClusterTest extends DatabaseAwareTestBase {
             .map(Diagnostic::getName)
             .collect(Collectors.toUnmodifiableSet());
         for (final String schemaName : SCHEMAS) {
-            executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(), ctx -> {
+            executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnTablesAndColumns(), ctx -> {
                 for (final DatabaseCheckOnCluster<? extends @NonNull DbObject> check : checksFactory.apply(getHaPgConnection())) {
                     if (!exclusions.contains(check.getName())) {
                         assertThat(check.check(ctx))

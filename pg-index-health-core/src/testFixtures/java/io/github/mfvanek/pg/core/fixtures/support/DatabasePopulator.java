@@ -10,13 +10,11 @@
 
 package io.github.mfvanek.pg.core.fixtures.support;
 
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnFunctionsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnTablesStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnColumnsStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnTablesAndColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnProceduresStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesAndColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysStatement;
@@ -225,39 +223,21 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Adds comments on database tables.
+     * Adds comments on database tables and their columns.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withCommentOnTables() {
-        return register(64, new AddCommentOnTablesStatement());
+    public DatabasePopulator withCommentOnTablesAndColumns() {
+        return register(64, new AddCommentOnTablesAndColumnsStatement());
     }
 
     /**
-     * Adds blank comments on database tables.
+     * Adds blank comments on database tables and their columns.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withBlankCommentOnTables() {
-        return register(65, new AddBlankCommentOnTablesStatement());
-    }
-
-    /**
-     * Adds comments on table columns.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withCommentOnColumns() {
-        return register(66, new AddCommentOnColumnsStatement());
-    }
-
-    /**
-     * Adds blank comments on table columns.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withBlankCommentOnColumns() {
-        return register(67, new AddBlankCommentOnColumnsStatement());
+    public DatabasePopulator withBlankCommentOnTablesAndColumns() {
+        return register(65, new AddBlankCommentOnTablesAndColumnsStatement());
     }
 
     /**

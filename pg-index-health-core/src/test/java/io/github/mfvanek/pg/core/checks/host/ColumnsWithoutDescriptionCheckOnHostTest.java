@@ -78,7 +78,7 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldNotTakingIntoAccountBlankComments(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnColumns(), ctx ->
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBlankCommentOnTablesAndColumns(), ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(15)
