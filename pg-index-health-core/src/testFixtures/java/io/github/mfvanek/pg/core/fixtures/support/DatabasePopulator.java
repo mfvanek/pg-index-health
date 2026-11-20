@@ -52,20 +52,18 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStateme
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWhereAllColumnsNullableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithBlobTypeColumnsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithFixedLengthVarcharStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIdentityPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIncrementingColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithInheritanceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithNaturalKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithTimestampInTheMiddleStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithUniqueSerialColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithoutPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithCyclicForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithEnumColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithInconsistentTypesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithSerialColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedSequenceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.DbStatement;
@@ -271,32 +269,13 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a table with check constraint on serial primary key.
+     * Configures tables with serial columns: a serial primary key with check constraints,
+     * a serial column with a unique constraint, and a serial primary key that also references other tables.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withCheckConstraintOnSerialPrimaryKey() {
-        return register(80, new CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement());
-    }
-
-    /**
-     * Configures a table with a unique constraint on serial column.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withUniqueConstraintOnSerialColumn() {
-        return register(81, new CreateTableWithUniqueSerialColumnStatement());
-    }
-
-    /**
-     * Configures a table with serial primary key referencing another table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withSerialPrimaryKeyReferencesToAnotherTable() {
-        return register(82, new CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement())
-            .withCheckConstraintOnSerialPrimaryKey()
-            .withUniqueConstraintOnSerialColumn();
+    public DatabasePopulator withSerialColumns() {
+        return register(80, new CreateTablesWithSerialColumnsStatement());
     }
 
     /**
