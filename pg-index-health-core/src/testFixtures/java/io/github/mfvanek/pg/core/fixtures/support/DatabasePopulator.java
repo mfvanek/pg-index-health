@@ -29,6 +29,7 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateAccountsTable
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedObjectsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateClientsTableStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateCoveringIndexesForForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateCustomCollationStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDictTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedCustomCollationIndexStatement;
@@ -42,13 +43,8 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithNull
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArrayColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDifferentOpclassStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIsNullPartialIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullAndNotDeletedPartialIndexForForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullPartialIndexesForForeignKeysStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexForForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexWithNotNullSubsetForCompositeForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotCoveringIndexesForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithInconsistentTypesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNoDataStatement;
@@ -60,7 +56,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTa
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWhereAllColumnsNullableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithBlobTypeColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement;
@@ -96,7 +91,7 @@ import javax.sql.DataSource;
 /**
  * Builder and populator for setting up database structures and test fixtures in PostgreSQL.
  */
-@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessivePublicCount", "PMD.CyclomaticComplexity"})
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessivePublicCount"})
 public final class DatabasePopulator implements AutoCloseable {
 
     private final DataSource dataSource;
@@ -183,30 +178,13 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a non-suitable index for a foreign key.
+     * Configures a foreign key on {@code accounts.client_id} with several indexes that do not cover it.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withNonSuitableIndex() {
-        return register(43, new CreateNotSuitableIndexForForeignKeyStatement());
-    }
-
-    /**
-     * Configures a suitable index for a foreign key.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withSuitableIndex() {
-        return register(44, new CreateSuitableIndexForForeignKeyStatement());
-    }
-
-    /**
-     * Configures a partial index for a foreign key.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withPartialIndexForForeignKey() {
-        return register(45, new CreatePartialIndexForForeignKeyStatement());
+    public DatabasePopulator withNotCoveringIndexesForForeignKey() {
+        return withReferences()
+            .register(43, new CreateNotCoveringIndexesForForeignKeyStatement());
     }
 
     /**
@@ -750,42 +728,15 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures foreign keys with partial indexes with predicates {@code fk_column is not null} for all of them.
+     * Configures foreign keys (including composite ones) with ordinary and partial indexes covering all of them.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withNotNullPartialIndexesForForeignKeys() {
+    public DatabasePopulator withCoveringIndexesForForeignKeys() {
         return withReferences()
             .withForeignKeyOnNullableColumn()
-            .register(166, new CreateNotNullPartialIndexesForForeignKeysStatement());
-    }
-
-    /**
-     * Configures partial indexes for composite foreign keys with predicates checking only a subset of their columns for not null.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withNotNullSubsetPartialIndexForCompositeForeignKey() {
-        return withCompositeForeignKey()
-            .register(168, new CreatePartialIndexWithNotNullSubsetForCompositeForeignKeyStatement());
-    }
-
-    /**
-     * Configures a partial index for a foreign key with a predicate {@code client_id is not null and not deleted}.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withNotNullAndNotDeletedPartialIndexForForeignKey() {
-        return register(170, new CreateNotNullAndNotDeletedPartialIndexForForeignKeyStatement());
-    }
-
-    /**
-     * Configures a partial index for a foreign key with a predicate {@code client_id is null}.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withIsNullPartialIndexForForeignKey() {
-        return register(171, new CreateIsNullPartialIndexForForeignKeyStatement());
+            .withCompositeForeignKey()
+            .register(166, new CreateCoveringIndexesForForeignKeysStatement());
     }
 
     /**
