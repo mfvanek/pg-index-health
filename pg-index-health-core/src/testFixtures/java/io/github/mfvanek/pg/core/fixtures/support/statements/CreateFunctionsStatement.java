@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that creates stored functions in the database.
+ * Represents a database statement that creates stored functions and procedures in the database.
  */
 public class CreateFunctionsStatement extends AbstractDbStatement {
 
@@ -40,7 +40,22 @@ public class CreateFunctionsStatement extends AbstractDbStatement {
                     as 'select $1 + $2 + $3;'
                     language sql
                     immutable
-                    returns null on null input;"""
+                    returns null on null input;""",
+            """
+                create or replace procedure {schemaName}.insert_data(a integer, b integer)
+                    language sql
+                    as $$
+                      insert into {schemaName}.clients values (a);
+                      insert into {schemaName}.clients values (b);
+                    $$;""",
+            """
+                create or replace procedure {schemaName}.insert_data(a int, b int, c int)
+                    language sql
+                    as $$
+                      insert into {schemaName}.clients values (a);
+                      insert into {schemaName}.clients values (b);
+                      insert into {schemaName}.clients values (c);
+                    $$;"""
         );
     }
 }

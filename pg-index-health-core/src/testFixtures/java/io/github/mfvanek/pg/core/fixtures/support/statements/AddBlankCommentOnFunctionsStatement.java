@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that adds blank comments on stored functions.
+ * Represents a database statement that adds blank comments on stored functions and procedures.
  */
 public class AddBlankCommentOnFunctionsStatement extends AbstractDbStatement {
 
@@ -30,7 +30,9 @@ public class AddBlankCommentOnFunctionsStatement extends AbstractDbStatement {
     protected List<String> getSqlToExecute() {
         return List.of(
             "comment on function {schemaName}.add(a integer, b integer) is '   ';",
-            "comment on function {schemaName}.add(a int, b int, c int) is '';"
+            "comment on function {schemaName}.add(a int, b int, c int) is '';",
+            "comment on procedure {schemaName}.insert_data(a integer, b integer) is '';",
+            "comment on procedure {schemaName}.insert_data(a int, b int, c int) is '   ';"
         );
     }
 }

@@ -13,7 +13,6 @@ package io.github.mfvanek.pg.core.fixtures.support;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnFunctionsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnTablesAndColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnFunctionsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesAndColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysStatement;
@@ -49,7 +48,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTa
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVarcharStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutCommentsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTablesWithCyclicAndSelfReferencedForeignKeysStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWhereAllColumnsNullableStatement;
@@ -302,7 +300,7 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures database functions.
+     * Configures database functions and procedures.
      *
      * @return this {@code DatabasePopulator} instance
      */
@@ -311,39 +309,23 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures database stored procedures if supported.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withProcedures() {
-        return register(91, new CreateProceduresStatement());
-    }
-
-    /**
-     * Adds blank comments on database functions.
+     * Configures database functions and procedures with blank comments on them.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withBlankCommentOnFunctions() {
-        return register(92, new AddBlankCommentOnFunctionsStatement());
+        return withFunctions()
+            .register(92, new AddBlankCommentOnFunctionsStatement());
     }
 
     /**
-     * Adds comments on database functions.
+     * Configures database functions and procedures with comments on them.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withCommentOnFunctions() {
-        return register(93, new AddCommentOnFunctionsStatement());
-    }
-
-    /**
-     * Adds comments on database stored procedures if supported.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withCommentOnProcedures() {
-        return register(94, new AddCommentOnProceduresStatement());
+        return withFunctions()
+            .register(93, new AddCommentOnFunctionsStatement());
     }
 
     /**

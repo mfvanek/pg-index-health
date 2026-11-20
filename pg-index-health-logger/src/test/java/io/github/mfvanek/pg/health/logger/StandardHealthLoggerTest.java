@@ -107,7 +107,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "columns_without_description:70",
                         "columns_with_json_type:1",
                         "columns_with_serial_types:3",
-                        "functions_without_description:4",
+                        "functions_without_description:6",
                         "indexes_with_boolean:1",
                         "not_valid_constraints:3",
                         "btree_indexes_on_array_columns:2",
