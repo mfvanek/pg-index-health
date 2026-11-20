@@ -91,30 +91,8 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldIgnoreCheckConstraintsOnSerialPrimaryKey(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withCheckConstraintOnSerialPrimaryKey, ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .isEmpty());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldDetectSerialColumnsWithUniqueConstraints(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withUniqueConstraintOnSerialColumn, ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparator()
-                .containsExactly(
-                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "one_more_table", "id"), "one_more_table_id_seq")
-                ));
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldDetectPrimaryKeysThatAreForeignKeysAsWell(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialPrimaryKeyReferencesToAnotherTable, ctx ->
+    void shouldIgnorePrimaryKeysAndDetectUniqueOrForeignKeySerialColumns(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withSerialColumns, ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(3)

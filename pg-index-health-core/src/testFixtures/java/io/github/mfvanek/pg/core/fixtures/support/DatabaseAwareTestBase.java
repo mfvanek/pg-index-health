@@ -91,38 +91,11 @@ public abstract class DatabaseAwareTestBase {
     protected void executeTestOnDatabase(final String schemaName,
                                          final DatabaseConfigurer databaseConfigurer,
                                          final Consumer<PgContext> testExecutor) {
-        try (DatabasePopulator databasePopulator = DatabasePopulator.builder(getDataSource(), schemaName, isProceduresSupported(), isUnloggedSequencesSupported())) {
+        try (DatabasePopulator databasePopulator = DatabasePopulator.builder(getDataSource(), schemaName, isUnloggedSequencesSupported())) {
             databaseConfigurer.configure(databasePopulator)
                 .populate();
             testExecutor.accept(PgContext.of(schemaName, 0));
         }
-    }
-
-    /**
-     * Checks if stored procedures are supported by the PostgreSQL server version.
-     *
-     * @return {@code true} if stored procedures are supported, {@code false} otherwise
-     */
-    protected static boolean isProceduresSupported() {
-        return POSTGRES.isProceduresSupported();
-    }
-
-    /**
-     * Checks if stored procedures are not supported by the PostgreSQL server version.
-     *
-     * @return {@code true} if stored procedures are not supported, {@code false} otherwise
-     */
-    protected static boolean isProceduresNotSupported() {
-        return !isProceduresSupported();
-    }
-
-    /**
-     * Checks if OUT parameters in procedures are supported by the PostgreSQL server version.
-     *
-     * @return {@code true} if OUT parameters are supported, {@code false} otherwise
-     */
-    protected static boolean isOutParametersInProcedureSupported() {
-        return POSTGRES.isOutParametersInProcedureSupported();
     }
 
     /**

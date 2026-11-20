@@ -42,18 +42,19 @@ class SelfReferencedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withSelfReferencedForeignKeys, ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withCyclicAndSelfReferencedForeignKeys, ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(2)
+                .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ForeignKey.ofNullableColumn(ctx, "bad_self_ref_restrict_table", "bad_self_ref_restrict_table_parent_id_fk", "parent_id"),
-                    ForeignKey.ofNullableColumn(ctx, "bad_self_ref_table", "bad_self_ref_table_parent_id_fk", "parent_id")
+                    ForeignKey.ofNullableColumn(ctx, "bad_self_ref_table", "bad_self_ref_table_parent_id_fk", "parent_id"),
+                    ForeignKey.ofNullableColumn(ctx, "cfk_node_b", "cfk_node_b_parent_fk", "parent_id")
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("bad_self_ref_table", "bad_self_ref_restrict_table")))
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("bad_self_ref_table", "bad_self_ref_restrict_table", "cfk_node_b")))
                 .isEmpty();
         });
     }

@@ -38,7 +38,7 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
     @ValueSource(strings = PgContext.DEFAULT_SCHEMA_NAME)
     void securityTest(final String schemaName) {
         try (LogsCaptor ignored = new LogsCaptor(QueryExecutors.class, Level.FINEST)) {
-            executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx -> {
+            executeTestOnDatabase(schemaName, dbp -> dbp.withBooleanAndNullValuesInIndexes().withData(), ctx -> {
                 final long before = getRowsCount(ctx.getSchemaName(), "clients");
                 assertThat(before).isEqualTo(1001L);
                 assertThat(check.check(PgContext.of("; truncate table clients;")))

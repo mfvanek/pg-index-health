@@ -39,7 +39,7 @@ class TablesWherePrimaryKeyColumnsNotFirstCheckOnHostTest extends DatabaseAwareT
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withNaturalKeys, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withNaturalKeysAndTimestampInTheMiddle, ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(2)

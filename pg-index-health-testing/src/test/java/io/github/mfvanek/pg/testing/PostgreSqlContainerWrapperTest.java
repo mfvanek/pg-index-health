@@ -58,10 +58,6 @@ class PostgreSqlContainerWrapperTest {
                         .isNotBlank();
                     assertThat(c.getPassword())
                         .isNotBlank();
-                    assertThat(c.isProceduresSupported())
-                        .isTrue();
-                    assertThat(c.isOutParametersInProcedureSupported())
-                        .isTrue();
                     assertThat(c.isCumulativeStatisticsSystemSupported())
                         .isTrue();
                     assertThat(c.getMountVolume())
@@ -91,10 +87,6 @@ class PostgreSqlContainerWrapperTest {
                         .isNotBlank();
                     assertThat(c.getPassword())
                         .isNotBlank();
-                    assertThat(c.isProceduresSupported())
-                        .isTrue();
-                    assertThat(c.isOutParametersInProcedureSupported())
-                        .isTrue();
                     assertThat(c.isCumulativeStatisticsSystemSupported())
                         .isTrue();
                     assertThat(c.getMountVolume())

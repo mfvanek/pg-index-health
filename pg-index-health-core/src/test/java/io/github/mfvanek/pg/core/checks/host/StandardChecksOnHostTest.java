@@ -67,7 +67,7 @@ class StandardChecksOnHostTest extends DatabaseAwareTestBase {
             .map(Diagnostic::getName)
             .collect(Collectors.toUnmodifiableSet());
         for (final String schemaName : SCHEMAS) {
-            executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnColumns().withCommentOnTables(), ctx -> {
+            executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withCommentOnTablesAndColumns(), ctx -> {
                 for (final DatabaseCheckOnHost<? extends @NonNull DbObject> check : checksFactory.apply(getPgConnection())) {
                     if (!exclusions.contains(check.getName())) {
                         assertThat(check.check(ctx))

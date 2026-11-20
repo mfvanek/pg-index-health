@@ -19,9 +19,10 @@ import io.github.mfvanek.pg.model.function.StoredFunction;
 import io.github.mfvanek.pg.model.predicates.SkipDbObjectsByNamePredicate;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
@@ -41,39 +42,19 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withFunctions, ctx -> {
-            final String functionName = ctx.enrichWithSchema("add");
             assertThat(check)
                 .executing(ctx)
-                .hasSize(2)
+                .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    StoredFunction.of(functionName, "a integer, b integer"),
-                    StoredFunction.of(functionName, "a integer, b integer, c integer"));
+                    StoredFunction.of(ctx, "add", "a integer, b integer"),
+                    StoredFunction.of(ctx, "add", "a integer, b integer, c integer"),
+                    StoredFunction.of(ctx, "insert_data", "IN a integer, IN b integer"),
+                    StoredFunction.of(ctx, "insert_data", "IN a integer, IN b integer, IN c integer")
+                );
 
             assertThat(check)
-                .executing(ctx, SkipDbObjectsByNamePredicate.ofName(functionName))
-                .isEmpty();
-        });
-    }
-
-    @DisabledIf("isProceduresNotSupported")
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithThemForProcedures(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withProcedures, ctx -> {
-            final String functionName = ctx.enrichWithSchema("insert_data");
-            assertThat(check)
-                .executing(ctx)
-                .hasSize(2)
-                .usingRecursiveFieldByFieldElementComparator()
-                .containsExactly(
-                    StoredFunction.of(functionName,
-                        isOutParametersInProcedureSupported() ? "IN a integer, IN b integer" : "a integer, b integer"),
-                    StoredFunction.of(functionName,
-                        isOutParametersInProcedureSupported() ? "IN a integer, IN b integer, IN c integer" : "a integer, b integer, c integer"));
-
-            assertThat(check)
-                .executing(ctx, SkipDbObjectsByNamePredicate.ofName(functionName))
+                .executing(ctx, SkipDbObjectsByNamePredicate.of(ctx, List.of("add", "insert_data")))
                 .isEmpty();
         });
     }
@@ -81,32 +62,23 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldNotTakingIntoAccountBlankComments(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withFunctions().withBlankCommentOnFunctions(), ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withBlankCommentOnFunctions, ctx ->
             assertThat(check)
                 .executing(ctx)
-                .hasSize(2)
+                .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     StoredFunction.of(ctx, "add", "a integer, b integer"),
-                    StoredFunction.of(ctx, "add", "a integer, b integer, c integer")
+                    StoredFunction.of(ctx, "add", "a integer, b integer, c integer"),
+                    StoredFunction.of(ctx, "insert_data", "IN a integer, IN b integer"),
+                    StoredFunction.of(ctx, "insert_data", "IN a integer, IN b integer, IN c integer")
                 ));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldTakingIntoAccountNonBlankComments(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withFunctions().withCommentOnFunctions(), ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .isEmpty()
-        );
-    }
-
-    @DisabledIf("isProceduresNotSupported")
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void shouldTakingIntoAccountNonBlankCommentsForProcedures(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withProcedures().withCommentOnProcedures(), ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withCommentOnFunctions, ctx ->
             assertThat(check)
                 .executing(ctx)
                 .isEmpty()

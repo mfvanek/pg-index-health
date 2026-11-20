@@ -13,14 +13,14 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that adds comments on table columns.
+ * Represents a database statement that adds comments on tables and their columns.
  */
-public class AddCommentOnColumnsStatement extends AbstractDbStatement {
+public class AddCommentOnTablesAndColumnsStatement extends AbstractDbStatement {
 
     /**
-     * Constructs a new instance of {@code AddCommentOnColumnsStatement}.
+     * Constructs a new instance of {@code AddCommentOnTablesAndColumnsStatement}.
      */
-    public AddCommentOnColumnsStatement() {
+    public AddCommentOnTablesAndColumnsStatement() {
     }
 
     /**
@@ -29,6 +29,8 @@ public class AddCommentOnColumnsStatement extends AbstractDbStatement {
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
+            "comment on table {schemaName}.clients is 'Customer Information';",
+            "comment on table {schemaName}.accounts is 'Information about customer accounts';",
             "comment on column {schemaName}.clients.id is 'Unique record ID';",
             "comment on column {schemaName}.clients.last_name is 'Customer''s last name';",
             "comment on column {schemaName}.clients.first_name is 'Customer''s given name';",

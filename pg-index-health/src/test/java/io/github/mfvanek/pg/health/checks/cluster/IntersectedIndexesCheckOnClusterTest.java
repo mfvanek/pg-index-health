@@ -72,7 +72,7 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldFindHashIndex(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedHashIndex(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withNotDuplicatedIndexes().withData(), ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
@@ -80,7 +80,7 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .containsExactly(
                     DuplicatedIndexes.of(
                         Index.of(ctx, "clients", "i_clients_last_first"),
-                        Index.of(ctx, "clients", "i_clients_last_name")))
+                        Index.of(ctx, "clients", "i_clients_last_name_hash")))
                 .allMatch(d -> d.getTotalSize() >= 106_496L);
 
             assertThat(check)
@@ -88,18 +88,9 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_last_name"))
+                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_last_name_hash"))
                 .isEmpty();
         });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void withDifferentOpclassShouldReturnNothing(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDifferentOpclassIndexes(), ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .isEmpty());
     }
 
     @ParameterizedTest

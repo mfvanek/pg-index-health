@@ -33,8 +33,6 @@ class PostgresVersionHolderTest {
             .isNotNull()
             .satisfies(v -> {
                 assertThat(v.getVersion()).isEqualTo("9.6.24");
-                assertThat(v.isOutParametersInProcedureSupported()).isFalse();
-                assertThat(v.isProceduresSupported()).isFalse();
                 assertThat(v.isCumulativeStatisticsSystemSupported()).isFalse();
                 assertThat(v.isNotNullConstraintsSupported()).isFalse();
                 assertThat(v.isUnloggedSequencesSupported()).isFalse();
@@ -47,8 +45,6 @@ class PostgresVersionHolderTest {
             .isNotNull()
             .satisfies(v -> {
                 assertThat(v.getVersion()).isEqualTo("15.1");
-                assertThat(v.isOutParametersInProcedureSupported()).isTrue();
-                assertThat(v.isProceduresSupported()).isTrue();
                 assertThat(v.isCumulativeStatisticsSystemSupported()).isTrue();
                 assertThat(v.isNotNullConstraintsSupported()).isFalse();
                 assertThat(v.isUnloggedSequencesSupported()).isTrue();
@@ -61,8 +57,6 @@ class PostgresVersionHolderTest {
             .isNotNull()
             .satisfies(v -> {
                 assertThat(v.getVersion()).isEqualTo("13.4.1");
-                assertThat(v.isOutParametersInProcedureSupported()).isFalse();
-                assertThat(v.isProceduresSupported()).isTrue();
                 assertThat(v.isCumulativeStatisticsSystemSupported()).isFalse();
             });
     }
@@ -73,8 +67,6 @@ class PostgresVersionHolderTest {
             .isNotNull()
             .satisfies(v -> {
                 assertThat(v.getVersion()).isEqualTo("18.0");
-                assertThat(v.isOutParametersInProcedureSupported()).isTrue();
-                assertThat(v.isProceduresSupported()).isTrue();
                 assertThat(v.isCumulativeStatisticsSystemSupported()).isTrue();
                 assertThat(v.isNotNullConstraintsSupported()).isTrue();
             });

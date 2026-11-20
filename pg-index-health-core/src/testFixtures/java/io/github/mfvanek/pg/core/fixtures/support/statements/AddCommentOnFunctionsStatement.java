@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that adds comments on stored functions.
+ * Represents a database statement that adds comments on stored functions and procedures.
  */
 public class AddCommentOnFunctionsStatement extends AbstractDbStatement {
 
@@ -30,7 +30,9 @@ public class AddCommentOnFunctionsStatement extends AbstractDbStatement {
     protected List<String> getSqlToExecute() {
         return List.of(
             "comment on function {schemaName}.add(a integer, b integer) is 'Sums two given arguments';",
-            "comment on function {schemaName}.add(a int, b int, c int) is 'Sums three given arguments';"
+            "comment on function {schemaName}.add(a int, b int, c int) is 'Sums three given arguments';",
+            "comment on procedure {schemaName}.insert_data(a integer, b integer) is 'Inserts two rows into clients';",
+            "comment on procedure {schemaName}.insert_data(a int, b int, c int) is 'Inserts three rows into clients';"
         );
     }
 }

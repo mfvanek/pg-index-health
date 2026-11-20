@@ -10,45 +10,34 @@
 
 package io.github.mfvanek.pg.core.fixtures.support;
 
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnFunctionsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnTablesStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnColumnsStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddBlankCommentOnTablesAndColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnFunctionsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnProceduresStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.AddCommentOnTablesAndColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddCompositeForeignKeyWithNullValuesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddDuplicatedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddIntersectedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddInvalidForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddLinksBetweenAccountsAndClientsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.AddMoneyColumnStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.AddSelfReferencedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.ConvertColumnToJsonTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateAccountsTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedObjectsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateBadlyNamedPartitionedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateClientsTableStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateCoveringIndexesForForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateCustomCollationStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDictTableStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedCustomCollationIndexStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedHashIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateEmptyTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateForeignKeyOnNullableColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateFunctionsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithBooleanValuesStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithNullValuesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArrayColumnStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDifferentOpclassStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIsNullPartialIndexForForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithBooleanAndNullValuesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullAndNotDeletedPartialIndexForForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotNullPartialIndexesForForeignKeysStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotSuitableIndexForForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexForForeignKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartialIndexWithNotNullSubsetForCompositeForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotCoveringIndexesForForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotDuplicatedIndexesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithInconsistentTypesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNoDataStatement;
@@ -57,26 +46,21 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTa
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithVarcharStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithoutCommentsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTablesWithCyclicAndSelfReferencedForeignKeysStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateProceduresStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSchemaStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSequenceStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateSuitableIndexForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWhereAllColumnsNullableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithBlobTypeColumnsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithColumnOfBigSerialTypeStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithFixedLengthVarcharStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIdentityPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIncrementingColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithInheritanceStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithNaturalKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithTimestampInTheMiddleStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithUniqueSerialColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithoutPrimaryKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithCyclicForeignKeysStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithCyclicAndSelfReferencedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithEnumColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithInconsistentTypesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithNaturalKeysAndTimestampInTheMiddleStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithSerialColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedSequenceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.DbStatement;
@@ -96,23 +80,20 @@ import javax.sql.DataSource;
 /**
  * Builder and populator for setting up database structures and test fixtures in PostgreSQL.
  */
-@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessivePublicCount", "PMD.CyclomaticComplexity"})
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessivePublicCount"})
 public final class DatabasePopulator implements AutoCloseable {
 
     private final DataSource dataSource;
     private final String schemaName;
     private final Map<Integer, Runnable> actionsToExecuteOutsideTransaction = new TreeMap<>();
     private final Map<Integer, DbStatement> statementsToExecuteInSameTransaction = new TreeMap<>();
-    private final boolean supportsProcedures;
     private final boolean supportsUnloggedSequences;
 
     private DatabasePopulator(final DataSource dataSource,
                               final String schemaName,
-                              final boolean supportsProcedures,
                               final boolean supportsUnloggedSequences) {
         this.dataSource = Objects.requireNonNull(dataSource);
         this.schemaName = Validators.notBlank(schemaName, "schemaName");
-        this.supportsProcedures = supportsProcedures;
         this.supportsUnloggedSequences = supportsUnloggedSequences;
         register(1, new CreateSchemaStatement());
         register(2, new CreateClientsTableStatement());
@@ -121,18 +102,8 @@ public final class DatabasePopulator implements AutoCloseable {
 
     static DatabasePopulator builder(final DataSource dataSource,
                                      final String schemaName,
-                                     final boolean supportsProcedures,
                                      final boolean supportsUnloggedSequences) {
-        return new DatabasePopulator(dataSource, schemaName, supportsProcedures, supportsUnloggedSequences);
-    }
-
-    /**
-     * Configures the database with a custom collation.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withCustomCollation() {
-        return register(4, new CreateCustomCollationStatement());
+        return new DatabasePopulator(dataSource, schemaName, supportsUnloggedSequences);
     }
 
     /**
@@ -174,39 +145,24 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures duplicated hash indexes.
+     * Configures indexes on the same columns that are not duplicates because they differ
+     * in access method (hash), operator class or collation.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withDuplicatedHashIndex() {
-        return register(41, new CreateDuplicatedHashIndexStatement());
+    public DatabasePopulator withNotDuplicatedIndexes() {
+        return register(4, new CreateCustomCollationStatement())
+            .register(41, new CreateNotDuplicatedIndexesStatement());
     }
 
     /**
-     * Configures a non-suitable index for a foreign key.
+     * Configures a foreign key on {@code accounts.client_id} with several indexes that do not cover it.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withNonSuitableIndex() {
-        return register(43, new CreateNotSuitableIndexForForeignKeyStatement());
-    }
-
-    /**
-     * Configures a suitable index for a foreign key.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withSuitableIndex() {
-        return register(44, new CreateSuitableIndexForForeignKeyStatement());
-    }
-
-    /**
-     * Configures a partial index for a foreign key.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withPartialIndexForForeignKey() {
-        return register(45, new CreatePartialIndexForForeignKeyStatement());
+    public DatabasePopulator withNotCoveringIndexesForForeignKey() {
+        return withReferences()
+            .register(43, new CreateNotCoveringIndexesForForeignKeyStatement());
     }
 
     /**
@@ -219,30 +175,13 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures an index with nullable columns containing null values.
+     * Configures indexes on boolean columns and an index on a nullable column.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withNullValuesInIndex() {
-        return register(48, new CreateIndexWithNullValuesStatement());
-    }
-
-    /**
-     * Configures an index on boolean columns.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withBooleanValuesInIndex() {
-        return register(49, new CreateIndexWithBooleanValuesStatement());
-    }
-
-    /**
-     * Configures indexes using different operator classes.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withDifferentOpclassIndexes() {
-        return register(50, new CreateIndexesWithDifferentOpclassStatement());
+    public DatabasePopulator withBooleanAndNullValuesInIndexes() {
+        return withReferences()
+            .register(48, new CreateIndexesWithBooleanAndNullValuesStatement());
     }
 
     /**
@@ -252,15 +191,6 @@ public final class DatabasePopulator implements AutoCloseable {
      */
     public DatabasePopulator withMaterializedView() {
         return register(55, new CreateMaterializedViewStatement());
-    }
-
-    /**
-     * Configures duplicated indexes with custom collation.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withDuplicatedCustomCollationIndex() {
-        return register(58, new CreateDuplicatedCustomCollationIndexStatement());
     }
 
     /**
@@ -274,39 +204,21 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Adds comments on database tables.
+     * Adds comments on database tables and their columns.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withCommentOnTables() {
-        return register(64, new AddCommentOnTablesStatement());
+    public DatabasePopulator withCommentOnTablesAndColumns() {
+        return register(64, new AddCommentOnTablesAndColumnsStatement());
     }
 
     /**
-     * Adds blank comments on database tables.
+     * Adds blank comments on database tables and their columns.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withBlankCommentOnTables() {
-        return register(65, new AddBlankCommentOnTablesStatement());
-    }
-
-    /**
-     * Adds comments on table columns.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withCommentOnColumns() {
-        return register(66, new AddCommentOnColumnsStatement());
-    }
-
-    /**
-     * Adds blank comments on table columns.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withBlankCommentOnColumns() {
-        return register(67, new AddBlankCommentOnColumnsStatement());
+    public DatabasePopulator withBlankCommentOnTablesAndColumns() {
+        return register(65, new AddBlankCommentOnTablesAndColumnsStatement());
     }
 
     /**
@@ -346,36 +258,17 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a table with check constraint on serial primary key.
+     * Configures tables with serial columns: a serial primary key with check constraints,
+     * a serial column with a unique constraint, and a serial primary key that also references other tables.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withCheckConstraintOnSerialPrimaryKey() {
-        return register(80, new CreateTableWithCheckConstraintOnSerialPrimaryKeyStatement());
+    public DatabasePopulator withSerialColumns() {
+        return register(80, new CreateTablesWithSerialColumnsStatement());
     }
 
     /**
-     * Configures a table with a unique constraint on serial column.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withUniqueConstraintOnSerialColumn() {
-        return register(81, new CreateTableWithUniqueSerialColumnStatement());
-    }
-
-    /**
-     * Configures a table with serial primary key referencing another table.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withSerialPrimaryKeyReferencesToAnotherTable() {
-        return register(82, new CreateTableWithSerialPrimaryKeyReferencesToAnotherTableStatement())
-            .withCheckConstraintOnSerialPrimaryKey()
-            .withUniqueConstraintOnSerialColumn();
-    }
-
-    /**
-     * Configures database functions.
+     * Configures database functions and procedures.
      *
      * @return this {@code DatabasePopulator} instance
      */
@@ -384,45 +277,23 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures database stored procedures if supported.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withProcedures() {
-        if (supportsProcedures) {
-            return register(91, new CreateProceduresStatement());
-        }
-        return this;
-    }
-
-    /**
-     * Adds blank comments on database functions.
+     * Configures database functions and procedures with blank comments on them.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withBlankCommentOnFunctions() {
-        return register(92, new AddBlankCommentOnFunctionsStatement());
+        return withFunctions()
+            .register(92, new AddBlankCommentOnFunctionsStatement());
     }
 
     /**
-     * Adds comments on database functions.
+     * Configures database functions and procedures with comments on them.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withCommentOnFunctions() {
-        return register(93, new AddCommentOnFunctionsStatement());
-    }
-
-    /**
-     * Adds comments on database stored procedures if supported.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withCommentOnProcedures() {
-        if (supportsProcedures) {
-            return register(94, new AddCommentOnProceduresStatement());
-        }
-        return this;
+        return withFunctions()
+            .register(93, new AddCommentOnFunctionsStatement());
     }
 
     /**
@@ -575,12 +446,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a table using natural keys.
+     * Configures tables using natural keys and a table with timestamp columns in the middle of indexes.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withNaturalKeys() {
-        return register(139, new CreateTableWithNaturalKeyStatement());
+    public DatabasePopulator withNaturalKeysAndTimestampInTheMiddle() {
+        return register(139, new CreateTablesWithNaturalKeysAndTimestampInTheMiddleStatement());
     }
 
     /**
@@ -590,15 +461,6 @@ public final class DatabasePopulator implements AutoCloseable {
      */
     public DatabasePopulator withMoneyColumn() {
         return register(140, new AddMoneyColumnStatement());
-    }
-
-    /**
-     * Configures a table with a timestamp column in the middle of columns.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withTimestampInTheMiddle() {
-        return register(141, new CreateTableWithTimestampInTheMiddleStatement());
     }
 
     /**
@@ -654,15 +516,6 @@ public final class DatabasePopulator implements AutoCloseable {
      */
     public DatabasePopulator withEmptyPartitionedTables() {
         return register(149, new CreatePartitionedTableWithNoDataStatement());
-    }
-
-    /**
-     * Configures self-referencing foreign keys.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withSelfReferencedForeignKeys() {
-        return register(151, new AddSelfReferencedForeignKeysStatement());
     }
 
     /**
@@ -732,12 +585,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures tables with cyclic foreign keys.
+     * Configures tables with cyclic foreign keys and tables with self-referencing foreign keys.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withCyclicForeignKeys() {
-        return register(164, new CreateTablesWithCyclicForeignKeysStatement());
+    public DatabasePopulator withCyclicAndSelfReferencedForeignKeys() {
+        return register(164, new CreateTablesWithCyclicAndSelfReferencedForeignKeysStatement());
     }
 
     /**
@@ -750,42 +603,15 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures foreign keys with partial indexes with predicates {@code fk_column is not null} for all of them.
+     * Configures foreign keys (including composite ones) with ordinary and partial indexes covering all of them.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withNotNullPartialIndexesForForeignKeys() {
+    public DatabasePopulator withCoveringIndexesForForeignKeys() {
         return withReferences()
             .withForeignKeyOnNullableColumn()
-            .register(166, new CreateNotNullPartialIndexesForForeignKeysStatement());
-    }
-
-    /**
-     * Configures partial indexes for composite foreign keys with predicates checking only a subset of their columns for not null.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withNotNullSubsetPartialIndexForCompositeForeignKey() {
-        return withCompositeForeignKey()
-            .register(168, new CreatePartialIndexWithNotNullSubsetForCompositeForeignKeyStatement());
-    }
-
-    /**
-     * Configures a partial index for a foreign key with a predicate {@code client_id is not null and not deleted}.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withNotNullAndNotDeletedPartialIndexForForeignKey() {
-        return register(170, new CreateNotNullAndNotDeletedPartialIndexForForeignKeyStatement());
-    }
-
-    /**
-     * Configures a partial index for a foreign key with a predicate {@code client_id is null}.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withIsNullPartialIndexForForeignKey() {
-        return register(171, new CreateIsNullPartialIndexForForeignKeyStatement());
+            .withCompositeForeignKey()
+            .register(166, new CreateCoveringIndexesForForeignKeysStatement());
     }
 
     /**

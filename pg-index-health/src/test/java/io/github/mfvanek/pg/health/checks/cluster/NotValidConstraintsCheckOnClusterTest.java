@@ -44,7 +44,7 @@ class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withNotValidConstraints().withUniqueConstraintOnSerialColumn().withBadlyNamedObjects(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withNotValidConstraints().withSerialColumns().withBadlyNamedObjects(), ctx -> {
             final List<Constraint> notValidConstraints = check.check(ctx);
             Assertions.assertThat(notValidConstraints)
                 .hasSize(3)

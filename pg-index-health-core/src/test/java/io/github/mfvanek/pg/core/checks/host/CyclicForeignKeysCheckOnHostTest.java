@@ -54,7 +54,7 @@ class CyclicForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withCyclicForeignKeys, ctx ->
+        executeTestOnDatabase(schemaName, DatabasePopulator::withCyclicAndSelfReferencedForeignKeys, ctx ->
             assertThat(check)
                 .executing(ctx)
                 .hasSize(7)
@@ -90,7 +90,7 @@ class CyclicForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void shouldExcludeCycleByAnyOfItsTablesOrConstraints(final String schemaName) {
-        executeTestOnDatabase(schemaName, DatabasePopulator::withCyclicForeignKeys, ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withCyclicAndSelfReferencedForeignKeys, ctx -> {
             // A cycle should be excluded by any of its tables, not only by the first one
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "cfk_ring_b"))

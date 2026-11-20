@@ -42,18 +42,19 @@ class TablesWithZeroOrOneColumnCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withCheckConstraintOnSerialPrimaryKey().withEmptyTable(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withSerialColumns().withEmptyTable(), ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(2)
+                .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("table.tableSizeInBytes")
                 .containsExactly(
                     TableWithColumns.ofNotNullColumn(ctx, "another_table", "id"),
-                    TableWithColumns.withoutColumns(ctx, "empty")
+                    TableWithColumns.withoutColumns(ctx, "empty"),
+                    TableWithColumns.ofNotNullColumn(ctx, "one_more_table", "id")
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("another_table", "empty")))
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("another_table", "empty", "one_more_table")))
                 .isEmpty();
         });
     }

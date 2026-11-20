@@ -35,11 +35,10 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
     private static final DatabaseConfigurer CONFIGURER = dbp -> dbp.withReferences()
         .withData()
         .withInvalidIndex()
-        .withNullValuesInIndex()
-        .withBooleanValuesInIndex()
+        .withBooleanAndNullValuesInIndexes()
         .withTableWithoutPrimaryKey()
         .withDuplicatedIndex()
-        .withNonSuitableIndex()
+        .withNotCoveringIndexesForForeignKey()
         .withJsonType()
         .withSerialType()
         .withFunctions()
@@ -55,9 +54,8 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
         .withBadlyNamedObjects()
         .withVarcharInsteadOfUuid()
         .withUnnecessaryWhereClause()
-        .withNaturalKeys()
+        .withNaturalKeysAndTimestampInTheMiddle()
         .withMoneyColumn()
-        .withTimestampInTheMiddle()
         .withTableWhereAllColumnsNullable();
 
     private final HealthLogger healthLogger = new StandardHealthLogger(
@@ -98,7 +96,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "foreign_keys_without_index:8",
                         "tables_without_primary_key:7",
                         "indexes_with_null_values:1",
-                        "bloated_indexes:19",
+                        "bloated_indexes:22",
                         "bloated_tables:4",
                         "intersected_indexes:18",
                         "unused_indexes:19",
@@ -107,7 +105,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "columns_without_description:70",
                         "columns_with_json_type:1",
                         "columns_with_serial_types:3",
-                        "functions_without_description:4",
+                        "functions_without_description:6",
                         "indexes_with_boolean:1",
                         "not_valid_constraints:3",
                         "btree_indexes_on_array_columns:2",
@@ -123,7 +121,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "columns_not_following_naming_convention:9",
                         "primary_keys_with_varchar:3",
                         "columns_with_fixed_length_varchar:17",
-                        "indexes_with_unnecessary_where_clause:2",
+                        "indexes_with_unnecessary_where_clause:3",
                         "primary_keys_that_most_likely_natural_keys:7",
                         "columns_with_money_type:1",
                         "indexes_with_timestamp_in_the_middle:3",

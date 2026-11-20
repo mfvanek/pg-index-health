@@ -64,8 +64,8 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithNotSuitableIndex(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withNonSuitableIndex(), ctx -> {
+    void onDatabaseWithNotCoveringIndexes(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withNotCoveringIndexesForForeignKey, ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)
@@ -86,64 +86,11 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithSuitableIndex(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withSuitableIndex(), ctx ->
+    void onDatabaseWithCoveringIndexes(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withCoveringIndexesForForeignKeys, ctx ->
             assertThat(check)
                 .executing(ctx)
                 .isEmpty());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithPartialIndexShouldNotConsiderItAsCovering(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withPartialIndexForForeignKey(), ctx -> {
-            assertThat(check)
-                .executing(ctx)
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparator()
-                .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id")
-                );
-
-            assertThat(check)
-                .executing(ctx, SkipByConstraintNamePredicate.ofName("c_accounts_fk_client_id"))
-                .isEmpty();
-        });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithNotNullPartialIndexShouldConsiderItAsCovering(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withNotNullPartialIndexesForForeignKeys().withNotNullSubsetPartialIndexForCompositeForeignKey(), ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .isEmpty());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithNotNullAndNotDeletedPartialIndexShouldNotConsiderItAsCovering(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withNotNullAndNotDeletedPartialIndexForForeignKey(), ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparator()
-                .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id")
-                ));
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void onDatabaseWithIsNullPartialIndexShouldNotConsiderItAsCovering(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withIsNullPartialIndexForForeignKey(), ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparator()
-                .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id")
-                ));
     }
 
     @ParameterizedTest
