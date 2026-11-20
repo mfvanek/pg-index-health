@@ -68,26 +68,8 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void withHashIndexShouldReturnNothing(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDuplicatedHashIndex(), ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .isEmpty());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void withDifferentOpclassShouldReturnNothing(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withDifferentOpclassIndexes(), ctx ->
-            assertThat(check)
-                .executing(ctx)
-                .isEmpty());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void withDifferentCollationShouldReturnNothing(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withCustomCollation().withDuplicatedCustomCollationIndex(), ctx ->
+    void withDifferentAccessMethodOpclassAndCollationShouldReturnNothing(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withNotDuplicatedIndexes, ctx ->
             assertThat(check)
                 .executing(ctx)
                 .isEmpty());

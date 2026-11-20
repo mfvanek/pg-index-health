@@ -32,8 +32,6 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateClientsTableS
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateCoveringIndexesForForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateCustomCollationStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDictTableStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedCustomCollationIndexStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedHashIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedIndexStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateEmptyTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateForeignKeyOnNullableColumnStatement;
@@ -42,9 +40,9 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithBool
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithNullValuesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArrayColumnStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithDifferentOpclassStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotCoveringIndexesForForeignKeyStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotDuplicatedIndexesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableForBloatStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithInconsistentTypesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreatePartitionedTableWithNoDataStatement;
@@ -122,15 +120,6 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures the database with a custom collation.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withCustomCollation() {
-        return register(4, new CreateCustomCollationStatement());
-    }
-
-    /**
      * Configures foreign key references between accounts and clients.
      *
      * @return this {@code DatabasePopulator} instance
@@ -169,12 +158,14 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures duplicated hash indexes.
+     * Configures indexes on the same columns that are not duplicates because they differ
+     * in access method (hash), operator class or collation.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withDuplicatedHashIndex() {
-        return register(41, new CreateDuplicatedHashIndexStatement());
+    public DatabasePopulator withNotDuplicatedIndexes() {
+        return register(4, new CreateCustomCollationStatement())
+            .register(41, new CreateNotDuplicatedIndexesStatement());
     }
 
     /**
@@ -215,30 +206,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures indexes using different operator classes.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withDifferentOpclassIndexes() {
-        return register(50, new CreateIndexesWithDifferentOpclassStatement());
-    }
-
-    /**
      * Configures a materialized view.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withMaterializedView() {
         return register(55, new CreateMaterializedViewStatement());
-    }
-
-    /**
-     * Configures duplicated indexes with custom collation.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withDuplicatedCustomCollationIndex() {
-        return register(58, new CreateDuplicatedCustomCollationIndexStatement());
     }
 
     /**
