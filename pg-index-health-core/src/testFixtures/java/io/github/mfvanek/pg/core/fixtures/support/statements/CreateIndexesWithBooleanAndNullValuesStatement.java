@@ -13,14 +13,14 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that creates an index on boolean columns.
+ * Represents a database statement that creates indexes on boolean columns and an index on a nullable column.
  */
-public class CreateIndexWithBooleanValuesStatement extends AbstractDbStatement {
+public class CreateIndexesWithBooleanAndNullValuesStatement extends AbstractDbStatement {
 
     /**
-     * Constructs a new instance of {@code CreateIndexWithBooleanValuesStatement}.
+     * Constructs a new instance of {@code CreateIndexesWithBooleanAndNullValuesStatement}.
      */
-    public CreateIndexWithBooleanValuesStatement() {
+    public CreateIndexesWithBooleanAndNullValuesStatement() {
     }
 
     /**
@@ -34,7 +34,8 @@ public class CreateIndexWithBooleanValuesStatement extends AbstractDbStatement {
                     on {schemaName}.accounts (deleted)""",
             """
                 create unique index if not exists i_accounts_account_number_deleted
-                    on {schemaName}.accounts (account_number, deleted)"""
+                    on {schemaName}.accounts (account_number, deleted)""",
+            "create index if not exists i_clients_middle_name on {schemaName}.clients (middle_name)"
         );
     }
 }

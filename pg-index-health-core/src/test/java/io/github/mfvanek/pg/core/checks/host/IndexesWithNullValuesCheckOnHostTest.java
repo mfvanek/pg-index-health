@@ -41,7 +41,7 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withBooleanAndNullValuesInIndexes().withData(), ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)

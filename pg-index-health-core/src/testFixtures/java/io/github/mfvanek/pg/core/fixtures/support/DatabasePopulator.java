@@ -32,10 +32,9 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateDuplicatedInd
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateEmptyTableStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateForeignKeyOnNullableColumnStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateFunctionsStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithBooleanValuesStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithNullValuesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexWithUnnecessaryWhereClauseStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesOnArrayColumnStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateIndexesWithBooleanAndNullValuesStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateMaterializedViewStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotCoveringIndexesForForeignKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateNotDuplicatedIndexesStatement;
@@ -56,12 +55,11 @@ import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithFixe
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIdentityPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithIncrementingColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithInheritanceStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithNaturalKeyStatement;
-import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithTimestampInTheMiddleStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTableWithoutPrimaryKeyStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithCyclicAndSelfReferencedForeignKeysStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithEnumColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithInconsistentTypesStatement;
+import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithNaturalKeysAndTimestampInTheMiddleStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateTablesWithSerialColumnsStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedSequenceStatement;
 import io.github.mfvanek.pg.core.fixtures.support.statements.CreateUnloggedTableStatement;
@@ -177,21 +175,13 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures an index with nullable columns containing null values.
+     * Configures indexes on boolean columns and an index on a nullable column.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withNullValuesInIndex() {
-        return register(48, new CreateIndexWithNullValuesStatement());
-    }
-
-    /**
-     * Configures an index on boolean columns.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withBooleanValuesInIndex() {
-        return register(49, new CreateIndexWithBooleanValuesStatement());
+    public DatabasePopulator withBooleanAndNullValuesInIndexes() {
+        return withReferences()
+            .register(48, new CreateIndexesWithBooleanAndNullValuesStatement());
     }
 
     /**
@@ -456,12 +446,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures a table using natural keys.
+     * Configures tables using natural keys and a table with timestamp columns in the middle of indexes.
      *
      * @return this {@code DatabasePopulator} instance
      */
-    public DatabasePopulator withNaturalKeys() {
-        return register(139, new CreateTableWithNaturalKeyStatement());
+    public DatabasePopulator withNaturalKeysAndTimestampInTheMiddle() {
+        return register(139, new CreateTablesWithNaturalKeysAndTimestampInTheMiddleStatement());
     }
 
     /**
@@ -471,15 +461,6 @@ public final class DatabasePopulator implements AutoCloseable {
      */
     public DatabasePopulator withMoneyColumn() {
         return register(140, new AddMoneyColumnStatement());
-    }
-
-    /**
-     * Configures a table with a timestamp column in the middle of columns.
-     *
-     * @return this {@code DatabasePopulator} instance
-     */
-    public DatabasePopulator withTimestampInTheMiddle() {
-        return register(141, new CreateTableWithTimestampInTheMiddleStatement());
     }
 
     /**

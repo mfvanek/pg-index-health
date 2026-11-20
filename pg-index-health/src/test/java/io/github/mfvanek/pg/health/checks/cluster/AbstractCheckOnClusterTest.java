@@ -45,7 +45,7 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
     @ValueSource(strings = PgContext.DEFAULT_SCHEMA_NAME)
     void forPublicSchema(final String schemaName) {
         try (LogsCaptor ignored = new LogsCaptor(AbstractCheckOnCluster.class, Level.FINEST)) {
-            executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withNullValuesInIndex(), ctx ->
+            executeTestOnDatabase(schemaName, dbp -> dbp.withBooleanAndNullValuesInIndexes().withData(), ctx ->
                 assertThat(check.check()) // executing on default schema
                     .hasSize(1)
                     .containsExactly(

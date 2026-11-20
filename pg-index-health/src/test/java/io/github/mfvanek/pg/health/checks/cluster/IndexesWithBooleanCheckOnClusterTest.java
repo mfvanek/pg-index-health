@@ -41,7 +41,7 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withBooleanValuesInIndex(), ctx -> {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withBooleanAndNullValuesInIndexes, ctx -> {
             assertThat(check)
                 .executing(ctx)
                 .hasSize(1)

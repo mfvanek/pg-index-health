@@ -35,8 +35,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
     private static final DatabaseConfigurer CONFIGURER = dbp -> dbp.withReferences()
         .withData()
         .withInvalidIndex()
-        .withNullValuesInIndex()
-        .withBooleanValuesInIndex()
+        .withBooleanAndNullValuesInIndexes()
         .withTableWithoutPrimaryKey()
         .withDuplicatedIndex()
         .withNotCoveringIndexesForForeignKey()
@@ -55,9 +54,8 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
         .withBadlyNamedObjects()
         .withVarcharInsteadOfUuid()
         .withUnnecessaryWhereClause()
-        .withNaturalKeys()
+        .withNaturalKeysAndTimestampInTheMiddle()
         .withMoneyColumn()
-        .withTimestampInTheMiddle()
         .withTableWhereAllColumnsNullable();
 
     private final HealthLogger healthLogger = new StandardHealthLogger(
