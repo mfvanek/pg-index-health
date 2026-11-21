@@ -45,15 +45,17 @@ class SequenceOverflowCheckOnHostTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, DatabasePopulator::withSequenceOverflow, ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(3)
+                .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     SequenceState.of(ctx, "seq_1", "smallint", 8.08),
                     SequenceState.of(ctx, "seq_3", "integer", 8.08),
-                    SequenceState.of(ctx, "seq_5", "bigint", 8.08));
+                    SequenceState.of(ctx, "seq_5", "bigint", 8.08),
+                    SequenceState.of(ctx, "seq_full_range_asc", "bigint", 0.0),
+                    SequenceState.of(ctx, "seq_full_range_desc", "bigint", 0.0));
 
             assertThat(check)
-                .executing(ctx, SkipBySequenceNamePredicate.of(ctx, List.of("seq_1", "seq_3", "seq_5")))
+                .executing(ctx, SkipBySequenceNamePredicate.of(ctx, List.of("seq_1", "seq_3", "seq_5", "seq_full_range_asc", "seq_full_range_desc")))
                 .isEmpty();
         });
     }

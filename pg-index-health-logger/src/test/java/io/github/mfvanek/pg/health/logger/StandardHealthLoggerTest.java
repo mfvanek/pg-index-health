@@ -109,7 +109,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "indexes_with_boolean:2",
                         "not_valid_constraints:3",
                         "btree_indexes_on_array_columns:2",
-                        "sequence_overflow:3",
+                        "sequence_overflow:5",
                         "primary_keys_with_serial_types:2",
                         "duplicated_foreign_keys:3",
                         "intersected_foreign_keys:1",
