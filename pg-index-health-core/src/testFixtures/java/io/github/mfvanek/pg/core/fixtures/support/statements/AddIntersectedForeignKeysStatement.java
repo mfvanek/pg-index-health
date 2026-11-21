@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Represents a database statement that adds intersected foreign keys between tables.
+ * One of the foreign key columns has a quoted name and a type that does not match the referenced column.
  */
 public class AddIntersectedForeignKeysStatement extends AbstractDbStatement {
 
@@ -33,18 +34,18 @@ public class AddIntersectedForeignKeysStatement extends AbstractDbStatement {
                 create table if not exists {schemaName}.client_preferences (
                     id bigint not null generated always as identity,
                     email varchar(200) not null,
-                    phone varchar(50) not null,
+                    "Phone" varchar(51) not null, /* quoted name and type that does not match the referenced column */
                     call_time_start timetz not null,
                     call_time_end timetz not null
                 )""",
             """
                 alter table if exists {schemaName}.client_preferences
                     add constraint c_client_preferences_email_phone_fk
-                    foreign key (email, phone) references {schemaName}.clients (email, phone)""",
+                    foreign key (email, "Phone") references {schemaName}.clients (email, phone)""",
             """
                 alter table if exists {schemaName}.client_preferences
                     add constraint c_client_preferences_phone_email_fk
-                    foreign key (phone, email) references {schemaName}.clients (phone, email)"""
+                    foreign key ("Phone", email) references {schemaName}.clients (phone, email)"""
         );
     }
 }

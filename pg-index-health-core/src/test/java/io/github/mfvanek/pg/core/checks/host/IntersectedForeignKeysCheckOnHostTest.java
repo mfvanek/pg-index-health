@@ -52,9 +52,9 @@ class IntersectedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
                 .containsExactly(
                     DuplicatedForeignKeys.of(
                         ForeignKey.of(ctx, "client_preferences", "c_client_preferences_email_phone_fk",
-                            List.of(Column.ofNotNull(ctx, "client_preferences", "email"), Column.ofNotNull(ctx, "client_preferences", "phone"))),
+                            List.of(Column.ofNotNull(ctx, "client_preferences", "email"), Column.ofNotNull(ctx, "client_preferences", "\"Phone\""))),
                         ForeignKey.of(ctx, "client_preferences", "c_client_preferences_phone_email_fk",
-                            List.of(Column.ofNotNull(ctx, "client_preferences", "phone"), Column.ofNotNull(ctx, "client_preferences", "email"))))
+                            List.of(Column.ofNotNull(ctx, "client_preferences", "\"Phone\""), Column.ofNotNull(ctx, "client_preferences", "email"))))
                 );
 
             assertThat(check)
