@@ -12,6 +12,17 @@ When data changes, [every index](https://www.postgresql.org/docs/17/btree.html) 
 Thus, duplicates degrade performance, take up disk space, and
 require regular maintenance (vacuuming, reindexing when bloated).
 
+## Which indexes are considered duplicates
+
+Indexes on the same table are duplicates if they match in all of the following:
+* access method (btree, hash, gin, etc.);
+* key columns and expressions, as well as included (`include`) columns;
+* operator classes and collations;
+* sort order of columns (`asc`/`desc`, `nulls first`/`nulls last`);
+* predicate of a partial index.
+
+For example, indexes on `(account_number)` and `(account_number desc)` are not duplicates.
+
 ## SQL query
 
 - [duplicated_indexes.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/duplicated_indexes.sql)

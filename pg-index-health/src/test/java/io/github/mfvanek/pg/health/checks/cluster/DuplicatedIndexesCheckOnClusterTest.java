@@ -68,7 +68,7 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
-    void withDifferentAccessMethodOpclassAndCollationShouldReturnNothing(final String schemaName) {
+    void withDifferentAccessMethodOpclassCollationAndSortOrderShouldReturnNothing(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withNotDuplicatedIndexes, ctx ->
             assertThat(check)
                 .executing(ctx)
