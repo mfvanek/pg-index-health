@@ -10,6 +10,15 @@ boolean  столбец может принимать только два зна
 Если строк с определенным значением столбца типа boolean гораздо меньше половины и при поиске чаще ищутся именно такие строки,
 то [можно создать частичный индекс](https://postgrespro.ru/docs/postgrespro/17/indexes-partial)
 
+## Что возвращает проверка
+
+Проверка находит неуникальные валидные индексы, у которых среди ключевых столбцов есть хотя бы один boolean-столбец.
+boolean-столбец, который есть только в секции `INCLUDE`, не приводит к срабатыванию проверки, так как он не используется для поиска.
+
+В результате одна строка на индекс со всеми столбцами индекса (включая столбцы из `INCLUDE`) в порядке их следования в индексе.
+Выражения в список столбцов не попадают: например, для индекса по `(account_balance, lower(account_number), deleted)`
+возвращаются только `account_balance` и `deleted`.
+
 ## SQL запрос
 
 - [indexes_with_boolean.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_boolean.sql)
@@ -43,6 +52,14 @@ create index if not exists i_accounts_deleted
 
 create unique index if not exists i_accounts_account_number_deleted
     on demo.accounts (account_number, deleted);
+
+-- попадёт в результат со столбцами account_balance и deleted (выражение не возвращается)
+create index if not exists i_accounts_balance_lower_number_deleted
+    on demo.accounts (account_balance, lower(account_number), deleted);
+
+-- не попадёт в результат: boolean-столбец есть только в секции include
+create index if not exists i_accounts_balance_include_deleted
+    on demo.accounts (account_balance) include (deleted);
 
 create table if not exists demo.dict(
     ref_type int not null primary key,

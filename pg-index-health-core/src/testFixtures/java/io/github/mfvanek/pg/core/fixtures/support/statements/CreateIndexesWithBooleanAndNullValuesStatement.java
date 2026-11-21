@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Represents a database statement that creates indexes on boolean columns and an index on a nullable column.
+ * Includes a multicolumn index with an expression and an index with a boolean column only in the {@code INCLUDE} clause.
  */
 public class CreateIndexesWithBooleanAndNullValuesStatement extends AbstractDbStatement {
 
@@ -35,6 +36,12 @@ public class CreateIndexesWithBooleanAndNullValuesStatement extends AbstractDbSt
             """
                 create unique index if not exists i_accounts_account_number_deleted
                     on {schemaName}.accounts (account_number, deleted)""",
+            """
+                create index if not exists i_accounts_balance_lower_number_deleted
+                    on {schemaName}.accounts (account_balance, lower(account_number), deleted)""",
+            """
+                create index if not exists i_accounts_balance_include_deleted
+                    on {schemaName}.accounts (account_balance) include (deleted)""",
             "create index if not exists i_clients_middle_name on {schemaName}.clients (middle_name)"
         );
     }

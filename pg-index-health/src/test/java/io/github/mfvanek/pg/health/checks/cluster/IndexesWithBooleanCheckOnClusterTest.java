@@ -24,6 +24,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
+
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -44,9 +46,12 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, DatabasePopulator::withBooleanAndNullValuesInIndexes, ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
+                .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
+                    IndexWithColumns.ofColumns(ctx, "accounts", "i_accounts_balance_lower_number_deleted", 0L, List.of(
+                        Column.ofNotNull(ctx, "accounts", "account_balance"),
+                        Column.ofNotNull(ctx, "accounts", "deleted"))),
                     IndexWithColumns.ofSingle(ctx, "accounts", "i_accounts_deleted", 0L,
                         Column.ofNotNull(ctx, "accounts", "deleted")))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
@@ -56,7 +61,7 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_accounts_deleted"))
+                .executing(ctx, SkipIndexesByNamePredicate.of(ctx, List.of("i_accounts_deleted", "i_accounts_balance_lower_number_deleted")))
                 .isEmpty();
         });
     }
@@ -74,8 +79,9 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
                         Column.ofNotNull(ctx, "t1", "deleted")),
                     IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted_duplicate", 0L,
                         Column.ofNotNull(ctx, "t1", "deleted")),
-                    IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted_entity_id", 0L,
-                        Column.ofNotNull(ctx, "t1", "deleted"))
+                    IndexWithColumns.ofColumns(ctx, "t1", "idx_t1_deleted_entity_id", 0L, List.of(
+                        Column.ofNotNull(ctx, "t1", "deleted"),
+                        Column.ofNotNull(ctx, "t1", "entity_id")))
                 ));
     }
 }
