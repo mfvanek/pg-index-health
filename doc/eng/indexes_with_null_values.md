@@ -11,6 +11,13 @@ A partial index, from which null values are excluded, will be more optimal, beca
 a common value [the index will not be used anyway](https://www.postgresql.org/docs/17/indexes-partial.html).
 The search will be faster. The index will take up less space on disk.
 
+## Which indexes are checked
+
+The check finds non-unique indexes whose first column is nullable.
+A partial index is skipped if its predicate references this column (for example, `col is not null`, `col = 'x'` or `col > 0`):
+such a predicate usually excludes null values.
+A predicate on other columns does not exclude null values, so such an index is reported.
+
 ## SQL query
 
 - [indexes_with_null_values.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_null_values.sql)
