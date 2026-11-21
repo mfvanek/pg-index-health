@@ -99,7 +99,7 @@ class StandardHealthLoggerTest extends StatisticsAwareTestBase {
                         "bloated_indexes:24",
                         "bloated_tables:4",
                         "intersected_indexes:18",
-                        "unused_indexes:25",
+                        "unused_indexes:26",
                         "tables_with_missing_indexes:0",
                         "tables_without_description:27",
                         "columns_without_description:70",
