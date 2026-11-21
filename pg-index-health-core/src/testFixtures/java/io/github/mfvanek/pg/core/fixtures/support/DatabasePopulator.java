@@ -338,7 +338,8 @@ public final class DatabasePopulator implements AutoCloseable {
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withDuplicatedForeignKeys() {
-        return register(105, new AddDuplicatedForeignKeysStatement());
+        return withForeignKeyOnNullableColumn()
+            .register(105, new AddDuplicatedForeignKeysStatement());
     }
 
     /**

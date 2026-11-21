@@ -6,6 +6,10 @@ Foreign keys can be created on several attributes of the target table — a refe
 In this case, a mistake is possible — creating another foreign key with the same attributes.
 Duplication of entities increases cognitive complexity and makes maintaining and developing the data schema harder in the future.
 
+Foreign keys are considered duplicates if they are created on the same columns of the same table in the same order
+and reference the same columns of the same target table in the same order.
+Foreign keys on the same columns that reference other columns of the target table are not duplicates.
+
 ## SQL query
 
 - [duplicated_foreign_keys.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/duplicated_foreign_keys.sql)

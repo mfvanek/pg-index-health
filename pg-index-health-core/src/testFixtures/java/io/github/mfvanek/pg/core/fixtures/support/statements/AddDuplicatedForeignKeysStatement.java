@@ -14,6 +14,10 @@ import java.util.List;
 
 /**
  * Represents a database statement that adds duplicated foreign keys between tables.
+ * Also adds a foreign key on the same columns as {@code c_bad_clients_fk_email_phone}
+ * that references other columns of the same table, so it is not a duplicate.
+ * <p>
+ * Requires the foreign keys on {@code bad_clients} (see {@link CreateForeignKeyOnNullableColumnStatement}).
  */
 public class AddDuplicatedForeignKeysStatement extends AbstractDbStatement {
 
@@ -28,10 +32,15 @@ public class AddDuplicatedForeignKeysStatement extends AbstractDbStatement {
      */
     @Override
     protected List<String> getSqlToExecute() {
-        return List.of("""
-            alter table if exists {schemaName}.accounts
-                add constraint c_accounts_fk_client_id_duplicate
-                foreign key (client_id) references {schemaName}.clients (id);"""
+        return List.of(
+            """
+                alter table if exists {schemaName}.accounts
+                    add constraint c_accounts_fk_client_id_duplicate
+                    foreign key (client_id) references {schemaName}.clients (id);""",
+            """
+                alter table if exists {schemaName}.bad_clients
+                    add constraint c_bad_clients_fk_email_phone_reversed
+                    foreign key (email, phone) references {schemaName}.clients (phone, email);"""
         );
     }
 }
