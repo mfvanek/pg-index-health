@@ -23,7 +23,12 @@
 
 ## Поддержка секционированных таблиц
 
-Поддерживает секционированные таблицы. Проверка выполняется на каждой секции.
+Поддерживает секционированные таблицы. Проверка выполняется как на секционированных (родительских) таблицах, так и на каждой секции.
+
+Индекс на секционированной таблице невалиден, пока к нему присоединены индексы не всех секций
+(например, если он был создан командой `create index ... on only`).
+Индексы на секциях также попадают в результат: невалидный индекс может быть присоединён к секционированному индексу,
+и тогда пересоздавать нужно именно индекс на секции.
 
 ## Скрипт для воспроизведения
 
@@ -61,10 +66,31 @@ values (1, 'Mary', 'Jones', '+12345678910'),
 
 create unique index concurrently if not exists i_first_last_name_p
     on demo.table_with_invalid_indexes_partitioned_hash_1_100 (first_name, last_name);
+
+create table if not exists demo.orders_partitioned(
+    id bigint not null,
+    creation_date timestamp with time zone not null,
+    primary key (id, creation_date)
+) partition by range (creation_date);
+
+create table if not exists demo.orders_partitioned_2025
+    partition of demo.orders_partitioned for values from ('2025-01-01') to ('2026-01-01');
+
+create table if not exists demo.orders_partitioned_default
+    partition of demo.orders_partitioned default;
+
+-- индекс на секционированной таблице остаётся невалидным: к нему присоединён индекс только одной из двух секций
+create index if not exists idx_orders_partitioned_creation_date on only demo.orders_partitioned (creation_date);
+create index if not exists idx_orders_partitioned_2025_creation_date on demo.orders_partitioned_2025 (creation_date);
+alter index demo.idx_orders_partitioned_creation_date attach partition demo.idx_orders_partitioned_2025_creation_date;
 ```
 
 ## Как исправить
 
 Если вы создавали уникальный индекс,
 убедитесь в отсутствии дубликатов в данных в таблице, препятствующих созданию индекса.
-В остальных случаях попробуйте пересоздать индекс, использую команду [reindex concurrently](https://www.postgresql.org/docs/current/sql-reindex.html).
+В остальных случаях попробуйте пересоздать индекс, используя команду [reindex concurrently](https://www.postgresql.org/docs/current/sql-reindex.html).
+
+Если невалидный индекс находится на секционированной таблице, создайте недостающие индексы на остальных секциях
+и присоедините их командой [alter index ... attach partition](https://postgrespro.ru/docs/postgresql/17/sql-alterindex):
+секционированный индекс станет валидным автоматически, как только будут присоединены индексы всех секций.
