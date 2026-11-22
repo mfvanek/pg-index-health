@@ -23,7 +23,12 @@ An invalid index also takes up disk space.
 
 ## Support for partitioned tables
 
-Partitioned tables are supported. The check is performed on each partition.
+Partitioned tables are supported. The check is performed both on partitioned (parent) tables and on each partition.
+
+An index on a partitioned table is invalid while the indexes of not all of its partitions are attached to it
+(for example, when it was created with `create index ... on only`).
+Indexes on partitions are reported as well: an invalid index can be attached to a partitioned index,
+and then it is the index on the partition that has to be rebuilt.
 
 ## Reproduction script
 
@@ -61,6 +66,23 @@ values (1, 'Mary', 'Jones', '+12345678910'),
 
 create unique index concurrently if not exists i_first_last_name_p
     on demo.table_with_invalid_indexes_partitioned_hash_1_100 (first_name, last_name);
+
+create table if not exists demo.orders_partitioned(
+    id bigint not null,
+    creation_date timestamp with time zone not null,
+    primary key (id, creation_date)
+) partition by range (creation_date);
+
+create table if not exists demo.orders_partitioned_2025
+    partition of demo.orders_partitioned for values from ('2025-01-01') to ('2026-01-01');
+
+create table if not exists demo.orders_partitioned_default
+    partition of demo.orders_partitioned default;
+
+-- the index on the partitioned table remains invalid: the index of only one of two partitions is attached to it
+create index if not exists idx_orders_partitioned_creation_date on only demo.orders_partitioned (creation_date);
+create index if not exists idx_orders_partitioned_2025_creation_date on demo.orders_partitioned_2025 (creation_date);
+alter index demo.idx_orders_partitioned_creation_date attach partition demo.idx_orders_partitioned_2025_creation_date;
 ```
 
 ## How to fix
@@ -68,3 +90,7 @@ create unique index concurrently if not exists i_first_last_name_p
 If you were creating a unique index,
 make sure there are no duplicates in the table data that prevent the index from being created.
 In other cases, try to rebuild the index using the [reindex concurrently](https://www.postgresql.org/docs/current/sql-reindex.html) command.
+
+If the invalid index is on a partitioned table, create the missing indexes on the remaining partitions
+and attach them using the [alter index ... attach partition](https://www.postgresql.org/docs/current/sql-alterindex.html) command:
+the partitioned index becomes valid automatically once the indexes of all partitions are attached.

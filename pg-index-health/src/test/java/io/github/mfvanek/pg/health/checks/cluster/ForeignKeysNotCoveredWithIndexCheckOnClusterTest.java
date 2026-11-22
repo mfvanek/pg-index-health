@@ -99,7 +99,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
             final String tableName = "referencing_bad_table_partitioned";
             assertThat(check)
                 .executing(ctx)
-                .hasSize(4)
+                .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ForeignKey.of(ctx, tableName, "\"referencing_bad_table_partitioned-fk\"", List.of(
@@ -107,11 +107,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
                         Column.ofNullable(ctx, tableName, "rbt_value")
                     )),
                     ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type"),
-                    ForeignKey.of(ctx, "t1", "t1_ref_type_ref_value_fk", List.of(
-                        Column.ofNotNull(ctx, "t1", "ref_type"),
-                        Column.ofNotNull(ctx, "t1", "ref_value")
-                    ))
+                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type")
                 );
         });
     }

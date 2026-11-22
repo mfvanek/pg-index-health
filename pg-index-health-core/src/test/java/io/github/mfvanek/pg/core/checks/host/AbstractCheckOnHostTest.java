@@ -49,9 +49,10 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
                     .isEmpty();
 
                 assertThat(check.check()) // executing on default schema
-                    .hasSize(1)
+                    .hasSize(2)
                     .containsExactly(
-                        IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name", "middle_name"));
+                        IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name", "middle_name"),
+                        IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name_known_last_name", "middle_name"));
 
                 assertThat(check.check(t -> !"clients".equalsIgnoreCase(t.getTableName())))
                     .isEmpty();

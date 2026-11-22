@@ -8,6 +8,8 @@
 
 Если таблицы без связей созданы намеренно, то их нужно просто проигнорировать.
 
+Учитываются внешние ключи из всех схем: таблица, на которую ссылается только внешний ключ из другой схемы, считается связанной.
+
 ## SQL запрос
 
 - [tables_not_linked_to_others.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_not_linked_to_others.sql)

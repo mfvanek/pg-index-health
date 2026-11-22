@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
+import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.core.fixtures.support.StatisticsAwareTestBase;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -62,6 +63,28 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
 
             assertThat(check)
                 .executing(ctx, SkipSmallTablesPredicate.of(1_000_000L))
+                .isEmpty();
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withNullableIndexesInPartitionedTable, ctx -> {
+            tryToCountRowsInTable(schemaName, "orders_partitioned");
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(2)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("table.tableSizeInBytes", "seqScans", "indexScans")
+                .containsExactly(
+                    TableWithMissingIndex.of(ctx, "orders_partitioned_2025"),
+                    TableWithMissingIndex.of(ctx, "orders_partitioned_default"))
+                .allMatch(t -> t.getSeqScans() >= AMOUNT_OF_TRIES)
+                .allMatch(t -> t.getIndexScans() == 0)
+                .allMatch(t -> t.getTableSizeInBytes() == 0L);
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("orders_partitioned_2025", "orders_partitioned_default")))
                 .isEmpty();
         });
     }

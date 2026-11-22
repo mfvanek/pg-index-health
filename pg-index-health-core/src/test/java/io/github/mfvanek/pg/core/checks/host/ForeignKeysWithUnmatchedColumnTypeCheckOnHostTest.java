@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
+
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class ForeignKeysWithUnmatchedColumnTypeCheckOnHostTest extends DatabaseAwareTestBase {
@@ -40,18 +42,20 @@ class ForeignKeysWithUnmatchedColumnTypeCheckOnHostTest extends DatabaseAwareTes
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withForeignKeyOnNullableColumn().withIntersectedForeignKeys(), ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(2)
+                .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_email_phone", "phone"),
-                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id")
+                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id"),
+                    ForeignKey.ofNotNullColumn(ctx, "client_preferences", "c_client_preferences_email_phone_fk", "\"Phone\""),
+                    ForeignKey.ofNotNullColumn(ctx, "client_preferences", "c_client_preferences_phone_email_fk", "\"Phone\"")
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_clients"))
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("bad_clients", "client_preferences")))
                 .isEmpty();
         });
     }

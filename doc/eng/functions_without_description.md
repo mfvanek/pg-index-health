@@ -5,6 +5,8 @@
 With a description, it is easier to apply a function correctly and to find possible errors in its definition.
 Having a description for functions/procedures makes them easier to maintain and modify in the future.
 
+Functions that belong to extensions are not reported: the user can't change them.
+
 ## SQL query
 
 - [functions_without_description.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/functions_without_description.sql)

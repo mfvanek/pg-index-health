@@ -12,11 +12,14 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
-import io.github.mfvanek.pg.core.checks.extractors.IndexWithSingleColumnExtractor;
+import io.github.mfvanek.pg.core.checks.extractors.IndexWithColumnsExtractor;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 /**
  * Check for indexes that contain boolean values on a specific host.
+ * <p>
+ * Returns one row per index with all its columns (including {@code INCLUDE} columns) in index order.
+ * Expressions are not included in the columns.
  *
  * @author Ivan Vakhrushev
  * @since 0.11.0
@@ -29,6 +32,6 @@ public class IndexesWithBooleanCheckOnHost extends AbstractCheckOnHost<IndexWith
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public IndexesWithBooleanCheckOnHost(final PgConnection pgConnection) {
-        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_BOOLEAN, IndexWithSingleColumnExtractor.of());
+        super(IndexWithColumns.class, pgConnection, Diagnostic.INDEXES_WITH_BOOLEAN, IndexWithColumnsExtractor.of());
     }
 }

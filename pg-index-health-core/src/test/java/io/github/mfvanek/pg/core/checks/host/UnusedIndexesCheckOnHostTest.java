@@ -44,14 +44,19 @@ class UnusedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
     @ParameterizedTest
     @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
     void onDatabaseWithThem(final String schemaName) {
-        executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData().withDuplicatedIndex(), ctx -> {
+        executeTestOnDatabase(schemaName, dbp -> dbp.withData().withDuplicatedIndex().withNotCoveringIndexesForForeignKey().withCoveringIndexesForForeignKeys(), ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(6)
+                .hasSize(11)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes", "indexScans")
                 .containsExactly(
                     UnusedIndex.of(ctx, "accounts", "i_accounts_account_number"),
+                    UnusedIndex.of(ctx, "accounts", "i_accounts_account_number_client_id"),
                     UnusedIndex.of(ctx, "accounts", "i_accounts_account_number_not_deleted"),
+                    UnusedIndex.of(ctx, "accounts", "i_accounts_client_id_brin"),
+                    UnusedIndex.of(ctx, "accounts", "i_accounts_client_id_is_null"),
+                    UnusedIndex.of(ctx, "accounts", "i_accounts_client_id_not_deleted"),
+                    UnusedIndex.of(ctx, "accounts", "i_accounts_client_id_not_null_not_deleted"),
                     UnusedIndex.of(ctx, "accounts", "i_accounts_id_account_number_not_deleted"),
                     UnusedIndex.of(ctx, "accounts", "i_accounts_number_balance_not_deleted"),
                     UnusedIndex.of(ctx, "clients", "i_clients_last_first"),
@@ -80,14 +85,15 @@ class UnusedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes", "indexScans")
                 .containsExactly(
-                    UnusedIndex.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "custom_entity_reference_with_very_very__entity_id_ref_value_idx"),
-                    UnusedIndex.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "custom_entity_reference_with_very_very_v_ref_type_ref_value_idx"),
+                    UnusedIndex.of(ctx, "custom_entity_reference_with_very_very_very_long_name", "idx_custom_entity_reference_with_very_very_very_long_name_1"),
+                    UnusedIndex.of(ctx, "custom_entity_reference_with_very_very_very_long_name", "idx_custom_entity_reference_with_very_very_very_long_name_2"),
                     UnusedIndex.of(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "idx_custom_entity_reference_with_very_very_very_long_name_1_d_3"))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L)
                 .allMatch(i -> i.getIndexScans() == 0);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default"))
+                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of(
+                    "custom_entity_reference_with_very_very_very_long_name", "custom_entity_reference_with_very_very_very_long_name_1_default")))
                 .isEmpty();
         });
     }

@@ -106,6 +106,25 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
         collectStatistics(schemaName);
     }
 
+    /**
+     * Counts rows in the specified table repeatedly to generate sequential scans and runs vacuum analyze.
+     * For a partitioned table, sequential scans are counted on each of its partitions.
+     *
+     * @param schemaName the schema name
+     * @param tableName  the table name
+     */
+    protected void tryToCountRowsInTable(final String schemaName, final String tableName) {
+        try (Connection connection = getDataSource().getConnection();
+             Statement statement = connection.createStatement()) {
+            for (int counter = 0; counter < AMOUNT_OF_TRIES; ++counter) {
+                statement.execute(String.format(Locale.ROOT, "select count(*) from %s.%s", schemaName, tableName));
+            }
+        } catch (SQLException e) {
+            throw new PgSqlException(e);
+        }
+        collectStatistics();
+    }
+
     private void waitForStatisticsCollector(@Nullable final String schemaName,
                                             final Collection<String> tableNames) {
         for (int i = 1; i <= 4; ++i) {

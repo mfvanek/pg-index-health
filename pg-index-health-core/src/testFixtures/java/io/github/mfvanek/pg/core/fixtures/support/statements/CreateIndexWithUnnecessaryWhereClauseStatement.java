@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Represents a database statement that creates an index with an unnecessary WHERE clause.
+ * Also creates an index with a necessary WHERE clause on a nullable column whose name ends with the name of the indexed column.
  */
 public class CreateIndexWithUnnecessaryWhereClauseStatement extends AbstractDbStatement {
 
@@ -32,11 +33,15 @@ public class CreateIndexWithUnnecessaryWhereClauseStatement extends AbstractDbSt
             """
                 create table if not exists {schemaName}.t1(
                     id bigint not null primary key,
-                    id_ref bigint not null
+                    id_ref bigint not null,
+                    parent_id_ref bigint
                 );""",
             """
                 create index if not exists idx_t1_id_ref on {schemaName}.t1 (id_ref)
                     where id_ref is not null;""",
+            """
+                create index if not exists idx_t1_id_ref_with_parent on {schemaName}.t1 (id_ref)
+                    where parent_id_ref is not null;""",
             """
                 create table if not exists {schemaName}.t2(
                     "first-ref" bigint not null,

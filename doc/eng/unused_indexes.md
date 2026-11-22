@@ -14,6 +14,17 @@ There can be many reasons for this:
 Every [index is updated](https://www.postgresql.org/docs/current/btree.html) when data changes, so redundant indexes degrade performance.
 Each index also takes up space on disk.
 
+## Which indexes are not reported
+
+The check skips indexes that cannot or should not be dropped as unused:
+* unique indexes (including primary key indexes);
+* indexes of exclusion constraints;
+* invalid indexes (they are reported by the [invalid_indexes](invalid_indexes.md) check);
+* indexes that can be used for lookups by a foreign key.
+
+An index serves a foreign key only if it contains all the columns of the foreign key, starts with one of them and is not a BRIN index.
+A partial index serves a foreign key only if its predicate consists solely of `fk_column is not null` conditions joined by `and`.
+
 ## SQL query
 
 - [unused_indexes.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/unused_indexes.sql)
@@ -26,7 +37,10 @@ In a database cluster, the check must be performed on every host.
 
 ## Support for partitioned tables
 
-Supports partitioned tables. The check is performed on each partition.
+Supports partitioned tables.
+An index on a partition that is attached to an index on the partitioned table cannot be dropped separately,
+so such indexes are reported once for the root partitioned table: their scans and sizes are summed over all partitions.
+Indexes created directly on a partition are reported for that partition.
 
 ## Reproduction script
 
@@ -107,6 +121,7 @@ drop index concurrently if exists demo.i_clients_last_name;
 ```
 
 Use `drop index concurrently` so that writes to the table are not blocked while the index is being dropped.
+An index on a partitioned table cannot be dropped concurrently: use `drop index` for it.
 
 Before dropping, make sure statistics have been accumulated on all hosts of the cluster over a sufficiently long period
 (including rare operations such as reports, nightly jobs, and maintenance), and that enough time has passed since the last

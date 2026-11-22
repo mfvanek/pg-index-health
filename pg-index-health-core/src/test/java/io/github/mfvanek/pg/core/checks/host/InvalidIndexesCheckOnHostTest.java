@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.core.checks.host;
 import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
+import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
@@ -55,6 +56,24 @@ class InvalidIndexesCheckOnHostTest extends DatabaseAwareTestBase {
 
             assertThat(check)
                 .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_last_name_first_name"))
+                .isEmpty();
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {PgContext.DEFAULT_SCHEMA_NAME, "custom"})
+    void shouldWorkWithPartitionedTables(final String schemaName) {
+        executeTestOnDatabase(schemaName, DatabasePopulator::withNullableIndexesInPartitionedTable, ctx -> {
+            assertThat(check)
+                .executing(ctx)
+                .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
+                .containsExactly(
+                    Index.of(ctx, "orders_partitioned", "idx_orders_partitioned_creation_date"))
+                .allMatch(i -> i.getIndexSizeInBytes() == 0L);
+
+            assertThat(check)
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "orders_partitioned"))
                 .isEmpty();
         });
     }

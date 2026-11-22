@@ -15,6 +15,7 @@ import java.util.List;
 /**
  * Represents a database statement that creates database objects with non-standard or uppercase names,
  * including names that start with a digit.
+ * Also creates badly named table, function and domain that are added to the {@code lo} extension.
  */
 public class CreateBadlyNamedObjectsStatement extends AbstractDbStatement {
 
@@ -62,7 +63,22 @@ public class CreateBadlyNamedObjectsStatement extends AbstractDbStatement {
                     as 'select $1 + $2;'
                     language sql
                     immutable
-                    returns null on null input;"""
+                    returns null on null input;""",
+            // Badly named objects that belong to an extension
+            "create extension if not exists lo schema {schemaName};",
+            """
+                create table if not exists {schemaName}."ext-table"(
+                    id int constraint "ext-table-pk" primary key
+                );""",
+            """
+                create or replace function {schemaName}."ext-func"() returns integer
+                    as 'select 1;'
+                    language sql
+                    immutable;""",
+            "create domain {schemaName}.\"ext-domain\" as integer constraint \"ext-domain-check\" check (value > 0);",
+            "alter extension lo add table {schemaName}.\"ext-table\";",
+            "alter extension lo add function {schemaName}.\"ext-func\"();",
+            "alter extension lo add domain {schemaName}.\"ext-domain\";"
         );
     }
 }

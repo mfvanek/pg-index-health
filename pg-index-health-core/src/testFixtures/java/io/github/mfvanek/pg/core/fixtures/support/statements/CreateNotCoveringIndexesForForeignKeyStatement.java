@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Represents a database statement that creates indexes on {@code accounts} that do not cover the foreign key on {@code client_id}:
- * an index with the foreign key column not in the first position and partial indexes with unsuitable predicates.
+ * an index with the foreign key column not in the first position, partial indexes with unsuitable predicates and a BRIN index.
  */
 public class CreateNotCoveringIndexesForForeignKeyStatement extends AbstractDbStatement {
 
@@ -33,7 +33,8 @@ public class CreateNotCoveringIndexesForForeignKeyStatement extends AbstractDbSt
             "create index if not exists i_accounts_account_number_client_id on {schemaName}.accounts (account_number, client_id)",
             "create index if not exists i_accounts_client_id_not_deleted on {schemaName}.accounts (client_id) where not deleted",
             "create index if not exists i_accounts_client_id_not_null_not_deleted on {schemaName}.accounts (client_id) where client_id is not null and not deleted",
-            "create index if not exists i_accounts_client_id_is_null on {schemaName}.accounts (client_id) where client_id is null"
+            "create index if not exists i_accounts_client_id_is_null on {schemaName}.accounts (client_id) where client_id is null",
+            "create index if not exists i_accounts_client_id_brin on {schemaName}.accounts using brin (client_id)"
         );
     }
 }

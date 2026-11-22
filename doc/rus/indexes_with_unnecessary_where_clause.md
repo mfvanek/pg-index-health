@@ -10,6 +10,9 @@
 - содержат избыточный предикат, который вычисляется каждый раз;
 - не могут быть использованы в качестве основы для внешнего ключа, если создаются с ключевым словом `unique`.
 
+Проверка ищет точное условие `<column> is not null` на `not null` столбец индекса.
+Условие на другой столбец (даже если его имя содержит имя столбца индекса, например `parent_id is not null` для столбца `id`) избыточным не является.
+
 ## SQL запрос
 
 - [indexes_with_unnecessary_where_clause.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_unnecessary_where_clause.sql)

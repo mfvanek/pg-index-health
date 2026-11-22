@@ -16,6 +16,16 @@ At the same time, you need to assess how often a search or modification of data 
 If the search is performed rarely and/or the table containing the column with the foreign key is small,
 then adding an index may not improve performance.
 
+## Which index covers a foreign key
+
+An index covers a foreign key if it contains all the columns of the foreign key and starts with one of them.
+For an equality lookup the order of the foreign key columns in the index does not matter.
+
+The following indexes do not cover a foreign key:
+* invalid indexes;
+* BRIN indexes: they store block ranges and do not speed up lookups by the foreign key;
+* partial indexes whose predicate is anything other than `fk_column is not null` conditions (on any subset of the foreign key columns) joined by `and`.
+
 ## SQL query
 
 - [foreign_keys_without_index.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/foreign_keys_without_index.sql)

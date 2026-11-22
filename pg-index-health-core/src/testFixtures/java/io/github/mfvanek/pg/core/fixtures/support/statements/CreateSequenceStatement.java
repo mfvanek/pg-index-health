@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.core.fixtures.support.statements;
 import java.util.List;
 
 /**
- * Represents a database statement that creates a database sequence.
+ * Represents a database statement that creates database sequences, including ones covering the full bigint range.
  */
 public class CreateSequenceStatement extends AbstractDbStatement {
 
@@ -36,7 +36,12 @@ public class CreateSequenceStatement extends AbstractDbStatement {
             "drop sequence if exists {schemaName}.seq_5;",
             "create sequence {schemaName}.seq_5 as bigint increment by 10 maxvalue 100 start 92;",
             "drop sequence if exists {schemaName}.seq_cycle;",
-            "create sequence {schemaName}.seq_cycle as bigint increment by 10 maxvalue 100 start 92 cycle;"
+            "create sequence {schemaName}.seq_cycle as bigint increment by 10 maxvalue 100 start 92 cycle;",
+            // Sequences covering the full bigint range
+            "drop sequence if exists {schemaName}.seq_full_range_asc;",
+            "create sequence {schemaName}.seq_full_range_asc as bigint increment by 1 minvalue -9223372036854775808 start 9223372036854775800;",
+            "drop sequence if exists {schemaName}.seq_full_range_desc;",
+            "create sequence {schemaName}.seq_full_range_desc as bigint increment by -1 maxvalue 9223372036854775807 start -9223372036854775800;"
         );
     }
 }

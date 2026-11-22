@@ -23,6 +23,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
+
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class IndexesWithNullValuesCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -43,10 +45,11 @@ class IndexesWithNullValuesCheckOnClusterTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withBooleanAndNullValuesInIndexes().withData(), ctx -> {
             assertThat(check)
                 .executing(ctx)
-                .hasSize(1)
+                .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofNullable(ctx, "clients", "i_clients_middle_name", "middle_name"))
+                    IndexWithColumns.ofNullable(ctx, "clients", "i_clients_middle_name", "middle_name"),
+                    IndexWithColumns.ofNullable(ctx, "clients", "i_clients_middle_name_known_last_name", "middle_name"))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -54,7 +57,7 @@ class IndexesWithNullValuesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_middle_name"))
+                .executing(ctx, SkipIndexesByNamePredicate.of(ctx, List.of("i_clients_middle_name", "i_clients_middle_name_known_last_name")))
                 .isEmpty();
         });
     }

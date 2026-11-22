@@ -10,6 +10,9 @@ Such indexes:
 - contain a redundant predicate that is evaluated every time;
 - cannot be used as the basis for a foreign key if they are created with the `unique` keyword.
 
+The check looks for the exact condition `<column> is not null` on a `not null` column of the index.
+A condition on another column (even one whose name contains the name of the index column, for example `parent_id is not null` for the `id` column) is not redundant.
+
 ## SQL query
 
 - [indexes_with_unnecessary_where_clause.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_unnecessary_where_clause.sql)

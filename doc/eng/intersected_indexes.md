@@ -11,6 +11,12 @@ Keep in mind, though, that for a composite btree index the search is efficient o
 When data changes, [every index](https://www.postgresql.org/docs/17/btree.html) is updated,
 so redundant indexes degrade performance.
 
+## Which indexes are considered intersected
+
+Indexes on the same table with the same predicate are intersected if the columns of one index are the leading columns of the other.
+Expression columns are compared by the text of the expression: indexes on `(lower(last_name))` and `(upper(first_name), last_name)` do not intersect.
+Indexes with the same set of columns are not reported by this check: they are found by the [duplicated_indexes](duplicated_indexes.md) check.
+
 ## SQL query
 
 - [intersected_indexes.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/intersected_indexes.sql)
