@@ -12,8 +12,8 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
-import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
+import io.github.mfvanek.pg.core.checks.extractors.ColumnExtractor;
+import io.github.mfvanek.pg.model.column.Column;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * @see <a href="https://www.schemacrawler.com/lint.html">SchemaCrawler LinterColumnTypes</a>
  * @since 0.41.1
  */
-public class ColumnsWithInconsistentTypesCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {
+public class ColumnsWithInconsistentTypesCheckOnHost extends AbstractCheckOnHost<Column> {
 
     /**
      * Constructs a new instance of {@code ColumnsWithInconsistentTypesCheckOnHost}.
@@ -37,7 +37,7 @@ public class ColumnsWithInconsistentTypesCheckOnHost extends AbstractCheckOnHost
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ColumnsWithInconsistentTypesCheckOnHost(final PgConnection pgConnection) {
-        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_INCONSISTENT_TYPES, ColumnWithTypeExtractor.of());
+        super(Column.class, pgConnection, Diagnostic.COLUMNS_WITH_INCONSISTENT_TYPES, ColumnExtractor.of());
     }
 
     /**
@@ -49,7 +49,7 @@ public class ColumnsWithInconsistentTypesCheckOnHost extends AbstractCheckOnHost
      * no longer inconsistent and are dropped from the result.
      */
     @Override
-    protected List<ColumnWithType> postProcessResults(final List<ColumnWithType> afterExclusions) {
+    protected List<Column> postProcessResults(final List<Column> afterExclusions) {
         return removeConsistentColumns(afterExclusions);
     }
 
@@ -62,10 +62,10 @@ public class ColumnsWithInconsistentTypesCheckOnHost extends AbstractCheckOnHost
      * @param columns the columns remaining after exclusions; must not be null
      * @return the columns that remain genuinely inconsistent, preserving the original order
      */
-    static List<ColumnWithType> removeConsistentColumns(final Collection<ColumnWithType> columns) {
+    static List<Column> removeConsistentColumns(final Collection<Column> columns) {
         final Map<String, Set<String>> typesByColumnName = columns.stream()
-            .collect(Collectors.groupingBy(ColumnWithType::getColumnName,
-                Collectors.mapping(ColumnWithType::getColumnType, Collectors.toSet())));
+            .collect(Collectors.groupingBy(Column::getColumnName,
+                Collectors.mapping(Column::getColumnType, Collectors.toSet())));
         return columns.stream()
             .filter(column -> typesByColumnName.getOrDefault(column.getColumnName(), Set.of()).size() > 1)
             .toList();

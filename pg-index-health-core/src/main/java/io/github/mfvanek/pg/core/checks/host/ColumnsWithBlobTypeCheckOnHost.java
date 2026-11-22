@@ -12,8 +12,8 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
-import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
+import io.github.mfvanek.pg.core.checks.extractors.ColumnExtractor;
+import io.github.mfvanek.pg.model.column.Column;
 
 /**
  * Check for columns with {@code oid} or {@code lo} blob type on a specific host.
@@ -24,7 +24,7 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
  * @see <a href="https://www.postgresql.org/docs/current/lo.html">lo extension</a>
  * @since 0.41.1
  */
-public class ColumnsWithBlobTypeCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {
+public class ColumnsWithBlobTypeCheckOnHost extends AbstractCheckOnHost<Column> {
 
     /**
      * Constructs a new instance of {@code ColumnsWithBlobTypeCheckOnHost}.
@@ -32,6 +32,6 @@ public class ColumnsWithBlobTypeCheckOnHost extends AbstractCheckOnHost<ColumnWi
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ColumnsWithBlobTypeCheckOnHost(final PgConnection pgConnection) {
-        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_BLOB_TYPE, ColumnWithTypeExtractor.of());
+        super(Column.class, pgConnection, Diagnostic.COLUMNS_WITH_BLOB_TYPE, ColumnExtractor.of());
     }
 }

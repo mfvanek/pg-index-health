@@ -16,6 +16,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipBySequenceNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -59,8 +60,8 @@ class PrimaryKeysWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "bad_accounts", "id"), "bad_accounts_id_seq"),
-                    ColumnWithSerialType.ofSerial(ctx, Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\""), "\"bad-table_bad-id_seq\"")
+                    ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "bad_accounts", "id", PgColumnType.BIG_SERIAL), "bad_accounts_id_seq"),
+                    ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\"", PgColumnType.SERIAL), "\"bad-table_bad-id_seq\"")
                 );
 
             assertThat(check)
@@ -84,7 +85,7 @@ class PrimaryKeysWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, tableName, "entity_id"), sequenceName)
+                    ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, tableName, "entity_id", PgColumnType.BIG_SERIAL), sequenceName)
                 );
         });
     }

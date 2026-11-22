@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.model.table;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
@@ -143,12 +144,32 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param pgContext  the schema context to enrich table name; must be non-null.
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
+     * @param columnType column type; should be non-blank.
      * @return a {@code TableWithColumns} with one non-nullable column
+     * @since 0.51.0
      */
     public static TableWithColumns ofNotNullColumn(final PgContext pgContext,
                                                    final String tableName,
-                                                   final String columnName) {
-        return ofSingle(Table.of(pgContext, tableName), Column.ofNotNull(pgContext, tableName, columnName));
+                                                   final String columnName,
+                                                   final String columnType) {
+        return ofSingle(Table.of(pgContext, tableName), Column.ofNotNull(pgContext, tableName, columnName, columnType));
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single non-nullable column.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @param columnType column type; must be non-null.
+     * @return a {@code TableWithColumns} with one non-nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofNotNullColumn(final PgContext pgContext,
+                                                   final String tableName,
+                                                   final String columnName,
+                                                   final PgColumnType columnType) {
+        return ofSingle(Table.of(pgContext, tableName), Column.ofNotNull(pgContext, tableName, columnName, columnType));
     }
 
     /**
@@ -157,11 +178,31 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param pgContext  the schema context to enrich table name; must be non-null.
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
+     * @param columnType column type; should be non-blank.
      * @return a {@code TableWithColumns} with one nullable column
+     * @since 0.51.0
      */
     public static TableWithColumns ofNullableColumn(final PgContext pgContext,
                                                     final String tableName,
-                                                    final String columnName) {
-        return ofSingle(Table.of(pgContext, tableName), Column.ofNullable(pgContext, tableName, columnName));
+                                                    final String columnName,
+                                                    final String columnType) {
+        return ofSingle(Table.of(pgContext, tableName), Column.ofNullable(pgContext, tableName, columnName, columnType));
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single nullable column.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @param columnType column type; must be non-null.
+     * @return a {@code TableWithColumns} with one nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofNullableColumn(final PgContext pgContext,
+                                                    final String tableName,
+                                                    final String columnName,
+                                                    final PgColumnType columnType) {
+        return ofSingle(Table.of(pgContext, tableName), Column.ofNullable(pgContext, tableName, columnName, columnType));
     }
 }

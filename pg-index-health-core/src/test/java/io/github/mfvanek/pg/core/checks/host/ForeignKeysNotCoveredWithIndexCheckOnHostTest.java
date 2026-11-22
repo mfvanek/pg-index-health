@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipByConstraintNamePredicate;
@@ -50,10 +51,10 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id"),
+                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id", PgColumnType.BIGINT),
                     ForeignKey.of(ctx, "bad_clients", "c_bad_clients_fk_email_phone",
-                        List.of(Column.ofNullable(ctx, "bad_clients", "email"), Column.ofNullable(ctx, "bad_clients", "phone"))),
-                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id")
+                        List.of(Column.ofNullable(ctx, "bad_clients", "email", PgColumnType.VARCHAR), Column.ofNullable(ctx, "bad_clients", "phone", PgColumnType.VARCHAR))),
+                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id", PgColumnType.INTEGER)
                 );
 
             assertThat(check)
@@ -71,7 +72,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id")
+                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id", PgColumnType.BIGINT)
                 );
 
             assertThat(check)
@@ -104,11 +105,11 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ForeignKey.of(ctx, tableName, "\"referencing_bad_table_partitioned-fk\"", List.of(
-                        Column.ofNotNull(ctx, tableName, "rbt_id"),
-                        Column.ofNullable(ctx, tableName, "rbt_value")
+                        Column.ofNotNull(ctx, tableName, "rbt_id", PgColumnType.INTEGER),
+                        Column.ofNullable(ctx, tableName, "rbt_value", PgColumnType.TEXT)
                     )),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type")
+                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type", PgColumnType.BIGINT),
+                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type", PgColumnType.BIGINT)
                 );
         });
     }

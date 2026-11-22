@@ -20,6 +20,26 @@ Ordering convention:
 - Use local variables when calling `getTableName()` on both sides — it involves a list access (`list.get(0)`) and would otherwise run twice
 - Start `compareTo` with `Objects.requireNonNull(other, "other cannot be null")`
 
+## Identity semantics (EQUALS_HASHCODE_COMPARETO_USE_ONLY_IDENTITY_FIELDS)
+
+Model objects mirror PostgreSQL catalog objects. `equals`, `hashCode` and `compareTo` must use only
+the fields that PostgreSQL itself uses to identify the object uniquely — never descriptive attributes.
+
+- Table: `tableName` (qualified name is unique).
+- Column: `tableName` + `columnName` (`pg_attribute` is unique on `(attrelid, attname)`, so a table
+  cannot have two columns with the same name). Nullability (`notNull`) and type (`columnType`) are
+  attributes and must not participate.
+- Index / sequence: `tableName` + `indexName` / `sequenceName` (relation names are unique in a schema).
+- Constraint: `tableName` + `constraintName` (`pg_constraint` is unique on `(conrelid, conname)`).
+- Stored function: `functionName` + `functionSignature` (overloads differ by argument types).
+- Wrapper objects (`ForeignKey`, `IndexWithColumns`, `TableWithColumns`, `ColumnWithSerialType`, etc.)
+  delegate to the wrapped identity object only; sizes, columns, sequence names and other payload are ignored.
+
+`compareTo` must be consistent with `equals`: compare the same fields in the same order and return 0
+exactly when `equals` returns true. `hashCode` must use exactly the fields used by `equals`.
+In tests, `EqualsVerifier` must list every non-identity field in `withIgnoredFields(...)`;
+attribute values are verified by `usingRecursiveFieldByFieldElementComparator()` in check tests.
+
 ## Capability interfaces naming (AWARE_CLASSES_SHOULD_BE_INTERFACES)
 
 Any type whose simple name ends with `Aware` must be an interface. Never create a concrete or abstract class with an `Aware` suffix.

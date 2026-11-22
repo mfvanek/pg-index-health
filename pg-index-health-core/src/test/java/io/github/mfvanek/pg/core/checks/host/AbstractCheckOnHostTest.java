@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.connection.fixtures.support.LogsCaptor;
 import io.github.mfvanek.pg.core.checks.common.ExecutionTopology;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.utils.QueryExecutors;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import org.jspecify.annotations.NonNull;
@@ -51,8 +52,8 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
                 assertThat(check.check()) // executing on default schema
                     .hasSize(2)
                     .containsExactly(
-                        IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name", "middle_name"),
-                        IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name_known_last_name", "middle_name"));
+                        IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name", "middle_name", PgColumnType.VARCHAR),
+                        IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name_known_last_name", "middle_name", PgColumnType.VARCHAR));
 
                 assertThat(check.check(t -> !"clients".equalsIgnoreCase(t.getTableName())))
                     .isEmpty();

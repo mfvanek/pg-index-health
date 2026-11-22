@@ -22,13 +22,15 @@ import java.util.Objects;
  * Column always belongs to a table/index/foreign key.
  *
  * @author Ivan Vakhrushev
+ * @see PgColumnType
  * @since 0.5.0
  */
-public final class Column implements DbObject, ColumnNameAware, Comparable<Column> {
+public final class Column implements DbObject, ColumnTypeAware, Comparable<Column> {
 
     private final String tableName;
     private final String columnName;
     private final boolean notNull;
+    private final String columnType;
 
     /**
      * Constructs a {@code Column} object.
@@ -36,13 +38,16 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @param notNull    whether a column is not null or nullable
+     * @param columnType column type; should be non-blank.
      */
     private Column(final String tableName,
                    final String columnName,
-                   final boolean notNull) {
+                   final boolean notNull,
+                   final String columnType) {
         this.tableName = Validators.tableNameNotBlank(tableName);
         this.columnName = Validators.notBlank(columnName, COLUMN_NAME_FIELD);
         this.notNull = notNull;
+        this.columnType = Validators.notBlank(columnType, COLUMN_TYPE_FIELD);
     }
 
     /**
@@ -87,13 +92,24 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
 
     /**
      * {@inheritDoc}
+     *
+     * @since 0.51.0
+     */
+    @Override
+    public String getColumnType() {
+        return columnType;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     @Override
     public String toString() {
         return Column.class.getSimpleName() + '{' +
             TABLE_NAME_FIELD + "='" + tableName + '\'' +
             ", " + COLUMN_NAME_FIELD + "='" + columnName + '\'' +
-            ", " + NOT_NULL_FIELD + '=' + notNull + '}';
+            ", " + NOT_NULL_FIELD + '=' + notNull +
+            ", " + COLUMN_TYPE_FIELD + "='" + columnType + '\'' + '}';
     }
 
     /**
@@ -109,8 +125,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
             return false;
         }
 
-        return notNull == that.notNull &&
-            Objects.equals(tableName, that.tableName) &&
+        return Objects.equals(tableName, that.tableName) &&
             Objects.equals(columnName, that.columnName);
     }
 
@@ -119,7 +134,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      */
     @Override
     public int hashCode() {
-        return Objects.hash(tableName, columnName, notNull);
+        return Objects.hash(tableName, columnName);
     }
 
     /**
@@ -131,10 +146,43 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
         if (!tableName.equals(other.tableName)) {
             return tableName.compareTo(other.tableName);
         }
-        if (!columnName.equals(other.columnName)) {
-            return columnName.compareTo(other.columnName);
-        }
-        return Boolean.compare(notNull, other.notNull);
+        return columnName.compareTo(other.columnName);
+    }
+
+    /**
+     * Constructs a {@code Column} object.
+     *
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @param notNull    whether a column is not null or nullable
+     * @param columnType column type; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column of(final String tableName,
+                            final String columnName,
+                            final boolean notNull,
+                            final String columnType) {
+        return new Column(tableName, columnName, notNull, columnType);
+    }
+
+    /**
+     * Constructs a {@code Column} object with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @param notNull    whether a column is not null or nullable
+     * @param columnType column type; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column of(final PgContext pgContext,
+                            final String tableName,
+                            final String columnName,
+                            final boolean notNull,
+                            final String columnType) {
+        return of(PgContext.enrichWith(tableName, pgContext), columnName, notNull, columnType);
     }
 
     /**
@@ -142,11 +190,29 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      *
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
+     * @param columnType column type; should be non-blank.
      * @return {@code Column}
+     * @since 0.51.0
      */
     public static Column ofNotNull(final String tableName,
-                                   final String columnName) {
-        return new Column(tableName, columnName, true);
+                                   final String columnName,
+                                   final String columnType) {
+        return of(tableName, columnName, true, columnType);
+    }
+
+    /**
+     * Constructs a not null {@code Column} object.
+     *
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @param columnType column type; must be non-null.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNotNull(final String tableName,
+                                   final String columnName,
+                                   final PgColumnType columnType) {
+        return ofNotNull(tableName, columnName, typeName(columnType));
     }
 
     /**
@@ -155,13 +221,32 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param pgContext  the schema context to enrich table name; must be non-null.
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
+     * @param columnType column type; should be non-blank.
      * @return {@code Column}
-     * @since 0.14.3
+     * @since 0.51.0
      */
     public static Column ofNotNull(final PgContext pgContext,
                                    final String tableName,
-                                   final String columnName) {
-        return ofNotNull(PgContext.enrichWith(tableName, pgContext), columnName);
+                                   final String columnName,
+                                   final String columnType) {
+        return of(pgContext, tableName, columnName, true, columnType);
+    }
+
+    /**
+     * Constructs a not null {@code Column} object with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @param columnType column type; must be non-null.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNotNull(final PgContext pgContext,
+                                   final String tableName,
+                                   final String columnName,
+                                   final PgColumnType columnType) {
+        return ofNotNull(pgContext, tableName, columnName, typeName(columnType));
     }
 
     /**
@@ -169,11 +254,29 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      *
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
+     * @param columnType column type; should be non-blank.
      * @return {@code Column}
+     * @since 0.51.0
      */
     public static Column ofNullable(final String tableName,
-                                    final String columnName) {
-        return new Column(tableName, columnName, false);
+                                    final String columnName,
+                                    final String columnType) {
+        return of(tableName, columnName, false, columnType);
+    }
+
+    /**
+     * Constructs a nullable {@code Column} object.
+     *
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @param columnType column type; must be non-null.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNullable(final String tableName,
+                                    final String columnName,
+                                    final PgColumnType columnType) {
+        return ofNullable(tableName, columnName, typeName(columnType));
     }
 
     /**
@@ -182,12 +285,35 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param pgContext  the schema context to enrich table name; must be non-null.
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
+     * @param columnType column type; should be non-blank.
      * @return {@code Column}
-     * @since 0.14.3
+     * @since 0.51.0
      */
     public static Column ofNullable(final PgContext pgContext,
                                     final String tableName,
-                                    final String columnName) {
-        return ofNullable(PgContext.enrichWith(tableName, pgContext), columnName);
+                                    final String columnName,
+                                    final String columnType) {
+        return of(pgContext, tableName, columnName, false, columnType);
+    }
+
+    /**
+     * Constructs a nullable {@code Column} object with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @param columnType column type; must be non-null.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNullable(final PgContext pgContext,
+                                    final String tableName,
+                                    final String columnName,
+                                    final PgColumnType columnType) {
+        return ofNullable(pgContext, tableName, columnName, typeName(columnType));
+    }
+
+    private static String typeName(final PgColumnType columnType) {
+        return Objects.requireNonNull(columnType, COLUMN_TYPE_FIELD + " cannot be null").getColumnType();
     }
 }

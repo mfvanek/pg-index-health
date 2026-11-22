@@ -63,16 +63,16 @@ class SkipByConstraintNamePredicateTest {
             .accepts(Table.of("t"))
             .accepts(Index.of("t1", "i1"))
             .accepts(Constraint.ofType("t1", "c2", ConstraintType.CHECK))
-            .accepts(ForeignKey.ofNotNullColumn("t1", "c2", "col1"))
+            .accepts(ForeignKey.ofNotNullColumn("t1", "c2", "col1", "integer"))
             .accepts(DuplicatedForeignKeys.of(
-                ForeignKey.ofNotNullColumn("t1", "c2", "col1"),
-                ForeignKey.ofNotNullColumn("t1", "c3", "col1")
+                ForeignKey.ofNotNullColumn("t1", "c2", "col1", "integer"),
+                ForeignKey.ofNotNullColumn("t1", "c3", "col1", "integer")
             ))
             .rejects(Constraint.ofType("t1", "c1", ConstraintType.CHECK))
-            .rejects(ForeignKey.ofNotNullColumn("t1", "c1", "col1"))
+            .rejects(ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"))
             .rejects(DuplicatedForeignKeys.of(
-                ForeignKey.ofNotNullColumn("t1", "c2", "col1"),
-                ForeignKey.ofNotNullColumn("t1", "c1", "col1")
+                ForeignKey.ofNotNullColumn("t1", "c2", "col1", "integer"),
+                ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer")
             ));
     }
 
@@ -81,12 +81,12 @@ class SkipByConstraintNamePredicateTest {
         assertThat(SkipByConstraintNamePredicate.of(Set.of("c1", "C2")))
             .accepts(Table.of("t"))
             .accepts(Constraint.ofType("t1", "c3", ConstraintType.CHECK))
-            .accepts(ForeignKey.ofNotNullColumn("t1", "c3", "col1"))
+            .accepts(ForeignKey.ofNotNullColumn("t1", "c3", "col1", "integer"))
             .rejects(Constraint.ofType("t1", "C1", ConstraintType.CHECK))
-            .rejects(ForeignKey.ofNotNullColumn("t1", "c1", "col1"))
+            .rejects(ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"))
             .rejects(DuplicatedForeignKeys.of(
-                ForeignKey.ofNotNullColumn("t1", "C2", "col1"),
-                ForeignKey.ofNotNullColumn("t1", "C1", "col1")
+                ForeignKey.ofNotNullColumn("t1", "C2", "col1", "integer"),
+                ForeignKey.ofNotNullColumn("t1", "C1", "col1", "integer")
             ));
     }
 }

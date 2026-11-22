@@ -12,8 +12,8 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
-import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
+import io.github.mfvanek.pg.core.checks.extractors.ColumnExtractor;
+import io.github.mfvanek.pg.model.column.Column;
 
 /**
  * Check for columns of type {@code char}, {@code char(n)}, {@code character(n)} or {@code bpchar(n)} on a specific host.
@@ -27,7 +27,7 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
  * @see <a href="https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don't_use_char(n)">Do not use char(n)</a>
  * @since 0.30.1
  */
-public class ColumnsWithCharTypeCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {
+public class ColumnsWithCharTypeCheckOnHost extends AbstractCheckOnHost<Column> {
 
     /**
      * Constructs a new instance of {@code ColumnsWithCharTypeCheckOnHost}.
@@ -35,6 +35,6 @@ public class ColumnsWithCharTypeCheckOnHost extends AbstractCheckOnHost<ColumnWi
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public ColumnsWithCharTypeCheckOnHost(final PgConnection pgConnection) {
-        super(ColumnWithType.class, pgConnection, Diagnostic.COLUMNS_WITH_CHAR_TYPE, ColumnWithTypeExtractor.of());
+        super(Column.class, pgConnection, Diagnostic.COLUMNS_WITH_CHAR_TYPE, ColumnExtractor.of());
     }
 }

@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -51,9 +52,9 @@ class IntersectedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                 .containsExactly(
                     DuplicatedForeignKeys.of(
                         ForeignKey.of(ctx, "client_preferences", "c_client_preferences_email_phone_fk",
-                            List.of(Column.ofNotNull(ctx, "client_preferences", "email"), Column.ofNotNull(ctx, "client_preferences", "\"Phone\""))),
+                            List.of(Column.ofNotNull(ctx, "client_preferences", "email", PgColumnType.VARCHAR), Column.ofNotNull(ctx, "client_preferences", "\"Phone\"", PgColumnType.VARCHAR))),
                         ForeignKey.of(ctx, "client_preferences", "c_client_preferences_phone_email_fk",
-                            List.of(Column.ofNotNull(ctx, "client_preferences", "\"Phone\""), Column.ofNotNull(ctx, "client_preferences", "email"))))
+                            List.of(Column.ofNotNull(ctx, "client_preferences", "\"Phone\"", PgColumnType.VARCHAR), Column.ofNotNull(ctx, "client_preferences", "email", PgColumnType.VARCHAR))))
                 );
 
             assertThat(check)
@@ -72,13 +73,13 @@ class IntersectedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedForeignKeys.of(
-                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
+                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type", PgColumnType.BIGINT),
                         ForeignKey.of(ctx, "t1", "t1_ref_type_ref_value_fk",
-                            List.of(Column.ofNotNull(ctx, "t1", "ref_type"), Column.ofNotNull(ctx, "t1", "ref_value")))),
+                            List.of(Column.ofNotNull(ctx, "t1", "ref_type", PgColumnType.BIGINT), Column.ofNotNull(ctx, "t1", "ref_value", PgColumnType.VARCHAR)))),
                     DuplicatedForeignKeys.of(
-                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type"),
+                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type", PgColumnType.BIGINT),
                         ForeignKey.of(ctx, "t1", "t1_ref_type_ref_value_fk",
-                            List.of(Column.ofNotNull(ctx, "t1", "ref_type"), Column.ofNotNull(ctx, "t1", "ref_value"))))
+                            List.of(Column.ofNotNull(ctx, "t1", "ref_type", PgColumnType.BIGINT), Column.ofNotNull(ctx, "t1", "ref_value", PgColumnType.VARCHAR))))
                 ));
     }
 }

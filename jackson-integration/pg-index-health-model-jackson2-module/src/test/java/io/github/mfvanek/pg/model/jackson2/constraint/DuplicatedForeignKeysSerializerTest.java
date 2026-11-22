@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.jackson2.constraint;
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.jackson2.support.ObjectMapperTestBase;
@@ -26,13 +27,13 @@ class DuplicatedForeignKeysSerializerTest extends ObjectMapperTestBase {
     @Test
     void serializationShouldWork() throws IOException {
         final DuplicatedForeignKeys original = DuplicatedForeignKeys.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1"),
-            ForeignKey.ofNotNullColumn("t1", "c2", "col1"));
+            ForeignKey.ofNotNullColumn("t1", "c1", "col1", PgColumnType.BIGINT),
+            ForeignKey.ofNotNullColumn("t1", "c2", "col1", PgColumnType.BIGINT));
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"tableName":"t1","foreignKeys":[\
-                {"constraint":{"tableName":"t1","constraintName":"c1","constraintType":"FOREIGN_KEY"},"columns":[{"tableName":"t1","columnName":"col1","notNull":true}]},\
-                {"constraint":{"tableName":"t1","constraintName":"c2","constraintType":"FOREIGN_KEY"},"columns":[{"tableName":"t1","columnName":"col1","notNull":true}]}]}""");
+                {"constraint":{"tableName":"t1","constraintName":"c1","constraintType":"FOREIGN_KEY"},"columns":[{"tableName":"t1","columnName":"col1","notNull":true,"columnType":"bigint"}]},\
+                {"constraint":{"tableName":"t1","constraintName":"c2","constraintType":"FOREIGN_KEY"},"columns":[{"tableName":"t1","columnName":"col1","notNull":true,"columnType":"bigint"}]}]}""");
         final DuplicatedForeignKeys restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), DuplicatedForeignKeys.class);
         assertThat(restored)
             .isEqualTo(original);

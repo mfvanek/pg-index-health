@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -50,17 +51,17 @@ class IndexesWithTimestampInTheMiddleCheckOnHostTest extends DatabaseAwareTestBa
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_expr_first", List.of(
-                        Column.ofNotNull(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\""),
-                        Column.ofNotNull(ctx, "\"t-multi\"", "id"),
-                        Column.ofNullable(ctx, "\"t-multi\"", "name"))),
+                        Column.ofNotNull(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\"", PgColumnType.TIMESTAMP),
+                        Column.ofNotNull(ctx, "\"t-multi\"", "id", PgColumnType.INTEGER),
+                        Column.ofNullable(ctx, "\"t-multi\"", "name", PgColumnType.TEXT))),
                     IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_expr_mid", List.of(
-                        Column.ofNotNull(ctx, "\"t-multi\"", "id"),
-                        Column.ofNotNull(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\""),
-                        Column.ofNullable(ctx, "\"t-multi\"", "name"))),
+                        Column.ofNotNull(ctx, "\"t-multi\"", "id", PgColumnType.INTEGER),
+                        Column.ofNotNull(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\"", PgColumnType.TIMESTAMP),
+                        Column.ofNullable(ctx, "\"t-multi\"", "name", PgColumnType.TEXT))),
                     IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_mid", List.of(
-                        Column.ofNotNull(ctx, "\"t-multi\"", "id"),
-                        Column.ofNullable(ctx, "\"t-multi\"", "ts"),
-                        Column.ofNullable(ctx, "\"t-multi\"", "name"))))
+                        Column.ofNotNull(ctx, "\"t-multi\"", "id", PgColumnType.INTEGER),
+                        Column.ofNullable(ctx, "\"t-multi\"", "ts", PgColumnType.TIMESTAMP),
+                        Column.ofNullable(ctx, "\"t-multi\"", "name", PgColumnType.TEXT))))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -79,9 +80,9 @@ class IndexesWithTimestampInTheMiddleCheckOnHostTest extends DatabaseAwareTestBa
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "tp", "i_tp_creation_date_entity_id_ref_type", List.of(
-                        Column.ofNotNull(ctx, "tp", "creation_date"),
-                        Column.ofNotNull(ctx, "tp", "entity_id"),
-                        Column.ofNotNull(ctx, "tp", "ref_type")
+                        Column.ofNotNull(ctx, "tp", "creation_date", PgColumnType.TIMESTAMP),
+                        Column.ofNotNull(ctx, "tp", "entity_id", PgColumnType.VARCHAR),
+                        Column.ofNotNull(ctx, "tp", "ref_type", PgColumnType.VARCHAR)
                     ))
                 ));
     }

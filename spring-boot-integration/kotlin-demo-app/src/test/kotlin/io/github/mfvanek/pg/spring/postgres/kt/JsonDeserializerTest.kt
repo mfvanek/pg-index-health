@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.spring.postgres.kt
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.mfvanek.pg.model.column.PgColumnType
 import io.github.mfvanek.pg.model.constraint.ForeignKey
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -31,12 +32,12 @@ class JsonDeserializerTest {
             .hasSizeGreaterThan(1)
             .contains("PgIndexHealthModelModule")
 
-        val original = ForeignKey.ofNotNullColumn("users", "fk_user_role", "role_id")
+        val original = ForeignKey.ofNotNullColumn("users", "fk_user_role", "role_id", PgColumnType.BIGINT)
         val json = objectMapper.writeValueAsString(original)
         assertThat(json)
             .isEqualTo(
                 """
-                {"constraint":{"tableName":"users","constraintName":"fk_user_role","constraintType":"FOREIGN_KEY"},"columns":[{"tableName":"users","columnName":"role_id","notNull":true}]}
+                {"constraint":{"tableName":"users","constraintName":"fk_user_role","constraintType":"FOREIGN_KEY"},"columns":[{"tableName":"users","columnName":"role_id","notNull":true,"columnType":"bigint"}]}
                 """.trimIndent()
             )
         val restored = objectMapper.readValue(json, ForeignKey::class.java)

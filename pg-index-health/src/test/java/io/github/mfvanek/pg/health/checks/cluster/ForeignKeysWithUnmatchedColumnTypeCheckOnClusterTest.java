@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -47,10 +48,10 @@ class ForeignKeysWithUnmatchedColumnTypeCheckOnClusterTest extends DatabaseAware
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_email_phone", "phone"),
-                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id"),
-                    ForeignKey.ofNotNullColumn(ctx, "client_preferences", "c_client_preferences_email_phone_fk", "\"Phone\""),
-                    ForeignKey.ofNotNullColumn(ctx, "client_preferences", "c_client_preferences_phone_email_fk", "\"Phone\"")
+                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_email_phone", "phone", PgColumnType.VARCHAR),
+                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id", PgColumnType.INTEGER),
+                    ForeignKey.ofNotNullColumn(ctx, "client_preferences", "c_client_preferences_email_phone_fk", "\"Phone\"", PgColumnType.VARCHAR),
+                    ForeignKey.ofNotNullColumn(ctx, "client_preferences", "c_client_preferences_phone_email_fk", "\"Phone\"", PgColumnType.VARCHAR)
                 );
 
             assertThat(check)
@@ -68,11 +69,11 @@ class ForeignKeysWithUnmatchedColumnTypeCheckOnClusterTest extends DatabaseAware
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNullableColumn(ctx, "referencing_bad_table_partitioned", "\"referencing_bad_table_partitioned-fk\"", "rbt_value"),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type"),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_ref_value_fk", "ref_type"),
-                    ForeignKey.ofNullableColumn(ctx, "t3", "t3_ref_type_fkey", "ref_type")
+                    ForeignKey.ofNullableColumn(ctx, "referencing_bad_table_partitioned", "\"referencing_bad_table_partitioned-fk\"", "rbt_value", PgColumnType.TEXT),
+                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type", PgColumnType.BIGINT),
+                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type", PgColumnType.BIGINT),
+                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_ref_value_fk", "ref_type", PgColumnType.BIGINT),
+                    ForeignKey.ofNullableColumn(ctx, "t3", "t3_ref_type_fkey", "ref_type", PgColumnType.BIGINT)
                 ));
     }
 }

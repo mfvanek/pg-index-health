@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.model.index;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.validation.Validators;
 
@@ -147,14 +148,35 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
+     * @param columnType column type; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.15.0
+     * @since 0.51.0
      */
     public static IndexWithColumns ofNullable(final PgContext pgContext,
                                               final String tableName,
                                               final String indexName,
-                                              final String columnName) {
-        return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNullable(pgContext, tableName, columnName));
+                                              final String columnName,
+                                              final String columnType) {
+        return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNullable(pgContext, tableName, columnName, columnType));
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one nullable column and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @param columnType column type; must be non-null.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofNullable(final PgContext pgContext,
+                                              final String tableName,
+                                              final String indexName,
+                                              final String columnName,
+                                              final PgColumnType columnType) {
+        return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNullable(pgContext, tableName, columnName, columnType));
     }
 
     /**
@@ -164,14 +186,35 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
+     * @param columnType column type; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.15.0
+     * @since 0.51.0
      */
     public static IndexWithColumns ofNotNull(final PgContext pgContext,
                                              final String tableName,
                                              final String indexName,
-                                             final String columnName) {
-        return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNotNull(pgContext, tableName, columnName));
+                                             final String columnName,
+                                             final String columnType) {
+        return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNotNull(pgContext, tableName, columnName, columnType));
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one not-null column and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @param columnType column type; must be non-null.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofNotNull(final PgContext pgContext,
+                                             final String tableName,
+                                             final String indexName,
+                                             final String columnName,
+                                             final PgColumnType columnType) {
+        return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNotNull(pgContext, tableName, columnName, columnType));
     }
 
     /**

@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithCharTypeCheckOnHost;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
+import io.github.mfvanek.pg.model.column.Column;
 
 /**
  * Check for columns of type {@code char}, {@code char(n)}, {@code character(n)} or {@code bpchar(n)} on all hosts in the cluster.
@@ -25,7 +25,7 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
  * @see <a href="https://www.postgresql.org/docs/current/datatype-character.html">Character Types </a>
  * @since 0.30.1
  */
-public class ColumnsWithCharTypeCheckOnCluster extends AbstractCheckOnCluster<ColumnWithType> {
+public class ColumnsWithCharTypeCheckOnCluster extends AbstractCheckOnCluster<Column> {
 
     /**
      * Constructs a new instance of {@code ColumnsWithCharTypeCheckOnCluster}.

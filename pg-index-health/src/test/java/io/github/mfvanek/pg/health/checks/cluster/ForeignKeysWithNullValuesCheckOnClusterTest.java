@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -50,11 +51,11 @@ class ForeignKeysWithNullValuesCheckOnClusterTest extends DatabaseAwareTestBase 
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ForeignKey.of(ctx, "bad_clients", "c_bad_clients_fk_email_phone", List.of(
-                        Column.ofNullable(ctx, "bad_clients", "email"),
-                        Column.ofNullable(ctx, "bad_clients", "phone"))),
+                        Column.ofNullable(ctx, "bad_clients", "email", PgColumnType.VARCHAR),
+                        Column.ofNullable(ctx, "bad_clients", "phone", PgColumnType.VARCHAR))),
                     ForeignKey.of(ctx, tableName, "\"referencing-bad-table-fk\"", List.of(
-                        Column.ofNotNull(ctx, tableName, "rbt_id"),
-                        Column.ofNullable(ctx, tableName, "rbt_value")
+                        Column.ofNotNull(ctx, tableName, "rbt_id", PgColumnType.INTEGER),
+                        Column.ofNullable(ctx, tableName, "rbt_value", PgColumnType.TEXT)
                     ))
                 );
 
@@ -75,8 +76,8 @@ class ForeignKeysWithNullValuesCheckOnClusterTest extends DatabaseAwareTestBase 
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ForeignKey.of(ctx, tableName, "\"referencing_bad_table_partitioned-fk\"", List.of(
-                        Column.ofNotNull(ctx, tableName, "rbt_id"),
-                        Column.ofNullable(ctx, tableName, "rbt_value")
+                        Column.ofNotNull(ctx, tableName, "rbt_id", PgColumnType.INTEGER),
+                        Column.ofNullable(ctx, tableName, "rbt_value", PgColumnType.TEXT)
                     ))
                 );
         });

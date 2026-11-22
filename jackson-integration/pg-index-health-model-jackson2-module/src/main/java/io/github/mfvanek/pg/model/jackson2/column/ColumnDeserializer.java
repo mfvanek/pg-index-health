@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
+import io.github.mfvanek.pg.model.column.ColumnTypeAware;
 import io.github.mfvanek.pg.model.jackson2.common.ModelDeserializer;
 
 import java.io.IOException;
@@ -36,9 +37,7 @@ public class ColumnDeserializer extends ModelDeserializer<Column> {
         final String tableName = getTableName(ctxt, rootNode);
         final String columnName = getStringField(ctxt, rootNode, ColumnNameAware.COLUMN_NAME_FIELD);
         final boolean notNull = getBooleanField(ctxt, rootNode, ColumnNameAware.NOT_NULL_FIELD);
-        if (notNull) {
-            return Column.ofNotNull(tableName, columnName);
-        }
-        return Column.ofNullable(tableName, columnName);
+        final String columnType = getStringField(ctxt, rootNode, ColumnTypeAware.COLUMN_TYPE_FIELD);
+        return Column.of(tableName, columnName, notNull, columnType);
     }
 }

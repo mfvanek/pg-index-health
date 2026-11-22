@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.jackson2.table;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.jackson2.support.ObjectMapperTestBase;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
@@ -26,13 +27,13 @@ class TableWithColumnsSerializerTest extends ObjectMapperTestBase {
     @Test
     void serializationShouldWork() throws IOException {
         final TableWithColumns original = TableWithColumns.of(Table.of("t1", 123L), List.of(
-            Column.ofNotNull("t1", "c1"),
-            Column.ofNotNull("t1", "c2")));
+            Column.ofNotNull("t1", "c1", PgColumnType.BIGINT),
+            Column.ofNotNull("t1", "c2", PgColumnType.BIGINT)));
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"table":{"tableName":"t1","tableSizeInBytes":123},"columns":[\
-                {"tableName":"t1","columnName":"c1","notNull":true},\
-                {"tableName":"t1","columnName":"c2","notNull":true}]}""");
+                {"tableName":"t1","columnName":"c1","notNull":true,"columnType":"bigint"},\
+                {"tableName":"t1","columnName":"c2","notNull":true,"columnType":"bigint"}]}""");
         final TableWithColumns restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), TableWithColumns.class);
         assertThat(restored)
             .usingRecursiveComparison()

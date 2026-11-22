@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
@@ -48,10 +49,10 @@ class ColumnsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "\"1st_table\"", "\"2nd_id\""),
-                    Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\""),
-                    Column.ofNotNull(ctx, "\"bad-table-two\"", "\"bad-ref-id\""),
-                    Column.ofNullable(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\"")
+                    Column.ofNotNull(ctx, "\"1st_table\"", "\"2nd_id\"", PgColumnType.INTEGER),
+                    Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\"", PgColumnType.INTEGER),
+                    Column.ofNotNull(ctx, "\"bad-table-two\"", "\"bad-ref-id\"", PgColumnType.INTEGER),
+                    Column.ofNullable(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\"", PgColumnType.INTEGER)
                 );
 
             assertThat(check)
@@ -69,8 +70,8 @@ class ColumnsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNullable(ctx, "\"one-partitioned\"", "\"1st_column\""),
-                    Column.ofNotNull(ctx, "\"one-partitioned\"", "\"bad-id\"")
+                    Column.ofNullable(ctx, "\"one-partitioned\"", "\"1st_column\"", PgColumnType.TEXT),
+                    Column.ofNotNull(ctx, "\"one-partitioned\"", "\"bad-id\"", PgColumnType.BIGINT)
                 )
         );
     }

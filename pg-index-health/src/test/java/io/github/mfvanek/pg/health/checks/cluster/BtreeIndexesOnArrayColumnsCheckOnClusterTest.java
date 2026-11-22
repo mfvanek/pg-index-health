@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -22,6 +23,8 @@ import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
@@ -46,10 +49,11 @@ class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofSingle(ctx, "accounts", "accounts_account_number_roles_btree_idx", 0L,
-                        Column.ofNullable(ctx, "accounts", "roles")),
+                    IndexWithColumns.ofColumns(ctx, "accounts", "accounts_account_number_roles_btree_idx", List.of(
+                        Column.ofNotNull(ctx, "accounts", "account_number", PgColumnType.VARCHAR),
+                        Column.ofNullable(ctx, "accounts", "roles", "text[]"))),
                     IndexWithColumns.ofSingle(ctx, "accounts", "accounts_roles_btree_idx", 0L,
-                        Column.ofNullable(ctx, "accounts", "roles")))
+                        Column.ofNullable(ctx, "accounts", "roles", "text[]")))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -67,7 +71,7 @@ class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    IndexWithColumns.ofSingle(ctx, "t1", "t1_roles_btree_idx", 0L, Column.ofNullable(ctx, "t1", "roles"))
+                    IndexWithColumns.ofSingle(ctx, "t1", "t1_roles_btree_idx", 0L, Column.ofNullable(ctx, "t1", "roles", "text[]"))
                 ));
     }
 }

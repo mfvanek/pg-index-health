@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
@@ -48,27 +49,27 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(21)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "\"1st_table\"", "\"2nd_id\""),
-                    Column.ofNotNull(ctx, "accounts", "account_balance"),
-                    Column.ofNotNull(ctx, "accounts", "account_number"),
-                    Column.ofNotNull(ctx, "accounts", "client_id"),
-                    Column.ofNotNull(ctx, "accounts", "deleted"),
-                    Column.ofNotNull(ctx, "accounts", "id"),
-                    Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\""),
-                    Column.ofNotNull(ctx, "\"bad-table-two\"", "\"bad-ref-id\""),
-                    Column.ofNullable(ctx, "\"bad-table-two\"", "description"),
-                    Column.ofNullable(ctx, "clients", "contact_person"),
-                    Column.ofNotNull(ctx, "clients", "first_name"),
-                    Column.ofNotNull(ctx, "clients", "gender"),
-                    Column.ofNullable(ctx, "clients", "home_address"),
-                    Column.ofNotNull(ctx, "clients", "id"),
-                    Column.ofNullable(ctx, "clients", "info"),
-                    Column.ofNotNull(ctx, "clients", "last_name"),
-                    Column.ofNullable(ctx, "clients", "middle_name"),
-                    Column.ofNullable(ctx, "clients", "nickname"),
-                    Column.ofNullable(ctx, "clients", "safe_word"),
-                    Column.ofNotNull(ctx, "\"ext-table\"", "id"),
-                    Column.ofNullable(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\""));
+                    Column.ofNotNull(ctx, "\"1st_table\"", "\"2nd_id\"", PgColumnType.INTEGER),
+                    Column.ofNotNull(ctx, "accounts", "account_balance", PgColumnType.NUMERIC),
+                    Column.ofNotNull(ctx, "accounts", "account_number", PgColumnType.VARCHAR),
+                    Column.ofNotNull(ctx, "accounts", "client_id", PgColumnType.BIGINT),
+                    Column.ofNotNull(ctx, "accounts", "deleted", PgColumnType.BOOLEAN),
+                    Column.ofNotNull(ctx, "accounts", "id", PgColumnType.BIGINT),
+                    Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\"", PgColumnType.INTEGER),
+                    Column.ofNotNull(ctx, "\"bad-table-two\"", "\"bad-ref-id\"", PgColumnType.INTEGER),
+                    Column.ofNullable(ctx, "\"bad-table-two\"", "description", PgColumnType.TEXT),
+                    Column.ofNullable(ctx, "clients", "contact_person", PgColumnType.CHARACTER),
+                    Column.ofNotNull(ctx, "clients", "first_name", PgColumnType.VARCHAR),
+                    Column.ofNotNull(ctx, "clients", "gender", PgColumnType.CHARACTER),
+                    Column.ofNullable(ctx, "clients", "home_address", PgColumnType.CHARACTER),
+                    Column.ofNotNull(ctx, "clients", "id", PgColumnType.BIGINT),
+                    Column.ofNullable(ctx, "clients", "info", PgColumnType.JSONB),
+                    Column.ofNotNull(ctx, "clients", "last_name", PgColumnType.VARCHAR),
+                    Column.ofNullable(ctx, "clients", "middle_name", PgColumnType.VARCHAR),
+                    Column.ofNullable(ctx, "clients", "nickname", PgColumnType.CHARACTER),
+                    Column.ofNullable(ctx, "clients", "safe_word", PgColumnType.CHARACTER),
+                    Column.ofNotNull(ctx, "\"ext-table\"", "id", PgColumnType.INTEGER),
+                    Column.ofNullable(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\"", PgColumnType.INTEGER));
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("\"1st_table\"", "accounts", "\"bad-table\"", "\"bad-table-two\"")))
@@ -87,8 +88,8 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "accounts", "id"),
-                    Column.ofNotNull(ctx, "clients", "id")));
+                    Column.ofNotNull(ctx, "accounts", "id", PgColumnType.BIGINT),
+                    Column.ofNotNull(ctx, "clients", "id", PgColumnType.BIGINT)));
     }
 
     @ParameterizedTest
@@ -100,7 +101,7 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(14)
                 .usingRecursiveFieldByFieldElementComparator()
                 .doesNotContain(
-                    Column.ofNullable(ctx, "clients", "info"))
+                    Column.ofNullable(ctx, "clients", "info", PgColumnType.JSONB))
                 .noneMatch(c -> "info".equalsIgnoreCase(c.getColumnName())));
     }
 
@@ -114,11 +115,11 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, expectedTableName, "creation_date"),
-                    Column.ofNullable(ctx, expectedTableName, "description"),
-                    Column.ofNotNull(ctx, expectedTableName, "entity_id"),
-                    Column.ofNotNull(ctx, expectedTableName, "ref_type"),
-                    Column.ofNotNull(ctx, expectedTableName, "ref_value")
+                    Column.ofNotNull(ctx, expectedTableName, "creation_date", PgColumnType.TIMESTAMPTZ),
+                    Column.ofNullable(ctx, expectedTableName, "description", PgColumnType.TEXT),
+                    Column.ofNotNull(ctx, expectedTableName, "entity_id", PgColumnType.VARCHAR),
+                    Column.ofNotNull(ctx, expectedTableName, "ref_type", PgColumnType.VARCHAR),
+                    Column.ofNotNull(ctx, expectedTableName, "ref_value", PgColumnType.VARCHAR)
                 ));
     }
 }

@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithEnumTypeCheckOnHost;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
+import io.github.mfvanek.pg.model.column.Column;
 
 /**
  * Check for columns with an enum type (including arrays of enums) on all hosts in the cluster.
@@ -20,7 +20,7 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
  * @author Ivan Vakhrushev
  * @since 0.50.0
  */
-public class ColumnsWithEnumTypeCheckOnCluster extends AbstractCheckOnCluster<ColumnWithType> {
+public class ColumnsWithEnumTypeCheckOnCluster extends AbstractCheckOnCluster<Column> {
 
     /**
      * Constructs a new instance of {@code ColumnsWithEnumTypeCheckOnCluster}.

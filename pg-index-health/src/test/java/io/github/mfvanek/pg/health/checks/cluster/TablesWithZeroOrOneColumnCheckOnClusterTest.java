@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
@@ -47,9 +48,9 @@ class TablesWithZeroOrOneColumnCheckOnClusterTest extends DatabaseAwareTestBase 
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("table.tableSizeInBytes")
                 .containsExactly(
-                    TableWithColumns.ofNotNullColumn(ctx, "another_table", "id"),
+                    TableWithColumns.ofNotNullColumn(ctx, "another_table", "id", PgColumnType.BIGINT),
                     TableWithColumns.withoutColumns(ctx, "empty"),
-                    TableWithColumns.ofNotNullColumn(ctx, "one_more_table", "id")
+                    TableWithColumns.ofNotNullColumn(ctx, "one_more_table", "id", PgColumnType.BIGINT)
                 );
 
             assertThat(check)
@@ -67,7 +68,7 @@ class TablesWithZeroOrOneColumnCheckOnClusterTest extends DatabaseAwareTestBase 
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    TableWithColumns.ofNotNullColumn(ctx, "tp_dropped_column", "ref_type")
+                    TableWithColumns.ofNotNullColumn(ctx, "tp_dropped_column", "ref_type", PgColumnType.BIGINT)
                 ));
     }
 }

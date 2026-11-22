@@ -14,7 +14,7 @@ import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
-import io.github.mfvanek.pg.model.column.SerialType;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.predicates.SkipLiquibaseTablesPredicate;
@@ -81,7 +81,7 @@ class DatabaseStructureStaticAnalysisTest {
                         .asInstanceOf(list(ColumnWithSerialType.class))
                         .usingRecursiveFieldByFieldElementComparator()
                         .containsExactly(
-                            ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "warehouse", "id"), SerialType.BIG_SERIAL, "warehouse_id_seq")
+                            ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "warehouse", "id", PgColumnType.BIG_SERIAL), "warehouse_id_seq")
                         );
 
                     default -> listAssert.isEmpty();
@@ -114,8 +114,8 @@ class DatabaseStructureStaticAnalysisTest {
                         .asInstanceOf(list(Column.class))
                         .usingRecursiveFieldByFieldElementComparator()
                         .containsExactly(
-                            Column.ofNotNull(ctx, "additional_table", "id"),
-                            Column.ofNotNull(ctx, "additional_table", "name")
+                            Column.ofNotNull(ctx, "additional_table", "id", PgColumnType.BIGINT),
+                            Column.ofNotNull(ctx, "additional_table", "name", PgColumnType.TEXT)
                         );
 
                     case "PRIMARY_KEYS_WITH_SERIAL_TYPES" -> listAssert
@@ -123,7 +123,7 @@ class DatabaseStructureStaticAnalysisTest {
                         .asInstanceOf(list(ColumnWithSerialType.class))
                         .usingRecursiveFieldByFieldElementComparator()
                         .containsExactly(
-                            ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "additional_table", "id"), "additional_table_id_seq")
+                            ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "additional_table", "id", PgColumnType.BIG_SERIAL), "additional_table_id_seq")
                         );
 
                     default -> listAssert.isEmpty();

@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model.predicates;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
@@ -64,26 +65,26 @@ class SkipByColumnNamePredicateTest {
         assertThat(SkipByColumnNamePredicate.ofName("COL1"))
             .accepts(Table.of("t"))
             .accepts(Index.of("t1", "i1"))
-            .accepts(Column.ofNotNull("t1", "col2"))
-            .accepts(ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "col2"), "s1"))
-            .accepts(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col2"))
+            .accepts(Column.ofNotNull("t1", "col2", "integer"))
+            .accepts(ColumnWithSerialType.of(Column.ofNotNull("t1", "col2", PgColumnType.SERIAL), "s1"))
+            .accepts(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col2", "integer"))
             .accepts(TableWithColumns.withoutColumns(Table.of("t2")))
-            .rejects(Column.ofNotNull("t1", "col1"))
-            .rejects(ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "col1"), "s1"))
-            .rejects(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col1"))
-            .rejects(TableWithColumns.ofNullableColumn(ctx, "t3", "col1"));
+            .rejects(Column.ofNotNull("t1", "col1", "integer"))
+            .rejects(ColumnWithSerialType.of(Column.ofNotNull("t1", "col1", PgColumnType.SERIAL), "s1"))
+            .rejects(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col1", "integer"))
+            .rejects(TableWithColumns.ofNullableColumn(ctx, "t3", "col1", "integer"));
     }
 
     @Test
     void shouldWorkForMultipleItems() {
         final PgContext ctx = PgContext.of("tst");
         assertThat(SkipByColumnNamePredicate.of(List.of("col1", "cOL2")))
-            .accepts(Column.ofNotNull("t1", "col3"))
-            .accepts(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col3"))
+            .accepts(Column.ofNotNull("t1", "col3", "integer"))
+            .accepts(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col3", "integer"))
             .accepts(TableWithColumns.withoutColumns(Table.of("t2")))
-            .rejects(Column.ofNotNull("t1", "col1"))
-            .rejects(ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "col2"), "s1"))
-            .rejects(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col1"))
-            .rejects(TableWithColumns.ofNullableColumn(ctx, "t3", "col1"));
+            .rejects(Column.ofNotNull("t1", "col1", "integer"))
+            .rejects(ColumnWithSerialType.of(Column.ofNotNull("t1", "col2", PgColumnType.SERIAL), "s1"))
+            .rejects(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col1", "integer"))
+            .rejects(TableWithColumns.ofNullableColumn(ctx, "t3", "col1", "integer"));
     }
 }

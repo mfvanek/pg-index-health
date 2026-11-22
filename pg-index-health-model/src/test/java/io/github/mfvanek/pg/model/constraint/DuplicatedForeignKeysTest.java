@@ -35,8 +35,8 @@ class DuplicatedForeignKeysTest {
         assertThat(foreignKeys)
             .hasToString("""
                 DuplicatedForeignKeys{tableName='t1', foreignKeys=[\
-                ForeignKey{tableName='t1', constraintName='c1', columns=[Column{tableName='t1', columnName='col1', notNull=true}]}, \
-                ForeignKey{tableName='t1', constraintName='c2', columns=[Column{tableName='t1', columnName='col1', notNull=true}]}]}""");
+                ForeignKey{tableName='t1', constraintName='c1', columns=[Column{tableName='t1', columnName='col1', notNull=true, columnType='integer'}]}, \
+                ForeignKey{tableName='t1', constraintName='c2', columns=[Column{tableName='t1', columnName='col1', notNull=true, columnType='integer'}]}]}""");
     }
 
     @Test
@@ -64,13 +64,13 @@ class DuplicatedForeignKeysTest {
         assertThatThrownBy(() -> DuplicatedForeignKeys.of(empty))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rows cannot be empty");
-        final List<ForeignKey> single = List.of(ForeignKey.ofNotNullColumn("t1", "c1", "col1"));
+        final List<ForeignKey> single = List.of(ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"));
         assertThatThrownBy(() -> DuplicatedForeignKeys.of(single))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rows should contains at least two items");
         final List<ForeignKey> twoInvalid = List.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1"),
-            ForeignKey.ofNotNullColumn("t2", "c2", "col1"));
+            ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"),
+            ForeignKey.ofNotNullColumn("t2", "c2", "col1", "integer"));
         assertThatThrownBy(() -> DuplicatedForeignKeys.of(twoInvalid))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Table name is not the same within given rows");
@@ -82,8 +82,8 @@ class DuplicatedForeignKeysTest {
         final DuplicatedForeignKeys first = prepare();
         final DuplicatedForeignKeys theSame = prepare();
         final DuplicatedForeignKeys second = DuplicatedForeignKeys.of(List.of(
-            ForeignKey.ofNotNullColumn("t1", "c3", "col2"),
-            ForeignKey.ofNotNullColumn("t1", "c4", "col2")));
+            ForeignKey.ofNotNullColumn("t1", "c3", "col2", "integer"),
+            ForeignKey.ofNotNullColumn("t1", "c4", "col2", "integer")));
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -117,11 +117,11 @@ class DuplicatedForeignKeysTest {
         final DuplicatedForeignKeys first = prepare();
         final DuplicatedForeignKeys theSame = prepare();
         final DuplicatedForeignKeys secondName = DuplicatedForeignKeys.of(
-            ForeignKey.ofNotNullColumn("t1", "c3", "col2"),
-            ForeignKey.ofNotNullColumn("t1", "c4", "col2"));
+            ForeignKey.ofNotNullColumn("t1", "c3", "col2", "integer"),
+            ForeignKey.ofNotNullColumn("t1", "c4", "col2", "integer"));
         final DuplicatedForeignKeys secondTable = DuplicatedForeignKeys.of(
-            ForeignKey.ofNotNullColumn("t2", "c1", "col1"),
-            ForeignKey.ofNotNullColumn("t2", "c2", "col1"));
+            ForeignKey.ofNotNullColumn("t2", "c1", "col1", "integer"),
+            ForeignKey.ofNotNullColumn("t2", "c2", "col1", "integer"));
 
         assertThatThrownBy(() -> first.compareTo(null))
             .isInstanceOf(NullPointerException.class)
@@ -145,7 +145,7 @@ class DuplicatedForeignKeysTest {
     @NonNull
     private DuplicatedForeignKeys prepare() {
         return DuplicatedForeignKeys.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1"),
-            ForeignKey.ofNotNullColumn("t1", "c2", "col1"));
+            ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"),
+            ForeignKey.ofNotNullColumn("t1", "c2", "col1", "integer"));
     }
 }

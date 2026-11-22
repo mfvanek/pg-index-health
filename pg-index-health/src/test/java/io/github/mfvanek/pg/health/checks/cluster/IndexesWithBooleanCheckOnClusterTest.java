@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
@@ -50,10 +51,10 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "accounts", "i_accounts_balance_lower_number_deleted", 0L, List.of(
-                        Column.ofNotNull(ctx, "accounts", "account_balance"),
-                        Column.ofNotNull(ctx, "accounts", "deleted"))),
+                        Column.ofNotNull(ctx, "accounts", "account_balance", PgColumnType.NUMERIC),
+                        Column.ofNotNull(ctx, "accounts", "deleted", PgColumnType.BOOLEAN))),
                     IndexWithColumns.ofSingle(ctx, "accounts", "i_accounts_deleted", 0L,
-                        Column.ofNotNull(ctx, "accounts", "deleted")))
+                        Column.ofNotNull(ctx, "accounts", "deleted", PgColumnType.BOOLEAN)))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -76,12 +77,12 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted", 0L,
-                        Column.ofNotNull(ctx, "t1", "deleted")),
+                        Column.ofNotNull(ctx, "t1", "deleted", PgColumnType.BOOLEAN)),
                     IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted_duplicate", 0L,
-                        Column.ofNotNull(ctx, "t1", "deleted")),
+                        Column.ofNotNull(ctx, "t1", "deleted", PgColumnType.BOOLEAN)),
                     IndexWithColumns.ofColumns(ctx, "t1", "idx_t1_deleted_entity_id", 0L, List.of(
-                        Column.ofNotNull(ctx, "t1", "deleted"),
-                        Column.ofNotNull(ctx, "t1", "entity_id")))
+                        Column.ofNotNull(ctx, "t1", "deleted", PgColumnType.BOOLEAN),
+                        Column.ofNotNull(ctx, "t1", "entity_id", PgColumnType.VARCHAR)))
                 ));
     }
 }

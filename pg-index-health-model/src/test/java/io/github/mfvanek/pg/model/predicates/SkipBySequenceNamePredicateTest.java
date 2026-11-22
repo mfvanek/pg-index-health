@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model.predicates;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.sequence.SequenceState;
 import io.github.mfvanek.pg.model.table.Table;
@@ -103,7 +104,7 @@ class SkipBySequenceNamePredicateTest {
             .rejects(SequenceState.of("s1", "int", 80.0))
             .rejects(SequenceState.of("s2", "int", 80.0))
             .rejects(SequenceState.of("S2", "int", 80.0))
-            .rejects(ColumnWithSerialType.ofSerial(Column.ofNullable("t", "c"), "s1"));
+            .rejects(ColumnWithSerialType.of(Column.ofNullable("t", "c", PgColumnType.SERIAL), "s1"));
     }
 
     @ParameterizedTest
@@ -114,6 +115,6 @@ class SkipBySequenceNamePredicateTest {
             .accepts(Table.of(ctx, "t"))
             .accepts(SequenceState.of(ctx, "s11", "int", 80.0))
             .rejects(SequenceState.of(ctx, "s1", "int", 80.0))
-            .rejects(ColumnWithSerialType.ofSerial(Column.ofNullable(ctx.enrichWithSchema("t"), "c"), ctx.enrichWithSchema("s1")));
+            .rejects(ColumnWithSerialType.of(Column.ofNullable(ctx.enrichWithSchema("t"), "c", PgColumnType.SERIAL), ctx.enrichWithSchema("s1")));
     }
 }

@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class PgIdentifierNameGeneratorTest {
         assertThatThrownBy(() -> PgIdentifierNameGenerator.of(null, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("foreignKey cannot be null");
-        final ForeignKey foreignKey = ForeignKey.ofNullableColumn("t", "cn", "c");
+        final ForeignKey foreignKey = ForeignKey.ofNullableColumn("t", "cn", "c", PgColumnType.BIGINT);
         assertThatThrownBy(() -> PgIdentifierNameGenerator.of(foreignKey, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("options cannot be null");
@@ -152,12 +153,12 @@ class PgIdentifierNameGeneratorTest {
             .isEqualTo("idx_table_with_very_very_very_long_name_3202677_without_nulls")
             .hasSizeLessThanOrEqualTo(MAX_IDENTIFIER_LENGTH);
 
-        final ForeignKey second = ForeignKey.ofNullableColumn("table_with_very_very_very_long_name_1", "cn", "column1");
+        final ForeignKey second = ForeignKey.ofNullableColumn("table_with_very_very_very_long_name_1", "cn", "column1", PgColumnType.BIGINT);
         assertThat(PgIdentifierNameGenerator.of(second, GeneratingOptions.builder().build()).generateTruncatedIndexName())
             .isEqualTo("table_with_very_very_very_long_name_1_column1_without_nulls_idx")
             .hasSizeLessThanOrEqualTo(MAX_IDENTIFIER_LENGTH);
 
-        final ForeignKey third = ForeignKey.ofNullableColumn("table_with_very_very_very_long_name_12", "cn", "column1");
+        final ForeignKey third = ForeignKey.ofNullableColumn("table_with_very_very_very_long_name_12", "cn", "column1", PgColumnType.BIGINT);
         assertThat(PgIdentifierNameGenerator.of(third, GeneratingOptions.builder().build()).generateTruncatedIndexName())
             .isEqualTo("table_with_very_very_very_long_name_12_column1_idx")
             .hasSizeLessThanOrEqualTo(MAX_IDENTIFIER_LENGTH);
@@ -200,25 +201,25 @@ class PgIdentifierNameGeneratorTest {
 
     @Test
     void fullAndTruncatedNamesShouldBeTheSameForShortCases() {
-        final ForeignKey first = ForeignKey.ofNotNullColumn("t", "cn", "col");
+        final ForeignKey first = ForeignKey.ofNotNullColumn("t", "cn", "col", PgColumnType.BIGINT);
         PgIdentifierNameGenerator generator = PgIdentifierNameGenerator.of(first, GeneratingOptions.builder().build());
         assertThat(generator.generateFullIndexName())
             .isEqualTo("t_col_idx")
             .isEqualTo(generator.generateTruncatedIndexName());
 
-        final ForeignKey second = ForeignKey.ofNotNullColumn("t_1234567890_1234567890_1234567890_1234567890", "cn", "col_123456789");
+        final ForeignKey second = ForeignKey.ofNotNullColumn("t_1234567890_1234567890_1234567890_1234567890", "cn", "col_123456789", PgColumnType.BIGINT);
         generator = PgIdentifierNameGenerator.of(second, GeneratingOptions.builder().build());
         assertThat(generator.generateFullIndexName())
             .isEqualTo("t_1234567890_1234567890_1234567890_1234567890_col_123456789_idx")
             .isEqualTo(generator.generateTruncatedIndexName());
 
-        final ForeignKey third = ForeignKey.ofNotNullColumn("t_1234567890_1234567890_1234567890_1234567890", "cn", "col_12345678");
+        final ForeignKey third = ForeignKey.ofNotNullColumn("t_1234567890_1234567890_1234567890_1234567890", "cn", "col_12345678", PgColumnType.BIGINT);
         generator = PgIdentifierNameGenerator.of(third, GeneratingOptions.builder().build());
         assertThat(generator.generateFullIndexName())
             .isEqualTo("t_1234567890_1234567890_1234567890_1234567890_col_12345678_idx")
             .isEqualTo(generator.generateTruncatedIndexName());
 
-        final ForeignKey nullableColumn = ForeignKey.ofNullableColumn("t2", "cn2", "col2");
+        final ForeignKey nullableColumn = ForeignKey.ofNullableColumn("t2", "cn2", "col2", PgColumnType.BIGINT);
         generator = PgIdentifierNameGenerator.of(nullableColumn, GeneratingOptions.builder().build());
         assertThat(generator.generateFullIndexName())
             .isEqualTo("t2_col2_without_nulls_idx")
@@ -228,26 +229,26 @@ class PgIdentifierNameGeneratorTest {
     @NonNull
     static ForeignKey notNullColumnWithSchema() {
         return ForeignKey.ofNotNullColumn("schema_name_that_should_be_omitted.table_with_very_very_very_long_name",
-            "cn", "column_with_very_very_very_long_name");
+            "cn", "column_with_very_very_very_long_name", PgColumnType.BIGINT);
     }
 
     @NonNull
     static ForeignKey nullableColumnWithSchema() {
         return ForeignKey.ofNullableColumn("schema_name_that_should_be_omitted.table_with_very_very_very_long_name",
-            "cn", "column_with_very_very_very_long_name");
+            "cn", "column_with_very_very_very_long_name", PgColumnType.BIGINT);
     }
 
     @NonNull
     static ForeignKey notNullColumnWithZeroHash() {
-        return ForeignKey.ofNotNullColumn("table_with_very_very_very_long_name_that_is_even_longer", "cn", "corrugatestendentiousness");
+        return ForeignKey.ofNotNullColumn("table_with_very_very_very_long_name_that_is_even_longer", "cn", "corrugatestendentiousness", PgColumnType.BIGINT);
     }
 
     @NonNull
     static ForeignKey severalColumnsWithoutNulls() {
         return ForeignKey.of("table_with_very_very_very_long_name", "cn",
             List.of(
-                Column.ofNotNull("table_with_very_very_very_long_name", "column_1_with_very_long_name"),
-                Column.ofNotNull("table_with_very_very_very_long_name", "column_2_with_very_long_name")
+                Column.ofNotNull("table_with_very_very_very_long_name", "column_1_with_very_long_name", PgColumnType.BIGINT),
+                Column.ofNotNull("table_with_very_very_very_long_name", "column_2_with_very_long_name", PgColumnType.BIGINT)
             ));
     }
 
@@ -255,8 +256,8 @@ class PgIdentifierNameGeneratorTest {
     static ForeignKey severalColumnsWithNulls() {
         return ForeignKey.of("table_with_very_very_very_long_name", "cn",
             List.of(
-                Column.ofNotNull("table_with_very_very_very_long_name", "column_1_with_very_long_name"),
-                Column.ofNullable("table_with_very_very_very_long_name", "column_2_with_very_long_name")
+                Column.ofNotNull("table_with_very_very_very_long_name", "column_1_with_very_long_name", PgColumnType.BIGINT),
+                Column.ofNullable("table_with_very_very_very_long_name", "column_2_with_very_long_name", PgColumnType.BIGINT)
             ));
     }
 }

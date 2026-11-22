@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -47,9 +48,9 @@ class SelfReferencedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase 
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNullableColumn(ctx, "bad_self_ref_restrict_table", "bad_self_ref_restrict_table_parent_id_fk", "parent_id"),
-                    ForeignKey.ofNullableColumn(ctx, "bad_self_ref_table", "bad_self_ref_table_parent_id_fk", "parent_id"),
-                    ForeignKey.ofNullableColumn(ctx, "cfk_node_b", "cfk_node_b_parent_fk", "parent_id")
+                    ForeignKey.ofNullableColumn(ctx, "bad_self_ref_restrict_table", "bad_self_ref_restrict_table_parent_id_fk", "parent_id", PgColumnType.BIGINT),
+                    ForeignKey.ofNullableColumn(ctx, "bad_self_ref_table", "bad_self_ref_table_parent_id_fk", "parent_id", PgColumnType.BIGINT),
+                    ForeignKey.ofNullableColumn(ctx, "cfk_node_b", "cfk_node_b_parent_fk", "parent_id", PgColumnType.BIGINT)
                 );
 
             assertThat(check)
@@ -67,7 +68,7 @@ class SelfReferencedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase 
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNullableColumn(ctx, "bad_self_ref_partitioned", "bad_self_ref_partitioned_parent_id_fk", "parent_id")
+                    ForeignKey.ofNullableColumn(ctx, "bad_self_ref_partitioned", "bad_self_ref_partitioned_parent_id_fk", "parent_id", PgColumnType.BIGINT)
                 );
         });
     }

@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
@@ -27,12 +27,12 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class ColumnsWithCharTypeCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<@NonNull ColumnWithType> check = new ColumnsWithCharTypeCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull Column> check = new ColumnsWithCharTypeCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(ColumnWithType.class)
+            .hasType(Column.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_CHAR_TYPE)
             .hasHost(getHost())
             .isStatic();
@@ -47,12 +47,12 @@ class ColumnsWithCharTypeCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "clients", "contact_person")),
-                    ColumnWithType.ofCharacter(Column.ofNotNull(ctx, "clients", "gender")),
-                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "clients", "home_address")),
-                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "clients", "nickname")))
+                    Column.ofNullable(ctx, "clients", "contact_person", PgColumnType.CHARACTER),
+                    Column.ofNotNull(ctx, "clients", "gender", PgColumnType.CHARACTER),
+                    Column.ofNullable(ctx, "clients", "home_address", PgColumnType.CHARACTER),
+                    Column.ofNullable(ctx, "clients", "nickname", PgColumnType.CHARACTER))
                 .doesNotContain(
-                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "clients", "safe_word"))
+                    Column.ofNullable(ctx, "clients", "safe_word", PgColumnType.CHARACTER)
                 ));
     }
 
@@ -65,12 +65,12 @@ class ColumnsWithCharTypeCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "tp", "contact_person")),
-                    ColumnWithType.ofCharacter(Column.ofNotNull(ctx, "tp", "gender")),
-                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "tp", "home_address")),
-                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "tp", "nickname")))
+                    Column.ofNullable(ctx, "tp", "contact_person", PgColumnType.CHARACTER),
+                    Column.ofNotNull(ctx, "tp", "gender", PgColumnType.CHARACTER),
+                    Column.ofNullable(ctx, "tp", "home_address", PgColumnType.CHARACTER),
+                    Column.ofNullable(ctx, "tp", "nickname", PgColumnType.CHARACTER))
                 .doesNotContain(
-                    ColumnWithType.ofCharacter(Column.ofNullable(ctx, "tp", "safe_word"))
+                    Column.ofNullable(ctx, "tp", "safe_word", PgColumnType.CHARACTER)
                 ));
     }
 }

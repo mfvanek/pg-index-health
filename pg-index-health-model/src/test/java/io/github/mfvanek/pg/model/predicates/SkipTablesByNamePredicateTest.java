@@ -110,9 +110,9 @@ class SkipTablesByNamePredicateTest {
     void shouldCheckEveryTableOfForeignKeyCycle(final String schemaName) {
         final PgContext ctx = PgContext.of(schemaName);
         final ForeignKeyCycle cycle = ForeignKeyCycle.of(
-            ForeignKey.ofNotNullColumn(ctx, "t1", "c1", "col1"),
-            ForeignKey.ofNotNullColumn(ctx, "t2", "c2", "col2"),
-            ForeignKey.ofNotNullColumn(ctx, "T3", "c3", "col3"));
+            ForeignKey.ofNotNullColumn(ctx, "t1", "c1", "col1", "integer"),
+            ForeignKey.ofNotNullColumn(ctx, "t2", "c2", "col2", "integer"),
+            ForeignKey.ofNotNullColumn(ctx, "T3", "c3", "col3", "integer"));
         assertThat(SkipTablesByNamePredicate.ofName(ctx, "t1"))
             .rejects(cycle);
         assertThat(SkipTablesByNamePredicate.ofName(ctx, "t2"))
@@ -130,8 +130,8 @@ class SkipTablesByNamePredicateTest {
     @Test
     void shouldWorkWithDuplicatedForeignKeys() {
         final DuplicatedForeignKeys duplicatedForeignKeys = DuplicatedForeignKeys.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1"),
-            ForeignKey.ofNotNullColumn("t1", "c2", "col1"));
+            ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"),
+            ForeignKey.ofNotNullColumn("t1", "c2", "col1", "integer"));
         assertThat(SkipTablesByNamePredicate.ofName("t1"))
             .rejects(duplicatedForeignKeys);
         assertThat(SkipTablesByNamePredicate.ofName("t2"))

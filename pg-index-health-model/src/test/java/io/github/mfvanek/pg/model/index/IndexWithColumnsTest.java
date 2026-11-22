@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model.index;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -27,7 +28,7 @@ class IndexWithColumnsTest {
 
     @Test
     void gettersShouldWork() {
-        final Column column = Column.ofNullable("t", "f");
+        final Column column = Column.ofNullable("t", "f", "integer");
         final IndexWithColumns index = IndexWithColumns.ofSingle("t", "i", 11L, column);
         assertThat(index.getTableName()).isEqualTo("t");
         assertThat(index.getIndexName())
@@ -37,11 +38,11 @@ class IndexWithColumnsTest {
         assertThat(index.getColumns())
             .hasSize(1)
             .isUnmodifiable()
-            .containsExactly(Column.ofNullable("t", "f"));
+            .containsExactly(Column.ofNullable("t", "f", "integer"));
         assertThat(index.getObjectType())
             .isEqualTo(PgObjectType.INDEX);
         assertThat(index.getFirstColumn())
-            .isEqualTo(Column.ofNullable("t", "f"));
+            .isEqualTo(Column.ofNullable("t", "f", "integer"));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -72,7 +73,7 @@ class IndexWithColumnsTest {
 
     @Test
     void tableShouldBeTheSame() {
-        final Column column = Column.ofNullable("t2", "f");
+        final Column column = Column.ofNullable("t2", "f", "integer");
         assertThatThrownBy(() -> IndexWithColumns.ofSingle("t", "i", 1L, column))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Table name is not the same within given rows");
@@ -80,29 +81,29 @@ class IndexWithColumnsTest {
 
     @Test
     void testToString() {
-        assertThat(IndexWithColumns.ofSingle("t", "i", 22L, Column.ofNullable("t", "f")))
-            .hasToString("IndexWithColumns{tableName='t', indexName='i', indexSizeInBytes=22, columns=[Column{tableName='t', columnName='f', notNull=false}]}");
+        assertThat(IndexWithColumns.ofSingle("t", "i", 22L, Column.ofNullable("t", "f", "integer")))
+            .hasToString("IndexWithColumns{tableName='t', indexName='i', indexSizeInBytes=22, columns=[Column{tableName='t', columnName='f', notNull=false, columnType='integer'}]}");
         final PgContext ctx = PgContext.of("tst");
-        final Column column = Column.ofNullable(ctx, "t", "f");
+        final Column column = Column.ofNullable(ctx, "t", "f", "integer");
         assertThat(IndexWithColumns.ofSingle(ctx, "t", "i", 22L, column))
-            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=22, columns=[Column{tableName='tst.t', columnName='f', notNull=false}]}");
+            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=22, columns=[Column{tableName='tst.t', columnName='f', notNull=false, columnType='integer'}]}");
         assertThat(IndexWithColumns.ofColumns(ctx, "t", "i", 22L, List.of(column)))
-            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=22, columns=[Column{tableName='tst.t', columnName='f', notNull=false}]}");
+            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=22, columns=[Column{tableName='tst.t', columnName='f', notNull=false, columnType='integer'}]}");
         assertThat(IndexWithColumns.ofColumns(ctx, "t", "i", List.of(column)))
-            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='f', notNull=false}]}");
-        assertThat(IndexWithColumns.ofNullable(ctx, "t", "i", "c"))
-            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='c', notNull=false}]}");
-        assertThat(IndexWithColumns.ofNotNull(ctx, "t", "i", "c"))
-            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='c', notNull=true}]}");
+            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='f', notNull=false, columnType='integer'}]}");
+        assertThat(IndexWithColumns.ofNullable(ctx, "t", "i", "c", "integer"))
+            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='c', notNull=false, columnType='integer'}]}");
+        assertThat(IndexWithColumns.ofNotNull(ctx, "t", "i", "c", "integer"))
+            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='c', notNull=true, columnType='integer'}]}");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
-        final Column column = Column.ofNullable("t1", "f");
+        final Column column = Column.ofNullable("t1", "f", "integer");
         final IndexWithColumns first = IndexWithColumns.ofSingle("t1", "i1", 1, column);
         final IndexWithColumns theSame = IndexWithColumns.ofSingle("t1", "i1", 3, column); // different size!
-        final IndexWithColumns second = IndexWithColumns.ofSingle("t2", "i2", 2, Column.ofNotNull("t2", "f2"));
+        final IndexWithColumns second = IndexWithColumns.ofSingle("t2", "i2", 2, Column.ofNotNull("t2", "f2", "integer"));
         final IndexWithColumns third = createThird();
 
         assertThat(first.equals(null)).isFalse();
@@ -139,6 +140,17 @@ class IndexWithColumnsTest {
     }
 
     @Test
+    void factoriesWithEnumTypeShouldWork() {
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(IndexWithColumns.ofNotNull(ctx, "t", "i", "c", PgColumnType.BIGINT))
+            .usingRecursiveComparison()
+            .isEqualTo(IndexWithColumns.ofNotNull(ctx, "t", "i", "c", "bigint"));
+        assertThat(IndexWithColumns.ofNullable(ctx, "t", "i", "c", PgColumnType.UUID))
+            .usingRecursiveComparison()
+            .isEqualTo(IndexWithColumns.ofNullable(ctx, "t", "i", "c", "uuid"));
+    }
+
+    @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(IndexWithColumns.class)
             .withIgnoredFields(ColumnsAware.COLUMNS_FIELD)
@@ -148,10 +160,10 @@ class IndexWithColumnsTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void compareToTest() {
-        final Column column = Column.ofNullable("t1", "f");
+        final Column column = Column.ofNullable("t1", "f", "integer");
         final IndexWithColumns first = IndexWithColumns.ofSingle("t1", "i1", 1, column);
         final IndexWithColumns theSame = IndexWithColumns.ofSingle("t1", "i1", 3, column); // different size!
-        final IndexWithColumns second = IndexWithColumns.ofSingle("t2", "i2", 2, Column.ofNotNull("t2", "f2"));
+        final IndexWithColumns second = IndexWithColumns.ofSingle("t2", "i2", 2, Column.ofNotNull("t2", "f2", "integer"));
         final IndexWithColumns third = createThird();
 
         assertThatThrownBy(() -> first.compareTo(null))
@@ -176,8 +188,8 @@ class IndexWithColumnsTest {
     @NonNull
     private static IndexWithColumns createThird() {
         final List<Column> columns = List.of(
-            Column.ofNullable("t3", "t"),
-            Column.ofNullable("t3", "f"));
+            Column.ofNullable("t3", "t", "integer"),
+            Column.ofNullable("t3", "f", "integer"));
         return IndexWithColumns.ofColumns("t3", "i3", 2L, columns);
     }
 }

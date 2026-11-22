@@ -32,8 +32,6 @@ public class ColumnWithSerialTypeSerializer extends ValueSerializer<ColumnWithSe
     public void serialize(final ColumnWithSerialType value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
         ctxt.defaultSerializeProperty(ColumnTypeAware.COLUMN_FIELD, value.toColumn(), gen);
-        gen.writeStringProperty(ColumnTypeAware.COLUMN_TYPE_FIELD, value.getColumnType());
-        gen.writeStringProperty(ColumnWithSerialType.SERIAL_TYPE_FIELD, value.getSerialType().name());
         gen.writeStringProperty(SequenceNameAware.SEQUENCE_NAME_FIELD, value.getSequenceName());
         gen.writeEndObject();
     }

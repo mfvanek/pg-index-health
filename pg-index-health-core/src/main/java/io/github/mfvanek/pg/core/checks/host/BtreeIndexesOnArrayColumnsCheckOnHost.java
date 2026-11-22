@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
-import io.github.mfvanek.pg.core.checks.extractors.IndexWithSingleColumnExtractor;
+import io.github.mfvanek.pg.core.checks.extractors.IndexWithColumnsExtractor;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 
 /**
@@ -31,6 +31,6 @@ public class BtreeIndexesOnArrayColumnsCheckOnHost extends AbstractCheckOnHost<I
      * @param pgConnection the connection to the PostgreSQL database; must not be null
      */
     public BtreeIndexesOnArrayColumnsCheckOnHost(final PgConnection pgConnection) {
-        super(IndexWithColumns.class, pgConnection, Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS, IndexWithSingleColumnExtractor.of());
+        super(IndexWithColumns.class, pgConnection, Diagnostic.BTREE_INDEXES_ON_ARRAY_COLUMNS, IndexWithColumnsExtractor.of());
     }
 }

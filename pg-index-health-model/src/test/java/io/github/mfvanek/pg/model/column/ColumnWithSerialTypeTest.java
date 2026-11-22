@@ -36,14 +36,16 @@ class ColumnWithSerialTypeTest {
                     .isFalse();
                 assertThat(c.isNotNull())
                     .isTrue();
+                assertThat(c.getColumnType())
+                    .isEqualTo("serial");
                 assertThat(c.getSerialType())
-                    .isEqualTo(SerialType.SERIAL);
+                    .isEqualTo(PgColumnType.SERIAL);
                 assertThat(c.getSequenceName())
                     .isEqualTo("s1");
                 assertThat(c.getObjectType())
                     .isEqualTo(PgObjectType.TABLE);
                 assertThat(c.toColumn())
-                    .isEqualTo(Column.ofNotNull("t1", "c1"));
+                    .isEqualTo(Column.ofNotNull("t1", "c1", PgColumnType.SERIAL));
             });
 
         final ColumnWithSerialType theSameButNullable = prepareNullable();
@@ -60,67 +62,63 @@ class ColumnWithSerialTypeTest {
                 assertThat(c.isNotNull())
                     .isFalse();
                 assertThat(c.getSerialType())
-                    .isEqualTo(SerialType.SERIAL);
+                    .isEqualTo(PgColumnType.SERIAL);
                 assertThat(c.getSequenceName())
                     .isEqualTo("s1");
                 assertThat(c.toColumn())
-                    .isEqualTo(Column.ofNullable("t1", "c1"));
+                    .isEqualTo(Column.ofNullable("t1", "c1", PgColumnType.SERIAL));
             });
+
+        assertThat(ColumnWithSerialType.of(Column.ofNotNull("t1", "c1", "smallserial"), "s1").getSerialType())
+            .isEqualTo(PgColumnType.SMALL_SERIAL);
+        assertThat(ColumnWithSerialType.of(Column.ofNotNull("t1", "c1", "bigserial"), "s1").getSerialType())
+            .isEqualTo(PgColumnType.BIG_SERIAL);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidValuesShouldThrowException() {
-        assertThatThrownBy(() -> ColumnWithSerialType.of(null, SerialType.SERIAL, null))
+        assertThatThrownBy(() -> ColumnWithSerialType.of(null, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("column cannot be null");
 
-        final Column column = Column.ofNullable("t1", "c1");
-        assertThatThrownBy(() -> ColumnWithSerialType.of(column, null, null))
-            .isInstanceOf(NullPointerException.class)
-            .hasMessage("serialType cannot be null");
-
-        assertThatThrownBy(() -> ColumnWithSerialType.of(column, SerialType.BIG_SERIAL, null))
+        final Column column = Column.ofNullable("t1", "c1", PgColumnType.BIG_SERIAL);
+        assertThatThrownBy(() -> ColumnWithSerialType.of(column, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("sequenceName cannot be null");
 
-        assertThatThrownBy(() -> ColumnWithSerialType.of(column, SerialType.SMALL_SERIAL, ""))
+        assertThatThrownBy(() -> ColumnWithSerialType.of(column, ""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("sequenceName cannot be blank");
 
-        assertThatThrownBy(() -> ColumnWithSerialType.of(column, SerialType.SMALL_SERIAL, "   "))
+        assertThatThrownBy(() -> ColumnWithSerialType.of(column, "   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("sequenceName cannot be blank");
+
+        final Column notSerial = Column.ofNotNull("t1", "c1", PgColumnType.BIGINT);
+        assertThatThrownBy(() -> ColumnWithSerialType.of(notSerial, "s1"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("column type must be serial but was 'bigint'");
+
+        final Column unknownType = Column.ofNotNull("t1", "c1", "unknown");
+        assertThatThrownBy(() -> ColumnWithSerialType.of(unknownType, "s1"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("pgColumnType = 'unknown'");
     }
 
     @Test
     void toStringTest() {
         assertThat(prepare())
             .hasToString("""
-                ColumnWithSerialType{column=Column{tableName='t1', columnName='c1', notNull=true}, \
-                columnType='serial', serialType=SerialType{columnType='serial'}, sequenceName='s1'}""");
+                ColumnWithSerialType{column=Column{tableName='t1', columnName='c1', notNull=true, columnType='serial'}, \
+                sequenceName='s1'}""");
 
         final PgContext ctx = PgContext.of("tst");
-        final Column col = Column.ofNotNull(ctx, "t2", "c2");
-        assertThat(ColumnWithSerialType.of(ctx, col, SerialType.SMALL_SERIAL, "s2"))
+        final Column col = Column.ofNotNull(ctx, "t2", "c2", PgColumnType.SMALL_SERIAL);
+        assertThat(ColumnWithSerialType.of(ctx, col, "s2"))
             .hasToString("""
-                ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, \
-                columnType='smallserial', serialType=SerialType{columnType='smallserial'}, sequenceName='tst.s2'}""");
-
-        assertThat(ColumnWithSerialType.ofBigSerial(ctx, col, "s3"))
-            .hasToString("""
-                ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, \
-                columnType='bigserial', serialType=SerialType{columnType='bigserial'}, sequenceName='tst.s3'}""");
-
-        assertThat(ColumnWithSerialType.ofSerial(ctx, col, "s4"))
-            .hasToString("""
-                ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, \
-                columnType='serial', serialType=SerialType{columnType='serial'}, sequenceName='tst.s4'}""");
-
-        assertThat(ColumnWithSerialType.ofSmallSerial(ctx, col, "s5"))
-            .hasToString("""
-                ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true}, \
-                columnType='smallserial', serialType=SerialType{columnType='smallserial'}, sequenceName='tst.s5'}""");
+                ColumnWithSerialType{column=Column{tableName='tst.t2', columnName='c2', notNull=true, columnType='smallserial'}, \
+                sequenceName='tst.s2'}""");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -129,9 +127,9 @@ class ColumnWithSerialTypeTest {
         final ColumnWithSerialType first = prepare();
         final ColumnWithSerialType theSame = prepare();
         final ColumnWithSerialType theSameButNullable = prepareNullable();
-        final ColumnWithSerialType second = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c2"), "s1");
-        final ColumnWithSerialType third = ColumnWithSerialType.ofSmallSerial(Column.ofNotNull("t1", "c1"), "s1");
-        final ColumnWithSerialType forth = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c1"), "s2");
+        final ColumnWithSerialType second = ColumnWithSerialType.of(Column.ofNotNull("t1", "c2", PgColumnType.SERIAL), "s1");
+        final ColumnWithSerialType third = ColumnWithSerialType.of(Column.ofNotNull("t1", "c1", PgColumnType.SMALL_SERIAL), "s1");
+        final ColumnWithSerialType forth = ColumnWithSerialType.of(Column.ofNotNull("t1", "c1", PgColumnType.SERIAL), "s2");
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -147,22 +145,22 @@ class ColumnWithSerialTypeTest {
             .isEqualTo(first)
             .hasSameHashCodeAs(first);
 
-        // do not ignore nullability of column
+        // nullability is an attribute, not a part of identity
         assertThat(theSameButNullable)
-            .isNotEqualTo(first)
-            .doesNotHaveSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // others
         assertThat(second)
             .isNotEqualTo(first)
             .doesNotHaveSameHashCodeAs(first);
 
-        // ignores serial type
+        // serial type is an attribute, not a part of identity
         assertThat(third)
             .isEqualTo(first)
             .hasSameHashCodeAs(first);
 
-        // ignores sequence name
+        // sequence name is an attribute, not a part of identity
         assertThat(forth)
             .isEqualTo(first)
             .hasSameHashCodeAs(first);
@@ -171,7 +169,7 @@ class ColumnWithSerialTypeTest {
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(ColumnWithSerialType.class)
-            .withIgnoredFields(ColumnTypeAware.COLUMN_TYPE_FIELD, ColumnWithSerialType.SERIAL_TYPE_FIELD, ColumnWithSerialType.SEQUENCE_NAME_FIELD)
+            .withIgnoredFields(ColumnWithSerialType.SEQUENCE_NAME_FIELD)
             .verify();
     }
 
@@ -180,10 +178,10 @@ class ColumnWithSerialTypeTest {
         final ColumnWithSerialType first = prepare();
         final ColumnWithSerialType theSame = prepare();
         final ColumnWithSerialType theSameButNullable = prepareNullable();
-        final ColumnWithSerialType second = ColumnWithSerialType.ofSmallSerial(Column.ofNotNull("t1", "c1"), "s1");
-        final ColumnWithSerialType third = ColumnWithSerialType.ofBigSerial(Column.ofNotNull("t1", "c1"), "s1");
-        final ColumnWithSerialType forth = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c2"), "s2");
-        final ColumnWithSerialType fifth = ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c1"), "s2");
+        final ColumnWithSerialType theSameButAnotherType = ColumnWithSerialType.of(Column.ofNotNull("t1", "c1", PgColumnType.BIG_SERIAL), "s1");
+        final ColumnWithSerialType theSameButAnotherSequence = ColumnWithSerialType.of(Column.ofNotNull("t1", "c1", PgColumnType.SERIAL), "s2");
+        final ColumnWithSerialType second = ColumnWithSerialType.of(Column.ofNotNull("t1", "c2", PgColumnType.SERIAL), "s1");
+        final ColumnWithSerialType third = ColumnWithSerialType.of(Column.ofNotNull("t2", "c1", PgColumnType.SERIAL), "s1");
 
         // noinspection ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
@@ -193,35 +191,28 @@ class ColumnWithSerialTypeTest {
         assertThat(first)
             .isEqualByComparingTo(first) // self
             .isEqualByComparingTo(theSame) // the same
-            .isGreaterThan(theSameButNullable) // do not ignore nullability of column
-            .isGreaterThan(second)
-            .isLessThan(third)
-            .isLessThan(forth)
-            .isLessThan(fifth);
-
-        assertThat(theSameButNullable)
-            .isLessThan(first);
+            .isEqualByComparingTo(theSameButNullable) // nullability is not a part of identity
+            .isEqualByComparingTo(theSameButAnotherType) // serial type is not a part of identity
+            .isEqualByComparingTo(theSameButAnotherSequence) // sequence name is not a part of identity
+            .isLessThan(second)
+            .isLessThan(third);
 
         assertThat(second)
-            .isLessThan(first)
-            .isLessThan(third)
-            .isLessThan(forth)
-            .isLessThan(fifth);
+            .isGreaterThan(first)
+            .isLessThan(third);
 
         assertThat(third)
             .isGreaterThan(first)
-            .isGreaterThan(second)
-            .isLessThan(forth)
-            .isGreaterThan(fifth);
+            .isGreaterThan(second);
     }
 
     @NonNull
     private static ColumnWithSerialType prepare() {
-        return ColumnWithSerialType.ofSerial(Column.ofNotNull("t1", "c1"), "s1");
+        return ColumnWithSerialType.of(Column.ofNotNull("t1", "c1", PgColumnType.SERIAL), "s1");
     }
 
     @NonNull
     private static ColumnWithSerialType prepareNullable() {
-        return ColumnWithSerialType.ofSerial(Column.ofNullable("t1", "c1"), "s1");
+        return ColumnWithSerialType.of(Column.ofNullable("t1", "c1", PgColumnType.SERIAL), "s1");
     }
 }

@@ -24,6 +24,13 @@ import java.sql.SQLException;
  */
 public final class ColumnExtractor implements ResultSetExtractor<Column> {
 
+    /**
+     * The name of the result set column that contains the column type.
+     *
+     * @since 0.51.0
+     */
+    public static final String COLUMN_TYPE = "column_type";
+
     private ColumnExtractor() {
     }
 
@@ -35,10 +42,8 @@ public final class ColumnExtractor implements ResultSetExtractor<Column> {
         final String tableName = resultSet.getString(TableExtractor.TABLE_NAME);
         final String columnName = resultSet.getString("column_name");
         final boolean columnNotNull = resultSet.getBoolean("column_not_null");
-        if (columnNotNull) {
-            return Column.ofNotNull(tableName, columnName);
-        }
-        return Column.ofNullable(tableName, columnName);
+        final String columnType = resultSet.getString(COLUMN_TYPE);
+        return Column.of(tableName, columnName, columnNotNull, columnType);
     }
 
     /**

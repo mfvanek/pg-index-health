@@ -15,7 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
@@ -27,12 +27,12 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class ColumnsWithTimestampOrTimetzTypeCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<@NonNull ColumnWithType> check = new ColumnsWithTimestampOrTimetzTypeCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull Column> check = new ColumnsWithTimestampOrTimetzTypeCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(ColumnWithType.class)
+            .hasType(Column.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_TIMESTAMP_OR_TIMETZ_TYPE)
             .hasHost(getHost())
             .isStatic();
@@ -47,8 +47,8 @@ class ColumnsWithTimestampOrTimetzTypeCheckOnHostTest extends DatabaseAwareTestB
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.of(Column.ofNullable(ctx, "\"t-multi\"", "created_at"), "time with time zone"),
-                    ColumnWithType.ofTimestamp(Column.ofNullable(ctx, "\"t-multi\"", "ts"))
+                    Column.ofNullable(ctx, "\"t-multi\"", "created_at", "time with time zone"),
+                    Column.ofNullable(ctx, "\"t-multi\"", "ts", PgColumnType.TIMESTAMP)
                 );
 
             assertThat(check)
@@ -66,8 +66,8 @@ class ColumnsWithTimestampOrTimetzTypeCheckOnHostTest extends DatabaseAwareTestB
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.ofTimestamp(Column.ofNotNull(ctx, "tp", "creation_date")),
-                    ColumnWithType.ofTimestamp(Column.ofNotNull(ctx, "tp_good", "creation_date"))
+                    Column.ofNotNull(ctx, "tp", "creation_date", PgColumnType.TIMESTAMP),
+                    Column.ofNotNull(ctx, "tp_good", "creation_date", PgColumnType.TIMESTAMP)
                 )
         );
     }

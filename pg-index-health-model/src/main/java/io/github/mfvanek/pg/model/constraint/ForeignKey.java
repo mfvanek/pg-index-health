@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.model.constraint;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
@@ -264,12 +265,32 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
+     * @param columnType     type of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
+     * @since 0.51.0
      */
     public static ForeignKey ofNotNullColumn(final String tableName,
                                              final String constraintName,
-                                             final String columnName) {
-        return ofColumn(tableName, constraintName, Column.ofNotNull(tableName, columnName));
+                                             final String columnName,
+                                             final String columnType) {
+        return ofColumn(tableName, constraintName, Column.ofNotNull(tableName, columnName, columnType));
+    }
+
+    /**
+     * Constructs a {@code ForeignKey} object with not null column.
+     *
+     * @param tableName      table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param columnName     name of column that is included in constraint; should be non-blank.
+     * @param columnType     type of column that is included in constraint; must be non-null.
+     * @return {@code ForeignKey}
+     * @since 0.51.0
+     */
+    public static ForeignKey ofNotNullColumn(final String tableName,
+                                             final String constraintName,
+                                             final String columnName,
+                                             final PgColumnType columnType) {
+        return ofColumn(tableName, constraintName, Column.ofNotNull(tableName, columnName, columnType));
     }
 
     /**
@@ -279,14 +300,35 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
+     * @param columnType     type of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.14.5
+     * @since 0.51.0
      */
     public static ForeignKey ofNotNullColumn(final PgContext pgContext,
                                              final String tableName,
                                              final String constraintName,
-                                             final String columnName) {
-        return ofColumn(pgContext, tableName, constraintName, Column.ofNotNull(pgContext, tableName, columnName));
+                                             final String columnName,
+                                             final String columnType) {
+        return ofColumn(pgContext, tableName, constraintName, Column.ofNotNull(pgContext, tableName, columnName, columnType));
+    }
+
+    /**
+     * Constructs a {@code ForeignKey} object with not null column and given context.
+     *
+     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param tableName      table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param columnName     name of column that is included in constraint; should be non-blank.
+     * @param columnType     type of column that is included in constraint; must be non-null.
+     * @return {@code ForeignKey}
+     * @since 0.51.0
+     */
+    public static ForeignKey ofNotNullColumn(final PgContext pgContext,
+                                             final String tableName,
+                                             final String constraintName,
+                                             final String columnName,
+                                             final PgColumnType columnType) {
+        return ofColumn(pgContext, tableName, constraintName, Column.ofNotNull(pgContext, tableName, columnName, columnType));
     }
 
     /**
@@ -295,12 +337,32 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
+     * @param columnType     type of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
+     * @since 0.51.0
      */
     public static ForeignKey ofNullableColumn(final String tableName,
                                               final String constraintName,
-                                              final String columnName) {
-        return ofColumn(tableName, constraintName, Column.ofNullable(tableName, columnName));
+                                              final String columnName,
+                                              final String columnType) {
+        return ofColumn(tableName, constraintName, Column.ofNullable(tableName, columnName, columnType));
+    }
+
+    /**
+     * Constructs a {@code ForeignKey} object with nullable column.
+     *
+     * @param tableName      table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param columnName     name of column that is included in constraint; should be non-blank.
+     * @param columnType     type of column that is included in constraint; must be non-null.
+     * @return {@code ForeignKey}
+     * @since 0.51.0
+     */
+    public static ForeignKey ofNullableColumn(final String tableName,
+                                              final String constraintName,
+                                              final String columnName,
+                                              final PgColumnType columnType) {
+        return ofColumn(tableName, constraintName, Column.ofNullable(tableName, columnName, columnType));
     }
 
     /**
@@ -310,13 +372,34 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
+     * @param columnType     type of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.14.5
+     * @since 0.51.0
      */
     public static ForeignKey ofNullableColumn(final PgContext pgContext,
                                               final String tableName,
                                               final String constraintName,
-                                              final String columnName) {
-        return ofColumn(pgContext, tableName, constraintName, Column.ofNullable(pgContext, tableName, columnName));
+                                              final String columnName,
+                                              final String columnType) {
+        return ofColumn(pgContext, tableName, constraintName, Column.ofNullable(pgContext, tableName, columnName, columnType));
+    }
+
+    /**
+     * Constructs a {@code ForeignKey} object with nullable column and given context.
+     *
+     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param tableName      table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param columnName     name of column that is included in constraint; should be non-blank.
+     * @param columnType     type of column that is included in constraint; must be non-null.
+     * @return {@code ForeignKey}
+     * @since 0.51.0
+     */
+    public static ForeignKey ofNullableColumn(final PgContext pgContext,
+                                              final String tableName,
+                                              final String constraintName,
+                                              final String columnName,
+                                              final PgColumnType columnType) {
+        return ofColumn(pgContext, tableName, constraintName, Column.ofNullable(pgContext, tableName, columnName, columnType));
     }
 }

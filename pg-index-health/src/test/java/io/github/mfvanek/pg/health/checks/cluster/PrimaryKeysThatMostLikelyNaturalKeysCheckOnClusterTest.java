@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -49,10 +50,10 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnClusterTest extends DatabaseAwa
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "t2_composite", "t2_composite_pkey",
-                        List.of(Column.ofNotNull(ctx, "t2_composite", "passport_series"), Column.ofNotNull(ctx, "t2_composite", "passport_number"))),
+                        List.of(Column.ofNotNull(ctx, "t2_composite", "passport_series", PgColumnType.TEXT), Column.ofNotNull(ctx, "t2_composite", "passport_number", PgColumnType.TEXT))),
                     IndexWithColumns.ofColumns(ctx, "t3_composite", "t3_composite_pkey",
-                        List.of(Column.ofNotNull(ctx, "t3_composite", "app_id"), Column.ofNotNull(ctx, "t3_composite", "app_number"))),
-                    IndexWithColumns.ofNotNull(ctx, "\"times-of-creation\"", "\"times-of-creation_pkey\"", "\"time-of-creation\""))
+                        List.of(Column.ofNotNull(ctx, "t3_composite", "app_id", PgColumnType.UUID), Column.ofNotNull(ctx, "t3_composite", "app_number", PgColumnType.TEXT))),
+                    IndexWithColumns.ofNotNull(ctx, "\"times-of-creation\"", "\"times-of-creation_pkey\"", "\"time-of-creation\"", PgColumnType.TIMESTAMPTZ))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -72,9 +73,9 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnClusterTest extends DatabaseAwa
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "tp", "tp_pkey",
                         List.of(
-                            Column.ofNotNull(ctx, "tp", "creation_date"),
-                            Column.ofNotNull(ctx, "tp", "ref_type"),
-                            Column.ofNotNull(ctx, "tp", "entity_id")))
+                            Column.ofNotNull(ctx, "tp", "creation_date", PgColumnType.TIMESTAMP),
+                            Column.ofNotNull(ctx, "tp", "ref_type", PgColumnType.VARCHAR),
+                            Column.ofNotNull(ctx, "tp", "entity_id", PgColumnType.VARCHAR)))
                 ));
     }
 }

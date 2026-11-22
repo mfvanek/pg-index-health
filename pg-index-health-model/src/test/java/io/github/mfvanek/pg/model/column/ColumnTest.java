@@ -22,7 +22,7 @@ class ColumnTest {
 
     @Test
     void gettersShouldWorkForNotNullColumn() {
-        final Column column = Column.ofNotNull("t1", "c1");
+        final Column column = Column.ofNotNull("t1", "c1", "integer");
         assertThat(column.getTableName())
             .isNotBlank()
             .isEqualTo("t1");
@@ -32,13 +32,15 @@ class ColumnTest {
             .isEqualTo(column.getName());
         assertThat(column.isNotNull()).isTrue();
         assertThat(column.isNullable()).isFalse();
+        assertThat(column.getColumnType())
+            .isEqualTo("integer");
         assertThat(column.getObjectType())
             .isEqualTo(PgObjectType.TABLE);
     }
 
     @Test
     void gettersShouldWorkForNullableColumn() {
-        final Column nullableColumn = Column.ofNullable("t2", "c2");
+        final Column nullableColumn = Column.ofNullable("t2", "c2", PgColumnType.TEXT);
         assertThat(nullableColumn.getTableName())
             .isNotBlank()
             .isEqualTo("t2");
@@ -48,55 +50,90 @@ class ColumnTest {
             .isEqualTo(nullableColumn.getName());
         assertThat(nullableColumn.isNotNull()).isFalse();
         assertThat(nullableColumn.isNullable()).isTrue();
+        assertThat(nullableColumn.getColumnType())
+            .isEqualTo("text");
         assertThat(nullableColumn.getObjectType())
             .isEqualTo(PgObjectType.TABLE);
+    }
+
+    @Test
+    void allFactoriesShouldWork() {
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(Column.ofNotNull("t1", "c1", PgColumnType.BIGINT))
+            .isEqualTo(Column.ofNotNull("t1", "c1", "bigint"))
+            .isEqualTo(Column.of("t1", "c1", true, "bigint"));
+        assertThat(Column.ofNotNull(ctx, "t1", "c1", PgColumnType.BIGINT))
+            .isEqualTo(Column.ofNotNull(ctx, "t1", "c1", "bigint"))
+            .isEqualTo(Column.of(ctx, "t1", "c1", true, "bigint"))
+            .isEqualTo(Column.of("tst.t1", "c1", true, "bigint"));
+        assertThat(Column.ofNullable("t1", "c1", PgColumnType.UUID))
+            .isEqualTo(Column.ofNullable("t1", "c1", "uuid"))
+            .isEqualTo(Column.of("t1", "c1", false, "uuid"));
+        assertThat(Column.ofNullable(ctx, "t1", "c1", PgColumnType.UUID))
+            .isEqualTo(Column.ofNullable(ctx, "t1", "c1", "uuid"))
+            .isEqualTo(Column.of(ctx, "t1", "c1", false, "uuid"))
+            .isEqualTo(Column.of("tst.t1", "c1", false, "uuid"));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidValuesShouldThrowException() {
-        assertThatThrownBy(() -> Column.ofNotNull(null, "c1"))
+        assertThatThrownBy(() -> Column.ofNotNull(null, "c1", "integer"))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("tableName cannot be null");
-        assertThatThrownBy(() -> Column.ofNotNull("", "c1"))
+        assertThatThrownBy(() -> Column.ofNotNull("", "c1", "integer"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("tableName cannot be blank");
-        assertThatThrownBy(() -> Column.ofNotNull("   ", "c1"))
+        assertThatThrownBy(() -> Column.ofNotNull("   ", "c1", "integer"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("tableName cannot be blank");
 
-        assertThatThrownBy(() -> Column.ofNotNull("t1", null))
+        assertThatThrownBy(() -> Column.ofNotNull("t1", null, "integer"))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("columnName cannot be null");
-        assertThatThrownBy(() -> Column.ofNotNull("t1", ""))
+        assertThatThrownBy(() -> Column.ofNotNull("t1", "", "integer"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
-        assertThatThrownBy(() -> Column.ofNotNull("t1", "   "))
+        assertThatThrownBy(() -> Column.ofNotNull("t1", "   ", "integer"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
+
+        assertThatThrownBy(() -> Column.ofNotNull("t1", "c1", (String) null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("columnType cannot be null");
+        assertThatThrownBy(() -> Column.ofNotNull("t1", "c1", (PgColumnType) null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("columnType cannot be null");
+        assertThatThrownBy(() -> Column.ofNullable("t1", "c1", ""))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("columnType cannot be blank");
+        assertThatThrownBy(() -> Column.ofNullable("t1", "c1", "   "))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("columnType cannot be blank");
     }
 
     @Test
     void testToString() {
-        assertThat(Column.ofNotNull("t1", "c1"))
-            .hasToString("Column{tableName='t1', columnName='c1', notNull=true}");
-        assertThat(Column.ofNullable("t2", "c2"))
-            .hasToString("Column{tableName='t2', columnName='c2', notNull=false}");
+        assertThat(Column.ofNotNull("t1", "c1", PgColumnType.INTEGER))
+            .hasToString("Column{tableName='t1', columnName='c1', notNull=true, columnType='integer'}");
+        assertThat(Column.ofNullable("t2", "c2", PgColumnType.TIMESTAMPTZ))
+            .hasToString("Column{tableName='t2', columnName='c2', notNull=false, columnType='timestamp with time zone'}");
 
         final PgContext ctx = PgContext.of("tst");
-        assertThat(Column.ofNotNull(ctx, "t1", "c1"))
-            .hasToString("Column{tableName='tst.t1', columnName='c1', notNull=true}");
-        assertThat(Column.ofNullable(ctx, "t2", "c2"))
-            .hasToString("Column{tableName='tst.t2', columnName='c2', notNull=false}");
+        assertThat(Column.ofNotNull(ctx, "t1", "c1", "integer[]"))
+            .hasToString("Column{tableName='tst.t1', columnName='c1', notNull=true, columnType='integer[]'}");
+        assertThat(Column.ofNullable(ctx, "t2", "c2", PgColumnType.VARCHAR))
+            .hasToString("Column{tableName='tst.t2', columnName='c2', notNull=false, columnType='character varying'}");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
-        final Column first = Column.ofNotNull("t1", "c1");
-        final Column theSame = Column.ofNotNull("t1", "c1");
-        final Column theSameButNullable = Column.ofNullable("t1", "c1");
-        final Column second = Column.ofNotNull("t1", "c2");
+        final Column first = Column.ofNotNull("t1", "c1", "integer");
+        final Column theSame = Column.ofNotNull("t1", "c1", PgColumnType.INTEGER);
+        final Column theSameButNullable = Column.ofNullable("t1", "c1", "integer");
+        final Column theSameButAnotherType = Column.ofNotNull("t1", "c1", "bigint");
+        final Column second = Column.ofNotNull("t1", "c2", "integer");
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -112,10 +149,15 @@ class ColumnTest {
             .isEqualTo(first)
             .hasSameHashCodeAs(first);
 
-        // do not ignore nullability of column
+        // nullability is an attribute, not a part of identity
         assertThat(theSameButNullable)
-            .isNotEqualTo(first)
-            .doesNotHaveSameHashCodeAs(first);
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
+
+        // type is an attribute, not a part of identity
+        assertThat(theSameButAnotherType)
+            .isEqualTo(first)
+            .hasSameHashCodeAs(first);
 
         // others
         assertThat(second)
@@ -126,16 +168,18 @@ class ColumnTest {
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(Column.class)
+            .withIgnoredFields(ColumnNameAware.NOT_NULL_FIELD, ColumnTypeAware.COLUMN_TYPE_FIELD)
             .verify();
     }
 
     @Test
     void compareToTest() {
-        final Column first = Column.ofNotNull("t1", "c1");
-        final Column theSame = Column.ofNotNull("t1", "c1");
-        final Column theSameButNullable = Column.ofNullable("t1", "c1");
-        final Column second = Column.ofNotNull("t1", "c2");
-        final Column third = Column.ofNotNull("t2", "c1");
+        final Column first = Column.ofNotNull("t1", "c1", "integer");
+        final Column theSame = Column.ofNotNull("t1", "c1", "integer");
+        final Column theSameButNullable = Column.ofNullable("t1", "c1", "integer");
+        final Column theSameButAnotherType = Column.ofNotNull("t1", "c1", "bigint");
+        final Column second = Column.ofNotNull("t1", "c2", "integer");
+        final Column third = Column.ofNotNull("t2", "c1", "integer");
 
         // noinspection ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
@@ -145,11 +189,10 @@ class ColumnTest {
         assertThat(first)
             .isEqualByComparingTo(first) // self
             .isEqualByComparingTo(theSame) // the same
-            .isGreaterThan(theSameButNullable) // do not ignore nullability of column
+            .isEqualByComparingTo(theSameButNullable) // nullability is not a part of identity
+            .isEqualByComparingTo(theSameButAnotherType) // type is not a part of identity
             .isLessThan(second)
             .isLessThan(third);
-
-        assertThat(theSameButNullable).isLessThan(first);
 
         assertThat(second)
             .isGreaterThan(first)

@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.constraint.ForeignKeyCycle;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -60,29 +61,29 @@ class CyclicForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ForeignKeyCycle.of(
-                        ForeignKey.ofNotNullColumn(ctx, "\"Cfk-A-First\"", "\"Cfk-A-First-Fk\"", "\"Second-Id\""),
-                        ForeignKey.ofNullableColumn(ctx, "\"Cfk-A-Second\"", "\"Cfk-A-Second-Fk\"", "\"First-Id\"")),
+                        ForeignKey.ofNotNullColumn(ctx, "\"Cfk-A-First\"", "\"Cfk-A-First-Fk\"", "\"Second-Id\"", PgColumnType.BIGINT),
+                        ForeignKey.ofNullableColumn(ctx, "\"Cfk-A-Second\"", "\"Cfk-A-Second-Fk\"", "\"First-Id\"", PgColumnType.BIGINT)),
                     ForeignKeyCycle.of(
-                        ForeignKey.ofNullableColumn(ctx, "cfk_customers", "cfk_customers_last_order_fk", "last_order_id"),
+                        ForeignKey.ofNullableColumn(ctx, "cfk_customers", "cfk_customers_last_order_fk", "last_order_id", PgColumnType.BIGINT),
                         ForeignKey.of(ctx, "cfk_orders", "cfk_orders_customer_fk",
-                            List.of(Column.ofNotNull(ctx, "cfk_orders", "customer_id"), Column.ofNotNull(ctx, "cfk_orders", "region_id")))),
+                            List.of(Column.ofNotNull(ctx, "cfk_orders", "customer_id", PgColumnType.BIGINT), Column.ofNotNull(ctx, "cfk_orders", "region_id", PgColumnType.BIGINT)))),
                     ForeignKeyCycle.of(
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_left", "cfk_left_first_right_fk", "first_right_id"),
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_right", "cfk_right_left_fk", "left_id")),
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_left", "cfk_left_first_right_fk", "first_right_id", PgColumnType.BIGINT),
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_right", "cfk_right_left_fk", "left_id", PgColumnType.BIGINT)),
                     ForeignKeyCycle.of(
-                        ForeignKey.ofNullableColumn(ctx, "cfk_left", "cfk_left_second_right_fk", "second_right_id"),
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_right", "cfk_right_left_fk", "left_id")),
+                        ForeignKey.ofNullableColumn(ctx, "cfk_left", "cfk_left_second_right_fk", "second_right_id", PgColumnType.BIGINT),
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_right", "cfk_right_left_fk", "left_id", PgColumnType.BIGINT)),
                     ForeignKeyCycle.of(
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_node_a", "cfk_node_a_b_fk", "b_id"),
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_node_b", "cfk_node_b_c_fk", "c_id"),
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_node_c", "cfk_node_c_a_fk", "a_id")),
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_node_a", "cfk_node_a_b_fk", "b_id", PgColumnType.BIGINT),
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_node_b", "cfk_node_b_c_fk", "c_id", PgColumnType.BIGINT),
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_node_c", "cfk_node_c_a_fk", "a_id", PgColumnType.BIGINT)),
                     ForeignKeyCycle.of(
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_ring_a", "cfk_ring_a_c_fk", "c_id"),
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_ring_c", "cfk_ring_c_a_fk", "a_id")),
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_ring_a", "cfk_ring_a_c_fk", "c_id", PgColumnType.BIGINT),
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_ring_c", "cfk_ring_c_a_fk", "a_id", PgColumnType.BIGINT)),
                     ForeignKeyCycle.of(
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_ring_a", "cfk_ring_a_c_fk", "c_id"),
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_ring_c", "cfk_ring_c_b_fk", "b_id"),
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_ring_b", "cfk_ring_b_a_fk", "a_id"))
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_ring_a", "cfk_ring_a_c_fk", "c_id", PgColumnType.BIGINT),
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_ring_c", "cfk_ring_c_b_fk", "b_id", PgColumnType.BIGINT),
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_ring_b", "cfk_ring_b_a_fk", "a_id", PgColumnType.BIGINT))
                 ));
     }
 
@@ -116,11 +117,11 @@ class CyclicForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     ForeignKeyCycle.of(
-                        ForeignKey.ofNullableColumn(ctx, "cfk_part_p", "cfk_part_p_q_fk", "q_id"),
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_part_q", "cfk_part_q_p_fk", "p_id")),
+                        ForeignKey.ofNullableColumn(ctx, "cfk_part_p", "cfk_part_p_q_fk", "q_id", PgColumnType.BIGINT),
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_part_q", "cfk_part_q_p_fk", "p_id", PgColumnType.BIGINT)),
                     ForeignKeyCycle.of(
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_part_r", "cfk_part_r_s_fk", "s_id"),
-                        ForeignKey.ofNotNullColumn(ctx, "cfk_part_s", "cfk_part_s_r_fk", "r_id"))
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_part_r", "cfk_part_r_s_fk", "s_id", PgColumnType.BIGINT),
+                        ForeignKey.ofNotNullColumn(ctx, "cfk_part_s", "cfk_part_s_r_fk", "r_id", PgColumnType.BIGINT))
                 ));
     }
 }
