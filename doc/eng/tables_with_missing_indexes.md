@@ -25,6 +25,9 @@ In a database cluster, the check must be performed on every host.
 
 Supports partitioned tables. The check is performed on each partition.
 
+Scans are counted per partition, so partitioned (parent) tables are never reported.
+This way a single partition that is scanned sequentially is not hidden behind the statistics of other partitions.
+
 ## Reproduction script
 
 ```sql
