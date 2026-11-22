@@ -8,6 +8,8 @@ Foreign keys also make it possible to quickly and correctly find data related to
 
 If tables without links were created intentionally, they should simply be ignored.
 
+Foreign keys from all schemas are taken into account: a table that is referenced only by a foreign key from another schema is considered linked.
+
 ## SQL query
 
 - [tables_not_linked_to_others.sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_not_linked_to_others.sql)
