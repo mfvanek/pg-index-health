@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Represents a database statement that creates stored functions and procedures in the database.
+ * Also installs the {@code lo} extension, whose functions have no description but belong to the extension.
  */
 public class CreateFunctionsStatement extends AbstractDbStatement {
 
@@ -29,6 +30,7 @@ public class CreateFunctionsStatement extends AbstractDbStatement {
     @Override
     protected List<String> getSqlToExecute() {
         return List.of(
+            "create extension if not exists lo schema {schemaName};",
             """
                 create or replace function {schemaName}.add(a integer, b integer) returns integer
                     as 'select $1 + $2;'

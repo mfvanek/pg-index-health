@@ -2,6 +2,9 @@
 
 The check finds names of database objects that need to be escaped with double quotes in SQL queries.
 
+Objects that belong to extensions are not reported: the user can't rename them.
+Indexes and constraints are not extension members themselves, so they are skipped when their table (or domain) belongs to an extension.
+
 ## Why you should pay attention to this
 
 - [Naming convention](https://www.postgresql.org/docs/17/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)

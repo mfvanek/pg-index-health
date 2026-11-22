@@ -43,19 +43,20 @@ class TablesWithNoDataCheckOnClusterTest extends StatisticsAwareTestBase {
 
             assertThat(check)
                 .executing(ctx)
-                .hasSize(5)
+                .hasSize(6)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields()
                 .containsExactly(
                     Table.of(ctx, "\"1st_table\""),
                     Table.of(ctx, "\"bad-table\""),
                     Table.of(ctx, "\"bad-table-two\"", 8_192L),
                     Table.of(ctx, "empty"),
+                    Table.of(ctx, "\"ext-table\""),
                     Table.of(ctx, "\"UpperCaseTable\"")
                 );
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "empty"))
-                .hasSize(4);
+                .hasSize(5);
         });
     }
 
