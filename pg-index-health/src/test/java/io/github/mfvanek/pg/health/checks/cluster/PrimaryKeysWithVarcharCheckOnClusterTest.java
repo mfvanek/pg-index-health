@@ -49,7 +49,8 @@ class PrimaryKeysWithVarcharCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "t_link", "t_link_pkey", List.of(Column.ofNotNull(ctx, "t_link", "id_long", PgColumnType.VARCHAR), Column.ofNotNull(ctx, "t_link", "\"id-short\"", PgColumnType.VARCHAR))),
+                    IndexWithColumns.ofColumns(ctx, "t_link", "t_link_pkey",
+                        List.of(Column.ofNotNull(ctx, "t_link", "id_long", PgColumnType.VARCHAR), Column.ofNotNull(ctx, "t_link", "\"id-short\"", PgColumnType.VARCHAR))),
                     IndexWithColumns.ofSingle(ctx, "t_varchar_long", "t_varchar_long_pkey", 0L, Column.ofNotNull(ctx, "t_varchar_long", "id_long", PgColumnType.VARCHAR)),
                     IndexWithColumns.ofSingle(ctx, "\"t-varchar-short\"", "\"t-varchar-short_pkey\"", 0L, Column.ofNotNull(ctx, "\"t-varchar-short\"", "\"id-short\"", PgColumnType.VARCHAR)))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);

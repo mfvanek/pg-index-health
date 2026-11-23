@@ -73,8 +73,10 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofNullable(ctx, "custom_entity_reference_with_very_very_very_long_name", "idx_custom_entity_reference_with_very_very_very_long_name_1", "ref_type", PgColumnType.VARCHAR),
-                    IndexWithColumns.ofNullable(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default", "idx_custom_entity_reference_with_very_very_very_long_name_1_d_3", "ref_type", PgColumnType.VARCHAR))
+                    IndexWithColumns.ofNullable(ctx, "custom_entity_reference_with_very_very_very_long_name",
+                        "idx_custom_entity_reference_with_very_very_very_long_name_1", "ref_type", PgColumnType.VARCHAR),
+                    IndexWithColumns.ofNullable(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default",
+                        "idx_custom_entity_reference_with_very_very_very_long_name_1_d_3", "ref_type", PgColumnType.VARCHAR))
         );
     }
 }

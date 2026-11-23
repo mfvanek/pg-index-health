@@ -66,7 +66,8 @@ class ForeignKeyCycleExtractorTest {
                 .isEqualTo(ForeignKeyCycle.of(
                     ForeignKey.of("t1", "c1", List.of(Column.ofNotNull("t1", "a", PgColumnType.INTEGER), Column.ofNullable("t1", "b", PgColumnType.INTEGER))),
                     ForeignKey.ofNotNullColumn("t2", "c2", "c", PgColumnType.INTEGER),
-                    ForeignKey.of("t3", "c3", List.of(Column.ofNotNull("t3", "d", PgColumnType.INTEGER), Column.ofNotNull("t3", "e", PgColumnType.INTEGER), Column.ofNullable("t3", "f", PgColumnType.INTEGER)))));
+                    ForeignKey.of("t3", "c3",
+                        List.of(Column.ofNotNull("t3", "d", PgColumnType.INTEGER), Column.ofNotNull("t3", "e", PgColumnType.INTEGER), Column.ofNullable("t3", "f", PgColumnType.INTEGER)))));
         }
     }
 

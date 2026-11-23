@@ -45,7 +45,6 @@ class ColumnsDataParserTest {
             .hasMessage("Cannot parse column info from a; b; c");
     }
 
-
     @Test
     void shouldThrowExceptionWhenTypeIsMissing() {
         assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "c1,true"))
