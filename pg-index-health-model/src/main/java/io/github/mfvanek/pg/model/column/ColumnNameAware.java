@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.model.column;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
 /**
- * Allows getting column name.
+ * Allows getting column name, nullability and type.
  *
  * @author Ivan Vakhrushev
  * @see TableNameAware
@@ -31,6 +31,16 @@ public interface ColumnNameAware extends TableNameAware {
      * It signifies that a column cannot contain null values.
      */
     String NOT_NULL_FIELD = "notNull";
+
+    /**
+     * Represents the constant value for identifying the "column" field.
+     */
+    String COLUMN_FIELD = "column";
+
+    /**
+     * The field name representing the type of column in a database.
+     */
+    String COLUMN_TYPE_FIELD = "columnType";
 
     /**
      * Retrieves column name in the table.
@@ -54,4 +64,11 @@ public interface ColumnNameAware extends TableNameAware {
     default boolean isNullable() {
         return !isNotNull();
     }
+
+    /**
+     * Retrieves column type in the table.
+     *
+     * @return column type
+     */
+    String getColumnType();
 }

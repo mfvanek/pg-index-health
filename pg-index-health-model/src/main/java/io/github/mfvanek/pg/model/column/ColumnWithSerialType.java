@@ -31,7 +31,7 @@ import java.util.Set;
  * @see Column
  * @since 0.6.2
  */
-public final class ColumnWithSerialType implements DbObject, ColumnTypeAware, SequenceNameAware, Comparable<ColumnWithSerialType> {
+public final class ColumnWithSerialType implements DbObject, ColumnNameAware, SequenceNameAware, Comparable<ColumnWithSerialType> {
 
     private static final Set<PgColumnType> SERIAL_TYPES = EnumSet.of(PgColumnType.SMALL_SERIAL, PgColumnType.SERIAL, PgColumnType.BIG_SERIAL);
 

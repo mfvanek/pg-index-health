@@ -212,7 +212,7 @@ class ColumnTest {
     @Test
     void equalsHashCodeShouldAdhereContracts() {
         EqualsVerifier.forClass(Column.class)
-            .withIgnoredFields(ColumnNameAware.NOT_NULL_FIELD, ColumnTypeAware.COLUMN_TYPE_FIELD)
+            .withIgnoredFields(ColumnNameAware.NOT_NULL_FIELD, ColumnNameAware.COLUMN_TYPE_FIELD)
             .verify();
     }
 

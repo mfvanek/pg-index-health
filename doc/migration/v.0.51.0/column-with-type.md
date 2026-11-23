@@ -41,6 +41,11 @@ The same applies to the convenience factories that create a column internally:
 `ForeignKey.ofNotNullColumn/ofNullableColumn`, `IndexWithColumns.ofNotNull/ofNullable` and
 `TableWithColumns.ofNotNullColumn/ofNullableColumn` take an additional `columnType` argument (`String` or `PgColumnType`).
 
+**`ColumnTypeAware` has been merged into `ColumnNameAware`.**
+
+`ColumnTypeAware` has been removed. `getColumnType()` and the `COLUMN_FIELD` / `COLUMN_TYPE_FIELD` constants
+are now part of `ColumnNameAware`. Replace `ColumnTypeAware` with `ColumnNameAware` in your code.
+
 **`PgColumnType` replaces `SerialType`.**
 
 `SerialType` has been removed. Use `PgColumnType.SMALL_SERIAL`, `PgColumnType.SERIAL` and `PgColumnType.BIG_SERIAL` instead.

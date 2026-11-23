@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
-import io.github.mfvanek.pg.model.column.ColumnTypeAware;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
 import java.io.IOException;
@@ -37,7 +36,7 @@ public class ColumnSerializer extends JsonSerializer<Column> {
         gen.writeStringField(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
         gen.writeStringField(ColumnNameAware.COLUMN_NAME_FIELD, value.getColumnName());
         gen.writeBooleanField(ColumnNameAware.NOT_NULL_FIELD, value.isNotNull());
-        gen.writeStringField(ColumnTypeAware.COLUMN_TYPE_FIELD, value.getColumnType());
+        gen.writeStringField(ColumnNameAware.COLUMN_TYPE_FIELD, value.getColumnType());
         gen.writeEndObject();
     }
 }

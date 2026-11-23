@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.model.jackson3.column;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
-import io.github.mfvanek.pg.model.column.ColumnTypeAware;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
@@ -35,7 +34,7 @@ public class ColumnDeserializer extends ModelDeserializer<Column> {
         final String tableName = getTableName(ctxt, rootNode);
         final String columnName = getStringField(ctxt, rootNode, ColumnNameAware.COLUMN_NAME_FIELD);
         final boolean notNull = getBooleanField(ctxt, rootNode, ColumnNameAware.NOT_NULL_FIELD);
-        final String columnType = getStringField(ctxt, rootNode, ColumnTypeAware.COLUMN_TYPE_FIELD);
+        final String columnType = getStringField(ctxt, rootNode, ColumnNameAware.COLUMN_TYPE_FIELD);
         return Column.of(tableName, columnName, notNull, columnType);
     }
 }

@@ -10,7 +10,7 @@
 
 package io.github.mfvanek.pg.model.jackson3.column;
 
-import io.github.mfvanek.pg.model.column.ColumnTypeAware;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 import tools.jackson.core.JsonGenerator;
@@ -31,7 +31,7 @@ public class ColumnWithSerialTypeSerializer extends ValueSerializer<ColumnWithSe
     @Override
     public void serialize(final ColumnWithSerialType value, final JsonGenerator gen, final SerializationContext ctxt) {
         gen.writeStartObject();
-        ctxt.defaultSerializeProperty(ColumnTypeAware.COLUMN_FIELD, value.toColumn(), gen);
+        ctxt.defaultSerializeProperty(ColumnNameAware.COLUMN_FIELD, value.toColumn(), gen);
         gen.writeStringProperty(SequenceNameAware.SEQUENCE_NAME_FIELD, value.getSequenceName());
         gen.writeEndObject();
     }

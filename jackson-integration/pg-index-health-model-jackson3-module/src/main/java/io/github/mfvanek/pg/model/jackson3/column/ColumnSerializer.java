@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.model.jackson3.column;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
-import io.github.mfvanek.pg.model.column.ColumnTypeAware;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
@@ -35,7 +34,7 @@ public class ColumnSerializer extends ValueSerializer<Column> {
         gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
         gen.writeStringProperty(ColumnNameAware.COLUMN_NAME_FIELD, value.getColumnName());
         gen.writeBooleanProperty(ColumnNameAware.NOT_NULL_FIELD, value.isNotNull());
-        gen.writeStringProperty(ColumnTypeAware.COLUMN_TYPE_FIELD, value.getColumnType());
+        gen.writeStringProperty(ColumnNameAware.COLUMN_TYPE_FIELD, value.getColumnType());
         gen.writeEndObject();
     }
 }

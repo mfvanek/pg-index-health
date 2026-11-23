@@ -25,7 +25,7 @@ import java.util.Objects;
  * @see PgColumnType
  * @since 0.5.0
  */
-public final class Column implements DbObject, ColumnTypeAware, Comparable<Column> {
+public final class Column implements DbObject, ColumnNameAware, Comparable<Column> {
 
     private final String tableName;
     private final String columnName;
