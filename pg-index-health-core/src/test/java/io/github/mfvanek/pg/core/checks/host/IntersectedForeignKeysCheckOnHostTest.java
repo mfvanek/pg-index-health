@@ -53,9 +53,9 @@ class IntersectedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
                 .containsExactly(
                     DuplicatedForeignKeys.of(
                         ForeignKey.of(ctx, "client_preferences", "c_client_preferences_email_phone_fk",
-                            List.of(Column.ofNotNull(ctx, "client_preferences", "email", PgColumnType.VARCHAR), Column.ofNotNull(ctx, "client_preferences", "\"Phone\"", PgColumnType.VARCHAR))),
+                            List.of(Column.ofVarchar(ctx, "client_preferences", "email"), Column.ofVarchar(ctx, "client_preferences", "\"Phone\""))),
                         ForeignKey.of(ctx, "client_preferences", "c_client_preferences_phone_email_fk",
-                            List.of(Column.ofNotNull(ctx, "client_preferences", "\"Phone\"", PgColumnType.VARCHAR), Column.ofNotNull(ctx, "client_preferences", "email", PgColumnType.VARCHAR))))
+                            List.of(Column.ofVarchar(ctx, "client_preferences", "\"Phone\""), Column.ofVarchar(ctx, "client_preferences", "email"))))
                 );
 
             assertThat(check)
@@ -76,11 +76,11 @@ class IntersectedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
                     DuplicatedForeignKeys.of(
                         ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type", PgColumnType.BIGINT),
                         ForeignKey.of(ctx, "t1", "t1_ref_type_ref_value_fk",
-                            List.of(Column.ofNotNull(ctx, "t1", "ref_type", PgColumnType.BIGINT), Column.ofNotNull(ctx, "t1", "ref_value", PgColumnType.VARCHAR)))),
+                            List.of(Column.ofBigint(ctx, "t1", "ref_type"), Column.ofVarchar(ctx, "t1", "ref_value")))),
                     DuplicatedForeignKeys.of(
                         ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type", PgColumnType.BIGINT),
                         ForeignKey.of(ctx, "t1", "t1_ref_type_ref_value_fk",
-                            List.of(Column.ofNotNull(ctx, "t1", "ref_type", PgColumnType.BIGINT), Column.ofNotNull(ctx, "t1", "ref_value", PgColumnType.VARCHAR))))
+                            List.of(Column.ofBigint(ctx, "t1", "ref_type"), Column.ofVarchar(ctx, "t1", "ref_value"))))
                 ));
     }
 }

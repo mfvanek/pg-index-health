@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
@@ -49,22 +48,22 @@ class ColumnsWithInconsistentTypesCheckOnHostTest extends DatabaseAwareTestBase 
                 .hasSize(6)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "\"t-int-id\"", "created_at", PgColumnType.TIMESTAMP),
-                    Column.ofNotNull(ctx, "t_uuid_id", "created_at", PgColumnType.TIMESTAMPTZ),
-                    Column.ofNotNull(ctx, "accounts", "id", PgColumnType.BIGINT),
-                    Column.ofNotNull(ctx, "clients", "id", PgColumnType.BIGINT),
-                    Column.ofNotNull(ctx, "\"t-int-id\"", "id", PgColumnType.INTEGER),
-                    Column.ofNotNull(ctx, "t_uuid_id", "id", PgColumnType.UUID));
+                    Column.ofTimestamp(ctx, "\"t-int-id\"", "created_at"),
+                    Column.ofTimestamptz(ctx, "t_uuid_id", "created_at"),
+                    Column.ofBigint(ctx, "accounts", "id"),
+                    Column.ofBigint(ctx, "clients", "id"),
+                    Column.ofInteger(ctx, "\"t-int-id\"", "id"),
+                    Column.ofUuid(ctx, "t_uuid_id", "id"));
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("clients", "accounts")))
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "\"t-int-id\"", "created_at", PgColumnType.TIMESTAMP),
-                    Column.ofNotNull(ctx, "t_uuid_id", "created_at", PgColumnType.TIMESTAMPTZ),
-                    Column.ofNotNull(ctx, "\"t-int-id\"", "id", PgColumnType.INTEGER),
-                    Column.ofNotNull(ctx, "t_uuid_id", "id", PgColumnType.UUID));
+                    Column.ofTimestamp(ctx, "\"t-int-id\"", "created_at"),
+                    Column.ofTimestamptz(ctx, "t_uuid_id", "created_at"),
+                    Column.ofInteger(ctx, "\"t-int-id\"", "id"),
+                    Column.ofUuid(ctx, "t_uuid_id", "id"));
 
             // Excluding "t_uuid_id" leaves "created_at" with a single type (timestamp): it is no longer
             // inconsistent and is dropped, while "id" keeps two distinct types and survives.
@@ -73,9 +72,9 @@ class ColumnsWithInconsistentTypesCheckOnHostTest extends DatabaseAwareTestBase 
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "accounts", "id", PgColumnType.BIGINT),
-                    Column.ofNotNull(ctx, "clients", "id", PgColumnType.BIGINT),
-                    Column.ofNotNull(ctx, "\"t-int-id\"", "id", PgColumnType.INTEGER));
+                    Column.ofBigint(ctx, "accounts", "id"),
+                    Column.ofBigint(ctx, "clients", "id"),
+                    Column.ofInteger(ctx, "\"t-int-id\"", "id"));
         });
     }
 
@@ -88,11 +87,11 @@ class ColumnsWithInconsistentTypesCheckOnHostTest extends DatabaseAwareTestBase 
                 .hasSize(6)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "pt_one", "created_at", PgColumnType.TIMESTAMPTZ),
-                    Column.ofNotNull(ctx, "pt_two", "created_at", PgColumnType.TIMESTAMP),
-                    Column.ofNotNull(ctx, "accounts", "id", PgColumnType.BIGINT),
-                    Column.ofNotNull(ctx, "clients", "id", PgColumnType.BIGINT),
-                    Column.ofNotNull(ctx, "pt_one", "id", PgColumnType.UUID),
-                    Column.ofNotNull(ctx, "pt_two", "id", PgColumnType.BIGINT)));
+                    Column.ofTimestamptz(ctx, "pt_one", "created_at"),
+                    Column.ofTimestamp(ctx, "pt_two", "created_at"),
+                    Column.ofBigint(ctx, "accounts", "id"),
+                    Column.ofBigint(ctx, "clients", "id"),
+                    Column.ofUuid(ctx, "pt_one", "id"),
+                    Column.ofBigint(ctx, "pt_two", "id")));
     }
 }

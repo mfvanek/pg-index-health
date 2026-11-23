@@ -15,6 +15,8 @@ import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -22,7 +24,8 @@ class ColumnTest {
 
     @Test
     void gettersShouldWorkForNotNullColumn() {
-        final Column column = Column.ofNotNull("t1", "c1", "integer");
+        final PgContext ctx = PgContext.ofDefault();
+        final Column column = Column.ofInteger(ctx, "t1", "c1");
         assertThat(column.getTableName())
             .isNotBlank()
             .isEqualTo("t1");
@@ -40,7 +43,8 @@ class ColumnTest {
 
     @Test
     void gettersShouldWorkForNullableColumn() {
-        final Column nullableColumn = Column.ofNullable("t2", "c2", PgColumnType.TEXT);
+        final PgContext ctx = PgContext.ofDefault();
+        final Column nullableColumn = Column.ofNullableText(ctx, "t2", "c2");
         assertThat(nullableColumn.getTableName())
             .isNotBlank()
             .isEqualTo("t2");
@@ -73,6 +77,42 @@ class ColumnTest {
             .isEqualTo(Column.ofNullable(ctx, "t1", "c1", "uuid"))
             .isEqualTo(Column.of(ctx, "t1", "c1", false, "uuid"))
             .isEqualTo(Column.of("tst.t1", "c1", false, "uuid"));
+    }
+
+    @Test
+    void typedFactoriesShouldWork() {
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(List.of(
+            Column.ofBigint(ctx, "t1", "c1"),
+            Column.ofNullableBigint(ctx, "t1", "c1"),
+            Column.ofInteger(ctx, "t1", "c1"),
+            Column.ofNullableInteger(ctx, "t1", "c1"),
+            Column.ofVarchar(ctx, "t1", "c1"),
+            Column.ofNullableVarchar(ctx, "t1", "c1"),
+            Column.ofText(ctx, "t1", "c1"),
+            Column.ofNullableText(ctx, "t1", "c1"),
+            Column.ofCharacter(ctx, "t1", "c1"),
+            Column.ofNullableCharacter(ctx, "t1", "c1"),
+            Column.ofBoolean(ctx, "t1", "c1"),
+            Column.ofTimestamp(ctx, "t1", "c1"),
+            Column.ofTimestamptz(ctx, "t1", "c1"),
+            Column.ofUuid(ctx, "t1", "c1")))
+            .usingRecursiveFieldByFieldElementComparator()
+            .containsExactly(
+                Column.of("tst.t1", "c1", true, "bigint"),
+                Column.of("tst.t1", "c1", false, "bigint"),
+                Column.of("tst.t1", "c1", true, "integer"),
+                Column.of("tst.t1", "c1", false, "integer"),
+                Column.of("tst.t1", "c1", true, "character varying"),
+                Column.of("tst.t1", "c1", false, "character varying"),
+                Column.of("tst.t1", "c1", true, "text"),
+                Column.of("tst.t1", "c1", false, "text"),
+                Column.of("tst.t1", "c1", true, "character"),
+                Column.of("tst.t1", "c1", false, "character"),
+                Column.of("tst.t1", "c1", true, "boolean"),
+                Column.of("tst.t1", "c1", true, "timestamp without time zone"),
+                Column.of("tst.t1", "c1", true, "timestamp with time zone"),
+                Column.of("tst.t1", "c1", true, "uuid"));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -129,11 +169,12 @@ class ColumnTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void testEqualsAndHashCode() {
-        final Column first = Column.ofNotNull("t1", "c1", "integer");
+        final PgContext ctx = PgContext.ofDefault();
+        final Column first = Column.ofInteger(ctx, "t1", "c1");
         final Column theSame = Column.ofNotNull("t1", "c1", PgColumnType.INTEGER);
-        final Column theSameButNullable = Column.ofNullable("t1", "c1", "integer");
+        final Column theSameButNullable = Column.ofNullableInteger(ctx, "t1", "c1");
         final Column theSameButAnotherType = Column.ofNotNull("t1", "c1", "bigint");
-        final Column second = Column.ofNotNull("t1", "c2", "integer");
+        final Column second = Column.ofInteger(ctx, "t1", "c2");
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -174,12 +215,13 @@ class ColumnTest {
 
     @Test
     void compareToTest() {
-        final Column first = Column.ofNotNull("t1", "c1", "integer");
-        final Column theSame = Column.ofNotNull("t1", "c1", "integer");
-        final Column theSameButNullable = Column.ofNullable("t1", "c1", "integer");
+        final PgContext ctx = PgContext.ofDefault();
+        final Column first = Column.ofInteger(ctx, "t1", "c1");
+        final Column theSame = Column.ofInteger(ctx, "t1", "c1");
+        final Column theSameButNullable = Column.ofNullableInteger(ctx, "t1", "c1");
         final Column theSameButAnotherType = Column.ofNotNull("t1", "c1", "bigint");
-        final Column second = Column.ofNotNull("t1", "c2", "integer");
-        final Column third = Column.ofNotNull("t2", "c1", "integer");
+        final Column second = Column.ofInteger(ctx, "t1", "c2");
+        final Column third = Column.ofInteger(ctx, "t2", "c1");
 
         // noinspection ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))

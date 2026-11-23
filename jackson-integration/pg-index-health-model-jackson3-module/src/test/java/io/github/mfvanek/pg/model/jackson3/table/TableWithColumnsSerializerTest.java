@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.model.jackson3.table;
 
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
@@ -25,9 +25,10 @@ class TableWithColumnsSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() {
-        final TableWithColumns original = TableWithColumns.of(Table.of("t1", 123L), List.of(
-            Column.ofNotNull("t1", "c1", PgColumnType.BIGINT),
-            Column.ofNotNull("t1", "c2", PgColumnType.BIGINT)));
+        final PgContext ctx = PgContext.ofDefault();
+        final TableWithColumns original = TableWithColumns.of(Table.of(ctx, "t1", 123L), List.of(
+            Column.ofBigint(ctx, "t1", "c1"),
+            Column.ofBigint(ctx, "t1", "c2")));
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"table":{"tableName":"t1","tableSizeInBytes":123},"columns":[\

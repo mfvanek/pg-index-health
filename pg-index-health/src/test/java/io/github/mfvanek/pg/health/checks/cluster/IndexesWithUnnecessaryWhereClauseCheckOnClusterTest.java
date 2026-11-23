@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -49,9 +48,9 @@ class IndexesWithUnnecessaryWhereClauseCheckOnClusterTest extends DatabaseAwareT
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_id_ref", 0L, Column.ofNotNull(ctx, "t1", "id_ref", PgColumnType.BIGINT)),
+                    IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_id_ref", 0L, Column.ofBigint(ctx, "t1", "id_ref")),
                     IndexWithColumns.ofColumns(ctx, "t2", "\"idx_t2_first-ref_second_ref\"", List.of(
-                        Column.ofNotNull(ctx, "t2", "second_ref", PgColumnType.BIGINT), Column.ofNotNull(ctx, "t2", "\"first-ref\"", PgColumnType.BIGINT))))
+                        Column.ofBigint(ctx, "t2", "second_ref"), Column.ofBigint(ctx, "t2", "\"first-ref\""))))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -70,7 +69,7 @@ class IndexesWithUnnecessaryWhereClauseCheckOnClusterTest extends DatabaseAwareT
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "deliveries", "\"idx_deliveries_status-id\"", List.of(
-                        Column.ofNotNull(ctx, "deliveries", "status", ctx.enrichWithSchema("delivery_status")), Column.ofNotNull(ctx, "deliveries", "id", PgColumnType.BIGINT)))
+                        Column.ofNotNull(ctx, "deliveries", "status", ctx.enrichWithSchema("delivery_status")), Column.ofBigint(ctx, "deliveries", "id")))
                 ));
     }
 }

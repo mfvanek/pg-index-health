@@ -51,9 +51,9 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHostTest extends DatabaseAwareT
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "t2_composite", "t2_composite_pkey",
-                        List.of(Column.ofNotNull(ctx, "t2_composite", "passport_series", PgColumnType.TEXT), Column.ofNotNull(ctx, "t2_composite", "passport_number", PgColumnType.TEXT))),
+                        List.of(Column.ofText(ctx, "t2_composite", "passport_series"), Column.ofText(ctx, "t2_composite", "passport_number"))),
                     IndexWithColumns.ofColumns(ctx, "t3_composite", "t3_composite_pkey",
-                        List.of(Column.ofNotNull(ctx, "t3_composite", "app_id", PgColumnType.UUID), Column.ofNotNull(ctx, "t3_composite", "app_number", PgColumnType.TEXT))),
+                        List.of(Column.ofUuid(ctx, "t3_composite", "app_id"), Column.ofText(ctx, "t3_composite", "app_number"))),
                     IndexWithColumns.ofNotNull(ctx, "\"times-of-creation\"", "\"times-of-creation_pkey\"", "\"time-of-creation\"", PgColumnType.TIMESTAMPTZ))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
@@ -74,9 +74,9 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHostTest extends DatabaseAwareT
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "tp", "tp_pkey",
                         List.of(
-                            Column.ofNotNull(ctx, "tp", "creation_date", PgColumnType.TIMESTAMP),
-                            Column.ofNotNull(ctx, "tp", "ref_type", PgColumnType.VARCHAR),
-                            Column.ofNotNull(ctx, "tp", "entity_id", PgColumnType.VARCHAR)))
+                            Column.ofTimestamp(ctx, "tp", "creation_date"),
+                            Column.ofVarchar(ctx, "tp", "ref_type"),
+                            Column.ofVarchar(ctx, "tp", "entity_id")))
                 ));
     }
 }

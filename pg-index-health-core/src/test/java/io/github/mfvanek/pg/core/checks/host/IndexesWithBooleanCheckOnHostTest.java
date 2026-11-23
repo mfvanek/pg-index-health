@@ -53,9 +53,9 @@ class IndexesWithBooleanCheckOnHostTest extends DatabaseAwareTestBase {
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "accounts", "i_accounts_balance_lower_number_deleted", 0L, List.of(
                         Column.ofNotNull(ctx, "accounts", "account_balance", PgColumnType.NUMERIC),
-                        Column.ofNotNull(ctx, "accounts", "deleted", PgColumnType.BOOLEAN))),
+                        Column.ofBoolean(ctx, "accounts", "deleted"))),
                     IndexWithColumns.ofSingle(ctx, "accounts", "i_accounts_deleted", 0L,
-                        Column.ofNotNull(ctx, "accounts", "deleted", PgColumnType.BOOLEAN)))
+                        Column.ofBoolean(ctx, "accounts", "deleted")))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -78,12 +78,12 @@ class IndexesWithBooleanCheckOnHostTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted", 0L,
-                        Column.ofNotNull(ctx, "t1", "deleted", PgColumnType.BOOLEAN)),
+                        Column.ofBoolean(ctx, "t1", "deleted")),
                     IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted_duplicate", 0L,
-                        Column.ofNotNull(ctx, "t1", "deleted", PgColumnType.BOOLEAN)),
+                        Column.ofBoolean(ctx, "t1", "deleted")),
                     IndexWithColumns.ofColumns(ctx, "t1", "idx_t1_deleted_entity_id", 0L, List.of(
-                        Column.ofNotNull(ctx, "t1", "deleted", PgColumnType.BOOLEAN),
-                        Column.ofNotNull(ctx, "t1", "entity_id", PgColumnType.VARCHAR)))
+                        Column.ofBoolean(ctx, "t1", "deleted"),
+                        Column.ofVarchar(ctx, "t1", "entity_id")))
                 ));
     }
 }

@@ -50,17 +50,17 @@ class IndexesWithTimestampInTheMiddleCheckOnClusterTest extends DatabaseAwareTes
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_expr_first", List.of(
-                        Column.ofNotNull(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\"", PgColumnType.TIMESTAMP),
-                        Column.ofNotNull(ctx, "\"t-multi\"", "id", PgColumnType.INTEGER),
-                        Column.ofNullable(ctx, "\"t-multi\"", "name", PgColumnType.TEXT))),
+                        Column.ofTimestamp(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\""),
+                        Column.ofInteger(ctx, "\"t-multi\"", "id"),
+                        Column.ofNullableText(ctx, "\"t-multi\"", "name"))),
                     IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_expr_mid", List.of(
-                        Column.ofNotNull(ctx, "\"t-multi\"", "id", PgColumnType.INTEGER),
-                        Column.ofNotNull(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\"", PgColumnType.TIMESTAMP),
-                        Column.ofNullable(ctx, "\"t-multi\"", "name", PgColumnType.TEXT))),
+                        Column.ofInteger(ctx, "\"t-multi\"", "id"),
+                        Column.ofTimestamp(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\""),
+                        Column.ofNullableText(ctx, "\"t-multi\"", "name"))),
                     IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_mid", List.of(
-                        Column.ofNotNull(ctx, "\"t-multi\"", "id", PgColumnType.INTEGER),
+                        Column.ofInteger(ctx, "\"t-multi\"", "id"),
                         Column.ofNullable(ctx, "\"t-multi\"", "ts", PgColumnType.TIMESTAMP),
-                        Column.ofNullable(ctx, "\"t-multi\"", "name", PgColumnType.TEXT))))
+                        Column.ofNullableText(ctx, "\"t-multi\"", "name"))))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -79,9 +79,9 @@ class IndexesWithTimestampInTheMiddleCheckOnClusterTest extends DatabaseAwareTes
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "tp", "i_tp_creation_date_entity_id_ref_type", List.of(
-                        Column.ofNotNull(ctx, "tp", "creation_date", PgColumnType.TIMESTAMP),
-                        Column.ofNotNull(ctx, "tp", "entity_id", PgColumnType.VARCHAR),
-                        Column.ofNotNull(ctx, "tp", "ref_type", PgColumnType.VARCHAR)
+                        Column.ofTimestamp(ctx, "tp", "creation_date"),
+                        Column.ofVarchar(ctx, "tp", "entity_id"),
+                        Column.ofVarchar(ctx, "tp", "ref_type")
                     ))
                 ));
     }

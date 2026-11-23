@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -50,7 +49,7 @@ class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "accounts", "accounts_account_number_roles_btree_idx", List.of(
-                        Column.ofNotNull(ctx, "accounts", "account_number", PgColumnType.VARCHAR),
+                        Column.ofVarchar(ctx, "accounts", "account_number"),
                         Column.ofNullable(ctx, "accounts", "roles", "text[]"))),
                     IndexWithColumns.ofSingle(ctx, "accounts", "accounts_roles_btree_idx", 0L,
                         Column.ofNullable(ctx, "accounts", "roles", "text[]")))

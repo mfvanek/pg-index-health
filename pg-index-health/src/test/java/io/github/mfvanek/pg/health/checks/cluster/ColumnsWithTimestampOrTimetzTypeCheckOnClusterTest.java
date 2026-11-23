@@ -65,8 +65,8 @@ class ColumnsWithTimestampOrTimetzTypeCheckOnClusterTest extends DatabaseAwareTe
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "tp", "creation_date", PgColumnType.TIMESTAMP),
-                    Column.ofNotNull(ctx, "tp_good", "creation_date", PgColumnType.TIMESTAMP)
+                    Column.ofTimestamp(ctx, "tp", "creation_date"),
+                    Column.ofTimestamp(ctx, "tp_good", "creation_date")
                 )
         );
     }

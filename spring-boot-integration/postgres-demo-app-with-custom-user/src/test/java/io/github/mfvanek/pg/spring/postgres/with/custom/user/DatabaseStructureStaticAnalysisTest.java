@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.predicates.SkipLiquibaseTablesPredicate;
@@ -114,8 +113,8 @@ class DatabaseStructureStaticAnalysisTest {
                         .asInstanceOf(list(Column.class))
                         .usingRecursiveFieldByFieldElementComparator()
                         .containsExactly(
-                            Column.ofNotNull(ctx, "additional_table", "id", PgColumnType.BIGINT),
-                            Column.ofNotNull(ctx, "additional_table", "name", PgColumnType.TEXT)
+                            Column.ofBigint(ctx, "additional_table", "id"),
+                            Column.ofText(ctx, "additional_table", "name")
                         );
 
                     case "PRIMARY_KEYS_WITH_SERIAL_TYPES" -> listAssert

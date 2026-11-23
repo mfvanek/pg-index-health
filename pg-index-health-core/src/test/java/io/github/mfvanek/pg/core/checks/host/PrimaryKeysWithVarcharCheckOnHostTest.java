@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -51,9 +50,9 @@ class PrimaryKeysWithVarcharCheckOnHostTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "t_link", "t_link_pkey",
-                        List.of(Column.ofNotNull(ctx, "t_link", "id_long", PgColumnType.VARCHAR), Column.ofNotNull(ctx, "t_link", "\"id-short\"", PgColumnType.VARCHAR))),
-                    IndexWithColumns.ofSingle(ctx, "t_varchar_long", "t_varchar_long_pkey", 0L, Column.ofNotNull(ctx, "t_varchar_long", "id_long", PgColumnType.VARCHAR)),
-                    IndexWithColumns.ofSingle(ctx, "\"t-varchar-short\"", "\"t-varchar-short_pkey\"", 0L, Column.ofNotNull(ctx, "\"t-varchar-short\"", "\"id-short\"", PgColumnType.VARCHAR)))
+                        List.of(Column.ofVarchar(ctx, "t_link", "id_long"), Column.ofVarchar(ctx, "t_link", "\"id-short\""))),
+                    IndexWithColumns.ofSingle(ctx, "t_varchar_long", "t_varchar_long_pkey", 0L, Column.ofVarchar(ctx, "t_varchar_long", "id_long")),
+                    IndexWithColumns.ofSingle(ctx, "\"t-varchar-short\"", "\"t-varchar-short_pkey\"", 0L, Column.ofVarchar(ctx, "\"t-varchar-short\"", "\"id-short\"")))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -72,9 +71,9 @@ class PrimaryKeysWithVarcharCheckOnHostTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     IndexWithColumns.ofColumns(ctx, "tp", "tp_pkey", List.of(
-                        Column.ofNotNull(ctx, "tp", "creation_date", PgColumnType.TIMESTAMP),
-                        Column.ofNotNull(ctx, "tp", "ref_type", PgColumnType.VARCHAR),
-                        Column.ofNotNull(ctx, "tp", "entity_id", PgColumnType.VARCHAR)))
+                        Column.ofTimestamp(ctx, "tp", "creation_date"),
+                        Column.ofVarchar(ctx, "tp", "ref_type"),
+                        Column.ofVarchar(ctx, "tp", "entity_id")))
                 ));
     }
 }

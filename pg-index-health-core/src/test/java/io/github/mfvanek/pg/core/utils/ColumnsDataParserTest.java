@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.core.utils;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.PgColumnType;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -60,55 +61,65 @@ class ColumnsDataParserTest {
 
     @Test
     void shouldWorkWhenValidDataPassed() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "c1, true, bigint", "c2, false, text", "c3, abracadabra, integer[]"))
             .hasSize(3)
+            .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
-                Column.ofNotNull("t", "c1", PgColumnType.BIGINT),
-                Column.ofNullable("t", "c2", PgColumnType.TEXT),
-                Column.ofNullable("t", "c3", "integer[]"))
+                Column.ofBigint(ctx, "t", "c1"),
+                Column.ofNullableText(ctx, "t", "c2"),
+                Column.ofNullable(ctx, "t", "c3", "integer[]"))
             .isUnmodifiable();
     }
 
     @Test
     void shouldWorkWithoutSpaces() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "c1,true,bigint", "c2,false,text", "c3,abracadabra,integer[]"))
             .hasSize(3)
+            .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
-                Column.ofNotNull("t", "c1", PgColumnType.BIGINT),
-                Column.ofNullable("t", "c2", PgColumnType.TEXT),
-                Column.ofNullable("t", "c3", "integer[]"))
+                Column.ofBigint(ctx, "t", "c1"),
+                Column.ofNullableText(ctx, "t", "c2"),
+                Column.ofNullable(ctx, "t", "c3", "integer[]"))
             .isUnmodifiable();
     }
 
     @Test
     void shouldWorkWithExtraSpaces() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "  c1,  true  , timestamp with time zone ", "   c2,   false   ,  character varying  "))
             .hasSize(2)
+            .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
-                Column.ofNotNull("t", "c1", PgColumnType.TIMESTAMPTZ),
-                Column.ofNullable("t", "c2", PgColumnType.VARCHAR))
+                Column.ofTimestamptz(ctx, "t", "c1"),
+                Column.ofNullableVarchar(ctx, "t", "c2"))
             .isUnmodifiable();
     }
 
     @Test
     void shouldWorkWithQuotedNamesContainingCommas() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThat(ColumnsDataParser.parseRawColumnsInTable("t", "\"Name\",false,text", "\"a,b\",true,integer", "\"x,true,y\",false,boolean"))
             .hasSize(3)
+            .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
-                Column.ofNullable("t", "\"Name\"", PgColumnType.TEXT),
-                Column.ofNotNull("t", "\"a,b\"", PgColumnType.INTEGER),
-                Column.ofNullable("t", "\"x,true,y\"", PgColumnType.BOOLEAN))
+                Column.ofNullableText(ctx, "t", "\"Name\""),
+                Column.ofInteger(ctx, "t", "\"a,b\""),
+                Column.ofNullable(ctx, "t", "\"x,true,y\"", PgColumnType.BOOLEAN))
             .isUnmodifiable();
     }
 
     @Test
     void shouldWorkWithExpressions() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "id,true,integer", "\"date_trunc('day'::text, ts)\",true,timestamp without time zone", "name,false,text"))
             .hasSize(3)
+            .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
-                Column.ofNotNull("t", "id", PgColumnType.INTEGER),
-                Column.ofNotNull("t", "\"date_trunc('day'::text, ts)\"", PgColumnType.TIMESTAMP),
-                Column.ofNullable("t", "name", PgColumnType.TEXT))
+                Column.ofInteger(ctx, "t", "id"),
+                Column.ofTimestamp(ctx, "t", "\"date_trunc('day'::text, ts)\""),
+                Column.ofNullableText(ctx, "t", "name"))
             .isUnmodifiable();
     }
 

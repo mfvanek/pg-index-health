@@ -49,27 +49,27 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(21)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "\"1st_table\"", "\"2nd_id\"", PgColumnType.INTEGER),
+                    Column.ofInteger(ctx, "\"1st_table\"", "\"2nd_id\""),
                     Column.ofNotNull(ctx, "accounts", "account_balance", PgColumnType.NUMERIC),
-                    Column.ofNotNull(ctx, "accounts", "account_number", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, "accounts", "client_id", PgColumnType.BIGINT),
-                    Column.ofNotNull(ctx, "accounts", "deleted", PgColumnType.BOOLEAN),
-                    Column.ofNotNull(ctx, "accounts", "id", PgColumnType.BIGINT),
-                    Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\"", PgColumnType.INTEGER),
-                    Column.ofNotNull(ctx, "\"bad-table-two\"", "\"bad-ref-id\"", PgColumnType.INTEGER),
-                    Column.ofNullable(ctx, "\"bad-table-two\"", "description", PgColumnType.TEXT),
-                    Column.ofNullable(ctx, "clients", "contact_person", PgColumnType.CHARACTER),
-                    Column.ofNotNull(ctx, "clients", "first_name", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, "clients", "gender", PgColumnType.CHARACTER),
-                    Column.ofNullable(ctx, "clients", "home_address", PgColumnType.CHARACTER),
-                    Column.ofNotNull(ctx, "clients", "id", PgColumnType.BIGINT),
+                    Column.ofVarchar(ctx, "accounts", "account_number"),
+                    Column.ofBigint(ctx, "accounts", "client_id"),
+                    Column.ofBoolean(ctx, "accounts", "deleted"),
+                    Column.ofBigint(ctx, "accounts", "id"),
+                    Column.ofInteger(ctx, "\"bad-table\"", "\"bad-id\""),
+                    Column.ofInteger(ctx, "\"bad-table-two\"", "\"bad-ref-id\""),
+                    Column.ofNullableText(ctx, "\"bad-table-two\"", "description"),
+                    Column.ofNullableCharacter(ctx, "clients", "contact_person"),
+                    Column.ofVarchar(ctx, "clients", "first_name"),
+                    Column.ofCharacter(ctx, "clients", "gender"),
+                    Column.ofNullableCharacter(ctx, "clients", "home_address"),
+                    Column.ofBigint(ctx, "clients", "id"),
                     Column.ofNullable(ctx, "clients", "info", PgColumnType.JSONB),
-                    Column.ofNotNull(ctx, "clients", "last_name", PgColumnType.VARCHAR),
-                    Column.ofNullable(ctx, "clients", "middle_name", PgColumnType.VARCHAR),
-                    Column.ofNullable(ctx, "clients", "nickname", PgColumnType.CHARACTER),
-                    Column.ofNullable(ctx, "clients", "safe_word", PgColumnType.CHARACTER),
-                    Column.ofNotNull(ctx, "\"ext-table\"", "id", PgColumnType.INTEGER),
-                    Column.ofNullable(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\"", PgColumnType.INTEGER));
+                    Column.ofVarchar(ctx, "clients", "last_name"),
+                    Column.ofNullableVarchar(ctx, "clients", "middle_name"),
+                    Column.ofNullableCharacter(ctx, "clients", "nickname"),
+                    Column.ofNullableCharacter(ctx, "clients", "safe_word"),
+                    Column.ofInteger(ctx, "\"ext-table\"", "id"),
+                    Column.ofNullableInteger(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\""));
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("\"1st_table\"", "accounts", "\"bad-table\"", "\"bad-table-two\"")))
@@ -88,8 +88,8 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "accounts", "id", PgColumnType.BIGINT),
-                    Column.ofNotNull(ctx, "clients", "id", PgColumnType.BIGINT)));
+                    Column.ofBigint(ctx, "accounts", "id"),
+                    Column.ofBigint(ctx, "clients", "id")));
     }
 
     @ParameterizedTest
@@ -115,11 +115,11 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, expectedTableName, "creation_date", PgColumnType.TIMESTAMPTZ),
-                    Column.ofNullable(ctx, expectedTableName, "description", PgColumnType.TEXT),
-                    Column.ofNotNull(ctx, expectedTableName, "entity_id", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, expectedTableName, "ref_type", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, expectedTableName, "ref_value", PgColumnType.VARCHAR)
+                    Column.ofTimestamptz(ctx, expectedTableName, "creation_date"),
+                    Column.ofNullableText(ctx, expectedTableName, "description"),
+                    Column.ofVarchar(ctx, expectedTableName, "entity_id"),
+                    Column.ofVarchar(ctx, expectedTableName, "ref_type"),
+                    Column.ofVarchar(ctx, expectedTableName, "ref_value")
                 ));
     }
 }

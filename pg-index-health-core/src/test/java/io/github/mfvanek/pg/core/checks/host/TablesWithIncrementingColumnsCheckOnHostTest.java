@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.table.Table;
 import io.github.mfvanek.pg.model.table.TableWithColumns;
@@ -53,11 +52,11 @@ class TablesWithIncrementingColumnsCheckOnHostTest extends DatabaseAwareTestBase
                     TableWithColumns.of(
                         Table.of(ctx, "orders", 8_192L),
                         List.of(
-                            Column.ofNullable(ctx, "orders", "phone1", PgColumnType.TEXT),
-                            Column.ofNullable(ctx, "orders", "phone2", PgColumnType.TEXT),
-                            Column.ofNullable(ctx, "orders", "address1", PgColumnType.TEXT),
-                            Column.ofNullable(ctx, "orders", "address2", PgColumnType.TEXT),
-                            Column.ofNullable(ctx, "orders", "address3", PgColumnType.TEXT)
+                            Column.ofNullableText(ctx, "orders", "phone1"),
+                            Column.ofNullableText(ctx, "orders", "phone2"),
+                            Column.ofNullableText(ctx, "orders", "address1"),
+                            Column.ofNullableText(ctx, "orders", "address2"),
+                            Column.ofNullableText(ctx, "orders", "address3")
                         )
                     )
                 ));
@@ -75,8 +74,8 @@ class TablesWithIncrementingColumnsCheckOnHostTest extends DatabaseAwareTestBase
                     TableWithColumns.of(
                         Table.of(ctx, "events"),
                         List.of(
-                            Column.ofNullable(ctx, "events", "tag1", PgColumnType.TEXT),
-                            Column.ofNullable(ctx, "events", "tag2", PgColumnType.TEXT)
+                            Column.ofNullableText(ctx, "events", "tag1"),
+                            Column.ofNullableText(ctx, "events", "tag2")
                         )
                     )
                 ));

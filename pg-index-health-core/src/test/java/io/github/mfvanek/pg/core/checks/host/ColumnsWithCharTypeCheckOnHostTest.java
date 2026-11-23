@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
@@ -47,12 +46,12 @@ class ColumnsWithCharTypeCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNullable(ctx, "clients", "contact_person", PgColumnType.CHARACTER),
-                    Column.ofNotNull(ctx, "clients", "gender", PgColumnType.CHARACTER),
-                    Column.ofNullable(ctx, "clients", "home_address", PgColumnType.CHARACTER),
-                    Column.ofNullable(ctx, "clients", "nickname", PgColumnType.CHARACTER))
+                    Column.ofNullableCharacter(ctx, "clients", "contact_person"),
+                    Column.ofCharacter(ctx, "clients", "gender"),
+                    Column.ofNullableCharacter(ctx, "clients", "home_address"),
+                    Column.ofNullableCharacter(ctx, "clients", "nickname"))
                 .doesNotContain(
-                    Column.ofNullable(ctx, "clients", "safe_word", PgColumnType.CHARACTER)
+                    Column.ofNullableCharacter(ctx, "clients", "safe_word")
                 ));
     }
 
@@ -65,12 +64,12 @@ class ColumnsWithCharTypeCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNullable(ctx, "tp", "contact_person", PgColumnType.CHARACTER),
-                    Column.ofNotNull(ctx, "tp", "gender", PgColumnType.CHARACTER),
-                    Column.ofNullable(ctx, "tp", "home_address", PgColumnType.CHARACTER),
-                    Column.ofNullable(ctx, "tp", "nickname", PgColumnType.CHARACTER))
+                    Column.ofNullableCharacter(ctx, "tp", "contact_person"),
+                    Column.ofCharacter(ctx, "tp", "gender"),
+                    Column.ofNullableCharacter(ctx, "tp", "home_address"),
+                    Column.ofNullableCharacter(ctx, "tp", "nickname"))
                 .doesNotContain(
-                    Column.ofNullable(ctx, "tp", "safe_word", PgColumnType.CHARACTER)
+                    Column.ofNullableCharacter(ctx, "tp", "safe_word")
                 ));
     }
 }

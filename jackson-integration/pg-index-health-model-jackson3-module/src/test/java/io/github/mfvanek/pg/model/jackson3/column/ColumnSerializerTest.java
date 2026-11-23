@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.model.jackson3.column;
 
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.exc.MismatchedInputException;
@@ -23,7 +23,8 @@ class ColumnSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationOfNotNullColumnShouldWork() {
-        final Column original = Column.ofNotNull("table1", "column1", PgColumnType.BIGINT);
+        final PgContext ctx = PgContext.ofDefault();
+        final Column original = Column.ofBigint(ctx, "table1", "column1");
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"tableName\":\"table1\",\"columnName\":\"column1\",\"notNull\":true,\"columnType\":\"bigint\"}");
         final Column restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), Column.class);
@@ -34,7 +35,8 @@ class ColumnSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationOfNullableColumnShouldWork() {
-        final Column original = Column.ofNullable("table2", "column2", PgColumnType.TEXT);
+        final PgContext ctx = PgContext.ofDefault();
+        final Column original = Column.ofNullableText(ctx, "table2", "column2");
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("{\"tableName\":\"table2\",\"columnName\":\"column2\",\"notNull\":false,\"columnType\":\"text\"}");
         final Column restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), Column.class);

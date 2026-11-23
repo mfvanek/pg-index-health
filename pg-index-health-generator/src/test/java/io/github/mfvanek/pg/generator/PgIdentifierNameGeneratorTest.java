@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.generator;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
@@ -245,19 +246,21 @@ class PgIdentifierNameGeneratorTest {
 
     @NonNull
     static ForeignKey severalColumnsWithoutNulls() {
-        return ForeignKey.of("table_with_very_very_very_long_name", "cn",
+        final PgContext ctx = PgContext.ofDefault();
+        return ForeignKey.of(ctx, "table_with_very_very_very_long_name", "cn",
             List.of(
-                Column.ofNotNull("table_with_very_very_very_long_name", "column_1_with_very_long_name", PgColumnType.BIGINT),
-                Column.ofNotNull("table_with_very_very_very_long_name", "column_2_with_very_long_name", PgColumnType.BIGINT)
+                Column.ofBigint(ctx, "table_with_very_very_very_long_name", "column_1_with_very_long_name"),
+                Column.ofBigint(ctx, "table_with_very_very_very_long_name", "column_2_with_very_long_name")
             ));
     }
 
     @NonNull
     static ForeignKey severalColumnsWithNulls() {
-        return ForeignKey.of("table_with_very_very_very_long_name", "cn",
+        final PgContext ctx = PgContext.ofDefault();
+        return ForeignKey.of(ctx, "table_with_very_very_very_long_name", "cn",
             List.of(
-                Column.ofNotNull("table_with_very_very_very_long_name", "column_1_with_very_long_name", PgColumnType.BIGINT),
-                Column.ofNullable("table_with_very_very_very_long_name", "column_2_with_very_long_name", PgColumnType.BIGINT)
+                Column.ofBigint(ctx, "table_with_very_very_very_long_name", "column_1_with_very_long_name"),
+                Column.ofNullableBigint(ctx, "table_with_very_very_very_long_name", "column_2_with_very_long_name")
             ));
     }
 }

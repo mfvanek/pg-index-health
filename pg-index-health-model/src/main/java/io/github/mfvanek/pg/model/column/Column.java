@@ -313,6 +313,216 @@ public final class Column implements DbObject, ColumnTypeAware, Comparable<Colum
         return ofNullable(pgContext, tableName, columnName, typeName(columnType));
     }
 
+    /**
+     * Constructs a not null {@code Column} object of {@code bigint} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofBigint(final PgContext pgContext,
+                                  final String tableName,
+                                  final String columnName) {
+        return ofNotNull(pgContext, tableName, columnName, PgColumnType.BIGINT.getColumnType());
+    }
+
+    /**
+     * Constructs a nullable {@code Column} object of {@code bigint} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNullableBigint(final PgContext pgContext,
+                                          final String tableName,
+                                          final String columnName) {
+        return ofNullable(pgContext, tableName, columnName, PgColumnType.BIGINT.getColumnType());
+    }
+
+    /**
+     * Constructs a not null {@code Column} object of {@code integer} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofInteger(final PgContext pgContext,
+                                   final String tableName,
+                                   final String columnName) {
+        return ofNotNull(pgContext, tableName, columnName, PgColumnType.INTEGER.getColumnType());
+    }
+
+    /**
+     * Constructs a nullable {@code Column} object of {@code integer} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNullableInteger(final PgContext pgContext,
+                                           final String tableName,
+                                           final String columnName) {
+        return ofNullable(pgContext, tableName, columnName, PgColumnType.INTEGER.getColumnType());
+    }
+
+    /**
+     * Constructs a not null {@code Column} object of {@code character varying} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofVarchar(final PgContext pgContext,
+                                   final String tableName,
+                                   final String columnName) {
+        return ofNotNull(pgContext, tableName, columnName, PgColumnType.VARCHAR.getColumnType());
+    }
+
+    /**
+     * Constructs a nullable {@code Column} object of {@code character varying} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNullableVarchar(final PgContext pgContext,
+                                           final String tableName,
+                                           final String columnName) {
+        return ofNullable(pgContext, tableName, columnName, PgColumnType.VARCHAR.getColumnType());
+    }
+
+    /**
+     * Constructs a not null {@code Column} object of {@code text} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofText(final PgContext pgContext,
+                                final String tableName,
+                                final String columnName) {
+        return ofNotNull(pgContext, tableName, columnName, PgColumnType.TEXT.getColumnType());
+    }
+
+    /**
+     * Constructs a nullable {@code Column} object of {@code text} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNullableText(final PgContext pgContext,
+                                        final String tableName,
+                                        final String columnName) {
+        return ofNullable(pgContext, tableName, columnName, PgColumnType.TEXT.getColumnType());
+    }
+
+    /**
+     * Constructs a not null {@code Column} object of {@code character} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofCharacter(final PgContext pgContext,
+                                     final String tableName,
+                                     final String columnName) {
+        return ofNotNull(pgContext, tableName, columnName, PgColumnType.CHARACTER.getColumnType());
+    }
+
+    /**
+     * Constructs a nullable {@code Column} object of {@code character} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNullableCharacter(final PgContext pgContext,
+                                             final String tableName,
+                                             final String columnName) {
+        return ofNullable(pgContext, tableName, columnName, PgColumnType.CHARACTER.getColumnType());
+    }
+
+    /**
+     * Constructs a not null {@code Column} object of {@code boolean} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofBoolean(final PgContext pgContext,
+                                   final String tableName,
+                                   final String columnName) {
+        return ofNotNull(pgContext, tableName, columnName, PgColumnType.BOOLEAN.getColumnType());
+    }
+
+    /**
+     * Constructs a not null {@code Column} object of {@code timestamp without time zone} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofTimestamp(final PgContext pgContext,
+                                     final String tableName,
+                                     final String columnName) {
+        return ofNotNull(pgContext, tableName, columnName, PgColumnType.TIMESTAMP.getColumnType());
+    }
+
+    /**
+     * Constructs a not null {@code Column} object of {@code timestamp with time zone} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofTimestamptz(final PgContext pgContext,
+                                       final String tableName,
+                                       final String columnName) {
+        return ofNotNull(pgContext, tableName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
+    }
+
+    /**
+     * Constructs a not null {@code Column} object of {@code uuid} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofUuid(final PgContext pgContext,
+                                final String tableName,
+                                final String columnName) {
+        return ofNotNull(pgContext, tableName, columnName, PgColumnType.UUID.getColumnType());
+    }
+
     private static String typeName(final PgColumnType columnType) {
         return Objects.requireNonNull(columnType, COLUMN_TYPE_FIELD + " cannot be null").getColumnType();
     }

@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
@@ -49,12 +48,12 @@ class ColumnsWithFixedLengthVarcharCheckTest extends DatabaseAwareTestBase {
                 .hasSize(6)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "accounts", "account_number", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, "clients", "email", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, "clients", "first_name", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, "clients", "last_name", PgColumnType.VARCHAR),
-                    Column.ofNullable(ctx, "clients", "middle_name", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, "clients", "phone", PgColumnType.VARCHAR)
+                    Column.ofVarchar(ctx, "accounts", "account_number"),
+                    Column.ofVarchar(ctx, "clients", "email"),
+                    Column.ofVarchar(ctx, "clients", "first_name"),
+                    Column.ofVarchar(ctx, "clients", "last_name"),
+                    Column.ofNullableVarchar(ctx, "clients", "middle_name"),
+                    Column.ofVarchar(ctx, "clients", "phone")
                 ));
     }
 
@@ -67,11 +66,11 @@ class ColumnsWithFixedLengthVarcharCheckTest extends DatabaseAwareTestBase {
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "clients", "email", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, "clients", "first_name", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, "clients", "last_name", PgColumnType.VARCHAR),
-                    Column.ofNullable(ctx, "clients", "middle_name", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, "clients", "phone", PgColumnType.VARCHAR)
+                    Column.ofVarchar(ctx, "clients", "email"),
+                    Column.ofVarchar(ctx, "clients", "first_name"),
+                    Column.ofVarchar(ctx, "clients", "last_name"),
+                    Column.ofNullableVarchar(ctx, "clients", "middle_name"),
+                    Column.ofVarchar(ctx, "clients", "phone")
                 ));
     }
 
@@ -84,13 +83,13 @@ class ColumnsWithFixedLengthVarcharCheckTest extends DatabaseAwareTestBase {
                 .hasSize(7)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNullable(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_1234567", "ref_type", PgColumnType.VARCHAR),
-                    Column.ofNullable(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_1234567", "ref_value", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, "parent", "entity_id", PgColumnType.VARCHAR),
-                    Column.ofNullable(ctx, "parent", "ref_type", PgColumnType.VARCHAR),
-                    Column.ofNullable(ctx, "parent", "ref_value", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, "tp", "entity_id", PgColumnType.VARCHAR),
-                    Column.ofNotNull(ctx, "tp", "ref_type", PgColumnType.VARCHAR)
+                    Column.ofNullableVarchar(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_1234567", "ref_type"),
+                    Column.ofNullableVarchar(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_1234567", "ref_value"),
+                    Column.ofVarchar(ctx, "parent", "entity_id"),
+                    Column.ofNullableVarchar(ctx, "parent", "ref_type"),
+                    Column.ofNullableVarchar(ctx, "parent", "ref_value"),
+                    Column.ofVarchar(ctx, "tp", "entity_id"),
+                    Column.ofVarchar(ctx, "tp", "ref_type")
                 ));
     }
 }

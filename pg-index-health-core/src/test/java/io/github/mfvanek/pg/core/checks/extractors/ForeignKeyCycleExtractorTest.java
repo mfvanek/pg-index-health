@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.constraint.ForeignKeyCycle;
+import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -57,6 +58,7 @@ class ForeignKeyCycleExtractorTest {
 
     @Test
     void shouldGroupColumnsOfMulticolumnForeignKeys() throws SQLException {
+        final PgContext ctx = PgContext.ofDefault();
         try (ResultSet rs = prepare(
             List.of("t1", "t1", "t2", "t3", "t3", "t3"),
             List.of("c1", "c1", "c2", "c3", "c3", "c3"),
@@ -64,10 +66,10 @@ class ForeignKeyCycleExtractorTest {
             assertThat(extractor.extractData(rs))
                 .usingRecursiveComparison()
                 .isEqualTo(ForeignKeyCycle.of(
-                    ForeignKey.of("t1", "c1", List.of(Column.ofNotNull("t1", "a", PgColumnType.INTEGER), Column.ofNullable("t1", "b", PgColumnType.INTEGER))),
-                    ForeignKey.ofNotNullColumn("t2", "c2", "c", PgColumnType.INTEGER),
-                    ForeignKey.of("t3", "c3",
-                        List.of(Column.ofNotNull("t3", "d", PgColumnType.INTEGER), Column.ofNotNull("t3", "e", PgColumnType.INTEGER), Column.ofNullable("t3", "f", PgColumnType.INTEGER)))));
+                    ForeignKey.of(ctx, "t1", "c1", List.of(Column.ofInteger(ctx, "t1", "a"), Column.ofNullableInteger(ctx, "t1", "b"))),
+                    ForeignKey.ofNotNullColumn(ctx, "t2", "c2", "c", PgColumnType.INTEGER),
+                    ForeignKey.of(ctx, "t3", "c3",
+                        List.of(Column.ofInteger(ctx, "t3", "d"), Column.ofInteger(ctx, "t3", "e"), Column.ofNullableInteger(ctx, "t3", "f")))));
         }
     }
 
