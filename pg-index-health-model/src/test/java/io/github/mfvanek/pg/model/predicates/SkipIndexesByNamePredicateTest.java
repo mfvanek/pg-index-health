@@ -112,10 +112,11 @@ class SkipIndexesByNamePredicateTest {
 
     @Test
     void shouldWorkForMultipleItems() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThat(SkipIndexesByNamePredicate.ofDefault(Set.of("i1", "I2")))
             .accepts(Table.of("t"))
             .accepts(SequenceState.of("s11", "int", 80.0))
-            .accepts(ColumnWithSerialType.of(Column.ofNullable("t", "c", PgColumnType.SERIAL), "s1"))
+            .accepts(ColumnWithSerialType.of(Column.ofNullable(ctx, "t", "c", PgColumnType.SERIAL), "s1"))
             .accepts(DuplicatedIndexes.of(
                 Index.of("t1", "i", 1L),
                 Index.of("t1", "i3", 1L)))

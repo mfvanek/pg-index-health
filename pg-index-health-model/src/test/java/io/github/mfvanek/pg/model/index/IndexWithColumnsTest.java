@@ -83,7 +83,7 @@ class IndexWithColumnsTest {
 
     @Test
     void testToString() {
-        assertThat(IndexWithColumns.ofSingle("t", "i", 22L, Column.ofNullable("t", "f", "integer")))
+        assertThat(IndexWithColumns.ofSingle("t", "i", 22L, Column.of("t", "f", false, "integer")))
             .hasToString("IndexWithColumns{tableName='t', indexName='i', indexSizeInBytes=22, columns=[Column{tableName='t', columnName='f', notNull=false, columnType='integer'}]}");
         final PgContext ctx = PgContext.of("tst");
         final Column column = Column.ofNullableInteger(ctx, "t", "f");

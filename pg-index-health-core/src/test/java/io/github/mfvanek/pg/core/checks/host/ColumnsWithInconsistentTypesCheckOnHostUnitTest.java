@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.core.checks.host;
 
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
+import io.github.mfvanek.pg.model.context.PgContext;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +30,8 @@ class ColumnsWithInconsistentTypesCheckOnHostUnitTest {
 
     @Test
     void shouldDropColumnNameLeftWithSingleType() {
-        final Column warehouseId = Column.ofNotNull("warehouse", "id", PgColumnType.BIGINT);
+        final PgContext ctx = PgContext.ofDefault();
+        final Column warehouseId = Column.ofBigint(ctx, "warehouse", "id");
 
         assertThat(ColumnsWithInconsistentTypesCheckOnHost.removeConsistentColumns(List.of(warehouseId)))
             .as("A single column cannot be inconsistent with itself")
@@ -39,8 +40,9 @@ class ColumnsWithInconsistentTypesCheckOnHostUnitTest {
 
     @Test
     void shouldDropColumnNameWhenAllRemainingTypesAreEqual() {
-        final Column accountsId = Column.ofNotNull("accounts", "id", PgColumnType.BIGINT);
-        final Column clientsId = Column.ofNotNull("clients", "id", PgColumnType.BIGINT);
+        final PgContext ctx = PgContext.ofDefault();
+        final Column accountsId = Column.ofBigint(ctx, "accounts", "id");
+        final Column clientsId = Column.ofBigint(ctx, "clients", "id");
 
         assertThat(ColumnsWithInconsistentTypesCheckOnHost.removeConsistentColumns(List.of(accountsId, clientsId)))
             .as("Same name with a single distinct type is consistent")
@@ -49,8 +51,9 @@ class ColumnsWithInconsistentTypesCheckOnHostUnitTest {
 
     @Test
     void shouldKeepColumnNameWithMoreThanOneType() {
-        final Column accountsId = Column.ofNotNull("accounts", "id", PgColumnType.BIGINT);
-        final Column clientsId = Column.ofNotNull("clients", "id", PgColumnType.INTEGER);
+        final PgContext ctx = PgContext.ofDefault();
+        final Column accountsId = Column.ofBigint(ctx, "accounts", "id");
+        final Column clientsId = Column.ofInteger(ctx, "clients", "id");
 
         assertThat(ColumnsWithInconsistentTypesCheckOnHost.removeConsistentColumns(List.of(accountsId, clientsId)))
             .containsExactly(accountsId, clientsId);
@@ -58,9 +61,10 @@ class ColumnsWithInconsistentTypesCheckOnHostUnitTest {
 
     @Test
     void shouldKeepInconsistentGroupAndDropDegradedOnePreservingOrder() {
-        final Column createdAt = Column.ofNotNull("t1", "created_at", PgColumnType.TIMESTAMP);
-        final Column accountsId = Column.ofNotNull("accounts", "id", PgColumnType.BIGINT);
-        final Column clientsId = Column.ofNotNull("clients", "id", PgColumnType.INTEGER);
+        final PgContext ctx = PgContext.ofDefault();
+        final Column createdAt = Column.ofTimestamp(ctx, "t1", "created_at");
+        final Column accountsId = Column.ofBigint(ctx, "accounts", "id");
+        final Column clientsId = Column.ofInteger(ctx, "clients", "id");
 
         assertThat(ColumnsWithInconsistentTypesCheckOnHost.removeConsistentColumns(List.of(createdAt, accountsId, clientsId)))
             .as("created_at has a single type and is dropped; id keeps two types and survives in original order")

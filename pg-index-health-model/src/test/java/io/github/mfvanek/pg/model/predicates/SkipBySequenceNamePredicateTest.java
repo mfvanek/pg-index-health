@@ -98,13 +98,14 @@ class SkipBySequenceNamePredicateTest {
 
     @Test
     void shouldWorkForMultipleItems() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThat(SkipBySequenceNamePredicate.ofDefault(Set.of("s1", "S2")))
             .accepts(Table.of("t"))
             .accepts(SequenceState.of("s11", "int", 80.0))
             .rejects(SequenceState.of("s1", "int", 80.0))
             .rejects(SequenceState.of("s2", "int", 80.0))
             .rejects(SequenceState.of("S2", "int", 80.0))
-            .rejects(ColumnWithSerialType.of(Column.ofNullable("t", "c", PgColumnType.SERIAL), "s1"));
+            .rejects(ColumnWithSerialType.of(Column.ofNullable(ctx, "t", "c", PgColumnType.SERIAL), "s1"));
     }
 
     @ParameterizedTest
@@ -115,6 +116,6 @@ class SkipBySequenceNamePredicateTest {
             .accepts(Table.of(ctx, "t"))
             .accepts(SequenceState.of(ctx, "s11", "int", 80.0))
             .rejects(SequenceState.of(ctx, "s1", "int", 80.0))
-            .rejects(ColumnWithSerialType.of(Column.ofNullable(ctx.enrichWithSchema("t"), "c", PgColumnType.SERIAL), ctx.enrichWithSchema("s1")));
+            .rejects(ColumnWithSerialType.of(Column.of(ctx.enrichWithSchema("t"), "c", false, "serial"), ctx.enrichWithSchema("s1")));
     }
 }

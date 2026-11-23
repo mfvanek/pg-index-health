@@ -273,7 +273,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                              final String constraintName,
                                              final String columnName,
                                              final String columnType) {
-        return ofColumn(tableName, constraintName, Column.ofNotNull(tableName, columnName, columnType));
+        return ofColumn(tableName, constraintName, Column.of(tableName, columnName, true, columnType));
     }
 
     /**
@@ -290,7 +290,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                              final String constraintName,
                                              final String columnName,
                                              final PgColumnType columnType) {
-        return ofColumn(tableName, constraintName, Column.ofNotNull(tableName, columnName, columnType));
+        return ofNotNullColumn(tableName, constraintName, columnName, Objects.requireNonNull(columnType, "columnType cannot be null").getColumnType());
     }
 
     /**
@@ -345,7 +345,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                               final String constraintName,
                                               final String columnName,
                                               final String columnType) {
-        return ofColumn(tableName, constraintName, Column.ofNullable(tableName, columnName, columnType));
+        return ofColumn(tableName, constraintName, Column.of(tableName, columnName, false, columnType));
     }
 
     /**
@@ -362,7 +362,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                               final String constraintName,
                                               final String columnName,
                                               final PgColumnType columnType) {
-        return ofColumn(tableName, constraintName, Column.ofNullable(tableName, columnName, columnType));
+        return ofNullableColumn(tableName, constraintName, columnName, Objects.requireNonNull(columnType, "columnType cannot be null").getColumnType());
     }
 
     /**

@@ -68,10 +68,10 @@ class ForeignKeyTest {
     @Test
     void getColumns() {
         final ForeignKey first = ForeignKey.of("t", "c_t_order_id",
-            List.of(Column.ofNotNull("t", "order_id", "integer"), Column.ofNotNull("t", "item_id", "integer")));
+            List.of(Column.of("t", "order_id", true, "integer"), Column.of("t", "item_id", true, "integer")));
         assertThat(first.getColumns())
             .hasSize(2)
-            .containsExactly(Column.ofNotNull("t", "order_id", "integer"), Column.ofNotNull("t", "item_id", "integer"))
+            .containsExactly(Column.of("t", "order_id", true, "integer"), Column.of("t", "item_id", true, "integer"))
             .isUnmodifiable();
 
         final PgContext ctx = PgContext.of("tst");
@@ -79,7 +79,7 @@ class ForeignKeyTest {
             List.of(Column.ofInteger(ctx, "t", "order_id"), Column.ofInteger(ctx, "t", "item_id")));
         assertThat(second.getColumns())
             .hasSize(2)
-            .containsExactly(Column.ofNotNull("tst.t", "order_id", "integer"), Column.ofNotNull("tst.t", "item_id", "integer"))
+            .containsExactly(Column.of("tst.t", "order_id", true, "integer"), Column.of("tst.t", "item_id", true, "integer"))
             .isUnmodifiable();
         assertThat(second.getTableName())
             .isEqualTo("tst.t");

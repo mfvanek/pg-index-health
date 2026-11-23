@@ -212,7 +212,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnTypeAware, Se
     public static ColumnWithSerialType ofBigSerial(final String tableName,
                                                    final String columnName,
                                                    final String sequenceName) {
-        return of(Column.ofNotNull(tableName, columnName, PgColumnType.BIG_SERIAL), sequenceName);
+        return of(Column.of(tableName, columnName, true, PgColumnType.BIG_SERIAL.getColumnType()), sequenceName);
     }
 
     /**
@@ -244,7 +244,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnTypeAware, Se
     public static ColumnWithSerialType ofSerial(final String tableName,
                                                 final String columnName,
                                                 final String sequenceName) {
-        return of(Column.ofNotNull(tableName, columnName, PgColumnType.SERIAL), sequenceName);
+        return of(Column.of(tableName, columnName, true, PgColumnType.SERIAL.getColumnType()), sequenceName);
     }
 
     /**
@@ -276,7 +276,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnTypeAware, Se
     public static ColumnWithSerialType ofSmallSerial(final String tableName,
                                                      final String columnName,
                                                      final String sequenceName) {
-        return of(Column.ofNotNull(tableName, columnName, PgColumnType.SMALL_SERIAL), sequenceName);
+        return of(Column.of(tableName, columnName, true, PgColumnType.SMALL_SERIAL.getColumnType()), sequenceName);
     }
 
     /**

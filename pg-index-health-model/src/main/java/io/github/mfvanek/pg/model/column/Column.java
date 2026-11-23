@@ -186,36 +186,6 @@ public final class Column implements DbObject, ColumnTypeAware, Comparable<Colum
     }
 
     /**
-     * Constructs a not null {@code Column} object.
-     *
-     * @param tableName  table name; should be non-blank.
-     * @param columnName column name; should be non-blank.
-     * @param columnType column type; should be non-blank.
-     * @return {@code Column}
-     * @since 0.51.0
-     */
-    public static Column ofNotNull(final String tableName,
-                                   final String columnName,
-                                   final String columnType) {
-        return of(tableName, columnName, true, columnType);
-    }
-
-    /**
-     * Constructs a not null {@code Column} object.
-     *
-     * @param tableName  table name; should be non-blank.
-     * @param columnName column name; should be non-blank.
-     * @param columnType column type; must be non-null.
-     * @return {@code Column}
-     * @since 0.51.0
-     */
-    public static Column ofNotNull(final String tableName,
-                                   final String columnName,
-                                   final PgColumnType columnType) {
-        return ofNotNull(tableName, columnName, typeName(columnType));
-    }
-
-    /**
      * Constructs a not null {@code Column} object with given context.
      *
      * @param pgContext  the schema context to enrich table name; must be non-null.
@@ -247,36 +217,6 @@ public final class Column implements DbObject, ColumnTypeAware, Comparable<Colum
                                    final String columnName,
                                    final PgColumnType columnType) {
         return ofNotNull(pgContext, tableName, columnName, typeName(columnType));
-    }
-
-    /**
-     * Constructs a nullable {@code Column} object.
-     *
-     * @param tableName  table name; should be non-blank.
-     * @param columnName column name; should be non-blank.
-     * @param columnType column type; should be non-blank.
-     * @return {@code Column}
-     * @since 0.51.0
-     */
-    public static Column ofNullable(final String tableName,
-                                    final String columnName,
-                                    final String columnType) {
-        return of(tableName, columnName, false, columnType);
-    }
-
-    /**
-     * Constructs a nullable {@code Column} object.
-     *
-     * @param tableName  table name; should be non-blank.
-     * @param columnName column name; should be non-blank.
-     * @param columnType column type; must be non-null.
-     * @return {@code Column}
-     * @since 0.51.0
-     */
-    public static Column ofNullable(final String tableName,
-                                    final String columnName,
-                                    final PgColumnType columnType) {
-        return ofNullable(tableName, columnName, typeName(columnType));
     }
 
     /**

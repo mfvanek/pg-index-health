@@ -8,7 +8,17 @@
 The type is a `String` exactly as PostgreSQL returns it (`atttypid::regtype::text`, without typmod),
 e.g. `integer`, `character varying`, `timestamp with time zone`, `integer[]`.
 
-All factory methods of `Column` require the type. It can be passed as a `String` or as a `PgColumnType` constant:
+All factory methods of `Column` require the type. It can be passed as a `String` or as a `PgColumnType` constant.
+
+**`Column.ofNotNull` and `Column.ofNullable` require a `PgContext`.**
+
+The overloads without `PgContext` have been removed. Use `PgContext.ofDefault()` for tables in the `public` schema
+(the table name is left unchanged). `Column.of(tableName, columnName, notNull, columnType)` without context is kept
+for already qualified table names.
+
+For the most common types there are shortcut factories (all with `PgContext`):
+`ofBigint`, `ofInteger`, `ofVarchar`, `ofText`, `ofCharacter`, `ofBoolean`, `ofTimestamp`, `ofTimestamptz`, `ofUuid` (not null)
+and `ofNullableBigint`, `ofNullableInteger`, `ofNullableVarchar`, `ofNullableText`, `ofNullableCharacter` (nullable).
 
 ```java
 // Before
@@ -18,11 +28,12 @@ ColumnWithType.ofBigint(Column.ofNotNull(ctx, "orders", "id"))
 ColumnWithType.of(Column.ofNotNull(ctx, "orders", "status"), ctx.enrichWithSchema("order_status"))
 
 // After
-Column.ofNotNull(ctx, "orders", "id", PgColumnType.BIGINT)
-Column.ofNullable("orders", "comment", "text")
+Column.ofBigint(ctx, "orders", "id")
+Column.ofNullableText(PgContext.ofDefault(), "orders", "comment")
 Column.ofNotNull(ctx, "orders", "id", PgColumnType.BIGINT)
 Column.ofNotNull(ctx, "orders", "status", ctx.enrichWithSchema("order_status"))
 Column.of(ctx, "orders", "tags", false, "integer[]")
+Column.of("public.orders", "tags", false, "integer[]")
 ```
 
 The same applies to the convenience factories that create a column internally:
@@ -40,7 +51,7 @@ The same applies to the convenience factories that create a column internally:
 ColumnWithSerialType.of(column, SerialType.SERIAL, "t_id_seq")
 
 // After
-ColumnWithSerialType.of(Column.ofNotNull("t", "id", PgColumnType.SERIAL), "t_id_seq")
+ColumnWithSerialType.of(Column.ofNotNull(PgContext.ofDefault(), "t", "id", PgColumnType.SERIAL), "t_id_seq")
 ```
 
 `getSerialType()` now returns `PgColumnType`.

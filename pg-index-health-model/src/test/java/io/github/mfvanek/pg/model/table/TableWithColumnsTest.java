@@ -38,7 +38,7 @@ class TableWithColumnsTest {
             .isEqualTo(PgObjectType.TABLE);
         assertThat(first.getColumns())
             .hasSize(1)
-            .containsExactly(Column.ofNullable("tst.t1", "c1", "integer"))
+            .containsExactly(Column.of("tst.t1", "c1", false, "integer"))
             .isUnmodifiable();
 
         final TableWithColumns second = TableWithColumns.withoutColumns(ctx, "t1");
@@ -71,7 +71,7 @@ class TableWithColumnsTest {
         assertThatThrownBy(() -> TableWithColumns.of(t, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("columns cannot be null");
-        final List<Column> columns = List.of(Column.ofNullable("t1", "c1", "integer"));
+        final List<Column> columns = List.of(Column.of("t1", "c1", false, "integer"));
         assertThatThrownBy(() -> TableWithColumns.of(t, columns))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Table name is not the same within given rows");

@@ -64,11 +64,11 @@ class SkipByColumnNamePredicateTest {
         assertThat(SkipByColumnNamePredicate.ofName("COL1"))
             .accepts(Table.of("t"))
             .accepts(Index.of("t1", "i1"))
-            .accepts(Column.ofNotNull("t1", "col2", "integer"))
+            .accepts(Column.of("t1", "col2", true, "integer"))
             .accepts(ColumnWithSerialType.ofSerial("t1", "col2", "s1"))
             .accepts(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col2", "integer"))
             .accepts(TableWithColumns.withoutColumns(Table.of("t2")))
-            .rejects(Column.ofNotNull("t1", "col1", "integer"))
+            .rejects(Column.of("t1", "col1", true, "integer"))
             .rejects(ColumnWithSerialType.ofSerial("t1", "col1", "s1"))
             .rejects(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col1", "integer"))
             .rejects(TableWithColumns.ofNullableColumn(ctx, "t3", "col1", "integer"));
@@ -78,10 +78,10 @@ class SkipByColumnNamePredicateTest {
     void shouldWorkForMultipleItems() {
         final PgContext ctx = PgContext.of("tst");
         assertThat(SkipByColumnNamePredicate.of(List.of("col1", "cOL2")))
-            .accepts(Column.ofNotNull("t1", "col3", "integer"))
+            .accepts(Column.of("t1", "col3", true, "integer"))
             .accepts(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col3", "integer"))
             .accepts(TableWithColumns.withoutColumns(Table.of("t2")))
-            .rejects(Column.ofNotNull("t1", "col1", "integer"))
+            .rejects(Column.of("t1", "col1", true, "integer"))
             .rejects(ColumnWithSerialType.ofSerial("t1", "col2", "s1"))
             .rejects(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col1", "integer"))
             .rejects(TableWithColumns.ofNullableColumn(ctx, "t3", "col1", "integer"));
