@@ -88,9 +88,13 @@ class ColumnTest {
             Column.ofCharacter(ctx, "t1", "c1"),
             Column.ofNullableCharacter(ctx, "t1", "c1"),
             Column.ofBoolean(ctx, "t1", "c1"),
+            Column.ofNullableBoolean(ctx, "t1", "c1"),
             Column.ofTimestamp(ctx, "t1", "c1"),
+            Column.ofNullableTimestamp(ctx, "t1", "c1"),
             Column.ofTimestamptz(ctx, "t1", "c1"),
-            Column.ofUuid(ctx, "t1", "c1")))
+            Column.ofNullableTimestamptz(ctx, "t1", "c1"),
+            Column.ofUuid(ctx, "t1", "c1"),
+            Column.ofNullableUuid(ctx, "t1", "c1")))
             .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
                 Column.of("tst.t1", "c1", true, "bigint"),
@@ -104,9 +108,13 @@ class ColumnTest {
                 Column.of("tst.t1", "c1", true, "character"),
                 Column.of("tst.t1", "c1", false, "character"),
                 Column.of("tst.t1", "c1", true, "boolean"),
+                Column.of("tst.t1", "c1", false, "boolean"),
                 Column.of("tst.t1", "c1", true, "timestamp without time zone"),
+                Column.of("tst.t1", "c1", false, "timestamp without time zone"),
                 Column.of("tst.t1", "c1", true, "timestamp with time zone"),
-                Column.of("tst.t1", "c1", true, "uuid"));
+                Column.of("tst.t1", "c1", false, "timestamp with time zone"),
+                Column.of("tst.t1", "c1", true, "uuid"),
+                Column.of("tst.t1", "c1", false, "uuid"));
     }
 
     @SuppressWarnings("ConstantConditions")

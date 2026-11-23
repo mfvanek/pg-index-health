@@ -70,25 +70,21 @@ class ColumnWithSerialTypeTest {
                     .isEqualTo(Column.ofNullable(ctx, "t1", "c1", PgColumnType.SERIAL));
             });
 
-        assertThat(ColumnWithSerialType.of(Column.ofNotNull(ctx, "t1", "c1", "smallserial"), "s1").getSerialType())
+        assertThat(ColumnWithSerialType.of(ctx, "t1", "c1", true, "smallserial", "s1").getSerialType())
             .isEqualTo(PgColumnType.SMALL_SERIAL);
-        assertThat(ColumnWithSerialType.of(Column.ofNotNull(ctx, "t1", "c1", "bigserial"), "s1").getSerialType())
+        assertThat(ColumnWithSerialType.of(ctx, "t1", "c1", true, "bigserial", "s1").getSerialType())
             .isEqualTo(PgColumnType.BIG_SERIAL);
     }
 
     @Test
-    void serialFactoriesShouldCreateNotNullColumn() {
-        assertThat(ColumnWithSerialType.ofBigSerial("t1", "c1", "s1"))
-            .usingRecursiveComparison()
-            .isEqualTo(ColumnWithSerialType.of(Column.of("t1", "c1", true, "bigserial"), "s1"));
-        assertThat(ColumnWithSerialType.ofSerial("t1", "c1", "s1"))
-            .usingRecursiveComparison()
-            .isEqualTo(ColumnWithSerialType.of(Column.of("t1", "c1", true, "serial"), "s1"));
-        assertThat(ColumnWithSerialType.ofSmallSerial("t1", "c1", "s1"))
-            .usingRecursiveComparison()
-            .isEqualTo(ColumnWithSerialType.of(Column.of("t1", "c1", true, "smallserial"), "s1"));
-
+    void factoriesWithContextShouldWork() {
         final PgContext ctx = PgContext.of("tst");
+        assertThat(ColumnWithSerialType.of(ctx, "t2", "c2", false, PgColumnType.BIG_SERIAL, "s2"))
+            .usingRecursiveComparison()
+            .isEqualTo(ColumnWithSerialType.of(Column.of("tst.t2", "c2", false, "bigserial"), "tst.s2"));
+        assertThat(ColumnWithSerialType.of(ctx, "t2", "c2", false, "smallserial", "s2"))
+            .usingRecursiveComparison()
+            .isEqualTo(ColumnWithSerialType.of(Column.of("tst.t2", "c2", false, "smallserial"), "tst.s2"));
         assertThat(ColumnWithSerialType.ofBigSerial(ctx, "t2", "c2", "s2"))
             .usingRecursiveComparison()
             .isEqualTo(ColumnWithSerialType.of(Column.of("tst.t2", "c2", true, "bigserial"), "tst.s2"));
@@ -126,6 +122,10 @@ class ColumnWithSerialTypeTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("column type must be serial but was 'bigint'");
 
+        assertThatThrownBy(() -> ColumnWithSerialType.of(ctx, "t1", "c1", true, (PgColumnType) null, "s1"))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("columnType cannot be null");
+
         final Column unknownType = Column.ofNotNull(ctx, "t1", "c1", "unknown");
         assertThatThrownBy(() -> ColumnWithSerialType.of(unknownType, "s1"))
             .isInstanceOf(IllegalArgumentException.class)
@@ -154,9 +154,9 @@ class ColumnWithSerialTypeTest {
         final ColumnWithSerialType first = prepare();
         final ColumnWithSerialType theSame = prepare();
         final ColumnWithSerialType theSameButNullable = prepareNullable();
-        final ColumnWithSerialType second = ColumnWithSerialType.of(Column.ofNotNull(ctx, "t1", "c2", PgColumnType.SERIAL), "s1");
-        final ColumnWithSerialType third = ColumnWithSerialType.of(Column.ofNotNull(ctx, "t1", "c1", PgColumnType.SMALL_SERIAL), "s1");
-        final ColumnWithSerialType forth = ColumnWithSerialType.of(Column.ofNotNull(ctx, "t1", "c1", PgColumnType.SERIAL), "s2");
+        final ColumnWithSerialType second = ColumnWithSerialType.of(ctx, "t1", "c2", true, PgColumnType.SERIAL, "s1");
+        final ColumnWithSerialType third = ColumnWithSerialType.of(ctx, "t1", "c1", true, PgColumnType.SMALL_SERIAL, "s1");
+        final ColumnWithSerialType forth = ColumnWithSerialType.of(ctx, "t1", "c1", true, PgColumnType.SERIAL, "s2");
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -206,10 +206,10 @@ class ColumnWithSerialTypeTest {
         final ColumnWithSerialType first = prepare();
         final ColumnWithSerialType theSame = prepare();
         final ColumnWithSerialType theSameButNullable = prepareNullable();
-        final ColumnWithSerialType theSameButAnotherType = ColumnWithSerialType.of(Column.ofNotNull(ctx, "t1", "c1", PgColumnType.BIG_SERIAL), "s1");
-        final ColumnWithSerialType theSameButAnotherSequence = ColumnWithSerialType.of(Column.ofNotNull(ctx, "t1", "c1", PgColumnType.SERIAL), "s2");
-        final ColumnWithSerialType second = ColumnWithSerialType.of(Column.ofNotNull(ctx, "t1", "c2", PgColumnType.SERIAL), "s1");
-        final ColumnWithSerialType third = ColumnWithSerialType.of(Column.ofNotNull(ctx, "t2", "c1", PgColumnType.SERIAL), "s1");
+        final ColumnWithSerialType theSameButAnotherType = ColumnWithSerialType.of(ctx, "t1", "c1", true, PgColumnType.BIG_SERIAL, "s1");
+        final ColumnWithSerialType theSameButAnotherSequence = ColumnWithSerialType.of(ctx, "t1", "c1", true, PgColumnType.SERIAL, "s2");
+        final ColumnWithSerialType second = ColumnWithSerialType.of(ctx, "t1", "c2", true, PgColumnType.SERIAL, "s1");
+        final ColumnWithSerialType third = ColumnWithSerialType.of(ctx, "t2", "c1", true, PgColumnType.SERIAL, "s1");
 
         // noinspection ConstantConditions
         assertThatThrownBy(() -> first.compareTo(null))
@@ -237,12 +237,12 @@ class ColumnWithSerialTypeTest {
     @NonNull
     private static ColumnWithSerialType prepare() {
         final PgContext ctx = PgContext.ofDefault();
-        return ColumnWithSerialType.of(Column.ofNotNull(ctx, "t1", "c1", PgColumnType.SERIAL), "s1");
+        return ColumnWithSerialType.of(ctx, "t1", "c1", true, PgColumnType.SERIAL, "s1");
     }
 
     @NonNull
     private static ColumnWithSerialType prepareNullable() {
         final PgContext ctx = PgContext.ofDefault();
-        return ColumnWithSerialType.of(Column.ofNullable(ctx, "t1", "c1", PgColumnType.SERIAL), "s1");
+        return ColumnWithSerialType.of(ctx, "t1", "c1", false, PgColumnType.SERIAL, "s1");
     }
 }

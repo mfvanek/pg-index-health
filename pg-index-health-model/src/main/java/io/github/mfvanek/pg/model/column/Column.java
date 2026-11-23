@@ -419,6 +419,21 @@ public final class Column implements DbObject, ColumnTypeAware, Comparable<Colum
     }
 
     /**
+     * Constructs a nullable {@code Column} object of {@code boolean} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNullableBoolean(final PgContext pgContext,
+                                           final String tableName,
+                                           final String columnName) {
+        return ofNullable(pgContext, tableName, columnName, PgColumnType.BOOLEAN.getColumnType());
+    }
+
+    /**
      * Constructs a not null {@code Column} object of {@code timestamp without time zone} type with given context.
      *
      * @param pgContext  the schema context to enrich table name; must be non-null.
@@ -431,6 +446,21 @@ public final class Column implements DbObject, ColumnTypeAware, Comparable<Colum
                                      final String tableName,
                                      final String columnName) {
         return ofNotNull(pgContext, tableName, columnName, PgColumnType.TIMESTAMP.getColumnType());
+    }
+
+    /**
+     * Constructs a nullable {@code Column} object of {@code timestamp without time zone} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNullableTimestamp(final PgContext pgContext,
+                                             final String tableName,
+                                             final String columnName) {
+        return ofNullable(pgContext, tableName, columnName, PgColumnType.TIMESTAMP.getColumnType());
     }
 
     /**
@@ -449,6 +479,21 @@ public final class Column implements DbObject, ColumnTypeAware, Comparable<Colum
     }
 
     /**
+     * Constructs a nullable {@code Column} object of {@code timestamp with time zone} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNullableTimestamptz(final PgContext pgContext,
+                                               final String tableName,
+                                               final String columnName) {
+        return ofNullable(pgContext, tableName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
+    }
+
+    /**
      * Constructs a not null {@code Column} object of {@code uuid} type with given context.
      *
      * @param pgContext  the schema context to enrich table name; must be non-null.
@@ -461,6 +506,21 @@ public final class Column implements DbObject, ColumnTypeAware, Comparable<Colum
                                 final String tableName,
                                 final String columnName) {
         return ofNotNull(pgContext, tableName, columnName, PgColumnType.UUID.getColumnType());
+    }
+
+    /**
+     * Constructs a nullable {@code Column} object of {@code uuid} type with given context.
+     *
+     * @param pgContext  the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.51.0
+     */
+    public static Column ofNullableUuid(final PgContext pgContext,
+                                        final String tableName,
+                                        final String columnName) {
+        return ofNullable(pgContext, tableName, columnName, PgColumnType.UUID.getColumnType());
     }
 
     private static String typeName(final PgColumnType columnType) {

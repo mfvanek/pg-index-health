@@ -10,7 +10,6 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
-import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -116,7 +115,7 @@ class SkipIndexesByNamePredicateTest {
         assertThat(SkipIndexesByNamePredicate.ofDefault(Set.of("i1", "I2")))
             .accepts(Table.of("t"))
             .accepts(SequenceState.of("s11", "int", 80.0))
-            .accepts(ColumnWithSerialType.of(Column.ofNullable(ctx, "t", "c", PgColumnType.SERIAL), "s1"))
+            .accepts(ColumnWithSerialType.of(ctx, "t", "c", false, PgColumnType.SERIAL, "s1"))
             .accepts(DuplicatedIndexes.of(
                 Index.of("t1", "i", 1L),
                 Index.of("t1", "i3", 1L)))

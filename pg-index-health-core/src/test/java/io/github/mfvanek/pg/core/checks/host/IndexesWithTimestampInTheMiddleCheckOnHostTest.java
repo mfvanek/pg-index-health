@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -60,7 +59,7 @@ class IndexesWithTimestampInTheMiddleCheckOnHostTest extends DatabaseAwareTestBa
                         Column.ofNullableText(ctx, "\"t-multi\"", "name"))),
                     IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_mid", List.of(
                         Column.ofInteger(ctx, "\"t-multi\"", "id"),
-                        Column.ofNullable(ctx, "\"t-multi\"", "ts", PgColumnType.TIMESTAMP),
+                        Column.ofNullableTimestamp(ctx, "\"t-multi\"", "ts"),
                         Column.ofNullableText(ctx, "\"t-multi\"", "name"))))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 

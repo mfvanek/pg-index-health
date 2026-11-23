@@ -11,7 +11,6 @@
 package io.github.mfvanek.pg.core.utils;
 
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import org.junit.jupiter.api.Tag;
@@ -106,7 +105,7 @@ class ColumnsDataParserTest {
             .containsExactly(
                 Column.ofNullableText(ctx, "t", "\"Name\""),
                 Column.ofInteger(ctx, "t", "\"a,b\""),
-                Column.ofNullable(ctx, "t", "\"x,true,y\"", PgColumnType.BOOLEAN))
+                Column.ofNullableBoolean(ctx, "t", "\"x,true,y\""))
             .isUnmodifiable();
     }
 

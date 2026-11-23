@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model.jackson2.column;
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.jackson2.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +25,8 @@ class ColumnWithSerialTypeSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() throws IOException {
-        final ColumnWithSerialType original = ColumnWithSerialType.ofSmallSerial("t1", "c1", "seq1");
+        final PgContext ctx = PgContext.ofDefault();
+        final ColumnWithSerialType original = ColumnWithSerialType.ofSmallSerial(ctx, "t1", "c1", "seq1");
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"column":{"tableName":"t1","columnName":"c1","notNull":true,"columnType":"smallserial"},\

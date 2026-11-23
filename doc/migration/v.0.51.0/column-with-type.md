@@ -18,7 +18,8 @@ for already qualified table names.
 
 For the most common types there are shortcut factories (all with `PgContext`):
 `ofBigint`, `ofInteger`, `ofVarchar`, `ofText`, `ofCharacter`, `ofBoolean`, `ofTimestamp`, `ofTimestamptz`, `ofUuid` (not null)
-and `ofNullableBigint`, `ofNullableInteger`, `ofNullableVarchar`, `ofNullableText`, `ofNullableCharacter` (nullable).
+and `ofNullableBigint`, `ofNullableInteger`, `ofNullableVarchar`, `ofNullableText`, `ofNullableCharacter`, `ofNullableBoolean`,
+`ofNullableTimestamp`, `ofNullableTimestamptz`, `ofNullableUuid` (nullable).
 
 ```java
 // Before
@@ -51,25 +52,29 @@ The same applies to the convenience factories that create a column internally:
 ColumnWithSerialType.of(column, SerialType.SERIAL, "t_id_seq")
 
 // After
-ColumnWithSerialType.of(Column.ofNotNull(PgContext.ofDefault(), "t", "id", PgColumnType.SERIAL), "t_id_seq")
+ColumnWithSerialType.of(ctx, "t", "id", true, PgColumnType.SERIAL, "t_id_seq")
+ColumnWithSerialType.of(ctx, "t", "id", false, "serial", "t_id_seq")
 ```
+
+`ColumnWithSerialType.of(PgContext, tableName, columnName, notNull, columnType, sequenceName)` creates the column inside;
+the column type can be passed as a `String` or as a `PgColumnType` and must be `smallserial`, `serial` or `bigserial`.
+`ColumnWithSerialType.of(column, sequenceName)` and `ColumnWithSerialType.of(PgContext, column, sequenceName)` are kept.
 
 `getSerialType()` now returns `PgColumnType`.
 
-The `ofSerial`, `ofBigSerial` and `ofSmallSerial` factories now take the table name and column name instead of a `Column`
-and always create a not null column of `serial`, `bigserial` or `smallserial` type respectively:
+The `ofSerial`, `ofBigSerial` and `ofSmallSerial` factories now require a `PgContext`, take the table name and column name
+instead of a `Column` and always create a not null column of `serial`, `bigserial` or `smallserial` type respectively.
+The overloads without `PgContext` have been removed; use `PgContext.ofDefault()` for tables in the `public` schema:
 
 ```java
 // Before
 ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "t", "id"), "t_id_seq")
+ColumnWithSerialType.ofSerial(column, "t_id_seq")
 
 // After
 ColumnWithSerialType.ofBigSerial(ctx, "t", "id", "t_id_seq")
-// which is the same as
-ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "t", "id", PgColumnType.BIG_SERIAL), "t_id_seq")
+ColumnWithSerialType.ofSerial(PgContext.ofDefault(), "t", "id", "t_id_seq")
 ```
-
-For a nullable serial column use `ColumnWithSerialType.of(...)` with `Column.ofNullable(...)`.
 
 **Extractors.**
 

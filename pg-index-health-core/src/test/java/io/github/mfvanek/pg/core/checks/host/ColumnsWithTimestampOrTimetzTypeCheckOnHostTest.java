@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
@@ -48,7 +47,7 @@ class ColumnsWithTimestampOrTimetzTypeCheckOnHostTest extends DatabaseAwareTestB
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     Column.ofNullable(ctx, "\"t-multi\"", "created_at", "time with time zone"),
-                    Column.ofNullable(ctx, "\"t-multi\"", "ts", PgColumnType.TIMESTAMP)
+                    Column.ofNullableTimestamp(ctx, "\"t-multi\"", "ts")
                 );
 
             assertThat(check)

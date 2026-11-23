@@ -105,7 +105,7 @@ class SkipBySequenceNamePredicateTest {
             .rejects(SequenceState.of("s1", "int", 80.0))
             .rejects(SequenceState.of("s2", "int", 80.0))
             .rejects(SequenceState.of("S2", "int", 80.0))
-            .rejects(ColumnWithSerialType.of(Column.ofNullable(ctx, "t", "c", PgColumnType.SERIAL), "s1"));
+            .rejects(ColumnWithSerialType.of(ctx, "t", "c", false, PgColumnType.SERIAL, "s1"));
     }
 
     @ParameterizedTest

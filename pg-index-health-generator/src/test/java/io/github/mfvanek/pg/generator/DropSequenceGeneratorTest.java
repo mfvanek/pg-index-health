@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
@@ -51,6 +52,7 @@ class DropSequenceGeneratorTest {
 
     @NonNull
     private ColumnWithSerialType column() {
-        return ColumnWithSerialType.ofSerial("s1.t1", "col1", "s1.seq1");
+        final PgContext ctx = PgContext.ofDefault();
+        return ColumnWithSerialType.ofSerial(ctx, "s1.t1", "col1", "s1.seq1");
     }
 }
