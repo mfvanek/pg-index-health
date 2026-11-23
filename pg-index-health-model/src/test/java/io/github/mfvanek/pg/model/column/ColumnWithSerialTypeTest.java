@@ -75,6 +75,30 @@ class ColumnWithSerialTypeTest {
             .isEqualTo(PgColumnType.BIG_SERIAL);
     }
 
+    @Test
+    void serialFactoriesShouldCreateNotNullColumn() {
+        assertThat(ColumnWithSerialType.ofBigSerial("t1", "c1", "s1"))
+            .usingRecursiveComparison()
+            .isEqualTo(ColumnWithSerialType.of(Column.ofNotNull("t1", "c1", PgColumnType.BIG_SERIAL), "s1"));
+        assertThat(ColumnWithSerialType.ofSerial("t1", "c1", "s1"))
+            .usingRecursiveComparison()
+            .isEqualTo(ColumnWithSerialType.of(Column.ofNotNull("t1", "c1", PgColumnType.SERIAL), "s1"));
+        assertThat(ColumnWithSerialType.ofSmallSerial("t1", "c1", "s1"))
+            .usingRecursiveComparison()
+            .isEqualTo(ColumnWithSerialType.of(Column.ofNotNull("t1", "c1", PgColumnType.SMALL_SERIAL), "s1"));
+
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(ColumnWithSerialType.ofBigSerial(ctx, "t2", "c2", "s2"))
+            .usingRecursiveComparison()
+            .isEqualTo(ColumnWithSerialType.of(Column.ofNotNull("tst.t2", "c2", PgColumnType.BIG_SERIAL), "tst.s2"));
+        assertThat(ColumnWithSerialType.ofSerial(ctx, "t2", "c2", "s2"))
+            .usingRecursiveComparison()
+            .isEqualTo(ColumnWithSerialType.of(Column.ofNotNull("tst.t2", "c2", PgColumnType.SERIAL), "tst.s2"));
+        assertThat(ColumnWithSerialType.ofSmallSerial(ctx, "t2", "c2", "s2"))
+            .usingRecursiveComparison()
+            .isEqualTo(ColumnWithSerialType.of(Column.ofNotNull("tst.t2", "c2", PgColumnType.SMALL_SERIAL), "tst.s2"));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void withInvalidValuesShouldThrowException() {

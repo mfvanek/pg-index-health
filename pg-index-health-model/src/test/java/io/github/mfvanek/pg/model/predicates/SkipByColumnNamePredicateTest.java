@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.model.predicates;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
@@ -66,11 +65,11 @@ class SkipByColumnNamePredicateTest {
             .accepts(Table.of("t"))
             .accepts(Index.of("t1", "i1"))
             .accepts(Column.ofNotNull("t1", "col2", "integer"))
-            .accepts(ColumnWithSerialType.of(Column.ofNotNull("t1", "col2", PgColumnType.SERIAL), "s1"))
+            .accepts(ColumnWithSerialType.ofSerial("t1", "col2", "s1"))
             .accepts(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col2", "integer"))
             .accepts(TableWithColumns.withoutColumns(Table.of("t2")))
             .rejects(Column.ofNotNull("t1", "col1", "integer"))
-            .rejects(ColumnWithSerialType.of(Column.ofNotNull("t1", "col1", PgColumnType.SERIAL), "s1"))
+            .rejects(ColumnWithSerialType.ofSerial("t1", "col1", "s1"))
             .rejects(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col1", "integer"))
             .rejects(TableWithColumns.ofNullableColumn(ctx, "t3", "col1", "integer"));
     }
@@ -83,7 +82,7 @@ class SkipByColumnNamePredicateTest {
             .accepts(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col3", "integer"))
             .accepts(TableWithColumns.withoutColumns(Table.of("t2")))
             .rejects(Column.ofNotNull("t1", "col1", "integer"))
-            .rejects(ColumnWithSerialType.of(Column.ofNotNull("t1", "col2", PgColumnType.SERIAL), "s1"))
+            .rejects(ColumnWithSerialType.ofSerial("t1", "col2", "s1"))
             .rejects(IndexWithColumns.ofNotNull(ctx, "t1", "i1", "col1", "integer"))
             .rejects(TableWithColumns.ofNullableColumn(ctx, "t3", "col1", "integer"));
     }

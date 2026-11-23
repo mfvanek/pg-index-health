@@ -14,9 +14,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
-import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipBySequenceNamePredicate;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -50,10 +48,8 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithSerialType.of(ctx,
-                        Column.ofNotNull(ctx, "bad_accounts", "real_account_id", PgColumnType.BIG_SERIAL), "bad_accounts_real_account_id_seq"),
-                    ColumnWithSerialType.of(ctx,
-                        Column.ofNotNull(ctx, "bad_accounts", "real_client_id", PgColumnType.BIG_SERIAL), "bad_accounts_real_client_id_seq"));
+                    ColumnWithSerialType.ofBigSerial(ctx, "bad_accounts", "real_account_id", "bad_accounts_real_account_id_seq"),
+                    ColumnWithSerialType.ofBigSerial(ctx, "bad_accounts", "real_client_id", "bad_accounts_real_client_id_seq"));
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_accounts"))
@@ -74,8 +70,7 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithSerialType.of(
-                        Column.ofNotNull(ctx, "bad_accounts", "real_client_id", PgColumnType.BIG_SERIAL), ctx.enrichWithSchema("bad_accounts_real_client_id_seq"))
+                    ColumnWithSerialType.ofBigSerial(ctx, "bad_accounts", "real_client_id", "bad_accounts_real_client_id_seq")
                 );
 
             assertThat(check)
@@ -97,9 +92,9 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "one_more_table", "id", PgColumnType.BIG_SERIAL), "one_more_table_id_seq"),
-                    ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "test_table", "id", PgColumnType.BIG_SERIAL), "test_table_id_seq"),
-                    ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "test_table", "num", PgColumnType.BIG_SERIAL), "test_table_num_seq")
+                    ColumnWithSerialType.ofBigSerial(ctx, "one_more_table", "id", "one_more_table_id_seq"),
+                    ColumnWithSerialType.ofBigSerial(ctx, "test_table", "id", "test_table_id_seq"),
+                    ColumnWithSerialType.ofBigSerial(ctx, "test_table", "num", "test_table_num_seq")
                 ));
     }
 
@@ -112,8 +107,8 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "attachment", "id", PgColumnType.BIG_SERIAL), "attachment_id_seq"),
-                    ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "parent", "real_client_id", PgColumnType.BIG_SERIAL), "parent_real_client_id_seq")
+                    ColumnWithSerialType.ofBigSerial(ctx, "attachment", "id", "attachment_id_seq"),
+                    ColumnWithSerialType.ofBigSerial(ctx, "parent", "real_client_id", "parent_real_client_id_seq")
                 ));
     }
 }

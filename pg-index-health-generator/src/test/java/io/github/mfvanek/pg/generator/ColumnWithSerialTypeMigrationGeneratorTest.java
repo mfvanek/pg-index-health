@@ -11,9 +11,7 @@
 package io.github.mfvanek.pg.generator;
 
 import io.github.mfvanek.pg.generator.support.GeneratorTestBase;
-import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +44,7 @@ class ColumnWithSerialTypeMigrationGeneratorTest extends GeneratorTestBase {
 
     @Test
     void forSeveralColumns() {
-        final ColumnWithSerialType secondColumn = ColumnWithSerialType.of(Column.ofNotNull("s2.t2", "col2", PgColumnType.SERIAL), "s2.seq2");
+        final ColumnWithSerialType secondColumn = ColumnWithSerialType.ofSerial("s2.t2", "col2", "s2.seq2");
         final ColumnWithSerialTypeMigrationGenerator generator = new ColumnWithSerialTypeMigrationGenerator(GeneratingOptions.builder().build());
 
         assertThat(generator.generate(List.of(column(), secondColumn)))
@@ -65,6 +63,6 @@ class ColumnWithSerialTypeMigrationGeneratorTest extends GeneratorTestBase {
 
     @NonNull
     private ColumnWithSerialType column() {
-        return ColumnWithSerialType.of(Column.ofNotNull("s1.t1", "col1", PgColumnType.SERIAL), "s1.seq1");
+        return ColumnWithSerialType.ofSerial("s1.t1", "col1", "s1.seq1");
     }
 }

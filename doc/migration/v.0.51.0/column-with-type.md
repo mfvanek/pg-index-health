@@ -37,15 +37,28 @@ The same applies to the convenience factories that create a column internally:
 
 ```java
 // Before
-ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "t", "id"), "t_id_seq")
 ColumnWithSerialType.of(column, SerialType.SERIAL, "t_id_seq")
 
 // After
-ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "t", "id", PgColumnType.BIG_SERIAL), "t_id_seq")
 ColumnWithSerialType.of(Column.ofNotNull("t", "id", PgColumnType.SERIAL), "t_id_seq")
 ```
 
-`getSerialType()` now returns `PgColumnType`. The `ofSerial`, `ofBigSerial` and `ofSmallSerial` factories have been removed.
+`getSerialType()` now returns `PgColumnType`.
+
+The `ofSerial`, `ofBigSerial` and `ofSmallSerial` factories now take the table name and column name instead of a `Column`
+and always create a not null column of `serial`, `bigserial` or `smallserial` type respectively:
+
+```java
+// Before
+ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "t", "id"), "t_id_seq")
+
+// After
+ColumnWithSerialType.ofBigSerial(ctx, "t", "id", "t_id_seq")
+// which is the same as
+ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "t", "id", PgColumnType.BIG_SERIAL), "t_id_seq")
+```
+
+For a nullable serial column use `ColumnWithSerialType.of(...)` with `Column.ofNullable(...)`.
 
 **Extractors.**
 

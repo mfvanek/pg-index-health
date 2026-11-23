@@ -10,9 +10,7 @@
 
 package io.github.mfvanek.pg.model.jackson3.column;
 
-import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.exc.MismatchedInputException;
@@ -24,7 +22,7 @@ class ColumnWithSerialTypeSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() {
-        final ColumnWithSerialType original = ColumnWithSerialType.of(Column.ofNotNull("t1", "c1", PgColumnType.SMALL_SERIAL), "seq1");
+        final ColumnWithSerialType original = ColumnWithSerialType.ofSmallSerial("t1", "c1", "seq1");
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"column":{"tableName":"t1","columnName":"c1","notNull":true,"columnType":"smallserial"},\

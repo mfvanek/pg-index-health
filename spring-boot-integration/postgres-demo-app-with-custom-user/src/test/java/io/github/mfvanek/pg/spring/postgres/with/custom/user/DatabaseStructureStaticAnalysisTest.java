@@ -81,7 +81,7 @@ class DatabaseStructureStaticAnalysisTest {
                         .asInstanceOf(list(ColumnWithSerialType.class))
                         .usingRecursiveFieldByFieldElementComparator()
                         .containsExactly(
-                            ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "warehouse", "id", PgColumnType.BIG_SERIAL), "warehouse_id_seq")
+                            ColumnWithSerialType.ofBigSerial(ctx, "warehouse", "id", "warehouse_id_seq")
                         );
 
                     default -> listAssert.isEmpty();
@@ -123,7 +123,7 @@ class DatabaseStructureStaticAnalysisTest {
                         .asInstanceOf(list(ColumnWithSerialType.class))
                         .usingRecursiveFieldByFieldElementComparator()
                         .containsExactly(
-                            ColumnWithSerialType.of(ctx, Column.ofNotNull(ctx, "additional_table", "id", PgColumnType.BIG_SERIAL), "additional_table_id_seq")
+                            ColumnWithSerialType.ofBigSerial(ctx, "additional_table", "id", "additional_table_id_seq")
                         );
 
                     default -> listAssert.isEmpty();
