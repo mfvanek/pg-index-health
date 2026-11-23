@@ -12,6 +12,11 @@ It ships as a multi-module Gradle project with Spring Boot integration, a CLI/de
 
 Docker must be running — tests use Testcontainers (PostgreSQL in Docker).
 
+**Running builds and tests in the background:**
+- **Never run tests or builds in the background without the user's explicit permission.** Ask first.
+- **Never run more than one build at a time** — no parallel builds and no loops chaining several builds
+  (e.g. over `TEST_PG_VERSION` values). Builds with Testcontainers are too resource-heavy.
+
 ```bash
 # Full build (unit tests + mutation tests + all quality checks)
 ./gradlew build
