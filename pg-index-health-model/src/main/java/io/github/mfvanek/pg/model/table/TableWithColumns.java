@@ -169,7 +169,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
                                              final String tableName,
                                              final String columnName,
                                              final PgColumnType columnType) {
-        return ofSingle(Table.of(ctx, tableName), Column.ofNotNull(ctx, tableName, columnName, columnType));
+        return ofNotNull(ctx, tableName, columnName, Validators.columnTypeNotNull(columnType));
     }
 
     /**
@@ -203,6 +203,276 @@ public final class TableWithColumns extends AbstractTableAware implements Column
                                               final String tableName,
                                               final String columnName,
                                               final PgColumnType columnType) {
-        return ofSingle(Table.of(ctx, tableName), Column.ofNullable(ctx, tableName, columnName, columnType));
+        return ofNullable(ctx, tableName, columnName, Validators.columnTypeNotNull(columnType));
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single non-nullable column of {@code bigint} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one non-nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofBigint(final PgContext ctx,
+                                            final String tableName,
+                                            final String columnName) {
+        return ofNotNull(ctx, tableName, columnName, PgColumnType.BIGINT.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single nullable column of {@code bigint} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofNullableBigint(final PgContext ctx,
+                                                    final String tableName,
+                                                    final String columnName) {
+        return ofNullable(ctx, tableName, columnName, PgColumnType.BIGINT.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single non-nullable column of {@code integer} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one non-nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofInteger(final PgContext ctx,
+                                             final String tableName,
+                                             final String columnName) {
+        return ofNotNull(ctx, tableName, columnName, PgColumnType.INTEGER.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single nullable column of {@code integer} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofNullableInteger(final PgContext ctx,
+                                                     final String tableName,
+                                                     final String columnName) {
+        return ofNullable(ctx, tableName, columnName, PgColumnType.INTEGER.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single non-nullable column of {@code character varying} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one non-nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofVarchar(final PgContext ctx,
+                                             final String tableName,
+                                             final String columnName) {
+        return ofNotNull(ctx, tableName, columnName, PgColumnType.VARCHAR.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single nullable column of {@code character varying} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofNullableVarchar(final PgContext ctx,
+                                                     final String tableName,
+                                                     final String columnName) {
+        return ofNullable(ctx, tableName, columnName, PgColumnType.VARCHAR.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single non-nullable column of {@code text} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one non-nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofText(final PgContext ctx,
+                                          final String tableName,
+                                          final String columnName) {
+        return ofNotNull(ctx, tableName, columnName, PgColumnType.TEXT.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single nullable column of {@code text} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofNullableText(final PgContext ctx,
+                                                  final String tableName,
+                                                  final String columnName) {
+        return ofNullable(ctx, tableName, columnName, PgColumnType.TEXT.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single non-nullable column of {@code character} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one non-nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofCharacter(final PgContext ctx,
+                                               final String tableName,
+                                               final String columnName) {
+        return ofNotNull(ctx, tableName, columnName, PgColumnType.CHARACTER.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single nullable column of {@code character} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofNullableCharacter(final PgContext ctx,
+                                                       final String tableName,
+                                                       final String columnName) {
+        return ofNullable(ctx, tableName, columnName, PgColumnType.CHARACTER.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single non-nullable column of {@code boolean} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one non-nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofBoolean(final PgContext ctx,
+                                             final String tableName,
+                                             final String columnName) {
+        return ofNotNull(ctx, tableName, columnName, PgColumnType.BOOLEAN.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single nullable column of {@code boolean} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofNullableBoolean(final PgContext ctx,
+                                                     final String tableName,
+                                                     final String columnName) {
+        return ofNullable(ctx, tableName, columnName, PgColumnType.BOOLEAN.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single non-nullable column of {@code timestamp without time zone} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one non-nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofTimestamp(final PgContext ctx,
+                                               final String tableName,
+                                               final String columnName) {
+        return ofNotNull(ctx, tableName, columnName, PgColumnType.TIMESTAMP.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single nullable column of {@code timestamp without time zone} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofNullableTimestamp(final PgContext ctx,
+                                                       final String tableName,
+                                                       final String columnName) {
+        return ofNullable(ctx, tableName, columnName, PgColumnType.TIMESTAMP.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single non-nullable column of {@code timestamp with time zone} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one non-nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofTimestamptz(final PgContext ctx,
+                                                 final String tableName,
+                                                 final String columnName) {
+        return ofNotNull(ctx, tableName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single nullable column of {@code timestamp with time zone} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofNullableTimestamptz(final PgContext ctx,
+                                                         final String tableName,
+                                                         final String columnName) {
+        return ofNullable(ctx, tableName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single non-nullable column of {@code uuid} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one non-nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofUuid(final PgContext ctx,
+                                          final String tableName,
+                                          final String columnName) {
+        return ofNotNull(ctx, tableName, columnName, PgColumnType.UUID.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single nullable column of {@code uuid} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one nullable column
+     * @since 0.51.0
+     */
+    public static TableWithColumns ofNullableUuid(final PgContext ctx,
+                                                  final String tableName,
+                                                  final String columnName) {
+        return ofNullable(ctx, tableName, columnName, PgColumnType.UUID.getColumnType());
     }
 }

@@ -96,6 +96,10 @@ IndexWithColumns.ofSingle(PgContext.ofDefault(), "orders", "i_orders_client_id",
 IndexWithColumns.ofNullableVarchar(ctx, "clients", "i_clients_middle_name", "middle_name")
 ```
 
+`TableWithColumns` also has typed shortcut factories (all with `PgContext`) for the same types as `Column`:
+`ofBigint`, `ofInteger`, ..., `ofUuid` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableUuid` (nullable),
+e.g. `TableWithColumns.ofBigint(ctx, "orders", "id")` instead of `TableWithColumns.ofNotNull(ctx, "orders", "id", PgColumnType.BIGINT)`.
+
 **`ColumnTypeAware` has been merged into `ColumnNameAware`.**
 
 `ColumnTypeAware` has been removed. `getColumnType()` and the `COLUMN_FIELD` / `COLUMN_TYPE_FIELD` constants
