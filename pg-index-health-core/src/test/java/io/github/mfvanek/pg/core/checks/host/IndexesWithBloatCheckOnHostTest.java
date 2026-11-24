@@ -77,11 +77,11 @@ class IndexesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
                 .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 8);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "clients"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.of(ctx, List.of("accounts_account_number_key", "accounts_pkey", "clients_pkey", "i_clients_email_phone")))
+                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "accounts_account_number_key", "accounts_pkey", "clients_pkey", "i_clients_email_phone"))
                 .isEmpty();
 
             assertThat(check)

@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class FunctionsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
@@ -55,7 +53,7 @@ class FunctionsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipDbObjectsByNamePredicate.of(ctx, List.of("add", "insert_data")))
+                .executing(ctx, SkipDbObjectsByNamePredicate.ofName(ctx, "add", "insert_data"))
                 .isEmpty();
         });
     }

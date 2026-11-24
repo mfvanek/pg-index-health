@@ -106,6 +106,18 @@ class SkipBySequenceNamePredicateTest {
             .rejects(SequenceState.of("s2", "int", 80.0))
             .rejects(SequenceState.of("S2", "int", 80.0))
             .rejects(ColumnWithSerialType.of(ctx, "t", "c", false, PgColumnType.SERIAL, "s1"));
+
+        assertThat(SkipBySequenceNamePredicate.ofName("s1", "S2", "s1"))
+            .accepts(SequenceState.of("s11", "int", 80.0))
+            .rejects(SequenceState.of("s1", "int", 80.0))
+            .rejects(SequenceState.of("s2", "int", 80.0));
+
+        final PgContext customCtx = PgContext.of("custom");
+        assertThat(SkipBySequenceNamePredicate.ofName(customCtx, "s1", "S2"))
+            .accepts(SequenceState.of("custom.s11", "int", 80.0))
+            .accepts(SequenceState.of("s1", "int", 80.0))
+            .rejects(SequenceState.of("custom.s1", "int", 80.0))
+            .rejects(SequenceState.of("custom.s2", "int", 80.0));
     }
 
     @ParameterizedTest

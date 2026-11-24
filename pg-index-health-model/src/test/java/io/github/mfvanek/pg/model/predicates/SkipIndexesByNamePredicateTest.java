@@ -125,6 +125,18 @@ class SkipIndexesByNamePredicateTest {
             .rejects(DuplicatedIndexes.of(
                 Index.of("t1", "i1", 1L),
                 Index.of("t1", "i2", 1L)));
+
+        assertThat(SkipIndexesByNamePredicate.ofName("i1", "I2", "i1"))
+            .accepts(Index.of("t1", "i3"))
+            .rejects(Index.of("t1", "i1"))
+            .rejects(Index.of("T2", "I2"));
+
+        final PgContext customCtx = PgContext.of("custom");
+        assertThat(SkipIndexesByNamePredicate.ofName(customCtx, "i1", "I2"))
+            .accepts(Index.of("custom.t1", "custom.i3"))
+            .accepts(Index.of("t1", "i1"))
+            .rejects(Index.of("custom.t1", "custom.i1"))
+            .rejects(Index.of("custom.t2", "custom.i2"));
     }
 
     @ParameterizedTest

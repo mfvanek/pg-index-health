@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class SelfReferencedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
@@ -54,7 +52,7 @@ class SelfReferencedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("bad_self_ref_table", "bad_self_ref_restrict_table", "cfk_node_b")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_self_ref_table", "bad_self_ref_restrict_table", "cfk_node_b"))
                 .isEmpty();
         });
     }

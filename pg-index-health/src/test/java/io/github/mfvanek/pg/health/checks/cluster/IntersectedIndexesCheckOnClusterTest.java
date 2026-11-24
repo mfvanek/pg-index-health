@@ -24,8 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -60,11 +58,11 @@ class IntersectedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .allMatch(d -> d.getTotalSize() >= 106_496L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "clients"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.of(ctx, List.of("i_clients_last_first", "i_accounts_number_balance_not_deleted")))
+                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_last_first", "i_accounts_number_balance_not_deleted"))
                 .isEmpty();
         });
     }

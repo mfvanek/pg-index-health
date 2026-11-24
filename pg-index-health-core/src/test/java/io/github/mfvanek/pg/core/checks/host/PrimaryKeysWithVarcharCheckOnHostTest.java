@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class PrimaryKeysWithVarcharCheckOnHostTest extends DatabaseAwareTestBase {
@@ -56,7 +54,7 @@ class PrimaryKeysWithVarcharCheckOnHostTest extends DatabaseAwareTestBase {
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("t_link", "t_varchar_long", "\"t-varchar-short\"")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "t_link", "t_varchar_long", "\"t-varchar-short\""))
                 .isEmpty();
         });
     }

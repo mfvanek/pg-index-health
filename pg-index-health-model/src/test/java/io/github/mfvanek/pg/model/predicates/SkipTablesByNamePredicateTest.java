@@ -90,6 +90,19 @@ class SkipTablesByNamePredicateTest {
             .rejects(Index.of("t", "i"))
             .rejects(Index.of("T", "I"))
             .rejects(Index.of("t2", "i2"));
+
+        assertThat(SkipTablesByNamePredicate.ofName("t", "T2", "t"))
+            .accepts(Index.of("t1", "i1"))
+            .rejects(Index.of("t", "i"))
+            .rejects(Index.of("T", "I"))
+            .rejects(Index.of("t2", "i2"));
+
+        final PgContext ctx = PgContext.of("custom");
+        assertThat(SkipTablesByNamePredicate.ofName(ctx, "t", "T2"))
+            .accepts(Index.of("custom.t1", "custom.i1"))
+            .accepts(Index.of("t2", "i2"))
+            .rejects(Index.of("custom.t", "custom.i"))
+            .rejects(Index.of("custom.t2", "custom.i2"));
     }
 
     @ParameterizedTest

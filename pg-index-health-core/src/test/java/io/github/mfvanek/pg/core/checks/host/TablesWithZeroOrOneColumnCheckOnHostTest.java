@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class TablesWithZeroOrOneColumnCheckOnHostTest extends DatabaseAwareTestBase {
@@ -54,7 +52,7 @@ class TablesWithZeroOrOneColumnCheckOnHostTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("another_table", "empty", "one_more_table")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "another_table", "empty", "one_more_table"))
                 .isEmpty();
         });
     }

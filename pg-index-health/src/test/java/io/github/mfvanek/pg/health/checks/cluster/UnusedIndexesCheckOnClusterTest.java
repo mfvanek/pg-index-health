@@ -89,12 +89,12 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts")
-                    .and(SkipIndexesByNamePredicate.of(ctx, List.of("i_clients_last_first", "i_clients_last_name"))))
+                    .and(SkipIndexesByNamePredicate.ofName(ctx, "i_clients_last_first", "i_clients_last_name")))
                 .isEmpty();
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts")
-                    .and(SkipDbObjectsByNamePredicate.of(List.of(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_clients_last_name")))))
+                    .and(SkipDbObjectsByNamePredicate.ofName(ctx.enrichWithSchema("i_clients_last_first"), ctx.enrichWithSchema("i_clients_last_name"))))
                 .isEmpty();
         });
     }
@@ -115,8 +115,8 @@ class UnusedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .allMatch(i -> i.getIndexScans() == 0);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of(
-                    "custom_entity_reference_with_very_very_very_long_name", "custom_entity_reference_with_very_very_very_long_name_1_default")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, 
+                    "custom_entity_reference_with_very_very_very_long_name", "custom_entity_reference_with_very_very_very_long_name_1_default"))
                 .isEmpty();
         });
     }

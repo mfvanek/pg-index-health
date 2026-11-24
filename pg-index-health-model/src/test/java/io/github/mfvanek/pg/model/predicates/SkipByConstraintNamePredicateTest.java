@@ -91,5 +91,9 @@ class SkipByConstraintNamePredicateTest {
                 ForeignKey.ofInteger(ctx, "t1", "C2", "col1"),
                 ForeignKey.ofInteger(ctx, "t1", "C1", "col1")
             ));
+        assertThat(SkipByConstraintNamePredicate.ofName("c1", "C2", "c1"))
+            .accepts(Constraint.ofType("t1", "c3", ConstraintType.CHECK))
+            .rejects(Constraint.ofType("t1", "C1", ConstraintType.CHECK))
+            .rejects(Constraint.ofType("t1", "c2", ConstraintType.CHECK));
     }
 }

@@ -19,6 +19,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.collectNamesToSkip;
 import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.prepareFullyQualifiedNamesToSkip;
 
 /**
@@ -37,8 +38,8 @@ public final class SkipBySequenceNamePredicate implements Predicate<DbObject> {
         this.fullyQualifiedSequenceNamesToSkip = prepareFullyQualifiedNamesToSkip(ctx, rawSequenceNamesToSkip);
     }
 
-    private SkipBySequenceNamePredicate(final PgContext ctx, final String rawSequenceNameToSkip) {
-        this(ctx, AbstractSkipTablesPredicate.prepareSingleNameToSkip(rawSequenceNameToSkip, "rawSequenceNameToSkip"));
+    private SkipBySequenceNamePredicate(final PgContext ctx, final String rawSequenceNameToSkip, final String... rawSequenceNamesToSkip) {
+        this(ctx, collectNamesToSkip(rawSequenceNameToSkip, rawSequenceNamesToSkip, "rawSequenceNameToSkip", "rawSequenceNamesToSkip"));
     }
 
     /**
@@ -56,13 +57,15 @@ public final class SkipBySequenceNamePredicate implements Predicate<DbObject> {
     }
 
     /**
-     * Creates a predicate to skip a specific sequence name in the default context.
+     * Creates a predicate to skip one or more sequence names in the default context.
      *
-     * @param rawSequenceNameToSkip the raw sequence name to skip; must be non-null and non-blank
-     * @return a {@code SkipBySequenceNamePredicate} instance for the specified sequence name
+     * @param rawSequenceNameToSkip  the raw sequence name to skip; must be non-null and non-blank
+     * @param rawSequenceNamesToSkip other raw sequence names to skip; must be non-null and must not contain null or blank elements
+     * @return a {@code SkipBySequenceNamePredicate} instance for the specified sequence names
+     * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final String rawSequenceNameToSkip) {
-        return new SkipBySequenceNamePredicate(PgContext.ofDefault(), rawSequenceNameToSkip);
+    public static Predicate<DbObject> ofName(final String rawSequenceNameToSkip, final String... rawSequenceNamesToSkip) {
+        return new SkipBySequenceNamePredicate(PgContext.ofDefault(), rawSequenceNameToSkip, rawSequenceNamesToSkip);
     }
 
     /**
@@ -76,14 +79,16 @@ public final class SkipBySequenceNamePredicate implements Predicate<DbObject> {
     }
 
     /**
-     * Creates a predicate to skip a specific sequence name in the given PostgreSQL context.
+     * Creates a predicate to skip one or more sequence names in the given PostgreSQL context.
      *
-     * @param ctx                   the PostgreSQL context to use; must be non-null
-     * @param rawSequenceNameToSkip the raw sequence name to skip; must be non-null and non-blank
-     * @return a {@code SkipBySequenceNamePredicate} instance for the specified sequence name
+     * @param ctx                    the PostgreSQL context to use; must be non-null
+     * @param rawSequenceNameToSkip  the raw sequence name to skip; must be non-null and non-blank
+     * @param rawSequenceNamesToSkip other raw sequence names to skip; must be non-null and must not contain null or blank elements
+     * @return a {@code SkipBySequenceNamePredicate} instance for the specified sequence names
+     * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final PgContext ctx, final String rawSequenceNameToSkip) {
-        return new SkipBySequenceNamePredicate(ctx, rawSequenceNameToSkip);
+    public static Predicate<DbObject> ofName(final PgContext ctx, final String rawSequenceNameToSkip, final String... rawSequenceNamesToSkip) {
+        return new SkipBySequenceNamePredicate(ctx, rawSequenceNameToSkip, rawSequenceNamesToSkip);
     }
 
     /**

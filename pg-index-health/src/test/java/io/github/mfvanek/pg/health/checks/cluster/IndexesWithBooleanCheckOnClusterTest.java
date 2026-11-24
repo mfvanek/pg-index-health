@@ -25,8 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -62,7 +60,7 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.of(ctx, List.of("i_accounts_deleted", "i_accounts_balance_lower_number_deleted")))
+                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_accounts_deleted", "i_accounts_balance_lower_number_deleted"))
                 .isEmpty();
         });
     }

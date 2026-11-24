@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -71,7 +69,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
                     Column.ofNullableInteger(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\""));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("\"1st_table\"", "accounts", "\"bad-table\"", "\"bad-table-two\"")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "\"1st_table\"", "accounts", "\"bad-table\"", "\"bad-table-two\""))
                 .hasSize(12);
         });
     }
@@ -110,7 +108,7 @@ class ColumnsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase 
         final String expectedTableName = "custom_entity_reference_with_very_very_very_long_name";
         executeTestOnDatabase(schemaName, DatabasePopulator::withPartitionedTableWithoutComments, ctx ->
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "clients"))
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(

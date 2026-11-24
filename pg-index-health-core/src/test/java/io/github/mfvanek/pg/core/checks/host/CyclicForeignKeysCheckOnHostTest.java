@@ -25,8 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class CyclicForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
@@ -98,11 +96,11 @@ class CyclicForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
                 .noneMatch(c -> c.getTableNames().contains(ctx.enrichWithSchema("cfk_ring_b")));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("\"Cfk-A-Second\"", "cfk_orders", "cfk_right", "cfk_node_c", "cfk_ring_c")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "\"Cfk-A-Second\"", "cfk_orders", "cfk_right", "cfk_node_c", "cfk_ring_c"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipByConstraintNamePredicate.of(List.of("\"Cfk-A-Second-Fk\"", "cfk_orders_customer_fk", "cfk_right_left_fk", "cfk_node_b_c_fk", "cfk_ring_a_c_fk")))
+                .executing(ctx, SkipByConstraintNamePredicate.ofName("\"Cfk-A-Second-Fk\"", "cfk_orders_customer_fk", "cfk_right_left_fk", "cfk_node_b_c_fk", "cfk_ring_a_c_fk"))
                 .isEmpty();
         });
     }

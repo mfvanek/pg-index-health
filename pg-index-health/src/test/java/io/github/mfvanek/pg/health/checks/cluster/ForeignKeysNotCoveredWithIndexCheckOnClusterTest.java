@@ -24,8 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -56,7 +54,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "bad_clients")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "bad_clients"))
                 .isEmpty();
         });
     }

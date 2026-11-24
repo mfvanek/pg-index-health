@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class ColumnsWithInconsistentTypesCheckOnHostTest extends DatabaseAwareTestBase {
@@ -56,7 +54,7 @@ class ColumnsWithInconsistentTypesCheckOnHostTest extends DatabaseAwareTestBase 
                     Column.ofUuid(ctx, "t_uuid_id", "id"));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("clients", "accounts")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients", "accounts"))
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
@@ -68,7 +66,7 @@ class ColumnsWithInconsistentTypesCheckOnHostTest extends DatabaseAwareTestBase 
             // Excluding "t_uuid_id" leaves "created_at" with a single type (timestamp): it is no longer
             // inconsistent and is dropped, while "id" keeps two distinct types and survives.
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("t_uuid_id")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "t_uuid_id"))
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(

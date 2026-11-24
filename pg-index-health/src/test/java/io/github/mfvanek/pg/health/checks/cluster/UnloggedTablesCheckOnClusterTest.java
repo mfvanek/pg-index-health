@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class UnloggedTablesCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -50,7 +48,7 @@ class UnloggedTablesCheckOnClusterTest extends DatabaseAwareTestBase {
                     Table.of(ctx, "unlogged_table"));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("unlogged_table")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "unlogged_table"))
                 .isEmpty();
         });
     }

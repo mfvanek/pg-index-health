@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class ColumnsNotFollowingNamingConventionCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -54,7 +52,7 @@ class ColumnsNotFollowingNamingConventionCheckOnClusterTest extends DatabaseAwar
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("\"1st_table\"", "\"bad-table\"", "\"bad-table-two\"", "\"UpperCaseTable\"")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "\"1st_table\"", "\"bad-table\"", "\"bad-table-two\"", "\"UpperCaseTable\""))
                 .isEmpty();
         });
     }

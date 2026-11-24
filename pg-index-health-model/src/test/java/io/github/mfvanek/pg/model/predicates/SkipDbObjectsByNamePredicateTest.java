@@ -76,6 +76,14 @@ class SkipDbObjectsByNamePredicateTest {
             .rejects(FIRST)
             .accepts(SECOND)
             .rejects(THIRD);
+        assertThat(SkipDbObjectsByNamePredicate.ofName("CUSTOM.table1", "custom.TABLE3", "CUSTOM.table1"))
+            .rejects(FIRST)
+            .accepts(SECOND)
+            .rejects(THIRD);
+        assertThat(SkipDbObjectsByNamePredicate.ofName(CTX, "table1", "TABLE3"))
+            .rejects(FIRST)
+            .accepts(SECOND)
+            .rejects(THIRD);
     }
 
     @Test

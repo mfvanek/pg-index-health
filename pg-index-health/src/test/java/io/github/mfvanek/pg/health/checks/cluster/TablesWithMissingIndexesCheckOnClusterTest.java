@@ -84,7 +84,7 @@ class TablesWithMissingIndexesCheckOnClusterTest extends StatisticsAwareTestBase
                 .allMatch(t -> t.getTableSizeInBytes() == 0L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("orders_partitioned_2025", "orders_partitioned_default")))
+                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "orders_partitioned_2025", "orders_partitioned_default"))
                 .isEmpty();
         });
     }

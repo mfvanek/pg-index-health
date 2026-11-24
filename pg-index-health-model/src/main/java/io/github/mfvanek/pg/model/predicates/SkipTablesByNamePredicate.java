@@ -34,20 +34,22 @@ public final class SkipTablesByNamePredicate extends AbstractSkipTablesPredicate
         super(ctx, rawTableNamesToSkip);
     }
 
-    private SkipTablesByNamePredicate(final PgContext ctx, final String rawTableNameToSkip) {
-        this(ctx, prepareSingleNameToSkip(rawTableNameToSkip, "rawTableNameToSkip"));
+    private SkipTablesByNamePredicate(final PgContext ctx, final String rawTableNameToSkip, final String... rawTableNamesToSkip) {
+        this(ctx, collectNamesToSkip(rawTableNameToSkip, rawTableNamesToSkip, "rawTableNameToSkip", "rawTableNamesToSkip"));
     }
 
     /**
-     * Creates a predicate to skip a specific table in the default schema.
+     * Creates a predicate to skip one or more tables in the default schema.
      *
-     * @param rawTableNameToSkip the name of the table to skip, must be non-null and non-blank
-     * @return a predicate that skips the specified table in the default schema
-     * @throws NullPointerException     if {@code tableName} is null
-     * @throws IllegalArgumentException if {@code tableName} is blank
+     * @param rawTableNameToSkip  the name of the table to skip, must be non-null and non-blank
+     * @param rawTableNamesToSkip names of other tables to skip, must be non-null and must not contain null or blank elements
+     * @return a predicate that skips the specified tables in the default schema
+     * @throws NullPointerException     if {@code rawTableNameToSkip}, {@code rawTableNamesToSkip} or any of its elements is null
+     * @throws IllegalArgumentException if any of the table names is blank
+     * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final String rawTableNameToSkip) {
-        return new SkipTablesByNamePredicate(PgContext.ofDefault(), rawTableNameToSkip);
+    public static Predicate<DbObject> ofName(final String rawTableNameToSkip, final String... rawTableNamesToSkip) {
+        return new SkipTablesByNamePredicate(PgContext.ofDefault(), rawTableNameToSkip, rawTableNamesToSkip);
     }
 
     /**
@@ -62,16 +64,18 @@ public final class SkipTablesByNamePredicate extends AbstractSkipTablesPredicate
     }
 
     /**
-     * Creates a predicate to skip a specific table in the specified schema context.
+     * Creates a predicate to skip one or more tables in the specified schema context.
      *
-     * @param ctx                the schema context for the table to be skipped, must be non-null
-     * @param rawTableNameToSkip the name of the table to skip, must be non-null and non-blank
-     * @return a predicate that skips the specified table in the given schema
-     * @throws NullPointerException     if {@code ctx} or {@code tableName} is null
-     * @throws IllegalArgumentException if {@code tableName} is blank
+     * @param ctx                 the schema context for the tables to be skipped, must be non-null
+     * @param rawTableNameToSkip  the name of the table to skip, must be non-null and non-blank
+     * @param rawTableNamesToSkip names of other tables to skip, must be non-null and must not contain null or blank elements
+     * @return a predicate that skips the specified tables in the given schema
+     * @throws NullPointerException     if {@code ctx}, {@code rawTableNameToSkip}, {@code rawTableNamesToSkip} or any of its elements is null
+     * @throws IllegalArgumentException if any of the table names is blank
+     * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final PgContext ctx, final String rawTableNameToSkip) {
-        return new SkipTablesByNamePredicate(ctx, rawTableNameToSkip);
+    public static Predicate<DbObject> ofName(final PgContext ctx, final String rawTableNameToSkip, final String... rawTableNamesToSkip) {
+        return new SkipTablesByNamePredicate(ctx, rawTableNameToSkip, rawTableNamesToSkip);
     }
 
     /**

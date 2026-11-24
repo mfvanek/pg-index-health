@@ -41,6 +41,34 @@ class AbstractSkipTablesPredicateTest {
             .hasMessage("rawNamesToSkip cannot be null");
     }
 
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void collectNamesToSkipShouldValidateEveryName() {
+        assertThatThrownBy(() -> AbstractSkipTablesPredicate.collectNamesToSkip(null, new String[0], "first", "others"))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("first cannot be null");
+        assertThatThrownBy(() -> AbstractSkipTablesPredicate.collectNamesToSkip(" ", new String[0], "first", "others"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("first cannot be blank");
+        assertThatThrownBy(() -> AbstractSkipTablesPredicate.collectNamesToSkip("t", null, "first", "others"))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("others cannot be null");
+        assertThatThrownBy(() -> AbstractSkipTablesPredicate.collectNamesToSkip("t", new String[]{"t2", null}, "first", "others"))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("others element cannot be null");
+        assertThatThrownBy(() -> AbstractSkipTablesPredicate.collectNamesToSkip("t", new String[]{"t2", ""}, "first", "others"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("others element cannot be blank");
+    }
+
+    @Test
+    void collectNamesToSkipShouldKeepOrderAndDuplicates() {
+        assertThat(AbstractSkipTablesPredicate.collectNamesToSkip("t", new String[0], "first", "others"))
+            .containsExactly("t");
+        assertThat(AbstractSkipTablesPredicate.collectNamesToSkip("t", new String[]{"T2", "t"}, "first", "others"))
+            .containsExactly("t", "T2", "t");
+    }
+
     @Test
     void canCombinePredicatesIntoChain() {
         final Predicate<DbObject> composite = SkipLiquibaseTablesPredicate.ofDefault().and(SkipFlywayTablesPredicate.ofDefault());

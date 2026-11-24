@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -56,7 +54,7 @@ class ColumnsWithSerialTypesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipBySequenceNamePredicate.of(ctx, List.of("bad_accounts_real_account_id_seq", "bad_accounts_real_client_id_seq")))
+                .executing(ctx, SkipBySequenceNamePredicate.ofName(ctx, "bad_accounts_real_account_id_seq", "bad_accounts_real_client_id_seq"))
                 .isEmpty();
         });
     }

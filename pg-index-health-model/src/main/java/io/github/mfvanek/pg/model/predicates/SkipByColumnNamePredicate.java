@@ -36,8 +36,8 @@ public final class SkipByColumnNamePredicate implements Predicate<DbObject> {
         this.columnNamesToSkip = AbstractSkipTablesPredicate.prepareNamesToSkip(columnNamesToSkip);
     }
 
-    private SkipByColumnNamePredicate(final String columnNameToSkip) {
-        this(AbstractSkipTablesPredicate.prepareSingleNameToSkip(columnNameToSkip, "columnNameToSkip"));
+    private SkipByColumnNamePredicate(final String columnNameToSkip, final String... columnNamesToSkip) {
+        this(AbstractSkipTablesPredicate.collectNamesToSkip(columnNameToSkip, columnNamesToSkip, "columnNameToSkip", "columnNamesToSkip"));
     }
 
     /**
@@ -65,13 +65,15 @@ public final class SkipByColumnNamePredicate implements Predicate<DbObject> {
     }
 
     /**
-     * Creates a predicate to skip a specific column name.
+     * Creates a predicate to skip one or more column names.
      *
-     * @param columnNameToSkip the column name to skip; must be non-blank
-     * @return a {@code SkipByColumnNamePredicate} instance for the specified column name
+     * @param columnNameToSkip  the column name to skip; must be non-null and non-blank
+     * @param columnNamesToSkip other column names to skip; must be non-null and must not contain null or blank elements
+     * @return a {@code SkipByColumnNamePredicate} instance for the specified column names
+     * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final String columnNameToSkip) {
-        return new SkipByColumnNamePredicate(columnNameToSkip);
+    public static Predicate<DbObject> ofName(final String columnNameToSkip, final String... columnNamesToSkip) {
+        return new SkipByColumnNamePredicate(columnNameToSkip, columnNamesToSkip);
     }
 
     /**
