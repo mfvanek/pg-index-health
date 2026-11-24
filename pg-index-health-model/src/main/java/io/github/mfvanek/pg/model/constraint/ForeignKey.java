@@ -226,7 +226,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param column       the first column that is included in constraint; must be non-null.
      * @param otherColumns other columns that are included in constraint; must not contain null elements.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey of(final Constraint constraint,
                                 final Column column,
@@ -243,7 +243,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param column         the first column that is included in constraint; must be non-null.
      * @param otherColumns   other columns that are included in constraint; must not contain null elements.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey of(final PgContext ctx,
                                 final String tableName,
@@ -262,7 +262,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @param columnType     type of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNotNull(final PgContext ctx,
                                        final String tableName,
@@ -281,7 +281,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @param columnType     type of column that is included in constraint; must be non-null.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNotNull(final PgContext ctx,
                                        final String tableName,
@@ -300,7 +300,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @param columnType     type of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNullable(final PgContext ctx,
                                         final String tableName,
@@ -319,7 +319,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @param columnType     type of column that is included in constraint; must be non-null.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNullable(final PgContext ctx,
                                         final String tableName,
@@ -337,7 +337,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofBigint(final PgContext ctx,
                                       final String tableName,
@@ -354,7 +354,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNullableBigint(final PgContext ctx,
                                               final String tableName,
@@ -371,7 +371,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofInteger(final PgContext ctx,
                                        final String tableName,
@@ -388,7 +388,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNullableInteger(final PgContext ctx,
                                                final String tableName,
@@ -405,7 +405,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofVarchar(final PgContext ctx,
                                        final String tableName,
@@ -422,7 +422,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNullableVarchar(final PgContext ctx,
                                                final String tableName,
@@ -439,7 +439,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofText(final PgContext ctx,
                                     final String tableName,
@@ -456,7 +456,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNullableText(final PgContext ctx,
                                             final String tableName,
@@ -473,7 +473,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofCharacter(final PgContext ctx,
                                          final String tableName,
@@ -490,7 +490,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNullableCharacter(final PgContext ctx,
                                                  final String tableName,
@@ -507,7 +507,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofBoolean(final PgContext ctx,
                                        final String tableName,
@@ -524,7 +524,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNullableBoolean(final PgContext ctx,
                                                final String tableName,
@@ -541,7 +541,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofTimestamp(final PgContext ctx,
                                          final String tableName,
@@ -558,7 +558,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNullableTimestamp(final PgContext ctx,
                                                  final String tableName,
@@ -575,7 +575,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofTimestamptz(final PgContext ctx,
                                            final String tableName,
@@ -592,7 +592,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNullableTimestamptz(final PgContext ctx,
                                                    final String tableName,
@@ -609,7 +609,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofUuid(final PgContext ctx,
                                     final String tableName,
@@ -626,7 +626,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ForeignKey ofNullableUuid(final PgContext ctx,
                                             final String tableName,

@@ -178,7 +178,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @param column       column with serial type; should be non-null.
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ColumnWithSerialType of(final Column column,
                                           final String sequenceName) {
@@ -192,7 +192,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @param column       column with serial type; should be non-null.
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ColumnWithSerialType of(final PgContext ctx,
                                           final Column column,
@@ -211,7 +211,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @param columnType   column type; must be one of {@code smallserial}, {@code serial} or {@code bigserial}.
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ColumnWithSerialType of(final PgContext ctx,
                                           final String tableName,
@@ -233,7 +233,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @param columnType   column type; must be one of {@link PgColumnType#SMALL_SERIAL}, {@link PgColumnType#SERIAL} or {@link PgColumnType#BIG_SERIAL}.
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ColumnWithSerialType of(final PgContext ctx,
                                           final String tableName,
@@ -252,7 +252,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @param columnName   column name; should be non-blank.
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ColumnWithSerialType ofBigSerial(final PgContext ctx,
                                                    final String tableName,
@@ -269,7 +269,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @param columnName   column name; should be non-blank.
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ColumnWithSerialType ofSerial(final PgContext ctx,
                                                 final String tableName,
@@ -286,7 +286,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
      * @param columnName   column name; should be non-blank.
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static ColumnWithSerialType ofSmallSerial(final PgContext ctx,
                                                      final String tableName,

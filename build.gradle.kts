@@ -21,7 +21,7 @@ description = "pg-index-health build"
 
 allprojects {
     group = "io.github.mfvanek"
-    version = "0.51.0"
+    version = "0.60.0"
 
     repositories {
         mavenCentral()

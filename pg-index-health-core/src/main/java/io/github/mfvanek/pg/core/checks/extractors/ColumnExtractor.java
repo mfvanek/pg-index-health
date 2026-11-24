@@ -27,7 +27,7 @@ public final class ColumnExtractor implements ResultSetExtractor<Column> {
     /**
      * The name of the result set column that contains the column type.
      *
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static final String COLUMN_TYPE = "column_type";
 

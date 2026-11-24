@@ -23,7 +23,7 @@ import java.util.Objects;
  *
  * @author Ivan Vakhrushev
  * @see <a href="https://www.postgresql.org/docs/current/datatype.html">Data Types</a>
- * @since 0.51.0
+ * @since 0.60.0
  */
 public enum PgColumnType {
 
