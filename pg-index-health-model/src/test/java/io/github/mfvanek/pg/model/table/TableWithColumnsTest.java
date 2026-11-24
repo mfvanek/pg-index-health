@@ -28,7 +28,7 @@ class TableWithColumnsTest {
     @Test
     void gettersShouldWork() {
         final PgContext ctx = PgContext.of("tst");
-        final TableWithColumns first = TableWithColumns.ofNullableColumn(ctx, "t1", "c1", "integer");
+        final TableWithColumns first = TableWithColumns.ofNullable(ctx, "t1", "c1", "integer");
         assertThat(first.getTableName())
             .isEqualTo("tst.t1")
             .isEqualTo(first.getName());
@@ -80,7 +80,7 @@ class TableWithColumnsTest {
     @Test
     void testToString() {
         final PgContext ctx = PgContext.of("tst");
-        assertThat(TableWithColumns.ofNotNullColumn(ctx, "t1", "c1", "integer"))
+        assertThat(TableWithColumns.ofNotNull(ctx, "t1", "c1", "integer"))
             .hasToString("TableWithColumns{tableName='tst.t1', tableSizeInBytes=0, columns=[Column{tableName='tst.t1', columnName='c1', notNull=true, columnType='integer'}]}");
         assertThat(TableWithColumns.withoutColumns(Table.of("t2")))
             .hasToString("TableWithColumns{tableName='t2', tableSizeInBytes=0, columns=[]}");
@@ -90,10 +90,10 @@ class TableWithColumnsTest {
     @Test
     void testEqualsAndHashCode() {
         final PgContext ctx = PgContext.of("tst");
-        final TableWithColumns first = TableWithColumns.ofNotNullColumn(ctx, "t1", "c1", "integer");
+        final TableWithColumns first = TableWithColumns.ofNotNull(ctx, "t1", "c1", "integer");
         final TableWithColumns theSame = TableWithColumns.ofSingle(Table.of(ctx, "t1"), Column.ofInteger(ctx, "t1", "c1"));
-        final TableWithColumns third = TableWithColumns.ofNullableColumn(ctx, "t1", "c2", "integer");
-        final TableWithColumns forth = TableWithColumns.ofNullableColumn(ctx, "t2", "c1", "integer");
+        final TableWithColumns third = TableWithColumns.ofNullable(ctx, "t1", "c2", "integer");
+        final TableWithColumns forth = TableWithColumns.ofNullable(ctx, "t2", "c1", "integer");
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -134,12 +134,12 @@ class TableWithColumnsTest {
     @Test
     void factoriesWithEnumTypeShouldWork() {
         final PgContext ctx = PgContext.of("tst");
-        assertThat(TableWithColumns.ofNotNullColumn(ctx, "t", "c", PgColumnType.BIGINT))
+        assertThat(TableWithColumns.ofNotNull(ctx, "t", "c", PgColumnType.BIGINT))
             .usingRecursiveComparison()
-            .isEqualTo(TableWithColumns.ofNotNullColumn(ctx, "t", "c", "bigint"));
-        assertThat(TableWithColumns.ofNullableColumn(ctx, "t", "c", PgColumnType.UUID))
+            .isEqualTo(TableWithColumns.ofNotNull(ctx, "t", "c", "bigint"));
+        assertThat(TableWithColumns.ofNullable(ctx, "t", "c", PgColumnType.UUID))
             .usingRecursiveComparison()
-            .isEqualTo(TableWithColumns.ofNullableColumn(ctx, "t", "c", "uuid"));
+            .isEqualTo(TableWithColumns.ofNullable(ctx, "t", "c", "uuid"));
     }
 
     @Test
@@ -152,9 +152,9 @@ class TableWithColumnsTest {
     @Test
     void compareToTest() {
         final PgContext ctx = PgContext.of("tst");
-        final TableWithColumns first = TableWithColumns.ofNotNullColumn(ctx, "t1", "c1", "integer");
+        final TableWithColumns first = TableWithColumns.ofNotNull(ctx, "t1", "c1", "integer");
         final TableWithColumns theSame = TableWithColumns.ofSingle(Table.of(ctx, "t1"), Column.ofInteger(ctx, "t1", "c1"));
-        final TableWithColumns third = TableWithColumns.ofNullableColumn(ctx, "t2", "c1", "integer");
+        final TableWithColumns third = TableWithColumns.ofNullable(ctx, "t2", "c1", "integer");
 
         assertThat(first)
             .isEqualByComparingTo(first)

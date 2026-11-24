@@ -256,11 +256,11 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNotNullColumn(final PgContext pgContext,
-                                             final String tableName,
-                                             final String constraintName,
-                                             final String columnName,
-                                             final String columnType) {
+    public static ForeignKey ofNotNull(final PgContext pgContext,
+                                       final String tableName,
+                                       final String constraintName,
+                                       final String columnName,
+                                       final String columnType) {
         return ofColumn(pgContext, tableName, constraintName, Column.ofNotNull(pgContext, tableName, columnName, columnType));
     }
 
@@ -275,12 +275,12 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNotNullColumn(final PgContext pgContext,
-                                             final String tableName,
-                                             final String constraintName,
-                                             final String columnName,
-                                             final PgColumnType columnType) {
-        return ofNotNullColumn(pgContext, tableName, constraintName, columnName, Validators.columnTypeNotNull(columnType));
+    public static ForeignKey ofNotNull(final PgContext pgContext,
+                                       final String tableName,
+                                       final String constraintName,
+                                       final String columnName,
+                                       final PgColumnType columnType) {
+        return ofNotNull(pgContext, tableName, constraintName, columnName, Validators.columnTypeNotNull(columnType));
     }
 
     /**
@@ -294,11 +294,11 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullableColumn(final PgContext pgContext,
-                                              final String tableName,
-                                              final String constraintName,
-                                              final String columnName,
-                                              final String columnType) {
+    public static ForeignKey ofNullable(final PgContext pgContext,
+                                        final String tableName,
+                                        final String constraintName,
+                                        final String columnName,
+                                        final String columnType) {
         return ofColumn(pgContext, tableName, constraintName, Column.ofNullable(pgContext, tableName, columnName, columnType));
     }
 
@@ -313,12 +313,12 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullableColumn(final PgContext pgContext,
-                                              final String tableName,
-                                              final String constraintName,
-                                              final String columnName,
-                                              final PgColumnType columnType) {
-        return ofNullableColumn(pgContext, tableName, constraintName, columnName, Validators.columnTypeNotNull(columnType));
+    public static ForeignKey ofNullable(final PgContext pgContext,
+                                        final String tableName,
+                                        final String constraintName,
+                                        final String columnName,
+                                        final PgColumnType columnType) {
+        return ofNullable(pgContext, tableName, constraintName, columnName, Validators.columnTypeNotNull(columnType));
     }
 
     /**
@@ -335,7 +335,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                       final String tableName,
                                       final String constraintName,
                                       final String columnName) {
-        return ofNotNullColumn(pgContext, tableName, constraintName, columnName, PgColumnType.BIGINT.getColumnType());
+        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.BIGINT.getColumnType());
     }
 
     /**
@@ -352,7 +352,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                               final String tableName,
                                               final String constraintName,
                                               final String columnName) {
-        return ofNullableColumn(pgContext, tableName, constraintName, columnName, PgColumnType.BIGINT.getColumnType());
+        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.BIGINT.getColumnType());
     }
 
     /**
@@ -369,7 +369,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                        final String tableName,
                                        final String constraintName,
                                        final String columnName) {
-        return ofNotNullColumn(pgContext, tableName, constraintName, columnName, PgColumnType.INTEGER.getColumnType());
+        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.INTEGER.getColumnType());
     }
 
     /**
@@ -386,7 +386,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                                final String tableName,
                                                final String constraintName,
                                                final String columnName) {
-        return ofNullableColumn(pgContext, tableName, constraintName, columnName, PgColumnType.INTEGER.getColumnType());
+        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.INTEGER.getColumnType());
     }
 
     /**
@@ -403,7 +403,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                        final String tableName,
                                        final String constraintName,
                                        final String columnName) {
-        return ofNotNullColumn(pgContext, tableName, constraintName, columnName, PgColumnType.VARCHAR.getColumnType());
+        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.VARCHAR.getColumnType());
     }
 
     /**
@@ -420,7 +420,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                                final String tableName,
                                                final String constraintName,
                                                final String columnName) {
-        return ofNullableColumn(pgContext, tableName, constraintName, columnName, PgColumnType.VARCHAR.getColumnType());
+        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.VARCHAR.getColumnType());
     }
 
     /**
@@ -437,7 +437,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                     final String tableName,
                                     final String constraintName,
                                     final String columnName) {
-        return ofNotNullColumn(pgContext, tableName, constraintName, columnName, PgColumnType.TEXT.getColumnType());
+        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.TEXT.getColumnType());
     }
 
     /**
@@ -454,7 +454,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                             final String tableName,
                                             final String constraintName,
                                             final String columnName) {
-        return ofNullableColumn(pgContext, tableName, constraintName, columnName, PgColumnType.TEXT.getColumnType());
+        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.TEXT.getColumnType());
     }
 
     /**
@@ -471,7 +471,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                          final String tableName,
                                          final String constraintName,
                                          final String columnName) {
-        return ofNotNullColumn(pgContext, tableName, constraintName, columnName, PgColumnType.CHARACTER.getColumnType());
+        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.CHARACTER.getColumnType());
     }
 
     /**
@@ -488,7 +488,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                                  final String tableName,
                                                  final String constraintName,
                                                  final String columnName) {
-        return ofNullableColumn(pgContext, tableName, constraintName, columnName, PgColumnType.CHARACTER.getColumnType());
+        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.CHARACTER.getColumnType());
     }
 
     /**
@@ -505,7 +505,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                        final String tableName,
                                        final String constraintName,
                                        final String columnName) {
-        return ofNotNullColumn(pgContext, tableName, constraintName, columnName, PgColumnType.BOOLEAN.getColumnType());
+        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.BOOLEAN.getColumnType());
     }
 
     /**
@@ -522,7 +522,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                                final String tableName,
                                                final String constraintName,
                                                final String columnName) {
-        return ofNullableColumn(pgContext, tableName, constraintName, columnName, PgColumnType.BOOLEAN.getColumnType());
+        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.BOOLEAN.getColumnType());
     }
 
     /**
@@ -539,7 +539,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                          final String tableName,
                                          final String constraintName,
                                          final String columnName) {
-        return ofNotNullColumn(pgContext, tableName, constraintName, columnName, PgColumnType.TIMESTAMP.getColumnType());
+        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.TIMESTAMP.getColumnType());
     }
 
     /**
@@ -556,7 +556,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                                  final String tableName,
                                                  final String constraintName,
                                                  final String columnName) {
-        return ofNullableColumn(pgContext, tableName, constraintName, columnName, PgColumnType.TIMESTAMP.getColumnType());
+        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.TIMESTAMP.getColumnType());
     }
 
     /**
@@ -573,7 +573,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                            final String tableName,
                                            final String constraintName,
                                            final String columnName) {
-        return ofNotNullColumn(pgContext, tableName, constraintName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
+        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
     }
 
     /**
@@ -590,7 +590,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                                    final String tableName,
                                                    final String constraintName,
                                                    final String columnName) {
-        return ofNullableColumn(pgContext, tableName, constraintName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
+        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
     }
 
     /**
@@ -607,7 +607,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                     final String tableName,
                                     final String constraintName,
                                     final String columnName) {
-        return ofNotNullColumn(pgContext, tableName, constraintName, columnName, PgColumnType.UUID.getColumnType());
+        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.UUID.getColumnType());
     }
 
     /**
@@ -624,6 +624,6 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                             final String tableName,
                                             final String constraintName,
                                             final String columnName) {
-        return ofNullableColumn(pgContext, tableName, constraintName, columnName, PgColumnType.UUID.getColumnType());
+        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.UUID.getColumnType());
     }
 }

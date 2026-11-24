@@ -49,9 +49,9 @@ class TablesWithZeroOrOneColumnCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("table.tableSizeInBytes")
                 .containsExactly(
-                    TableWithColumns.ofNotNullColumn(ctx, "another_table", "id", PgColumnType.BIGINT),
+                    TableWithColumns.ofNotNull(ctx, "another_table", "id", PgColumnType.BIGINT),
                     TableWithColumns.withoutColumns(ctx, "empty"),
-                    TableWithColumns.ofNotNullColumn(ctx, "one_more_table", "id", PgColumnType.BIGINT)
+                    TableWithColumns.ofNotNull(ctx, "one_more_table", "id", PgColumnType.BIGINT)
                 );
 
             assertThat(check)
@@ -69,7 +69,7 @@ class TablesWithZeroOrOneColumnCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    TableWithColumns.ofNotNullColumn(ctx, "tp_dropped_column", "ref_type", PgColumnType.BIGINT)
+                    TableWithColumns.ofNotNull(ctx, "tp_dropped_column", "ref_type", PgColumnType.BIGINT)
                 ));
     }
 }

@@ -148,10 +148,10 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @return a {@code TableWithColumns} with one non-nullable column
      * @since 0.51.0
      */
-    public static TableWithColumns ofNotNullColumn(final PgContext pgContext,
-                                                   final String tableName,
-                                                   final String columnName,
-                                                   final String columnType) {
+    public static TableWithColumns ofNotNull(final PgContext pgContext,
+                                             final String tableName,
+                                             final String columnName,
+                                             final String columnType) {
         return ofSingle(Table.of(pgContext, tableName), Column.ofNotNull(pgContext, tableName, columnName, columnType));
     }
 
@@ -165,10 +165,10 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @return a {@code TableWithColumns} with one non-nullable column
      * @since 0.51.0
      */
-    public static TableWithColumns ofNotNullColumn(final PgContext pgContext,
-                                                   final String tableName,
-                                                   final String columnName,
-                                                   final PgColumnType columnType) {
+    public static TableWithColumns ofNotNull(final PgContext pgContext,
+                                             final String tableName,
+                                             final String columnName,
+                                             final PgColumnType columnType) {
         return ofSingle(Table.of(pgContext, tableName), Column.ofNotNull(pgContext, tableName, columnName, columnType));
     }
 
@@ -182,10 +182,10 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @return a {@code TableWithColumns} with one nullable column
      * @since 0.51.0
      */
-    public static TableWithColumns ofNullableColumn(final PgContext pgContext,
-                                                    final String tableName,
-                                                    final String columnName,
-                                                    final String columnType) {
+    public static TableWithColumns ofNullable(final PgContext pgContext,
+                                              final String tableName,
+                                              final String columnName,
+                                              final String columnType) {
         return ofSingle(Table.of(pgContext, tableName), Column.ofNullable(pgContext, tableName, columnName, columnType));
     }
 
@@ -199,10 +199,10 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @return a {@code TableWithColumns} with one nullable column
      * @since 0.51.0
      */
-    public static TableWithColumns ofNullableColumn(final PgContext pgContext,
-                                                    final String tableName,
-                                                    final String columnName,
-                                                    final PgColumnType columnType) {
+    public static TableWithColumns ofNullable(final PgContext pgContext,
+                                              final String tableName,
+                                              final String columnName,
+                                              final PgColumnType columnType) {
         return ofSingle(Table.of(pgContext, tableName), Column.ofNullable(pgContext, tableName, columnName, columnType));
     }
 }

@@ -71,7 +71,7 @@ class SkipByColumnNamePredicateTest {
             .rejects(Column.of("t1", "col1", true, "integer"))
             .rejects(ColumnWithSerialType.of(Column.of("t1", "col1", true, "serial"), "s1"))
             .rejects(IndexWithColumns.ofInteger(ctx, "t1", "i1", "col1"))
-            .rejects(TableWithColumns.ofNullableColumn(ctx, "t3", "col1", "integer"));
+            .rejects(TableWithColumns.ofNullable(ctx, "t3", "col1", "integer"));
     }
 
     @Test
@@ -84,6 +84,6 @@ class SkipByColumnNamePredicateTest {
             .rejects(Column.of("t1", "col1", true, "integer"))
             .rejects(ColumnWithSerialType.of(Column.of("t1", "col2", true, "serial"), "s1"))
             .rejects(IndexWithColumns.ofInteger(ctx, "t1", "i1", "col1"))
-            .rejects(TableWithColumns.ofNullableColumn(ctx, "t3", "col1", "integer"));
+            .rejects(TableWithColumns.ofNullable(ctx, "t3", "col1", "integer"));
     }
 }

@@ -29,10 +29,10 @@ class ForeignKeyTest {
     @Test
     void testToString() {
         final PgContext ctx = PgContext.of("tst");
-        assertThat(ForeignKey.ofNotNullColumn(ctx, "t", "c_t_order_id", "order_id", "integer"))
+        assertThat(ForeignKey.ofNotNull(ctx, "t", "c_t_order_id", "order_id", "integer"))
             .hasToString("ForeignKey{tableName='tst.t', constraintName='c_t_order_id', columns=[Column{tableName='tst.t', columnName='order_id', notNull=true, columnType='integer'}]}");
 
-        assertThat(ForeignKey.ofNullableColumn(ctx, "t", "c_t_order_id", "order_id", "integer"))
+        assertThat(ForeignKey.ofNullable(ctx, "t", "c_t_order_id", "order_id", "integer"))
             .hasToString("ForeignKey{tableName='tst.t', constraintName='c_t_order_id', columns=[Column{tableName='tst.t', columnName='order_id', notNull=false, columnType='integer'}]}");
     }
 
@@ -127,22 +127,22 @@ class ForeignKeyTest {
         assertThatThrownBy(() -> ForeignKey.ofColumn(ctx, "t", "fk", null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("column cannot be null");
-        assertThatThrownBy(() -> ForeignKey.ofNotNullColumn(ctx, "t", "fk", null, "integer"))
+        assertThatThrownBy(() -> ForeignKey.ofNotNull(ctx, "t", "fk", null, "integer"))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("columnName cannot be null");
-        assertThatThrownBy(() -> ForeignKey.ofNotNullColumn(ctx, "t", "fk", "", "integer"))
+        assertThatThrownBy(() -> ForeignKey.ofNotNull(ctx, "t", "fk", "", "integer"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
-        assertThatThrownBy(() -> ForeignKey.ofNotNullColumn(ctx, "t", "fk", "  ", "integer"))
+        assertThatThrownBy(() -> ForeignKey.ofNotNull(ctx, "t", "fk", "  ", "integer"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
-        assertThatThrownBy(() -> ForeignKey.ofNullableColumn(ctx, "t", "fk", null, "integer"))
+        assertThatThrownBy(() -> ForeignKey.ofNullable(ctx, "t", "fk", null, "integer"))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("columnName cannot be null");
-        assertThatThrownBy(() -> ForeignKey.ofNullableColumn(ctx, "t", "fk", "", "integer"))
+        assertThatThrownBy(() -> ForeignKey.ofNullable(ctx, "t", "fk", "", "integer"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
-        assertThatThrownBy(() -> ForeignKey.ofNullableColumn(ctx, "t", "fk", "  ", "integer"))
+        assertThatThrownBy(() -> ForeignKey.ofNullable(ctx, "t", "fk", "  ", "integer"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
         final Column column = Column.ofInteger(ctx, "t", "col");
@@ -207,12 +207,12 @@ class ForeignKeyTest {
     @Test
     void factoriesWithEnumTypeShouldWork() {
         final PgContext ctx = PgContext.of("tst");
-        assertThat(ForeignKey.ofNotNullColumn(ctx, "t", "c_t_order_id", "order_id", PgColumnType.BIGINT))
+        assertThat(ForeignKey.ofNotNull(ctx, "t", "c_t_order_id", "order_id", PgColumnType.BIGINT))
             .usingRecursiveComparison()
-            .isEqualTo(ForeignKey.ofNotNullColumn(ctx, "t", "c_t_order_id", "order_id", "bigint"));
-        assertThat(ForeignKey.ofNullableColumn(ctx, "t", "c_t_order_id", "order_id", PgColumnType.UUID))
+            .isEqualTo(ForeignKey.ofNotNull(ctx, "t", "c_t_order_id", "order_id", "bigint"));
+        assertThat(ForeignKey.ofNullable(ctx, "t", "c_t_order_id", "order_id", PgColumnType.UUID))
             .usingRecursiveComparison()
-            .isEqualTo(ForeignKey.ofNullableColumn(ctx, "t", "c_t_order_id", "order_id", "uuid"));
+            .isEqualTo(ForeignKey.ofNullable(ctx, "t", "c_t_order_id", "order_id", "uuid"));
     }
 
     @Test
@@ -239,24 +239,24 @@ class ForeignKeyTest {
             ForeignKey.ofNullableUuid(ctx, "t1", "fk", "c1")))
             .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
-                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "bigint"),
-                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "bigint"),
-                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "integer"),
-                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "integer"),
-                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "character varying"),
-                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "character varying"),
-                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "text"),
-                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "text"),
-                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "character"),
-                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "character"),
-                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "boolean"),
-                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "boolean"),
-                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "timestamp without time zone"),
-                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "timestamp without time zone"),
-                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "timestamp with time zone"),
-                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "timestamp with time zone"),
-                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "uuid"),
-                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "uuid"));
+                ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "bigint"),
+                ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "bigint"),
+                ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "integer"),
+                ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "integer"),
+                ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "character varying"),
+                ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "character varying"),
+                ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "text"),
+                ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "text"),
+                ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "character"),
+                ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "character"),
+                ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "boolean"),
+                ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "boolean"),
+                ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "timestamp without time zone"),
+                ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "timestamp without time zone"),
+                ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "timestamp with time zone"),
+                ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "timestamp with time zone"),
+                ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "uuid"),
+                ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "uuid"));
     }
 
     @Test

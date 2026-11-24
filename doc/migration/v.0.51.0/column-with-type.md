@@ -38,10 +38,23 @@ Column.of("public.orders", "tags", false, "integer[]")
 ```
 
 The same applies to the convenience factories that create a column internally:
-`ForeignKey.ofNotNullColumn/ofNullableColumn`, `IndexWithColumns.ofNotNull/ofNullable` and
-`TableWithColumns.ofNotNullColumn/ofNullableColumn` take an additional `columnType` argument (`String` or `PgColumnType`).
+`ForeignKey.ofNotNull/ofNullable`, `IndexWithColumns.ofNotNull/ofNullable` and
+`TableWithColumns.ofNotNull/ofNullable` take an additional `columnType` argument (`String` or `PgColumnType`).
 
-**`ForeignKey.ofNotNullColumn`, `ForeignKey.ofNullableColumn` and `ForeignKey.ofColumn` require a `PgContext`.**
+**`ForeignKey` and `TableWithColumns`: `ofNotNullColumn` / `ofNullableColumn` have been renamed to `ofNotNull` / `ofNullable`**
+(the same names as in `IndexWithColumns`).
+
+```java
+// Before
+TableWithColumns.ofNotNullColumn(ctx, "orders", "id")
+ForeignKey.ofNullableColumn(ctx, "orders", "fk_orders_client", "client_id")
+
+// After
+TableWithColumns.ofNotNull(ctx, "orders", "id", PgColumnType.BIGINT)
+ForeignKey.ofNullable(ctx, "orders", "fk_orders_client", "client_id", "bigint")
+```
+
+**`ForeignKey.ofNotNull`, `ForeignKey.ofNullable` and `ForeignKey.ofColumn` require a `PgContext`.**
 
 The overloads without `PgContext` have been removed; use `PgContext.ofDefault()` for tables in the `public` schema
 (the table name is left unchanged). `ForeignKey.of(tableName, constraintName, columns)` without context is kept
@@ -53,8 +66,8 @@ ForeignKey.ofNotNullColumn("orders", "fk_orders_client", "client_id")
 ForeignKey.ofColumn("orders", "fk_orders_client", column)
 
 // After
-ForeignKey.ofNotNullColumn(PgContext.ofDefault(), "orders", "fk_orders_client", "client_id", PgColumnType.BIGINT)
-ForeignKey.ofNullableColumn(ctx, "orders", "fk_orders_client", "client_id", "bigint")
+ForeignKey.ofNotNull(PgContext.ofDefault(), "orders", "fk_orders_client", "client_id", PgColumnType.BIGINT)
+ForeignKey.ofNullable(ctx, "orders", "fk_orders_client", "client_id", "bigint")
 ForeignKey.ofColumn(ctx, "orders", "fk_orders_client", column)
 ForeignKey.ofBigint(ctx, "orders", "fk_orders_client", "client_id")
 ```
@@ -62,7 +75,7 @@ ForeignKey.ofBigint(ctx, "orders", "fk_orders_client", "client_id")
 `ForeignKey` also has typed shortcut factories (all with `PgContext`) for the same types as `Column`:
 `ofBigint`, `ofInteger`, ..., `ofUuid` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableUuid` (nullable),
 e.g. `ForeignKey.ofInteger(ctx, "orders", "fk_orders_client", "client_id")` instead of
-`ForeignKey.ofNotNullColumn(ctx, "orders", "fk_orders_client", "client_id", PgColumnType.INTEGER)`.
+`ForeignKey.ofNotNull(ctx, "orders", "fk_orders_client", "client_id", PgColumnType.INTEGER)`.
 
 **`IndexWithColumns.ofSingle` requires a `PgContext` or an `Index`.**
 
