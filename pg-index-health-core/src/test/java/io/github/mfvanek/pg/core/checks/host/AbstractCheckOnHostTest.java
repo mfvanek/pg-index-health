@@ -18,8 +18,7 @@ import io.github.mfvanek.pg.core.utils.QueryExecutors;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -34,11 +33,10 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
 
     private final AbstractCheckOnHost<@NonNull IndexWithColumns> check = new IndexesWithNullValuesCheckOnHost(getPgConnection());
 
-    @ParameterizedTest
-    @ValueSource(strings = PgContext.DEFAULT_SCHEMA_NAME)
-    void securityTest(final String schemaName) {
+    @Test
+    void securityTest() {
         try (LogsCaptor ignored = new LogsCaptor(QueryExecutors.class, Level.FINEST)) {
-            executeTestOnDatabase(schemaName, dbp -> dbp.withBooleanAndNullValuesInIndexes().withData(), ctx -> {
+            executeTestOnDatabase(PgContext.DEFAULT_SCHEMA_NAME, dbp -> dbp.withBooleanAndNullValuesInIndexes().withData(), ctx -> {
                 final long before = getRowsCount(ctx.getSchemaName(), "clients");
                 assertThat(before).isEqualTo(1001L);
                 assertThat(check.check(PgContext.of("; truncate table clients;")))
@@ -51,8 +49,8 @@ class AbstractCheckOnHostTest extends DatabaseAwareTestBase {
                 assertThat(check.check()) // executing on default schema
                     .hasSize(2)
                     .containsExactly(
-                        IndexWithColumns.ofNullableVarchar(PgContext.ofDefault(), "clients", "i_clients_middle_name", "middle_name"),
-                        IndexWithColumns.ofNullableVarchar(PgContext.ofDefault(), "clients", "i_clients_middle_name_known_last_name", "middle_name"));
+                        IndexWithColumns.ofNullableVarchar(ctx, "clients", "i_clients_middle_name", "middle_name"),
+                        IndexWithColumns.ofNullableVarchar(ctx, "clients", "i_clients_middle_name_known_last_name", "middle_name"));
 
                 assertThat(check.check(t -> !"clients".equalsIgnoreCase(t.getTableName())))
                     .isEmpty();
