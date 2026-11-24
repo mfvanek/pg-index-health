@@ -52,7 +52,7 @@ class DropSequenceGeneratorTest {
 
     @NonNull
     private ColumnWithSerialType column() {
-        final PgContext ctx = PgContext.ofDefault();
-        return ColumnWithSerialType.ofSerial(ctx, "s1.t1", "col1", "s1.seq1");
+        final PgContext ctx = PgContext.of("s1");
+        return ColumnWithSerialType.ofSerial(ctx, "t1", "col1", "seq1");
     }
 }
