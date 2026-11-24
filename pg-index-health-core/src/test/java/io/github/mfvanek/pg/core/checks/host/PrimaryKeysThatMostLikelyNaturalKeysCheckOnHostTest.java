@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -54,7 +53,7 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHostTest extends DatabaseAwareT
                         List.of(Column.ofText(ctx, "t2_composite", "passport_series"), Column.ofText(ctx, "t2_composite", "passport_number"))),
                     IndexWithColumns.ofColumns(ctx, "t3_composite", "t3_composite_pkey",
                         List.of(Column.ofUuid(ctx, "t3_composite", "app_id"), Column.ofText(ctx, "t3_composite", "app_number"))),
-                    IndexWithColumns.ofNotNull(ctx, "\"times-of-creation\"", "\"times-of-creation_pkey\"", "\"time-of-creation\"", PgColumnType.TIMESTAMPTZ))
+                    IndexWithColumns.ofTimestamptz(ctx, "\"times-of-creation\"", "\"times-of-creation_pkey\"", "\"time-of-creation\""))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)

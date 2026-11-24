@@ -64,6 +64,25 @@ ForeignKey.ofBigint(ctx, "orders", "fk_orders_client", "client_id")
 e.g. `ForeignKey.ofInteger(ctx, "orders", "fk_orders_client", "client_id")` instead of
 `ForeignKey.ofNotNullColumn(ctx, "orders", "fk_orders_client", "client_id", PgColumnType.INTEGER)`.
 
+**`IndexWithColumns.ofSingle` requires a `PgContext` or an `Index`.**
+
+`IndexWithColumns.ofSingle(tableName, indexName, indexSizeInBytes, column)` without context has been removed;
+use `PgContext.ofDefault()` for tables in the `public` schema. `IndexWithColumns.ofColumns(tableName, indexName, indexSizeInBytes, columns)`
+without context is kept for already qualified table names.
+
+`IndexWithColumns` also has typed shortcut factories (all with `PgContext`, zero index size) for the same types as `Column`:
+`ofBigint`, `ofInteger`, ..., `ofUuid` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableUuid` (nullable).
+
+```java
+// Before
+IndexWithColumns.ofSingle("orders", "i_orders_client_id", 0L, column)
+IndexWithColumns.ofNullable(ctx, "clients", "i_clients_middle_name", "middle_name", PgColumnType.VARCHAR)
+
+// After
+IndexWithColumns.ofSingle(PgContext.ofDefault(), "orders", "i_orders_client_id", 0L, column)
+IndexWithColumns.ofNullableVarchar(ctx, "clients", "i_clients_middle_name", "middle_name")
+```
+
 **`ColumnTypeAware` has been merged into `ColumnNameAware`.**
 
 `ColumnTypeAware` has been removed. `getColumnType()` and the `COLUMN_FIELD` / `COLUMN_TYPE_FIELD` constants

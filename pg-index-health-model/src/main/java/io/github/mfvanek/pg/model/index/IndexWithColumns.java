@@ -93,22 +93,6 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
     }
 
     /**
-     * Constructs an {@code IndexWithColumns} object with one column.
-     *
-     * @param tableName        table name; should be non-blank.
-     * @param indexName        index name; should be non-blank.
-     * @param indexSizeInBytes index size in bytes; should be positive or zero.
-     * @param column           column in index; must be non-null.
-     * @return {@code IndexWithColumns}
-     */
-    public static IndexWithColumns ofSingle(final String tableName,
-                                            final String indexName,
-                                            final long indexSizeInBytes,
-                                            final Column column) {
-        return ofSingle(Index.of(tableName, indexName, indexSizeInBytes), column);
-    }
-
-    /**
      * Constructs an {@code IndexWithColumns} object with one column and given context.
      *
      * @param pgContext        the schema context to enrich table and index name; must be non-null.
@@ -176,7 +160,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
                                               final String indexName,
                                               final String columnName,
                                               final PgColumnType columnType) {
-        return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNullable(pgContext, tableName, columnName, columnType));
+        return ofNullable(pgContext, tableName, indexName, columnName, Validators.columnTypeNotNull(columnType));
     }
 
     /**
@@ -214,7 +198,313 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
                                              final String indexName,
                                              final String columnName,
                                              final PgColumnType columnType) {
-        return ofSingle(Index.of(pgContext, tableName, indexName), Column.ofNotNull(pgContext, tableName, columnName, columnType));
+        return ofNotNull(pgContext, tableName, indexName, columnName, Validators.columnTypeNotNull(columnType));
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one not-null column of {@code bigint} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofBigint(final PgContext pgContext,
+                                            final String tableName,
+                                            final String indexName,
+                                            final String columnName) {
+        return ofNotNull(pgContext, tableName, indexName, columnName, PgColumnType.BIGINT.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one nullable column of {@code bigint} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofNullableBigint(final PgContext pgContext,
+                                                    final String tableName,
+                                                    final String indexName,
+                                                    final String columnName) {
+        return ofNullable(pgContext, tableName, indexName, columnName, PgColumnType.BIGINT.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one not-null column of {@code integer} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofInteger(final PgContext pgContext,
+                                             final String tableName,
+                                             final String indexName,
+                                             final String columnName) {
+        return ofNotNull(pgContext, tableName, indexName, columnName, PgColumnType.INTEGER.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one nullable column of {@code integer} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofNullableInteger(final PgContext pgContext,
+                                                     final String tableName,
+                                                     final String indexName,
+                                                     final String columnName) {
+        return ofNullable(pgContext, tableName, indexName, columnName, PgColumnType.INTEGER.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one not-null column of {@code character varying} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofVarchar(final PgContext pgContext,
+                                             final String tableName,
+                                             final String indexName,
+                                             final String columnName) {
+        return ofNotNull(pgContext, tableName, indexName, columnName, PgColumnType.VARCHAR.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one nullable column of {@code character varying} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofNullableVarchar(final PgContext pgContext,
+                                                     final String tableName,
+                                                     final String indexName,
+                                                     final String columnName) {
+        return ofNullable(pgContext, tableName, indexName, columnName, PgColumnType.VARCHAR.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one not-null column of {@code text} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofText(final PgContext pgContext,
+                                          final String tableName,
+                                          final String indexName,
+                                          final String columnName) {
+        return ofNotNull(pgContext, tableName, indexName, columnName, PgColumnType.TEXT.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one nullable column of {@code text} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofNullableText(final PgContext pgContext,
+                                                  final String tableName,
+                                                  final String indexName,
+                                                  final String columnName) {
+        return ofNullable(pgContext, tableName, indexName, columnName, PgColumnType.TEXT.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one not-null column of {@code character} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofCharacter(final PgContext pgContext,
+                                               final String tableName,
+                                               final String indexName,
+                                               final String columnName) {
+        return ofNotNull(pgContext, tableName, indexName, columnName, PgColumnType.CHARACTER.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one nullable column of {@code character} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofNullableCharacter(final PgContext pgContext,
+                                                       final String tableName,
+                                                       final String indexName,
+                                                       final String columnName) {
+        return ofNullable(pgContext, tableName, indexName, columnName, PgColumnType.CHARACTER.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one not-null column of {@code boolean} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofBoolean(final PgContext pgContext,
+                                             final String tableName,
+                                             final String indexName,
+                                             final String columnName) {
+        return ofNotNull(pgContext, tableName, indexName, columnName, PgColumnType.BOOLEAN.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one nullable column of {@code boolean} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofNullableBoolean(final PgContext pgContext,
+                                                     final String tableName,
+                                                     final String indexName,
+                                                     final String columnName) {
+        return ofNullable(pgContext, tableName, indexName, columnName, PgColumnType.BOOLEAN.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one not-null column of {@code timestamp without time zone} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofTimestamp(final PgContext pgContext,
+                                               final String tableName,
+                                               final String indexName,
+                                               final String columnName) {
+        return ofNotNull(pgContext, tableName, indexName, columnName, PgColumnType.TIMESTAMP.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one nullable column of {@code timestamp without time zone} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofNullableTimestamp(final PgContext pgContext,
+                                                       final String tableName,
+                                                       final String indexName,
+                                                       final String columnName) {
+        return ofNullable(pgContext, tableName, indexName, columnName, PgColumnType.TIMESTAMP.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one not-null column of {@code timestamp with time zone} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofTimestamptz(final PgContext pgContext,
+                                                 final String tableName,
+                                                 final String indexName,
+                                                 final String columnName) {
+        return ofNotNull(pgContext, tableName, indexName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one nullable column of {@code timestamp with time zone} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofNullableTimestamptz(final PgContext pgContext,
+                                                         final String tableName,
+                                                         final String indexName,
+                                                         final String columnName) {
+        return ofNullable(pgContext, tableName, indexName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one not-null column of {@code uuid} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofUuid(final PgContext pgContext,
+                                          final String tableName,
+                                          final String indexName,
+                                          final String columnName) {
+        return ofNotNull(pgContext, tableName, indexName, columnName, PgColumnType.UUID.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one nullable column of {@code uuid} type and given context.
+     *
+     * @param pgContext  the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns ofNullableUuid(final PgContext pgContext,
+                                                  final String tableName,
+                                                  final String indexName,
+                                                  final String columnName) {
+        return ofNullable(pgContext, tableName, indexName, columnName, PgColumnType.UUID.getColumnType());
     }
 
     /**

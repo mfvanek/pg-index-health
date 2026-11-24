@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.core.checks.common.DatabaseCheckOnHost;
 import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
@@ -50,8 +49,8 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofNullable(ctx, "clients", "i_clients_middle_name", "middle_name", PgColumnType.VARCHAR),
-                    IndexWithColumns.ofNullable(ctx, "clients", "i_clients_middle_name_known_last_name", "middle_name", PgColumnType.VARCHAR))
+                    IndexWithColumns.ofNullableVarchar(ctx, "clients", "i_clients_middle_name", "middle_name"),
+                    IndexWithColumns.ofNullableVarchar(ctx, "clients", "i_clients_middle_name_known_last_name", "middle_name"))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -73,10 +72,10 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofNullable(ctx, "custom_entity_reference_with_very_very_very_long_name",
-                        "idx_custom_entity_reference_with_very_very_very_long_name_1", "ref_type", PgColumnType.VARCHAR),
-                    IndexWithColumns.ofNullable(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default",
-                        "idx_custom_entity_reference_with_very_very_very_long_name_1_d_3", "ref_type", PgColumnType.VARCHAR))
+                    IndexWithColumns.ofNullableVarchar(ctx, "custom_entity_reference_with_very_very_very_long_name",
+                        "idx_custom_entity_reference_with_very_very_very_long_name_1", "ref_type"),
+                    IndexWithColumns.ofNullableVarchar(ctx, "custom_entity_reference_with_very_very_very_long_name_1_default",
+                        "idx_custom_entity_reference_with_very_very_very_long_name_1_d_3", "ref_type"))
         );
     }
 }
