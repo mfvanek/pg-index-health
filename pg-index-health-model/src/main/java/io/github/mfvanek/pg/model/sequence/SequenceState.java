@@ -160,17 +160,17 @@ public final class SequenceState implements DbObject, SequenceNameAware, Compara
     /**
      * Constructs a {@code SequenceState} object with given context.
      *
-     * @param pgContext           the schema context to enrich sequence name; must be non-null.
+     * @param ctx                 the schema context to enrich sequence name; must be non-null.
      * @param sequenceName        sequence name; should be non-blank.
      * @param dataType            data type; should be non-blank.
      * @param remainingPercentage the remaining percentage; in the range from 0 to 100 inclusive.
      * @return {@code SequenceState}
      * @since 0.14.3
      */
-    public static SequenceState of(final PgContext pgContext,
+    public static SequenceState of(final PgContext ctx,
                                    final String sequenceName,
                                    final String dataType,
                                    final double remainingPercentage) {
-        return of(PgContext.enrichWith(sequenceName, pgContext), dataType, remainingPercentage);
+        return of(PgContext.enrichWith(sequenceName, ctx), dataType, remainingPercentage);
     }
 }

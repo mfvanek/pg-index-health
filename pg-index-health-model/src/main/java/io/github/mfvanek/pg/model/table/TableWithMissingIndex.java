@@ -145,7 +145,7 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
     /**
      * Constructs a {@code TableWithMissingIndex} object with given context.
      *
-     * @param pgContext        the schema context to enrich table name; must be non-null.
+     * @param ctx              the schema context to enrich table name; must be non-null.
      * @param tableName        table name; should be non-blank.
      * @param tableSizeInBytes table size in bytes; should be positive or zero.
      * @param seqScans         the number of sequential scans initiated on this table; should be non-negative.
@@ -153,26 +153,26 @@ public final class TableWithMissingIndex extends AbstractTableAware implements C
      * @return {@code TableWithMissingIndex}
      * @since 0.14.3
      */
-    public static TableWithMissingIndex of(final PgContext pgContext,
+    public static TableWithMissingIndex of(final PgContext ctx,
                                            final String tableName,
                                            final long tableSizeInBytes,
                                            final long seqScans,
                                            final long indexScans) {
-        final Table table = Table.of(pgContext, tableName, tableSizeInBytes);
+        final Table table = Table.of(ctx, tableName, tableSizeInBytes);
         return of(table, seqScans, indexScans);
     }
 
     /**
      * Constructs a {@code TableWithMissingIndex} object with given context and zero size.
      *
-     * @param pgContext the schema context to enrich table name; must be non-null.
+     * @param ctx       the schema context to enrich table name; must be non-null.
      * @param tableName table name; should be non-blank.
      * @return {@code TableWithMissingIndex}
      * @since 0.15.0
      */
-    public static TableWithMissingIndex of(final PgContext pgContext,
+    public static TableWithMissingIndex of(final PgContext ctx,
                                            final String tableName) {
-        return of(pgContext, tableName, 0L, 0L, 0L);
+        return of(ctx, tableName, 0L, 0L, 0L);
     }
 
     /**

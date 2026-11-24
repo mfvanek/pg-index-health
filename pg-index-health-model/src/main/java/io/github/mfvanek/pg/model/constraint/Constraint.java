@@ -178,17 +178,17 @@ public final class Constraint implements DbObject, ConstraintNameAware, Comparab
     /**
      * Constructs a {@code Constraint} object with given {@code ConstraintType} and context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param constraintType constraint type; should be non-null.
      * @return {@code Constraint}
      * @since 0.14.3
      */
-    public static Constraint ofType(final PgContext pgContext,
+    public static Constraint ofType(final PgContext ctx,
                                     final String tableName,
                                     final String constraintName,
                                     final ConstraintType constraintType) {
-        return ofType(PgContext.enrichWith(tableName, pgContext), constraintName, constraintType);
+        return ofType(PgContext.enrichWith(tableName, ctx), constraintName, constraintType);
     }
 }

@@ -49,10 +49,10 @@ class TableTest {
             .hasMessage("tableSizeInBytes cannot be less than zero");
         assertThatThrownBy(() -> Table.of(null, "t"))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
         assertThatThrownBy(() -> Table.of(null, "t", -1L))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
     }
 
     @Test

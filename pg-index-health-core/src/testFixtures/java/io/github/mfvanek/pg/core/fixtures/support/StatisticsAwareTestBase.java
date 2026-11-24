@@ -43,18 +43,18 @@ public abstract class StatisticsAwareTestBase extends DatabaseAwareTestBase {
     /**
      * Retrieves the number of sequential scans recorded for the accounts table.
      *
-     * @param pgContext the context of the PostgreSQL schema
+     * @param ctx       the context of the PostgreSQL schema
      * @return the number of sequential scans
      */
     @SuppressWarnings("PMD.CheckResultSet")
-    protected long getSeqScansForAccounts(final PgContext pgContext) {
+    protected long getSeqScansForAccounts(final PgContext ctx) {
         final String sqlQuery = """
             select psat.relname::text as table_name, coalesce(psat.seq_scan, 0) as seq_scan
             from pg_catalog.pg_stat_all_tables psat
             where psat.schemaname = ?::text and psat.relname = 'accounts'::text;""";
         try (Connection connection = getDataSource().getConnection();
              PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            statement.setString(1, pgContext.getSchemaName());
+            statement.setString(1, ctx.getSchemaName());
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 return resultSet.getLong(2);

@@ -25,8 +25,8 @@ The extractor is stored as `protected final ResultSetExtractor<T> rowMapper` and
 Previously every subclass was required to override `doCheck`. Now the base class provides a default implementation:
 
 ```java
-protected List<T> doCheck(PgContext pgContext) {
-    return executeQuery(pgContext, rowMapper);
+protected List<T> doCheck(PgContext ctx) {
+    return executeQuery(ctx, rowMapper);
 }
 ```
 
@@ -47,8 +47,8 @@ public class MyCustomCheckOnHost extends AbstractCheckOnHost<Column> {
     }
 
     @Override
-    protected List<Column> doCheck(PgContext pgContext) {
-        return executeQuery(pgContext, ColumnExtractor.of());
+    protected List<Column> doCheck(PgContext ctx) {
+        return executeQuery(ctx, ColumnExtractor.of());
     }
 }
 ```
@@ -83,9 +83,9 @@ public class MyCustomCheckOnHost extends AbstractCheckOnHost<TableWithColumns> {
     }
 
     @Override
-    protected List<TableWithColumns> doCheck(PgContext pgContext) {
+    protected List<TableWithColumns> doCheck(PgContext ctx) {
         return jdbcClient.sql(checkInfo.getSqlQuery())
-            .param("schema_name_param", pgContext.getSchemaName())
+            .param("schema_name_param", ctx.getSchemaName())
             .query(rowMapper::mapRow)  // use inherited rowMapper field
             .list();
     }
@@ -99,5 +99,5 @@ public class MyCustomCheckOnHost extends AbstractCheckOnHost<TableWithColumns> {
 | What you had                                                                     | What to do                                                                                   |
 |----------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
 | 3-arg `super(type, conn, checkInfo)` call                                        | Add your extractor as the **4th argument**: `super(type, conn, checkInfo, MyExtractor.of())` |
-| `doCheck` override that only calls `executeQuery(pgContext, SomeExtractor.of())` | **Delete the override** — the base class now does this automatically                         |
+| `doCheck` override that only calls `executeQuery(ctx, SomeExtractor.of())`       | **Delete the override** — the base class now does this automatically                         |
 | `doCheck` override with custom logic (JdbcClient, etc.)                          | Keep the override, but use `rowMapper::mapRow` instead of creating a new extractor instance  |

@@ -116,7 +116,7 @@ public final class IndexWithBloat extends AbstractIndexAware implements BloatAwa
     /**
      * Constructs a {@code IndexWithBloat} object with given context.
      *
-     * @param pgContext        the schema context to enrich table and index name; must be non-null.
+     * @param ctx              the schema context to enrich table and index name; must be non-null.
      * @param tableName        table name; should be non-blank.
      * @param indexName        index name; should be non-blank.
      * @param indexSizeInBytes index size in bytes; should be positive or zero.
@@ -125,28 +125,28 @@ public final class IndexWithBloat extends AbstractIndexAware implements BloatAwa
      * @return {@code IndexWithBloat}
      * @since 0.14.3
      */
-    public static IndexWithBloat of(final PgContext pgContext,
+    public static IndexWithBloat of(final PgContext ctx,
                                     final String tableName,
                                     final String indexName,
                                     final long indexSizeInBytes,
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
-        return of(Index.of(pgContext, tableName, indexName, indexSizeInBytes), bloatSizeInBytes, bloatPercentage);
+        return of(Index.of(ctx, tableName, indexName, indexSizeInBytes), bloatSizeInBytes, bloatPercentage);
     }
 
     /**
      * Constructs a {@code IndexWithBloat} object with given context and zero bloat.
      *
-     * @param pgContext the schema context to enrich table and index name; must be non-null.
+     * @param ctx       the schema context to enrich table and index name; must be non-null.
      * @param tableName table name; should be non-blank.
      * @param indexName index name; should be non-blank.
      * @return {@code IndexWithBloat}
      * @since 0.14.3
      */
-    public static IndexWithBloat of(final PgContext pgContext,
+    public static IndexWithBloat of(final PgContext ctx,
                                     final String tableName,
                                     final String indexName) {
-        return of(pgContext, tableName, indexName, 0L, 0L, 0.0);
+        return of(ctx, tableName, indexName, 0L, 0L, 0.0);
     }
 
     /**

@@ -52,12 +52,12 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      * to ensure that fully qualified names are used for comparison.
      * </p>
      *
-     * @param pgContext           the schema context used to enrich table names
+     * @param ctx                 the schema context used to enrich table names
      * @param rawTableNamesToSkip the collection of raw table names to skip, without schema enrichment
-     * @throws NullPointerException if {@code pgContext} or {@code rawTableNamesToSkip} is null
+     * @throws NullPointerException if {@code ctx} or {@code rawTableNamesToSkip} is null
      */
-    AbstractSkipTablesPredicate(final PgContext pgContext, final Collection<String> rawTableNamesToSkip) {
-        this.fullyQualifiedTableNamesToSkip = prepareFullyQualifiedNamesToSkip(pgContext, rawTableNamesToSkip);
+    AbstractSkipTablesPredicate(final PgContext ctx, final Collection<String> rawTableNamesToSkip) {
+        this.fullyQualifiedTableNamesToSkip = prepareFullyQualifiedNamesToSkip(ctx, rawTableNamesToSkip);
     }
 
     /**
@@ -99,17 +99,17 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      * Prepares a set of fully qualified names to skip by enriching each raw name with schema information from the provided
      * PostgreSQL context and converting it to lowercase for case-insensitive matching.
      *
-     * @param pgContext      the PostgreSQL context used to enrich each raw name with schema information; must be non-null
+     * @param ctx            the PostgreSQL context used to enrich each raw name with schema information; must be non-null
      * @param rawNamesToSkip the collection of raw names to skip; must be non-null
      * @return an unmodifiable {@link Set} of fully qualified names to skip, in lowercase
-     * @throws NullPointerException if {@code pgContext} or {@code rawNamesToSkip} is null
+     * @throws NullPointerException if {@code ctx} or {@code rawNamesToSkip} is null
      */
-    static Set<String> prepareFullyQualifiedNamesToSkip(final PgContext pgContext,
+    static Set<String> prepareFullyQualifiedNamesToSkip(final PgContext ctx,
                                                         final Collection<String> rawNamesToSkip) {
-        Objects.requireNonNull(pgContext, "pgContext cannot be null");
+        Objects.requireNonNull(ctx, "ctx cannot be null");
         return Objects.requireNonNull(rawNamesToSkip, "rawNamesToSkip cannot be null")
             .stream()
-            .map(pgContext::enrichWithSchema)
+            .map(ctx::enrichWithSchema)
             .map(s -> s.toLowerCase(Locale.ROOT))
             .collect(Collectors.toUnmodifiableSet());
     }
@@ -119,7 +119,7 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
      *
      * @param rawNamesToSkip the collection of raw names to skip; must be non-null
      * @return an unmodifiable {@link Set} of names to skip, in lowercase
-     * @throws NullPointerException if {@code pgContext} or {@code rawNamesToSkip} is null
+     * @throws NullPointerException if {@code ctx} or {@code rawNamesToSkip} is null
      */
     static Set<String> prepareNamesToSkip(final Collection<String> rawNamesToSkip) {
         return Objects.requireNonNull(rawNamesToSkip, "rawNamesToSkip cannot be null")

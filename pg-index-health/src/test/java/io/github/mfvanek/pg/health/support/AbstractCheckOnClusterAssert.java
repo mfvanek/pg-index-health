@@ -68,15 +68,15 @@ public class AbstractCheckOnClusterAssert<E extends @NonNull DbObject> extends A
     }
 
     @CheckReturnValue
-    public ListAssert<E> executing(final PgContext pgContext) {
+    public ListAssert<E> executing(final PgContext ctx) {
         isNotNull();
-        return Assertions.assertThat(actual.check(pgContext));
+        return Assertions.assertThat(actual.check(ctx));
     }
 
     @CheckReturnValue
-    public ListAssert<E> executing(final PgContext pgContext, final Predicate<? super E> exclusionsFilter) {
+    public ListAssert<E> executing(final PgContext ctx, final Predicate<? super E> exclusionsFilter) {
         isNotNull();
-        return Assertions.assertThat(actual.check(pgContext, exclusionsFilter));
+        return Assertions.assertThat(actual.check(ctx, exclusionsFilter));
     }
 
     @CheckReturnValue

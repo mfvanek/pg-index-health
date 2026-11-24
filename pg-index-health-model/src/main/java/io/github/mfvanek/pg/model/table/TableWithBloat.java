@@ -114,7 +114,7 @@ public final class TableWithBloat extends AbstractTableAware implements BloatAwa
     /**
      * Constructs a {@code TableWithBloat} object with given context.
      *
-     * @param pgContext        the schema context to enrich table name; must be non-null.
+     * @param ctx              the schema context to enrich table name; must be non-null.
      * @param tableName        table name; should be non-blank.
      * @param tableSizeInBytes table size in bytes; should be positive or zero.
      * @param bloatSizeInBytes bloat amount in bytes; should be positive or zero.
@@ -122,26 +122,26 @@ public final class TableWithBloat extends AbstractTableAware implements BloatAwa
      * @return {@code TableWithBloat}
      * @since 0.14.3
      */
-    public static TableWithBloat of(final PgContext pgContext,
+    public static TableWithBloat of(final PgContext ctx,
                                     final String tableName,
                                     final long tableSizeInBytes,
                                     final long bloatSizeInBytes,
                                     final double bloatPercentage) {
-        final Table table = Table.of(pgContext, tableName, tableSizeInBytes);
+        final Table table = Table.of(ctx, tableName, tableSizeInBytes);
         return of(table, bloatSizeInBytes, bloatPercentage);
     }
 
     /**
      * Constructs a {@code TableWithBloat} object with given context and zero bloat.
      *
-     * @param pgContext the schema context to enrich table name; must be non-null.
+     * @param ctx       the schema context to enrich table name; must be non-null.
      * @param tableName table name; should be non-blank.
      * @return {@code TableWithBloat}
      * @since 0.14.3
      */
-    public static TableWithBloat of(final PgContext pgContext,
+    public static TableWithBloat of(final PgContext ctx,
                                     final String tableName) {
-        return of(pgContext, tableName, 0L, 0L, 0.0);
+        return of(ctx, tableName, 0L, 0L, 0.0);
     }
 
     /**

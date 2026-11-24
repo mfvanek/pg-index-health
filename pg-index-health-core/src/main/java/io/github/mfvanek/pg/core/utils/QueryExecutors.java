@@ -75,7 +75,7 @@ public final class QueryExecutors {
      * Executes a given SQL query within the context of the provided schema name.
      *
      * @param pgConnection the PostgreSQL connection; cannot be null
-     * @param pgContext    the context containing the schema name; cannot be null
+     * @param ctx          the context containing the schema name; cannot be null
      * @param sqlQuery     the SQL query to execute; cannot be null
      * @param rse          the result set extractor to process the {@link ResultSet}; cannot be null
      * @param <T>          the type of the result
@@ -84,12 +84,12 @@ public final class QueryExecutors {
      * @throws PgSqlException       if a database access error occurs
      */
     public static <T> List<T> executeQueryWithSchema(final PgConnection pgConnection,
-                                                     final PgContext pgContext,
+                                                     final PgContext ctx,
                                                      final String sqlQuery,
                                                      final ResultSetExtractor<T> rse) {
-        return executeQuery(pgConnection, pgContext, sqlQuery, rse, statement -> {
+        return executeQuery(pgConnection, ctx, sqlQuery, rse, statement -> {
             try {
-                statement.setString(1, pgContext.getSchemaName());
+                statement.setString(1, ctx.getSchemaName());
             } catch (SQLException e) {
                 throw new PgSqlException(e);
             }
@@ -100,7 +100,7 @@ public final class QueryExecutors {
      * Executes a given SQL query within the context of the provided schema name and bloat threshold.
      *
      * @param pgConnection the PostgreSQL connection; cannot be null
-     * @param pgContext    the context containing the schema name and bloat threshold; cannot be null
+     * @param ctx          the context containing the schema name and bloat threshold; cannot be null
      * @param sqlQuery     the SQL query to execute; cannot be null
      * @param rse          the result set extractor to process the {@link ResultSet}; cannot be null
      * @param <T>          the type of the result
@@ -109,13 +109,13 @@ public final class QueryExecutors {
      * @throws PgSqlException       if a database access error occurs
      */
     public static <T> List<T> executeQueryWithBloatThreshold(final PgConnection pgConnection,
-                                                             final PgContext pgContext,
+                                                             final PgContext ctx,
                                                              final String sqlQuery,
                                                              final ResultSetExtractor<T> rse) {
-        return executeQuery(pgConnection, pgContext, sqlQuery, rse, statement -> {
+        return executeQuery(pgConnection, ctx, sqlQuery, rse, statement -> {
             try {
-                statement.setString(1, pgContext.getSchemaName());
-                statement.setDouble(2, pgContext.getBloatPercentageThreshold());
+                statement.setString(1, ctx.getSchemaName());
+                statement.setDouble(2, ctx.getBloatPercentageThreshold());
             } catch (SQLException e) {
                 throw new PgSqlException(e);
             }
@@ -126,7 +126,7 @@ public final class QueryExecutors {
      * Executes a given SQL query within the context of the provided schema name and remaining percentage threshold.
      *
      * @param pgConnection the PostgreSQL connection; cannot be null
-     * @param pgContext    the context containing the schema name and remaining percentage threshold; cannot be null
+     * @param ctx          the context containing the schema name and remaining percentage threshold; cannot be null
      * @param sqlQuery     the SQL query to execute; cannot be null
      * @param rse          the result set extractor to process the {@link ResultSet}; cannot be null
      * @param <T>          the type of the result
@@ -135,13 +135,13 @@ public final class QueryExecutors {
      * @throws PgSqlException       if a database access error occurs
      */
     public static <T> List<T> executeQueryWithRemainingPercentageThreshold(final PgConnection pgConnection,
-                                                                           final PgContext pgContext,
+                                                                           final PgContext ctx,
                                                                            final String sqlQuery,
                                                                            final ResultSetExtractor<T> rse) {
-        return executeQuery(pgConnection, pgContext, sqlQuery, rse, statement -> {
+        return executeQuery(pgConnection, ctx, sqlQuery, rse, statement -> {
             try {
-                statement.setString(1, pgContext.getSchemaName());
-                statement.setDouble(2, pgContext.getRemainingPercentageThreshold());
+                statement.setString(1, ctx.getSchemaName());
+                statement.setDouble(2, ctx.getRemainingPercentageThreshold());
             } catch (SQLException e) {
                 throw new PgSqlException(e);
             }
@@ -149,11 +149,11 @@ public final class QueryExecutors {
     }
 
     private static <T> List<T> executeQuery(final PgConnection pgConnection,
-                                            final PgContext pgContext,
+                                            final PgContext ctx,
                                             final String sqlQuery,
                                             final ResultSetExtractor<T> rse,
                                             final Consumer<PreparedStatement> paramsSetter) {
-        LOGGER.fine(() -> String.format(Locale.ROOT, "Executing query with context %s: %s", pgContext, sqlQuery));
+        LOGGER.fine(() -> String.format(Locale.ROOT, "Executing query with context %s: %s", ctx, sqlQuery));
         Objects.requireNonNull(sqlQuery, "sqlQuery");
         final DataSource dataSource = pgConnection.getDataSource();
         try (Connection connection = dataSource.getConnection();

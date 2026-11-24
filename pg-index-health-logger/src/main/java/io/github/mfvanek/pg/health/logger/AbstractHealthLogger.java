@@ -66,18 +66,18 @@ public abstract class AbstractHealthLogger implements HealthLogger {
      */
     @Override
     public final List<String> logAll(final Exclusions exclusions,
-                                     final PgContext pgContext) {
+                                     final PgContext ctx) {
         Objects.requireNonNull(exclusions);
-        Objects.requireNonNull(pgContext);
+        Objects.requireNonNull(ctx);
         // The main idea here is to create haPgConnection for a short period of time.
         // This helps to avoid dealing with failover/switch-over situations that occur in real clusters.
         try (HighAvailabilityPgConnection haPgConnection = connectionFactory.of(credentials)) {
             final List<DatabaseCheckOnCluster<? extends DbObject>> databaseChecksOnCluster = databaseChecksFactory.apply(haPgConnection);
-            final Predicate<DbObject> jointFilters = prepareFilters(exclusions, pgContext);
+            final Predicate<DbObject> jointFilters = prepareFilters(exclusions, ctx);
             final List<String> logResult = new ArrayList<>();
             for (final DatabaseCheckOnCluster<? extends DbObject> check : databaseChecksOnCluster) {
                 final LoggingKey key = SimpleLoggingKeyAdapter.of(check);
-                final List<? extends DbObject> checkResult = check.check(pgContext, jointFilters);
+                final List<? extends DbObject> checkResult = check.check(ctx, jointFilters);
                 if (checkResult.isEmpty()) {
                     logResult.add(writeZeroToLog(key));
                 } else {
@@ -89,10 +89,10 @@ public abstract class AbstractHealthLogger implements HealthLogger {
         }
     }
 
-    private Predicate<DbObject> prepareFilters(final Exclusions exclusions, final PgContext pgContext) {
-        return SkipTablesByNamePredicate.of(pgContext, exclusions.getTableNameExclusions())
-            .and(SkipIndexesByNamePredicate.of(pgContext, exclusions.getIndexNameExclusions()))
-            .and(SkipBySequenceNamePredicate.of(pgContext, exclusions.getSequenceNameExclusions()))
+    private Predicate<DbObject> prepareFilters(final Exclusions exclusions, final PgContext ctx) {
+        return SkipTablesByNamePredicate.of(ctx, exclusions.getTableNameExclusions())
+            .and(SkipIndexesByNamePredicate.of(ctx, exclusions.getIndexNameExclusions()))
+            .and(SkipBySequenceNamePredicate.of(ctx, exclusions.getSequenceNameExclusions()))
             .and(SkipBloatUnderThresholdPredicate.of(exclusions.getBloatSizeThresholdInBytes(), exclusions.getBloatPercentageThreshold()))
             .and(SkipSmallTablesPredicate.of(exclusions.getTableSizeThresholdInBytes()))
             .and(SkipSmallIndexesPredicate.of(exclusions.getIndexSizeThresholdInBytes()));

@@ -47,6 +47,8 @@ public final class PgContext {
      */
     public static final String REMAINING_PERCENTAGE_THRESHOLD_FIELD = "remainingPercentageThreshold";
 
+    private static final PgContext DEFAULT_CONTEXT = of(DEFAULT_SCHEMA_NAME);
+
     private final String schemaName;
     private final double bloatPercentageThreshold;
     private final double remainingPercentageThreshold;
@@ -204,19 +206,19 @@ public final class PgContext {
      * @since 0.15.0
      */
     public static PgContext ofDefault() {
-        return of(DEFAULT_SCHEMA_NAME);
+        return DEFAULT_CONTEXT;
     }
 
     /**
      * Complement the given object name with the specified schema name if it is necessary.
      *
      * @param objectName the name of the object to be enriched with schema information; must not be null
-     * @param pgContext  the schema context to enrich object name; must be non-null.
+     * @param ctx        the schema context to enrich object name; must be non-null.
      * @return the fully qualified object name with schema information
      * @since 0.14.3
      */
-    public static String enrichWith(final String objectName, final PgContext pgContext) {
-        Objects.requireNonNull(pgContext, "pgContext cannot be null");
-        return pgContext.enrichWithSchema(objectName);
+    public static String enrichWith(final String objectName, final PgContext ctx) {
+        Objects.requireNonNull(ctx, "ctx cannot be null");
+        return ctx.enrichWithSchema(objectName);
     }
 }

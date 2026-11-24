@@ -94,8 +94,8 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
      * {@inheritDoc}
      */
     @Override
-    public final List<T> check(final PgContext pgContext, final Predicate<? super T> exclusionsFilter) {
-        final List<T> afterExclusions = doCheck(pgContext).stream()
+    public final List<T> check(final PgContext ctx, final Predicate<? super T> exclusionsFilter) {
+        final List<T> afterExclusions = doCheck(ctx).stream()
             .filter(exclusionsFilter)
             .toList();
         return postProcessResults(afterExclusions);
@@ -129,11 +129,11 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
      * Executes the check in the specified schema.
      * Subclasses may override this method to provide custom check logic.
      *
-     * @param pgContext check's context with the specified schema; must not be null
+     * @param ctx       check's context with the specified schema; must not be null
      * @return list of deviations from the specified rule
      */
-    protected List<T> doCheck(final PgContext pgContext) {
-        return executeQuery(pgContext, rowMapper);
+    protected List<T> doCheck(final PgContext ctx) {
+        return executeQuery(ctx, rowMapper);
     }
 
     /**
@@ -155,13 +155,13 @@ public abstract class AbstractCheckOnHost<T extends DbObject> implements Databas
     /**
      * Executes a query associated with a diagnostic and extracts the result.
      *
-     * @param pgContext check's context with the specified schema; must not be null
+     * @param ctx       check's context with the specified schema; must not be null
      * @param rse       the extractor used to extract results from the {@link java.sql.ResultSet}; must not be null
      * @return list of deviations from the specified rule
      */
-    protected final List<T> executeQuery(final PgContext pgContext,
+    protected final List<T> executeQuery(final PgContext ctx,
                                          final ResultSetExtractor<T> rse) {
         final String sqlQuery = checkInfo.getSqlQuery();
-        return checkInfo.getQueryExecutor().executeQuery(pgConnection, pgContext, sqlQuery, rse);
+        return checkInfo.getQueryExecutor().executeQuery(pgConnection, ctx, sqlQuery, rse);
     }
 }

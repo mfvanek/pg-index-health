@@ -37,13 +37,12 @@ class StatisticsMaintenanceOnHostImplTest extends StatisticsAwareTestBase {
         executeTestOnDatabase(schemaName, dbp -> dbp.withReferences().withData(), ctx -> {
             final OffsetDateTime testStartTime = OffsetDateTime.now(ClockHolder.clock());
             tryToFindAccountByClientId(schemaName);
-            final PgContext pgContext = PgContext.of(schemaName);
-            assertThat(getSeqScansForAccounts(pgContext))
+            assertThat(getSeqScansForAccounts(ctx))
                 .isGreaterThanOrEqualTo(AMOUNT_OF_TRIES);
             assertThat(statisticsMaintenance.resetStatistics())
                 .isTrue();
             collectStatistics(schemaName);
-            assertThat(getSeqScansForAccounts(pgContext))
+            assertThat(getSeqScansForAccounts(ctx))
                 .isZero();
 
             assertThat(statisticsMaintenance.getLastStatsResetTimestamp())

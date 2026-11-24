@@ -38,8 +38,8 @@ public final class SkipFlywayTablesPredicate extends AbstractSkipTablesPredicate
      */
     private static final Set<String> RAW_FLYWAY_TABLES = Set.of("flyway_schema_history");
 
-    private SkipFlywayTablesPredicate(final PgContext pgContext) {
-        super(pgContext, RAW_FLYWAY_TABLES);
+    private SkipFlywayTablesPredicate(final PgContext ctx) {
+        super(ctx, RAW_FLYWAY_TABLES);
     }
 
     /**
@@ -64,10 +64,10 @@ public final class SkipFlywayTablesPredicate extends AbstractSkipTablesPredicate
      * allowing for filtering in environments where a schema other than default one is used.
      * </p>
      *
-     * @param pgContext the schema context to enrich Flyway table names
+     * @param ctx       the schema context to enrich Flyway table names
      * @return a predicate that skips Flyway tables in the specified schema
      */
-    public static Predicate<DbObject> of(final PgContext pgContext) {
-        return new SkipFlywayTablesPredicate(pgContext);
+    public static Predicate<DbObject> of(final PgContext ctx) {
+        return new SkipFlywayTablesPredicate(ctx);
     }
 }

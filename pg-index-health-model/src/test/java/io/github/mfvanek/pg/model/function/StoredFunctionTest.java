@@ -71,7 +71,7 @@ class StoredFunctionTest {
             .hasMessage("functionName cannot be blank");
         assertThatThrownBy(() -> StoredFunction.ofNoArgs(null, null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
 
         assertThatThrownBy(() -> StoredFunction.of(null, null))
             .isInstanceOf(NullPointerException.class)
@@ -87,7 +87,7 @@ class StoredFunctionTest {
             .hasMessage("functionSignature cannot be null");
         assertThatThrownBy(() -> StoredFunction.of(null, null, null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
     }
 
     @Test

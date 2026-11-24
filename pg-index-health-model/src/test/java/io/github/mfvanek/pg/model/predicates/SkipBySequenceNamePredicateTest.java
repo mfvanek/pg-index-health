@@ -52,7 +52,7 @@ class SkipBySequenceNamePredicateTest {
 
         assertThatThrownBy(() -> SkipBySequenceNamePredicate.of(null, null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
 
         final PgContext ctx = PgContext.ofDefault();
         assertThatThrownBy(() -> SkipBySequenceNamePredicate.of(ctx, null))

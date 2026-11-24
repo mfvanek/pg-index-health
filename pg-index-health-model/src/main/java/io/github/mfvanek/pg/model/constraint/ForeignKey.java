@@ -164,10 +164,10 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
         return Constraint.ofType(tableName, constraintName, ConstraintType.FOREIGN_KEY);
     }
 
-    private static Constraint asConstraint(final PgContext pgContext,
+    private static Constraint asConstraint(final PgContext ctx,
                                            final String tableName,
                                            final String constraintName) {
-        return Constraint.ofType(pgContext, tableName, constraintName, ConstraintType.FOREIGN_KEY);
+        return Constraint.ofType(ctx, tableName, constraintName, ConstraintType.FOREIGN_KEY);
     }
 
     /**
@@ -201,18 +201,18 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     /**
      * Constructs a {@code ForeignKey} object with given columns and context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columns        a list of columns that are included in constraint; should be non-empty.
      * @return {@code ForeignKey}
      * @since 0.14.5
      */
-    public static ForeignKey of(final PgContext pgContext,
+    public static ForeignKey of(final PgContext ctx,
                                 final String tableName,
                                 final String constraintName,
                                 final List<Column> columns) {
-        return of(asConstraint(pgContext, tableName, constraintName), columns);
+        return of(asConstraint(ctx, tableName, constraintName), columns);
     }
 
     /**
@@ -231,24 +231,24 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     /**
      * Constructs a {@code ForeignKey} object with given {@code Column} and context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param column         column that is included in constraint.
      * @return {@code ForeignKey}
      * @since 0.15.0
      */
-    public static ForeignKey ofColumn(final PgContext pgContext,
+    public static ForeignKey ofColumn(final PgContext ctx,
                                       final String tableName,
                                       final String constraintName,
                                       final Column column) {
-        return ofColumn(asConstraint(pgContext, tableName, constraintName), column);
+        return ofColumn(asConstraint(ctx, tableName, constraintName), column);
     }
 
     /**
      * Constructs a {@code ForeignKey} object with not null column and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
@@ -256,18 +256,18 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNotNull(final PgContext pgContext,
+    public static ForeignKey ofNotNull(final PgContext ctx,
                                        final String tableName,
                                        final String constraintName,
                                        final String columnName,
                                        final String columnType) {
-        return ofColumn(pgContext, tableName, constraintName, Column.ofNotNull(pgContext, tableName, columnName, columnType));
+        return ofColumn(ctx, tableName, constraintName, Column.ofNotNull(ctx, tableName, columnName, columnType));
     }
 
     /**
      * Constructs a {@code ForeignKey} object with not null column and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
@@ -275,18 +275,18 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNotNull(final PgContext pgContext,
+    public static ForeignKey ofNotNull(final PgContext ctx,
                                        final String tableName,
                                        final String constraintName,
                                        final String columnName,
                                        final PgColumnType columnType) {
-        return ofNotNull(pgContext, tableName, constraintName, columnName, Validators.columnTypeNotNull(columnType));
+        return ofNotNull(ctx, tableName, constraintName, columnName, Validators.columnTypeNotNull(columnType));
     }
 
     /**
      * Constructs a {@code ForeignKey} object with nullable column and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
@@ -294,18 +294,18 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullable(final PgContext pgContext,
+    public static ForeignKey ofNullable(final PgContext ctx,
                                         final String tableName,
                                         final String constraintName,
                                         final String columnName,
                                         final String columnType) {
-        return ofColumn(pgContext, tableName, constraintName, Column.ofNullable(pgContext, tableName, columnName, columnType));
+        return ofColumn(ctx, tableName, constraintName, Column.ofNullable(ctx, tableName, columnName, columnType));
     }
 
     /**
      * Constructs a {@code ForeignKey} object with nullable column and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
@@ -313,317 +313,317 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullable(final PgContext pgContext,
+    public static ForeignKey ofNullable(final PgContext ctx,
                                         final String tableName,
                                         final String constraintName,
                                         final String columnName,
                                         final PgColumnType columnType) {
-        return ofNullable(pgContext, tableName, constraintName, columnName, Validators.columnTypeNotNull(columnType));
+        return ofNullable(ctx, tableName, constraintName, columnName, Validators.columnTypeNotNull(columnType));
     }
 
     /**
      * Constructs a {@code ForeignKey} object with not null column of {@code bigint} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofBigint(final PgContext pgContext,
+    public static ForeignKey ofBigint(final PgContext ctx,
                                       final String tableName,
                                       final String constraintName,
                                       final String columnName) {
-        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.BIGINT.getColumnType());
+        return ofNotNull(ctx, tableName, constraintName, columnName, PgColumnType.BIGINT.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with nullable column of {@code bigint} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullableBigint(final PgContext pgContext,
+    public static ForeignKey ofNullableBigint(final PgContext ctx,
                                               final String tableName,
                                               final String constraintName,
                                               final String columnName) {
-        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.BIGINT.getColumnType());
+        return ofNullable(ctx, tableName, constraintName, columnName, PgColumnType.BIGINT.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with not null column of {@code integer} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofInteger(final PgContext pgContext,
+    public static ForeignKey ofInteger(final PgContext ctx,
                                        final String tableName,
                                        final String constraintName,
                                        final String columnName) {
-        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.INTEGER.getColumnType());
+        return ofNotNull(ctx, tableName, constraintName, columnName, PgColumnType.INTEGER.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with nullable column of {@code integer} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullableInteger(final PgContext pgContext,
+    public static ForeignKey ofNullableInteger(final PgContext ctx,
                                                final String tableName,
                                                final String constraintName,
                                                final String columnName) {
-        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.INTEGER.getColumnType());
+        return ofNullable(ctx, tableName, constraintName, columnName, PgColumnType.INTEGER.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with not null column of {@code character varying} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofVarchar(final PgContext pgContext,
+    public static ForeignKey ofVarchar(final PgContext ctx,
                                        final String tableName,
                                        final String constraintName,
                                        final String columnName) {
-        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.VARCHAR.getColumnType());
+        return ofNotNull(ctx, tableName, constraintName, columnName, PgColumnType.VARCHAR.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with nullable column of {@code character varying} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullableVarchar(final PgContext pgContext,
+    public static ForeignKey ofNullableVarchar(final PgContext ctx,
                                                final String tableName,
                                                final String constraintName,
                                                final String columnName) {
-        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.VARCHAR.getColumnType());
+        return ofNullable(ctx, tableName, constraintName, columnName, PgColumnType.VARCHAR.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with not null column of {@code text} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofText(final PgContext pgContext,
+    public static ForeignKey ofText(final PgContext ctx,
                                     final String tableName,
                                     final String constraintName,
                                     final String columnName) {
-        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.TEXT.getColumnType());
+        return ofNotNull(ctx, tableName, constraintName, columnName, PgColumnType.TEXT.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with nullable column of {@code text} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullableText(final PgContext pgContext,
+    public static ForeignKey ofNullableText(final PgContext ctx,
                                             final String tableName,
                                             final String constraintName,
                                             final String columnName) {
-        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.TEXT.getColumnType());
+        return ofNullable(ctx, tableName, constraintName, columnName, PgColumnType.TEXT.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with not null column of {@code character} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofCharacter(final PgContext pgContext,
+    public static ForeignKey ofCharacter(final PgContext ctx,
                                          final String tableName,
                                          final String constraintName,
                                          final String columnName) {
-        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.CHARACTER.getColumnType());
+        return ofNotNull(ctx, tableName, constraintName, columnName, PgColumnType.CHARACTER.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with nullable column of {@code character} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullableCharacter(final PgContext pgContext,
+    public static ForeignKey ofNullableCharacter(final PgContext ctx,
                                                  final String tableName,
                                                  final String constraintName,
                                                  final String columnName) {
-        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.CHARACTER.getColumnType());
+        return ofNullable(ctx, tableName, constraintName, columnName, PgColumnType.CHARACTER.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with not null column of {@code boolean} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofBoolean(final PgContext pgContext,
+    public static ForeignKey ofBoolean(final PgContext ctx,
                                        final String tableName,
                                        final String constraintName,
                                        final String columnName) {
-        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.BOOLEAN.getColumnType());
+        return ofNotNull(ctx, tableName, constraintName, columnName, PgColumnType.BOOLEAN.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with nullable column of {@code boolean} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullableBoolean(final PgContext pgContext,
+    public static ForeignKey ofNullableBoolean(final PgContext ctx,
                                                final String tableName,
                                                final String constraintName,
                                                final String columnName) {
-        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.BOOLEAN.getColumnType());
+        return ofNullable(ctx, tableName, constraintName, columnName, PgColumnType.BOOLEAN.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with not null column of {@code timestamp without time zone} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofTimestamp(final PgContext pgContext,
+    public static ForeignKey ofTimestamp(final PgContext ctx,
                                          final String tableName,
                                          final String constraintName,
                                          final String columnName) {
-        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.TIMESTAMP.getColumnType());
+        return ofNotNull(ctx, tableName, constraintName, columnName, PgColumnType.TIMESTAMP.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with nullable column of {@code timestamp without time zone} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullableTimestamp(final PgContext pgContext,
+    public static ForeignKey ofNullableTimestamp(final PgContext ctx,
                                                  final String tableName,
                                                  final String constraintName,
                                                  final String columnName) {
-        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.TIMESTAMP.getColumnType());
+        return ofNullable(ctx, tableName, constraintName, columnName, PgColumnType.TIMESTAMP.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with not null column of {@code timestamp with time zone} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofTimestamptz(final PgContext pgContext,
+    public static ForeignKey ofTimestamptz(final PgContext ctx,
                                            final String tableName,
                                            final String constraintName,
                                            final String columnName) {
-        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
+        return ofNotNull(ctx, tableName, constraintName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with nullable column of {@code timestamp with time zone} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullableTimestamptz(final PgContext pgContext,
+    public static ForeignKey ofNullableTimestamptz(final PgContext ctx,
                                                    final String tableName,
                                                    final String constraintName,
                                                    final String columnName) {
-        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
+        return ofNullable(ctx, tableName, constraintName, columnName, PgColumnType.TIMESTAMPTZ.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with not null column of {@code uuid} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofUuid(final PgContext pgContext,
+    public static ForeignKey ofUuid(final PgContext ctx,
                                     final String tableName,
                                     final String constraintName,
                                     final String columnName) {
-        return ofNotNull(pgContext, tableName, constraintName, columnName, PgColumnType.UUID.getColumnType());
+        return ofNotNull(ctx, tableName, constraintName, columnName, PgColumnType.UUID.getColumnType());
     }
 
     /**
      * Constructs a {@code ForeignKey} object with nullable column of {@code uuid} type and given context.
      *
-     * @param pgContext      the schema context to enrich table name; must be non-null.
+     * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
      * @param columnName     name of column that is included in constraint; should be non-blank.
      * @return {@code ForeignKey}
      * @since 0.51.0
      */
-    public static ForeignKey ofNullableUuid(final PgContext pgContext,
+    public static ForeignKey ofNullableUuid(final PgContext ctx,
                                             final String tableName,
                                             final String constraintName,
                                             final String columnName) {
-        return ofNullable(pgContext, tableName, constraintName, columnName, PgColumnType.UUID.getColumnType());
+        return ofNullable(ctx, tableName, constraintName, columnName, PgColumnType.UUID.getColumnType());
     }
 }

@@ -56,7 +56,7 @@ class TableWithColumnsTest {
             .hasMessage("table cannot be null");
         assertThatThrownBy(() -> TableWithColumns.withoutColumns(null, null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
         final PgContext ctx = PgContext.of("tst");
         assertThatThrownBy(() -> TableWithColumns.withoutColumns(ctx, null))
             .isInstanceOf(NullPointerException.class)

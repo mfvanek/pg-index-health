@@ -39,8 +39,8 @@ public final class SkipLiquibaseTablesPredicate extends AbstractSkipTablesPredic
      */
     private static final Set<String> RAW_LIQUIBASE_TABLES = Set.of("databasechangelog", "databasechangeloglock");
 
-    private SkipLiquibaseTablesPredicate(final PgContext pgContext) {
-        super(pgContext, RAW_LIQUIBASE_TABLES);
+    private SkipLiquibaseTablesPredicate(final PgContext ctx) {
+        super(ctx, RAW_LIQUIBASE_TABLES);
     }
 
     /**
@@ -65,10 +65,10 @@ public final class SkipLiquibaseTablesPredicate extends AbstractSkipTablesPredic
      * allowing for filtering in environments where a schema other than default one is used.
      * </p>
      *
-     * @param pgContext the schema context to enrich Liquibase table names
+     * @param ctx       the schema context to enrich Liquibase table names
      * @return a predicate that skips Liquibase tables in the specified schema
      */
-    public static Predicate<DbObject> of(final PgContext pgContext) {
-        return new SkipLiquibaseTablesPredicate(pgContext);
+    public static Predicate<DbObject> of(final PgContext ctx) {
+        return new SkipLiquibaseTablesPredicate(ctx);
     }
 }

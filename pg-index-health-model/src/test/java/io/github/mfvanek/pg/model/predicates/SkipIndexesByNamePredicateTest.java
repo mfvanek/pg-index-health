@@ -53,7 +53,7 @@ class SkipIndexesByNamePredicateTest {
 
         assertThatThrownBy(() -> SkipIndexesByNamePredicate.of(null, null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
 
         final PgContext ctx = PgContext.ofDefault();
         assertThatThrownBy(() -> SkipIndexesByNamePredicate.of(ctx, null))

@@ -130,16 +130,16 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
     /**
      * Constructs a {@code Table} object with given context.
      *
-     * @param pgContext        the schema context to enrich table name; must be non-null.
+     * @param ctx              the schema context to enrich table name; must be non-null.
      * @param tableName        table name; should be non-blank.
      * @param tableSizeInBytes table size in bytes; should be positive or zero.
      * @return {@code Table}
      * @since 0.14.3
      */
-    public static Table of(final PgContext pgContext,
+    public static Table of(final PgContext ctx,
                            final String tableName,
                            final long tableSizeInBytes) {
-        return of(PgContext.enrichWith(tableName, pgContext), tableSizeInBytes);
+        return of(PgContext.enrichWith(tableName, ctx), tableSizeInBytes);
     }
 
     /**
@@ -156,14 +156,14 @@ public final class Table implements DbObject, TableSizeAware, Comparable<Table> 
     /**
      * Constructs a {@code Table} object with zero size and given context.
      *
-     * @param pgContext the schema context to enrich table name; must be non-null.
+     * @param ctx       the schema context to enrich table name; must be non-null.
      * @param tableName table name; should be non-blank.
      * @return {@code Table}
      * @since 0.14.3
      */
-    public static Table of(final PgContext pgContext,
+    public static Table of(final PgContext ctx,
                            final String tableName) {
-        Objects.requireNonNull(pgContext, "pgContext cannot be null");
-        return of(PgContext.enrichWith(tableName, pgContext));
+        Objects.requireNonNull(ctx, "ctx cannot be null");
+        return of(PgContext.enrichWith(tableName, ctx));
     }
 }

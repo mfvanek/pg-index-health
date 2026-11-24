@@ -51,9 +51,9 @@ public class AllPrimaryKeysMustBeNamedAsIdCheckOnHost extends AbstractCheckOnHos
     }
 
     @Override
-    protected List<TableWithColumns> doCheck(final PgContext pgContext) {
+    protected List<TableWithColumns> doCheck(final PgContext ctx) {
         return jdbcClient.sql(checkInfo.getSqlQuery())
-            .param("schema_name_param", pgContext.getSchemaName())
+            .param("schema_name_param", ctx.getSchemaName())
             .query(rowMapper::mapRow)
             .list();
     }

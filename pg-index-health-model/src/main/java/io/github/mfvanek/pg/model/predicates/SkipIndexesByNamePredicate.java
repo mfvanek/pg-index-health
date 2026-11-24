@@ -40,12 +40,12 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
 
     private final Set<String> fullyQualifiedIndexNamesToSkip;
 
-    private SkipIndexesByNamePredicate(final PgContext pgContext, final Collection<String> rawIndexNamesToSkip) {
-        this.fullyQualifiedIndexNamesToSkip = prepareFullyQualifiedNamesToSkip(pgContext, rawIndexNamesToSkip);
+    private SkipIndexesByNamePredicate(final PgContext ctx, final Collection<String> rawIndexNamesToSkip) {
+        this.fullyQualifiedIndexNamesToSkip = prepareFullyQualifiedNamesToSkip(ctx, rawIndexNamesToSkip);
     }
 
-    private SkipIndexesByNamePredicate(final PgContext pgContext, final String rawIndexNameToSkip) {
-        this(pgContext, AbstractSkipTablesPredicate.prepareSingleNameToSkip(rawIndexNameToSkip, "rawIndexNameToSkip"));
+    private SkipIndexesByNamePredicate(final PgContext ctx, final String rawIndexNameToSkip) {
+        this(ctx, AbstractSkipTablesPredicate.prepareSingleNameToSkip(rawIndexNameToSkip, "rawIndexNameToSkip"));
     }
 
     /**
@@ -95,22 +95,22 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
     /**
      * Creates a predicate to skip a single index name in a specified schema context.
      *
-     * @param pgContext          the PostgreSQL context used to enrich the raw index name with schema information; must be non-null
+     * @param ctx                the PostgreSQL context used to enrich the raw index name with schema information; must be non-null
      * @param rawIndexNameToSkip the raw index name to skip; must be non-null and non-blank
      * @return a {@link Predicate} to skip the specified index name
      */
-    public static Predicate<DbObject> ofName(final PgContext pgContext, final String rawIndexNameToSkip) {
-        return new SkipIndexesByNamePredicate(pgContext, rawIndexNameToSkip);
+    public static Predicate<DbObject> ofName(final PgContext ctx, final String rawIndexNameToSkip) {
+        return new SkipIndexesByNamePredicate(ctx, rawIndexNameToSkip);
     }
 
     /**
      * Creates a predicate to skip a collection of index names in a specified schema context.
      *
-     * @param pgContext           the PostgreSQL context used to enrich each raw index name with schema information; must be non-null
+     * @param ctx                 the PostgreSQL context used to enrich each raw index name with schema information; must be non-null
      * @param rawIndexNamesToSkip a collection of raw index names to skip; must be non-null
      * @return a {@link Predicate} to skip the specified index names
      */
-    public static Predicate<DbObject> of(final PgContext pgContext, final Collection<String> rawIndexNamesToSkip) {
-        return new SkipIndexesByNamePredicate(pgContext, rawIndexNamesToSkip);
+    public static Predicate<DbObject> of(final PgContext ctx, final Collection<String> rawIndexNamesToSkip) {
+        return new SkipIndexesByNamePredicate(ctx, rawIndexNamesToSkip);
     }
 }

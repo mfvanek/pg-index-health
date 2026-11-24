@@ -32,22 +32,22 @@ public interface DatabaseCheckOnHost<T extends DbObject> extends CheckTypeAware,
     /**
      * Executes the check in the specified schema.
      *
-     * @param pgContext        check's context with the specified schema
+     * @param ctx              check's context with the specified schema
      * @param exclusionsFilter predicate to filter out unnecessary results
      * @return list of deviations from the specified rule
      * @see PgContext
      */
-    List<T> check(PgContext pgContext, Predicate<? super T> exclusionsFilter);
+    List<T> check(PgContext ctx, Predicate<? super T> exclusionsFilter);
 
     /**
      * Executes the check in the specified schema.
      *
-     * @param pgContext check's context with the specified schema
+     * @param ctx       check's context with the specified schema
      * @return list of deviations from the specified rule
      * @see PgContext
      */
-    default List<T> check(final PgContext pgContext) {
-        return check(pgContext, item -> true);
+    default List<T> check(final PgContext ctx) {
+        return check(ctx, item -> true);
     }
 
     /**

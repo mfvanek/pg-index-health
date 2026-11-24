@@ -118,11 +118,11 @@ public abstract class AbstractCheckOnCluster<T extends DbObject> implements Data
      * {@inheritDoc}
      */
     @Override
-    public final List<T> check(final PgContext pgContext, final Predicate<? super T> exclusionsFilter) {
+    public final List<T> check(final PgContext ctx, final Predicate<? super T> exclusionsFilter) {
         if (isAcrossCluster()) {
-            return executeOnCluster(pgContext, exclusionsFilter);
+            return executeOnCluster(ctx, exclusionsFilter);
         }
-        return executeOnPrimary(pgContext, exclusionsFilter);
+        return executeOnPrimary(ctx, exclusionsFilter);
     }
 
     /**
@@ -143,27 +143,27 @@ public abstract class AbstractCheckOnCluster<T extends DbObject> implements Data
         return checksOnHosts.computeIfAbsent(connectionToHost.getHost(), h -> checkOnHostFactory.apply(connectionToHost));
     }
 
-    private List<T> executeOnPrimary(final PgContext pgContext, final Predicate<? super T> exclusionsFilter) {
+    private List<T> executeOnPrimary(final PgContext ctx, final Predicate<? super T> exclusionsFilter) {
         final DatabaseCheckOnHost<T> checkOnPrimary = computeCheckForPrimaryIfNeed();
         LOGGER.fine(() -> "Going to execute on primary host " + checkOnPrimary.getHost().getName());
-        return checkOnPrimary.check(pgContext, exclusionsFilter);
+        return checkOnPrimary.check(ctx, exclusionsFilter);
     }
 
     @SuppressWarnings("NullAway")
-    private List<T> executeOnCluster(final PgContext pgContext, final Predicate<? super T> exclusionsFilter) {
+    private List<T> executeOnCluster(final PgContext ctx, final Predicate<? super T> exclusionsFilter) {
         final List<List<T>> acrossClusterResults = new ArrayList<>();
         for (final PgConnection pgConnection : haPgConnection.getConnectionsToAllHostsInCluster()) {
             doBeforeExecuteOnHost(pgConnection);
-            final List<T> resultsFromHost = executeOnHost(pgConnection, pgContext, exclusionsFilter);
+            final List<T> resultsFromHost = executeOnHost(pgConnection, ctx, exclusionsFilter);
             acrossClusterResults.add(resultsFromHost);
         }
         return acrossClusterResultsMapper.apply(acrossClusterResults); // acrossClusterResultsMapper cannot be null here
     }
 
     private List<T> executeOnHost(final PgConnection connectionToHost,
-                                  final PgContext pgContext,
+                                  final PgContext ctx,
                                   final Predicate<? super T> exclusionsFilter) {
         final DatabaseCheckOnHost<T> checkOnHost = computeCheckForHostIfNeed(connectionToHost);
-        return checkOnHost.check(pgContext, exclusionsFilter);
+        return checkOnHost.check(ctx, exclusionsFilter);
     }
 }
