@@ -52,7 +52,7 @@ class SequenceOverflowCheckOnClusterTest extends DatabaseAwareTestBase {
                     SequenceState.of(ctx, "seq_full_range_desc", "bigint", 0.0));
 
             assertThat(check)
-                .executing(ctx, SkipBySequenceNamePredicate.ofName(ctx, "seq_1", "seq_3", "seq_5", "seq_full_range_asc", "seq_full_range_desc"))
+                .executing(ctx, SkipBySequenceNamePredicate.ofNames(ctx, "seq_1", "seq_3", "seq_5", "seq_full_range_asc", "seq_full_range_desc"))
                 .isEmpty();
         });
     }

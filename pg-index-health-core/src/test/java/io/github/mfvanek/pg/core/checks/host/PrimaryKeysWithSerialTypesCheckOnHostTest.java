@@ -62,11 +62,11 @@ class PrimaryKeysWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_accounts", "\"bad-table\""))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "bad_accounts", "\"bad-table\""))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipBySequenceNamePredicate.ofName(ctx, "bad_accounts_id_seq", "\"bad-table_bad-id_seq\""))
+                .executing(ctx, SkipBySequenceNamePredicate.ofNames(ctx, "bad_accounts_id_seq", "\"bad-table_bad-id_seq\""))
                 .isEmpty();
         });
     }

@@ -52,7 +52,7 @@ class FunctionsWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBas
                 );
 
             assertThat(check)
-                .executing(ctx, SkipDbObjectsByNamePredicate.ofName(ctx, "add", "insert_data"))
+                .executing(ctx, SkipDbObjectsByNamePredicate.ofNames(ctx, "add", "insert_data"))
                 .isEmpty();
         });
     }

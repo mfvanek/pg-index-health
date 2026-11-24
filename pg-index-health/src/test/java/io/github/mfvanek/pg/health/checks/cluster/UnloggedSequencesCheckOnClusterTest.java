@@ -54,7 +54,7 @@ class UnloggedSequencesCheckOnClusterTest extends DatabaseAwareTestBase {
             }
 
             assertThat(check)
-                .executing(ctx, SkipDbObjectsByNamePredicate.ofName(ctx, "unlogged_seq_1"))
+                .executing(ctx, SkipDbObjectsByNamePredicate.ofNames(ctx, "unlogged_seq_1"))
                 .isEmpty();
         });
     }

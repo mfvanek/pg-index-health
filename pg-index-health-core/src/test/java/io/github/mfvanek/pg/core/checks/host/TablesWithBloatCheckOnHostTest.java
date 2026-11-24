@@ -60,7 +60,7 @@ class TablesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
                 .allMatch(t -> t.getBloatPercentage() == 0 && t.getBloatSizeInBytes() == 0L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "clients"))
                 .isEmpty();
 
             assertThat(check)

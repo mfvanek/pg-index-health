@@ -57,7 +57,7 @@ class ForeignKeysWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, tableName, "bad_clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, tableName, "bad_clients"))
                 .isEmpty();
         });
     }

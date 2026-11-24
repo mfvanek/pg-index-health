@@ -70,7 +70,7 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                     Column.ofNullableInteger(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\""));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "\"1st_table\"", "accounts", "\"bad-table\"", "\"bad-table-two\""))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "\"1st_table\"", "accounts", "\"bad-table\"", "\"bad-table-two\""))
                 .hasSize(12);
         });
     }
@@ -109,7 +109,7 @@ class ColumnsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
         final String expectedTableName = "custom_entity_reference_with_very_very_very_long_name";
         executeTestOnDatabase(schemaName, DatabasePopulator::withPartitionedTableWithoutComments, ctx ->
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "clients"))
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(

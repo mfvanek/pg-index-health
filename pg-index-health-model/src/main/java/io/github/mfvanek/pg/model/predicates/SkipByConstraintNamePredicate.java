@@ -72,7 +72,7 @@ public final class SkipByConstraintNamePredicate implements Predicate<DbObject> 
      * @return a {@code SkipByConstraintNamePredicate} instance for the specified constraint names
      * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final String constraintNameToSkip, final String... constraintNamesToSkip) {
+    public static Predicate<DbObject> ofNames(final String constraintNameToSkip, final String... constraintNamesToSkip) {
         return new SkipByConstraintNamePredicate(constraintNameToSkip, constraintNamesToSkip);
     }
 

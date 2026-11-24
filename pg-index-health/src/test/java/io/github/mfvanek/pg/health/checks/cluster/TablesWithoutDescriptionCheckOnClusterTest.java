@@ -51,7 +51,7 @@ class TablesWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
                 .allMatch(t -> t.getTableSizeInBytes() >= 0L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "clients"))
                 .isEmpty();
         });
     }
@@ -84,7 +84,7 @@ class TablesWithoutDescriptionCheckOnClusterTest extends DatabaseAwareTestBase {
     void shouldWorkWithPartitionedTables(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withPartitionedTableWithoutComments, ctx ->
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "clients"))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(

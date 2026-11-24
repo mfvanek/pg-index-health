@@ -72,7 +72,7 @@ public final class SkipByColumnNamePredicate implements Predicate<DbObject> {
      * @return a {@code SkipByColumnNamePredicate} instance for the specified column names
      * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final String columnNameToSkip, final String... columnNamesToSkip) {
+    public static Predicate<DbObject> ofNames(final String columnNameToSkip, final String... columnNamesToSkip) {
         return new SkipByColumnNamePredicate(columnNameToSkip, columnNamesToSkip);
     }
 

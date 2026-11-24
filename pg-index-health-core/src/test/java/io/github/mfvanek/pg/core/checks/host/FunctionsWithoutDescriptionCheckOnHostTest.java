@@ -53,7 +53,7 @@ class FunctionsWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipDbObjectsByNamePredicate.ofName(ctx, "add", "insert_data"))
+                .executing(ctx, SkipDbObjectsByNamePredicate.ofNames(ctx, "add", "insert_data"))
                 .isEmpty();
         });
     }

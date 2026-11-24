@@ -51,7 +51,7 @@ class SelfReferencedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase 
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_self_ref_table", "bad_self_ref_restrict_table", "cfk_node_b"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "bad_self_ref_table", "bad_self_ref_restrict_table", "cfk_node_b"))
                 .isEmpty();
         });
     }

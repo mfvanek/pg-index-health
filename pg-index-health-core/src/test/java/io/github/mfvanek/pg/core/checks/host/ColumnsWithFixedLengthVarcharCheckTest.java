@@ -77,7 +77,7 @@ class ColumnsWithFixedLengthVarcharCheckTest extends DatabaseAwareTestBase {
     void shouldWorkWithPartitionedTables(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx ->
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "clients"))
                 .hasSize(7)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(

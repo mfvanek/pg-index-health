@@ -50,11 +50,11 @@ class ColumnsWithJsonTypeCheckOnClusterTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "clients"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipByColumnNamePredicate.ofName("info"))
+                .executing(ctx, SkipByColumnNamePredicate.ofNames("info"))
                 .isEmpty();
         });
     }

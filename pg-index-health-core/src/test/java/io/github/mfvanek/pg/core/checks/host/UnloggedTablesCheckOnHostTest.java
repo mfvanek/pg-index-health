@@ -49,7 +49,7 @@ class UnloggedTablesCheckOnHostTest extends DatabaseAwareTestBase {
                     Table.of(ctx, "unlogged_table"));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "unlogged_table"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "unlogged_table"))
                 .isEmpty();
         });
     }

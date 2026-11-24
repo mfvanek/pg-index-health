@@ -52,11 +52,11 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "bad_accounts"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipBySequenceNamePredicate.ofName(ctx, "bad_accounts_real_account_id_seq", "bad_accounts_real_client_id_seq"))
+                .executing(ctx, SkipBySequenceNamePredicate.ofNames(ctx, "bad_accounts_real_account_id_seq", "bad_accounts_real_client_id_seq"))
                 .isEmpty();
         });
     }
@@ -74,11 +74,11 @@ class ColumnsWithSerialTypesCheckOnHostTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "bad_accounts"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipBySequenceNamePredicate.ofName(ctx, "bad_accounts_real_client_id_seq"))
+                .executing(ctx, SkipBySequenceNamePredicate.ofNames(ctx, "bad_accounts_real_client_id_seq"))
                 .isEmpty();
         });
     }

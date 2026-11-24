@@ -56,7 +56,7 @@ class PossibleObjectNameOverflowCheckOnHostTest extends DatabaseAwareTestBase {
                     AnyObject.ofType(ctx, matViewName, PgObjectType.MATERIALIZED_VIEW));
 
             assertThat(check)
-                .executing(ctx, SkipDbObjectsByNamePredicate.ofName(ctx, matViewName, constraintName))
+                .executing(ctx, SkipDbObjectsByNamePredicate.ofNames(ctx, matViewName, constraintName))
                 .isEmpty();
         });
     }

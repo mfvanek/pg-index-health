@@ -90,16 +90,16 @@ class CyclicForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
         executeTestOnDatabase(schemaName, DatabasePopulator::withCyclicAndSelfReferencedForeignKeys, ctx -> {
             // A cycle should be excluded by any of its tables, not only by the first one
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "cfk_ring_b"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "cfk_ring_b"))
                 .hasSize(6)
                 .noneMatch(c -> c.getTableNames().contains(ctx.enrichWithSchema("cfk_ring_b")));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "\"Cfk-A-Second\"", "cfk_orders", "cfk_right", "cfk_node_c", "cfk_ring_c"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "\"Cfk-A-Second\"", "cfk_orders", "cfk_right", "cfk_node_c", "cfk_ring_c"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipByConstraintNamePredicate.ofName("\"Cfk-A-Second-Fk\"", "cfk_orders_customer_fk", "cfk_right_left_fk", "cfk_node_b_c_fk", "cfk_ring_a_c_fk"))
+                .executing(ctx, SkipByConstraintNamePredicate.ofNames("\"Cfk-A-Second-Fk\"", "cfk_orders_customer_fk", "cfk_right_left_fk", "cfk_node_b_c_fk", "cfk_ring_a_c_fk"))
                 .isEmpty();
         });
     }

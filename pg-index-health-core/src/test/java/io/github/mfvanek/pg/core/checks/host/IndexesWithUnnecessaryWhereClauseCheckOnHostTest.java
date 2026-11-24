@@ -53,7 +53,7 @@ class IndexesWithUnnecessaryWhereClauseCheckOnHostTest extends DatabaseAwareTest
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "t1", "t2"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "t1", "t2"))
                 .isEmpty();
         });
     }

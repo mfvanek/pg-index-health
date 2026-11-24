@@ -56,7 +56,7 @@ class NotValidConstraintsCheckOnClusterTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "\"bad-table-two\""))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "\"bad-table-two\""))
                 .isEmpty();
 
             ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {

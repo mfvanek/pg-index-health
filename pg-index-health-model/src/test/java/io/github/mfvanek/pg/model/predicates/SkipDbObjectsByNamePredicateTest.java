@@ -32,15 +32,15 @@ class SkipDbObjectsByNamePredicateTest {
     @SuppressWarnings("DataFlowIssue")
     @Test
     void shouldThrowExceptionWhenInvalidDataPassed() {
-        assertThatThrownBy(() -> SkipDbObjectsByNamePredicate.ofName(null))
+        assertThatThrownBy(() -> SkipDbObjectsByNamePredicate.ofNames(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("fullyQualifiedObjectNameToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipDbObjectsByNamePredicate.ofName(""))
+        assertThatThrownBy(() -> SkipDbObjectsByNamePredicate.ofNames(""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("fullyQualifiedObjectNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipDbObjectsByNamePredicate.ofName("   "))
+        assertThatThrownBy(() -> SkipDbObjectsByNamePredicate.ofNames("   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("fullyQualifiedObjectNameToSkip cannot be blank");
 
@@ -54,12 +54,12 @@ class SkipDbObjectsByNamePredicateTest {
 
     @Test
     void caseShouldNotMatter() {
-        assertThat(SkipDbObjectsByNamePredicate.ofName("CUSTOM.table3"))
+        assertThat(SkipDbObjectsByNamePredicate.ofNames("CUSTOM.table3"))
             .accepts(FIRST)
             .accepts(SECOND)
             .rejects(THIRD);
 
-        assertThat(SkipDbObjectsByNamePredicate.ofName(CTX, "table3"))
+        assertThat(SkipDbObjectsByNamePredicate.ofNames(CTX, "table3"))
             .accepts(FIRST)
             .accepts(SECOND)
             .rejects(THIRD);
@@ -76,11 +76,11 @@ class SkipDbObjectsByNamePredicateTest {
             .rejects(FIRST)
             .accepts(SECOND)
             .rejects(THIRD);
-        assertThat(SkipDbObjectsByNamePredicate.ofName("CUSTOM.table1", "custom.TABLE3", "CUSTOM.table1"))
+        assertThat(SkipDbObjectsByNamePredicate.ofNames("CUSTOM.table1", "custom.TABLE3", "CUSTOM.table1"))
             .rejects(FIRST)
             .accepts(SECOND)
             .rejects(THIRD);
-        assertThat(SkipDbObjectsByNamePredicate.ofName(CTX, "table1", "TABLE3"))
+        assertThat(SkipDbObjectsByNamePredicate.ofNames(CTX, "table1", "TABLE3"))
             .rejects(FIRST)
             .accepts(SECOND)
             .rejects(THIRD);

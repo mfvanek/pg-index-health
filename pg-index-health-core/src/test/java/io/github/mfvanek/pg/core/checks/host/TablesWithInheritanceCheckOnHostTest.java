@@ -51,7 +51,7 @@ class TablesWithInheritanceCheckOnHostTest extends DatabaseAwareTestBase {
                 .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "child_table", "\"second-child_table\""))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "child_table", "\"second-child_table\""))
                 .isEmpty();
         });
     }

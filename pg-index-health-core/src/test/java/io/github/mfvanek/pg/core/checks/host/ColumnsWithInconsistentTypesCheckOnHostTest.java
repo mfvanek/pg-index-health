@@ -54,7 +54,7 @@ class ColumnsWithInconsistentTypesCheckOnHostTest extends DatabaseAwareTestBase 
                     Column.ofUuid(ctx, "t_uuid_id", "id"));
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients", "accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "clients", "accounts"))
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
@@ -66,7 +66,7 @@ class ColumnsWithInconsistentTypesCheckOnHostTest extends DatabaseAwareTestBase 
             // Excluding "t_uuid_id" leaves "created_at" with a single type (timestamp): it is no longer
             // inconsistent and is dropped, while "id" keeps two distinct types and survives.
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "t_uuid_id"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "t_uuid_id"))
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(

@@ -53,7 +53,7 @@ class ColumnsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "\"1st_table\"", "\"bad-table\"", "\"bad-table-two\"", "\"UpperCaseTable\""))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "\"1st_table\"", "\"bad-table\"", "\"bad-table-two\"", "\"UpperCaseTable\""))
                 .isEmpty();
         });
     }

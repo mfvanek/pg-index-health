@@ -31,15 +31,15 @@ class SkipTablesByNamePredicateTest {
     @SuppressWarnings("DataFlowIssue")
     @Test
     void shouldThrowExceptionWhenInvalidDataPassed() {
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName(null))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofNames(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawTableNameToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName(""))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofNames(""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawTableNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName("   "))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofNames("   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawTableNameToSkip cannot be blank");
 
@@ -56,28 +56,28 @@ class SkipTablesByNamePredicateTest {
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawNamesToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName(ctx, null))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofNames(ctx, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawTableNameToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName(ctx, ""))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofNames(ctx, ""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawTableNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofName(ctx, "   "))
+        assertThatThrownBy(() -> SkipTablesByNamePredicate.ofNames(ctx, "   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawTableNameToSkip cannot be blank");
     }
 
     @Test
     void shouldWorkForSingleItem() {
-        assertThat(SkipTablesByNamePredicate.ofName("t"))
+        assertThat(SkipTablesByNamePredicate.ofNames("t"))
             .accepts(Index.of("t1", "i1"))
             .rejects(Index.of("t", "i"))
             .rejects(Index.of("T", "I"));
 
         final PgContext ctx = PgContext.of("custom");
-        assertThat(SkipTablesByNamePredicate.ofName(ctx, "t"))
+        assertThat(SkipTablesByNamePredicate.ofNames(ctx, "t"))
             .accepts(Index.of("custom.t1", "custom.i1"))
             .rejects(Index.of("custom.t", "custom.i"))
             .rejects(Index.of("custom.T", "custom.I"));
@@ -91,14 +91,14 @@ class SkipTablesByNamePredicateTest {
             .rejects(Index.of("T", "I"))
             .rejects(Index.of("t2", "i2"));
 
-        assertThat(SkipTablesByNamePredicate.ofName("t", "T2", "t"))
+        assertThat(SkipTablesByNamePredicate.ofNames("t", "T2", "t"))
             .accepts(Index.of("t1", "i1"))
             .rejects(Index.of("t", "i"))
             .rejects(Index.of("T", "I"))
             .rejects(Index.of("t2", "i2"));
 
         final PgContext ctx = PgContext.of("custom");
-        assertThat(SkipTablesByNamePredicate.ofName(ctx, "t", "T2"))
+        assertThat(SkipTablesByNamePredicate.ofNames(ctx, "t", "T2"))
             .accepts(Index.of("custom.t1", "custom.i1"))
             .accepts(Index.of("t2", "i2"))
             .rejects(Index.of("custom.t", "custom.i"))
@@ -126,15 +126,15 @@ class SkipTablesByNamePredicateTest {
             ForeignKey.ofInteger(ctx, "t1", "c1", "col1"),
             ForeignKey.ofInteger(ctx, "t2", "c2", "col2"),
             ForeignKey.ofInteger(ctx, "T3", "c3", "col3"));
-        assertThat(SkipTablesByNamePredicate.ofName(ctx, "t1"))
+        assertThat(SkipTablesByNamePredicate.ofNames(ctx, "t1"))
             .rejects(cycle);
-        assertThat(SkipTablesByNamePredicate.ofName(ctx, "t2"))
+        assertThat(SkipTablesByNamePredicate.ofNames(ctx, "t2"))
             .rejects(cycle);
-        assertThat(SkipTablesByNamePredicate.ofName(ctx, "t3"))
+        assertThat(SkipTablesByNamePredicate.ofNames(ctx, "t3"))
             .rejects(cycle);
         assertThat(SkipTablesByNamePredicate.of(ctx, Set.of("t4", "T3")))
             .rejects(cycle);
-        assertThat(SkipTablesByNamePredicate.ofName(ctx, "t4"))
+        assertThat(SkipTablesByNamePredicate.ofNames(ctx, "t4"))
             .accepts(cycle);
         assertThat(SkipTablesByNamePredicate.of(ctx, Set.of("c1", "c2", "c3", "col1")))
             .accepts(cycle);
@@ -146,9 +146,9 @@ class SkipTablesByNamePredicateTest {
         final DuplicatedForeignKeys duplicatedForeignKeys = DuplicatedForeignKeys.of(
             ForeignKey.ofInteger(ctx, "t1", "c1", "col1"),
             ForeignKey.ofInteger(ctx, "t1", "c2", "col1"));
-        assertThat(SkipTablesByNamePredicate.ofName("t1"))
+        assertThat(SkipTablesByNamePredicate.ofNames("t1"))
             .rejects(duplicatedForeignKeys);
-        assertThat(SkipTablesByNamePredicate.ofName("t2"))
+        assertThat(SkipTablesByNamePredicate.ofNames("t2"))
             .accepts(duplicatedForeignKeys);
     }
 }

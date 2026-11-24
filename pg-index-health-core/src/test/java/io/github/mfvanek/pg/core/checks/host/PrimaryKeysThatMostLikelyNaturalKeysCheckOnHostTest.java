@@ -55,7 +55,7 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHostTest extends DatabaseAwareT
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "t2_composite", "t3_composite", "\"times-of-creation\""))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "t2_composite", "t3_composite", "\"times-of-creation\""))
                 .isEmpty();
         });
     }

@@ -51,11 +51,11 @@ class IndexesWithNullValuesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "clients"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_middle_name", "i_clients_middle_name_known_last_name"))
+                .executing(ctx, SkipIndexesByNamePredicate.ofNames(ctx, "i_clients_middle_name", "i_clients_middle_name_known_last_name"))
                 .isEmpty();
         });
     }

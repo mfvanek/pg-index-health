@@ -51,7 +51,7 @@ class TablesWithZeroOrOneColumnCheckOnClusterTest extends DatabaseAwareTestBase 
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "another_table", "empty", "one_more_table"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "another_table", "empty", "one_more_table"))
                 .isEmpty();
         });
     }

@@ -59,11 +59,11 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .allMatch(d -> d.getTotalSize() >= 106_496L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "clients"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_last_first", "i_accounts_number_balance_not_deleted"))
+                .executing(ctx, SkipIndexesByNamePredicate.ofNames(ctx, "i_clients_last_first", "i_accounts_number_balance_not_deleted"))
                 .isEmpty();
         });
     }
@@ -83,11 +83,11 @@ class IntersectedIndexesCheckOnHostTest extends DatabaseAwareTestBase {
                 .allMatch(d -> d.getTotalSize() >= 106_496L);
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_last_first"))
+                .executing(ctx, SkipIndexesByNamePredicate.ofNames(ctx, "i_clients_last_first"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_last_name_hash"))
+                .executing(ctx, SkipIndexesByNamePredicate.ofNames(ctx, "i_clients_last_name_hash"))
                 .isEmpty();
         });
     }

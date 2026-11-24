@@ -55,7 +55,7 @@ class IntersectedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "client_preferences"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "client_preferences"))
                 .isEmpty();
         });
     }

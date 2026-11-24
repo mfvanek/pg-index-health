@@ -55,7 +55,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "bad_clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "bad_clients"))
                 .isEmpty();
         });
     }
@@ -73,11 +73,11 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipByConstraintNamePredicate.ofName("c_accounts_fk_client_id"))
+                .executing(ctx, SkipByConstraintNamePredicate.ofNames("c_accounts_fk_client_id"))
                 .isEmpty();
         });
     }

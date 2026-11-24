@@ -62,7 +62,7 @@ class IndexesWithTimestampInTheMiddleCheckOnHostTest extends DatabaseAwareTestBa
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "\"t-multi\""))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "\"t-multi\""))
                 .isEmpty();
         });
     }

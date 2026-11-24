@@ -39,9 +39,9 @@ class DatabaseStructureStaticAnalysisTest {
         // Do not use predicates for temporary exceptions or recording deviations in the database structure.
         final Predicate<DbObject> exclusions = SkipLiquibaseTablesPredicate.ofDefault()
             .and(SkipFlywayTablesPredicate.ofDefault()) // if you use Flyway
-            .and(SkipTablesByNamePredicate.ofName("my_awesome_table", "my_another_table"))
-            .and(SkipIndexesByNamePredicate.ofName("my_awesome_index"))
-            .and(SkipByColumnNamePredicate.ofName("id"));
+            .and(SkipTablesByNamePredicate.ofNames("my_awesome_table", "my_another_table"))
+            .and(SkipIndexesByNamePredicate.ofNames("my_awesome_index"))
+            .and(SkipByColumnNamePredicate.ofNames("id"));
 
         checks.stream()
             .filter(DatabaseCheckOnHost::isStatic)
@@ -88,9 +88,9 @@ internal class DatabaseStructureStaticAnalysisTest {
         // Do not use predicates for temporary exceptions or recording deviations in the database structure.
         val exclusions = SkipLiquibaseTablesPredicate.ofDefault()
             .and(SkipFlywayTablesPredicate.ofDefault()) // if you use Flyway
-            .and(SkipTablesByNamePredicate.ofName("my_awesome_table", "my_another_table"))
-            .and(SkipIndexesByNamePredicate.ofName("my_awesome_index"))
-            .and(SkipByColumnNamePredicate.ofName("id"))
+            .and(SkipTablesByNamePredicate.ofNames("my_awesome_table", "my_another_table"))
+            .and(SkipIndexesByNamePredicate.ofNames("my_awesome_index"))
+            .and(SkipByColumnNamePredicate.ofNames("id"))
 
         checks
             .filter { it.isStatic }

@@ -50,11 +50,11 @@ class InvalidIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .allMatch(i -> i.getIndexSizeInBytes() == 0L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "clients"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_clients_last_name_first_name"))
+                .executing(ctx, SkipIndexesByNamePredicate.ofNames(ctx, "i_clients_last_name_first_name"))
                 .isEmpty();
         });
     }
@@ -72,7 +72,7 @@ class InvalidIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .allMatch(i -> i.getIndexSizeInBytes() == 0L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "orders_partitioned"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "orders_partitioned"))
                 .isEmpty();
         });
     }

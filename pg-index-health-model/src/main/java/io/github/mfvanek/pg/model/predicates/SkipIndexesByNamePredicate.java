@@ -81,7 +81,7 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
      * @return a {@link Predicate} to skip the specified index names
      * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final String rawIndexNameToSkip, final String... rawIndexNamesToSkip) {
+    public static Predicate<DbObject> ofNames(final String rawIndexNameToSkip, final String... rawIndexNamesToSkip) {
         return new SkipIndexesByNamePredicate(PgContext.ofDefault(), rawIndexNameToSkip, rawIndexNamesToSkip);
     }
 
@@ -104,7 +104,7 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
      * @return a {@link Predicate} to skip the specified index names
      * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final PgContext ctx, final String rawIndexNameToSkip, final String... rawIndexNamesToSkip) {
+    public static Predicate<DbObject> ofNames(final PgContext ctx, final String rawIndexNameToSkip, final String... rawIndexNamesToSkip) {
         return new SkipIndexesByNamePredicate(ctx, rawIndexNameToSkip, rawIndexNamesToSkip);
     }
 

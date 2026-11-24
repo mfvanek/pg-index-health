@@ -53,15 +53,15 @@ class DuplicatedIndexesCheckOnClusterTest extends DatabaseAwareTestBase {
                 .allMatch(d -> d.getTotalSize() >= 16_384L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "accounts_account_number_key"))
+                .executing(ctx, SkipIndexesByNamePredicate.ofNames(ctx, "accounts_account_number_key"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "i_accounts_account_number"))
+                .executing(ctx, SkipIndexesByNamePredicate.ofNames(ctx, "i_accounts_account_number"))
                 .isEmpty();
         });
     }

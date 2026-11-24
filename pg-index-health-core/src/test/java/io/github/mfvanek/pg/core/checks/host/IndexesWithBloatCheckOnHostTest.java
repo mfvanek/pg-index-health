@@ -77,11 +77,11 @@ class IndexesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
                 .allMatch(i -> i.getBloatSizeInBytes() > 1L && i.getBloatPercentage() >= 8);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts", "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "clients"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "accounts_account_number_key", "accounts_pkey", "clients_pkey", "i_clients_email_phone"))
+                .executing(ctx, SkipIndexesByNamePredicate.ofNames(ctx, "accounts_account_number_key", "accounts_pkey", "clients_pkey", "i_clients_email_phone"))
                 .isEmpty();
 
             assertThat(check)
@@ -115,7 +115,7 @@ class IndexesWithBloatCheckOnHostTest extends StatisticsAwareTestBase {
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.ofName(ctx, "order_item_default_warehouse_id_idx"))
+                .executing(ctx, SkipIndexesByNamePredicate.ofNames(ctx, "order_item_default_warehouse_id_idx"))
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes", "bloatSizeInBytes", "bloatPercentage")
                 .containsExactly(

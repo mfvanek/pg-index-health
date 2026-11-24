@@ -76,7 +76,7 @@ class ObjectsNotFollowingNamingConventionCheckOnClusterTest extends DatabaseAwar
                 .containsExactlyInAnyOrder(expected);
 
             assertThat(check)
-                .executing(ctx, SkipDbObjectsByNamePredicate.ofName(ctx, "\"bad-table\"", "\"bad-add\""))
+                .executing(ctx, SkipDbObjectsByNamePredicate.ofNames(ctx, "\"bad-table\"", "\"bad-add\""))
                 .hasSize(isNotNullConstraintsSupported() ? 16 : 13);
         });
     }

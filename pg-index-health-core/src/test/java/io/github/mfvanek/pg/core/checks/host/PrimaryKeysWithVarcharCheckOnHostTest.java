@@ -54,7 +54,7 @@ class PrimaryKeysWithVarcharCheckOnHostTest extends DatabaseAwareTestBase {
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "t_link", "t_varchar_long", "\"t-varchar-short\""))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "t_link", "t_varchar_long", "\"t-varchar-short\""))
                 .isEmpty();
         });
     }

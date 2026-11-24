@@ -83,7 +83,7 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
      * @throws IllegalArgumentException if any of the object names is blank
      * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final String fullyQualifiedObjectNameToSkip, final String... fullyQualifiedObjectNamesToSkip) {
+    public static Predicate<DbObject> ofNames(final String fullyQualifiedObjectNameToSkip, final String... fullyQualifiedObjectNamesToSkip) {
         return new SkipDbObjectsByNamePredicate(fullyQualifiedObjectNameToSkip, fullyQualifiedObjectNamesToSkip);
     }
 
@@ -98,7 +98,7 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
      * @throws IllegalArgumentException if any of the object names is blank
      * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final PgContext ctx,
+    public static Predicate<DbObject> ofNames(final PgContext ctx,
                                              final String objectNameToSkip,
                                              final String... objectNamesToSkip) {
         return of(prepareFullyQualifiedNamesToSkip(ctx, collectNamesToSkip(objectNameToSkip, objectNamesToSkip, "objectNameToSkip", "objectNamesToSkip")));

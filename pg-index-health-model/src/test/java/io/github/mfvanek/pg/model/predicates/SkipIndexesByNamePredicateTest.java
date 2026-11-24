@@ -35,15 +35,15 @@ class SkipIndexesByNamePredicateTest {
     @SuppressWarnings("DataFlowIssue")
     @Test
     void shouldThrowExceptionWhenInvalidDataPassed() {
-        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofName(null))
+        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofNames(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawIndexNameToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofName(""))
+        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofNames(""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawIndexNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofName("   "))
+        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofNames("   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawIndexNameToSkip cannot be blank");
 
@@ -60,15 +60,15 @@ class SkipIndexesByNamePredicateTest {
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawNamesToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofName(ctx, null))
+        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofNames(ctx, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawIndexNameToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofName(ctx, ""))
+        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofNames(ctx, ""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawIndexNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofName(ctx, "   "))
+        assertThatThrownBy(() -> SkipIndexesByNamePredicate.ofNames(ctx, "   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawIndexNameToSkip cannot be blank");
     }
@@ -83,7 +83,7 @@ class SkipIndexesByNamePredicateTest {
 
     @Test
     void shouldWorkForSingleItem() {
-        assertThat(SkipIndexesByNamePredicate.ofName("i2"))
+        assertThat(SkipIndexesByNamePredicate.ofNames("i2"))
             .accepts(Table.of("t"))
             .accepts(Index.of("t1", "i1"))
             .accepts(DuplicatedIndexes.of(
@@ -96,7 +96,7 @@ class SkipIndexesByNamePredicateTest {
                 Index.of("t1", "i2", 1L)));
 
         final PgContext ctx = PgContext.of("CUSTOM");
-        assertThat(SkipIndexesByNamePredicate.ofName(ctx, "I2"))
+        assertThat(SkipIndexesByNamePredicate.ofNames(ctx, "I2"))
             .accepts(Table.of("custom.t"))
             .accepts(Index.of("custom.t1", "custom.i1"))
             .accepts(DuplicatedIndexes.of(
@@ -126,13 +126,13 @@ class SkipIndexesByNamePredicateTest {
                 Index.of("t1", "i1", 1L),
                 Index.of("t1", "i2", 1L)));
 
-        assertThat(SkipIndexesByNamePredicate.ofName("i1", "I2", "i1"))
+        assertThat(SkipIndexesByNamePredicate.ofNames("i1", "I2", "i1"))
             .accepts(Index.of("t1", "i3"))
             .rejects(Index.of("t1", "i1"))
             .rejects(Index.of("T2", "I2"));
 
         final PgContext customCtx = PgContext.of("custom");
-        assertThat(SkipIndexesByNamePredicate.ofName(customCtx, "i1", "I2"))
+        assertThat(SkipIndexesByNamePredicate.ofNames(customCtx, "i1", "I2"))
             .accepts(Index.of("custom.t1", "custom.i3"))
             .accepts(Index.of("t1", "i1"))
             .rejects(Index.of("custom.t1", "custom.i1"))
