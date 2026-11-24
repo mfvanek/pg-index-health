@@ -68,8 +68,11 @@ public final class ColumnsDataParser {
 
     /**
      * Parses a single raw column definition in the format {@code name,not_null,type}.
-     * The column type never contains a comma, but a quoted column name may contain it,
-     * so the last two commas separate nullability and type, and everything before them is the name.
+     * A quoted column name may contain a comma, so the last two commas separate nullability and type,
+     * and everything before them is the name.
+     * <p>
+     * Limitation: the column type must not contain a comma. A user-defined type whose quoted name contains a comma
+     * (e.g. {@code "st,atus"}) is parsed incorrectly.
      *
      * @param tableName     the name of the table to which the column belongs
      * @param rawColumnInfo the raw column definition

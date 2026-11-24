@@ -170,13 +170,21 @@ ColumnWithSerialType.ofSerial(PgContext.ofDefault(), "t", "id", "t_id_seq")
 `ColumnWithTypeExtractor`, `IndexWithSingleColumnExtractor` and `IndexWithNullableColumnExtractor` have been removed.
 `ColumnExtractor` now reads the `column_type` column, so the SQL query of a custom check that uses `ColumnExtractor`
 must return `table_name, column_not_null, column_type, column_name`.
-Checks that return `columns` arrays expect every element in the format `name,not_null,type`.
+Checks that return `columns` arrays expect every element in the format `name,not_null,type`,
+e.g. `quote_ident(col.attname) || ',' || col.attnotnull::text || ',' || col.atttypid::regtype::text`.
+An element in the old `name,not_null` format causes an `IllegalArgumentException` when the check returns at least one row.
+
+Known limitation: the element is split by its last two commas, so a quoted column name may contain a comma,
+but the column type must not. A user-defined type whose quoted name contains a comma (e.g. `"st,atus"`) is parsed incorrectly.
 
 **Checks.**
 
 - All `columns_with_*` checks now return `Column` instead of `ColumnWithType`.
 - `btree_indexes_on_array_columns` returns one row per index with all its columns (previously one row per array column).
   Indexes that have array columns only in `INCLUDE (...)` are no longer reported.
+  Since the result contains all columns of the index, an exclusion by column name (`SkipByColumnNamePredicate`)
+  now hides the whole index if any of its columns matches, including columns that are not arrays.
+  For example, skipping `account_number` hides the index on `(account_number, roles)` even though `roles` is the array column.
 
 **JSON (Jackson 2 and Jackson 3 modules).**
 
