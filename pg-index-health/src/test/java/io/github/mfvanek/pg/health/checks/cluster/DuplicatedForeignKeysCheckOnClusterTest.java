@@ -14,7 +14,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -48,8 +47,8 @@ class DuplicatedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedForeignKeys.of(
-                        ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id", PgColumnType.BIGINT),
-                        ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id_duplicate", "client_id", PgColumnType.BIGINT))
+                        ForeignKey.ofBigint(ctx, "accounts", "c_accounts_fk_client_id", "client_id"),
+                        ForeignKey.ofBigint(ctx, "accounts", "c_accounts_fk_client_id_duplicate", "client_id"))
                 );
 
             assertThat(check)
@@ -68,8 +67,8 @@ class DuplicatedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedForeignKeys.of(
-                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type", PgColumnType.BIGINT),
-                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type", PgColumnType.BIGINT))
+                        ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
+                        ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fkey", "ref_type"))
                 ));
     }
 }

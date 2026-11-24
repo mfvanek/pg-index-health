@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.core.checks.extractors;
 
 import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.constraint.ForeignKeyCycle;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -44,6 +43,7 @@ class ForeignKeyCycleExtractorTest {
 
     @Test
     void shouldExtractCycleOfSingleColumnForeignKeys() throws SQLException {
+        final PgContext ctx = PgContext.ofDefault();
         try (ResultSet rs = prepare(
             List.of("t1", "t2"),
             List.of("fk", "fk"),
@@ -51,8 +51,8 @@ class ForeignKeyCycleExtractorTest {
             assertThat(extractor.extractData(rs))
                 .usingRecursiveComparison()
                 .isEqualTo(ForeignKeyCycle.of(
-                    ForeignKey.ofNotNullColumn("t1", "fk", "col1", PgColumnType.INTEGER),
-                    ForeignKey.ofNullableColumn("t2", "fk", "col2", PgColumnType.INTEGER)));
+                    ForeignKey.ofInteger(ctx, "t1", "fk", "col1"),
+                    ForeignKey.ofNullableInteger(ctx, "t2", "fk", "col2")));
         }
     }
 
@@ -67,7 +67,7 @@ class ForeignKeyCycleExtractorTest {
                 .usingRecursiveComparison()
                 .isEqualTo(ForeignKeyCycle.of(
                     ForeignKey.of(ctx, "t1", "c1", List.of(Column.ofInteger(ctx, "t1", "a"), Column.ofNullableInteger(ctx, "t1", "b"))),
-                    ForeignKey.ofNotNullColumn(ctx, "t2", "c2", "c", PgColumnType.INTEGER),
+                    ForeignKey.ofInteger(ctx, "t2", "c2", "c"),
                     ForeignKey.of(ctx, "t3", "c3",
                         List.of(Column.ofInteger(ctx, "t3", "d"), Column.ofInteger(ctx, "t3", "e"), Column.ofNullableInteger(ctx, "t3", "f")))));
         }

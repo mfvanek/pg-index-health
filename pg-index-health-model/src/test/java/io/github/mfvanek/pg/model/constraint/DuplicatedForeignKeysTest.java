@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.jspecify.annotations.NonNull;
@@ -57,6 +58,7 @@ class DuplicatedForeignKeysTest {
     @SuppressWarnings("DataFlowIssue")
     @Test
     void shouldThrowExceptionOnInvalidArguments() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThatThrownBy(() -> DuplicatedForeignKeys.of(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("foreignKeys cannot be null");
@@ -64,13 +66,13 @@ class DuplicatedForeignKeysTest {
         assertThatThrownBy(() -> DuplicatedForeignKeys.of(empty))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rows cannot be empty");
-        final List<ForeignKey> single = List.of(ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"));
+        final List<ForeignKey> single = List.of(ForeignKey.ofInteger(ctx, "t1", "c1", "col1"));
         assertThatThrownBy(() -> DuplicatedForeignKeys.of(single))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rows should contains at least two items");
         final List<ForeignKey> twoInvalid = List.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"),
-            ForeignKey.ofNotNullColumn("t2", "c2", "col1", "integer"));
+            ForeignKey.ofInteger(ctx, "t1", "c1", "col1"),
+            ForeignKey.ofInteger(ctx, "t2", "c2", "col1"));
         assertThatThrownBy(() -> DuplicatedForeignKeys.of(twoInvalid))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Table name is not the same within given rows");
@@ -79,11 +81,12 @@ class DuplicatedForeignKeysTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
+        final PgContext ctx = PgContext.ofDefault();
         final DuplicatedForeignKeys first = prepare();
         final DuplicatedForeignKeys theSame = prepare();
         final DuplicatedForeignKeys second = DuplicatedForeignKeys.of(List.of(
-            ForeignKey.ofNotNullColumn("t1", "c3", "col2", "integer"),
-            ForeignKey.ofNotNullColumn("t1", "c4", "col2", "integer")));
+            ForeignKey.ofInteger(ctx, "t1", "c3", "col2"),
+            ForeignKey.ofInteger(ctx, "t1", "c4", "col2")));
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -114,14 +117,15 @@ class DuplicatedForeignKeysTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void compareToTest() {
+        final PgContext ctx = PgContext.ofDefault();
         final DuplicatedForeignKeys first = prepare();
         final DuplicatedForeignKeys theSame = prepare();
         final DuplicatedForeignKeys secondName = DuplicatedForeignKeys.of(
-            ForeignKey.ofNotNullColumn("t1", "c3", "col2", "integer"),
-            ForeignKey.ofNotNullColumn("t1", "c4", "col2", "integer"));
+            ForeignKey.ofInteger(ctx, "t1", "c3", "col2"),
+            ForeignKey.ofInteger(ctx, "t1", "c4", "col2"));
         final DuplicatedForeignKeys secondTable = DuplicatedForeignKeys.of(
-            ForeignKey.ofNotNullColumn("t2", "c1", "col1", "integer"),
-            ForeignKey.ofNotNullColumn("t2", "c2", "col1", "integer"));
+            ForeignKey.ofInteger(ctx, "t2", "c1", "col1"),
+            ForeignKey.ofInteger(ctx, "t2", "c2", "col1"));
 
         assertThatThrownBy(() -> first.compareTo(null))
             .isInstanceOf(NullPointerException.class)
@@ -144,8 +148,9 @@ class DuplicatedForeignKeysTest {
 
     @NonNull
     private DuplicatedForeignKeys prepare() {
+        final PgContext ctx = PgContext.ofDefault();
         return DuplicatedForeignKeys.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"),
-            ForeignKey.ofNotNullColumn("t1", "c2", "col1", "integer"));
+            ForeignKey.ofInteger(ctx, "t1", "c1", "col1"),
+            ForeignKey.ofInteger(ctx, "t1", "c2", "col1"));
     }
 }

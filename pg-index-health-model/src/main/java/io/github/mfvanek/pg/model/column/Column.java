@@ -216,7 +216,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
                                    final String tableName,
                                    final String columnName,
                                    final PgColumnType columnType) {
-        return ofNotNull(pgContext, tableName, columnName, typeName(columnType));
+        return ofNotNull(pgContext, tableName, columnName, Validators.columnTypeNotNull(columnType));
     }
 
     /**
@@ -250,7 +250,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
                                     final String tableName,
                                     final String columnName,
                                     final PgColumnType columnType) {
-        return ofNullable(pgContext, tableName, columnName, typeName(columnType));
+        return ofNullable(pgContext, tableName, columnName, Validators.columnTypeNotNull(columnType));
     }
 
     /**
@@ -521,9 +521,5 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
                                         final String tableName,
                                         final String columnName) {
         return ofNullable(pgContext, tableName, columnName, PgColumnType.UUID.getColumnType());
-    }
-
-    private static String typeName(final PgColumnType columnType) {
-        return Objects.requireNonNull(columnType, COLUMN_TYPE_FIELD + " cannot be null").getColumnType();
     }
 }

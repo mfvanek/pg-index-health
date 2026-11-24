@@ -11,8 +11,8 @@
 package io.github.mfvanek.pg.spring.postgres.kt
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.mfvanek.pg.model.column.PgColumnType
 import io.github.mfvanek.pg.model.constraint.ForeignKey
+import io.github.mfvanek.pg.model.context.PgContext
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,7 +32,8 @@ class JsonDeserializerTest {
             .hasSizeGreaterThan(1)
             .contains("PgIndexHealthModelModule")
 
-        val original = ForeignKey.ofNotNullColumn("users", "fk_user_role", "role_id", PgColumnType.BIGINT)
+        val ctx = PgContext.ofDefault()
+        val original = ForeignKey.ofBigint(ctx, "users", "fk_user_role", "role_id")
         val json = objectMapper.writeValueAsString(original)
         assertThat(json)
             .isEqualTo(

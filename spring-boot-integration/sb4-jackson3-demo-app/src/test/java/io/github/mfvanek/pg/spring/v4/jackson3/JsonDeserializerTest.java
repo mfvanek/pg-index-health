@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.spring.v4.jackson3;
 
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.context.PgContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,12 +30,13 @@ class JsonDeserializerTest {
 
     @Test
     void deserializeShouldWork() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThat(objectMapper.registeredModules())
             .hasSizeGreaterThan(1)
             .extracting(JacksonModule::getModuleName)
             .contains("PgIndexHealthModelModule");
 
-        final ForeignKey original = ForeignKey.ofNotNullColumn("users", "fk_user_role", "role_id", PgColumnType.BIGINT);
+        final ForeignKey original = ForeignKey.ofBigint(ctx, "users", "fk_user_role", "role_id");
         final String json = objectMapper.writeValueAsString(original);
         assertThat(json)
             .isEqualTo("""

@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
@@ -74,11 +73,11 @@ class IntersectedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedForeignKeys.of(
-                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type", PgColumnType.BIGINT),
+                        ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
                         ForeignKey.of(ctx, "t1", "t1_ref_type_ref_value_fk",
                             List.of(Column.ofBigint(ctx, "t1", "ref_type"), Column.ofVarchar(ctx, "t1", "ref_value")))),
                     DuplicatedForeignKeys.of(
-                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type", PgColumnType.BIGINT),
+                        ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fkey", "ref_type"),
                         ForeignKey.of(ctx, "t1", "t1_ref_type_ref_value_fk",
                             List.of(Column.ofBigint(ctx, "t1", "ref_type"), Column.ofVarchar(ctx, "t1", "ref_value"))))
                 ));

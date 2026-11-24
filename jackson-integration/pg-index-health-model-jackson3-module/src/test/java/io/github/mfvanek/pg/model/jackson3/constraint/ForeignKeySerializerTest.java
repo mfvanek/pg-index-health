@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model.jackson3.constraint;
 
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.exc.MismatchedInputException;
@@ -23,7 +23,8 @@ class ForeignKeySerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() {
-        final ForeignKey original = ForeignKey.ofNotNullColumn("demo.orders", "client_id_fk", "client_id", PgColumnType.BIGINT);
+        final PgContext ctx = PgContext.ofDefault();
+        final ForeignKey original = ForeignKey.ofBigint(ctx, "demo.orders", "client_id_fk", "client_id");
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"constraint":{"tableName":"demo.orders","constraintName":"client_id_fk","constraintType":"FOREIGN_KEY"},\

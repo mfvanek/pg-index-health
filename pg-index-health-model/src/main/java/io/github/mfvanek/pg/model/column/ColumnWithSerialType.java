@@ -241,8 +241,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
                                           final boolean notNull,
                                           final PgColumnType columnType,
                                           final String sequenceName) {
-        Objects.requireNonNull(columnType, COLUMN_TYPE_FIELD + " cannot be null");
-        return of(pgContext, tableName, columnName, notNull, columnType.getColumnType(), sequenceName);
+        return of(pgContext, tableName, columnName, notNull, Validators.columnTypeNotNull(columnType), sequenceName);
     }
 
     /**

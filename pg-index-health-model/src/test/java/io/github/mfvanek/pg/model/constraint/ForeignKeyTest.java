@@ -28,15 +28,9 @@ class ForeignKeyTest {
 
     @Test
     void testToString() {
-        assertThat(ForeignKey.ofNotNullColumn("t", "c_t_order_id", "order_id", "integer"))
-            .hasToString("ForeignKey{tableName='t', constraintName='c_t_order_id', columns=[Column{tableName='t', columnName='order_id', notNull=true, columnType='integer'}]}");
-
         final PgContext ctx = PgContext.of("tst");
         assertThat(ForeignKey.ofNotNullColumn(ctx, "t", "c_t_order_id", "order_id", "integer"))
             .hasToString("ForeignKey{tableName='tst.t', constraintName='c_t_order_id', columns=[Column{tableName='tst.t', columnName='order_id', notNull=true, columnType='integer'}]}");
-
-        assertThat(ForeignKey.ofNullableColumn("t", "c_t_order_id", "order_id", "integer"))
-            .hasToString("ForeignKey{tableName='t', constraintName='c_t_order_id', columns=[Column{tableName='t', columnName='order_id', notNull=false, columnType='integer'}]}");
 
         assertThat(ForeignKey.ofNullableColumn(ctx, "t", "c_t_order_id", "order_id", "integer"))
             .hasToString("ForeignKey{tableName='tst.t', constraintName='c_t_order_id', columns=[Column{tableName='tst.t', columnName='order_id', notNull=false, columnType='integer'}]}");
@@ -45,7 +39,7 @@ class ForeignKeyTest {
     @Test
     void foreignKey() {
         final PgContext ctx = PgContext.ofDefault();
-        final ForeignKey foreignKey = ForeignKey.ofNotNullColumn("t", "c_t_order_id", "order_id", "integer");
+        final ForeignKey foreignKey = ForeignKey.ofInteger(ctx, "t", "c_t_order_id", "order_id");
         assertThat(foreignKey.getTableName())
             .isNotBlank()
             .isEqualTo("t");
@@ -130,25 +124,25 @@ class ForeignKeyTest {
         assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", columns))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columns cannot be empty");
-        assertThatThrownBy(() -> ForeignKey.ofColumn("t", "fk", null))
+        assertThatThrownBy(() -> ForeignKey.ofColumn(ctx, "t", "fk", null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("column cannot be null");
-        assertThatThrownBy(() -> ForeignKey.ofNotNullColumn("t", "fk", null, "integer"))
+        assertThatThrownBy(() -> ForeignKey.ofNotNullColumn(ctx, "t", "fk", null, "integer"))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("columnName cannot be null");
-        assertThatThrownBy(() -> ForeignKey.ofNotNullColumn("t", "fk", "", "integer"))
+        assertThatThrownBy(() -> ForeignKey.ofNotNullColumn(ctx, "t", "fk", "", "integer"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
-        assertThatThrownBy(() -> ForeignKey.ofNotNullColumn("t", "fk", "  ", "integer"))
+        assertThatThrownBy(() -> ForeignKey.ofNotNullColumn(ctx, "t", "fk", "  ", "integer"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
-        assertThatThrownBy(() -> ForeignKey.ofNullableColumn("t", "fk", null, "integer"))
+        assertThatThrownBy(() -> ForeignKey.ofNullableColumn(ctx, "t", "fk", null, "integer"))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("columnName cannot be null");
-        assertThatThrownBy(() -> ForeignKey.ofNullableColumn("t", "fk", "", "integer"))
+        assertThatThrownBy(() -> ForeignKey.ofNullableColumn(ctx, "t", "fk", "", "integer"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
-        assertThatThrownBy(() -> ForeignKey.ofNullableColumn("t", "fk", "  ", "integer"))
+        assertThatThrownBy(() -> ForeignKey.ofNullableColumn(ctx, "t", "fk", "  ", "integer"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnName cannot be blank");
         final Column column = Column.ofInteger(ctx, "t", "col");
@@ -171,7 +165,7 @@ class ForeignKeyTest {
             List.of(Column.ofInteger(ctx, "t", "order_id"), Column.ofInteger(ctx, "t", "limit")));
         final ForeignKey withDifferentOrderOfColumns = ForeignKey.of("t", "c_t_order_id",
             List.of(Column.ofInteger(ctx, "t", "limit"), Column.ofInteger(ctx, "t", "order_id")));
-        final ForeignKey withDifferentColumnName = ForeignKey.ofNullableColumn("t", "c_t_order_id", "no_matter_what", "integer");
+        final ForeignKey withDifferentColumnName = ForeignKey.ofNullableInteger(ctx, "t", "c_t_order_id", "no_matter_what");
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -213,18 +207,56 @@ class ForeignKeyTest {
     @Test
     void factoriesWithEnumTypeShouldWork() {
         final PgContext ctx = PgContext.of("tst");
-        assertThat(ForeignKey.ofNotNullColumn("t", "c_t_order_id", "order_id", PgColumnType.BIGINT))
-            .usingRecursiveComparison()
-            .isEqualTo(ForeignKey.ofNotNullColumn("t", "c_t_order_id", "order_id", "bigint"));
         assertThat(ForeignKey.ofNotNullColumn(ctx, "t", "c_t_order_id", "order_id", PgColumnType.BIGINT))
             .usingRecursiveComparison()
             .isEqualTo(ForeignKey.ofNotNullColumn(ctx, "t", "c_t_order_id", "order_id", "bigint"));
-        assertThat(ForeignKey.ofNullableColumn("t", "c_t_order_id", "order_id", PgColumnType.UUID))
-            .usingRecursiveComparison()
-            .isEqualTo(ForeignKey.ofNullableColumn("t", "c_t_order_id", "order_id", "uuid"));
         assertThat(ForeignKey.ofNullableColumn(ctx, "t", "c_t_order_id", "order_id", PgColumnType.UUID))
             .usingRecursiveComparison()
             .isEqualTo(ForeignKey.ofNullableColumn(ctx, "t", "c_t_order_id", "order_id", "uuid"));
+    }
+
+    @Test
+    void typedFactoriesShouldWork() {
+        final PgContext ctx = PgContext.of("tst");
+        assertThat(List.of(
+            ForeignKey.ofBigint(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofNullableBigint(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofInteger(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofNullableInteger(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofVarchar(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofNullableVarchar(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofText(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofNullableText(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofCharacter(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofNullableCharacter(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofBoolean(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofNullableBoolean(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofTimestamp(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofNullableTimestamp(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofTimestamptz(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofNullableTimestamptz(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofUuid(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofNullableUuid(ctx, "t1", "fk", "c1")))
+            .usingRecursiveFieldByFieldElementComparator()
+            .containsExactly(
+                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "bigint"),
+                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "bigint"),
+                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "integer"),
+                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "integer"),
+                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "character varying"),
+                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "character varying"),
+                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "text"),
+                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "text"),
+                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "character"),
+                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "character"),
+                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "boolean"),
+                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "boolean"),
+                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "timestamp without time zone"),
+                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "timestamp without time zone"),
+                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "timestamp with time zone"),
+                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "timestamp with time zone"),
+                ForeignKey.ofNotNullColumn(ctx, "t1", "fk", "c1", "uuid"),
+                ForeignKey.ofNullableColumn(ctx, "t1", "fk", "c1", "uuid"));
     }
 
     @Test
@@ -237,10 +269,11 @@ class ForeignKeyTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void compareToTest() {
-        final ForeignKey first = ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer");
-        final ForeignKey theSame = ForeignKey.ofNotNullColumn("t1", "c1", "col2", "integer"); // different column!
-        final ForeignKey secondName = ForeignKey.ofNotNullColumn("t1", "c2", "col1", "integer");
-        final ForeignKey secondTable = ForeignKey.ofNotNullColumn("t2", "c1", "col1", "integer");
+        final PgContext ctx = PgContext.ofDefault();
+        final ForeignKey first = ForeignKey.ofInteger(ctx, "t1", "c1", "col1");
+        final ForeignKey theSame = ForeignKey.ofInteger(ctx, "t1", "c1", "col2"); // different column!
+        final ForeignKey secondName = ForeignKey.ofInteger(ctx, "t1", "c2", "col1");
+        final ForeignKey secondTable = ForeignKey.ofInteger(ctx, "t2", "c1", "col1");
 
         assertThatThrownBy(() -> first.compareTo(null))
             .isInstanceOf(NullPointerException.class)

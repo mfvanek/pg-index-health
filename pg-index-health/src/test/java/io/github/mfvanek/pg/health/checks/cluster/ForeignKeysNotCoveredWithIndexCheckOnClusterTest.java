@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipByConstraintNamePredicate;
@@ -50,10 +49,10 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id", PgColumnType.BIGINT),
+                    ForeignKey.ofBigint(ctx, "accounts", "c_accounts_fk_client_id", "client_id"),
                     ForeignKey.of(ctx, "bad_clients", "c_bad_clients_fk_email_phone",
                         List.of(Column.ofNullableVarchar(ctx, "bad_clients", "email"), Column.ofNullableVarchar(ctx, "bad_clients", "phone"))),
-                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id", PgColumnType.INTEGER)
+                    ForeignKey.ofNullableInteger(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id")
                 );
 
             assertThat(check)
@@ -71,7 +70,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id", PgColumnType.BIGINT)
+                    ForeignKey.ofBigint(ctx, "accounts", "c_accounts_fk_client_id", "client_id")
                 );
 
             assertThat(check)
@@ -107,8 +106,8 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
                         Column.ofInteger(ctx, tableName, "rbt_id"),
                         Column.ofNullableText(ctx, tableName, "rbt_value")
                     )),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type", PgColumnType.BIGINT),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type", PgColumnType.BIGINT)
+                    ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
+                    ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fkey", "ref_type")
                 );
         });
     }

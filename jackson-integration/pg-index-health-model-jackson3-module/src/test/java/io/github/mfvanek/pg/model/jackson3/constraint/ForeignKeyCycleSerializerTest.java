@@ -10,9 +10,9 @@
 
 package io.github.mfvanek.pg.model.jackson3.constraint;
 
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.constraint.ForeignKeyCycle;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.exc.MismatchedInputException;
@@ -24,9 +24,10 @@ class ForeignKeyCycleSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() {
+        final PgContext ctx = PgContext.ofDefault();
         final ForeignKeyCycle original = ForeignKeyCycle.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1", PgColumnType.BIGINT),
-            ForeignKey.ofNullableColumn("t2", "c2", "col2", PgColumnType.BIGINT));
+            ForeignKey.ofBigint(ctx, "t1", "c1", "col1"),
+            ForeignKey.ofNullableBigint(ctx, "t2", "c2", "col2"));
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"foreignKeys":[\

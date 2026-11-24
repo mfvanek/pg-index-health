@@ -41,6 +41,29 @@ The same applies to the convenience factories that create a column internally:
 `ForeignKey.ofNotNullColumn/ofNullableColumn`, `IndexWithColumns.ofNotNull/ofNullable` and
 `TableWithColumns.ofNotNullColumn/ofNullableColumn` take an additional `columnType` argument (`String` or `PgColumnType`).
 
+**`ForeignKey.ofNotNullColumn`, `ForeignKey.ofNullableColumn` and `ForeignKey.ofColumn` require a `PgContext`.**
+
+The overloads without `PgContext` have been removed; use `PgContext.ofDefault()` for tables in the `public` schema
+(the table name is left unchanged). `ForeignKey.of(tableName, constraintName, columns)` without context is kept
+for already qualified table names, as well as `ForeignKey.of(constraint, columns)` and `ForeignKey.ofColumn(constraint, column)`.
+
+```java
+// Before
+ForeignKey.ofNotNullColumn("orders", "fk_orders_client", "client_id")
+ForeignKey.ofColumn("orders", "fk_orders_client", column)
+
+// After
+ForeignKey.ofNotNullColumn(PgContext.ofDefault(), "orders", "fk_orders_client", "client_id", PgColumnType.BIGINT)
+ForeignKey.ofNullableColumn(ctx, "orders", "fk_orders_client", "client_id", "bigint")
+ForeignKey.ofColumn(ctx, "orders", "fk_orders_client", column)
+ForeignKey.ofBigint(ctx, "orders", "fk_orders_client", "client_id")
+```
+
+`ForeignKey` also has typed shortcut factories (all with `PgContext`) for the same types as `Column`:
+`ofBigint`, `ofInteger`, ..., `ofUuid` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableUuid` (nullable),
+e.g. `ForeignKey.ofInteger(ctx, "orders", "fk_orders_client", "client_id")` instead of
+`ForeignKey.ofNotNullColumn(ctx, "orders", "fk_orders_client", "client_id", PgColumnType.INTEGER)`.
+
 **`ColumnTypeAware` has been merged into `ColumnNameAware`.**
 
 `ColumnTypeAware` has been removed. `getColumnType()` and the `COLUMN_FIELD` / `COLUMN_TYPE_FIELD` constants

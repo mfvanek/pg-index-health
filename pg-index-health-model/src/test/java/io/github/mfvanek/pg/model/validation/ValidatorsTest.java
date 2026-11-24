@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.validation;
 
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,16 @@ class ValidatorsTest {
         assertThatThrownBy(() -> Validators.indexNameNotBlank(""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("indexName cannot be blank");
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void columnTypeNotNull() {
+        assertThat(Validators.columnTypeNotNull(PgColumnType.VARCHAR))
+            .isEqualTo("character varying");
+        assertThatThrownBy(() -> Validators.columnTypeNotNull(null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("columnType cannot be null");
     }
 
     @Test

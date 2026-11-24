@@ -10,6 +10,7 @@
 
 package io.github.mfvanek.pg.model.constraint;
 
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.jspecify.annotations.NonNull;
@@ -60,6 +61,7 @@ class ForeignKeyCycleTest {
     @SuppressWarnings("DataFlowIssue")
     @Test
     void shouldThrowExceptionOnInvalidArguments() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThatThrownBy(() -> ForeignKeyCycle.of(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("foreignKeys cannot be null");
@@ -67,19 +69,19 @@ class ForeignKeyCycleTest {
         assertThatThrownBy(() -> ForeignKeyCycle.of(empty))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("foreignKeys should contain at least two items");
-        final List<ForeignKey> single = List.of(ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"));
+        final List<ForeignKey> single = List.of(ForeignKey.ofInteger(ctx, "t1", "c1", "col1"));
         assertThatThrownBy(() -> ForeignKeyCycle.of(single))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("foreignKeys should contain at least two items");
         final List<ForeignKey> sameTable = List.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"),
-            ForeignKey.ofNotNullColumn("t2", "c2", "col1", "integer"),
-            ForeignKey.ofNotNullColumn("t1", "c3", "col2", "integer"));
+            ForeignKey.ofInteger(ctx, "t1", "c1", "col1"),
+            ForeignKey.ofInteger(ctx, "t2", "c2", "col1"),
+            ForeignKey.ofInteger(ctx, "t1", "c3", "col2"));
         assertThatThrownBy(() -> ForeignKeyCycle.of(sameTable))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Table name must not be repeated within a cycle");
-        final ForeignKey first = ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer");
-        final ForeignKey second = ForeignKey.ofNotNullColumn("t2", "c2", "col1", "integer");
+        final ForeignKey first = ForeignKey.ofInteger(ctx, "t1", "c1", "col1");
+        final ForeignKey second = ForeignKey.ofInteger(ctx, "t2", "c2", "col1");
         assertThatThrownBy(() -> ForeignKeyCycle.of(null, second))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("firstObject cannot be null");
@@ -94,14 +96,15 @@ class ForeignKeyCycleTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void equalsAndHashCode() {
+        final PgContext ctx = PgContext.ofDefault();
         final ForeignKeyCycle first = prepare();
         final ForeignKeyCycle theSame = prepare();
         final ForeignKeyCycle second = ForeignKeyCycle.of(List.of(
-            ForeignKey.ofNotNullColumn("t1", "c3", "col2", "integer"),
-            ForeignKey.ofNotNullColumn("t2", "c4", "col2", "integer")));
+            ForeignKey.ofInteger(ctx, "t1", "c3", "col2"),
+            ForeignKey.ofInteger(ctx, "t2", "c4", "col2")));
         final ForeignKeyCycle reversed = ForeignKeyCycle.of(
-            ForeignKey.ofNullableColumn("t2", "c2", "col2", "integer"),
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"));
+            ForeignKey.ofNullableInteger(ctx, "t2", "c2", "col2"),
+            ForeignKey.ofInteger(ctx, "t1", "c1", "col1"));
 
         assertThat(first.equals(null)).isFalse();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -137,18 +140,19 @@ class ForeignKeyCycleTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void compareToTest() {
+        final PgContext ctx = PgContext.ofDefault();
         final ForeignKeyCycle first = prepare();
         final ForeignKeyCycle theSame = prepare();
         final ForeignKeyCycle longer = ForeignKeyCycle.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"),
-            ForeignKey.ofNullableColumn("t2", "c2", "col2", "integer"),
-            ForeignKey.ofNotNullColumn("t3", "c3", "col3", "integer"));
+            ForeignKey.ofInteger(ctx, "t1", "c1", "col1"),
+            ForeignKey.ofNullableInteger(ctx, "t2", "c2", "col2"),
+            ForeignKey.ofInteger(ctx, "t3", "c3", "col3"));
         final ForeignKeyCycle secondName = ForeignKeyCycle.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"),
-            ForeignKey.ofNotNullColumn("t2", "c4", "col2", "integer"));
+            ForeignKey.ofInteger(ctx, "t1", "c1", "col1"),
+            ForeignKey.ofInteger(ctx, "t2", "c4", "col2"));
         final ForeignKeyCycle secondTable = ForeignKeyCycle.of(
-            ForeignKey.ofNotNullColumn("t2", "c1", "col1", "integer"),
-            ForeignKey.ofNotNullColumn("t3", "c2", "col1", "integer"));
+            ForeignKey.ofInteger(ctx, "t2", "c1", "col1"),
+            ForeignKey.ofInteger(ctx, "t3", "c2", "col1"));
 
         assertThatThrownBy(() -> first.compareTo(null))
             .isInstanceOf(NullPointerException.class)
@@ -179,8 +183,9 @@ class ForeignKeyCycleTest {
 
     @NonNull
     private ForeignKeyCycle prepare() {
+        final PgContext ctx = PgContext.ofDefault();
         return ForeignKeyCycle.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"),
-            ForeignKey.ofNullableColumn("t2", "c2", "col2", "integer"));
+            ForeignKey.ofInteger(ctx, "t1", "c1", "col1"),
+            ForeignKey.ofNullableInteger(ctx, "t2", "c2", "col2"));
     }
 }

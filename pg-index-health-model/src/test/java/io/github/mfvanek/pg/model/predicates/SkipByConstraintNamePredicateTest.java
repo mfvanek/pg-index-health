@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.model.constraint.Constraint;
 import io.github.mfvanek.pg.model.constraint.ConstraintType;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.Index;
 import io.github.mfvanek.pg.model.table.Table;
 import org.junit.jupiter.api.Test;
@@ -59,34 +60,36 @@ class SkipByConstraintNamePredicateTest {
 
     @Test
     void shouldWorkForSingleItem() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThat(SkipByConstraintNamePredicate.ofName("C1"))
             .accepts(Table.of("t"))
             .accepts(Index.of("t1", "i1"))
             .accepts(Constraint.ofType("t1", "c2", ConstraintType.CHECK))
-            .accepts(ForeignKey.ofNotNullColumn("t1", "c2", "col1", "integer"))
+            .accepts(ForeignKey.ofInteger(ctx, "t1", "c2", "col1"))
             .accepts(DuplicatedForeignKeys.of(
-                ForeignKey.ofNotNullColumn("t1", "c2", "col1", "integer"),
-                ForeignKey.ofNotNullColumn("t1", "c3", "col1", "integer")
+                ForeignKey.ofInteger(ctx, "t1", "c2", "col1"),
+                ForeignKey.ofInteger(ctx, "t1", "c3", "col1")
             ))
             .rejects(Constraint.ofType("t1", "c1", ConstraintType.CHECK))
-            .rejects(ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"))
+            .rejects(ForeignKey.ofInteger(ctx, "t1", "c1", "col1"))
             .rejects(DuplicatedForeignKeys.of(
-                ForeignKey.ofNotNullColumn("t1", "c2", "col1", "integer"),
-                ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer")
+                ForeignKey.ofInteger(ctx, "t1", "c2", "col1"),
+                ForeignKey.ofInteger(ctx, "t1", "c1", "col1")
             ));
     }
 
     @Test
     void shouldWorkForMultipleItems() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThat(SkipByConstraintNamePredicate.of(Set.of("c1", "C2")))
             .accepts(Table.of("t"))
             .accepts(Constraint.ofType("t1", "c3", ConstraintType.CHECK))
-            .accepts(ForeignKey.ofNotNullColumn("t1", "c3", "col1", "integer"))
+            .accepts(ForeignKey.ofInteger(ctx, "t1", "c3", "col1"))
             .rejects(Constraint.ofType("t1", "C1", ConstraintType.CHECK))
-            .rejects(ForeignKey.ofNotNullColumn("t1", "c1", "col1", "integer"))
+            .rejects(ForeignKey.ofInteger(ctx, "t1", "c1", "col1"))
             .rejects(DuplicatedForeignKeys.of(
-                ForeignKey.ofNotNullColumn("t1", "C2", "col1", "integer"),
-                ForeignKey.ofNotNullColumn("t1", "C1", "col1", "integer")
+                ForeignKey.ofInteger(ctx, "t1", "C2", "col1"),
+                ForeignKey.ofInteger(ctx, "t1", "C1", "col1")
             ));
     }
 }

@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model.validation;
 
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.index.IndexNameAware;
 import io.github.mfvanek.pg.model.table.TableNameAware;
@@ -65,6 +66,18 @@ public final class Validators {
      */
     public static String indexNameNotBlank(final String indexName) {
         return notBlank(indexName, IndexNameAware.INDEX_NAME_FIELD);
+    }
+
+    /**
+     * Ensures the provided column type is not null and returns its name.
+     *
+     * @param columnType the column type to check
+     * @return the name of the provided column type
+     * @throws NullPointerException if the column type is null
+     * @since 0.51.0
+     */
+    public static String columnTypeNotNull(final PgColumnType columnType) {
+        return Objects.requireNonNull(columnType, ColumnNameAware.COLUMN_TYPE_FIELD + " cannot be null").getColumnType();
     }
 
     /**

@@ -11,9 +11,9 @@
 package io.github.mfvanek.pg.model.jackson2.constraint;
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.constraint.DuplicatedForeignKeys;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.jackson2.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 
@@ -26,9 +26,10 @@ class DuplicatedForeignKeysSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() throws IOException {
+        final PgContext ctx = PgContext.ofDefault();
         final DuplicatedForeignKeys original = DuplicatedForeignKeys.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1", PgColumnType.BIGINT),
-            ForeignKey.ofNotNullColumn("t1", "c2", "col1", PgColumnType.BIGINT));
+            ForeignKey.ofBigint(ctx, "t1", "c1", "col1"),
+            ForeignKey.ofBigint(ctx, "t1", "c2", "col1"));
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"tableName":"t1","foreignKeys":[\
