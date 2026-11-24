@@ -115,7 +115,7 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
     /**
      * Creates a new {@code UnusedIndex} instance with the specified parameters and given context.
      *
-     * @param pgContext        the schema context to enrich table and index name; must be non-null.
+     * @param ctx              the schema context to enrich table and index name; must be non-null.
      * @param tableName        the name of the table associated with the index; must be non-null
      * @param indexName        the name of the index; must be non-null
      * @param indexSizeInBytes the size of the index in bytes
@@ -123,12 +123,12 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
      * @return a new {@code UnusedIndex} instance
      * @since 0.14.3
      */
-    public static UnusedIndex of(final PgContext pgContext,
+    public static UnusedIndex of(final PgContext ctx,
                                  final String tableName,
                                  final String indexName,
                                  final long indexSizeInBytes,
                                  final long indexScans) {
-        return of(Index.of(pgContext, tableName, indexName, indexSizeInBytes), indexScans);
+        return of(Index.of(ctx, tableName, indexName, indexSizeInBytes), indexScans);
     }
 
     /**
@@ -147,16 +147,16 @@ public final class UnusedIndex extends AbstractIndexAware implements Comparable<
     /**
      * Creates a new {@code UnusedIndex} instance with zero size and given context.
      *
-     * @param pgContext the schema context to enrich table and index name; must be non-null.
+     * @param ctx       the schema context to enrich table and index name; must be non-null.
      * @param tableName the name of the table associated with the index; must be non-null
      * @param indexName the name of the index; must be non-null
      * @return a new {@code UnusedIndex} instance
      * @since 0.14.3
      */
-    public static UnusedIndex of(final PgContext pgContext,
+    public static UnusedIndex of(final PgContext ctx,
                                  final String tableName,
                                  final String indexName) {
-        return of(pgContext, tableName, indexName, 0L, 0L);
+        return of(ctx, tableName, indexName, 0L, 0L);
     }
 
     /**

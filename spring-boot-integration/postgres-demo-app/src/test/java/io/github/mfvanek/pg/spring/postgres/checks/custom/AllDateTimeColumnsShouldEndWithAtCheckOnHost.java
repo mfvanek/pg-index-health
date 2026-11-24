@@ -12,17 +12,17 @@ package io.github.mfvanek.pg.spring.postgres.checks.custom;
 
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.StandardCheckInfo;
-import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
+import io.github.mfvanek.pg.core.checks.extractors.ColumnExtractor;
 import io.github.mfvanek.pg.core.checks.host.AbstractCheckOnHost;
 import io.github.mfvanek.pg.core.utils.NamedParametersParser;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
+import io.github.mfvanek.pg.model.column.Column;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class AllDateTimeColumnsShouldEndWithAtCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {
+public class AllDateTimeColumnsShouldEndWithAtCheckOnHost extends AbstractCheckOnHost<Column> {
 
     public AllDateTimeColumnsShouldEndWithAtCheckOnHost(final PgConnection pgConnection) {
-        super(ColumnWithType.class, pgConnection,
+        super(Column.class, pgConnection,
             StandardCheckInfo.ofStatic("ALL_DATETIME_COLUMNS_SHOULD_END_WITH_AT", NamedParametersParser.parse("""
                 select
                     t.oid::regclass::text as table_name,
@@ -42,6 +42,6 @@ public class AllDateTimeColumnsShouldEndWithAtCheckOnHost extends AbstractCheckO
                     right(col.attname, length('_at')) != '_at' and /* should end with _at */
                     nsp.nspname = :schema_name_param::text
                 order by table_name, column_name;""")),
-            ColumnWithTypeExtractor.of());
+            ColumnExtractor.of());
     }
 }

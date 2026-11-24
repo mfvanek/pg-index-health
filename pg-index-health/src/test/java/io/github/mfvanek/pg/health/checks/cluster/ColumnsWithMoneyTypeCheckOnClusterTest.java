@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
@@ -26,12 +25,12 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class ColumnsWithMoneyTypeCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<@NonNull ColumnWithType> check = new ColumnsWithMoneyTypeCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull Column> check = new ColumnsWithMoneyTypeCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(ColumnWithType.class)
+            .hasType(Column.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_MONEY_TYPE)
             .isStatic();
     }
@@ -45,7 +44,7 @@ class ColumnsWithMoneyTypeCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.of(Column.ofNullable(ctx, "accounts", "\"account_balance-bad\""), "money")
+                    Column.ofNullable(ctx, "accounts", "\"account_balance-bad\"", "money")
                 ));
     }
 
@@ -58,7 +57,7 @@ class ColumnsWithMoneyTypeCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.of(Column.ofNotNull(ctx, "tp", "account_balance"), "money")
+                    Column.ofNotNull(ctx, "tp", "account_balance", "money")
                 ));
     }
 }

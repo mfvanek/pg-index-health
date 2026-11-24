@@ -14,6 +14,7 @@ import io.github.mfvanek.pg.core.checks.common.ResultSetExtractor;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.constraint.ForeignKeyCycle;
+import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -42,30 +43,33 @@ class ForeignKeyCycleExtractorTest {
 
     @Test
     void shouldExtractCycleOfSingleColumnForeignKeys() throws SQLException {
+        final PgContext ctx = PgContext.ofDefault();
         try (ResultSet rs = prepare(
             List.of("t1", "t2"),
             List.of("fk", "fk"),
-            List.of("col1,true", "col2,false"))) {
+            List.of("col1,true,integer", "col2,false,integer"))) {
             assertThat(extractor.extractData(rs))
                 .usingRecursiveComparison()
                 .isEqualTo(ForeignKeyCycle.of(
-                    ForeignKey.ofNotNullColumn("t1", "fk", "col1"),
-                    ForeignKey.ofNullableColumn("t2", "fk", "col2")));
+                    ForeignKey.ofInteger(ctx, "t1", "fk", "col1"),
+                    ForeignKey.ofNullableInteger(ctx, "t2", "fk", "col2")));
         }
     }
 
     @Test
     void shouldGroupColumnsOfMulticolumnForeignKeys() throws SQLException {
+        final PgContext ctx = PgContext.ofDefault();
         try (ResultSet rs = prepare(
             List.of("t1", "t1", "t2", "t3", "t3", "t3"),
             List.of("c1", "c1", "c2", "c3", "c3", "c3"),
-            List.of("a,true", "b,false", "c,true", "d,true", "e,true", "f,false"))) {
+            List.of("a,true,integer", "b,false,integer", "c,true,integer", "d,true,integer", "e,true,integer", "f,false,integer"))) {
             assertThat(extractor.extractData(rs))
                 .usingRecursiveComparison()
                 .isEqualTo(ForeignKeyCycle.of(
-                    ForeignKey.of("t1", "c1", List.of(Column.ofNotNull("t1", "a"), Column.ofNullable("t1", "b"))),
-                    ForeignKey.ofNotNullColumn("t2", "c2", "c"),
-                    ForeignKey.of("t3", "c3", List.of(Column.ofNotNull("t3", "d"), Column.ofNotNull("t3", "e"), Column.ofNullable("t3", "f")))));
+                    ForeignKey.of(ctx, "t1", "c1", Column.ofInteger(ctx, "t1", "a"), Column.ofNullableInteger(ctx, "t1", "b")),
+                    ForeignKey.ofInteger(ctx, "t2", "c2", "c"),
+                    ForeignKey.of(ctx, "t3", "c3",
+                        Column.ofInteger(ctx, "t3", "d"), Column.ofInteger(ctx, "t3", "e"), Column.ofNullableInteger(ctx, "t3", "f"))));
         }
     }
 
@@ -74,7 +78,7 @@ class ForeignKeyCycleExtractorTest {
         try (ResultSet rs = prepare(
             List.of("t1", "t1", "t2"),
             List.of("c1", "c2", "c3"),
-            List.of("a,true", "b,true", "c,true"))) {
+            List.of("a,true,integer", "b,true,integer", "c,true,integer"))) {
             assertThatThrownBy(() -> extractor.extractData(rs))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Table name must not be repeated within a cycle");
@@ -86,7 +90,7 @@ class ForeignKeyCycleExtractorTest {
         try (ResultSet rs = prepare(
             List.of("t1", "t2"),
             List.of("c1"),
-            List.of("a,true", "b,true"))) {
+            List.of("a,true,integer", "b,true,integer"))) {
             assertThatThrownBy(() -> extractor.extractData(rs))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Arrays table_names, constraint_names and columns must have the same length");
@@ -94,7 +98,7 @@ class ForeignKeyCycleExtractorTest {
         try (ResultSet rs = prepare(
             List.of("t1", "t2"),
             List.of("c1", "c2"),
-            List.of("a,true"))) {
+            List.of("a,true,integer"))) {
             assertThatThrownBy(() -> extractor.extractData(rs))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Arrays table_names, constraint_names and columns must have the same length");

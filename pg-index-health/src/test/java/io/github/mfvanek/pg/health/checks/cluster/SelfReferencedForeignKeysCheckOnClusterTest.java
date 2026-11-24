@@ -47,9 +47,9 @@ class SelfReferencedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase 
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNullableColumn(ctx, "bad_self_ref_restrict_table", "bad_self_ref_restrict_table_parent_id_fk", "parent_id"),
-                    ForeignKey.ofNullableColumn(ctx, "bad_self_ref_table", "bad_self_ref_table_parent_id_fk", "parent_id"),
-                    ForeignKey.ofNullableColumn(ctx, "cfk_node_b", "cfk_node_b_parent_fk", "parent_id")
+                    ForeignKey.ofNullableBigint(ctx, "bad_self_ref_restrict_table", "bad_self_ref_restrict_table_parent_id_fk", "parent_id"),
+                    ForeignKey.ofNullableBigint(ctx, "bad_self_ref_table", "bad_self_ref_table_parent_id_fk", "parent_id"),
+                    ForeignKey.ofNullableBigint(ctx, "cfk_node_b", "cfk_node_b_parent_fk", "parent_id")
                 );
 
             assertThat(check)
@@ -67,7 +67,7 @@ class SelfReferencedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase 
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNullableColumn(ctx, "bad_self_ref_partitioned", "bad_self_ref_partitioned_parent_id_fk", "parent_id")
+                    ForeignKey.ofNullableBigint(ctx, "bad_self_ref_partitioned", "bad_self_ref_partitioned_parent_id_fk", "parent_id")
                 );
         });
     }

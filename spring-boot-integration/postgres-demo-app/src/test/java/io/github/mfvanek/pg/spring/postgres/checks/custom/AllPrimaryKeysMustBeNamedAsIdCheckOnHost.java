@@ -33,7 +33,7 @@ public class AllPrimaryKeysMustBeNamedAsIdCheckOnHost extends AbstractCheckOnHos
                 select
                     pc.oid::regclass::text as table_name,
                     pg_table_size(pc.oid) as table_size,
-                    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text order by col.attnum) as columns
+                    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text || ',' || col.atttypid::regtype::text order by col.attnum) as columns
                 from
                     pg_catalog.pg_constraint c
                     inner join pg_catalog.pg_class pc on pc.oid = c.conrelid
@@ -51,9 +51,9 @@ public class AllPrimaryKeysMustBeNamedAsIdCheckOnHost extends AbstractCheckOnHos
     }
 
     @Override
-    protected List<TableWithColumns> doCheck(final PgContext pgContext) {
+    protected List<TableWithColumns> doCheck(final PgContext ctx) {
         return jdbcClient.sql(checkInfo.getSqlQuery())
-            .param("schema_name_param", pgContext.getSchemaName())
+            .param("schema_name_param", ctx.getSchemaName())
             .query(rowMapper::mapRow)
             .list();
     }

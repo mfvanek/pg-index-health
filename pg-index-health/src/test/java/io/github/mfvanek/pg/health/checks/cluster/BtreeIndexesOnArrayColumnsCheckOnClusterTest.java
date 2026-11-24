@@ -46,10 +46,11 @@ class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofSingle(ctx, "accounts", "accounts_account_number_roles_btree_idx", 0L,
-                        Column.ofNullable(ctx, "accounts", "roles")),
-                    IndexWithColumns.ofSingle(ctx, "accounts", "accounts_roles_btree_idx", 0L,
-                        Column.ofNullable(ctx, "accounts", "roles")))
+                    IndexWithColumns.of(ctx, "accounts", "accounts_account_number_roles_btree_idx",
+                        Column.ofVarchar(ctx, "accounts", "account_number"),
+                        Column.ofNullable(ctx, "accounts", "roles", "text[]")),
+                    IndexWithColumns.of(ctx, "accounts", "accounts_roles_btree_idx",
+                        Column.ofNullable(ctx, "accounts", "roles", "text[]")))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -67,7 +68,7 @@ class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    IndexWithColumns.ofSingle(ctx, "t1", "t1_roles_btree_idx", 0L, Column.ofNullable(ctx, "t1", "roles"))
+                    IndexWithColumns.of(ctx, "t1", "t1_roles_btree_idx", Column.ofNullable(ctx, "t1", "roles", "text[]"))
                 ));
     }
 }

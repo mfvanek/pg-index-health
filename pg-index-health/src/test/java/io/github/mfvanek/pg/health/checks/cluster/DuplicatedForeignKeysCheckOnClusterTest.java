@@ -47,8 +47,8 @@ class DuplicatedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedForeignKeys.of(
-                        ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id"),
-                        ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id_duplicate", "client_id"))
+                        ForeignKey.ofBigint(ctx, "accounts", "c_accounts_fk_client_id", "client_id"),
+                        ForeignKey.ofBigint(ctx, "accounts", "c_accounts_fk_client_id_duplicate", "client_id"))
                 );
 
             assertThat(check)
@@ -67,8 +67,8 @@ class DuplicatedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedForeignKeys.of(
-                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
-                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type"))
+                        ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
+                        ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fkey", "ref_type"))
                 ));
     }
 }

@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithFixedLengthVarcharCheckOnHost;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
+import io.github.mfvanek.pg.model.column.Column;
 
 /**
  * Check for columns with a fixed length varchar type on all hosts in the cluster.
@@ -20,7 +20,7 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
  * @author Diana Gilfanova
  * @since 0.14.6
  */
-public class ColumnsWithFixedLengthVarcharCheckOnCluster extends AbstractCheckOnCluster<ColumnWithType> {
+public class ColumnsWithFixedLengthVarcharCheckOnCluster extends AbstractCheckOnCluster<Column> {
 
     /**
      * Constructs a new instance of {@code ColumnsWithFixedLengthVarcharCheckOnCluster}.

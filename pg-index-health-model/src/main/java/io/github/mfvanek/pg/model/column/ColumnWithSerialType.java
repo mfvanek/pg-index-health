@@ -11,44 +11,105 @@
 package io.github.mfvanek.pg.model.column;
 
 import io.github.mfvanek.pg.model.context.PgContext;
+import io.github.mfvanek.pg.model.dbobject.DbObject;
+import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
+import java.util.EnumSet;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * An immutable representation of column with serial type in database table.
+ * The serial type is taken from the column type, which must be one of
+ * {@link PgColumnType#SMALL_SERIAL}, {@link PgColumnType#SERIAL} or {@link PgColumnType#BIG_SERIAL}.
  *
  * @author Ivan Vakhrushev
- * @see SerialType
+ * @see PgColumnType
  * @see Column
  * @since 0.6.2
  */
-public final class ColumnWithSerialType extends AbstractColumnAware implements SequenceNameAware, Comparable<ColumnWithSerialType> {
+public final class ColumnWithSerialType implements DbObject, ColumnNameAware, SequenceNameAware, Comparable<ColumnWithSerialType> {
 
-    /**
-     * The field name representing the type of serial column in a database.
-     */
-    public static final String SERIAL_TYPE_FIELD = "serialType";
+    private static final Set<PgColumnType> SERIAL_TYPES = EnumSet.of(PgColumnType.SMALL_SERIAL, PgColumnType.SERIAL, PgColumnType.BIG_SERIAL);
 
-    private final SerialType serialType;
+    private final Column column;
     private final String sequenceName;
 
     private ColumnWithSerialType(final Column column,
-                                 final SerialType serialType,
                                  final String sequenceName) {
-        super(column, Objects.requireNonNull(serialType, SERIAL_TYPE_FIELD + " cannot be null").getColumnType());
-        this.serialType = serialType;
+        this.column = Objects.requireNonNull(column, COLUMN_FIELD + " cannot be null");
+        validateSerialType(column.getColumnType());
         this.sequenceName = Validators.notBlank(sequenceName, SEQUENCE_NAME_FIELD);
     }
 
     /**
-     * Retrieves raw type of serial column.
-     *
-     * @return type of serial column
+     * {@inheritDoc}
      */
-    public SerialType getSerialType() {
-        return serialType;
+    @Override
+    public String getName() {
+        return column.getName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PgObjectType getObjectType() {
+        return column.getObjectType();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getTableName() {
+        return column.getTableName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getColumnName() {
+        return column.getColumnName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isNotNull() {
+        return column.isNotNull();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getColumnType() {
+        return column.getColumnType();
+    }
+
+    /**
+     * Retrieves the current instance as a {@code Column}.
+     *
+     * @return the {@code Column} associated with this instance
+     * @since 0.20.3
+     */
+    public Column toColumn() {
+        return column;
+    }
+
+    /**
+     * Retrieves serial type of the column.
+     *
+     * @return serial type of the column: {@link PgColumnType#SMALL_SERIAL}, {@link PgColumnType#SERIAL} or {@link PgColumnType#BIG_SERIAL}
+     */
+    public PgColumnType getSerialType() {
+        return PgColumnType.valueFrom(column.getColumnType());
     }
 
     /**
@@ -67,8 +128,7 @@ public final class ColumnWithSerialType extends AbstractColumnAware implements S
     @Override
     public String toString() {
         return ColumnWithSerialType.class.getSimpleName() + '{' +
-            innerToString() +
-            ", " + SERIAL_TYPE_FIELD + '=' + serialType +
+            COLUMN_FIELD + '=' + column +
             ", " + SEQUENCE_NAME_FIELD + "='" + sequenceName + '\'' +
             '}';
     }
@@ -103,124 +163,135 @@ public final class ColumnWithSerialType extends AbstractColumnAware implements S
     @Override
     public int compareTo(final ColumnWithSerialType other) {
         Objects.requireNonNull(other, "other cannot be null");
-        if (!column.equals(other.column)) {
-            return column.compareTo(other.column);
+        return column.compareTo(other.column);
+    }
+
+    private static void validateSerialType(final String columnType) {
+        if (!SERIAL_TYPES.contains(PgColumnType.valueFrom(columnType))) {
+            throw new IllegalArgumentException(String.format(Locale.ROOT, "column type must be serial but was '%s'", columnType));
         }
-        if (serialType != other.serialType) {
-            return serialType.compareTo(other.serialType);
-        }
-        return sequenceName.compareTo(other.sequenceName);
     }
 
     /**
-     * Constructs a {@code ColumnWithSerialType} object of a given serial type.
+     * Constructs a {@code ColumnWithSerialType} object.
      *
-     * @param column       column; should be non-null.
-     * @param serialType   column serial type; should be non-null.
+     * @param column       column with serial type; should be non-null.
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
+     * @since 0.51.0
      */
     public static ColumnWithSerialType of(final Column column,
-                                          final SerialType serialType,
                                           final String sequenceName) {
-        return new ColumnWithSerialType(column, serialType, sequenceName);
+        return new ColumnWithSerialType(column, sequenceName);
     }
 
     /**
-     * Constructs a {@code ColumnWithSerialType} object of a given serial type and context.
+     * Constructs a {@code ColumnWithSerialType} object with given context.
      *
-     * @param pgContext    the schema context to enrich table name; must be non-null.
-     * @param column       column; should be non-null.
-     * @param serialType   column serial type; should be non-null.
+     * @param ctx          the schema context to enrich sequence name; must be non-null.
+     * @param column       column with serial type; should be non-null.
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
-     * @since 0.14.6
+     * @since 0.51.0
      */
-    public static ColumnWithSerialType of(final PgContext pgContext,
+    public static ColumnWithSerialType of(final PgContext ctx,
                                           final Column column,
-                                          final SerialType serialType,
                                           final String sequenceName) {
-        return of(column, serialType, PgContext.enrichWith(sequenceName, pgContext));
+        return of(column, PgContext.enrichWith(sequenceName, ctx));
     }
 
     /**
-     * Constructs a {@code ColumnWithSerialType} object of {@code bigserial} type.
+     * Constructs a {@code ColumnWithSerialType} object with given context.
+     * The column is created from the given table name, column name, nullability and column type.
      *
-     * @param column       column; should be non-null.
+     * @param ctx          the schema context to enrich table name and sequence name; must be non-null.
+     * @param tableName    table name; should be non-blank.
+     * @param columnName   column name; should be non-blank.
+     * @param notNull      whether the column is not null.
+     * @param columnType   column type; must be one of {@code smallserial}, {@code serial} or {@code bigserial}.
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
+     * @since 0.51.0
      */
-    public static ColumnWithSerialType ofBigSerial(final Column column,
+    public static ColumnWithSerialType of(final PgContext ctx,
+                                          final String tableName,
+                                          final String columnName,
+                                          final boolean notNull,
+                                          final String columnType,
+                                          final String sequenceName) {
+        return of(ctx, Column.of(ctx, tableName, columnName, notNull, columnType), sequenceName);
+    }
+
+    /**
+     * Constructs a {@code ColumnWithSerialType} object with given context.
+     * The column is created from the given table name, column name, nullability and column type.
+     *
+     * @param ctx          the schema context to enrich table name and sequence name; must be non-null.
+     * @param tableName    table name; should be non-blank.
+     * @param columnName   column name; should be non-blank.
+     * @param notNull      whether the column is not null.
+     * @param columnType   column type; must be one of {@link PgColumnType#SMALL_SERIAL}, {@link PgColumnType#SERIAL} or {@link PgColumnType#BIG_SERIAL}.
+     * @param sequenceName sequence name; should be non-blank.
+     * @return {@code ColumnWithSerialType}
+     * @since 0.51.0
+     */
+    public static ColumnWithSerialType of(final PgContext ctx,
+                                          final String tableName,
+                                          final String columnName,
+                                          final boolean notNull,
+                                          final PgColumnType columnType,
+                                          final String sequenceName) {
+        return of(ctx, tableName, columnName, notNull, Validators.columnTypeNotNull(columnType), sequenceName);
+    }
+
+    /**
+     * Constructs a {@code ColumnWithSerialType} object of {@code bigserial} type with a not null column and given context.
+     *
+     * @param ctx          the schema context to enrich table name and sequence name; must be non-null.
+     * @param tableName    table name; should be non-blank.
+     * @param columnName   column name; should be non-blank.
+     * @param sequenceName sequence name; should be non-blank.
+     * @return {@code ColumnWithSerialType}
+     * @since 0.51.0
+     */
+    public static ColumnWithSerialType ofBigSerial(final PgContext ctx,
+                                                   final String tableName,
+                                                   final String columnName,
                                                    final String sequenceName) {
-        return of(column, SerialType.BIG_SERIAL, sequenceName);
+        return of(ctx, tableName, columnName, true, PgColumnType.BIG_SERIAL, sequenceName);
     }
 
     /**
-     * Constructs a {@code ColumnWithSerialType} object of {@code bigserial} type and context.
+     * Constructs a {@code ColumnWithSerialType} object of {@code serial} type with a not null column and given context.
      *
-     * @param pgContext    the schema context to enrich table name; must be non-null.
-     * @param column       column; should be non-null.
+     * @param ctx          the schema context to enrich table name and sequence name; must be non-null.
+     * @param tableName    table name; should be non-blank.
+     * @param columnName   column name; should be non-blank.
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
-     * @since 0.15.0
+     * @since 0.51.0
      */
-    public static ColumnWithSerialType ofBigSerial(final PgContext pgContext,
-                                                   final Column column,
-                                                   final String sequenceName) {
-        return ofBigSerial(column, PgContext.enrichWith(sequenceName, pgContext));
-    }
-
-    /**
-     * Constructs a {@code ColumnWithSerialType} object of {@code serial} type.
-     *
-     * @param column       column; should be non-null.
-     * @param sequenceName sequence name; should be non-blank.
-     * @return {@code ColumnWithSerialType}
-     */
-    public static ColumnWithSerialType ofSerial(final Column column,
+    public static ColumnWithSerialType ofSerial(final PgContext ctx,
+                                                final String tableName,
+                                                final String columnName,
                                                 final String sequenceName) {
-        return of(column, SerialType.SERIAL, sequenceName);
+        return of(ctx, tableName, columnName, true, PgColumnType.SERIAL, sequenceName);
     }
 
     /**
-     * Constructs a {@code ColumnWithSerialType} object of {@code serial} type.
+     * Constructs a {@code ColumnWithSerialType} object of {@code smallserial} type with a not null column and given context.
      *
-     * @param pgContext    the schema context to enrich table name; must be non-null.
-     * @param column       column; should be non-null.
+     * @param ctx          the schema context to enrich table name and sequence name; must be non-null.
+     * @param tableName    table name; should be non-blank.
+     * @param columnName   column name; should be non-blank.
      * @param sequenceName sequence name; should be non-blank.
      * @return {@code ColumnWithSerialType}
-     * @since 0.15.0
+     * @since 0.51.0
      */
-    public static ColumnWithSerialType ofSerial(final PgContext pgContext,
-                                                final Column column,
-                                                final String sequenceName) {
-        return ofSerial(column, PgContext.enrichWith(sequenceName, pgContext));
-    }
-
-    /**
-     * Constructs a {@code ColumnWithSerialType} object of {@code smallserial} type.
-     *
-     * @param column       column; should be non-null.
-     * @param sequenceName sequence name; should be non-blank.
-     * @return {@code ColumnWithSerialType}
-     */
-    public static ColumnWithSerialType ofSmallSerial(final Column column,
+    public static ColumnWithSerialType ofSmallSerial(final PgContext ctx,
+                                                     final String tableName,
+                                                     final String columnName,
                                                      final String sequenceName) {
-        return of(column, SerialType.SMALL_SERIAL, sequenceName);
-    }
-
-    /**
-     * Constructs a {@code ColumnWithSerialType} object of {@code smallserial} type.
-     *
-     * @param pgContext    the schema context to enrich table name; must be non-null.
-     * @param column       column; should be non-null.
-     * @param sequenceName sequence name; should be non-blank.
-     * @return {@code ColumnWithSerialType}
-     * @since 0.15.0
-     */
-    public static ColumnWithSerialType ofSmallSerial(final PgContext pgContext,
-                                                     final Column column,
-                                                     final String sequenceName) {
-        return ofSmallSerial(column, PgContext.enrichWith(sequenceName, pgContext));
+        return of(ctx, tableName, columnName, true, PgColumnType.SMALL_SERIAL, sequenceName);
     }
 }

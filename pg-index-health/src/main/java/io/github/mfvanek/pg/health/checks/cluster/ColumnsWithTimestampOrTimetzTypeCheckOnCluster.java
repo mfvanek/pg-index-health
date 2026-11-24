@@ -12,7 +12,7 @@ package io.github.mfvanek.pg.health.checks.cluster;
 
 import io.github.mfvanek.pg.connection.HighAvailabilityPgConnection;
 import io.github.mfvanek.pg.core.checks.host.ColumnsWithTimestampOrTimetzTypeCheckOnHost;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
+import io.github.mfvanek.pg.model.column.Column;
 
 /**
  * Check for columns with {@code timestamp} or {@code timetz} type on all hosts in the cluster.
@@ -20,7 +20,7 @@ import io.github.mfvanek.pg.model.column.ColumnWithType;
  * @author Ivan Vakhrushev
  * @since 0.20.3
  */
-public class ColumnsWithTimestampOrTimetzTypeCheckOnCluster extends AbstractCheckOnCluster<ColumnWithType> {
+public class ColumnsWithTimestampOrTimetzTypeCheckOnCluster extends AbstractCheckOnCluster<Column> {
 
     /**
      * Constructs a new instance of {@code ColumnsWithTimestampOrTimetzTypeCheckOnCluster}.

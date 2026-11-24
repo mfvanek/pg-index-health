@@ -6,17 +6,17 @@ To do this, you need to create a class that inherits from the [AbstractCheckOnHo
 ```java
 import io.github.mfvanek.pg.connection.PgConnection;
 import io.github.mfvanek.pg.core.checks.common.StandardCheckInfo;
-import io.github.mfvanek.pg.core.checks.extractors.ColumnWithTypeExtractor;
+import io.github.mfvanek.pg.core.checks.extractors.ColumnExtractor;
 import io.github.mfvanek.pg.core.checks.host.AbstractCheckOnHost;
 import io.github.mfvanek.pg.core.utils.NamedParametersParser;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
+import io.github.mfvanek.pg.model.column.Column;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class AllDateTimeColumnsShouldEndWithAtCheckOnHost extends AbstractCheckOnHost<ColumnWithType> {
+public class AllDateTimeColumnsShouldEndWithAtCheckOnHost extends AbstractCheckOnHost<Column> {
 
     public AllDateTimeColumnsShouldEndWithAtCheckOnHost(final PgConnection pgConnection) {
-        super(ColumnWithType.class, pgConnection,
+        super(Column.class, pgConnection,
             StandardCheckInfo.ofStatic("ALL_DATETIME_COLUMNS_SHOULD_END_WITH_AT", NamedParametersParser.parse("""
                 select
                     t.oid::regclass::text as table_name,
@@ -36,7 +36,7 @@ public class AllDateTimeColumnsShouldEndWithAtCheckOnHost extends AbstractCheckO
                     right(col.attname, length('_at')) != '_at' and /* should end with _at */
                     nsp.nspname = :schema_name_param::text
                 order by table_name, column_name;""")),
-            ColumnWithTypeExtractor.of());
+            ColumnExtractor.of());
     }
 }
 ```
@@ -78,7 +78,7 @@ public class AllPrimaryKeysMustBeNamedAsIdCheckOnHost extends AbstractCheckOnHos
                 select
                     pc.oid::regclass::text as table_name,
                     pg_table_size(pc.oid) as table_size,
-                    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text order by col.attnum) as columns
+                    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text || ',' || col.atttypid::regtype::text order by col.attnum) as columns
                 from
                     pg_catalog.pg_constraint c
                     inner join pg_catalog.pg_class pc on pc.oid = c.conrelid
@@ -96,9 +96,9 @@ public class AllPrimaryKeysMustBeNamedAsIdCheckOnHost extends AbstractCheckOnHos
     }
 
     @Override
-    protected List<TableWithColumns> doCheck(final PgContext pgContext) {
+    protected List<TableWithColumns> doCheck(final PgContext ctx) {
         return jdbcClient.sql(checkInfo.getSqlQuery())
-            .param("schema_name_param", pgContext.getSchemaName())
+            .param("schema_name_param", ctx.getSchemaName())
             .query(rowMapper::mapRow)
             .list();
     }

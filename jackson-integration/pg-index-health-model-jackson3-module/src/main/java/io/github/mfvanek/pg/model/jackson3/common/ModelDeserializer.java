@@ -11,7 +11,7 @@
 package io.github.mfvanek.pg.model.jackson3.common;
 
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnTypeAware;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.index.Index;
@@ -67,7 +67,7 @@ public abstract class ModelDeserializer<T extends DbObject> extends AbstractDese
      */
     protected final Column getColumn(final JsonNode rootNode,
                                      final DeserializationContext ctxt) {
-        final JsonNode notNullNode = getNotNullNode(ctxt, rootNode, ColumnTypeAware.COLUMN_FIELD);
+        final JsonNode notNullNode = getNotNullNode(ctxt, rootNode, ColumnNameAware.COLUMN_FIELD);
         try (JsonParser tokens = ctxt.treeAsTokens(notNullNode)) {
             return tokens.readValueAs(Column.class);
         }

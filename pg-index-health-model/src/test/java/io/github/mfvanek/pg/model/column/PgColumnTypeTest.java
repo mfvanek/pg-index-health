@@ -18,53 +18,57 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class SerialTypeTest {
+class PgColumnTypeTest {
 
     @Test
     void allPgTypeNamesShouldBeUnique() {
         final Set<String> types = new HashSet<>();
-        for (final SerialType serialType : SerialType.values()) {
+        for (final PgColumnType serialType : PgColumnType.values()) {
             assertThat(serialType.getColumnType())
                 .isNotBlank();
             types.add(serialType.getColumnType());
         }
         assertThat(types)
-            .hasSameSizeAs(SerialType.values());
+            .hasSameSizeAs(PgColumnType.values());
     }
 
     @Test
     void toStringTest() {
-        assertThat(SerialType.SMALL_SERIAL)
-            .hasToString("SerialType{columnType='smallserial'}");
-        assertThat(SerialType.SERIAL)
-            .hasToString("SerialType{columnType='serial'}");
-        assertThat(SerialType.BIG_SERIAL)
-            .hasToString("SerialType{columnType='bigserial'}");
+        assertThat(PgColumnType.SMALL_SERIAL)
+            .hasToString("PgColumnType{columnType='smallserial'}");
+        assertThat(PgColumnType.SERIAL)
+            .hasToString("PgColumnType{columnType='serial'}");
+        assertThat(PgColumnType.BIG_SERIAL)
+            .hasToString("PgColumnType{columnType='bigserial'}");
+        assertThat(PgColumnType.VARCHAR)
+            .hasToString("PgColumnType{columnType='character varying'}");
     }
 
     @Test
     void creationFromStringShouldWork() {
-        assertThat(SerialType.valueFrom("smallserial"))
-            .isEqualTo(SerialType.SMALL_SERIAL);
-        assertThat(SerialType.valueOf("SMALL_SERIAL"))
-            .isEqualTo(SerialType.SMALL_SERIAL);
+        assertThat(PgColumnType.valueFrom("timestamp with time zone"))
+            .isEqualTo(PgColumnType.TIMESTAMPTZ);
+        assertThat(PgColumnType.valueFrom("smallserial"))
+            .isEqualTo(PgColumnType.SMALL_SERIAL);
+        assertThat(PgColumnType.valueOf("SMALL_SERIAL"))
+            .isEqualTo(PgColumnType.SMALL_SERIAL);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void creationFromStringShouldThrowExceptionWhenNotFound() {
-        assertThatThrownBy(() -> SerialType.valueFrom(null))
+        assertThatThrownBy(() -> PgColumnType.valueFrom(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("pgColumnType cannot be null");
-        assertThatThrownBy(() -> SerialType.valueFrom(""))
+        assertThatThrownBy(() -> PgColumnType.valueFrom(""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("pgColumnType = ''");
 
-        assertThatThrownBy(() -> SerialType.valueOf(null))
+        assertThatThrownBy(() -> PgColumnType.valueOf(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("Name is null");
-        assertThatThrownBy(() -> SerialType.valueOf(""))
+        assertThatThrownBy(() -> PgColumnType.valueOf(""))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("No enum constant io.github.mfvanek.pg.model.column.SerialType.");
+            .hasMessage("No enum constant io.github.mfvanek.pg.model.column.PgColumnType.");
     }
 }

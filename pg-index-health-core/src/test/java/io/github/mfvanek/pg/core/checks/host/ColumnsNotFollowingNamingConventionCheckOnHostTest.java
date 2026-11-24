@@ -48,10 +48,10 @@ class ColumnsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNotNull(ctx, "\"1st_table\"", "\"2nd_id\""),
-                    Column.ofNotNull(ctx, "\"bad-table\"", "\"bad-id\""),
-                    Column.ofNotNull(ctx, "\"bad-table-two\"", "\"bad-ref-id\""),
-                    Column.ofNullable(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\"")
+                    Column.ofInteger(ctx, "\"1st_table\"", "\"2nd_id\""),
+                    Column.ofInteger(ctx, "\"bad-table\"", "\"bad-id\""),
+                    Column.ofInteger(ctx, "\"bad-table-two\"", "\"bad-ref-id\""),
+                    Column.ofNullableInteger(ctx, "\"UpperCaseTable\"", "\"UpperCaseId\"")
                 );
 
             assertThat(check)
@@ -69,8 +69,8 @@ class ColumnsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    Column.ofNullable(ctx, "\"one-partitioned\"", "\"1st_column\""),
-                    Column.ofNotNull(ctx, "\"one-partitioned\"", "\"bad-id\"")
+                    Column.ofNullableText(ctx, "\"one-partitioned\"", "\"1st_column\""),
+                    Column.ofBigint(ctx, "\"one-partitioned\"", "\"bad-id\"")
                 )
         );
     }

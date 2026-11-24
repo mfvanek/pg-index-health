@@ -33,8 +33,8 @@ public final class ColumnsDataParser {
      * or indexes. The method enforces that at least one column must be provided.
      *
      * @param tableName  the name of the table to which the columns belong; must be non-blank.
-     * @param rawColumns the raw column definitions; each definition is expected to contain the column name followed by a comma and a boolean indicating nullability.
-     * @return a list of {@code Column} objects representing the parsed columns with their respective table association and nullability.
+     * @param rawColumns the raw column definitions; each definition is expected to be in the format {@code name,not_null,type}.
+     * @return a list of {@code Column} objects representing the parsed columns with their respective table association, nullability and type.
      */
     public static List<Column> parseRawColumnsInForeignKeyOrIndex(final String tableName, final String... rawColumns) {
         return parseRawColumnsData(tableName, true, rawColumns);
@@ -46,8 +46,8 @@ public final class ColumnsDataParser {
      * to be provided and determines nullability based on the input data.
      *
      * @param tableName  the name of the table to which the columns belong; must be non-blank.
-     * @param rawColumns the raw column definitions as strings; each definition is expected to specify the column name followed by a comma and a boolean indicating nullability.
-     * @return a list of {@code Column} objects representing the parsed column information with their associated table and nullability.
+     * @param rawColumns the raw column definitions as strings; each definition is expected to be in the format {@code name,not_null,type}.
+     * @return a list of {@code Column} objects representing the parsed column information with their associated table, nullability and type.
      */
     public static List<Column> parseRawColumnsInTable(final String tableName, final String... rawColumns) {
         return parseRawColumnsData(tableName, false, rawColumns);
@@ -66,17 +66,27 @@ public final class ColumnsDataParser {
             .toList();
     }
 
+    /**
+     * Parses a single raw column definition in the format {@code name,not_null,type}.
+     * A quoted column name may contain a comma, so the last two commas separate nullability and type,
+     * and everything before them is the name.
+     * <p>
+     * Limitation: the column type must not contain a comma. A user-defined type whose quoted name contains a comma
+     * (e.g. {@code "st,atus"}) is parsed incorrectly.
+     *
+     * @param tableName     the name of the table to which the column belongs
+     * @param rawColumnInfo the raw column definition
+     * @return parsed {@code Column}
+     */
     private static Column toColumn(final String tableName, final String rawColumnInfo) {
-        final int lastCommaPosition = rawColumnInfo.lastIndexOf(',');
-        if (lastCommaPosition == -1) {
+        final int typeCommaPosition = rawColumnInfo.lastIndexOf(',');
+        final int nullabilityCommaPosition = rawColumnInfo.lastIndexOf(',', typeCommaPosition - 1);
+        if (nullabilityCommaPosition == -1) {
             throw new IllegalArgumentException("Cannot parse column info from " + rawColumnInfo);
         }
-        final String nullability = rawColumnInfo.substring(lastCommaPosition + 1).trim();
-        final boolean notNullColumn = Boolean.parseBoolean(nullability);
-        final String columnName = rawColumnInfo.substring(0, lastCommaPosition).trim();
-        if (notNullColumn) {
-            return Column.ofNotNull(tableName, columnName);
-        }
-        return Column.ofNullable(tableName, columnName);
+        final String columnName = rawColumnInfo.substring(0, nullabilityCommaPosition).trim();
+        final String nullability = rawColumnInfo.substring(nullabilityCommaPosition + 1, typeCommaPosition).trim();
+        final String columnType = rawColumnInfo.substring(typeCommaPosition + 1).trim();
+        return Column.of(tableName, columnName, Boolean.parseBoolean(nullability), columnType);
     }
 }

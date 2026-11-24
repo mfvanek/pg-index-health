@@ -20,23 +20,26 @@ class PgContextTest {
 
     @Test
     void getSchemaNameForCustomSchema() {
-        final PgContext pgContext = PgContext.of("s");
-        assertThat(pgContext.getSchemaName()).isEqualTo("s");
-        assertThat(pgContext.isDefaultSchema()).isFalse();
+        final PgContext ctx = PgContext.of("s");
+        assertThat(ctx.getSchemaName()).isEqualTo("s");
+        assertThat(ctx.isDefaultSchema()).isFalse();
     }
 
     @Test
     void getSchemaNameForPublicSchema() {
-        final PgContext pgContext = PgContext.ofDefault();
-        assertThat(pgContext.getSchemaName()).isEqualTo(PgContext.DEFAULT_SCHEMA_NAME);
-        assertThat(pgContext.isDefaultSchema()).isTrue();
+        final PgContext ctx = PgContext.ofDefault();
+        assertThat(ctx.getSchemaName()).isEqualTo(PgContext.DEFAULT_SCHEMA_NAME);
+        assertThat(ctx.isDefaultSchema()).isTrue();
+        assertThat(PgContext.ofDefault())
+            .isSameAs(ctx)
+            .isEqualTo(PgContext.of(PgContext.DEFAULT_SCHEMA_NAME));
     }
 
     @Test
     void getSchemaNameForPublicSchemaWithUpperCase() {
-        final PgContext pgContext = PgContext.of("PUBLIC");
-        assertThat(pgContext.getSchemaName()).isEqualTo(PgContext.DEFAULT_SCHEMA_NAME);
-        assertThat(pgContext.isDefaultSchema()).isTrue();
+        final PgContext ctx = PgContext.of("PUBLIC");
+        assertThat(ctx.getSchemaName()).isEqualTo(PgContext.DEFAULT_SCHEMA_NAME);
+        assertThat(ctx.isDefaultSchema()).isTrue();
     }
 
     @Test
@@ -128,49 +131,49 @@ class PgContextTest {
 
     @Test
     void complementWithCustomSchema() {
-        final PgContext pgContext = PgContext.of("TEST");
-        assertThat(pgContext.enrichWithSchema("table1"))
+        final PgContext ctx = PgContext.of("TEST");
+        assertThat(ctx.enrichWithSchema("table1"))
             .isEqualTo("test.table1");
-        assertThat(pgContext.enrichWithSchema("index1"))
+        assertThat(ctx.enrichWithSchema("index1"))
             .isEqualTo("test.index1");
-        assertThat(pgContext.enrichWithSchema("test.table2"))
+        assertThat(ctx.enrichWithSchema("test.table2"))
             .isEqualTo("test.table2");
-        assertThat(pgContext.enrichWithSchema("TEST.table2"))
+        assertThat(ctx.enrichWithSchema("TEST.table2"))
             .isEqualTo("TEST.table2");
-        assertThat(PgContext.enrichWith("table1", pgContext))
+        assertThat(PgContext.enrichWith("table1", ctx))
             .isEqualTo("test.table1");
     }
 
     @Test
     void complementWithPublicSchema() {
-        final PgContext pgContext = PgContext.ofDefault();
-        assertThat(pgContext.enrichWithSchema("table1"))
+        final PgContext ctx = PgContext.ofDefault();
+        assertThat(ctx.enrichWithSchema("table1"))
             .isEqualTo("table1");
-        assertThat(pgContext.enrichWithSchema("index1"))
+        assertThat(ctx.enrichWithSchema("index1"))
             .isEqualTo("index1");
-        assertThat(pgContext.enrichWithSchema("public.table2"))
+        assertThat(ctx.enrichWithSchema("public.table2"))
             .isEqualTo("public.table2");
-        assertThat(pgContext.enrichWithSchema("PUBLIC.table2"))
+        assertThat(ctx.enrichWithSchema("PUBLIC.table2"))
             .isEqualTo("PUBLIC.table2");
-        assertThat(PgContext.enrichWith("table1", pgContext))
+        assertThat(PgContext.enrichWith("table1", ctx))
             .isEqualTo("table1");
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void complementWithSchemaWithInvalidArguments() {
-        final PgContext pgContext = PgContext.ofDefault();
-        assertThatThrownBy(() -> pgContext.enrichWithSchema(null))
+        final PgContext ctx = PgContext.ofDefault();
+        assertThatThrownBy(() -> ctx.enrichWithSchema(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("objectName cannot be null");
-        assertThatThrownBy(() -> pgContext.enrichWithSchema(""))
+        assertThatThrownBy(() -> ctx.enrichWithSchema(""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("objectName cannot be blank");
-        assertThatThrownBy(() -> pgContext.enrichWithSchema("   "))
+        assertThatThrownBy(() -> ctx.enrichWithSchema("   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("objectName cannot be blank");
         assertThatThrownBy(() -> PgContext.enrichWith(null, null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
     }
 }

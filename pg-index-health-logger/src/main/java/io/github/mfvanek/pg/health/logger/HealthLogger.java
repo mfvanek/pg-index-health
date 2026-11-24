@@ -25,10 +25,10 @@ public interface HealthLogger {
      * Logs indexes and tables health with given exclusions in given schema.
      *
      * @param exclusions {@link Exclusions}
-     * @param pgContext  {@link PgContext}
+     * @param ctx        {@link PgContext}
      * @return results of logging health indexes
      */
-    List<String> logAll(Exclusions exclusions, PgContext pgContext);
+    List<String> logAll(Exclusions exclusions, PgContext ctx);
 
     /**
      * Logs indexes and tables health with given exclusions in default schema.

@@ -13,6 +13,7 @@ package io.github.mfvanek.pg.generator;
 import io.github.mfvanek.pg.generator.support.GeneratorTestBase;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
+import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
@@ -66,6 +67,7 @@ class DropDefaultValueGeneratorTest extends GeneratorTestBase {
 
     @NonNull
     private ColumnNameAware column() {
-        return Column.ofNotNull("s1.t1", "col1");
+        final PgContext ctx = PgContext.ofDefault();
+        return Column.ofBigint(ctx, "s1.t1", "col1");
     }
 }

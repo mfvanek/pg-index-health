@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
@@ -27,12 +26,12 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class ColumnsWithTimestampOrTimetzTypeCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<@NonNull ColumnWithType> check = new ColumnsWithTimestampOrTimetzTypeCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull Column> check = new ColumnsWithTimestampOrTimetzTypeCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(ColumnWithType.class)
+            .hasType(Column.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_TIMESTAMP_OR_TIMETZ_TYPE)
             .isStatic();
     }
@@ -46,8 +45,8 @@ class ColumnsWithTimestampOrTimetzTypeCheckOnClusterTest extends DatabaseAwareTe
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.of(Column.ofNullable(ctx, "\"t-multi\"", "created_at"), "time with time zone"),
-                    ColumnWithType.ofTimestamp(Column.ofNullable(ctx, "\"t-multi\"", "ts"))
+                    Column.ofNullable(ctx, "\"t-multi\"", "created_at", "time with time zone"),
+                    Column.ofNullableTimestamp(ctx, "\"t-multi\"", "ts")
                 );
 
             assertThat(check)
@@ -65,8 +64,8 @@ class ColumnsWithTimestampOrTimetzTypeCheckOnClusterTest extends DatabaseAwareTe
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.ofTimestamp(Column.ofNotNull(ctx, "tp", "creation_date")),
-                    ColumnWithType.ofTimestamp(Column.ofNotNull(ctx, "tp_good", "creation_date"))
+                    Column.ofTimestamp(ctx, "tp", "creation_date"),
+                    Column.ofTimestamp(ctx, "tp_good", "creation_date")
                 )
         );
     }

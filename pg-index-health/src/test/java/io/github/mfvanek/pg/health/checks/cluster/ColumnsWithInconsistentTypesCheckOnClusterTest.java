@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
@@ -29,12 +28,12 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class ColumnsWithInconsistentTypesCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<@NonNull ColumnWithType> check = new ColumnsWithInconsistentTypesCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull Column> check = new ColumnsWithInconsistentTypesCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(ColumnWithType.class)
+            .hasType(Column.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_INCONSISTENT_TYPES)
             .isStatic();
     }
@@ -48,22 +47,22 @@ class ColumnsWithInconsistentTypesCheckOnClusterTest extends DatabaseAwareTestBa
                 .hasSize(6)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.ofTimestamp(Column.ofNotNull(ctx, "\"t-int-id\"", "created_at")),
-                    ColumnWithType.ofTimestamptz(Column.ofNotNull(ctx, "t_uuid_id", "created_at")),
-                    ColumnWithType.ofBigint(Column.ofNotNull(ctx, "accounts", "id")),
-                    ColumnWithType.ofBigint(Column.ofNotNull(ctx, "clients", "id")),
-                    ColumnWithType.ofInteger(Column.ofNotNull(ctx, "\"t-int-id\"", "id")),
-                    ColumnWithType.ofUuid(Column.ofNotNull(ctx, "t_uuid_id", "id")));
+                    Column.ofTimestamp(ctx, "\"t-int-id\"", "created_at"),
+                    Column.ofTimestamptz(ctx, "t_uuid_id", "created_at"),
+                    Column.ofBigint(ctx, "accounts", "id"),
+                    Column.ofBigint(ctx, "clients", "id"),
+                    Column.ofInteger(ctx, "\"t-int-id\"", "id"),
+                    Column.ofUuid(ctx, "t_uuid_id", "id"));
 
             assertThat(check)
                 .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("clients", "accounts")))
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.ofTimestamp(Column.ofNotNull(ctx, "\"t-int-id\"", "created_at")),
-                    ColumnWithType.ofTimestamptz(Column.ofNotNull(ctx, "t_uuid_id", "created_at")),
-                    ColumnWithType.ofInteger(Column.ofNotNull(ctx, "\"t-int-id\"", "id")),
-                    ColumnWithType.ofUuid(Column.ofNotNull(ctx, "t_uuid_id", "id")));
+                    Column.ofTimestamp(ctx, "\"t-int-id\"", "created_at"),
+                    Column.ofTimestamptz(ctx, "t_uuid_id", "created_at"),
+                    Column.ofInteger(ctx, "\"t-int-id\"", "id"),
+                    Column.ofUuid(ctx, "t_uuid_id", "id"));
 
             // Excluding "t_uuid_id" leaves "created_at" with a single type (timestamp): it is no longer
             // inconsistent and is dropped, while "id" keeps two distinct types and survives.
@@ -72,9 +71,9 @@ class ColumnsWithInconsistentTypesCheckOnClusterTest extends DatabaseAwareTestBa
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.ofBigint(Column.ofNotNull(ctx, "accounts", "id")),
-                    ColumnWithType.ofBigint(Column.ofNotNull(ctx, "clients", "id")),
-                    ColumnWithType.ofInteger(Column.ofNotNull(ctx, "\"t-int-id\"", "id")));
+                    Column.ofBigint(ctx, "accounts", "id"),
+                    Column.ofBigint(ctx, "clients", "id"),
+                    Column.ofInteger(ctx, "\"t-int-id\"", "id"));
         });
     }
 
@@ -87,11 +86,11 @@ class ColumnsWithInconsistentTypesCheckOnClusterTest extends DatabaseAwareTestBa
                 .hasSize(6)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.ofTimestamptz(Column.ofNotNull(ctx, "pt_one", "created_at")),
-                    ColumnWithType.ofTimestamp(Column.ofNotNull(ctx, "pt_two", "created_at")),
-                    ColumnWithType.ofBigint(Column.ofNotNull(ctx, "accounts", "id")),
-                    ColumnWithType.ofBigint(Column.ofNotNull(ctx, "clients", "id")),
-                    ColumnWithType.ofUuid(Column.ofNotNull(ctx, "pt_one", "id")),
-                    ColumnWithType.ofBigint(Column.ofNotNull(ctx, "pt_two", "id"))));
+                    Column.ofTimestamptz(ctx, "pt_one", "created_at"),
+                    Column.ofTimestamp(ctx, "pt_two", "created_at"),
+                    Column.ofBigint(ctx, "accounts", "id"),
+                    Column.ofBigint(ctx, "clients", "id"),
+                    Column.ofUuid(ctx, "pt_one", "id"),
+                    Column.ofBigint(ctx, "pt_two", "id")));
     }
 }

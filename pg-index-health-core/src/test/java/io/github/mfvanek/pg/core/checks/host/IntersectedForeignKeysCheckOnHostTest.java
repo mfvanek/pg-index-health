@@ -24,8 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class IntersectedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
@@ -52,9 +50,9 @@ class IntersectedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
                 .containsExactly(
                     DuplicatedForeignKeys.of(
                         ForeignKey.of(ctx, "client_preferences", "c_client_preferences_email_phone_fk",
-                            List.of(Column.ofNotNull(ctx, "client_preferences", "email"), Column.ofNotNull(ctx, "client_preferences", "\"Phone\""))),
+                            Column.ofVarchar(ctx, "client_preferences", "email"), Column.ofVarchar(ctx, "client_preferences", "\"Phone\"")),
                         ForeignKey.of(ctx, "client_preferences", "c_client_preferences_phone_email_fk",
-                            List.of(Column.ofNotNull(ctx, "client_preferences", "\"Phone\""), Column.ofNotNull(ctx, "client_preferences", "email"))))
+                            Column.ofVarchar(ctx, "client_preferences", "\"Phone\""), Column.ofVarchar(ctx, "client_preferences", "email")))
                 );
 
             assertThat(check)
@@ -73,13 +71,13 @@ class IntersectedForeignKeysCheckOnHostTest extends DatabaseAwareTestBase {
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
                     DuplicatedForeignKeys.of(
-                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
+                        ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
                         ForeignKey.of(ctx, "t1", "t1_ref_type_ref_value_fk",
-                            List.of(Column.ofNotNull(ctx, "t1", "ref_type"), Column.ofNotNull(ctx, "t1", "ref_value")))),
+                            Column.ofBigint(ctx, "t1", "ref_type"), Column.ofVarchar(ctx, "t1", "ref_value"))),
                     DuplicatedForeignKeys.of(
-                        ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type"),
+                        ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fkey", "ref_type"),
                         ForeignKey.of(ctx, "t1", "t1_ref_type_ref_value_fk",
-                            List.of(Column.ofNotNull(ctx, "t1", "ref_type"), Column.ofNotNull(ctx, "t1", "ref_value"))))
+                            Column.ofBigint(ctx, "t1", "ref_type"), Column.ofVarchar(ctx, "t1", "ref_value")))
                 ));
     }
 }

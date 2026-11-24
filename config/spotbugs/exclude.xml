@@ -58,7 +58,7 @@
         <Class name="io.github.mfvanek.pg.model.fixtures.support.TestUtils"/>
     </Match>
     <Match>
-        <Bug pattern="CE_CLASS_ENVY,SEC_SIDE_EFFECT_CONSTRUCTOR,EC_UNRELATED_TYPES,EC_UNRELATED_CLASS_AND_INTERFACE,UVA_POSSIBLE_EXCESS_NULL"/>
+        <Bug pattern="CE_CLASS_ENVY,SEC_SIDE_EFFECT_CONSTRUCTOR,EC_UNRELATED_TYPES,EC_UNRELATED_CLASS_AND_INTERFACE,UVA_POSSIBLE_EXCESS_NULL,UVA_REMOVE_NULL_ARG"/>
         <Class name="~.*Test"/>
     </Match>
     <Match>

@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.model.jackson3.index;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
@@ -23,15 +24,16 @@ class IndexWithColumnsSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() {
+        final PgContext ctx = PgContext.ofDefault();
         final List<Column> columns = List.of(
-            Column.ofNullable("t3", "t"),
-            Column.ofNullable("t3", "f"));
-        final IndexWithColumns original = IndexWithColumns.ofColumns("t3", "i3", 2L, columns);
+            Column.ofNullableBigint(ctx, "t3", "t"),
+            Column.ofNullableBigint(ctx, "t3", "f"));
+        final IndexWithColumns original = IndexWithColumns.of(ctx, "t3", "i3", 2L, columns);
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"index":{"tableName":"t3","indexName":"i3","indexSizeInBytes":2},"columns":[\
-                {"tableName":"t3","columnName":"t","notNull":false},\
-                {"tableName":"t3","columnName":"f","notNull":false}]}""");
+                {"tableName":"t3","columnName":"t","notNull":false,"columnType":"bigint"},\
+                {"tableName":"t3","columnName":"f","notNull":false,"columnType":"bigint"}]}""");
         final IndexWithColumns restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), IndexWithColumns.class);
         assertThat(restored)
             .usingRecursiveComparison()

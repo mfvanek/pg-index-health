@@ -159,8 +159,8 @@ class DatabaseStructureStaticAnalysisTest {
                         .asInstanceOf(list(Column.class))
                         .usingRecursiveFieldByFieldElementComparator()
                         .containsExactly(
-                            Column.ofNotNull(ctx, "additional_table", "id"),
-                            Column.ofNotNull(ctx, "additional_table", "name")
+                            Column.ofBigint(ctx, "additional_table", "id"),
+                            Column.ofText(ctx, "additional_table", "name")
                         );
 
                     case "PRIMARY_KEYS_WITH_SERIAL_TYPES" -> listAssert
@@ -168,7 +168,7 @@ class DatabaseStructureStaticAnalysisTest {
                         .asInstanceOf(list(ColumnWithSerialType.class))
                         .usingRecursiveFieldByFieldElementComparator()
                         .containsExactly(
-                            ColumnWithSerialType.ofBigSerial(ctx, Column.ofNotNull(ctx, "additional_table", "id"), "additional_table_id_seq")
+                            ColumnWithSerialType.ofBigSerial(ctx, "additional_table", "id", "additional_table_id_seq")
                         );
 
                     default -> listAssert.isEmpty();

@@ -13,7 +13,7 @@ package io.github.mfvanek.pg.model.jackson2.column;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import io.github.mfvanek.pg.model.column.ColumnTypeAware;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 
@@ -33,9 +33,7 @@ public class ColumnWithSerialTypeSerializer extends JsonSerializer<ColumnWithSer
     @Override
     public void serialize(final ColumnWithSerialType value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
-        serializers.defaultSerializeField(ColumnTypeAware.COLUMN_FIELD, value.toColumn(), gen);
-        gen.writeStringField(ColumnTypeAware.COLUMN_TYPE_FIELD, value.getColumnType());
-        gen.writeStringField(ColumnWithSerialType.SERIAL_TYPE_FIELD, value.getSerialType().name());
+        serializers.defaultSerializeField(ColumnNameAware.COLUMN_FIELD, value.toColumn(), gen);
         gen.writeStringField(SequenceNameAware.SEQUENCE_NAME_FIELD, value.getSequenceName());
         gen.writeEndObject();
     }

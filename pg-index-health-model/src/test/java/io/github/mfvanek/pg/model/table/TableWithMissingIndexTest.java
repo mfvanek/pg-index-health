@@ -62,7 +62,7 @@ class TableWithMissingIndexTest {
             .hasMessage("table cannot be null");
         assertThatThrownBy(() -> TableWithMissingIndex.of(null, "t", 0L, 0L, 0L))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
     }
 
     @Test

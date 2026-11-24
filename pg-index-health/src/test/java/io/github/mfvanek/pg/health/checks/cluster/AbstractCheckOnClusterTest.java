@@ -19,8 +19,6 @@ import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.index.UnusedIndex;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.logging.Level;
 
@@ -41,16 +39,15 @@ class AbstractCheckOnClusterTest extends DatabaseAwareTestBase {
         }
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = PgContext.DEFAULT_SCHEMA_NAME)
-    void forPublicSchema(final String schemaName) {
+    @Test
+    void forPublicSchema() {
         try (LogsCaptor ignored = new LogsCaptor(AbstractCheckOnCluster.class, Level.FINEST)) {
-            executeTestOnDatabase(schemaName, dbp -> dbp.withBooleanAndNullValuesInIndexes().withData(), ctx ->
+            executeTestOnDatabase(PgContext.DEFAULT_SCHEMA_NAME, dbp -> dbp.withBooleanAndNullValuesInIndexes().withData(), ctx ->
                 assertThat(check.check()) // executing on default schema
                     .hasSize(2)
                     .containsExactly(
-                        IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name", "middle_name"),
-                        IndexWithColumns.ofNullable(PgContext.ofDefault(), "clients", "i_clients_middle_name_known_last_name", "middle_name"))
+                        IndexWithColumns.ofNullableVarchar(ctx, "clients", "i_clients_middle_name", "middle_name"),
+                        IndexWithColumns.ofNullableVarchar(ctx, "clients", "i_clients_middle_name_known_last_name", "middle_name"))
             );
         }
     }

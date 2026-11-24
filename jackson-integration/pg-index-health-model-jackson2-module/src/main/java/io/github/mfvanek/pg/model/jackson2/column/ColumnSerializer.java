@@ -36,6 +36,7 @@ public class ColumnSerializer extends JsonSerializer<Column> {
         gen.writeStringField(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
         gen.writeStringField(ColumnNameAware.COLUMN_NAME_FIELD, value.getColumnName());
         gen.writeBooleanField(ColumnNameAware.NOT_NULL_FIELD, value.isNotNull());
+        gen.writeStringField(ColumnNameAware.COLUMN_TYPE_FIELD, value.getColumnType());
         gen.writeEndObject();
     }
 }

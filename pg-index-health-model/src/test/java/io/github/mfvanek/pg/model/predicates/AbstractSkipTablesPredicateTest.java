@@ -33,7 +33,7 @@ class AbstractSkipTablesPredicateTest {
     void shouldThrowExceptionWhenInvalidDataPassed() {
         assertThatThrownBy(() -> new SkipTablesPredicate(null, null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
 
         final PgContext ctx = PgContext.ofDefault();
         assertThatThrownBy(() -> new SkipTablesPredicate(ctx, null))
@@ -60,8 +60,8 @@ class AbstractSkipTablesPredicateTest {
 
     private static class SkipTablesPredicate extends AbstractSkipTablesPredicate {
 
-        SkipTablesPredicate(final PgContext pgContext, final Collection<String> rawTableNamesToSkip) {
-            super(pgContext, rawTableNamesToSkip);
+        SkipTablesPredicate(final PgContext ctx, final Collection<String> rawTableNamesToSkip) {
+            super(ctx, rawTableNamesToSkip);
         }
     }
 }

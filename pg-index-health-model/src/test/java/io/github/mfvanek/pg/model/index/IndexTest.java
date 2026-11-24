@@ -43,7 +43,7 @@ class IndexTest {
             .hasMessage("indexName cannot be blank");
         assertThatThrownBy(() -> Index.of(null, null, null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
     }
 
     @Test

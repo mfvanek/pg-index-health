@@ -34,6 +34,7 @@ public class ColumnSerializer extends ValueSerializer<Column> {
         gen.writeStringProperty(TableNameAware.TABLE_NAME_FIELD, value.getTableName());
         gen.writeStringProperty(ColumnNameAware.COLUMN_NAME_FIELD, value.getColumnName());
         gen.writeBooleanProperty(ColumnNameAware.NOT_NULL_FIELD, value.isNotNull());
+        gen.writeStringProperty(ColumnNameAware.COLUMN_TYPE_FIELD, value.getColumnType());
         gen.writeEndObject();
     }
 }

@@ -49,10 +49,10 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id"),
+                    ForeignKey.ofBigint(ctx, "accounts", "c_accounts_fk_client_id", "client_id"),
                     ForeignKey.of(ctx, "bad_clients", "c_bad_clients_fk_email_phone",
-                        List.of(Column.ofNullable(ctx, "bad_clients", "email"), Column.ofNullable(ctx, "bad_clients", "phone"))),
-                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id")
+                        Column.ofNullableVarchar(ctx, "bad_clients", "email"), Column.ofNullableVarchar(ctx, "bad_clients", "phone")),
+                    ForeignKey.ofNullableInteger(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id")
                 );
 
             assertThat(check)
@@ -70,7 +70,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNotNullColumn(ctx, "accounts", "c_accounts_fk_client_id", "client_id")
+                    ForeignKey.ofBigint(ctx, "accounts", "c_accounts_fk_client_id", "client_id")
                 );
 
             assertThat(check)
@@ -102,12 +102,11 @@ class ForeignKeysNotCoveredWithIndexCheckOnClusterTest extends DatabaseAwareTest
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.of(ctx, tableName, "\"referencing_bad_table_partitioned-fk\"", List.of(
-                        Column.ofNotNull(ctx, tableName, "rbt_id"),
-                        Column.ofNullable(ctx, tableName, "rbt_value")
-                    )),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type")
+                    ForeignKey.of(ctx, tableName, "\"referencing_bad_table_partitioned-fk\"",
+                        Column.ofInteger(ctx, tableName, "rbt_id"),
+                        Column.ofNullableText(ctx, tableName, "rbt_value")),
+                    ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
+                    ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fkey", "ref_type")
                 );
         });
     }

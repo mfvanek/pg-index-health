@@ -69,7 +69,7 @@ class TableWithBloatTest {
             .hasMessage("tableSizeInBytes cannot be less than zero");
         assertThatThrownBy(() -> TableWithBloat.of(null, "t", 0L, 0L, 0))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
 
         assertThat(TableWithBloat.of("t", 0L, 0L, 0))
             .isNotNull();

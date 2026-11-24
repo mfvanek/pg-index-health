@@ -48,10 +48,10 @@ class ForeignKeysWithUnmatchedColumnTypeCheckOnHostTest extends DatabaseAwareTes
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_email_phone", "phone"),
-                    ForeignKey.ofNullableColumn(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id"),
-                    ForeignKey.ofNotNullColumn(ctx, "client_preferences", "c_client_preferences_email_phone_fk", "\"Phone\""),
-                    ForeignKey.ofNotNullColumn(ctx, "client_preferences", "c_client_preferences_phone_email_fk", "\"Phone\"")
+                    ForeignKey.ofNullableVarchar(ctx, "bad_clients", "c_bad_clients_fk_email_phone", "phone"),
+                    ForeignKey.ofNullableInteger(ctx, "bad_clients", "c_bad_clients_fk_real_client_id", "real_client_id"),
+                    ForeignKey.ofVarchar(ctx, "client_preferences", "c_client_preferences_email_phone_fk", "\"Phone\""),
+                    ForeignKey.ofVarchar(ctx, "client_preferences", "c_client_preferences_phone_email_fk", "\"Phone\"")
                 );
 
             assertThat(check)
@@ -69,11 +69,11 @@ class ForeignKeysWithUnmatchedColumnTypeCheckOnHostTest extends DatabaseAwareTes
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.ofNullableColumn(ctx, "referencing_bad_table_partitioned", "\"referencing_bad_table_partitioned-fk\"", "rbt_value"),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_fkey", "ref_type"),
-                    ForeignKey.ofNotNullColumn(ctx, "t1", "t1_ref_type_ref_value_fk", "ref_type"),
-                    ForeignKey.ofNullableColumn(ctx, "t3", "t3_ref_type_fkey", "ref_type")
+                    ForeignKey.ofNullableText(ctx, "referencing_bad_table_partitioned", "\"referencing_bad_table_partitioned-fk\"", "rbt_value"),
+                    ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fk_duplicate", "ref_type"),
+                    ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_fkey", "ref_type"),
+                    ForeignKey.ofBigint(ctx, "t1", "t1_ref_type_ref_value_fk", "ref_type"),
+                    ForeignKey.ofNullableBigint(ctx, "t3", "t3_ref_type_fkey", "ref_type")
                 ));
     }
 }

@@ -32,7 +32,7 @@ class SkipFlywayTablesPredicateTest {
     void shouldThrowExceptionWhenPgContextIsNull() {
         assertThatThrownBy(() -> SkipFlywayTablesPredicate.of(null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
     }
 
     @Test

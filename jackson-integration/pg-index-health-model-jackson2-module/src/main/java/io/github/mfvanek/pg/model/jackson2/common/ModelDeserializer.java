@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnTypeAware;
+import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.index.Index;
@@ -72,7 +72,7 @@ public abstract class ModelDeserializer<T extends DbObject> extends AbstractDese
     protected final Column getColumn(final ObjectCodec codec,
                                      final JsonNode rootNode,
                                      final DeserializationContext ctxt) throws IOException {
-        return codec.treeToValue(getNotNullNode(ctxt, rootNode, ColumnTypeAware.COLUMN_FIELD), Column.class);
+        return codec.treeToValue(getNotNullNode(ctxt, rootNode, ColumnNameAware.COLUMN_FIELD), Column.class);
     }
 
     /**

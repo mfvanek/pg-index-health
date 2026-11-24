@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
 import org.jspecify.annotations.NonNull;
@@ -29,12 +28,12 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class ColumnsWithFixedLengthVarcharCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<@NonNull ColumnWithType> check = new ColumnsWithFixedLengthVarcharCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull Column> check = new ColumnsWithFixedLengthVarcharCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(ColumnWithType.class)
+            .hasType(Column.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_FIXED_LENGTH_VARCHAR)
             .isStatic();
     }
@@ -48,12 +47,12 @@ class ColumnsWithFixedLengthVarcharCheckOnClusterTest extends DatabaseAwareTestB
                 .hasSize(6)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "accounts", "account_number")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "email")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "first_name")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "last_name")),
-                    ColumnWithType.ofVarchar(Column.ofNullable(ctx, "clients", "middle_name")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "phone"))
+                    Column.ofVarchar(ctx, "accounts", "account_number"),
+                    Column.ofVarchar(ctx, "clients", "email"),
+                    Column.ofVarchar(ctx, "clients", "first_name"),
+                    Column.ofVarchar(ctx, "clients", "last_name"),
+                    Column.ofNullableVarchar(ctx, "clients", "middle_name"),
+                    Column.ofVarchar(ctx, "clients", "phone")
                 ));
     }
 
@@ -66,11 +65,11 @@ class ColumnsWithFixedLengthVarcharCheckOnClusterTest extends DatabaseAwareTestB
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "email")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "first_name")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "last_name")),
-                    ColumnWithType.ofVarchar(Column.ofNullable(ctx, "clients", "middle_name")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "clients", "phone"))
+                    Column.ofVarchar(ctx, "clients", "email"),
+                    Column.ofVarchar(ctx, "clients", "first_name"),
+                    Column.ofVarchar(ctx, "clients", "last_name"),
+                    Column.ofNullableVarchar(ctx, "clients", "middle_name"),
+                    Column.ofVarchar(ctx, "clients", "phone")
                 ));
     }
 
@@ -83,13 +82,13 @@ class ColumnsWithFixedLengthVarcharCheckOnClusterTest extends DatabaseAwareTestB
                 .hasSize(7)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.ofVarchar(Column.ofNullable(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_1234567", "ref_type")),
-                    ColumnWithType.ofVarchar(Column.ofNullable(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_1234567", "ref_value")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "parent", "entity_id")),
-                    ColumnWithType.ofVarchar(Column.ofNullable(ctx, "parent", "ref_type")),
-                    ColumnWithType.ofVarchar(Column.ofNullable(ctx, "parent", "ref_value")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "tp", "entity_id")),
-                    ColumnWithType.ofVarchar(Column.ofNotNull(ctx, "tp", "ref_type"))
+                    Column.ofNullableVarchar(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_1234567", "ref_type"),
+                    Column.ofNullableVarchar(ctx, "entity_long_1234567890_1234567890_1234567890_1234567890_1234567", "ref_value"),
+                    Column.ofVarchar(ctx, "parent", "entity_id"),
+                    Column.ofNullableVarchar(ctx, "parent", "ref_type"),
+                    Column.ofNullableVarchar(ctx, "parent", "ref_value"),
+                    Column.ofVarchar(ctx, "tp", "entity_id"),
+                    Column.ofVarchar(ctx, "tp", "ref_type")
                 ));
     }
 }

@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.core.utils;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -45,45 +46,85 @@ class ColumnsDataParserTest {
     }
 
     @Test
+    void shouldThrowExceptionWhenTypeIsMissing() {
+        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "c1,true"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Cannot parse column info from c1,true");
+        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", ",true"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Cannot parse column info from ,true");
+        assertThatThrownBy(() -> ColumnsDataParser.parseRawColumnsInTable("t", "c1,true,"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("columnType cannot be blank");
+    }
+
+    @Test
     void shouldWorkWhenValidDataPassed() {
-        assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "c1, true", "c2, false", "c3, abracadabra"))
+        final PgContext ctx = PgContext.ofDefault();
+        assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "c1, true, bigint", "c2, false, text", "c3, abracadabra, integer[]"))
             .hasSize(3)
+            .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
-                Column.ofNotNull("t", "c1"),
-                Column.ofNullable("t", "c2"),
-                Column.ofNullable("t", "c3"))
+                Column.ofBigint(ctx, "t", "c1"),
+                Column.ofNullableText(ctx, "t", "c2"),
+                Column.ofNullable(ctx, "t", "c3", "integer[]"))
             .isUnmodifiable();
     }
 
     @Test
     void shouldWorkWithoutSpaces() {
-        assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "c1,true", "c2,false", "c3,abracadabra"))
+        final PgContext ctx = PgContext.ofDefault();
+        assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "c1,true,bigint", "c2,false,text", "c3,abracadabra,integer[]"))
             .hasSize(3)
+            .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
-                Column.ofNotNull("t", "c1"),
-                Column.ofNullable("t", "c2"),
-                Column.ofNullable("t", "c3"))
+                Column.ofBigint(ctx, "t", "c1"),
+                Column.ofNullableText(ctx, "t", "c2"),
+                Column.ofNullable(ctx, "t", "c3", "integer[]"))
             .isUnmodifiable();
     }
 
     @Test
     void shouldWorkWithExtraSpaces() {
-        assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "  c1,  true  ", "   c2,   false   "))
+        final PgContext ctx = PgContext.ofDefault();
+        assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "  c1,  true  , timestamp with time zone ", "   c2,   false   ,  character varying  "))
             .hasSize(2)
+            .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
-                Column.ofNotNull("t", "c1"),
-                Column.ofNullable("t", "c2"))
+                Column.ofTimestamptz(ctx, "t", "c1"),
+                Column.ofNullableVarchar(ctx, "t", "c2"))
+            .isUnmodifiable();
+    }
+
+    @Test
+    void shouldWorkWithQuotedNamesContainingCommas() {
+        final PgContext ctx = PgContext.ofDefault();
+        assertThat(ColumnsDataParser.parseRawColumnsInTable("t", "\"Name\",false,text", "\"a,b\",true,integer", "\"x,true,y\",false,boolean"))
+            .hasSize(3)
+            .usingRecursiveFieldByFieldElementComparator()
+            .containsExactly(
+                Column.ofNullableText(ctx, "t", "\"Name\""),
+                Column.ofInteger(ctx, "t", "\"a,b\""),
+                Column.ofNullableBoolean(ctx, "t", "\"x,true,y\""))
             .isUnmodifiable();
     }
 
     @Test
     void shouldWorkWithExpressions() {
-        assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "id,true", "\"date_trunc('day'::text, ts)\",true", "name,false"))
+        final PgContext ctx = PgContext.ofDefault();
+        assertThat(ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex("t", "id,true,integer", "\"date_trunc('day'::text, ts)\",true,timestamp without time zone", "name,false,text"))
             .hasSize(3)
+            .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
-                Column.ofNotNull("t", "id"),
-                Column.ofNotNull("t", "\"date_trunc('day'::text, ts)\""),
-                Column.ofNullable("t", "name"))
+                Column.ofInteger(ctx, "t", "id"),
+                Column.ofTimestamp(ctx, "t", "\"date_trunc('day'::text, ts)\""),
+                Column.ofNullableText(ctx, "t", "name"))
             .isUnmodifiable();
+    }
+
+    @Test
+    void shouldAllowZeroColumnsInTable() {
+        assertThat(ColumnsDataParser.parseRawColumnsInTable("t"))
+            .isEmpty();
     }
 }

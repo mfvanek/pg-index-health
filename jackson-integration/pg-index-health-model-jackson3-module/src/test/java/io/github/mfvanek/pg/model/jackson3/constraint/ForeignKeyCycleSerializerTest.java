@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model.jackson3.constraint;
 
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
 import io.github.mfvanek.pg.model.constraint.ForeignKeyCycle;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.exc.MismatchedInputException;
@@ -23,14 +24,15 @@ class ForeignKeyCycleSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() {
+        final PgContext ctx = PgContext.ofDefault();
         final ForeignKeyCycle original = ForeignKeyCycle.of(
-            ForeignKey.ofNotNullColumn("t1", "c1", "col1"),
-            ForeignKey.ofNullableColumn("t2", "c2", "col2"));
+            ForeignKey.ofBigint(ctx, "t1", "c1", "col1"),
+            ForeignKey.ofNullableBigint(ctx, "t2", "c2", "col2"));
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"foreignKeys":[\
-                {"constraint":{"tableName":"t1","constraintName":"c1","constraintType":"FOREIGN_KEY"},"columns":[{"tableName":"t1","columnName":"col1","notNull":true}]},\
-                {"constraint":{"tableName":"t2","constraintName":"c2","constraintType":"FOREIGN_KEY"},"columns":[{"tableName":"t2","columnName":"col2","notNull":false}]}]}""");
+                {"constraint":{"tableName":"t1","constraintName":"c1","constraintType":"FOREIGN_KEY"},"columns":[{"tableName":"t1","columnName":"col1","notNull":true,"columnType":"bigint"}]},\
+                {"constraint":{"tableName":"t2","constraintName":"c2","constraintType":"FOREIGN_KEY"},"columns":[{"tableName":"t2","columnName":"col2","notNull":false,"columnType":"bigint"}]}]}""");
         final ForeignKeyCycle restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), ForeignKeyCycle.class);
         assertThat(restored)
             .isEqualTo(original);

@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model.jackson3.column;
 
-import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.jackson3.support.ObjectMapperTestBase;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.exc.MismatchedInputException;
@@ -23,11 +23,12 @@ class ColumnWithSerialTypeSerializerTest extends ObjectMapperTestBase {
 
     @Test
     void serializationShouldWork() {
-        final ColumnWithSerialType original = ColumnWithSerialType.ofSmallSerial(Column.ofNotNull("t1", "c1"), "seq1");
+        final PgContext ctx = PgContext.ofDefault();
+        final ColumnWithSerialType original = ColumnWithSerialType.ofSmallSerial(ctx, "t1", "c1", "seq1");
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
-                {"column":{"tableName":"t1","columnName":"c1","notNull":true},\
-                "columnType":"smallserial","serialType":"SMALL_SERIAL","sequenceName":"seq1"}""");
+                {"column":{"tableName":"t1","columnName":"c1","notNull":true,"columnType":"smallserial"},\
+                "sequenceName":"seq1"}""");
         final ColumnWithSerialType restored = objectMapper.readValue(objectMapper.writeValueAsBytes(original), ColumnWithSerialType.class);
         assertThat(restored)
             .usingRecursiveComparison()
@@ -40,12 +41,7 @@ class ColumnWithSerialTypeSerializerTest extends ObjectMapperTestBase {
             .isInstanceOf(MismatchedInputException.class)
             .hasMessageStartingWith("Missing required field: column");
         assertThatThrownBy(() -> objectMapper.readValue("""
-            {"column":{"tableName":"t1","columnName":"c1","notNull":true}}""", ColumnWithSerialType.class))
-            .isInstanceOf(MismatchedInputException.class)
-            .hasMessageStartingWith("Missing required field: serialType");
-        assertThatThrownBy(() -> objectMapper.readValue("""
-            {"column":{"tableName":"t1","columnName":"c1","notNull":true},\
-            "columnType":"smallserial","serialType":"SMALL_SERIAL"}""", ColumnWithSerialType.class))
+            {"column":{"tableName":"t1","columnName":"c1","notNull":true,"columnType":"smallserial"}}""", ColumnWithSerialType.class))
             .isInstanceOf(MismatchedInputException.class)
             .hasMessageStartingWith("Missing required field: sequenceName");
     }

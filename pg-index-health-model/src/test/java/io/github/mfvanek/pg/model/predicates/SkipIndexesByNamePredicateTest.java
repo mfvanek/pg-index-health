@@ -10,8 +10,8 @@
 
 package io.github.mfvanek.pg.model.predicates;
 
-import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.DuplicatedIndexes;
 import io.github.mfvanek.pg.model.index.Index;
@@ -53,7 +53,7 @@ class SkipIndexesByNamePredicateTest {
 
         assertThatThrownBy(() -> SkipIndexesByNamePredicate.of(null, null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
 
         final PgContext ctx = PgContext.ofDefault();
         assertThatThrownBy(() -> SkipIndexesByNamePredicate.of(ctx, null))
@@ -111,10 +111,11 @@ class SkipIndexesByNamePredicateTest {
 
     @Test
     void shouldWorkForMultipleItems() {
+        final PgContext ctx = PgContext.ofDefault();
         assertThat(SkipIndexesByNamePredicate.ofDefault(Set.of("i1", "I2")))
             .accepts(Table.of("t"))
             .accepts(SequenceState.of("s11", "int", 80.0))
-            .accepts(ColumnWithSerialType.ofSerial(Column.ofNullable("t", "c"), "s1"))
+            .accepts(ColumnWithSerialType.of(ctx, "t", "c", false, PgColumnType.SERIAL, "s1"))
             .accepts(DuplicatedIndexes.of(
                 Index.of("t1", "i", 1L),
                 Index.of("t1", "i3", 1L)))

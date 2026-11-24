@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
@@ -26,12 +25,12 @@ import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assert
 
 class ColumnsWithEnumTypeCheckOnHostTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnHost<@NonNull ColumnWithType> check = new ColumnsWithEnumTypeCheckOnHost(getPgConnection());
+    private final DatabaseCheckOnHost<@NonNull Column> check = new ColumnsWithEnumTypeCheckOnHost(getPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(ColumnWithType.class)
+            .hasType(Column.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_ENUM_TYPE)
             .hasHost(getHost())
             .isStatic();
@@ -46,11 +45,11 @@ class ColumnsWithEnumTypeCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.of(Column.ofNotNull(ctx, "\"Bad-Orders\"", "\"Bad-Status\""), ctx.enrichWithSchema("order_status")),
-                    ColumnWithType.of(Column.ofNullable(ctx, "orders", "previous_status"), ctx.enrichWithSchema("order_status")),
-                    ColumnWithType.of(Column.ofNotNull(ctx, "orders", "status"), ctx.enrichWithSchema("order_status")),
-                    ColumnWithType.of(Column.ofNullable(ctx, "orders", "status_history"), ctx.enrichWithSchema("order_status[]")),
-                    ColumnWithType.of(Column.ofNotNull(ctx, "orders", "status_matrix"), ctx.enrichWithSchema("order_status[]"))
+                    Column.ofNotNull(ctx, "\"Bad-Orders\"", "\"Bad-Status\"", ctx.enrichWithSchema("order_status")),
+                    Column.ofNullable(ctx, "orders", "previous_status", ctx.enrichWithSchema("order_status")),
+                    Column.ofNotNull(ctx, "orders", "status", ctx.enrichWithSchema("order_status")),
+                    Column.ofNullable(ctx, "orders", "status_history", ctx.enrichWithSchema("order_status[]")),
+                    Column.ofNotNull(ctx, "orders", "status_matrix", ctx.enrichWithSchema("order_status[]"))
                 ));
     }
 
@@ -63,7 +62,7 @@ class ColumnsWithEnumTypeCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.of(Column.ofNotNull(ctx, "deliveries", "status"), ctx.enrichWithSchema("delivery_status"))
+                    Column.ofNotNull(ctx, "deliveries", "status", ctx.enrichWithSchema("delivery_status"))
                 ));
     }
 }

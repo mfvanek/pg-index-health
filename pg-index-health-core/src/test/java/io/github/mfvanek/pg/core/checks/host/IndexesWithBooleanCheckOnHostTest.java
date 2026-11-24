@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipIndexesByNamePredicate;
@@ -50,11 +51,11 @@ class IndexesWithBooleanCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "accounts", "i_accounts_balance_lower_number_deleted", 0L, List.of(
-                        Column.ofNotNull(ctx, "accounts", "account_balance"),
-                        Column.ofNotNull(ctx, "accounts", "deleted"))),
-                    IndexWithColumns.ofSingle(ctx, "accounts", "i_accounts_deleted", 0L,
-                        Column.ofNotNull(ctx, "accounts", "deleted")))
+                    IndexWithColumns.of(ctx, "accounts", "i_accounts_balance_lower_number_deleted",
+                        Column.ofNotNull(ctx, "accounts", "account_balance", PgColumnType.NUMERIC),
+                        Column.ofBoolean(ctx, "accounts", "deleted")),
+                    IndexWithColumns.of(ctx, "accounts", "i_accounts_deleted",
+                        Column.ofBoolean(ctx, "accounts", "deleted")))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -76,13 +77,13 @@ class IndexesWithBooleanCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted", 0L,
-                        Column.ofNotNull(ctx, "t1", "deleted")),
-                    IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted_duplicate", 0L,
-                        Column.ofNotNull(ctx, "t1", "deleted")),
-                    IndexWithColumns.ofColumns(ctx, "t1", "idx_t1_deleted_entity_id", 0L, List.of(
-                        Column.ofNotNull(ctx, "t1", "deleted"),
-                        Column.ofNotNull(ctx, "t1", "entity_id")))
+                    IndexWithColumns.of(ctx, "t1", "idx_t1_deleted",
+                        Column.ofBoolean(ctx, "t1", "deleted")),
+                    IndexWithColumns.of(ctx, "t1", "idx_t1_deleted_duplicate",
+                        Column.ofBoolean(ctx, "t1", "deleted")),
+                    IndexWithColumns.of(ctx, "t1", "idx_t1_deleted_entity_id",
+                        Column.ofBoolean(ctx, "t1", "deleted"),
+                        Column.ofVarchar(ctx, "t1", "entity_id"))
                 ));
     }
 }

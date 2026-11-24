@@ -158,18 +158,18 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
     /**
      * Constructs an {@code Index} object with given context.
      *
-     * @param pgContext        the schema context to enrich table and index name; must be non-null.
+     * @param ctx              the schema context to enrich table and index name; must be non-null.
      * @param tableName        table name; should be non-blank.
      * @param indexName        index name; should be non-blank.
      * @param indexSizeInBytes index size in bytes; should be positive or zero.
      * @return {@code Index}
      * @since 0.15.0
      */
-    public static Index of(final PgContext pgContext,
+    public static Index of(final PgContext ctx,
                            final String tableName,
                            final String indexName,
                            final long indexSizeInBytes) {
-        return of(PgContext.enrichWith(tableName, pgContext), PgContext.enrichWith(indexName, pgContext), indexSizeInBytes);
+        return of(PgContext.enrichWith(tableName, ctx), PgContext.enrichWith(indexName, ctx), indexSizeInBytes);
     }
 
     /**
@@ -187,15 +187,15 @@ public final class Index implements DbObject, TableNameAware, IndexSizeAware, Co
     /**
      * Constructs an {@code Index} object with zero size and given context.
      *
-     * @param pgContext the schema context to enrich table and index name; must be non-null.
+     * @param ctx       the schema context to enrich table and index name; must be non-null.
      * @param tableName table name; should be non-blank.
      * @param indexName index name; should be non-blank.
      * @return {@code Index}
      * @since 0.14.3
      */
-    public static Index of(final PgContext pgContext,
+    public static Index of(final PgContext ctx,
                            final String tableName,
                            final String indexName) {
-        return of(pgContext, tableName, indexName, 0L);
+        return of(ctx, tableName, indexName, 0L);
     }
 }

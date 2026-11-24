@@ -12,7 +12,6 @@ package io.github.mfvanek.pg.model.jackson3.column;
 
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnWithSerialType;
-import io.github.mfvanek.pg.model.column.SerialType;
 import io.github.mfvanek.pg.model.jackson3.common.ModelDeserializer;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 import tools.jackson.core.JsonParser;
@@ -34,8 +33,7 @@ public class ColumnWithSerialTypeDeserializer extends ModelDeserializer<ColumnWi
     public ColumnWithSerialType deserialize(final JsonParser p, final DeserializationContext ctxt) {
         final JsonNode rootNode = ctxt.readTree(p);
         final Column column = getColumn(rootNode, ctxt);
-        final String serialType = getStringField(ctxt, rootNode, ColumnWithSerialType.SERIAL_TYPE_FIELD);
         final String sequenceName = getStringField(ctxt, rootNode, SequenceNameAware.SEQUENCE_NAME_FIELD);
-        return ColumnWithSerialType.of(column, SerialType.valueOf(serialType), sequenceName);
+        return ColumnWithSerialType.of(column, sequenceName);
     }
 }

@@ -48,9 +48,9 @@ class IndexesWithUnnecessaryWhereClauseCheckOnClusterTest extends DatabaseAwareT
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_id_ref", 0L, Column.ofNotNull(ctx, "t1", "id_ref")),
-                    IndexWithColumns.ofColumns(ctx, "t2", "\"idx_t2_first-ref_second_ref\"", List.of(
-                        Column.ofNotNull(ctx, "t2", "second_ref"), Column.ofNotNull(ctx, "t2", "\"first-ref\""))))
+                    IndexWithColumns.of(ctx, "t1", "idx_t1_id_ref", Column.ofBigint(ctx, "t1", "id_ref")),
+                    IndexWithColumns.of(ctx, "t2", "\"idx_t2_first-ref_second_ref\"",
+                        Column.ofBigint(ctx, "t2", "second_ref"), Column.ofBigint(ctx, "t2", "\"first-ref\"")))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -68,8 +68,8 @@ class IndexesWithUnnecessaryWhereClauseCheckOnClusterTest extends DatabaseAwareT
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "deliveries", "\"idx_deliveries_status-id\"", List.of(
-                        Column.ofNotNull(ctx, "deliveries", "status"), Column.ofNotNull(ctx, "deliveries", "id")))
+                    IndexWithColumns.of(ctx, "deliveries", "\"idx_deliveries_status-id\"",
+                        Column.ofNotNull(ctx, "deliveries", "status", ctx.enrichWithSchema("delivery_status")), Column.ofBigint(ctx, "deliveries", "id"))
                 ));
     }
 }

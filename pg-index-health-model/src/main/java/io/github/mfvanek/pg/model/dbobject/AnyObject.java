@@ -120,16 +120,16 @@ public final class AnyObject implements DbObject, Comparable<AnyObject> {
     /**
      * Constructs an {@code AnyObject} instance with given context.
      *
-     * @param pgContext  the schema context to enrich object name; must be non-null.
+     * @param ctx        the schema context to enrich object name; must be non-null.
      * @param objectName name of an object in a database; should be non-blank.
      * @param objectType type of object in a database; should be non-null.
      * @return {@code AnyObject} instance
      * @since 0.14.4
      */
-    public static AnyObject ofType(final PgContext pgContext,
+    public static AnyObject ofType(final PgContext ctx,
                                    final String objectName,
                                    final PgObjectType objectType) {
-        return ofType(PgContext.enrichWith(objectName, pgContext), objectType);
+        return ofType(PgContext.enrichWith(objectName, ctx), objectType);
     }
 
     /**

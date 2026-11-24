@@ -10,12 +10,15 @@
 
 package io.github.mfvanek.pg.model.validation;
 
+import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.column.ColumnNameAware;
 import io.github.mfvanek.pg.model.column.ColumnsAware;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.index.IndexNameAware;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -65,6 +68,18 @@ public final class Validators {
      */
     public static String indexNameNotBlank(final String indexName) {
         return notBlank(indexName, IndexNameAware.INDEX_NAME_FIELD);
+    }
+
+    /**
+     * Ensures the provided column type is not null and returns its name.
+     *
+     * @param columnType the column type to check
+     * @return the name of the provided column type
+     * @throws NullPointerException if the column type is null
+     * @since 0.51.0
+     */
+    public static String columnTypeNotNull(final PgColumnType columnType) {
+        return Objects.requireNonNull(columnType, ColumnNameAware.COLUMN_TYPE_FIELD + " cannot be null").getColumnType();
     }
 
     /**
@@ -175,6 +190,25 @@ public final class Validators {
         if (columns.isEmpty()) {
             throw new IllegalArgumentException(ColumnsAware.COLUMNS_FIELD + " cannot be empty");
         }
+    }
+
+    /**
+     * Collects the given columns into a list, ensuring that none of them is null.
+     *
+     * @param column       the first column; must be non-null.
+     * @param otherColumns other columns; must be non-null and must not contain null elements.
+     * @return a list with the first column followed by the other columns
+     * @since 0.51.0
+     */
+    public static List<Column> columnsNotNull(final Column column, final Column... otherColumns) {
+        Objects.requireNonNull(column, "column cannot be null");
+        Objects.requireNonNull(otherColumns, "otherColumns cannot be null");
+        final List<Column> columns = new ArrayList<>(otherColumns.length + 1);
+        columns.add(column);
+        for (final Column otherColumn : otherColumns) {
+            columns.add(Objects.requireNonNull(otherColumn, "otherColumns cannot contain null"));
+        }
+        return columns;
     }
 
     /**

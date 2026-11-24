@@ -32,7 +32,7 @@ class SkipLiquibaseTablesPredicateTest {
     void shouldThrowExceptionWhenPgContextIsNull() {
         assertThatThrownBy(() -> SkipLiquibaseTablesPredicate.of(null))
             .isInstanceOf(NullPointerException.class)
-            .hasMessage("pgContext cannot be null");
+            .hasMessage("ctx cannot be null");
     }
 
     @Test

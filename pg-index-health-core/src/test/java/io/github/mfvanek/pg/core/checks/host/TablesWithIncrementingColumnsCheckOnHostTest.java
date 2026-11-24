@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class TablesWithIncrementingColumnsCheckOnHostTest extends DatabaseAwareTestBase {
@@ -51,13 +49,11 @@ class TablesWithIncrementingColumnsCheckOnHostTest extends DatabaseAwareTestBase
                 .containsExactly(
                     TableWithColumns.of(
                         Table.of(ctx, "orders", 8_192L),
-                        List.of(
-                            Column.ofNullable(ctx, "orders", "phone1"),
-                            Column.ofNullable(ctx, "orders", "phone2"),
-                            Column.ofNullable(ctx, "orders", "address1"),
-                            Column.ofNullable(ctx, "orders", "address2"),
-                            Column.ofNullable(ctx, "orders", "address3")
-                        )
+                        Column.ofNullableText(ctx, "orders", "phone1"),
+                        Column.ofNullableText(ctx, "orders", "phone2"),
+                        Column.ofNullableText(ctx, "orders", "address1"),
+                        Column.ofNullableText(ctx, "orders", "address2"),
+                        Column.ofNullableText(ctx, "orders", "address3")
                     )
                 ));
     }
@@ -73,10 +69,8 @@ class TablesWithIncrementingColumnsCheckOnHostTest extends DatabaseAwareTestBase
                 .containsExactly(
                     TableWithColumns.of(
                         Table.of(ctx, "events"),
-                        List.of(
-                            Column.ofNullable(ctx, "events", "tag1"),
-                            Column.ofNullable(ctx, "events", "tag2")
-                        )
+                        Column.ofNullableText(ctx, "events", "tag1"),
+                        Column.ofNullableText(ctx, "events", "tag2")
                     )
                 ));
     }

@@ -15,7 +15,6 @@ import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.health.checks.common.DatabaseCheckOnCluster;
 import io.github.mfvanek.pg.model.column.Column;
-import io.github.mfvanek.pg.model.column.ColumnWithType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
@@ -26,12 +25,12 @@ import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.a
 
 class ColumnsWithBlobTypeCheckOnClusterTest extends DatabaseAwareTestBase {
 
-    private final DatabaseCheckOnCluster<@NonNull ColumnWithType> check = new ColumnsWithBlobTypeCheckOnCluster(getHaPgConnection());
+    private final DatabaseCheckOnCluster<@NonNull Column> check = new ColumnsWithBlobTypeCheckOnCluster(getHaPgConnection());
 
     @Test
     void shouldSatisfyContract() {
         assertThat(check)
-            .hasType(ColumnWithType.class)
+            .hasType(Column.class)
             .hasDiagnostic(Diagnostic.COLUMNS_WITH_BLOB_TYPE)
             .isStatic();
     }
@@ -45,10 +44,10 @@ class ColumnsWithBlobTypeCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.of(Column.ofNotNull(ctx, "\"document-bad\"", "\"content-bad\""), "oid"),
-                    ColumnWithType.of(Column.ofNullable(ctx, "image", "raster"), ctx.enrichWithSchema("lo")),
-                    ColumnWithType.of(Column.ofNotNull(ctx, "media_file", "full_image"), ctx.enrichWithSchema("lo")),
-                    ColumnWithType.of(Column.ofNullable(ctx, "media_file", "thumbnail"), "oid")
+                    Column.ofNotNull(ctx, "\"document-bad\"", "\"content-bad\"", "oid"),
+                    Column.ofNullable(ctx, "image", "raster", ctx.enrichWithSchema("lo")),
+                    Column.ofNotNull(ctx, "media_file", "full_image", ctx.enrichWithSchema("lo")),
+                    Column.ofNullable(ctx, "media_file", "thumbnail", "oid")
                 ));
     }
 
@@ -61,7 +60,7 @@ class ColumnsWithBlobTypeCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ColumnWithType.of(Column.ofNullable(ctx, "attachment", "file_data"), "oid")
+                    Column.ofNullable(ctx, "attachment", "file_data", "oid")
                 ));
     }
 }

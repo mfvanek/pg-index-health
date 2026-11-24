@@ -138,14 +138,14 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
     /**
      * Constructs a {@code StoredFunction} object without arguments/signature with given context.
      *
-     * @param pgContext    the schema context to enrich procedure/function name; must be non-null.
+     * @param ctx          the schema context to enrich procedure/function name; must be non-null.
      * @param functionName procedure/function name.
      * @return {@code StoredFunction}
      * @since 0.14.3
      */
-    public static StoredFunction ofNoArgs(final PgContext pgContext,
+    public static StoredFunction ofNoArgs(final PgContext ctx,
                                           final String functionName) {
-        return ofNoArgs(PgContext.enrichWith(functionName, pgContext));
+        return ofNoArgs(PgContext.enrichWith(functionName, ctx));
     }
 
     /**
@@ -163,15 +163,15 @@ public final class StoredFunction implements DbObject, Comparable<StoredFunction
     /**
      * Constructs a {@code StoredFunction} object with given context.
      *
-     * @param pgContext         the schema context to enrich procedure/function name; must be non-null.
+     * @param ctx               the schema context to enrich procedure/function name; must be non-null.
      * @param functionName      procedure/function name.
      * @param functionSignature procedure/function signature (arguments).
      * @return {@code StoredFunction}
      * @since 0.14.3
      */
-    public static StoredFunction of(final PgContext pgContext,
+    public static StoredFunction of(final PgContext ctx,
                                     final String functionName,
                                     final String functionSignature) {
-        return of(PgContext.enrichWith(functionName, pgContext), functionSignature);
+        return of(PgContext.enrichWith(functionName, ctx), functionSignature);
     }
 }

@@ -13,10 +13,9 @@ package io.github.mfvanek.pg.generator;
 import io.github.mfvanek.pg.generator.support.GeneratorTestBase;
 import io.github.mfvanek.pg.model.column.Column;
 import io.github.mfvanek.pg.model.constraint.ForeignKey;
+import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static io.github.mfvanek.pg.generator.PgIdentifierNameGeneratorTest.notNullColumnWithSchema;
 import static io.github.mfvanek.pg.generator.PgIdentifierNameGeneratorTest.nullableColumnWithSchema;
@@ -97,10 +96,9 @@ class PgIndexOnForeignKeyGeneratorTest extends GeneratorTestBase {
 
     @NonNull
     static ForeignKey severalColumnsWithNulls() {
-        return ForeignKey.of("custom_table", "cn",
-            List.of(
-                Column.ofNotNull("custom_table", "custom_column_1"),
-                Column.ofNullable("custom_table", "custom_column_22")
-            ));
+        final PgContext ctx = PgContext.ofDefault();
+        return ForeignKey.of(ctx, "custom_table", "cn",
+            Column.ofBigint(ctx, "custom_table", "custom_column_1"),
+            Column.ofNullableBigint(ctx, "custom_table", "custom_column_22"));
     }
 }
