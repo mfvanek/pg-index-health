@@ -22,6 +22,10 @@ import java.util.Objects;
 
 /**
  * An immutable representation of a database index with information about size and columns.
+ * <p>
+ * The order of columns is significant: it is the column order in the index definition,
+ * so indexes on {@code (a, b)} and {@code (b, a)} are different.
+ * That is why the factories accept a {@link List} or varargs rather than an arbitrary {@link java.util.Collection}.
  *
  * @author Ivan Vakhrushev
  * @since 0.11.0
@@ -535,7 +539,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param tableName        table name; should be non-blank.
      * @param indexName        index name; should be non-blank.
      * @param indexSizeInBytes index size in bytes; should be positive or zero.
-     * @param columns          columns in index; must be non-null.
+     * @param columns          ordered list of columns in index; must be non-null.
      * @return {@code IndexWithColumns}
      */
     public static IndexWithColumns of(final String tableName,
@@ -552,7 +556,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param tableName        table name; should be non-blank.
      * @param indexName        index name; should be non-blank.
      * @param indexSizeInBytes index size in bytes; should be positive or zero.
-     * @param columns          columns in index; must be non-null.
+     * @param columns          ordered list of columns in index; must be non-null.
      * @return {@code IndexWithColumns}
      * @since 0.14.3
      */
@@ -570,7 +574,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param ctx       the schema context to enrich table and index name; must be non-null.
      * @param tableName table name; should be non-blank.
      * @param indexName index name; should be non-blank.
-     * @param columns   columns in index; must be non-null.
+     * @param columns   ordered list of columns in index; must be non-null.
      * @return {@code IndexWithColumns}
      * @since 0.20.2
      */
@@ -585,7 +589,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * Constructs an {@code IndexWithColumns} object with given index and columns.
      *
      * @param index   index; must be non-null.
-     * @param columns columns in index; must be non-null.
+     * @param columns ordered list of columns in index; must be non-null.
      * @return {@code IndexWithColumns}
      * @since 0.15.0
      */

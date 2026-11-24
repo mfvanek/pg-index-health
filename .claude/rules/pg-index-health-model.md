@@ -47,3 +47,13 @@ Any type whose simple name ends with `Aware` must be an interface. Never create 
 ## Predicate placement (PREDICATE_IMPLEMENTATIONS_SHOULD_RESIDE_IN_PREDICATES_PACKAGE)
 
 All classes that implement `Predicate<DbObject>` — directly or through inheritance — must reside in the `predicates` sub-package. Do not add filtering logic to domain or utility packages.
+
+## Columns are ordered (COLUMNS_PARAMETERS_MUST_BE_LISTS)
+
+The order of columns in `ForeignKey`, `IndexWithColumns` and `TableWithColumns` (and any other `ColumnsAware` class) is significant:
+FK columns are matched with the referenced columns by position, and indexes on `(a, b)` and `(b, a)` are different.
+
+- Factories and constructors take columns as `List<Column>` or as varargs `(Column column, Column... otherColumns)`.
+  Never widen these parameters to `Collection<Column>`/`Iterable<Column>`: a `HashSet` would silently produce a random column order.
+- `SequencedCollection` is not an option while the project targets Java 17.
+- Keep the class-level Javadoc note explaining why columns are a `List`.

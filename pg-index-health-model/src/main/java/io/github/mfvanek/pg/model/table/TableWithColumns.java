@@ -23,6 +23,10 @@ import java.util.Objects;
 /**
  * An immutable representation of a database table with its columns.
  * Table can have zero or more columns.
+ * <p>
+ * The order of columns is significant: columns are kept in the order they were given
+ * (usually the column order in the table definition).
+ * That is why the factories accept a {@link List} or varargs rather than an arbitrary {@link java.util.Collection}.
  *
  * @author Ivan Vakhrushev
  * @since 0.14.6
@@ -118,7 +122,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * Creates a {@code TableWithColumns} from the given table and list of columns.
      *
      * @param table   the table
-     * @param columns the list of columns (must not be null)
+     * @param columns the ordered list of columns (must not be null)
      * @return a {@code TableWithColumns} instance
      */
     public static TableWithColumns of(final Table table,

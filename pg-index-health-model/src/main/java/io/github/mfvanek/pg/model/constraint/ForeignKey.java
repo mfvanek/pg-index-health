@@ -25,6 +25,10 @@ import java.util.Objects;
 
 /**
  * An immutable representation of a foreign key in a database.
+ * <p>
+ * The order of columns is significant: it is the column order in the constraint definition,
+ * and the foreign key columns are matched with the referenced columns by position.
+ * That is why the factories accept a {@link List} or varargs rather than an arbitrary {@link java.util.Collection}.
  *
  * @author Ivan Vakhrushev
  * @see TableNameAware
@@ -174,7 +178,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * Creates a new {@code ForeignKey} object with the specified {@code Constraint} and associated columns.
      *
      * @param constraint the underlying constraint to be associated with the foreign key; must be non-null.
-     * @param columns    a list of columns that are part of the constraint; must be non-null and non-empty.
+     * @param columns    an ordered list of columns that are part of the constraint; must be non-null and non-empty.
      * @return a new instance of {@code ForeignKey}.
      * @author Ivan Vakhrushev
      * @since 0.20.3
@@ -189,7 +193,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      *
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
-     * @param columns        a list of columns that are included in constraint; should be non-empty.
+     * @param columns        an ordered list of columns that are included in constraint; should be non-empty.
      * @return {@code ForeignKey}
      */
     public static ForeignKey of(final String tableName,
@@ -204,7 +208,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
      * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
-     * @param columns        a list of columns that are included in constraint; should be non-empty.
+     * @param columns        an ordered list of columns that are included in constraint; should be non-empty.
      * @return {@code ForeignKey}
      * @since 0.14.5
      */
