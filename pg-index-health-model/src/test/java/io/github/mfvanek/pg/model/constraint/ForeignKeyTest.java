@@ -77,6 +77,10 @@ class ForeignKeyTest {
             .isUnmodifiable();
         assertThat(second.getTableName())
             .isEqualTo("tst.t");
+
+        assertThat(ForeignKey.of(ctx, "t", "c_t_order_id", Column.ofInteger(ctx, "t", "order_id"), Column.ofInteger(ctx, "t", "item_id")))
+            .usingRecursiveComparison()
+            .isEqualTo(second);
     }
 
     @Test
@@ -111,7 +115,7 @@ class ForeignKeyTest {
     @Test
     void withInvalidArguments() {
         final PgContext ctx = PgContext.ofDefault();
-        assertThatThrownBy(() -> ForeignKey.of(null, null, null))
+        assertThatThrownBy(() -> ForeignKey.of((String) null, null, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("tableName cannot be null");
         assertThatThrownBy(() -> ForeignKey.of("t", null, null))
@@ -124,7 +128,7 @@ class ForeignKeyTest {
         assertThatThrownBy(() -> ForeignKey.of("t", "c_t_order_id", columns))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columns cannot be empty");
-        assertThatThrownBy(() -> ForeignKey.ofColumn(ctx, "t", "fk", null))
+        assertThatThrownBy(() -> ForeignKey.of(ctx, "t", "fk", (Column) null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("column cannot be null");
         assertThatThrownBy(() -> ForeignKey.ofNotNull(ctx, "t", "fk", null, "integer"))
@@ -147,10 +151,10 @@ class ForeignKeyTest {
             .hasMessage("columnName cannot be blank");
         final Column column = Column.ofInteger(ctx, "t", "col");
         final Constraint constraint = Constraint.ofType("t", "c", ConstraintType.CHECK);
-        assertThatThrownBy(() -> ForeignKey.ofColumn(constraint, column))
+        assertThatThrownBy(() -> ForeignKey.of(constraint, column))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("constraint must be foreign key");
-        assertThatThrownBy(() -> ForeignKey.ofColumn(null, column))
+        assertThatThrownBy(() -> ForeignKey.of(null, column))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("constraint cannot be null");
     }

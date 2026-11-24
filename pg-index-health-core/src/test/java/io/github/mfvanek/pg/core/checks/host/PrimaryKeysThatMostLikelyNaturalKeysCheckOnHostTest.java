@@ -49,10 +49,10 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHostTest extends DatabaseAwareT
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "t2_composite", "t2_composite_pkey",
-                        List.of(Column.ofText(ctx, "t2_composite", "passport_series"), Column.ofText(ctx, "t2_composite", "passport_number"))),
-                    IndexWithColumns.ofColumns(ctx, "t3_composite", "t3_composite_pkey",
-                        List.of(Column.ofUuid(ctx, "t3_composite", "app_id"), Column.ofText(ctx, "t3_composite", "app_number"))),
+                    IndexWithColumns.of(ctx, "t2_composite", "t2_composite_pkey",
+                        Column.ofText(ctx, "t2_composite", "passport_series"), Column.ofText(ctx, "t2_composite", "passport_number")),
+                    IndexWithColumns.of(ctx, "t3_composite", "t3_composite_pkey",
+                        Column.ofUuid(ctx, "t3_composite", "app_id"), Column.ofText(ctx, "t3_composite", "app_number")),
                     IndexWithColumns.ofTimestamptz(ctx, "\"times-of-creation\"", "\"times-of-creation_pkey\"", "\"time-of-creation\""))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
@@ -71,11 +71,10 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHostTest extends DatabaseAwareT
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "tp", "tp_pkey",
-                        List.of(
-                            Column.ofTimestamp(ctx, "tp", "creation_date"),
-                            Column.ofVarchar(ctx, "tp", "ref_type"),
-                            Column.ofVarchar(ctx, "tp", "entity_id")))
+                    IndexWithColumns.of(ctx, "tp", "tp_pkey",
+                        Column.ofTimestamp(ctx, "tp", "creation_date"),
+                        Column.ofVarchar(ctx, "tp", "ref_type"),
+                        Column.ofVarchar(ctx, "tp", "entity_id"))
                 ));
     }
 }

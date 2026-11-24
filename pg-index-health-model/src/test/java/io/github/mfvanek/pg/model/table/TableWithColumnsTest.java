@@ -91,7 +91,7 @@ class TableWithColumnsTest {
     void testEqualsAndHashCode() {
         final PgContext ctx = PgContext.of("tst");
         final TableWithColumns first = TableWithColumns.ofNotNull(ctx, "t1", "c1", "integer");
-        final TableWithColumns theSame = TableWithColumns.ofSingle(Table.of(ctx, "t1"), Column.ofInteger(ctx, "t1", "c1"));
+        final TableWithColumns theSame = TableWithColumns.of(Table.of(ctx, "t1"), Column.ofInteger(ctx, "t1", "c1"));
         final TableWithColumns third = TableWithColumns.ofNullableInteger(ctx, "t1", "c2");
         final TableWithColumns forth = TableWithColumns.ofNullableInteger(ctx, "t2", "c1");
 
@@ -197,7 +197,7 @@ class TableWithColumnsTest {
     void compareToTest() {
         final PgContext ctx = PgContext.of("tst");
         final TableWithColumns first = TableWithColumns.ofNotNull(ctx, "t1", "c1", "integer");
-        final TableWithColumns theSame = TableWithColumns.ofSingle(Table.of(ctx, "t1"), Column.ofInteger(ctx, "t1", "c1"));
+        final TableWithColumns theSame = TableWithColumns.of(Table.of(ctx, "t1"), Column.ofInteger(ctx, "t1", "c1"));
         final TableWithColumns third = TableWithColumns.ofNullableInteger(ctx, "t2", "c1");
 
         assertThat(first)

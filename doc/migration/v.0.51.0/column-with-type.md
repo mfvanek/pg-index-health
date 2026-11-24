@@ -58,7 +58,7 @@ ForeignKey.ofNullable(ctx, "orders", "fk_orders_client", "client_id", "bigint")
 
 The overloads without `PgContext` have been removed; use `PgContext.ofDefault()` for tables in the `public` schema
 (the table name is left unchanged). `ForeignKey.of(tableName, constraintName, columns)` without context is kept
-for already qualified table names, as well as `ForeignKey.of(constraint, columns)` and `ForeignKey.ofColumn(constraint, column)`.
+for already qualified table names, as well as `ForeignKey.of(constraint, columns)`.
 
 ```java
 // Before
@@ -68,7 +68,7 @@ ForeignKey.ofColumn("orders", "fk_orders_client", column)
 // After
 ForeignKey.ofNotNull(PgContext.ofDefault(), "orders", "fk_orders_client", "client_id", PgColumnType.BIGINT)
 ForeignKey.ofNullable(ctx, "orders", "fk_orders_client", "client_id", "bigint")
-ForeignKey.ofColumn(ctx, "orders", "fk_orders_client", column)
+ForeignKey.of(ctx, "orders", "fk_orders_client", column)
 ForeignKey.ofBigint(ctx, "orders", "fk_orders_client", "client_id")
 ```
 
@@ -77,10 +77,10 @@ ForeignKey.ofBigint(ctx, "orders", "fk_orders_client", "client_id")
 e.g. `ForeignKey.ofInteger(ctx, "orders", "fk_orders_client", "client_id")` instead of
 `ForeignKey.ofNotNull(ctx, "orders", "fk_orders_client", "client_id", PgColumnType.INTEGER)`.
 
-**`IndexWithColumns.ofSingle` requires a `PgContext` or an `Index`.**
+**`IndexWithColumns`: creating an index with a single column requires a `PgContext` or an `Index`.**
 
 `IndexWithColumns.ofSingle(tableName, indexName, indexSizeInBytes, column)` without context has been removed;
-use `PgContext.ofDefault()` for tables in the `public` schema. `IndexWithColumns.ofColumns(tableName, indexName, indexSizeInBytes, columns)`
+use `PgContext.ofDefault()` for tables in the `public` schema. `IndexWithColumns.of(tableName, indexName, indexSizeInBytes, columns)`
 without context is kept for already qualified table names.
 
 `IndexWithColumns` also has typed shortcut factories (all with `PgContext`, zero index size) for the same types as `Column`:
@@ -92,8 +92,33 @@ IndexWithColumns.ofSingle("orders", "i_orders_client_id", 0L, column)
 IndexWithColumns.ofNullable(ctx, "clients", "i_clients_middle_name", "middle_name", PgColumnType.VARCHAR)
 
 // After
-IndexWithColumns.ofSingle(PgContext.ofDefault(), "orders", "i_orders_client_id", 0L, column)
+IndexWithColumns.of(PgContext.ofDefault(), "orders", "i_orders_client_id", column)
 IndexWithColumns.ofNullableVarchar(ctx, "clients", "i_clients_middle_name", "middle_name")
+```
+
+**Factories with several columns accept them as varargs; `ofSingle`, `ofColumn` and `ofColumns` have been renamed to `of`.**
+
+`ForeignKey`, `IndexWithColumns` and `TableWithColumns` have `of(..., Column column, Column... otherColumns)` factories,
+so the columns no longer need to be wrapped in a `List`. At least one column is required at compile time.
+The factories that take a `List<Column>` are kept for collections built at runtime.
+
+- `ForeignKey.ofColumn(...)` → `ForeignKey.of(...)`
+- `IndexWithColumns.ofSingle(...)` and `IndexWithColumns.ofColumns(...)` → `IndexWithColumns.of(...)`
+  (a zero-size overload without `indexSizeInBytes` is available for both varargs and `List`)
+- `TableWithColumns.ofSingle(table, column)` → `TableWithColumns.of(table, column)`
+
+```java
+// Before
+ForeignKey.of(ctx, "orders", "fk_orders_client", List.of(Column.ofBigint(ctx, "orders", "client_id"), Column.ofBigint(ctx, "orders", "region_id")))
+IndexWithColumns.ofColumns(ctx, "orders", "i_orders_client_id_region_id", 0L, List.of(clientId, regionId))
+IndexWithColumns.ofSingle(ctx, "orders", "i_orders_client_id", 0L, clientId)
+TableWithColumns.ofSingle(Table.of(ctx, "orders"), clientId)
+
+// After
+ForeignKey.of(ctx, "orders", "fk_orders_client", Column.ofBigint(ctx, "orders", "client_id"), Column.ofBigint(ctx, "orders", "region_id"))
+IndexWithColumns.of(ctx, "orders", "i_orders_client_id_region_id", clientId, regionId)
+IndexWithColumns.of(ctx, "orders", "i_orders_client_id", clientId)
+TableWithColumns.of(Table.of(ctx, "orders"), clientId)
 ```
 
 `TableWithColumns` also has typed shortcut factories (all with `PgContext`) for the same types as `Column`:

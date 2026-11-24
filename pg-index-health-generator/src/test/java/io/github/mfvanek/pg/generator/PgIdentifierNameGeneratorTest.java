@@ -16,8 +16,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.generator.PgIndexOnForeignKeyGenerator.MAX_IDENTIFIER_LENGTH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -253,19 +251,15 @@ class PgIdentifierNameGeneratorTest {
     static ForeignKey severalColumnsWithoutNulls() {
         final PgContext ctx = PgContext.ofDefault();
         return ForeignKey.of(ctx, "table_with_very_very_very_long_name", "cn",
-            List.of(
-                Column.ofBigint(ctx, "table_with_very_very_very_long_name", "column_1_with_very_long_name"),
-                Column.ofBigint(ctx, "table_with_very_very_very_long_name", "column_2_with_very_long_name")
-            ));
+            Column.ofBigint(ctx, "table_with_very_very_very_long_name", "column_1_with_very_long_name"),
+            Column.ofBigint(ctx, "table_with_very_very_very_long_name", "column_2_with_very_long_name"));
     }
 
     @NonNull
     static ForeignKey severalColumnsWithNulls() {
         final PgContext ctx = PgContext.ofDefault();
         return ForeignKey.of(ctx, "table_with_very_very_very_long_name", "cn",
-            List.of(
-                Column.ofBigint(ctx, "table_with_very_very_very_long_name", "column_1_with_very_long_name"),
-                Column.ofNullableBigint(ctx, "table_with_very_very_very_long_name", "column_2_with_very_long_name")
-            ));
+            Column.ofBigint(ctx, "table_with_very_very_very_long_name", "column_1_with_very_long_name"),
+            Column.ofNullableBigint(ctx, "table_with_very_very_very_long_name", "column_2_with_very_long_name"));
     }
 }

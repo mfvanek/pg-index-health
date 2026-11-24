@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -48,10 +46,10 @@ class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "accounts", "accounts_account_number_roles_btree_idx", List.of(
+                    IndexWithColumns.of(ctx, "accounts", "accounts_account_number_roles_btree_idx",
                         Column.ofVarchar(ctx, "accounts", "account_number"),
-                        Column.ofNullable(ctx, "accounts", "roles", "text[]"))),
-                    IndexWithColumns.ofSingle(ctx, "accounts", "accounts_roles_btree_idx", 0L,
+                        Column.ofNullable(ctx, "accounts", "roles", "text[]")),
+                    IndexWithColumns.of(ctx, "accounts", "accounts_roles_btree_idx",
                         Column.ofNullable(ctx, "accounts", "roles", "text[]")))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
@@ -70,7 +68,7 @@ class BtreeIndexesOnArrayColumnsCheckOnClusterTest extends DatabaseAwareTestBase
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    IndexWithColumns.ofSingle(ctx, "t1", "t1_roles_btree_idx", 0L, Column.ofNullable(ctx, "t1", "roles", "text[]"))
+                    IndexWithColumns.of(ctx, "t1", "t1_roles_btree_idx", Column.ofNullable(ctx, "t1", "roles", "text[]"))
                 ));
     }
 }

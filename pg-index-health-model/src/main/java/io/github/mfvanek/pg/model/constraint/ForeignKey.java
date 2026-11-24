@@ -216,33 +216,37 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
     }
 
     /**
-     * Constructs a {@code ForeignKey} object with given {@code Constraint} and {@code Column}.
+     * Constructs a {@code ForeignKey} object with given {@code Constraint} and columns.
      *
-     * @param constraint underlying constraint that is included in a foreign key; must be non-null.
-     * @param column     column that is included in constraint; must be non-null.
+     * @param constraint   underlying constraint that is included in a foreign key; must be non-null.
+     * @param column       the first column that is included in constraint; must be non-null.
+     * @param otherColumns other columns that are included in constraint; must not contain null elements.
      * @return {@code ForeignKey}
-     * @since 0.15.0
+     * @since 0.51.0
      */
-    public static ForeignKey ofColumn(final Constraint constraint,
-                                      final Column column) {
-        return of(constraint, List.of(Objects.requireNonNull(column, "column cannot be null")));
+    public static ForeignKey of(final Constraint constraint,
+                                final Column column,
+                                final Column... otherColumns) {
+        return of(constraint, Validators.columnsNotNull(column, otherColumns));
     }
 
     /**
-     * Constructs a {@code ForeignKey} object with given {@code Column} and context.
+     * Constructs a {@code ForeignKey} object with given columns and context.
      *
      * @param ctx            the schema context to enrich table name; must be non-null.
      * @param tableName      table name; should be non-blank.
      * @param constraintName constraint name; should be non-blank.
-     * @param column         column that is included in constraint.
+     * @param column         the first column that is included in constraint; must be non-null.
+     * @param otherColumns   other columns that are included in constraint; must not contain null elements.
      * @return {@code ForeignKey}
-     * @since 0.15.0
+     * @since 0.51.0
      */
-    public static ForeignKey ofColumn(final PgContext ctx,
-                                      final String tableName,
-                                      final String constraintName,
-                                      final Column column) {
-        return ofColumn(asConstraint(ctx, tableName, constraintName), column);
+    public static ForeignKey of(final PgContext ctx,
+                                final String tableName,
+                                final String constraintName,
+                                final Column column,
+                                final Column... otherColumns) {
+        return of(asConstraint(ctx, tableName, constraintName), column, otherColumns);
     }
 
     /**
@@ -261,7 +265,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                        final String constraintName,
                                        final String columnName,
                                        final String columnType) {
-        return ofColumn(ctx, tableName, constraintName, Column.ofNotNull(ctx, tableName, columnName, columnType));
+        return of(ctx, tableName, constraintName, Column.ofNotNull(ctx, tableName, columnName, columnType));
     }
 
     /**
@@ -299,7 +303,7 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                         final String constraintName,
                                         final String columnName,
                                         final String columnType) {
-        return ofColumn(ctx, tableName, constraintName, Column.ofNullable(ctx, tableName, columnName, columnType));
+        return of(ctx, tableName, constraintName, Column.ofNullable(ctx, tableName, columnName, columnType));
     }
 
     /**

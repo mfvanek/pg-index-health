@@ -127,15 +127,18 @@ public final class TableWithColumns extends AbstractTableAware implements Column
     }
 
     /**
-     * Creates a {@code TableWithColumns} containing a single column.
+     * Creates a {@code TableWithColumns} from the given table and columns.
      *
-     * @param table  the table
-     * @param column the single column
-     * @return a {@code TableWithColumns} with one column
+     * @param table        the table
+     * @param column       the first column; must be non-null.
+     * @param otherColumns other columns; must not contain null elements.
+     * @return a {@code TableWithColumns} instance
+     * @since 0.51.0
      */
-    public static TableWithColumns ofSingle(final Table table,
-                                            final Column column) {
-        return of(table, List.of(column));
+    public static TableWithColumns of(final Table table,
+                                      final Column column,
+                                      final Column... otherColumns) {
+        return of(table, Validators.columnsNotNull(column, otherColumns));
     }
 
     /**
@@ -152,7 +155,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
                                              final String tableName,
                                              final String columnName,
                                              final String columnType) {
-        return ofSingle(Table.of(ctx, tableName), Column.ofNotNull(ctx, tableName, columnName, columnType));
+        return of(Table.of(ctx, tableName), Column.ofNotNull(ctx, tableName, columnName, columnType));
     }
 
     /**
@@ -186,7 +189,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
                                               final String tableName,
                                               final String columnName,
                                               final String columnType) {
-        return ofSingle(Table.of(ctx, tableName), Column.ofNullable(ctx, tableName, columnName, columnType));
+        return of(Table.of(ctx, tableName), Column.ofNullable(ctx, tableName, columnName, columnType));
     }
 
     /**

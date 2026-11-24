@@ -50,10 +50,10 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "accounts", "i_accounts_balance_lower_number_deleted", 0L, List.of(
+                    IndexWithColumns.of(ctx, "accounts", "i_accounts_balance_lower_number_deleted",
                         Column.ofNotNull(ctx, "accounts", "account_balance", PgColumnType.NUMERIC),
-                        Column.ofBoolean(ctx, "accounts", "deleted"))),
-                    IndexWithColumns.ofSingle(ctx, "accounts", "i_accounts_deleted", 0L,
+                        Column.ofBoolean(ctx, "accounts", "deleted")),
+                    IndexWithColumns.of(ctx, "accounts", "i_accounts_deleted",
                         Column.ofBoolean(ctx, "accounts", "deleted")))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
@@ -76,13 +76,13 @@ class IndexesWithBooleanCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted", 0L,
+                    IndexWithColumns.of(ctx, "t1", "idx_t1_deleted",
                         Column.ofBoolean(ctx, "t1", "deleted")),
-                    IndexWithColumns.ofSingle(ctx, "t1", "idx_t1_deleted_duplicate", 0L,
+                    IndexWithColumns.of(ctx, "t1", "idx_t1_deleted_duplicate",
                         Column.ofBoolean(ctx, "t1", "deleted")),
-                    IndexWithColumns.ofColumns(ctx, "t1", "idx_t1_deleted_entity_id", 0L, List.of(
+                    IndexWithColumns.of(ctx, "t1", "idx_t1_deleted_entity_id",
                         Column.ofBoolean(ctx, "t1", "deleted"),
-                        Column.ofVarchar(ctx, "t1", "entity_id")))
+                        Column.ofVarchar(ctx, "t1", "entity_id"))
                 ));
     }
 }

@@ -66,10 +66,10 @@ class ForeignKeyCycleExtractorTest {
             assertThat(extractor.extractData(rs))
                 .usingRecursiveComparison()
                 .isEqualTo(ForeignKeyCycle.of(
-                    ForeignKey.of(ctx, "t1", "c1", List.of(Column.ofInteger(ctx, "t1", "a"), Column.ofNullableInteger(ctx, "t1", "b"))),
+                    ForeignKey.of(ctx, "t1", "c1", Column.ofInteger(ctx, "t1", "a"), Column.ofNullableInteger(ctx, "t1", "b")),
                     ForeignKey.ofInteger(ctx, "t2", "c2", "c"),
                     ForeignKey.of(ctx, "t3", "c3",
-                        List.of(Column.ofInteger(ctx, "t3", "d"), Column.ofInteger(ctx, "t3", "e"), Column.ofNullableInteger(ctx, "t3", "f")))));
+                        Column.ofInteger(ctx, "t3", "d"), Column.ofInteger(ctx, "t3", "e"), Column.ofNullableInteger(ctx, "t3", "f"))));
         }
     }
 

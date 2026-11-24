@@ -30,7 +30,7 @@ class IndexWithColumnsTest {
     void gettersShouldWork() {
         final PgContext ctx = PgContext.ofDefault();
         final Column column = Column.ofNullableInteger(ctx, "t", "f");
-        final IndexWithColumns index = IndexWithColumns.ofSingle(ctx, "t", "i", 11L, column);
+        final IndexWithColumns index = IndexWithColumns.of(ctx, "t", "i", 11L, column);
         assertThat(index.getTableName()).isEqualTo("t");
         assertThat(index.getIndexName())
             .isEqualTo("i")
@@ -50,25 +50,25 @@ class IndexWithColumnsTest {
     @Test
     void withInvalidArguments() {
         final PgContext ctx = PgContext.ofDefault();
-        assertThatThrownBy(() -> IndexWithColumns.ofColumns(null, null, 0, null))
+        assertThatThrownBy(() -> IndexWithColumns.of(null, null, 0, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("tableName cannot be null");
-        assertThatThrownBy(() -> IndexWithColumns.ofColumns("", null, 0, null))
+        assertThatThrownBy(() -> IndexWithColumns.of("", null, 0, null))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("tableName cannot be blank");
-        assertThatThrownBy(() -> IndexWithColumns.ofColumns("  ", null, 0, null))
+        assertThatThrownBy(() -> IndexWithColumns.of("  ", null, 0, null))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("tableName cannot be blank");
-        assertThatThrownBy(() -> IndexWithColumns.ofColumns("t", null, 0, null))
+        assertThatThrownBy(() -> IndexWithColumns.of("t", null, 0, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("indexName cannot be null");
-        assertThatThrownBy(() -> IndexWithColumns.ofColumns("t", "", 0, null))
+        assertThatThrownBy(() -> IndexWithColumns.of("t", "", 0, null))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("indexName cannot be blank");
-        assertThatThrownBy(() -> IndexWithColumns.ofSingle(ctx, "t", "i", 0, null))
+        assertThatThrownBy(() -> IndexWithColumns.of(ctx, "t", "i", 0, (Column) null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("column cannot be null");
-        assertThatThrownBy(() -> IndexWithColumns.ofColumns("t", "i", 0, null))
+        assertThatThrownBy(() -> IndexWithColumns.of("t", "i", 0, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("columns cannot be null");
     }
@@ -77,7 +77,7 @@ class IndexWithColumnsTest {
     void tableShouldBeTheSame() {
         final PgContext ctx = PgContext.ofDefault();
         final Column column = Column.ofNullableInteger(ctx, "t2", "f");
-        assertThatThrownBy(() -> IndexWithColumns.ofSingle(ctx, "t", "i", 1L, column))
+        assertThatThrownBy(() -> IndexWithColumns.of(ctx, "t", "i", 1L, column))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Table name is not the same within given rows");
     }
@@ -86,12 +86,15 @@ class IndexWithColumnsTest {
     void testToString() {
         final PgContext ctx = PgContext.of("tst");
         final Column column = Column.ofNullableInteger(ctx, "t", "f");
-        assertThat(IndexWithColumns.ofSingle(ctx, "t", "i", 22L, column))
+        assertThat(IndexWithColumns.of(ctx, "t", "i", 22L, column))
             .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=22, columns=[Column{tableName='tst.t', columnName='f', notNull=false, columnType='integer'}]}");
-        assertThat(IndexWithColumns.ofColumns(ctx, "t", "i", 22L, List.of(column)))
+        assertThat(IndexWithColumns.of(ctx, "t", "i", 22L, List.of(column)))
             .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=22, columns=[Column{tableName='tst.t', columnName='f', notNull=false, columnType='integer'}]}");
-        assertThat(IndexWithColumns.ofColumns(ctx, "t", "i", List.of(column)))
+        assertThat(IndexWithColumns.of(ctx, "t", "i", List.of(column)))
             .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='f', notNull=false, columnType='integer'}]}");
+        assertThat(IndexWithColumns.of(ctx, "t", "i", column, Column.ofText(ctx, "t", "g")))
+            .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[" +
+                "Column{tableName='tst.t', columnName='f', notNull=false, columnType='integer'}, Column{tableName='tst.t', columnName='g', notNull=true, columnType='text'}]}");
         assertThat(IndexWithColumns.ofNullable(ctx, "t", "i", "c", "integer"))
             .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='c', notNull=false, columnType='integer'}]}");
         assertThat(IndexWithColumns.ofNotNull(ctx, "t", "i", "c", "integer"))
@@ -103,9 +106,9 @@ class IndexWithColumnsTest {
     void testEqualsAndHashCode() {
         final PgContext ctx = PgContext.ofDefault();
         final Column column = Column.ofNullableInteger(ctx, "t1", "f");
-        final IndexWithColumns first = IndexWithColumns.ofSingle(ctx, "t1", "i1", 1, column);
-        final IndexWithColumns theSame = IndexWithColumns.ofSingle(ctx, "t1", "i1", 3, column); // different size!
-        final IndexWithColumns second = IndexWithColumns.ofSingle(ctx, "t2", "i2", 2, Column.ofInteger(ctx, "t2", "f2"));
+        final IndexWithColumns first = IndexWithColumns.of(ctx, "t1", "i1", 1, column);
+        final IndexWithColumns theSame = IndexWithColumns.of(ctx, "t1", "i1", 3, column); // different size!
+        final IndexWithColumns second = IndexWithColumns.of(ctx, "t2", "i2", 2, Column.ofInteger(ctx, "t2", "f2"));
         final IndexWithColumns third = createThird();
 
         assertThat(first.equals(null)).isFalse();
@@ -208,9 +211,9 @@ class IndexWithColumnsTest {
     void compareToTest() {
         final PgContext ctx = PgContext.ofDefault();
         final Column column = Column.ofNullableInteger(ctx, "t1", "f");
-        final IndexWithColumns first = IndexWithColumns.ofSingle(ctx, "t1", "i1", 1, column);
-        final IndexWithColumns theSame = IndexWithColumns.ofSingle(ctx, "t1", "i1", 3, column); // different size!
-        final IndexWithColumns second = IndexWithColumns.ofSingle(ctx, "t2", "i2", 2, Column.ofInteger(ctx, "t2", "f2"));
+        final IndexWithColumns first = IndexWithColumns.of(ctx, "t1", "i1", 1, column);
+        final IndexWithColumns theSame = IndexWithColumns.of(ctx, "t1", "i1", 3, column); // different size!
+        final IndexWithColumns second = IndexWithColumns.of(ctx, "t2", "i2", 2, Column.ofInteger(ctx, "t2", "f2"));
         final IndexWithColumns third = createThird();
 
         assertThatThrownBy(() -> first.compareTo(null))
@@ -238,6 +241,6 @@ class IndexWithColumnsTest {
         final List<Column> columns = List.of(
             Column.ofNullableInteger(ctx, "t3", "t"),
             Column.ofNullableInteger(ctx, "t3", "f"));
-        return IndexWithColumns.ofColumns("t3", "i3", 2L, columns);
+        return IndexWithColumns.of("t3", "i3", 2L, columns);
     }
 }

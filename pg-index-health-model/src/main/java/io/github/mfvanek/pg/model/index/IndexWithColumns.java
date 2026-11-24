@@ -93,36 +93,58 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
     }
 
     /**
-     * Constructs an {@code IndexWithColumns} object with one column and given context.
+     * Constructs an {@code IndexWithColumns} object with given columns and context.
      *
      * @param ctx              the schema context to enrich table and index name; must be non-null.
      * @param tableName        table name; should be non-blank.
      * @param indexName        index name; should be non-blank.
      * @param indexSizeInBytes index size in bytes; should be positive or zero.
-     * @param column           column in index; must be non-null.
+     * @param column           the first column in index; must be non-null.
+     * @param otherColumns     other columns in index; must not contain null elements.
      * @return {@code IndexWithColumns}
-     * @since 0.14.3
+     * @since 0.51.0
      */
-    public static IndexWithColumns ofSingle(final PgContext ctx,
-                                            final String tableName,
-                                            final String indexName,
-                                            final long indexSizeInBytes,
-                                            final Column column) {
-        return ofSingle(Index.of(ctx, tableName, indexName, indexSizeInBytes), column);
+    public static IndexWithColumns of(final PgContext ctx,
+                                      final String tableName,
+                                      final String indexName,
+                                      final long indexSizeInBytes,
+                                      final Column column,
+                                      final Column... otherColumns) {
+        return of(Index.of(ctx, tableName, indexName, indexSizeInBytes), column, otherColumns);
     }
 
     /**
-     * Constructs an {@code IndexWithColumns} object with one column and given index.
+     * Constructs an {@code IndexWithColumns} object with zero size, given columns and context.
      *
-     * @param index  index; must be non-null.
-     * @param column column in index; must be non-null.
+     * @param ctx          the schema context to enrich table and index name; must be non-null.
+     * @param tableName    table name; should be non-blank.
+     * @param indexName    index name; should be non-blank.
+     * @param column       the first column in index; must be non-null.
+     * @param otherColumns other columns in index; must not contain null elements.
      * @return {@code IndexWithColumns}
-     * @since 0.15.0
+     * @since 0.51.0
      */
-    public static IndexWithColumns ofSingle(final Index index,
-                                            final Column column) {
-        final List<Column> columns = List.of(Objects.requireNonNull(column, "column cannot be null"));
-        return of(index, columns);
+    public static IndexWithColumns of(final PgContext ctx,
+                                      final String tableName,
+                                      final String indexName,
+                                      final Column column,
+                                      final Column... otherColumns) {
+        return of(Index.of(ctx, tableName, indexName), column, otherColumns);
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object with given index and columns.
+     *
+     * @param index        index; must be non-null.
+     * @param column       the first column in index; must be non-null.
+     * @param otherColumns other columns in index; must not contain null elements.
+     * @return {@code IndexWithColumns}
+     * @since 0.51.0
+     */
+    public static IndexWithColumns of(final Index index,
+                                      final Column column,
+                                      final Column... otherColumns) {
+        return of(index, Validators.columnsNotNull(column, otherColumns));
     }
 
     /**
@@ -141,7 +163,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
                                               final String indexName,
                                               final String columnName,
                                               final String columnType) {
-        return ofSingle(Index.of(ctx, tableName, indexName), Column.ofNullable(ctx, tableName, columnName, columnType));
+        return of(Index.of(ctx, tableName, indexName), Column.ofNullable(ctx, tableName, columnName, columnType));
     }
 
     /**
@@ -179,7 +201,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
                                              final String indexName,
                                              final String columnName,
                                              final String columnType) {
-        return ofSingle(Index.of(ctx, tableName, indexName), Column.ofNotNull(ctx, tableName, columnName, columnType));
+        return of(Index.of(ctx, tableName, indexName), Column.ofNotNull(ctx, tableName, columnName, columnType));
     }
 
     /**
@@ -516,10 +538,10 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param columns          columns in index; must be non-null.
      * @return {@code IndexWithColumns}
      */
-    public static IndexWithColumns ofColumns(final String tableName,
-                                             final String indexName,
-                                             final long indexSizeInBytes,
-                                             final List<Column> columns) {
+    public static IndexWithColumns of(final String tableName,
+                                      final String indexName,
+                                      final long indexSizeInBytes,
+                                      final List<Column> columns) {
         return of(Index.of(tableName, indexName, indexSizeInBytes), columns);
     }
 
@@ -534,11 +556,11 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @return {@code IndexWithColumns}
      * @since 0.14.3
      */
-    public static IndexWithColumns ofColumns(final PgContext ctx,
-                                             final String tableName,
-                                             final String indexName,
-                                             final long indexSizeInBytes,
-                                             final List<Column> columns) {
+    public static IndexWithColumns of(final PgContext ctx,
+                                      final String tableName,
+                                      final String indexName,
+                                      final long indexSizeInBytes,
+                                      final List<Column> columns) {
         return of(Index.of(ctx, tableName, indexName, indexSizeInBytes), columns);
     }
 
@@ -552,11 +574,11 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @return {@code IndexWithColumns}
      * @since 0.20.2
      */
-    public static IndexWithColumns ofColumns(final PgContext ctx,
-                                             final String tableName,
-                                             final String indexName,
-                                             final List<Column> columns) {
-        return ofColumns(ctx, tableName, indexName, 0L, columns);
+    public static IndexWithColumns of(final PgContext ctx,
+                                      final String tableName,
+                                      final String indexName,
+                                      final List<Column> columns) {
+        return of(ctx, tableName, indexName, 0L, columns);
     }
 
     /**

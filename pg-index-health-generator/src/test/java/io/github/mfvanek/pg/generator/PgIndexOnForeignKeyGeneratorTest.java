@@ -17,8 +17,6 @@ import io.github.mfvanek.pg.model.context.PgContext;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.generator.PgIdentifierNameGeneratorTest.notNullColumnWithSchema;
 import static io.github.mfvanek.pg.generator.PgIdentifierNameGeneratorTest.nullableColumnWithSchema;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -100,9 +98,7 @@ class PgIndexOnForeignKeyGeneratorTest extends GeneratorTestBase {
     static ForeignKey severalColumnsWithNulls() {
         final PgContext ctx = PgContext.ofDefault();
         return ForeignKey.of(ctx, "custom_table", "cn",
-            List.of(
-                Column.ofBigint(ctx, "custom_table", "custom_column_1"),
-                Column.ofNullableBigint(ctx, "custom_table", "custom_column_22")
-            ));
+            Column.ofBigint(ctx, "custom_table", "custom_column_1"),
+            Column.ofNullableBigint(ctx, "custom_table", "custom_column_22"));
     }
 }

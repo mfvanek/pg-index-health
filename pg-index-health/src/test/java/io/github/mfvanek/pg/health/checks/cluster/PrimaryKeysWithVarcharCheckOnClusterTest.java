@@ -48,10 +48,10 @@ class PrimaryKeysWithVarcharCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "t_link", "t_link_pkey",
-                        List.of(Column.ofVarchar(ctx, "t_link", "id_long"), Column.ofVarchar(ctx, "t_link", "\"id-short\""))),
-                    IndexWithColumns.ofSingle(ctx, "t_varchar_long", "t_varchar_long_pkey", 0L, Column.ofVarchar(ctx, "t_varchar_long", "id_long")),
-                    IndexWithColumns.ofSingle(ctx, "\"t-varchar-short\"", "\"t-varchar-short_pkey\"", 0L, Column.ofVarchar(ctx, "\"t-varchar-short\"", "\"id-short\"")))
+                    IndexWithColumns.of(ctx, "t_link", "t_link_pkey",
+                        Column.ofVarchar(ctx, "t_link", "id_long"), Column.ofVarchar(ctx, "t_link", "\"id-short\"")),
+                    IndexWithColumns.of(ctx, "t_varchar_long", "t_varchar_long_pkey", Column.ofVarchar(ctx, "t_varchar_long", "id_long")),
+                    IndexWithColumns.of(ctx, "\"t-varchar-short\"", "\"t-varchar-short_pkey\"", Column.ofVarchar(ctx, "\"t-varchar-short\"", "\"id-short\"")))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -69,10 +69,10 @@ class PrimaryKeysWithVarcharCheckOnClusterTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "tp", "tp_pkey", List.of(
+                    IndexWithColumns.of(ctx, "tp", "tp_pkey",
                         Column.ofTimestamp(ctx, "tp", "creation_date"),
                         Column.ofVarchar(ctx, "tp", "ref_type"),
-                        Column.ofVarchar(ctx, "tp", "entity_id")))
+                        Column.ofVarchar(ctx, "tp", "entity_id"))
                 ));
     }
 }

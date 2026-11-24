@@ -29,7 +29,7 @@ class IndexWithColumnsSerializerTest extends ObjectMapperTestBase {
         final List<Column> columns = List.of(
             Column.ofNullableBigint(ctx, "t3", "t"),
             Column.ofNullableBigint(ctx, "t3", "f"));
-        final IndexWithColumns original = IndexWithColumns.ofColumns(ctx, "t3", "i3", 2L, columns);
+        final IndexWithColumns original = IndexWithColumns.of(ctx, "t3", "i3", 2L, columns);
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"index":{"tableName":"t3","indexName":"i3","indexSizeInBytes":2},"columns":[\

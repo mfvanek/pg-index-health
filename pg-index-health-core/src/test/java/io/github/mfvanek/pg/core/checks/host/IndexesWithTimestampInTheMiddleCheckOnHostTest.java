@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class IndexesWithTimestampInTheMiddleCheckOnHostTest extends DatabaseAwareTestBase {
@@ -49,18 +47,18 @@ class IndexesWithTimestampInTheMiddleCheckOnHostTest extends DatabaseAwareTestBa
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("index.indexSizeInBytes")
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_expr_first", List.of(
+                    IndexWithColumns.of(ctx, "\"t-multi\"", "idx_multi_expr_first",
                         Column.ofTimestamp(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\""),
                         Column.ofInteger(ctx, "\"t-multi\"", "id"),
-                        Column.ofNullableText(ctx, "\"t-multi\"", "name"))),
-                    IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_expr_mid", List.of(
+                        Column.ofNullableText(ctx, "\"t-multi\"", "name")),
+                    IndexWithColumns.of(ctx, "\"t-multi\"", "idx_multi_expr_mid",
                         Column.ofInteger(ctx, "\"t-multi\"", "id"),
                         Column.ofTimestamp(ctx, "\"t-multi\"", "\"date_trunc('day'::text, ts)\""),
-                        Column.ofNullableText(ctx, "\"t-multi\"", "name"))),
-                    IndexWithColumns.ofColumns(ctx, "\"t-multi\"", "idx_multi_mid", List.of(
+                        Column.ofNullableText(ctx, "\"t-multi\"", "name")),
+                    IndexWithColumns.of(ctx, "\"t-multi\"", "idx_multi_mid",
                         Column.ofInteger(ctx, "\"t-multi\"", "id"),
                         Column.ofNullableTimestamp(ctx, "\"t-multi\"", "ts"),
-                        Column.ofNullableText(ctx, "\"t-multi\"", "name"))))
+                        Column.ofNullableText(ctx, "\"t-multi\"", "name")))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -78,11 +76,10 @@ class IndexesWithTimestampInTheMiddleCheckOnHostTest extends DatabaseAwareTestBa
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    IndexWithColumns.ofColumns(ctx, "tp", "i_tp_creation_date_entity_id_ref_type", List.of(
+                    IndexWithColumns.of(ctx, "tp", "i_tp_creation_date_entity_id_ref_type",
                         Column.ofTimestamp(ctx, "tp", "creation_date"),
                         Column.ofVarchar(ctx, "tp", "entity_id"),
-                        Column.ofVarchar(ctx, "tp", "ref_type")
-                    ))
+                        Column.ofVarchar(ctx, "tp", "ref_type"))
                 ));
     }
 }

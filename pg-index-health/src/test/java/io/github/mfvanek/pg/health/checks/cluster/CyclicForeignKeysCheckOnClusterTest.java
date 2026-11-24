@@ -65,7 +65,7 @@ class CyclicForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                     ForeignKeyCycle.of(
                         ForeignKey.ofNullableBigint(ctx, "cfk_customers", "cfk_customers_last_order_fk", "last_order_id"),
                         ForeignKey.of(ctx, "cfk_orders", "cfk_orders_customer_fk",
-                            List.of(Column.ofBigint(ctx, "cfk_orders", "customer_id"), Column.ofBigint(ctx, "cfk_orders", "region_id")))),
+                            Column.ofBigint(ctx, "cfk_orders", "customer_id"), Column.ofBigint(ctx, "cfk_orders", "region_id"))),
                     ForeignKeyCycle.of(
                         ForeignKey.ofBigint(ctx, "cfk_left", "cfk_left_first_right_fk", "first_right_id"),
                         ForeignKey.ofBigint(ctx, "cfk_right", "cfk_right_left_fk", "left_id")),

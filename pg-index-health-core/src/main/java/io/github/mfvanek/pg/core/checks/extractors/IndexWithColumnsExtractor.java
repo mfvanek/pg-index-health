@@ -43,7 +43,7 @@ public final class IndexWithColumnsExtractor implements ResultSetExtractor<Index
         final Array columnsArray = resultSet.getArray(ColumnsAware.COLUMNS_FIELD);
         final String[] rawColumns = (String[]) columnsArray.getArray();
         final List<Column> columns = ColumnsDataParser.parseRawColumnsInForeignKeyOrIndex(tableName, rawColumns);
-        return IndexWithColumns.ofColumns(tableName, indexName, indexSize, columns);
+        return IndexWithColumns.of(tableName, indexName, indexSize, columns);
     }
 
     /**

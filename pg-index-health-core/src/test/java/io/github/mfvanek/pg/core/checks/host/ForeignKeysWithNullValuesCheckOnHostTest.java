@@ -50,13 +50,12 @@ class ForeignKeysWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.of(ctx, "bad_clients", "c_bad_clients_fk_email_phone", List.of(
+                    ForeignKey.of(ctx, "bad_clients", "c_bad_clients_fk_email_phone",
                         Column.ofNullableVarchar(ctx, "bad_clients", "email"),
-                        Column.ofNullableVarchar(ctx, "bad_clients", "phone"))),
-                    ForeignKey.of(ctx, tableName, "\"referencing-bad-table-fk\"", List.of(
+                        Column.ofNullableVarchar(ctx, "bad_clients", "phone")),
+                    ForeignKey.of(ctx, tableName, "\"referencing-bad-table-fk\"",
                         Column.ofInteger(ctx, tableName, "rbt_id"),
-                        Column.ofNullableText(ctx, tableName, "rbt_value")
-                    ))
+                        Column.ofNullableText(ctx, tableName, "rbt_value"))
                 );
 
             assertThat(check)
@@ -75,10 +74,9 @@ class ForeignKeysWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    ForeignKey.of(ctx, tableName, "\"referencing_bad_table_partitioned-fk\"", List.of(
+                    ForeignKey.of(ctx, tableName, "\"referencing_bad_table_partitioned-fk\"",
                         Column.ofInteger(ctx, tableName, "rbt_id"),
-                        Column.ofNullableText(ctx, tableName, "rbt_value")
-                    ))
+                        Column.ofNullableText(ctx, tableName, "rbt_value"))
                 );
         });
     }

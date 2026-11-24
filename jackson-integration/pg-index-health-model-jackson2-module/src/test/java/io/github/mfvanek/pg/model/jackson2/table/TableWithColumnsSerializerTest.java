@@ -18,7 +18,6 @@ import io.github.mfvanek.pg.model.table.TableWithColumns;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,9 +26,9 @@ class TableWithColumnsSerializerTest extends ObjectMapperTestBase {
     @Test
     void serializationShouldWork() throws IOException {
         final PgContext ctx = PgContext.ofDefault();
-        final TableWithColumns original = TableWithColumns.of(Table.of(ctx, "t1", 123L), List.of(
+        final TableWithColumns original = TableWithColumns.of(Table.of(ctx, "t1", 123L),
             Column.ofBigint(ctx, "t1", "c1"),
-            Column.ofBigint(ctx, "t1", "c2")));
+            Column.ofBigint(ctx, "t1", "c2"));
         assertThat(objectMapper.writeValueAsString(original))
             .isEqualTo("""
                 {"table":{"tableName":"t1","tableSizeInBytes":123},"columns":[\
