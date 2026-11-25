@@ -9,6 +9,8 @@ The type is a `String` exactly as PostgreSQL returns it (`atttypid::regtype::tex
 e.g. `integer`, `character varying`, `timestamp with time zone`, `integer[]`.
 
 All factory methods of `Column` require the type. It can be passed as a `String` or as a `PgColumnType` constant.
+For array columns use `PgColumnType.getArrayType()`, e.g. `PgColumnType.TEXT.getArrayType()` returns `text[]`
+(serial pseudo-types have no array form and throw `UnsupportedOperationException`).
 
 **`Column.ofNotNull` and `Column.ofNullable` require a `PgContext`.**
 
@@ -34,6 +36,7 @@ Column.ofNullableText(PgContext.ofDefault(), "orders", "comment")
 Column.ofNotNull(ctx, "orders", "id", PgColumnType.BIGINT)
 Column.ofNotNull(ctx, "orders", "status", ctx.enrichWithSchema("order_status"))
 Column.of(ctx, "orders", "tags", false, "integer[]")
+Column.ofNullable(ctx, "orders", "tags", PgColumnType.INTEGER.getArrayType())
 Column.of("public.orders", "tags", false, "integer[]")
 ```
 
@@ -133,6 +136,7 @@ are now part of `ColumnNameAware`. Replace `ColumnTypeAware` with `ColumnNameAwa
 **`PgColumnType` replaces `SerialType`.**
 
 `SerialType` has been removed. Use `PgColumnType.SMALL_SERIAL`, `PgColumnType.SERIAL` and `PgColumnType.BIG_SERIAL` instead.
+`PgColumnType.isSerial()` tells whether a type is one of these serial pseudo-types.
 
 **`ColumnWithSerialType` takes the serial type from the column type.**
 
