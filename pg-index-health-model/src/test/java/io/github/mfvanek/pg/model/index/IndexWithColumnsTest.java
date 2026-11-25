@@ -95,9 +95,9 @@ class IndexWithColumnsTest {
         assertThat(IndexWithColumns.of(ctx, "t", "i", column, Column.ofText(ctx, "t", "g")))
             .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[" +
                 "Column{tableName='tst.t', columnName='f', notNull=false, columnType='integer'}, Column{tableName='tst.t', columnName='g', notNull=true, columnType='text'}]}");
-        assertThat(IndexWithColumns.ofNullable(ctx, "t", "i", "c", "integer"))
+        assertThat(IndexWithColumns.ofNullableInteger(ctx, "t", "i", "c"))
             .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='c', notNull=false, columnType='integer'}]}");
-        assertThat(IndexWithColumns.ofNotNull(ctx, "t", "i", "c", "integer"))
+        assertThat(IndexWithColumns.ofInteger(ctx, "t", "i", "c"))
             .hasToString("IndexWithColumns{tableName='tst.t', indexName='tst.i', indexSizeInBytes=0, columns=[Column{tableName='tst.t', columnName='c', notNull=true, columnType='integer'}]}");
     }
 
@@ -176,7 +176,9 @@ class IndexWithColumnsTest {
             IndexWithColumns.ofTimestamptz(ctx, "t1", "i1", "c1"),
             IndexWithColumns.ofNullableTimestamptz(ctx, "t1", "i1", "c1"),
             IndexWithColumns.ofUuid(ctx, "t1", "i1", "c1"),
-            IndexWithColumns.ofNullableUuid(ctx, "t1", "i1", "c1")))
+            IndexWithColumns.ofNullableUuid(ctx, "t1", "i1", "c1"),
+            IndexWithColumns.ofDate(ctx, "t1", "i1", "c1"),
+            IndexWithColumns.ofNullableDate(ctx, "t1", "i1", "c1")))
             .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
                 IndexWithColumns.ofNotNull(ctx, "t1", "i1", "c1", "bigint"),
@@ -196,7 +198,9 @@ class IndexWithColumnsTest {
                 IndexWithColumns.ofNotNull(ctx, "t1", "i1", "c1", "timestamp with time zone"),
                 IndexWithColumns.ofNullable(ctx, "t1", "i1", "c1", "timestamp with time zone"),
                 IndexWithColumns.ofNotNull(ctx, "t1", "i1", "c1", "uuid"),
-                IndexWithColumns.ofNullable(ctx, "t1", "i1", "c1", "uuid"));
+                IndexWithColumns.ofNullable(ctx, "t1", "i1", "c1", "uuid"),
+                IndexWithColumns.ofNotNull(ctx, "t1", "i1", "c1", "date"),
+                IndexWithColumns.ofNullable(ctx, "t1", "i1", "c1", "date"));
     }
 
     @Test

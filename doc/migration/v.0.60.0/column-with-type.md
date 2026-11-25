@@ -17,9 +17,9 @@ The overloads without `PgContext` have been removed. Use `PgContext.ofDefault()`
 for already qualified table names.
 
 For the most common types there are shortcut factories (all with `PgContext`):
-`ofBigint`, `ofInteger`, `ofVarchar`, `ofText`, `ofCharacter`, `ofBoolean`, `ofTimestamp`, `ofTimestamptz`, `ofUuid` (not null)
+`ofBigint`, `ofInteger`, `ofVarchar`, `ofText`, `ofCharacter`, `ofBoolean`, `ofTimestamp`, `ofTimestamptz`, `ofUuid`, `ofDate` (not null)
 and `ofNullableBigint`, `ofNullableInteger`, `ofNullableVarchar`, `ofNullableText`, `ofNullableCharacter`, `ofNullableBoolean`,
-`ofNullableTimestamp`, `ofNullableTimestamptz`, `ofNullableUuid` (nullable).
+`ofNullableTimestamp`, `ofNullableTimestamptz`, `ofNullableUuid`, `ofNullableDate` (nullable).
 
 ```java
 // Before
@@ -73,7 +73,7 @@ ForeignKey.ofBigint(ctx, "orders", "fk_orders_client", "client_id")
 ```
 
 `ForeignKey` also has typed shortcut factories (all with `PgContext`) for the same types as `Column`:
-`ofBigint`, `ofInteger`, ..., `ofUuid` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableUuid` (nullable),
+`ofBigint`, `ofInteger`, ..., `ofDate` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableDate` (nullable),
 e.g. `ForeignKey.ofInteger(ctx, "orders", "fk_orders_client", "client_id")` instead of
 `ForeignKey.ofNotNull(ctx, "orders", "fk_orders_client", "client_id", PgColumnType.INTEGER)`.
 
@@ -84,7 +84,7 @@ use `PgContext.ofDefault()` for tables in the `public` schema. `IndexWithColumns
 without context is kept for already qualified table names.
 
 `IndexWithColumns` also has typed shortcut factories (all with `PgContext`, zero index size) for the same types as `Column`:
-`ofBigint`, `ofInteger`, ..., `ofUuid` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableUuid` (nullable).
+`ofBigint`, `ofInteger`, ..., `ofDate` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableDate` (nullable).
 
 ```java
 // Before
@@ -122,7 +122,7 @@ TableWithColumns.of(Table.of(ctx, "orders"), clientId)
 ```
 
 `TableWithColumns` also has typed shortcut factories (all with `PgContext`) for the same types as `Column`:
-`ofBigint`, `ofInteger`, ..., `ofUuid` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableUuid` (nullable),
+`ofBigint`, `ofInteger`, ..., `ofDate` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableDate` (nullable),
 e.g. `TableWithColumns.ofBigint(ctx, "orders", "id")` instead of `TableWithColumns.ofNotNull(ctx, "orders", "id", PgColumnType.BIGINT)`.
 
 **`ColumnTypeAware` has been merged into `ColumnNameAware`.**

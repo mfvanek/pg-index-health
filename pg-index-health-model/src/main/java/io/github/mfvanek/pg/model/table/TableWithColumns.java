@@ -482,4 +482,34 @@ public final class TableWithColumns extends AbstractTableAware implements Column
                                                   final String columnName) {
         return ofNullable(ctx, tableName, columnName, PgColumnType.UUID.getColumnType());
     }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single non-nullable column of {@code date} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one non-nullable column
+     * @since 0.60.0
+     */
+    public static TableWithColumns ofDate(final PgContext ctx,
+                                          final String tableName,
+                                          final String columnName) {
+        return ofNotNull(ctx, tableName, columnName, PgColumnType.DATE.getColumnType());
+    }
+
+    /**
+     * Creates a {@code TableWithColumns} for the given table and a single nullable column of {@code date} type.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return a {@code TableWithColumns} with one nullable column
+     * @since 0.60.0
+     */
+    public static TableWithColumns ofNullableDate(final PgContext ctx,
+                                                  final String tableName,
+                                                  final String columnName) {
+        return ofNullable(ctx, tableName, columnName, PgColumnType.DATE.getColumnType());
+    }
 }

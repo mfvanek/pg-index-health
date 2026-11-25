@@ -28,7 +28,7 @@ class TableWithColumnsTest {
     @Test
     void gettersShouldWork() {
         final PgContext ctx = PgContext.of("tst");
-        final TableWithColumns first = TableWithColumns.ofNullable(ctx, "t1", "c1", "integer");
+        final TableWithColumns first = TableWithColumns.ofNullableInteger(ctx, "t1", "c1");
         assertThat(first.getTableName())
             .isEqualTo("tst.t1")
             .isEqualTo(first.getName());
@@ -80,7 +80,7 @@ class TableWithColumnsTest {
     @Test
     void testToString() {
         final PgContext ctx = PgContext.of("tst");
-        assertThat(TableWithColumns.ofNotNull(ctx, "t1", "c1", "integer"))
+        assertThat(TableWithColumns.ofInteger(ctx, "t1", "c1"))
             .hasToString("TableWithColumns{tableName='tst.t1', tableSizeInBytes=0, columns=[Column{tableName='tst.t1', columnName='c1', notNull=true, columnType='integer'}]}");
         assertThat(TableWithColumns.withoutColumns(Table.of("t2")))
             .hasToString("TableWithColumns{tableName='t2', tableSizeInBytes=0, columns=[]}");
@@ -90,7 +90,7 @@ class TableWithColumnsTest {
     @Test
     void testEqualsAndHashCode() {
         final PgContext ctx = PgContext.of("tst");
-        final TableWithColumns first = TableWithColumns.ofNotNull(ctx, "t1", "c1", "integer");
+        final TableWithColumns first = TableWithColumns.ofInteger(ctx, "t1", "c1");
         final TableWithColumns theSame = TableWithColumns.of(Table.of(ctx, "t1"), Column.ofInteger(ctx, "t1", "c1"));
         final TableWithColumns third = TableWithColumns.ofNullableInteger(ctx, "t1", "c2");
         final TableWithColumns forth = TableWithColumns.ofNullableInteger(ctx, "t2", "c1");
@@ -163,13 +163,15 @@ class TableWithColumnsTest {
             TableWithColumns.ofTimestamptz(ctx, "t1", "c1"),
             TableWithColumns.ofNullableTimestamptz(ctx, "t1", "c1"),
             TableWithColumns.ofUuid(ctx, "t1", "c1"),
-            TableWithColumns.ofNullableUuid(ctx, "t1", "c1")))
+            TableWithColumns.ofNullableUuid(ctx, "t1", "c1"),
+            TableWithColumns.ofDate(ctx, "t1", "c1"),
+            TableWithColumns.ofNullableDate(ctx, "t1", "c1")))
             .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
                 TableWithColumns.ofNotNull(ctx, "t1", "c1", "bigint"),
                 TableWithColumns.ofNullable(ctx, "t1", "c1", "bigint"),
-                TableWithColumns.ofNotNull(ctx, "t1", "c1", "integer"),
-                TableWithColumns.ofNullable(ctx, "t1", "c1", "integer"),
+                TableWithColumns.ofInteger(ctx, "t1", "c1"),
+                TableWithColumns.ofNullableInteger(ctx, "t1", "c1"),
                 TableWithColumns.ofNotNull(ctx, "t1", "c1", "character varying"),
                 TableWithColumns.ofNullable(ctx, "t1", "c1", "character varying"),
                 TableWithColumns.ofNotNull(ctx, "t1", "c1", "text"),
@@ -183,7 +185,9 @@ class TableWithColumnsTest {
                 TableWithColumns.ofNotNull(ctx, "t1", "c1", "timestamp with time zone"),
                 TableWithColumns.ofNullable(ctx, "t1", "c1", "timestamp with time zone"),
                 TableWithColumns.ofNotNull(ctx, "t1", "c1", "uuid"),
-                TableWithColumns.ofNullable(ctx, "t1", "c1", "uuid"));
+                TableWithColumns.ofNullable(ctx, "t1", "c1", "uuid"),
+                TableWithColumns.ofNotNull(ctx, "t1", "c1", "date"),
+                TableWithColumns.ofNullable(ctx, "t1", "c1", "date"));
     }
 
     @Test
@@ -196,7 +200,7 @@ class TableWithColumnsTest {
     @Test
     void compareToTest() {
         final PgContext ctx = PgContext.of("tst");
-        final TableWithColumns first = TableWithColumns.ofNotNull(ctx, "t1", "c1", "integer");
+        final TableWithColumns first = TableWithColumns.ofInteger(ctx, "t1", "c1");
         final TableWithColumns theSame = TableWithColumns.of(Table.of(ctx, "t1"), Column.ofInteger(ctx, "t1", "c1"));
         final TableWithColumns third = TableWithColumns.ofNullableInteger(ctx, "t2", "c1");
 
