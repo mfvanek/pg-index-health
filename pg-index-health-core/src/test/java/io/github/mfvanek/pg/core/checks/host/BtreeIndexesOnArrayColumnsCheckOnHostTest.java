@@ -15,6 +15,7 @@ import io.github.mfvanek.pg.core.checks.common.Diagnostic;
 import io.github.mfvanek.pg.core.fixtures.support.DatabaseAwareTestBase;
 import io.github.mfvanek.pg.core.fixtures.support.DatabasePopulator;
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.index.IndexWithColumns;
 import io.github.mfvanek.pg.model.predicates.SkipTablesByNamePredicate;
@@ -49,9 +50,9 @@ class BtreeIndexesOnArrayColumnsCheckOnHostTest extends DatabaseAwareTestBase {
                 .containsExactly(
                     IndexWithColumns.of(ctx, "accounts", "accounts_account_number_roles_btree_idx",
                         Column.ofVarchar(ctx, "accounts", "account_number"),
-                        Column.ofNullable(ctx, "accounts", "roles", "text[]")),
+                        Column.ofNullable(ctx, "accounts", "roles", PgColumnType.TEXT.getArrayType())),
                     IndexWithColumns.of(ctx, "accounts", "accounts_roles_btree_idx",
-                        Column.ofNullable(ctx, "accounts", "roles", "text[]")))
+                        Column.ofNullable(ctx, "accounts", "roles", PgColumnType.TEXT.getArrayType())))
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
@@ -69,7 +70,7 @@ class BtreeIndexesOnArrayColumnsCheckOnHostTest extends DatabaseAwareTestBase {
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(
-                    IndexWithColumns.of(ctx, "t1", "t1_roles_btree_idx", Column.ofNullable(ctx, "t1", "roles", "text[]"))
+                    IndexWithColumns.of(ctx, "t1", "t1_roles_btree_idx", Column.ofNullable(ctx, "t1", "roles", PgColumnType.TEXT.getArrayType()))
                 ));
     }
 }

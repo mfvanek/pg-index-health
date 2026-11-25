@@ -94,7 +94,9 @@ class ColumnTest {
             Column.ofTimestamptz(ctx, "t1", "c1"),
             Column.ofNullableTimestamptz(ctx, "t1", "c1"),
             Column.ofUuid(ctx, "t1", "c1"),
-            Column.ofNullableUuid(ctx, "t1", "c1")))
+            Column.ofNullableUuid(ctx, "t1", "c1"),
+            Column.ofDate(ctx, "t1", "c1"),
+            Column.ofNullableDate(ctx, "t1", "c1")))
             .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
                 Column.of("tst.t1", "c1", true, "bigint"),
@@ -114,7 +116,9 @@ class ColumnTest {
                 Column.of("tst.t1", "c1", true, "timestamp with time zone"),
                 Column.of("tst.t1", "c1", false, "timestamp with time zone"),
                 Column.of("tst.t1", "c1", true, "uuid"),
-                Column.of("tst.t1", "c1", false, "uuid"));
+                Column.of("tst.t1", "c1", false, "uuid"),
+                Column.of("tst.t1", "c1", true, "date"),
+                Column.of("tst.t1", "c1", false, "date"));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -163,9 +167,9 @@ class ColumnTest {
             .hasToString("Column{tableName='t2', columnName='c2', notNull=false, columnType='timestamp with time zone'}");
 
         final PgContext ctx = PgContext.of("tst");
-        assertThat(Column.ofNotNull(ctx, "t1", "c1", "integer[]"))
+        assertThat(Column.ofNotNull(ctx, "t1", "c1", PgColumnType.INTEGER.getArrayType()))
             .hasToString("Column{tableName='tst.t1', columnName='c1', notNull=true, columnType='integer[]'}");
-        assertThat(Column.ofNullable(ctx, "t2", "c2", PgColumnType.VARCHAR))
+        assertThat(Column.ofNullableVarchar(ctx, "t2", "c2"))
             .hasToString("Column{tableName='tst.t2', columnName='c2', notNull=false, columnType='character varying'}");
     }
 

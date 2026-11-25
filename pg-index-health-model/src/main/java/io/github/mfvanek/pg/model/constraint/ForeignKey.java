@@ -34,6 +34,7 @@ import java.util.Objects;
  * @see TableNameAware
  * @see Constraint
  */
+@SuppressWarnings("PMD.GodClass") // many trivial typed factory methods inflate WMC
 public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsAware, Comparable<ForeignKey> {
 
     /**
@@ -633,5 +634,39 @@ public final class ForeignKey implements DbObject, ConstraintNameAware, ColumnsA
                                             final String constraintName,
                                             final String columnName) {
         return ofNullable(ctx, tableName, constraintName, columnName, PgColumnType.UUID.getColumnType());
+    }
+
+    /**
+     * Constructs a {@code ForeignKey} object with not null column of {@code date} type and given context.
+     *
+     * @param ctx            the schema context to enrich table name; must be non-null.
+     * @param tableName      table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param columnName     name of column that is included in constraint; should be non-blank.
+     * @return {@code ForeignKey}
+     * @since 0.60.0
+     */
+    public static ForeignKey ofDate(final PgContext ctx,
+                                    final String tableName,
+                                    final String constraintName,
+                                    final String columnName) {
+        return ofNotNull(ctx, tableName, constraintName, columnName, PgColumnType.DATE.getColumnType());
+    }
+
+    /**
+     * Constructs a {@code ForeignKey} object with nullable column of {@code date} type and given context.
+     *
+     * @param ctx            the schema context to enrich table name; must be non-null.
+     * @param tableName      table name; should be non-blank.
+     * @param constraintName constraint name; should be non-blank.
+     * @param columnName     name of column that is included in constraint; should be non-blank.
+     * @return {@code ForeignKey}
+     * @since 0.60.0
+     */
+    public static ForeignKey ofNullableDate(final PgContext ctx,
+                                            final String tableName,
+                                            final String constraintName,
+                                            final String columnName) {
+        return ofNullable(ctx, tableName, constraintName, columnName, PgColumnType.DATE.getColumnType());
     }
 }

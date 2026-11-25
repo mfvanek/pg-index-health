@@ -522,4 +522,34 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
                                         final String columnName) {
         return ofNullable(ctx, tableName, columnName, PgColumnType.UUID.getColumnType());
     }
+
+    /**
+     * Constructs a not null {@code Column} object of {@code date} type with given context.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.60.0
+     */
+    public static Column ofDate(final PgContext ctx,
+                                final String tableName,
+                                final String columnName) {
+        return ofNotNull(ctx, tableName, columnName, PgColumnType.DATE.getColumnType());
+    }
+
+    /**
+     * Constructs a nullable {@code Column} object of {@code date} type with given context.
+     *
+     * @param ctx        the schema context to enrich table name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code Column}
+     * @since 0.60.0
+     */
+    public static Column ofNullableDate(final PgContext ctx,
+                                        final String tableName,
+                                        final String columnName) {
+        return ofNullable(ctx, tableName, columnName, PgColumnType.DATE.getColumnType());
+    }
 }

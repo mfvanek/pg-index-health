@@ -16,10 +16,8 @@ import io.github.mfvanek.pg.model.dbobject.PgObjectType;
 import io.github.mfvanek.pg.model.sequence.SequenceNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
-import java.util.EnumSet;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * An immutable representation of column with serial type in database table.
@@ -32,8 +30,6 @@ import java.util.Set;
  * @since 0.6.2
  */
 public final class ColumnWithSerialType implements DbObject, ColumnNameAware, SequenceNameAware, Comparable<ColumnWithSerialType> {
-
-    private static final Set<PgColumnType> SERIAL_TYPES = EnumSet.of(PgColumnType.SMALL_SERIAL, PgColumnType.SERIAL, PgColumnType.BIG_SERIAL);
 
     private final Column column;
     private final String sequenceName;
@@ -167,7 +163,7 @@ public final class ColumnWithSerialType implements DbObject, ColumnNameAware, Se
     }
 
     private static void validateSerialType(final String columnType) {
-        if (!SERIAL_TYPES.contains(PgColumnType.valueFrom(columnType))) {
+        if (!PgColumnType.valueFrom(columnType).isSerial()) {
             throw new IllegalArgumentException(String.format(Locale.ROOT, "column type must be serial but was '%s'", columnType));
         }
     }

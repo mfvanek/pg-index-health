@@ -12,6 +12,7 @@ package io.github.mfvanek.pg.model.column;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,6 +34,12 @@ class PgColumnTypeTest {
     }
 
     @Test
+    void isSerialShouldWork() {
+        assertThat(Arrays.stream(PgColumnType.values()).filter(PgColumnType::isSerial))
+            .containsExactly(PgColumnType.SMALL_SERIAL, PgColumnType.SERIAL, PgColumnType.BIG_SERIAL);
+    }
+
+    @Test
     void toStringTest() {
         assertThat(PgColumnType.SMALL_SERIAL)
             .hasToString("PgColumnType{columnType='smallserial'}");
@@ -42,6 +49,29 @@ class PgColumnTypeTest {
             .hasToString("PgColumnType{columnType='bigserial'}");
         assertThat(PgColumnType.VARCHAR)
             .hasToString("PgColumnType{columnType='character varying'}");
+    }
+
+    @Test
+    void arrayTypeShouldWork() {
+        assertThat(PgColumnType.TEXT.getArrayType())
+            .isEqualTo("text[]");
+        assertThat(PgColumnType.INTEGER.getArrayType())
+            .isEqualTo("integer[]");
+        assertThat(PgColumnType.TIMESTAMPTZ.getArrayType())
+            .isEqualTo("timestamp with time zone[]");
+    }
+
+    @Test
+    void arrayTypeShouldThrowExceptionForSerialTypes() {
+        assertThatThrownBy(PgColumnType.SMALL_SERIAL::getArrayType)
+            .isInstanceOf(UnsupportedOperationException.class)
+            .hasMessage("Serial pseudo-type 'smallserial' has no array form");
+        assertThatThrownBy(PgColumnType.SERIAL::getArrayType)
+            .isInstanceOf(UnsupportedOperationException.class)
+            .hasMessage("Serial pseudo-type 'serial' has no array form");
+        assertThatThrownBy(PgColumnType.BIG_SERIAL::getArrayType)
+            .isInstanceOf(UnsupportedOperationException.class)
+            .hasMessage("Serial pseudo-type 'bigserial' has no array form");
     }
 
     @Test

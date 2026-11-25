@@ -29,10 +29,10 @@ class ForeignKeyTest {
     @Test
     void testToString() {
         final PgContext ctx = PgContext.of("tst");
-        assertThat(ForeignKey.ofNotNull(ctx, "t", "c_t_order_id", "order_id", "integer"))
+        assertThat(ForeignKey.ofInteger(ctx, "t", "c_t_order_id", "order_id"))
             .hasToString("ForeignKey{tableName='tst.t', constraintName='c_t_order_id', columns=[Column{tableName='tst.t', columnName='order_id', notNull=true, columnType='integer'}]}");
 
-        assertThat(ForeignKey.ofNullable(ctx, "t", "c_t_order_id", "order_id", "integer"))
+        assertThat(ForeignKey.ofNullableInteger(ctx, "t", "c_t_order_id", "order_id"))
             .hasToString("ForeignKey{tableName='tst.t', constraintName='c_t_order_id', columns=[Column{tableName='tst.t', columnName='order_id', notNull=false, columnType='integer'}]}");
     }
 
@@ -240,7 +240,9 @@ class ForeignKeyTest {
             ForeignKey.ofTimestamptz(ctx, "t1", "fk", "c1"),
             ForeignKey.ofNullableTimestamptz(ctx, "t1", "fk", "c1"),
             ForeignKey.ofUuid(ctx, "t1", "fk", "c1"),
-            ForeignKey.ofNullableUuid(ctx, "t1", "fk", "c1")))
+            ForeignKey.ofNullableUuid(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofDate(ctx, "t1", "fk", "c1"),
+            ForeignKey.ofNullableDate(ctx, "t1", "fk", "c1")))
             .usingRecursiveFieldByFieldElementComparator()
             .containsExactly(
                 ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "bigint"),
@@ -260,7 +262,9 @@ class ForeignKeyTest {
                 ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "timestamp with time zone"),
                 ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "timestamp with time zone"),
                 ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "uuid"),
-                ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "uuid"));
+                ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "uuid"),
+                ForeignKey.ofNotNull(ctx, "t1", "fk", "c1", "date"),
+                ForeignKey.ofNullable(ctx, "t1", "fk", "c1", "date"));
     }
 
     @Test

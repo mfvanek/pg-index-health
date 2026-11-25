@@ -11,6 +11,7 @@
 package io.github.mfvanek.pg.core.utils;
 
 import io.github.mfvanek.pg.model.column.Column;
+import io.github.mfvanek.pg.model.column.PgColumnType;
 import io.github.mfvanek.pg.model.context.PgContext;
 import io.github.mfvanek.pg.model.fixtures.support.TestUtils;
 import org.junit.jupiter.api.Tag;
@@ -67,7 +68,7 @@ class ColumnsDataParserTest {
             .containsExactly(
                 Column.ofBigint(ctx, "t", "c1"),
                 Column.ofNullableText(ctx, "t", "c2"),
-                Column.ofNullable(ctx, "t", "c3", "integer[]"))
+                Column.ofNullable(ctx, "t", "c3", PgColumnType.INTEGER.getArrayType()))
             .isUnmodifiable();
     }
 
@@ -80,7 +81,7 @@ class ColumnsDataParserTest {
             .containsExactly(
                 Column.ofBigint(ctx, "t", "c1"),
                 Column.ofNullableText(ctx, "t", "c2"),
-                Column.ofNullable(ctx, "t", "c3", "integer[]"))
+                Column.ofNullable(ctx, "t", "c3", PgColumnType.INTEGER.getArrayType()))
             .isUnmodifiable();
     }
 

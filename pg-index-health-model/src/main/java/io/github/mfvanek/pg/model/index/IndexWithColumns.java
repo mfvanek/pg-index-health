@@ -534,6 +534,40 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
     }
 
     /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one not-null column of {@code date} type and given context.
+     *
+     * @param ctx        the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.60.0
+     */
+    public static IndexWithColumns ofDate(final PgContext ctx,
+                                          final String tableName,
+                                          final String indexName,
+                                          final String columnName) {
+        return ofNotNull(ctx, tableName, indexName, columnName, PgColumnType.DATE.getColumnType());
+    }
+
+    /**
+     * Constructs an {@code IndexWithColumns} object of zero size with one nullable column of {@code date} type and given context.
+     *
+     * @param ctx        the schema context to enrich table and index name; must be non-null.
+     * @param tableName  table name; should be non-blank.
+     * @param indexName  index name; should be non-blank.
+     * @param columnName column name; should be non-blank.
+     * @return {@code IndexWithColumns}
+     * @since 0.60.0
+     */
+    public static IndexWithColumns ofNullableDate(final PgContext ctx,
+                                                  final String tableName,
+                                                  final String indexName,
+                                                  final String columnName) {
+        return ofNullable(ctx, tableName, indexName, columnName, PgColumnType.DATE.getColumnType());
+    }
+
+    /**
      * Constructs an {@code IndexWithColumns} object with given columns.
      *
      * @param tableName        table name; should be non-blank.

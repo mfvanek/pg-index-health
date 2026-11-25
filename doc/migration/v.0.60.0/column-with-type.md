@@ -9,6 +9,8 @@ The type is a `String` exactly as PostgreSQL returns it (`atttypid::regtype::tex
 e.g. `integer`, `character varying`, `timestamp with time zone`, `integer[]`.
 
 All factory methods of `Column` require the type. It can be passed as a `String` or as a `PgColumnType` constant.
+For array columns use `PgColumnType.getArrayType()`, e.g. `PgColumnType.TEXT.getArrayType()` returns `text[]`
+(serial pseudo-types have no array form and throw `UnsupportedOperationException`).
 
 **`Column.ofNotNull` and `Column.ofNullable` require a `PgContext`.**
 
@@ -17,9 +19,9 @@ The overloads without `PgContext` have been removed. Use `PgContext.ofDefault()`
 for already qualified table names.
 
 For the most common types there are shortcut factories (all with `PgContext`):
-`ofBigint`, `ofInteger`, `ofVarchar`, `ofText`, `ofCharacter`, `ofBoolean`, `ofTimestamp`, `ofTimestamptz`, `ofUuid` (not null)
+`ofBigint`, `ofInteger`, `ofVarchar`, `ofText`, `ofCharacter`, `ofBoolean`, `ofTimestamp`, `ofTimestamptz`, `ofUuid`, `ofDate` (not null)
 and `ofNullableBigint`, `ofNullableInteger`, `ofNullableVarchar`, `ofNullableText`, `ofNullableCharacter`, `ofNullableBoolean`,
-`ofNullableTimestamp`, `ofNullableTimestamptz`, `ofNullableUuid` (nullable).
+`ofNullableTimestamp`, `ofNullableTimestamptz`, `ofNullableUuid`, `ofNullableDate` (nullable).
 
 ```java
 // Before
@@ -34,6 +36,7 @@ Column.ofNullableText(PgContext.ofDefault(), "orders", "comment")
 Column.ofNotNull(ctx, "orders", "id", PgColumnType.BIGINT)
 Column.ofNotNull(ctx, "orders", "status", ctx.enrichWithSchema("order_status"))
 Column.of(ctx, "orders", "tags", false, "integer[]")
+Column.ofNullable(ctx, "orders", "tags", PgColumnType.INTEGER.getArrayType())
 Column.of("public.orders", "tags", false, "integer[]")
 ```
 
@@ -73,7 +76,7 @@ ForeignKey.ofBigint(ctx, "orders", "fk_orders_client", "client_id")
 ```
 
 `ForeignKey` also has typed shortcut factories (all with `PgContext`) for the same types as `Column`:
-`ofBigint`, `ofInteger`, ..., `ofUuid` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableUuid` (nullable),
+`ofBigint`, `ofInteger`, ..., `ofDate` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableDate` (nullable),
 e.g. `ForeignKey.ofInteger(ctx, "orders", "fk_orders_client", "client_id")` instead of
 `ForeignKey.ofNotNull(ctx, "orders", "fk_orders_client", "client_id", PgColumnType.INTEGER)`.
 
@@ -84,7 +87,7 @@ use `PgContext.ofDefault()` for tables in the `public` schema. `IndexWithColumns
 without context is kept for already qualified table names.
 
 `IndexWithColumns` also has typed shortcut factories (all with `PgContext`, zero index size) for the same types as `Column`:
-`ofBigint`, `ofInteger`, ..., `ofUuid` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableUuid` (nullable).
+`ofBigint`, `ofInteger`, ..., `ofDate` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableDate` (nullable).
 
 ```java
 // Before
@@ -122,7 +125,7 @@ TableWithColumns.of(Table.of(ctx, "orders"), clientId)
 ```
 
 `TableWithColumns` also has typed shortcut factories (all with `PgContext`) for the same types as `Column`:
-`ofBigint`, `ofInteger`, ..., `ofUuid` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableUuid` (nullable),
+`ofBigint`, `ofInteger`, ..., `ofDate` (not null) and `ofNullableBigint`, `ofNullableInteger`, ..., `ofNullableDate` (nullable),
 e.g. `TableWithColumns.ofBigint(ctx, "orders", "id")` instead of `TableWithColumns.ofNotNull(ctx, "orders", "id", PgColumnType.BIGINT)`.
 
 **`ColumnTypeAware` has been merged into `ColumnNameAware`.**
@@ -133,6 +136,7 @@ are now part of `ColumnNameAware`. Replace `ColumnTypeAware` with `ColumnNameAwa
 **`PgColumnType` replaces `SerialType`.**
 
 `SerialType` has been removed. Use `PgColumnType.SMALL_SERIAL`, `PgColumnType.SERIAL` and `PgColumnType.BIG_SERIAL` instead.
+`PgColumnType.isSerial()` tells whether a type is one of these serial pseudo-types.
 
 **`ColumnWithSerialType` takes the serial type from the column type.**
 

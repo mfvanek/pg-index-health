@@ -104,19 +104,19 @@ public enum PgColumnType {
      *
      * @see <a href="https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL">Serial types</a>
      */
-    SMALL_SERIAL("smallserial"),
+    SMALL_SERIAL("smallserial", true),
     /**
      * Constant for the PostgreSQL "serial" pseudo-type.
      *
      * @see <a href="https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL">Serial types</a>
      */
-    SERIAL("serial"),
+    SERIAL("serial", true),
     /**
      * Constant for the PostgreSQL "bigserial" pseudo-type.
      *
      * @see <a href="https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL">Serial types</a>
      */
-    BIG_SERIAL("bigserial");
+    BIG_SERIAL("bigserial", true);
 
     private static final Map<String, PgColumnType> VALUES = new HashMap<>();
 
@@ -127,9 +127,15 @@ public enum PgColumnType {
     }
 
     private final String columnType;
+    private final boolean serial;
 
     PgColumnType(final String columnType) {
+        this(columnType, false);
+    }
+
+    PgColumnType(final String columnType, final boolean serial) {
         this.columnType = Objects.requireNonNull(columnType);
+        this.serial = serial;
     }
 
     /**
@@ -139,6 +145,33 @@ public enum PgColumnType {
      */
     public String getColumnType() {
         return columnType;
+    }
+
+    /**
+     * Checks whether this is one of the serial pseudo-types: {@link #SMALL_SERIAL}, {@link #SERIAL} or {@link #BIG_SERIAL}.
+     *
+     * @return {@code true} for serial pseudo-types
+     * @since 0.60.0
+     */
+    public boolean isSerial() {
+        return serial;
+    }
+
+    /**
+     * Gets the PostgreSQL name of the one-dimensional array of this column type,
+     * e.g. {@code text[]} for {@code text} or {@code integer[]} for {@code integer}.
+     * <p>
+     * PostgreSQL reports multidimensional arrays with the same type name, so {@code integer[][]} is also {@code integer[]}.
+     *
+     * @return the PostgreSQL name of the array of this column type
+     * @throws UnsupportedOperationException for serial pseudo-types ({@link #SMALL_SERIAL}, {@link #SERIAL}, {@link #BIG_SERIAL}): they have no array form
+     * @since 0.60.0
+     */
+    public String getArrayType() {
+        if (serial) {
+            throw new UnsupportedOperationException(String.format(Locale.ROOT, "Serial pseudo-type '%s' has no array form", columnType));
+        }
+        return columnType + "[]";
     }
 
     /**
