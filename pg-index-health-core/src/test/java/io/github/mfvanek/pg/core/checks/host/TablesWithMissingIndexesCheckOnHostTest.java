@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class TablesWithMissingIndexesCheckOnHostTest extends StatisticsAwareTestBase {
@@ -56,7 +54,7 @@ class TablesWithMissingIndexesCheckOnHostTest extends StatisticsAwareTestBase {
                 .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts"))
                 .isEmpty();
 
             assertThat(check)
@@ -82,7 +80,7 @@ class TablesWithMissingIndexesCheckOnHostTest extends StatisticsAwareTestBase {
                 .allMatch(t -> t.getTableSizeInBytes() == 0L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("orders_partitioned_2025", "orders_partitioned_default")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "orders_partitioned_2025", "orders_partitioned_default"))
                 .isEmpty();
         });
     }

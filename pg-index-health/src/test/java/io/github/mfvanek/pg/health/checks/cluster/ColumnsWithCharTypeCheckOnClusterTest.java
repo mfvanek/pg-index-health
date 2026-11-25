@@ -59,7 +59,7 @@ class ColumnsWithCharTypeCheckOnClusterTest extends DatabaseAwareTestBase {
     void shouldWorkWithPartitionedTables(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx ->
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "clients"))
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(

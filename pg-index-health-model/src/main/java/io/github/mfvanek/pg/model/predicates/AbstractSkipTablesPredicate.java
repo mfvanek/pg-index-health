@@ -17,7 +17,9 @@ import io.github.mfvanek.pg.model.dbobject.DbObject;
 import io.github.mfvanek.pg.model.table.TableNameAware;
 import io.github.mfvanek.pg.model.validation.Validators;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
@@ -129,15 +131,30 @@ abstract class AbstractSkipTablesPredicate implements Predicate<DbObject> {
     }
 
     /**
-     * Prepares a set containing a single name to skip, after validating that it is non-blank.
+     * Collects the given names to skip into a list, after validating that each of them is non-null and non-blank.
+     * <p>
+     * Duplicates are preserved here; they are eliminated later when the names are collected into a set.
+     * </p>
      *
-     * @param rawNameToSkip the raw name to skip; must be non-null and non-blank
-     * @param argumentName  the name of the argument being checked
-     * @return a {@link Set} containing the single validated name to skip
-     * @throws IllegalArgumentException if {@code rawNameToSkip} is blank
-     * @throws NullPointerException     if {@code rawNameToSkip} is null
+     * @param rawNameToSkip          the first raw name to skip; must be non-null and non-blank
+     * @param otherRawNamesToSkip    other raw names to skip; must be non-null and must not contain null or blank elements
+     * @param argumentName           the name of the first argument being checked
+     * @param otherNamesArgumentName the name of the varargs argument being checked
+     * @return a {@link List} with the first name followed by the other names
+     * @throws IllegalArgumentException if any of the names is blank
+     * @throws NullPointerException     if {@code rawNameToSkip}, {@code otherRawNamesToSkip} or any of its elements is null
      */
-    static Set<String> prepareSingleNameToSkip(final String rawNameToSkip, final String argumentName) {
-        return Set.of(Validators.notBlank(rawNameToSkip, argumentName));
+    static List<String> collectNamesToSkip(final String rawNameToSkip,
+                                           final String[] otherRawNamesToSkip,
+                                           final String argumentName,
+                                           final String otherNamesArgumentName) {
+        Validators.notBlank(rawNameToSkip, argumentName);
+        Objects.requireNonNull(otherRawNamesToSkip, otherNamesArgumentName + " cannot be null");
+        final List<String> namesToSkip = new ArrayList<>(otherRawNamesToSkip.length + 1);
+        namesToSkip.add(rawNameToSkip);
+        for (final String otherRawNameToSkip : otherRawNamesToSkip) {
+            namesToSkip.add(Validators.notBlank(otherRawNameToSkip, otherNamesArgumentName + " element"));
+        }
+        return namesToSkip;
     }
 }

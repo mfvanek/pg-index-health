@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHostTest extends DatabaseAwareTestBase {
@@ -57,7 +55,7 @@ class PrimaryKeysThatMostLikelyNaturalKeysCheckOnHostTest extends DatabaseAwareT
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("t2_composite", "t3_composite", "\"times-of-creation\"")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "t2_composite", "t3_composite", "\"times-of-creation\""))
                 .isEmpty();
         });
     }

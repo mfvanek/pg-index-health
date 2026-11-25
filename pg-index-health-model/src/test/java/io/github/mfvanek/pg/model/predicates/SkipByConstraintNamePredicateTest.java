@@ -33,15 +33,15 @@ class SkipByConstraintNamePredicateTest {
     @SuppressWarnings("DataFlowIssue")
     @Test
     void shouldThrowExceptionWhenInvalidDataPassed() {
-        assertThatThrownBy(() -> SkipByConstraintNamePredicate.ofName(null))
+        assertThatThrownBy(() -> SkipByConstraintNamePredicate.ofNames(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("constraintNameToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipByConstraintNamePredicate.ofName(""))
+        assertThatThrownBy(() -> SkipByConstraintNamePredicate.ofNames(""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("constraintNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipByConstraintNamePredicate.ofName("   "))
+        assertThatThrownBy(() -> SkipByConstraintNamePredicate.ofNames("   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("constraintNameToSkip cannot be blank");
 
@@ -61,7 +61,7 @@ class SkipByConstraintNamePredicateTest {
     @Test
     void shouldWorkForSingleItem() {
         final PgContext ctx = PgContext.ofDefault();
-        assertThat(SkipByConstraintNamePredicate.ofName("C1"))
+        assertThat(SkipByConstraintNamePredicate.ofNames("C1"))
             .accepts(Table.of("t"))
             .accepts(Index.of("t1", "i1"))
             .accepts(Constraint.ofType("t1", "c2", ConstraintType.CHECK))
@@ -91,5 +91,9 @@ class SkipByConstraintNamePredicateTest {
                 ForeignKey.ofInteger(ctx, "t1", "C2", "col1"),
                 ForeignKey.ofInteger(ctx, "t1", "C1", "col1")
             ));
+        assertThat(SkipByConstraintNamePredicate.ofNames("c1", "C2", "c1"))
+            .accepts(Constraint.ofType("t1", "c3", ConstraintType.CHECK))
+            .rejects(Constraint.ofType("t1", "C1", ConstraintType.CHECK))
+            .rejects(Constraint.ofType("t1", "c2", ConstraintType.CHECK));
     }
 }

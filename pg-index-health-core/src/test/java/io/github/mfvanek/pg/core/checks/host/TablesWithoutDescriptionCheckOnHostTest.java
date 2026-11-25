@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class TablesWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
@@ -54,7 +52,7 @@ class TablesWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
                 .allMatch(t -> t.getTableSizeInBytes() >= 0L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "clients"))
                 .isEmpty();
         });
     }
@@ -87,7 +85,7 @@ class TablesWithoutDescriptionCheckOnHostTest extends DatabaseAwareTestBase {
     void shouldWorkWithPartitionedTables(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withPartitionedTableWithoutComments, ctx ->
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "clients"))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(

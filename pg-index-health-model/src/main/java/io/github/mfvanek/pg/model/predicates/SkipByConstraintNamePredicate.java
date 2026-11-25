@@ -36,8 +36,8 @@ public final class SkipByConstraintNamePredicate implements Predicate<DbObject> 
         this.constraintNamesToSkip = AbstractSkipTablesPredicate.prepareNamesToSkip(constraintNamesToSkip);
     }
 
-    private SkipByConstraintNamePredicate(final String constraintNameToSkip) {
-        this(AbstractSkipTablesPredicate.prepareSingleNameToSkip(constraintNameToSkip, "constraintNameToSkip"));
+    private SkipByConstraintNamePredicate(final String constraintNameToSkip, final String... constraintNamesToSkip) {
+        this(AbstractSkipTablesPredicate.collectNamesToSkip(constraintNameToSkip, constraintNamesToSkip, "constraintNameToSkip", "constraintNamesToSkip"));
     }
 
     /**
@@ -65,13 +65,15 @@ public final class SkipByConstraintNamePredicate implements Predicate<DbObject> 
     }
 
     /**
-     * Creates a predicate to skip a specific constraint name.
+     * Creates a predicate to skip one or more constraint names.
      *
-     * @param constraintNameToSkip the constraint name to skip; must be non-blank
-     * @return a {@code SkipByConstraintNamePredicate} instance for the specified constraint name
+     * @param constraintNameToSkip  the constraint name to skip; must be non-null and non-blank
+     * @param constraintNamesToSkip other constraint names to skip; must be non-null and must not contain null or blank elements
+     * @return a {@code SkipByConstraintNamePredicate} instance for the specified constraint names
+     * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final String constraintNameToSkip) {
-        return new SkipByConstraintNamePredicate(constraintNameToSkip);
+    public static Predicate<DbObject> ofNames(final String constraintNameToSkip, final String... constraintNamesToSkip) {
+        return new SkipByConstraintNamePredicate(constraintNameToSkip, constraintNamesToSkip);
     }
 
     /**

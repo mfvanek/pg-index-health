@@ -137,7 +137,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param column       the first column; must be non-null.
      * @param otherColumns other columns; must not contain null elements.
      * @return a {@code TableWithColumns} instance
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns of(final Table table,
                                       final Column column,
@@ -153,7 +153,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param columnName column name; should be non-blank.
      * @param columnType column type; should be non-blank.
      * @return a {@code TableWithColumns} with one non-nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNotNull(final PgContext ctx,
                                              final String tableName,
@@ -170,7 +170,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param columnName column name; should be non-blank.
      * @param columnType column type; must be non-null.
      * @return a {@code TableWithColumns} with one non-nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNotNull(final PgContext ctx,
                                              final String tableName,
@@ -187,7 +187,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param columnName column name; should be non-blank.
      * @param columnType column type; should be non-blank.
      * @return a {@code TableWithColumns} with one nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNullable(final PgContext ctx,
                                               final String tableName,
@@ -204,7 +204,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param columnName column name; should be non-blank.
      * @param columnType column type; must be non-null.
      * @return a {@code TableWithColumns} with one nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNullable(final PgContext ctx,
                                               final String tableName,
@@ -220,7 +220,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one non-nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofBigint(final PgContext ctx,
                                             final String tableName,
@@ -235,7 +235,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNullableBigint(final PgContext ctx,
                                                     final String tableName,
@@ -250,7 +250,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one non-nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofInteger(final PgContext ctx,
                                              final String tableName,
@@ -265,7 +265,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNullableInteger(final PgContext ctx,
                                                      final String tableName,
@@ -280,7 +280,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one non-nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofVarchar(final PgContext ctx,
                                              final String tableName,
@@ -295,7 +295,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNullableVarchar(final PgContext ctx,
                                                      final String tableName,
@@ -310,7 +310,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one non-nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofText(final PgContext ctx,
                                           final String tableName,
@@ -325,7 +325,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNullableText(final PgContext ctx,
                                                   final String tableName,
@@ -340,7 +340,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one non-nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofCharacter(final PgContext ctx,
                                                final String tableName,
@@ -355,7 +355,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNullableCharacter(final PgContext ctx,
                                                        final String tableName,
@@ -370,7 +370,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one non-nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofBoolean(final PgContext ctx,
                                              final String tableName,
@@ -385,7 +385,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNullableBoolean(final PgContext ctx,
                                                      final String tableName,
@@ -400,7 +400,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one non-nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofTimestamp(final PgContext ctx,
                                                final String tableName,
@@ -415,7 +415,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNullableTimestamp(final PgContext ctx,
                                                        final String tableName,
@@ -430,7 +430,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one non-nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofTimestamptz(final PgContext ctx,
                                                  final String tableName,
@@ -445,7 +445,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNullableTimestamptz(final PgContext ctx,
                                                          final String tableName,
@@ -460,7 +460,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one non-nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofUuid(final PgContext ctx,
                                           final String tableName,
@@ -475,7 +475,7 @@ public final class TableWithColumns extends AbstractTableAware implements Column
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return a {@code TableWithColumns} with one nullable column
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static TableWithColumns ofNullableUuid(final PgContext ctx,
                                                   final String tableName,

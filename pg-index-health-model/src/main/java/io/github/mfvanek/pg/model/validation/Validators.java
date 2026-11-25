@@ -76,7 +76,7 @@ public final class Validators {
      * @param columnType the column type to check
      * @return the name of the provided column type
      * @throws NullPointerException if the column type is null
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static String columnTypeNotNull(final PgColumnType columnType) {
         return Objects.requireNonNull(columnType, ColumnNameAware.COLUMN_TYPE_FIELD + " cannot be null").getColumnType();
@@ -198,7 +198,7 @@ public final class Validators {
      * @param column       the first column; must be non-null.
      * @param otherColumns other columns; must be non-null and must not contain null elements.
      * @return a list with the first column followed by the other columns
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static List<Column> columnsNotNull(final Column column, final Column... otherColumns) {
         Objects.requireNonNull(column, "column cannot be null");

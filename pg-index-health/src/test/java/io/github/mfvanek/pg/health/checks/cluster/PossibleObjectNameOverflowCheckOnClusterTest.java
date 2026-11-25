@@ -24,7 +24,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
@@ -56,7 +55,7 @@ class PossibleObjectNameOverflowCheckOnClusterTest extends DatabaseAwareTestBase
                     AnyObject.ofType(ctx, matViewName, PgObjectType.MATERIALIZED_VIEW));
 
             assertThat(check)
-                .executing(ctx, SkipDbObjectsByNamePredicate.of(ctx, List.of(matViewName, constraintName)))
+                .executing(ctx, SkipDbObjectsByNamePredicate.ofNames(ctx, matViewName, constraintName))
                 .isEmpty();
         });
     }

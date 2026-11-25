@@ -106,7 +106,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param column           the first column in index; must be non-null.
      * @param otherColumns     other columns in index; must not contain null elements.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns of(final PgContext ctx,
                                       final String tableName,
@@ -126,7 +126,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param column       the first column in index; must be non-null.
      * @param otherColumns other columns in index; must not contain null elements.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns of(final PgContext ctx,
                                       final String tableName,
@@ -143,7 +143,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param column       the first column in index; must be non-null.
      * @param otherColumns other columns in index; must not contain null elements.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns of(final Index index,
                                       final Column column,
@@ -160,7 +160,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param columnName column name; should be non-blank.
      * @param columnType column type; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNullable(final PgContext ctx,
                                               final String tableName,
@@ -179,7 +179,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param columnName column name; should be non-blank.
      * @param columnType column type; must be non-null.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNullable(final PgContext ctx,
                                               final String tableName,
@@ -198,7 +198,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param columnName column name; should be non-blank.
      * @param columnType column type; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNotNull(final PgContext ctx,
                                              final String tableName,
@@ -217,7 +217,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param columnName column name; should be non-blank.
      * @param columnType column type; must be non-null.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNotNull(final PgContext ctx,
                                              final String tableName,
@@ -235,7 +235,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofBigint(final PgContext ctx,
                                             final String tableName,
@@ -252,7 +252,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNullableBigint(final PgContext ctx,
                                                     final String tableName,
@@ -269,7 +269,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofInteger(final PgContext ctx,
                                              final String tableName,
@@ -286,7 +286,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNullableInteger(final PgContext ctx,
                                                      final String tableName,
@@ -303,7 +303,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofVarchar(final PgContext ctx,
                                              final String tableName,
@@ -320,7 +320,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNullableVarchar(final PgContext ctx,
                                                      final String tableName,
@@ -337,7 +337,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofText(final PgContext ctx,
                                           final String tableName,
@@ -354,7 +354,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNullableText(final PgContext ctx,
                                                   final String tableName,
@@ -371,7 +371,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofCharacter(final PgContext ctx,
                                                final String tableName,
@@ -388,7 +388,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNullableCharacter(final PgContext ctx,
                                                        final String tableName,
@@ -405,7 +405,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofBoolean(final PgContext ctx,
                                              final String tableName,
@@ -422,7 +422,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNullableBoolean(final PgContext ctx,
                                                      final String tableName,
@@ -439,7 +439,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofTimestamp(final PgContext ctx,
                                                final String tableName,
@@ -456,7 +456,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNullableTimestamp(final PgContext ctx,
                                                        final String tableName,
@@ -473,7 +473,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofTimestamptz(final PgContext ctx,
                                                  final String tableName,
@@ -490,7 +490,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNullableTimestamptz(final PgContext ctx,
                                                          final String tableName,
@@ -507,7 +507,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofUuid(final PgContext ctx,
                                           final String tableName,
@@ -524,7 +524,7 @@ public final class IndexWithColumns extends AbstractIndexAware implements Column
      * @param indexName  index name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code IndexWithColumns}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static IndexWithColumns ofNullableUuid(final PgContext ctx,
                                                   final String tableName,

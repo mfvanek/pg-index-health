@@ -55,7 +55,7 @@ class BtreeIndexesOnArrayColumnsCheckOnHostTest extends DatabaseAwareTestBase {
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts"))
                 .isEmpty();
         });
     }

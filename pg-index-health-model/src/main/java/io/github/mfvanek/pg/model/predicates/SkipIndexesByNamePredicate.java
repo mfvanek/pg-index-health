@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.collectNamesToSkip;
 import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.prepareFullyQualifiedNamesToSkip;
 
 /**
@@ -44,8 +45,8 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
         this.fullyQualifiedIndexNamesToSkip = prepareFullyQualifiedNamesToSkip(ctx, rawIndexNamesToSkip);
     }
 
-    private SkipIndexesByNamePredicate(final PgContext ctx, final String rawIndexNameToSkip) {
-        this(ctx, AbstractSkipTablesPredicate.prepareSingleNameToSkip(rawIndexNameToSkip, "rawIndexNameToSkip"));
+    private SkipIndexesByNamePredicate(final PgContext ctx, final String rawIndexNameToSkip, final String... rawIndexNamesToSkip) {
+        this(ctx, collectNamesToSkip(rawIndexNameToSkip, rawIndexNamesToSkip, "rawIndexNameToSkip", "rawIndexNamesToSkip"));
     }
 
     /**
@@ -73,13 +74,15 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
     }
 
     /**
-     * Creates a predicate to skip a single index name in the default schema.
+     * Creates a predicate to skip one or more index names in the default schema.
      *
-     * @param rawIndexNameToSkip the raw index name to skip; must be non-null and non-blank
-     * @return a {@link Predicate} to skip the specified index name
+     * @param rawIndexNameToSkip  the raw index name to skip; must be non-null and non-blank
+     * @param rawIndexNamesToSkip other raw index names to skip; must be non-null and must not contain null or blank elements
+     * @return a {@link Predicate} to skip the specified index names
+     * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final String rawIndexNameToSkip) {
-        return new SkipIndexesByNamePredicate(PgContext.ofDefault(), rawIndexNameToSkip);
+    public static Predicate<DbObject> ofNames(final String rawIndexNameToSkip, final String... rawIndexNamesToSkip) {
+        return new SkipIndexesByNamePredicate(PgContext.ofDefault(), rawIndexNameToSkip, rawIndexNamesToSkip);
     }
 
     /**
@@ -93,14 +96,16 @@ public final class SkipIndexesByNamePredicate implements Predicate<DbObject> {
     }
 
     /**
-     * Creates a predicate to skip a single index name in a specified schema context.
+     * Creates a predicate to skip one or more index names in a specified schema context.
      *
-     * @param ctx                the PostgreSQL context used to enrich the raw index name with schema information; must be non-null
-     * @param rawIndexNameToSkip the raw index name to skip; must be non-null and non-blank
-     * @return a {@link Predicate} to skip the specified index name
+     * @param ctx                 the PostgreSQL context used to enrich the raw index names with schema information; must be non-null
+     * @param rawIndexNameToSkip  the raw index name to skip; must be non-null and non-blank
+     * @param rawIndexNamesToSkip other raw index names to skip; must be non-null and must not contain null or blank elements
+     * @return a {@link Predicate} to skip the specified index names
+     * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final PgContext ctx, final String rawIndexNameToSkip) {
-        return new SkipIndexesByNamePredicate(ctx, rawIndexNameToSkip);
+    public static Predicate<DbObject> ofNames(final PgContext ctx, final String rawIndexNameToSkip, final String... rawIndexNamesToSkip) {
+        return new SkipIndexesByNamePredicate(ctx, rawIndexNameToSkip, rawIndexNamesToSkip);
     }
 
     /**

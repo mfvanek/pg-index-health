@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class SequenceOverflowCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -54,7 +52,7 @@ class SequenceOverflowCheckOnClusterTest extends DatabaseAwareTestBase {
                     SequenceState.of(ctx, "seq_full_range_desc", "bigint", 0.0));
 
             assertThat(check)
-                .executing(ctx, SkipBySequenceNamePredicate.of(ctx, List.of("seq_1", "seq_3", "seq_5", "seq_full_range_asc", "seq_full_range_desc")))
+                .executing(ctx, SkipBySequenceNamePredicate.ofNames(ctx, "seq_1", "seq_3", "seq_5", "seq_full_range_asc", "seq_full_range_desc"))
                 .isEmpty();
         });
     }

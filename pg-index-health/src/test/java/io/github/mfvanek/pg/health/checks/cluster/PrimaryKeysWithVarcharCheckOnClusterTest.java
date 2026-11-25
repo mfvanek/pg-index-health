@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class PrimaryKeysWithVarcharCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -55,7 +53,7 @@ class PrimaryKeysWithVarcharCheckOnClusterTest extends DatabaseAwareTestBase {
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("t_link", "t_varchar_long", "\"t-varchar-short\"")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "t_link", "t_varchar_long", "\"t-varchar-short\""))
                 .isEmpty();
         });
     }

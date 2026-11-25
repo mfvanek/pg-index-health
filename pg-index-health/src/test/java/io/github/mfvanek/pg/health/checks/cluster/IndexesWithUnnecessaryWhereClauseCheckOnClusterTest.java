@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class IndexesWithUnnecessaryWhereClauseCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -54,7 +52,7 @@ class IndexesWithUnnecessaryWhereClauseCheckOnClusterTest extends DatabaseAwareT
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("t1", "t2")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "t1", "t2"))
                 .isEmpty();
         });
     }

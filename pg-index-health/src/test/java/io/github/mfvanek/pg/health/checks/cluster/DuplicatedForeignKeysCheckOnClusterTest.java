@@ -52,7 +52,7 @@ class DuplicatedForeignKeysCheckOnClusterTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts"))
                 .isEmpty();
         });
     }

@@ -33,15 +33,15 @@ class SkipByColumnNamePredicateTest {
     @SuppressWarnings("DataFlowIssue")
     @Test
     void shouldThrowExceptionWhenInvalidDataPassed() {
-        assertThatThrownBy(() -> SkipByColumnNamePredicate.ofName(null))
+        assertThatThrownBy(() -> SkipByColumnNamePredicate.ofNames(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("columnNameToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipByColumnNamePredicate.ofName(""))
+        assertThatThrownBy(() -> SkipByColumnNamePredicate.ofNames(""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipByColumnNamePredicate.ofName("   "))
+        assertThatThrownBy(() -> SkipByColumnNamePredicate.ofNames("   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("columnNameToSkip cannot be blank");
 
@@ -61,7 +61,7 @@ class SkipByColumnNamePredicateTest {
     @Test
     void shouldWorkForSingleItem() {
         final PgContext ctx = PgContext.of("tst");
-        assertThat(SkipByColumnNamePredicate.ofName("COL1"))
+        assertThat(SkipByColumnNamePredicate.ofNames("COL1"))
             .accepts(Table.of("t"))
             .accepts(Index.of("t1", "i1"))
             .accepts(Column.of("t1", "col2", true, "integer"))
@@ -85,5 +85,9 @@ class SkipByColumnNamePredicateTest {
             .rejects(ColumnWithSerialType.of(Column.of("t1", "col2", true, "serial"), "s1"))
             .rejects(IndexWithColumns.ofInteger(ctx, "t1", "i1", "col1"))
             .rejects(TableWithColumns.ofNullableInteger(ctx, "t3", "col1"));
+        assertThat(SkipByColumnNamePredicate.ofNames("col1", "cOL2", "col1"))
+            .accepts(Column.of("t1", "col3", true, "integer"))
+            .rejects(Column.of("t1", "col1", true, "integer"))
+            .rejects(Column.of("t1", "col2", true, "integer"));
     }
 }

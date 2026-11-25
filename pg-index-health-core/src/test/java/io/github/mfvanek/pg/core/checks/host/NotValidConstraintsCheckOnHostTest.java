@@ -57,7 +57,7 @@ class NotValidConstraintsCheckOnHostTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "\"bad-table-two\"")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "\"bad-table-two\""))
                 .isEmpty();
 
             ExecuteUtils.executeOnDatabase(getDataSource(), statement -> {

@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class ForeignKeysWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
@@ -59,7 +57,7 @@ class ForeignKeysWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of(tableName, "bad_clients")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, tableName, "bad_clients"))
                 .isEmpty();
         });
     }

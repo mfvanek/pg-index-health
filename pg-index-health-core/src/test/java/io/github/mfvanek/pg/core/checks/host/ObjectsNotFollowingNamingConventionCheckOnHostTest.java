@@ -24,7 +24,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
@@ -78,7 +77,7 @@ class ObjectsNotFollowingNamingConventionCheckOnHostTest extends DatabaseAwareTe
                 .containsExactlyInAnyOrder(expected);
 
             assertThat(check)
-                .executing(ctx, SkipDbObjectsByNamePredicate.of(ctx, List.of("\"bad-table\"", "\"bad-add\"")))
+                .executing(ctx, SkipDbObjectsByNamePredicate.ofNames(ctx, "\"bad-table\"", "\"bad-add\""))
                 .hasSize(isNotNullConstraintsSupported() ? 16 : 13);
         });
     }

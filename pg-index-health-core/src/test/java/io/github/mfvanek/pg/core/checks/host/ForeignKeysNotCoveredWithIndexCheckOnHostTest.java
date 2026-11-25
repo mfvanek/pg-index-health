@@ -24,8 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBase {
@@ -57,7 +55,7 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "bad_clients")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "bad_clients"))
                 .isEmpty();
         });
     }
@@ -75,11 +73,11 @@ class ForeignKeysNotCoveredWithIndexCheckOnHostTest extends DatabaseAwareTestBas
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "accounts"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipByConstraintNamePredicate.ofName("c_accounts_fk_client_id"))
+                .executing(ctx, SkipByConstraintNamePredicate.ofNames("c_accounts_fk_client_id"))
                 .isEmpty();
         });
     }

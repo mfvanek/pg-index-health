@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class ForeignKeysWithUnmatchedColumnTypeCheckOnHostTest extends DatabaseAwareTestBase {
@@ -55,7 +53,7 @@ class ForeignKeysWithUnmatchedColumnTypeCheckOnHostTest extends DatabaseAwareTes
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("bad_clients", "client_preferences")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "bad_clients", "client_preferences"))
                 .isEmpty();
         });
     }

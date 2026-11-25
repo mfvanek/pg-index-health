@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
@@ -54,11 +52,11 @@ class IndexesWithNullValuesCheckOnHostTest extends DatabaseAwareTestBase {
                 .allMatch(i -> i.getIndexSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "clients"))
                 .isEmpty();
 
             assertThat(check)
-                .executing(ctx, SkipIndexesByNamePredicate.of(ctx, List.of("i_clients_middle_name", "i_clients_middle_name_known_last_name")))
+                .executing(ctx, SkipIndexesByNamePredicate.ofNames(ctx, "i_clients_middle_name", "i_clients_middle_name_known_last_name"))
                 .isEmpty();
         });
     }

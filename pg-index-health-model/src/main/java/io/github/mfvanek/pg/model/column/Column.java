@@ -93,7 +93,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
     /**
      * {@inheritDoc}
      *
-     * @since 0.51.0
+     * @since 0.60.0
      */
     @Override
     public String getColumnType() {
@@ -157,7 +157,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param notNull    whether a column is not null or nullable
      * @param columnType column type; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column of(final String tableName,
                             final String columnName,
@@ -175,7 +175,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param notNull    whether a column is not null or nullable
      * @param columnType column type; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column of(final PgContext ctx,
                             final String tableName,
@@ -193,7 +193,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param columnName column name; should be non-blank.
      * @param columnType column type; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNotNull(final PgContext ctx,
                                    final String tableName,
@@ -210,7 +210,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param columnName column name; should be non-blank.
      * @param columnType column type; must be non-null.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNotNull(final PgContext ctx,
                                    final String tableName,
@@ -227,7 +227,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param columnName column name; should be non-blank.
      * @param columnType column type; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNullable(final PgContext ctx,
                                     final String tableName,
@@ -244,7 +244,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param columnName column name; should be non-blank.
      * @param columnType column type; must be non-null.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNullable(final PgContext ctx,
                                     final String tableName,
@@ -260,7 +260,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofBigint(final PgContext ctx,
                                   final String tableName,
@@ -275,7 +275,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNullableBigint(final PgContext ctx,
                                           final String tableName,
@@ -290,7 +290,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofInteger(final PgContext ctx,
                                    final String tableName,
@@ -305,7 +305,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNullableInteger(final PgContext ctx,
                                            final String tableName,
@@ -320,7 +320,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofVarchar(final PgContext ctx,
                                    final String tableName,
@@ -335,7 +335,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNullableVarchar(final PgContext ctx,
                                            final String tableName,
@@ -350,7 +350,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofText(final PgContext ctx,
                                 final String tableName,
@@ -365,7 +365,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNullableText(final PgContext ctx,
                                         final String tableName,
@@ -380,7 +380,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofCharacter(final PgContext ctx,
                                      final String tableName,
@@ -395,7 +395,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNullableCharacter(final PgContext ctx,
                                              final String tableName,
@@ -410,7 +410,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofBoolean(final PgContext ctx,
                                    final String tableName,
@@ -425,7 +425,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNullableBoolean(final PgContext ctx,
                                            final String tableName,
@@ -440,7 +440,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofTimestamp(final PgContext ctx,
                                      final String tableName,
@@ -455,7 +455,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNullableTimestamp(final PgContext ctx,
                                              final String tableName,
@@ -470,7 +470,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofTimestamptz(final PgContext ctx,
                                        final String tableName,
@@ -485,7 +485,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNullableTimestamptz(final PgContext ctx,
                                                final String tableName,
@@ -500,7 +500,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofUuid(final PgContext ctx,
                                 final String tableName,
@@ -515,7 +515,7 @@ public final class Column implements DbObject, ColumnNameAware, Comparable<Colum
      * @param tableName  table name; should be non-blank.
      * @param columnName column name; should be non-blank.
      * @return {@code Column}
-     * @since 0.51.0
+     * @since 0.60.0
      */
     public static Column ofNullableUuid(final PgContext ctx,
                                         final String tableName,

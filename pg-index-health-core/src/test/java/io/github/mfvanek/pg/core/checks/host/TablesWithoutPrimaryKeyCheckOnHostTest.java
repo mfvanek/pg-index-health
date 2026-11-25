@@ -49,7 +49,7 @@ class TablesWithoutPrimaryKeyCheckOnHostTest extends DatabaseAwareTestBase {
                 .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "bad_clients"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "bad_clients"))
                 .isEmpty();
         });
     }

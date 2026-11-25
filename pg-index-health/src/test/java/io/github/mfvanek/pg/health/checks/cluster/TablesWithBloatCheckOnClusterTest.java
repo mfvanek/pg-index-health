@@ -59,7 +59,7 @@ class TablesWithBloatCheckOnClusterTest extends StatisticsAwareTestBase {
                 .allMatch(t -> t.getBloatPercentage() == 0 && t.getBloatSizeInBytes() == 0L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "clients"))
                 .isEmpty();
 
             assertThat(check)

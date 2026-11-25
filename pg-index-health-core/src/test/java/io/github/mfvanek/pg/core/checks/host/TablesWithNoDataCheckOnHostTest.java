@@ -56,7 +56,7 @@ class TablesWithNoDataCheckOnHostTest extends StatisticsAwareTestBase {
                 );
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.ofName(ctx, "empty"))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "empty"))
                 .hasSize(5);
         });
     }

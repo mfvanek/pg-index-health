@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.health.support.AbstractCheckOnClusterAssert.assertThat;
 
 class ColumnsWithFixedLengthVarcharCheckOnClusterTest extends DatabaseAwareTestBase {
@@ -78,7 +76,7 @@ class ColumnsWithFixedLengthVarcharCheckOnClusterTest extends DatabaseAwareTestB
     void shouldWorkWithPartitionedTables(final String schemaName) {
         executeTestOnDatabase(schemaName, DatabasePopulator::withVarcharInPartitionedTable, ctx ->
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("accounts", "clients")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "accounts", "clients"))
                 .hasSize(7)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(

@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class UnloggedSequencesCheckOnHostTest extends DatabaseAwareTestBase {
@@ -57,7 +55,7 @@ class UnloggedSequencesCheckOnHostTest extends DatabaseAwareTestBase {
             }
 
             assertThat(check)
-                .executing(ctx, SkipDbObjectsByNamePredicate.of(ctx, List.of("unlogged_seq_1")))
+                .executing(ctx, SkipDbObjectsByNamePredicate.ofNames(ctx, "unlogged_seq_1"))
                 .isEmpty();
         });
     }

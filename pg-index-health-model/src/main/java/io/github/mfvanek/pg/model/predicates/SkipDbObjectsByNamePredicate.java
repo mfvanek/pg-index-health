@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.collectNamesToSkip;
 import static io.github.mfvanek.pg.model.predicates.AbstractSkipTablesPredicate.prepareFullyQualifiedNamesToSkip;
 
 /**
@@ -49,8 +50,9 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
             .collect(Collectors.toUnmodifiableSet());
     }
 
-    private SkipDbObjectsByNamePredicate(final String fullyQualifiedObjectNameToSkip) {
-        this(AbstractSkipTablesPredicate.prepareSingleNameToSkip(fullyQualifiedObjectNameToSkip, "fullyQualifiedObjectNameToSkip"));
+    private SkipDbObjectsByNamePredicate(final String fullyQualifiedObjectNameToSkip, final String... fullyQualifiedObjectNamesToSkip) {
+        this(collectNamesToSkip(fullyQualifiedObjectNameToSkip, fullyQualifiedObjectNamesToSkip,
+            "fullyQualifiedObjectNameToSkip", "fullyQualifiedObjectNamesToSkip"));
     }
 
     /**
@@ -72,28 +74,34 @@ public final class SkipDbObjectsByNamePredicate implements Predicate<DbObject> {
     }
 
     /**
-     * Creates a predicate to skip a specific fully qualified object name.
+     * Creates a predicate to skip one or more fully qualified object names.
      *
-     * @param fullyQualifiedObjectNameToSkip the fully qualified object name to skip, must be non-null and non-blank
-     * @return a predicate that skips the specified object
-     * @throws NullPointerException     if {@code fullyQualifiedObjectNameToSkip} is null
-     * @throws IllegalArgumentException if {@code fullyQualifiedObjectNameToSkip} is blank
+     * @param fullyQualifiedObjectNameToSkip  the fully qualified object name to skip, must be non-null and non-blank
+     * @param fullyQualifiedObjectNamesToSkip other fully qualified object names to skip, must be non-null and must not contain null or blank elements
+     * @return a predicate that skips the specified objects
+     * @throws NullPointerException     if {@code fullyQualifiedObjectNameToSkip}, {@code fullyQualifiedObjectNamesToSkip} or any of its elements is null
+     * @throws IllegalArgumentException if any of the object names is blank
+     * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final String fullyQualifiedObjectNameToSkip) {
-        return new SkipDbObjectsByNamePredicate(fullyQualifiedObjectNameToSkip);
+    public static Predicate<DbObject> ofNames(final String fullyQualifiedObjectNameToSkip, final String... fullyQualifiedObjectNamesToSkip) {
+        return new SkipDbObjectsByNamePredicate(fullyQualifiedObjectNameToSkip, fullyQualifiedObjectNamesToSkip);
     }
 
     /**
-     * Creates a predicate to skip a specific object name in the given context.
+     * Creates a predicate to skip one or more object names in the given context.
      *
-     * @param ctx              the PostgreSQL context to use; must be non-null
-     * @param objectNameToSkip the object name to skip, must be non-null and non-blank
-     * @return a predicate that skips the specified object
-     * @since 0.14.4
+     * @param ctx               the PostgreSQL context to use; must be non-null
+     * @param objectNameToSkip  the object name to skip, must be non-null and non-blank
+     * @param objectNamesToSkip other object names to skip, must be non-null and must not contain null or blank elements
+     * @return a predicate that skips the specified objects
+     * @throws NullPointerException     if {@code ctx}, {@code objectNameToSkip}, {@code objectNamesToSkip} or any of its elements is null
+     * @throws IllegalArgumentException if any of the object names is blank
+     * @since 0.60.0
      */
-    public static Predicate<DbObject> ofName(final PgContext ctx,
-                                             final String objectNameToSkip) {
-        return ofName(PgContext.enrichWith(objectNameToSkip, ctx));
+    public static Predicate<DbObject> ofNames(final PgContext ctx,
+                                             final String objectNameToSkip,
+                                             final String... objectNamesToSkip) {
+        return of(prepareFullyQualifiedNamesToSkip(ctx, collectNamesToSkip(objectNameToSkip, objectNamesToSkip, "objectNameToSkip", "objectNamesToSkip")));
     }
 
     /**

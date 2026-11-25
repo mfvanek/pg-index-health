@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 import static io.github.mfvanek.pg.core.support.AbstractCheckOnHostAssert.assertThat;
 
 class TablesWithInheritanceCheckOnHostTest extends DatabaseAwareTestBase {
@@ -53,7 +51,7 @@ class TablesWithInheritanceCheckOnHostTest extends DatabaseAwareTestBase {
                 .allMatch(t -> t.getTableSizeInBytes() > 1L);
 
             assertThat(check)
-                .executing(ctx, SkipTablesByNamePredicate.of(ctx, List.of("child_table", "\"second-child_table\"")))
+                .executing(ctx, SkipTablesByNamePredicate.ofNames(ctx, "child_table", "\"second-child_table\""))
                 .isEmpty();
         });
     }

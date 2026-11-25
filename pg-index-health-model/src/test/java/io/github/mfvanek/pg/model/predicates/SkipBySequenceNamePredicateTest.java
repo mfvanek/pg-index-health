@@ -34,15 +34,15 @@ class SkipBySequenceNamePredicateTest {
     @SuppressWarnings("DataFlowIssue")
     @Test
     void shouldThrowExceptionWhenInvalidDataPassed() {
-        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofName(null))
+        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofNames(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawSequenceNameToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofName(""))
+        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofNames(""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawSequenceNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofName("   "))
+        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofNames("   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawSequenceNameToSkip cannot be blank");
 
@@ -59,15 +59,15 @@ class SkipBySequenceNamePredicateTest {
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawNamesToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofName(ctx, null))
+        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofNames(ctx, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessage("rawSequenceNameToSkip cannot be null");
 
-        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofName(ctx, ""))
+        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofNames(ctx, ""))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawSequenceNameToSkip cannot be blank");
 
-        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofName(ctx, "   "))
+        assertThatThrownBy(() -> SkipBySequenceNamePredicate.ofNames(ctx, "   "))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("rawSequenceNameToSkip cannot be blank");
     }
@@ -82,14 +82,14 @@ class SkipBySequenceNamePredicateTest {
 
     @Test
     void shouldWorkForSingleItem() {
-        assertThat(SkipBySequenceNamePredicate.ofName("s2"))
+        assertThat(SkipBySequenceNamePredicate.ofNames("s2"))
             .accepts(Table.of("t"))
             .accepts(SequenceState.of("s1", "int", 80.0))
             .rejects(SequenceState.of("s2", "int", 80.0))
             .rejects(SequenceState.of("S2", "int", 80.0));
 
         final PgContext ctx = PgContext.of("CUSTOM");
-        assertThat(SkipBySequenceNamePredicate.ofName(ctx, "S2"))
+        assertThat(SkipBySequenceNamePredicate.ofNames(ctx, "S2"))
             .accepts(Table.of("custom.t"))
             .accepts(SequenceState.of("custom.s1", "int", 80.0))
             .rejects(SequenceState.of("custom.s2", "int", 80.0))
@@ -106,6 +106,18 @@ class SkipBySequenceNamePredicateTest {
             .rejects(SequenceState.of("s2", "int", 80.0))
             .rejects(SequenceState.of("S2", "int", 80.0))
             .rejects(ColumnWithSerialType.of(ctx, "t", "c", false, PgColumnType.SERIAL, "s1"));
+
+        assertThat(SkipBySequenceNamePredicate.ofNames("s1", "S2", "s1"))
+            .accepts(SequenceState.of("s11", "int", 80.0))
+            .rejects(SequenceState.of("s1", "int", 80.0))
+            .rejects(SequenceState.of("s2", "int", 80.0));
+
+        final PgContext customCtx = PgContext.of("custom");
+        assertThat(SkipBySequenceNamePredicate.ofNames(customCtx, "s1", "S2"))
+            .accepts(SequenceState.of("custom.s11", "int", 80.0))
+            .accepts(SequenceState.of("s1", "int", 80.0))
+            .rejects(SequenceState.of("custom.s1", "int", 80.0))
+            .rejects(SequenceState.of("custom.s2", "int", 80.0));
     }
 
     @ParameterizedTest
