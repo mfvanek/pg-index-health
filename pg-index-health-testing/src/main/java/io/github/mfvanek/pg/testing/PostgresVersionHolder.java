@@ -46,14 +46,6 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
      * {@inheritDoc}
      */
     @Override
-    public boolean isCumulativeStatisticsSystemSupported() {
-        return getMajorVersion() >= 15;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String getMountVolume() {
         final int majorVersion = getMajorVersion();
         if (majorVersion >= 18) {
@@ -68,14 +60,6 @@ public final class PostgresVersionHolder implements PostgresVersionAware {
     @Override
     public boolean isNotNullConstraintsSupported() {
         return getMajorVersion() >= 18;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isUnloggedSequencesSupported() {
-        return getMajorVersion() >= 15;
     }
 
     @ExcludeFromJacocoGeneratedReport

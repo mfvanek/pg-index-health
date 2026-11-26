@@ -135,14 +135,6 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
      * {@inheritDoc}
      */
     @Override
-    public boolean isCumulativeStatisticsSystemSupported() {
-        return pgVersion.isCumulativeStatisticsSystemSupported();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String getMountVolume() {
         return pgVersion.getMountVolume();
     }
@@ -153,14 +145,6 @@ public final class PostgreSqlContainerWrapper implements AutoCloseable, Postgres
     @Override
     public boolean isNotNullConstraintsSupported() {
         return pgVersion.isNotNullConstraintsSupported();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isUnloggedSequencesSupported() {
-        return pgVersion.isUnloggedSequencesSupported();
     }
 
     /**

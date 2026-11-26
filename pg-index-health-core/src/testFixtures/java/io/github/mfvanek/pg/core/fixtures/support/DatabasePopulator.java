@@ -87,23 +87,19 @@ public final class DatabasePopulator implements AutoCloseable {
     private final String schemaName;
     private final Map<Integer, Runnable> actionsToExecuteOutsideTransaction = new TreeMap<>();
     private final Map<Integer, DbStatement> statementsToExecuteInSameTransaction = new TreeMap<>();
-    private final boolean supportsUnloggedSequences;
 
     private DatabasePopulator(final DataSource dataSource,
-                              final String schemaName,
-                              final boolean supportsUnloggedSequences) {
+                              final String schemaName) {
         this.dataSource = Objects.requireNonNull(dataSource);
         this.schemaName = Validators.notBlank(schemaName, "schemaName");
-        this.supportsUnloggedSequences = supportsUnloggedSequences;
         register(1, new CreateSchemaStatement());
         register(2, new CreateClientsTableStatement());
         register(3, new CreateAccountsTableStatement());
     }
 
     static DatabasePopulator builder(final DataSource dataSource,
-                                     final String schemaName,
-                                     final boolean supportsUnloggedSequences) {
-        return new DatabasePopulator(dataSource, schemaName, supportsUnloggedSequences);
+                                     final String schemaName) {
+        return new DatabasePopulator(dataSource, schemaName);
     }
 
     /**
@@ -565,15 +561,12 @@ public final class DatabasePopulator implements AutoCloseable {
     }
 
     /**
-     * Configures an unlogged sequence if supported.
+     * Configures an unlogged sequence.
      *
      * @return this {@code DatabasePopulator} instance
      */
     public DatabasePopulator withUnloggedSequence() {
-        if (supportsUnloggedSequences) {
-            return register(160, new CreateUnloggedSequenceStatement());
-        }
-        return this;
+        return register(160, new CreateUnloggedSequenceStatement());
     }
 
     /**
