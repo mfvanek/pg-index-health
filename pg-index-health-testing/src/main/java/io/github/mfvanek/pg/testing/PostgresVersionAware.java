@@ -18,15 +18,6 @@ package io.github.mfvanek.pg.testing;
 public interface PostgresVersionAware {
 
     /**
-     * Checks whether <a href="https://www.postgresql.org/docs/current/monitoring-stats.html">The Cumulative Statistics System</a> is supported for given PostgreSQL container.
-     *
-     * @return true for version 15 and higher
-     * @see <a href="https://www.percona.com/blog/postgresql-15-stats-collector-gone-whats-new/">PostgreSQL 15: Stats Collector Gone? What’s New?</a>
-     * @since 0.7.0
-     */
-    boolean isCumulativeStatisticsSystemSupported();
-
-    /**
      * Retrieves the mount volume for the PostgreSQL container.
      *
      * @return the mount volume path as a string
@@ -41,14 +32,4 @@ public interface PostgresVersionAware {
      * @since 0.30.0
      */
     boolean isNotNullConstraintsSupported();
-
-    /**
-     * Checks whether unlogged sequences are supported for the given PostgreSQL container.
-     * Unlogged sequences were introduced in PostgreSQL 15.
-     *
-     * @return true for version 15 and higher
-     * @see <a href="https://www.postgresql.org/docs/15/sql-createsequence.html">CREATE SEQUENCE</a>
-     * @since 0.41.2
-     */
-    boolean isUnloggedSequencesSupported();
 }

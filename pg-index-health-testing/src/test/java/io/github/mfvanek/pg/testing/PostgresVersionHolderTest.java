@@ -33,9 +33,7 @@ class PostgresVersionHolderTest {
             .isNotNull()
             .satisfies(v -> {
                 assertThat(v.getVersion()).isEqualTo("9.6.24");
-                assertThat(v.isCumulativeStatisticsSystemSupported()).isFalse();
                 assertThat(v.isNotNullConstraintsSupported()).isFalse();
-                assertThat(v.isUnloggedSequencesSupported()).isFalse();
             });
     }
 
@@ -45,19 +43,8 @@ class PostgresVersionHolderTest {
             .isNotNull()
             .satisfies(v -> {
                 assertThat(v.getVersion()).isEqualTo("15.1");
-                assertThat(v.isCumulativeStatisticsSystemSupported()).isTrue();
                 assertThat(v.isNotNullConstraintsSupported()).isFalse();
-                assertThat(v.isUnloggedSequencesSupported()).isTrue();
-            });
-    }
-
-    @Test
-    void outParametersNotSupported() {
-        assertThat(new PostgresVersionHolder("13.4.1"))
-            .isNotNull()
-            .satisfies(v -> {
-                assertThat(v.getVersion()).isEqualTo("13.4.1");
-                assertThat(v.isCumulativeStatisticsSystemSupported()).isFalse();
+                assertThat(v.getMountVolume()).isEqualTo("/var/lib/postgresql/data");
             });
     }
 
@@ -67,8 +54,8 @@ class PostgresVersionHolderTest {
             .isNotNull()
             .satisfies(v -> {
                 assertThat(v.getVersion()).isEqualTo("18.0");
-                assertThat(v.isCumulativeStatisticsSystemSupported()).isTrue();
                 assertThat(v.isNotNullConstraintsSupported()).isTrue();
+                assertThat(v.getMountVolume()).isEqualTo("/var/lib/postgresql/18/docker");
             });
     }
 

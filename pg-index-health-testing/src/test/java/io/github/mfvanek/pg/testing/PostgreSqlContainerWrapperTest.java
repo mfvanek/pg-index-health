@@ -58,13 +58,9 @@ class PostgreSqlContainerWrapperTest {
                         .isNotBlank();
                     assertThat(c.getPassword())
                         .isNotBlank();
-                    assertThat(c.isCumulativeStatisticsSystemSupported())
-                        .isTrue();
                     assertThat(c.getMountVolume())
                         .isEqualTo("/var/lib/postgresql/18/docker");
                     assertThat(c.isNotNullConstraintsSupported())
-                        .isTrue();
-                    assertThat(c.isUnloggedSequencesSupported())
                         .isTrue();
                 });
         }
@@ -87,8 +83,6 @@ class PostgreSqlContainerWrapperTest {
                         .isNotBlank();
                     assertThat(c.getPassword())
                         .isNotBlank();
-                    assertThat(c.isCumulativeStatisticsSystemSupported())
-                        .isTrue();
                     assertThat(c.getMountVolume())
                         .isEqualTo("/var/lib/postgresql/data");
                     assertThat(c.isNotNullConstraintsSupported())
