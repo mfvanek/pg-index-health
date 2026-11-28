@@ -107,6 +107,7 @@ Add a standard test to your project [as shown in the link](doc/standard_test.md)
 [![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-green.svg)](https://www.postgresql.org/about/news/postgresql-16-released-2715/ "PostgreSQL 16")
 [![PostgreSQL 17](https://img.shields.io/badge/PostgreSQL-17-green.svg)](https://www.postgresql.org/about/news/postgresql-17-released-2936/ "PostgreSQL 17")
 [![PostgreSQL 18](https://img.shields.io/badge/PostgreSQL-18-green.svg)](https://www.postgresql.org/about/news/postgresql-18-released-3142/ "PostgreSQL 18")
+[![PostgreSQL 19](https://img.shields.io/badge/PostgreSQL-19-green.svg)](https://www.postgresql.org/about/news/postgresql-19-released-3449/ "PostgreSQL 19")
 
 ### Support for previous versions of PostgreSQL
 

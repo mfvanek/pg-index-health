@@ -36,14 +36,14 @@ class PostgreSqlContainerWrapperTest {
                     assertThat(c.getPassword())
                         .isNotBlank();
                     assertThat(c.getMountVolume())
-                        .isEqualTo(c.isNotNullConstraintsSupported() ? "/var/lib/postgresql/18/docker" : "/var/lib/postgresql/data");
+                        .matches(c.isNotNullConstraintsSupported() ? "/var/lib/postgresql/\\d+/docker" : "/var/lib/postgresql/data");
                 });
         }
     }
 
     @Test
     void withNewVersionShouldWork() {
-        try (PostgreSqlContainerWrapper container = PostgreSqlContainerWrapper.withVersion("18.7")) {
+        try (PostgreSqlContainerWrapper container = PostgreSqlContainerWrapper.withVersion("19.0")) {
             assertThat(container)
                 .isNotNull()
                 .satisfies(c -> {
@@ -59,7 +59,7 @@ class PostgreSqlContainerWrapperTest {
                     assertThat(c.getPassword())
                         .isNotBlank();
                     assertThat(c.getMountVolume())
-                        .isEqualTo("/var/lib/postgresql/18/docker");
+                        .isEqualTo("/var/lib/postgresql/19/docker");
                     assertThat(c.isNotNullConstraintsSupported())
                         .isTrue();
                 });

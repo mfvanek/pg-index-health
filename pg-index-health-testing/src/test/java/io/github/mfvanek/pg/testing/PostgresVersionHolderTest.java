@@ -57,6 +57,13 @@ class PostgresVersionHolderTest {
                 assertThat(v.isNotNullConstraintsSupported()).isTrue();
                 assertThat(v.getMountVolume()).isEqualTo("/var/lib/postgresql/18/docker");
             });
+        assertThat(new PostgresVersionHolder("19.0"))
+            .isNotNull()
+            .satisfies(v -> {
+                assertThat(v.getVersion()).isEqualTo("19.0");
+                assertThat(v.isNotNullConstraintsSupported()).isTrue();
+                assertThat(v.getMountVolume()).isEqualTo("/var/lib/postgresql/19/docker");
+            });
     }
 
     @Test
@@ -69,7 +76,7 @@ class PostgresVersionHolderTest {
                 .isEqualTo(System.getenv("TEST_PG_VERSION"));
         } else {
             assertThat(versionHolder.getVersion())
-                .isEqualTo("18.7");
+                .isEqualTo("19.0");
         }
     }
 
